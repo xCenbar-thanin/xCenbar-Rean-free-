@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន TypeScript</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f9fc; --panel:#ffffff; --text:#162231; --muted:#5b6b61; --line:#dde6f0;
+  --accent:#3178c6; --accent2:#5b9bd5; --accent-soft:#e8f1fb;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#79b8ff; --accent2:#5b9bd5; --accent-soft:#14202e;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#79b8ff; --accent2:#5b9bd5; --accent-soft:#14202e;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#235a97,#5b9bd5);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+</style>
+<link rel="icon" href="../assets/icons/ts.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/ts.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>វគ្គសិក្សា TypeScript ពីដើមដល់កម្រិតអាជីព</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. TypeScript ជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#install">២. របៀបដំឡើងក្នុង VS Code</a>
+<a href="#elements">៣. ធាតុនីមួយៗរបស់ TypeScript</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Types មូលដ្ឋាន, Annotation &amp; Inference</a>
+<a href="#l2">មេរៀន ២: Arrays, Tuples &amp; Objects</a>
+<a href="#l3">មេរៀន ៣: Functions: Parameters, Return, Callbacks</a>
+<a href="#l4">មេរៀន ៤: Union, Literal Types &amp; Narrowing</a>
+<a href="#l5">មេរៀន ៥: type vs interface, Extends &amp; Intersection</a>
+<a href="#l6">មេរៀន ៦: Generics</a>
+<a href="#l7">មេរៀន ៧: Utility Types</a>
+<a href="#l8">មេរៀន ៨: Advanced: keyof, typeof, Mapped, Conditional, as const, satisfies</a>
+<a href="#l9">មេរៀន ៩: Classes, Interfaces &amp; OOP</a>
+<a href="#l10">មេរៀន ១០: any vs unknown, Assertions, Modules &amp; tsconfig</a>
+<a href="#l11">មេរៀន ១១: Runtime Validation: Zod + z.infer</a>
+<a href="#l12">មេរៀន ១២: TypeScript + Node.js / Express</a>
+<a href="#l13">មេរៀន ១៣: TypeScript + React</a>
+<a href="#l14">មេរៀន ១៤: Migration JS → TS, TypeScript 7, ESLint &amp; Best Practices</a>
+<a href="#cheat">📋 Cheat Sheet</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងអាជីព: Kafe API ជា TypeScript + Shared Types + Typed Client</a>
+<a href="#pro-structure">🗂️ រចនាសម្ព័ន្ធ &amp; Config</a>
+<a href="#pro-code">🧩 កូដសំខាន់ៗ</a>
+<a href="#pro-app">▶ Typed client ផ្ទាល់ (tsc + រត់ជាមួយ Mock API)</a>
+<a href="#pro-check">✅ Checklist &amp; គម្រោងចុងក្រោយ</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+
+</nav>
+<main>
+<section class="hero">
+  <h2>🟦 TypeScript ពីដើមដល់ចប់</h2>
+  <p>រៀន <b>TypeScript</b> — JavaScript ដែលមាន <b>Type</b>៖ Types, Functions, Union & Narrowing, Interfaces, Generics, Utility types, Advanced types, Classes, tsconfig, Zod, Node/Express និង React ជាមួយ TypeScript រហូតដល់ <b>Kafe API កម្រិតអាជីព</b>។ ឧទាហរណ៍នីមួយៗបង្ហាញ <b>លទ្ធផល tsc (Type checker ពិត)</b> និង <b>Console</b> ក្រោមកូដ។</p>
+  <p><span class="badge">📘 ១៤ មេរៀន</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">✔ tsc 0 errors</span><span class="badge">🏆 Kafe API (TS)</span></p>
+</section>
+
+<!-- NAV: ផ្នែកទី ១ – មូលដ្ឋាន -->
+<section id="intro">
+  <h2>១. TypeScript ជាអ្វី? អ្នកណាបង្កើត?</h2>
+  <p><b>TypeScript</b> គឺជា JavaScript + <b>Static types</b>។ អ្នកសរសេរ <code class="i">.ts</code> ហើយ <b>Type checker (tsc)</b> រកកំហុសមុនរត់ (ឧ. ហៅ Function ខុស Argument, ភ្លេចពិនិត្យ <code class="i">null</code>)។ ពេលរត់ Type ត្រូវបានលុបចេញ នៅសល់ JavaScript ធម្មតា ដែលរត់បានគ្រប់កន្លែង (Browser, Node.js)។</p>
+  <div class="grid">
+    <div class="card"><b>អ្នកបង្កើត</b><br><b style="font-size:19px">Anders Hejlsberg</b><br>នៅ <b>Microsoft</b> — ក៏ជាអ្នកបង្កើត <b>C#</b>, Delphi និង Turbo Pascal</div>
+    <div class="card"><b>ចេញដំបូង</b><br><b>តុលា 2012</b> (TypeScript 0.8) ជា Open-source</div>
+    <div class="card"><b>TypeScript 7</b> (2026)<br>Compiler ត្រូវបានសរសេរឡើងវិញជាភាសា <b>Go</b> (Project Corsa) — លឿនជាងប្រហែល <b>10 ដង</b></div>
+    <div class="card"><b>Node.js</b> 22.18+ / 23.6+<br>រត់ <code class="i">.ts</code> ដោយផ្ទាល់ (Type stripping) — មិនចាំបាច់ Build ពេល Dev</div>
+  </div>
+  <h3>ហេតុអ្វីត្រូវរៀន TypeScript?</h3>
+  <div class="grid">
+    <div class="card">🐞 <b>រកកំហុសមុន</b><br>Typo, null, Argument ខុស — ឃើញពេលវាយកូដ មិនមែនពេលអតិថិជនប្រើ</div>
+    <div class="card">🧠 <b>IntelliSense</b><br>VS Code ដឹងថា Object មាន Field អ្វី — Autocomplete, Rename, Go to definition</div>
+    <div class="card">📖 <b>Type = ឯកសារ</b><br>ឃើញ <code class="i">(id: number) =&gt; Promise&lt;Product&gt;</code> ដឹងភ្លាមពីរបៀបប្រើ</div>
+    <div class="card">🔧 <b>Refactor ដោយទំនុកចិត្ត</b><br>ប្តូរ Field មួយ → tsc បង្ហាញគ្រប់កន្លែងដែលត្រូវកែ</div>
+    <div class="card">💼 <b>ការងារ</b><br>React, Next.js, Node.js, Angular, Vue — ក្រុមហ៊ុនភាគច្រើនប្រើ TypeScript</div>
+    <div class="card">🤝 <b>Full-stack</b><br>Types តែមួយ ប្រើទាំង Backend និង Frontend</div>
+  </div>
+</section>
+
+<section id="install">
+  <h2>២. របៀបដំឡើងក្នុង VS Code</h2>
+  <ol class="steps">
+    <li>ដំឡើង <b>Node.js LTS</b> (22.18+ ឬ 24) និង <b>VS Code</b> — VS Code គាំទ្រ TypeScript ស្រាប់ (IntelliSense, Error ពណ៌ក្រហម)</li>
+    <li>Extensions ដែលមានប្រយោជន៍៖ <b>ESLint</b>, <b>Prettier</b>, <b>Pretty TypeScript Errors</b> (Error អានងាយ), <b>Error Lens</b> (Error នៅលើបន្ទាត់)</li>
+    <li>បង្កើតគម្រោង ហើយដំឡើង TypeScript ក្នុងគម្រោង (មិនមែន Global)</li>
+    <li>VS Code៖ <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → <b>TypeScript: Select TypeScript Version</b> → Use Workspace Version</li>
+  </ol>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+mkdir ts-basics && cd ts-basics
+npm init -y && npm pkg set type=module
+npm install -D typescript @types/node
+npx tsc --init                 # បង្កើត tsconfig.json
+npx tsc --version
+
+# រត់ .ts ដោយផ្ទាល់ (Node 22.18+): Node លុប Type ចេញ — មិនពិនិត្យ Type
+node src/index.ts
+# ពិនិត្យ Type (ដាច់ដោយឡែក)
+npx tsc --noEmit
+npx tsc --noEmit --watch       # ពិនិត្យជាប់ៗពេលរក្សាទុក
+
+# React + TypeScript
+npm create vite@latest web -- --template react-ts
+</script>
+  <script type="text/x-code" data-lang="json" data-label="tsconfig.json (Node.js ទំនើប — ណែនាំដោយ Node.js docs)">
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "nodenext",
+    "strict": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true
+  },
+  "include": ["src"]
+}
+</script>
+  <div class="note">💡 <b>Node.js រត់ .ts ដោយ «Type stripping»</b>៖ វាលុប Type ចេញ ប៉ុន្តែ <b>មិនពិនិត្យ Type</b> ហើយមិនគាំទ្រ Syntax ដែលបង្កើតកូដ JavaScript ថ្មី (<code class="i">enum</code>, <code class="i">namespace</code> មាន Value, Parameter properties)។ <code class="i">erasableSyntaxOnly</code> ធ្វើឱ្យ tsc រារាំង Syntax ទាំងនោះ។ Import ត្រូវមាន <code class="i">.ts</code>៖ <code class="i">import { x } from "./x.ts"</code>។</div>
+</section>
+
+<section id="elements">
+  <h2>៣. ធាតុនីមួយៗរបស់ TypeScript</h2>
+  <table>
+    <tr><th>ធាតុ</th><th>ឧទាហរណ៍</th><th>មេរៀន</th></tr>
+    <tr><td><b>Primitive types</b></td><td><code class="i">string</code>, <code class="i">number</code>, <code class="i">boolean</code>, <code class="i">null</code>, <code class="i">undefined</code>, <code class="i">bigint</code>, <code class="i">symbol</code></td><td>១</td></tr>
+    <tr><td><b>Type annotation / Inference</b></td><td><code class="i">let n: number = 1</code> · <code class="i">let n = 1</code> (ទាយ)</td><td>១</td></tr>
+    <tr><td><b>Array / Tuple / Object</b></td><td><code class="i">number[]</code>, <code class="i">[string, number]</code>, <code class="i">{ id: number }</code></td><td>២</td></tr>
+    <tr><td><b>Function types</b></td><td><code class="i">(a: number) =&gt; string</code></td><td>៣</td></tr>
+    <tr><td><b>Union / Literal</b></td><td><code class="i">"coffee" | "tea"</code>, <code class="i">string | null</code></td><td>៤</td></tr>
+    <tr><td><b>Narrowing</b></td><td><code class="i">typeof</code>, <code class="i">in</code>, <code class="i">instanceof</code>, Discriminated union</td><td>៤</td></tr>
+    <tr><td><b>type / interface</b></td><td>ដាក់ឈ្មោះ Type · extends · &amp;</td><td>៥</td></tr>
+    <tr><td><b>Generics</b></td><td><code class="i">Paginated&lt;T&gt;</code>, <code class="i">function first&lt;T&gt;()</code></td><td>៦</td></tr>
+    <tr><td><b>Utility types</b></td><td><code class="i">Partial</code>, <code class="i">Pick</code>, <code class="i">Omit</code>, <code class="i">Record</code>…</td><td>៧</td></tr>
+    <tr><td><b>Type operators</b></td><td><code class="i">keyof</code>, <code class="i">typeof</code>, Mapped, Conditional, Template literal, <code class="i">satisfies</code></td><td>៨</td></tr>
+    <tr><td><b>Special types</b></td><td><code class="i">any</code> (ជៀសវាង), <code class="i">unknown</code> (សុវត្ថិភាព), <code class="i">never</code>, <code class="i">void</code></td><td>៤, ១០</td></tr>
+    <tr><td><b>Declaration files</b></td><td><code class="i">.d.ts</code>, <code class="i">@types/*</code>, Declaration merging</td><td>១០, ១២</td></tr>
+    <tr><td><b>tsconfig.json</b></td><td><code class="i">strict</code>, <code class="i">module</code>, <code class="i">target</code></td><td>១០</td></tr>
+  </table>
+</section>
+
+<!-- NAV: ផ្នែកទី ២ – មេរៀន -->
+<section id="l1">
+  <h2><span class="badge">មេរៀន ១</span>Types មូលដ្ឋាន, Annotation & Inference</h2>
+  <script type="text/x-code" data-lang="ts" data-label="basics.ts" data-demo data-tsrun="0">
+let shop: string = "Kafe";
+let price = 2.5;                 // Inference: TypeScript ដឹងថាជា number
+const open = true;               // boolean
+let maybe: string | null = null;
+
+price = price * 2;
+console.log(shop, price, open, maybe);
+
+// ❌ កំហុសដែល tsc ចាប់បាន (Code នៅតែរត់ ព្រោះ Type ត្រូវបានលុប — តែ tsc ព្រមាន)
+price = "ថ្លៃ";                   // string មិនអាចដាក់ក្នុង number
+console.log(shop.toUppercase()); // Typo: toUpperCase
+</script>
+  <div class="note">💡 <b>ទុកឱ្យ TypeScript ទាយ (Inference)</b> ពេលតម្លៃច្បាស់ ហើយសរសេរ Type នៅ <b>Parameter របស់ Function</b> និង <b>API សាធារណៈ</b>។ មើលក្នុងឧទាហរណ៍៖ tsc រកឃើញ Bug ២ ប៉ុន្តែ JavaScript នៅតែរត់ — បន្ទាត់ចុងក្រោយ Crash ពេលរត់ (Uncaught TypeError)។ នោះហើយជាមូលហេតុដែលត្រូវរត់ <code class="i">tsc</code> ក្នុង CI។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ១</h4>
+    <p>ប្រកាស Variable សម្រាប់៖ ឈ្មោះសិស្ស, អាយុ, បានបង់ថ្លៃឬនៅ, និងលេខទូរស័ព្ទ (អាចគ្មាន)។ តើមួយណាគួរសរសេរ Type ច្បាស់?</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="ts" data-label="answer1.ts" data-demo data-tsrun="1">
+const name = "សុខ ដារា";                 // Inference: string
+const age = 20;                           // number
+let paid = false;                         // boolean (let ព្រោះអាចប្តូរ)
+let phone: string | null = null;          // ✅ សរសេរ Type: បើមិនដូច្នេះ TS ទាយថា null ប៉ុណ្ណោះ
+phone = "012345678";
+console.log({ name, age, paid, phone });
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l2">
+  <h2><span class="badge">មេរៀន ២</span>Arrays, Tuples & Objects</h2>
+  <script type="text/x-code" data-lang="ts" data-label="collections.ts" data-demo data-tsrun="2">
+const prices: number[] = [2.5, 2.0, 1.5];
+const names: Array<string> = ["Latte", "Tea"];
+const pair: [string, number] = ["Latte", 2.5];        // Tuple: ទីតាំង និង Type ថេរ
+
+// Object type: optional (?) និង readonly
+const product: { readonly id: number; name: string; price: number; note?: string } = {
+  id: 1, name: "Latte", price: 2.5,
+};
+product.price = 2.8;                                   // ✅
+console.log(prices.map(p => p * 2), names.join(", "), pair[0], product);
+console.log(product.note?.toUpperCase() ?? "គ្មាន note"); // Optional chaining
+
+product.id = 2;                                        // ❌ readonly
+prices.push("3");                                      // ❌ string ក្នុង number[]
+const bad: [string, number] = [2.5, "Latte"];          // ❌ លំដាប់ខុស
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ២</h4>
+    <p>បង្កើត Array នៃ Orders ដែល Order នីមួយៗមាន <code class="i">id</code> (readonly), <code class="i">items</code> (Array នៃ Tuple [ឈ្មោះ, ចំនួន]), <code class="i">paid</code>, <code class="i">note</code> (optional)។ គណនាចំនួនកែវសរុប។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="ts" data-label="answer2.ts" data-demo data-tsrun="3">
+const orders: { readonly id: number; items: [string, number][]; paid: boolean; note?: string }[] = [
+  { id: 1, items: [["Latte", 2], ["Croissant", 1]], paid: true },
+  { id: 2, items: [["Green Tea", 3]], paid: false, note: "ស្ករតិច" },
+];
+const cups = orders.flatMap(o => o.items).reduce((sum, [, qty]) => sum + qty, 0);
+console.log("ចំនួនសរុប:", cups);    // 6
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l3">
+  <h2><span class="badge">មេរៀន ៣</span>Functions: Parameters, Return, Callbacks</h2>
+  <script type="text/x-code" data-lang="ts" data-label="functions.ts" data-demo data-tsrun="4">
+function total(price: number, qty: number = 1, discount?: number): number {
+  const sum = price * qty;
+  return discount ? sum * (1 - discount) : sum;
+}
+
+const khr = (usd: number): string => `${(usd * 4100).toLocaleString()} ៛`;
+
+// Callback type
+function applyAll(values: number[], fn: (v: number) => number): number[] {
+  return values.map(fn);
+}
+
+// void = មិន return តម្លៃ · never = មិនដែល return (throw / loop)
+function log(msg: string): void { console.log("📝", msg); }
+function fail(msg: string): never { throw new Error(msg); }
+
+log(`សរុប: $${total(2.5, 3, 0.1)}`);              // 6.75
+log(khr(10));                                      // 41,000 ៛
+log(String(applyAll([1, 2, 3], v => v * 10)));
+
+total(2.5, "3");                                   // ❌ string → number
+total();                                           // ❌ ខ្វះ price
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ៣</h4>
+    <p>សរសេរ Function <code class="i">formatPrice(amount, currency)</code> ដែល currency ជា <code class="i">"USD"</code> ឬ <code class="i">"KHR"</code> (Default "USD") ហើយ Return string។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="ts" data-label="answer3.ts" data-demo data-tsrun="5">
+function formatPrice(amount: number, currency: "USD" | "KHR" = "USD"): string {
+  return currency === "USD" ? `$${amount.toFixed(2)}` : `${Math.round(amount).toLocaleString()} ៛`;
+}
+console.log(formatPrice(2.5), formatPrice(10250, "KHR"));
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l4">
+  <h2><span class="badge">មេរៀន ៤</span>Union, Literal Types & Narrowing</h2>
+  <script type="text/x-code" data-lang="ts" data-label="narrowing.ts" data-demo data-tsrun="6">
+type Size = "S" | "M" | "L";                         // Literal union
+type Id = number | string;
+
+function priceFor(size: Size): number {
+  switch (size) {
+    case "S": return 2;
+    case "M": return 2.5;
+    case "L": return 3;
+  }
+}
+
+function describe(id: Id): string {
+  if (typeof id === "number") return `#${id.toFixed(0)}`;   // នៅទីនេះ id: number
+  return id.toUpperCase();                                   // នៅទីនេះ id: string
+}
+
+// Discriminated union: Field "status" បែងចែក
+type Payment =
+  | { status: "paid"; amount: number; method: "cash" | "khqr" }
+  | { status: "pending"; dueDate: string }
+  | { status: "failed"; reason: string };
+
+function paymentText(p: Payment): string {
+  switch (p.status) {
+    case "paid": return `បានបង់ $${p.amount} (${p.method})`;
+    case "pending": return `រង់ចាំ ដល់ ${p.dueDate}`;
+    case "failed": return `បរាជ័យ: ${p.reason}`;
+    default: {
+      const never: never = p;                                // Exhaustive check
+      return never;
+    }
+  }
+}
+
+console.log(priceFor("M"), describe(7), describe("kafe-01"));
+console.log(paymentText({ status: "paid", amount: 5, method: "khqr" }));
+console.log(paymentText({ status: "failed", reason: "សមតុល្យមិនគ្រប់" }));
+priceFor("XL");                                              // ❌ មិនមែន Size
+</script>
+  <div class="note">💡 <b>Exhaustive check</b>៖ បើថ្ងៃក្រោយបន្ថែម <code class="i">{ status: "refunded" }</code> ទៅ Payment ហើយភ្លេចកែ switch → tsc រាយការណ៍ Error នៅ <code class="i">const never: never = p</code> ភ្លាម។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៤</h4>
+    <p>បង្កើត Type <code class="i">Shape</code> = Circle (radius) | Rect (width, height) ដោយ Field <code class="i">kind</code> ហើយ Function <code class="i">area(shape)</code>។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="ts" data-label="answer4.ts" data-demo data-tsrun="7">
+type Shape = { kind: "circle"; radius: number } | { kind: "rect"; width: number; height: number };
+function area(s: Shape): number {
+  return s.kind === "circle" ? Math.PI * s.radius ** 2 : s.width * s.height;
+}
+console.log(area({ kind: "circle", radius: 1 }).toFixed(2), area({ kind: "rect", width: 2, height: 3 }));
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l5">
+  <h2><span class="badge">មេរៀន ៥</span>type vs interface, Extends & Intersection</h2>
+  <script type="text/x-code" data-lang="ts" data-label="models.ts" data-demo data-tsrun="8">
+interface Entity { readonly id: number; createdAt: Date }
+
+interface Product extends Entity {           // interface extends
+  name: string;
+  price: number;
+  category: "coffee" | "tea" | "bakery";
+}
+
+type WithStock = { stock: number };
+type InventoryItem = Product & WithStock;    // Intersection (&)
+
+type Money = number;                         // type: ដាក់ឈ្មោះ Type ណាក៏បាន (Union, Tuple, Function…)
+type Formatter = (m: Money) => string;
+
+const item: InventoryItem = { id: 1, createdAt: new Date("2026-01-05"), name: "Latte", price: 2.5, category: "coffee", stock: 40 };
+const usd: Formatter = m => `$${m.toFixed(2)}`;
+console.log(item.name, usd(item.price), item.stock);
+
+const broken: Product = { id: 2, createdAt: new Date(), name: "Tea", price: 2 };   // ❌ ខ្វះ category
+</script>
+  <table>
+    <tr><th></th><th><code class="i">interface</code></th><th><code class="i">type</code></th></tr>
+    <tr><td>Object shape</td><td>✅</td><td>✅</td></tr>
+    <tr><td>Union / Tuple / Primitive alias</td><td>❌</td><td>✅</td></tr>
+    <tr><td>extends</td><td><code class="i">extends</code></td><td><code class="i">&amp;</code></td></tr>
+    <tr><td>Declaration merging (បន្ថែមពីក្រៅ)</td><td>✅ (ឧ. Express.Request)</td><td>❌</td></tr>
+  </table>
+  <p>ច្បាប់សាមញ្ញ៖ ប្រើ <b>interface</b> សម្រាប់ Object/Class contract · ប្រើ <b>type</b> សម្រាប់ Union, Function, Utility។ សំខាន់គឺ <b>ស្របគ្នា</b> ក្នុងគម្រោង។</p>
+  <div class="ex"><h4>✍️ លំហាត់ ៥</h4>
+    <p>បង្កើត <code class="i">User</code> (id, name, email) និង <code class="i">Admin</code> ដែលមានបន្ថែម <code class="i">permissions: string[]</code> ដោយ interface extends។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="ts" data-label="answer5.ts" data-demo data-tsrun="9">
+interface User { id: number; name: string; email: string }
+interface Admin extends User { permissions: string[] }
+const a: Admin = { id: 1, name: "Dara", email: "dara@kafe.com", permissions: ["products:write", "users:read"] };
+console.log(`${a.name} មានសិទ្ធិ ${a.permissions.length}`);
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l6">
+  <h2><span class="badge">មេរៀន ៦</span>Generics</h2>
+  <p><b>Generic</b> = Type ដែលទទួល «Type parameter» ដូច Function ទទួល Argument — សរសេរម្តង ប្រើបានគ្រប់ Type ដោយរក្សាព័ត៌មាន Type។</p>
+  <script type="text/x-code" data-lang="ts" data-label="generics.ts" data-demo data-tsrun="10">
+function first<T>(items: T[]): T | undefined {
+  return items[0];
+}
+const n = first([10, 20]);            // number | undefined
+const s = first(["Latte", "Tea"]);    // string | undefined
+
+// Generic type: API response
+interface Paginated<T> { data: T[]; meta: { page: number; total: number } }
+interface Product { id: number; name: string; price: number }
+
+const page: Paginated<Product> = { data: [{ id: 1, name: "Latte", price: 2.5 }], meta: { page: 1, total: 1 } };
+
+// Constraint: T ត្រូវមាន id
+function byId<T extends { id: number }>(items: T[], id: number): T | undefined {
+  return items.find(x => x.id === id);
+}
+
+// Generic ច្រើន + keyof
+function pluck<T, K extends keyof T>(items: T[], key: K): T[K][] {
+  return items.map(x => x[key]);
+}
+
+console.log(n, s, byId(page.data, 1)?.name, pluck(page.data, "price"));
+pluck(page.data, "cost");             // ❌ "cost" មិនមែន keyof Product
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ៦</h4>
+    <p>សរសេរ Generic <code class="i">groupBy&lt;T, K extends string&gt;(items, getKey)</code> ដែល Return <code class="i">Record&lt;K, T[]&gt;</code>។ សាកជាមួយ Product តាម category។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="ts" data-label="answer6.ts" data-demo data-tsrun="11">
+function groupBy<T, K extends string>(items: T[], getKey: (item: T) => K): Partial<Record<K, T[]>> {
+  const out: Partial<Record<K, T[]>> = {};
+  for (const item of items) (out[getKey(item)] ??= []).push(item);
+  return out;
+}
+const menu = [
+  { name: "Latte", category: "coffee" as const },
+  { name: "Green Tea", category: "tea" as const },
+  { name: "Americano", category: "coffee" as const },
+];
+const g = groupBy(menu, p => p.category);
+console.log(g.coffee?.map(p => p.name), g.tea?.length);
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l7">
+  <h2><span class="badge">មេរៀន ៧</span>Utility Types</h2>
+  <script type="text/x-code" data-lang="ts" data-label="utility.ts" data-demo data-tsrun="12">
+interface Product { id: number; name: string; price: number; stock: number; category: "coffee" | "tea" }
+
+type NewProduct   = Omit<Product, "id">;                 // POST body (គ្មាន id)
+type ProductPatch = Partial<NewProduct>;                 // PATCH: Field ទាំងអស់ optional
+type ProductCard  = Pick<Product, "name" | "price">;     // តែ Field ដែល UI ត្រូវការ
+type FrozenProduct = Readonly<Product>;
+type StockByName  = Record<string, number>;
+
+const patch: ProductPatch = { price: 2.8 };
+const card: ProductCard = { name: "Latte", price: 2.5 };
+const stock: StockByName = { Latte: 40, Tea: 25 };
+
+async function getProduct(): Promise<Product> {
+  return { id: 1, name: "Latte", price: 2.5, stock: 40, category: "coffee" };
+}
+type Fetched = Awaited<ReturnType<typeof getProduct>>;   // Product
+type Params = Parameters<(id: number, q?: string) => void>;  // [id: number, q?: string]
+
+const frozen: FrozenProduct = { id: 1, name: "Latte", price: 2.5, stock: 40, category: "coffee" };
+console.log(patch, card, stock);
+frozen.price = 3;                                        // ❌ Readonly
+const np: NewProduct = { name: "Tea", price: 2 };       // ❌ ខ្វះ stock, category
+</script>
+  <table>
+    <tr><th>Utility</th><th>ន័យ</th></tr>
+    <tr><td><code class="i">Partial&lt;T&gt;</code> / <code class="i">Required&lt;T&gt;</code></td><td>Field ទាំងអស់ optional / required</td></tr>
+    <tr><td><code class="i">Pick&lt;T, K&gt;</code> / <code class="i">Omit&lt;T, K&gt;</code></td><td>យក / ដក Field</td></tr>
+    <tr><td><code class="i">Record&lt;K, V&gt;</code></td><td>Object ដែល Key K តម្លៃ V</td></tr>
+    <tr><td><code class="i">Readonly&lt;T&gt;</code></td><td>កែមិនបាន</td></tr>
+    <tr><td><code class="i">ReturnType</code> / <code class="i">Parameters</code> / <code class="i">Awaited</code></td><td>យក Type ពី Function / Promise</td></tr>
+    <tr><td><code class="i">NonNullable</code> / <code class="i">Exclude</code> / <code class="i">Extract</code></td><td>ដក null / ដក ឬយកផ្នែកពី Union</td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ៧</h4>
+    <p>ពី <code class="i">User { id, name, email, passwordHash, role }</code> បង្កើត៖ (ក) <code class="i">PublicUser</code> គ្មាន passwordHash (ខ) <code class="i">UserUpdate</code> កែបានតែ name/email ហើយ optional។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="ts" data-label="answer7.ts" data-demo data-tsrun="13">
+interface User { id: number; name: string; email: string; passwordHash: string; role: "admin" | "staff" }
+type PublicUser = Omit<User, "passwordHash">;
+type UserUpdate = Partial<Pick<User, "name" | "email">>;
+
+const toPublic = ({ passwordHash, ...rest }: User): PublicUser => rest;
+const u: User = { id: 1, name: "Dara", email: "d@kafe.com", passwordHash: "$2b$…", role: "staff" };
+const upd: UserUpdate = { name: "Sok Dara" };
+console.log(toPublic(u), upd);
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l8">
+  <h2><span class="badge">មេរៀន ៨</span>Advanced: keyof, typeof, Mapped, Conditional, as const, satisfies</h2>
+  <script type="text/x-code" data-lang="ts" data-label="advanced.ts" data-demo data-tsrun="14">
+// as const + typeof: បង្កើត Union ពី Array (ជំនួស enum)
+const CATEGORIES = ["coffee", "tea", "bakery"] as const;
+type Category = (typeof CATEGORIES)[number];             // "coffee" | "tea" | "bakery"
+
+// satisfies: ពិនិត្យ Type តែរក្សា Type ជាក់លាក់
+const PRICES = { coffee: 2.5, tea: 2.2, bakery: 1.5 } satisfies Record<Category, number>;
+
+// keyof + Indexed access
+interface Product { id: number; name: string; price: number }
+type ProductKey = keyof Product;                          // "id" | "name" | "price"
+type PriceType = Product["price"];                        // number
+
+// Mapped type: Field ទាំងអស់ → boolean (ឧ. Form "touched")
+type Touched<T> = { [K in keyof T]?: boolean };
+const touched: Touched<Product> = { name: true };
+
+// Conditional type
+type ApiData<T> = T extends Array<infer U> ? U : T;
+type One = ApiData<Product[]>;                            // Product
+
+// Template literal type
+type Event = `product:${"created" | "updated" | "deleted"}`;
+const ev: Event = "product:created";
+
+console.log(CATEGORIES, PRICES.tea, touched, ev);
+const bad: Category = "juice";                            // ❌
+const ev2: Event = "product:archived";                    // ❌
+</script>
+  <div class="note">💡 <b>ជំនួស <code class="i">enum</code></b>៖ ប្រើ <code class="i">as const</code> + Union ព្រោះវាជា JavaScript ធម្មតា (Node.js Type stripping និង <code class="i">erasableSyntaxOnly</code> មិនអនុញ្ញាត <code class="i">enum</code>)។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៨</h4>
+    <p>បង្កើត Mapped type <code class="i">FormErrors&lt;T&gt;</code> ដែល Field នីមួយៗ (optional) ជា string សារ Error ហើយប្រើវាសម្រាប់ Product form។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="ts" data-label="answer8.ts" data-demo data-tsrun="15">
+type FormErrors<T> = { [K in keyof T]?: string };
+interface ProductForm { name: string; price: number; category: "coffee" | "tea" }
+function validate(f: ProductForm): FormErrors<ProductForm> {
+  const e: FormErrors<ProductForm> = {};
+  if (f.name.trim().length < 2) e.name = "ឈ្មោះខ្លីពេក";
+  if (!(f.price > 0)) e.price = "តម្លៃត្រូវ > 0";
+  return e;
+}
+console.log(validate({ name: "M", price: 0, category: "tea" }));
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l9">
+  <h2><span class="badge">មេរៀន ៩</span>Classes, Interfaces & OOP</h2>
+  <script type="text/x-code" data-lang="ts" data-label="classes.ts" data-demo data-tsrun="16">
+interface PaymentMethod {
+  readonly name: string;
+  pay(amount: number): string;
+}
+
+class Cash implements PaymentMethod {
+  readonly name = "Cash";
+  pay(amount: number): string { return `ទទួលសាច់ប្រាក់ $${amount}`; }
+}
+
+class Khqr implements PaymentMethod {
+  readonly name = "KHQR";
+  #merchantId: string;                          // # = Private ពិត (JavaScript)
+  constructor(merchantId: string) { this.#merchantId = merchantId; }
+  pay(amount: number): string { return `ស្កេន QR ${this.#merchantId} · $${amount}`; }
+}
+
+abstract class Discount {
+  abstract apply(total: number): number;
+  describe(total: number): string { return `$${total} → $${this.apply(total).toFixed(2)}`; }
+}
+class Percent extends Discount {
+  readonly rate: number;
+  constructor(rate: number) { super(); this.rate = rate; }
+  override apply(total: number): number { return total * (1 - this.rate); }
+}
+
+const methods: PaymentMethod[] = [new Cash(), new Khqr("KAFE-001")];
+methods.forEach(m => console.log(m.name, "→", m.pay(7.5)));
+console.log(new Percent(0.1).describe(20));
+new Discount();                                  // ❌ abstract class
+</script>
+  <div class="note">💡 ក្នុងគម្រោងដែលប្រើ <code class="i">erasableSyntaxOnly</code> កុំប្រើ <b>Parameter properties</b> (<code class="i">constructor(private rate: number)</code>) — សរសេរ Field និងកំណត់ក្នុង constructor ដូចខាងលើ។ ក្នុង TypeScript ជាច្រើនគេប្រើ Function + Object ជាជាង Class។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៩</h4>
+    <p>បន្ថែម <code class="i">class Card implements PaymentMethod</code> ដែលគិតថ្លៃសេវា 2%។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="ts" data-label="answer9.ts" data-demo data-tsrun="17">
+interface PaymentMethod { readonly name: string; pay(amount: number): string }
+class Card implements PaymentMethod {
+  readonly name = "Card";
+  readonly feeRate = 0.02;
+  pay(amount: number): string {
+    const total = amount * (1 + this.feeRate);
+    return `កាត $${amount} + សេវា = $${total.toFixed(2)}`;
+  }
+}
+console.log(new Card().pay(10));
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l10">
+  <h2><span class="badge">មេរៀន ១០</span>any vs unknown, Assertions, Modules & tsconfig</h2>
+  <script type="text/x-code" data-lang="ts" data-label="unknown.ts" data-demo data-tsrun="18">
+// any: បិទការពិនិត្យ ❌ · unknown: ត្រូវពិនិត្យមុនប្រើ ✅
+const fromApi: unknown = JSON.parse('{"name":"Latte","price":2.5}');
+
+// Type guard (user-defined)
+function isProduct(x: unknown): x is { name: string; price: number } {
+  return typeof x === "object" && x !== null
+    && "name" in x && typeof x.name === "string"
+    && "price" in x && typeof x.price === "number";
+}
+
+if (isProduct(fromApi)) console.log("✅", fromApi.name, fromApi.price);
+
+const risky: any = fromApi;
+console.log(risky.prcie);                // any: គ្មាន Error ទោះ Typo → undefined
+console.log(fromApi.name);               // ❌ unknown: ត្រូវ Narrow មុន
+
+const el = document.getElementById("out") as HTMLDivElement;   // Assertion: «ខ្ញុំដឹងច្បាស់» — ប្រើតិចៗ
+console.log(el.tagName);
+</script>
+  <script type="text/x-code" data-lang="ts" data-label="Modules (import type)">
+// product.ts
+export interface Product { id: number; name: string }
+export const formatName = (p: Product): string => p.name.toUpperCase();
+
+// main.ts — import type ត្រូវបានលុបចេញពេលរត់ (verbatimModuleSyntax)
+import type { Product } from "./product.ts";
+import { formatName } from "./product.ts";
+</script>
+  <table>
+    <tr><th>tsconfig</th><th>ន័យ</th></tr>
+    <tr><td><code class="i">strict: true</code></td><td>បើកការពិនិត្យសំខាន់ៗទាំងអស់ (strictNullChecks, noImplicitAny…) — <b>ត្រូវបើកជានិច្ច</b> (TS 7 Default)</td></tr>
+    <tr><td><code class="i">noUncheckedIndexedAccess</code></td><td><code class="i">arr[i]</code> / <code class="i">obj[key]</code> អាចជា undefined</td></tr>
+    <tr><td><code class="i">module / moduleResolution</code></td><td><code class="i">nodenext</code> (Node) · <code class="i">bundler</code> (Vite/Next.js)</td></tr>
+    <tr><td><code class="i">noEmit</code></td><td>tsc ពិនិត្យតែប៉ុណ្ណោះ (Vite/Node/esbuild ជាអ្នករត់)</td></tr>
+    <tr><td><code class="i">verbatimModuleSyntax</code> · <code class="i">erasableSyntaxOnly</code></td><td>ស្របជាមួយ Type stripping</td></tr>
+    <tr><td><code class="i">skipLibCheck</code></td><td>រំលងពិនិត្យ .d.ts របស់ Library (លឿន)</td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ១០</h4>
+    <p>សរសេរ Type guard <code class="i">isStringArray(x: unknown): x is string[]</code>។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="ts" data-label="answer10.ts" data-demo data-tsrun="19">
+function isStringArray(x: unknown): x is string[] {
+  return Array.isArray(x) && x.every(v => typeof v === "string");
+}
+const data: unknown = JSON.parse('["Latte","Tea"]');
+if (isStringArray(data)) console.log(data.map(s => s.toUpperCase()));
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l11">
+  <h2><span class="badge">មេរៀន ១១</span>Runtime Validation: Zod + z.infer</h2>
+  <div class="warn">⚠️ <b>Type មិនមាននៅពេលរត់ទេ!</b> <code class="i">const body: Product = req.body</code> មិនពិនិត្យអ្វីទាំងអស់ — Client អាចផ្ញើអ្វីក៏បាន។ ទិន្នន័យពីខាងក្រៅ (API, Form, JSON, Env) ត្រូវ <b>Validate នៅ Runtime</b>។</div>
+  <script type="text/x-code" data-lang="ts" data-label="schemas.ts (npm i zod)">
+import { z } from "zod";
+
+export const productCreate = z.object({
+  name: z.string().trim().min(2),
+  category: z.enum(["coffee", "tea", "bakery"]).default("coffee"),
+  price: z.number().positive(),
+  stock: z.number().int().min(0).default(0),
+});
+
+// Type ចេញពី Schema — Validation និង Type តែមួយ មិនដែលខុសគ្នា
+export type ProductCreate = z.infer<typeof productCreate>;
+//   { name: string; category: "coffee" | "tea" | "bakery"; price: number; stock: number }
+
+const r = productCreate.safeParse(JSON.parse(input));
+if (r.success) save(r.data);          // r.data: ProductCreate (ស្អាត + Default)
+else console.log(r.error.issues);     // [{ path: ["price"], message: "…" }]
+
+// Env variables ក៏ Validate ដែរ
+const Env = z.object({ PORT: z.coerce.number().default(3000), JWT_SECRET: z.string().min(32) });
+export const env = Env.parse(process.env);   // Crash ពេលចាប់ផ្តើម បើ Config ខុស (Fail fast)
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១១</h4>
+    <p>សរសេរ Zod schema សម្រាប់ Order៖ <code class="i">items</code> (យ៉ាងតិច 1: productId int &gt; 0, qty int 1–20), <code class="i">note</code> optional ≤ 100 តួ ហើយ Export Type។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="ts" data-label="Answer">
+export const orderCreate = z.object({
+  items: z.array(z.object({
+    productId: z.number().int().positive(),
+    qty: z.number().int().min(1).max(20),
+  })).min(1, "យ៉ាងតិច ១ មុខ"),
+  note: z.string().max(100).optional(),
+});
+export type OrderCreate = z.infer<typeof orderCreate>;
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l12">
+  <h2><span class="badge">មេរៀន ១២</span>TypeScript + Node.js / Express</h2>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+npm install express zod
+npm install -D typescript @types/node @types/express
+node --watch src/server.ts        # Dev: Node រត់ .ts ផ្ទាល់
+npx tsc --noEmit                  # CI: ពិនិត្យ Type
+</script>
+  <script type="text/x-code" data-lang="ts" data-label="Typed route + Declaration merging">
+import express, { type Request, type Response, type RequestHandler } from "express";
+import type { AuthUser, Product } from "./types.ts";
+
+// បន្ថែម req.user ទៅ Type របស់ Express (Declaration merging)
+declare global {
+  namespace Express {
+    interface Request { user?: AuthUser }
+  }
+}
+
+const requireAdmin: RequestHandler = (req, res, next) => {
+  if (req.user?.role !== "admin") { res.status(403).json({ error: { message: "គ្មានសិទ្ធិ" } }); return; }
+  next();
+};
+
+app.get("/api/products/:id", (req: Request<{ id: string }>, res: Response<Product | { error: { message: string } }>) => {
+  const p = repo.find(Number(req.params.id));
+  if (!p) { res.status(404).json({ error: { message: "រកមិនឃើញ" } }); return; }
+  res.json(p);          // ✅ tsc ពិនិត្យថា Body ត្រូវជា Product
+});
+</script>
+  <div class="note">💡 ក្នុង <b>@types/express v5</b> Handler ត្រូវ Return <code class="i">void</code> — សរសេរ <code class="i">{ res.json(x); return; }</code> ជាជាង <code class="i">return res.json(x)</code>។ មើលកូដពេញក្នុងផ្នែកអាជីព។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ១២</h4>
+    <p>បន្ថែម Field <code class="i">requestId: string</code> ទៅ Express Request ហើយសរសេរ Middleware ដែលកំណត់វា។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="ts" data-label="Answer">
+import { randomUUID } from "node:crypto";
+import type { RequestHandler } from "express";
+
+declare global { namespace Express { interface Request { requestId?: string } } }
+
+export const requestId: RequestHandler = (req, res, next) => {
+  req.requestId = req.get("x-request-id") ?? randomUUID();
+  res.set("x-request-id", req.requestId);
+  next();
+};
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l13">
+  <h2><span class="badge">មេរៀន ១៣</span>TypeScript + React</h2>
+  <script type="text/x-code" data-lang="ts" data-label="ProductCard.tsx">
+import { useState, type ReactNode, type ChangeEvent, type FormEvent } from "react";
+import type { Product } from "../../shared/types.ts";
+
+// Props
+interface ProductCardProps {
+  product: Product;
+  onAdd: (id: number, qty: number) => void;     // Callback prop
+  badge?: ReactNode;                            // optional, JSX ណាក៏បាន
+}
+
+export function ProductCard({ product, onAdd, badge }: ProductCardProps) {
+  const [qty, setQty] = useState(1);                              // number (Inference)
+  const [error, setError] = useState<string | null>(null);        // Generic ពេល Initial = null
+  return (
+    <article>
+      {badge}
+      <h3>{product.name}</h3>
+      <button onClick={() => onAdd(product.id, qty)}>＋ {qty}</button>
+      {error && <p role="alert">{error}</p>}
+    </article>
+  );
+}
+
+// Events
+function SearchBox({ onSearch }: { onSearch: (q: string) => void }) {
+  const [q, setQ] = useState("");
+  const change = (e: ChangeEvent<HTMLInputElement>) => setQ(e.target.value);
+  const submit = (e: FormEvent<HTMLFormElement>) => { e.preventDefault(); onSearch(q); };
+  return <form onSubmit={submit}><input value={q} onChange={change} /></form>;
+}
+
+// Generic hook
+function useFetch<T>(url: string) {
+  const [data, setData] = useState<T | null>(null);
+  // ... useEffect fetch → setData(json as T) (ល្អជាងនេះ: Validate ដោយ Zod)
+  return data;
+}
+const page = useFetch<Paginated<Product>>("/api/products");   // page?.data[0].name ✅
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១៣</h4>
+    <p>សរសេរ Props type សម្រាប់ <code class="i">&lt;Button&gt;</code> ដែលទទួល Props ទាំងអស់របស់ <code class="i">&lt;button&gt;</code> HTML បូក <code class="i">variant: "primary" | "ghost"</code> និង <code class="i">loading?: boolean</code>។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="ts" data-label="Button.tsx">
+import type { ComponentProps } from "react";
+
+type ButtonProps = ComponentProps<"button"> & { variant?: "primary" | "ghost"; loading?: boolean };
+
+export function Button({ variant = "primary", loading = false, children, disabled, ...rest }: ButtonProps) {
+  return (
+    <button className={`btn btn-${variant}`} disabled={disabled || loading} aria-busy={loading} {...rest}>
+      {loading ? "កំពុងដំណើរការ…" : children}
+    </button>
+  );
+}
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l14">
+  <h2><span class="badge">មេរៀន ១៤</span>Migration JS → TS, TypeScript 7, ESLint & Best Practices</h2>
+  <ol class="steps">
+    <li>ដំឡើង TypeScript + <code class="i">tsconfig.json</code> ជាមួយ <code class="i">allowJs: true</code>, <code class="i">checkJs: false</code></li>
+    <li>ប្តូរ File ម្តងមួយ <code class="i">.js</code> → <code class="i">.ts</code> ចាប់ពី Types/Utils (មិនពឹងលើគេ) ទៅ Routes/Components</li>
+    <li>ចាប់ផ្តើមដោយ <code class="i">strict: true</code> · Error ច្រើន → ជួសជុលម្តងមួយ (មិនមែន <code class="i">any</code> គ្រប់កន្លែង)</li>
+    <li>បន្ថែម <code class="i">npm run typecheck</code> ក្នុង CI (GitHub Actions) — Merge មិនបានបើ Type ខុស</li>
+    <li><b>typescript-eslint</b>៖ ច្បាប់ដូចជា <code class="i">no-explicit-any</code>, <code class="i">no-floating-promises</code></li>
+  </ol>
+  <h3>TypeScript 7 (Native compiler)</h3>
+  <ul>
+    <li>Compiler សរសេរឡើងវិញជា <b>Go</b> — Type-check គម្រោងធំលឿនប្រហែល 10 ដង · ដំឡើងដដែល៖ <code class="i">npm i -D typescript</code></li>
+    <li><code class="i">strict</code> ជា Default · Option ដែលបាន Deprecated ក្នុង 6.0 ក្លាយជា Error → ឡើង 6.0 មុន រួចទើប 7.0</li>
+    <li>Tooling ខ្លះដែលពឹងលើ TypeScript API (ឧ. typescript-eslint) អាចត្រូវការ <code class="i">@typescript/typescript6</code> បណ្តោះអាសន្ន</li>
+  </ul>
+  <h3>Best Practices</h3>
+  <table>
+    <tr><th>✅ ធ្វើ</th><th>❌ ជៀសវាង</th></tr>
+    <tr><td><code class="i">unknown</code> + Type guard / Zod</td><td><code class="i">any</code></td></tr>
+    <tr><td>Union + <code class="i">as const</code></td><td><code class="i">enum</code></td></tr>
+    <tr><td>Discriminated union សម្រាប់ State (loading/success/error)</td><td>Boolean ច្រើន (isLoading, isError, …)</td></tr>
+    <tr><td>Types រួម (shared) Backend/Frontend</td><td>Copy Type ដោយដៃ</td></tr>
+    <tr><td>Validate ទិន្នន័យពីខាងក្រៅ</td><td><code class="i">as Product</code> លើ JSON ដែលមិនទាន់ពិនិត្យ</td></tr>
+    <tr><td>Inference សម្រាប់ Local variables</td><td>សរសេរ Type គ្រប់ Variable</td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ១៤</h4>
+    <p>កែ State នេះឱ្យប្រើ Discriminated union៖ <code class="i">{ isLoading: boolean; error: string | null; data: Product[] | null }</code>។ ហេតុអ្វីល្អជាង?</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="ts" data-label="answer14.ts" data-demo data-tsrun="20">
+interface Product { id: number; name: string }
+type State =
+  | { status: "loading" }
+  | { status: "error"; error: string }
+  | { status: "success"; data: Product[] };
+
+function render(s: State): string {
+  switch (s.status) {
+    case "loading": return "⏳";
+    case "error": return `⚠ ${s.error}`;
+    case "success": return s.data.map(p => p.name).join(", ");   // data មានជានិច្ច
+  }
+}
+console.log(render({ status: "loading" }), render({ status: "success", data: [{ id: 1, name: "Latte" }] }));
+// ល្អជាង: មិនអាចមាន State មិនសមហេតុផល (isLoading=true ហើយមាន error និង data ព្រមគ្នា)
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="cheat">
+  <h2>📋 Cheat Sheet</h2>
+  <script type="text/x-code" data-lang="ts" data-label="TypeScript Cheat Sheet">
+let a: string; let b: number[]; let c: [string, number]; let d: "S" | "M" | "L";
+type Fn = (x: number) => string;                    interface I { readonly id: number; name?: string }
+type U = A | B;  type X = A & B;                    function f<T extends { id: number }>(x: T): T
+Partial<T>  Required<T>  Pick<T,K>  Omit<T,K>  Record<K,V>  Readonly<T>  ReturnType<F>  Awaited<P>
+keyof T   T[K]   typeof v   { [K in keyof T]: … }   T extends U ? X : Y   `a:${B}`   as const   satisfies
+unknown → narrow (typeof / in / instanceof / x is T)      never → exhaustive check
+import type { T } from "./t.ts"      declare global { namespace Express { interface Request { … } } }
+</script>
+</section>
+
+<!-- NAV: ផ្នែកទី ៣ – កម្រិតអាជីព -->
+<section class="hero" id="pro">
+  <h2>🏆 គម្រោងអាជីព: Kafe API ជា TypeScript + Shared Types + Typed Client</h2>
+  <p>បំប្លែង <b>Kafe REST API</b> (វគ្គ React + REST API) ទៅជា TypeScript ពេញលេញ៖ <b>Shared types</b> (Backend + React), Zod + <code class="i">z.infer</code>, Typed repository (node:sqlite), Typed middleware + Declaration merging, Error handling ជាមួយ <code class="i">unknown</code>, និង <b>Typed API client</b> ដែលប្រើ <code class="i">Result&lt;T&gt;</code>។ រត់ដោយ Node.js ផ្ទាល់ (គ្មាន Build)។</p>
+  <p><span class="badge">✔ tsc --noEmit: 0 errors</span><span class="badge">✔ node --test: 5/5 pass</span></p>
+</section>
+
+<section id="pro-structure">
+  <h2>🗂️ រចនាសម្ព័ន្ធ & Config</h2>
+  <script type="text/x-code" data-lang="txt" data-label="kafe-api-ts/">
+kafe-api-ts/
+├── package.json          ← "type": "module", scripts: dev / typecheck / test
+├── tsconfig.json         ← strict, nodenext, erasableSyntaxOnly, noEmit
+├── shared/
+│   ├── types.ts          ← Product, Category, Paginated<T>, ApiErrorBody… (React ប្រើដូចគ្នា)
+│   └── api-client.ts     ← createClient() + Result<T> (ប្រើក្នុង React និង Tests)
+├── src/
+│   ├── server.ts · app.ts · db.ts · schemas.ts
+│   ├── middleware/       ← auth.ts · validate.ts · errors.ts
+│   └── routes/           ← auth.ts · products.ts
+└── tests/products.test.ts
+</script>
+  <script type="text/x-code" data-lang="json" data-label="package.json">
+{
+  "name": "kafe-api-ts",
+  "version": "2.0.0",
+  "type": "module",
+  "engines": { "node": ">=22.18" },
+  "scripts": {
+    "dev": "node --watch --env-file=.env src/server.ts",
+    "start": "node --env-file=.env src/server.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/*.test.ts",
+    "check": "npm run typecheck && npm test"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.0.0",
+    "typescript": "^7.0.0"
+  }
+}
+</script>
+  <script type="text/x-code" data-lang="json" data-label="tsconfig.json">
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "nodenext",
+    "strict": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "skipLibCheck": true,
+    "types": ["node"]
+  },
+  "include": ["src", "tests", "shared"]
+}
+</script>
+</section>
+
+<section id="pro-code">
+  <h2>🧩 កូដសំខាន់ៗ</h2>
+  <script type="text/x-code" data-lang="ts" data-label="shared/types.ts">
+// Types ដែល Backend និង Frontend (React) ប្រើរួមគ្នា
+export const CATEGORIES = ["coffee", "tea", "bakery"] as const;
+export type Category = (typeof CATEGORIES)[number];          // "coffee" | "tea" | "bakery"
+
+export interface Product {
+  id: number;
+  name: string;
+  category: Category;
+  price: number;
+  stock: number;
+}
+
+export type Role = "admin" | "staff";
+export interface AuthUser { id: number; name: string; role: Role }
+
+export interface PageMeta { page: number; limit: number; total: number; pages: number }
+export interface Paginated<T> { data: T[]; meta: PageMeta }
+
+export interface ApiErrorBody { error: { message: string; details?: Record<string, string> } }
+export interface LoginResponse { token: string; user: AuthUser }
+</script>
+  <script type="text/x-code" data-lang="ts" data-label="src/schemas.ts">
+import { z } from "zod";
+import { CATEGORIES } from "../shared/types.ts";
+
+export const productCreate = z.object({
+  name: z.string().trim().min(2, "name ត្រូវមានយ៉ាងតិច 2 តួ"),
+  category: z.enum(CATEGORIES).default("coffee"),
+  price: z.number().positive("price ត្រូវជាលេខ > 0"),
+  stock: z.number().int().min(0).default(0),
+});
+export const productUpdate = productCreate.partial();
+
+export const listQuery = z.object({
+  search: z.string().trim().optional(),
+  category: z.enum(CATEGORIES).optional(),
+  sort: z.enum(["id", "-id", "name", "-name", "price", "-price"]).default("id"),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(50).default(10),
+});
+
+export const login = z.object({ email: z.email("អ៊ីមែលមិនត្រឹមត្រូវ"), password: z.string().min(6) });
+
+// Type ចេញពី Schema ដោយស្វ័យប្រវត្តិ — Validation និង Type មិនដែលខុសគ្នា
+export type ProductCreate = z.infer<typeof productCreate>;
+export type ProductUpdate = z.infer<typeof productUpdate>;
+export type ListQuery = z.infer<typeof listQuery>;
+export type LoginInput = z.infer<typeof login>;
+</script>
+  <script type="text/x-code" data-lang="ts" data-label="src/db.ts">
+import { DatabaseSync } from "node:sqlite";
+import bcrypt from "bcryptjs";
+import type { Product, Role } from "../shared/types.ts";
+import type { ListQuery, ProductCreate } from "./schemas.ts";
+
+export interface UserRow { id: number; name: string; email: string; password_hash: string; role: Role }
+
+// Repository: SQL នៅកន្លែងតែមួយ ហើយ Return Type ច្បាស់លាស់
+export interface ProductRepo {
+  list(q: ListQuery): { data: Product[]; total: number };
+  find(id: number): Product | undefined;
+  create(p: ProductCreate): Product;
+  update(id: number, p: Product): Product;
+  remove(id: number): boolean;
+}
+export interface UserRepo { findByEmail(email: string): UserRow | undefined }
+export interface Db { products: ProductRepo; users: UserRepo }
+
+const SORT = { id: "id", name: "name", price: "price" } as const satisfies Record<string, keyof Product>;
+type SortKey = keyof typeof SORT;
+
+export function openDb(file: string = process.env.DB_FILE ?? ":memory:"): Db {
+  const db = new DatabaseSync(file);
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL,
+      email TEXT NOT NULL UNIQUE, password_hash TEXT NOT NULL, role TEXT NOT NULL DEFAULT 'staff');
+    CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL,
+      category TEXT NOT NULL CHECK (category IN ('coffee','tea','bakery')),
+      price REAL NOT NULL CHECK (price > 0), stock INTEGER NOT NULL DEFAULT 0);
+  `);
+  const count = db.prepare("SELECT COUNT(*) AS n FROM products").get() as { n: number };
+  if (count.n === 0) {
+    const ins = db.prepare("INSERT INTO products (name, category, price, stock) VALUES (?, ?, ?, ?)");
+    const seed: Array<[string, string, number, number]> = [["Latte", "coffee", 2.5, 40], ["Americano", "coffee", 2.0, 35], ["Green Tea", "tea", 2.2, 25], ["Croissant", "bakery", 1.5, 12]];
+    for (const p of seed) ins.run(...p);
+    db.prepare("INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, 'admin')")
+      .run("Admin", "admin@kafe.com", bcrypt.hashSync("secret123", 10));
+  }
+
+  const products: ProductRepo = {
+    list({ search, category, sort, page, limit }) {
+      const where: string[] = [], args: Array<string | number> = [];
+      if (search) { where.push("name LIKE ?"); args.push(`%${search}%`); }
+      if (category) { where.push("category = ?"); args.push(category); }
+      const w = where.length ? `WHERE ${where.join(" AND ")}` : "";
+      const key = sort.replace("-", "") as SortKey;
+      const order = `${SORT[key]} ${sort.startsWith("-") ? "DESC" : "ASC"}`;
+      const { total } = db.prepare(`SELECT COUNT(*) AS total FROM products ${w}`).get(...args) as { total: number };
+      const data = db.prepare(`SELECT * FROM products ${w} ORDER BY ${order} LIMIT ? OFFSET ?`)
+        .all(...args, limit, (page - 1) * limit) as unknown as Product[];
+      return { data, total };
+    },
+    find: id => db.prepare("SELECT * FROM products WHERE id = ?").get(id) as Product | undefined,
+    create(p) {
+      const r = db.prepare("INSERT INTO products (name, category, price, stock) VALUES (?, ?, ?, ?)")
+        .run(p.name, p.category, p.price, p.stock);
+      return products.find(Number(r.lastInsertRowid))!;
+    },
+    update(id, p) {
+      db.prepare("UPDATE products SET name = ?, category = ?, price = ?, stock = ? WHERE id = ?")
+        .run(p.name, p.category, p.price, p.stock, id);
+      return products.find(id)!;
+    },
+    remove: id => Number(db.prepare("DELETE FROM products WHERE id = ?").run(id).changes) > 0,
+  };
+  const users: UserRepo = {
+    findByEmail: email => db.prepare("SELECT * FROM users WHERE email = ?").get(email) as UserRow | undefined,
+  };
+  return { products, users };
+}
+</script>
+  <script type="text/x-code" data-lang="ts" data-label="src/middleware/validate.ts">
+import type { RequestHandler } from "express";
+import type { z } from "zod";
+
+declare global {
+  namespace Express {
+    interface Request {
+      valid?: { body?: unknown; query?: unknown };   // Declaration merging: បន្ថែម Field ទៅ Request
+    }
+  }
+}
+
+export const validate = <S extends z.ZodType>(schema: S, where: "body" | "query" = "body"): RequestHandler =>
+  (req, res, next) => {
+    const r = schema.safeParse(req[where] ?? {});
+    if (!r.success) {
+      const details = Object.fromEntries(r.error.issues.map(i => [i.path.join(".") || where, i.message]));
+      res.status(422).json({ error: { message: "ទិន្នន័យមិនត្រឹមត្រូវ", details } });
+      return;
+    }
+    req.valid = { ...req.valid, [where]: r.data };
+    next();
+  };
+
+// Helper ដែលមាន Type: យកទិន្នន័យដែល Validate រួចជាមួយ Type ត្រឹមត្រូវ
+export const validBody = <S extends z.ZodType>(req: Express.Request, _schema: S) => req.valid?.body as z.infer<S>;
+export const validQuery = <S extends z.ZodType>(req: Express.Request, _schema: S) => req.valid?.query as z.infer<S>;
+</script>
+  <script type="text/x-code" data-lang="ts" data-label="src/middleware/auth.ts">
+import type { RequestHandler } from "express";
+import jwt from "jsonwebtoken";
+import type { AuthUser, Role } from "../../shared/types.ts";
+
+declare global {
+  namespace Express {
+    interface Request { user?: AuthUser }
+  }
+}
+
+// Type guard: ពិនិត្យ Payload ពី Token នៅ Runtime
+function isAuthUser(x: unknown): x is AuthUser {
+  return typeof x === "object" && x !== null && "id" in x && typeof x.id === "number"
+    && "role" in x && (x.role === "admin" || x.role === "staff");
+}
+
+export const requireAuth: RequestHandler = (req, res, next) => {
+  const [type, token] = (req.headers.authorization ?? "").split(" ");
+  if (type !== "Bearer" || !token) { res.status(401).json({ error: { message: "ត្រូវ Login ជាមុន" } }); return; }
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET ?? "", { algorithms: ["HS256"] });
+    if (!isAuthUser(payload)) throw new Error("bad payload");
+    req.user = { id: payload.id, name: payload.name, role: payload.role };
+    next();
+  } catch {
+    res.status(401).json({ error: { message: "Token មិនត្រឹមត្រូវ ឬផុតកំណត់" } });
+  }
+};
+
+export const requireRole = (role: Role): RequestHandler => (req, res, next) => {
+  if (req.user?.role === role) return next();
+  res.status(403).json({ error: { message: "គ្មានសិទ្ធិ" } });
+};
+</script>
+  <script type="text/x-code" data-lang="ts" data-label="src/middleware/errors.ts">
+import type { Request, Response, NextFunction } from "express";
+import type { ApiErrorBody } from "../../shared/types.ts";
+
+export class HttpError extends Error {
+  readonly status: number;
+  constructor(status: number, message: string) {   // គ្មាន parameter properties (erasableSyntaxOnly)
+    super(message);
+    this.status = status;
+  }
+}
+
+export function notFound(req: Request, res: Response<ApiErrorBody>): void {
+  res.status(404).json({ error: { message: `Not found: ${req.method} ${req.originalUrl}` } });
+}
+
+// unknown (មិនមែន any): ត្រូវពិនិត្យប្រភេទមុនប្រើ
+export function errorHandler(err: unknown, req: Request, res: Response<ApiErrorBody>, _next: NextFunction) {
+  const status = err instanceof HttpError ? err.status
+    : typeof err === "object" && err !== null && "status" in err && typeof err.status === "number" ? err.status : 500;
+  if (status === 500) console.error(err);
+  const message = status === 500 ? "Server error" : err instanceof Error ? err.message : "Error";
+  res.status(status).json({ error: { message } });
+}
+</script>
+  <script type="text/x-code" data-lang="ts" data-label="src/routes/products.ts">
+import { Router } from "express";
+import type { Db } from "../db.ts";
+import type { Paginated, Product } from "../../shared/types.ts";
+import { productCreate, productUpdate, listQuery } from "../schemas.ts";
+import { validate, validBody, validQuery } from "../middleware/validate.ts";
+import { requireAuth, requireRole } from "../middleware/auth.ts";
+import { HttpError } from "../middleware/errors.ts";
+
+export default function productRoutes(db: Db): Router {
+  const r = Router();
+  const findOr404 = (id: string | undefined): Product => {
+    const p = db.products.find(Number(id));
+    if (!p) throw new HttpError(404, "រកមិនឃើញផលិតផល");
+    return p;
+  };
+
+  r.get("/", validate(listQuery, "query"), (req, res) => {
+    const q = validQuery(req, listQuery);
+    const { data, total } = db.products.list(q);
+    const body: Paginated<Product> = { data, meta: { page: q.page, limit: q.limit, total, pages: Math.max(1, Math.ceil(total / q.limit)) } };
+    res.json(body);
+  });
+
+  r.get("/:id", (req, res) => { res.json(findOr404(req.params.id)); });
+
+  r.post("/", requireAuth, requireRole("admin"), validate(productCreate), (req, res) => {
+    const created = db.products.create(validBody(req, productCreate));
+    res.status(201).location(`/api/products/${created.id}`).json(created);
+  });
+
+  r.patch("/:id", requireAuth, requireRole("admin"), validate(productUpdate), (req, res) => {
+    const merged: Product = { ...findOr404(req.params.id), ...validBody(req, productUpdate) };
+    res.json(db.products.update(merged.id, merged));
+  });
+
+  r.delete("/:id", requireAuth, requireRole("admin"), (req, res) => {
+    if (!db.products.remove(findOr404(req.params.id).id)) throw new HttpError(500, "លុបមិនបាន");
+    res.status(204).end();
+  });
+
+  return r;
+}
+</script>
+  <script type="text/x-code" data-lang="ts" data-label="src/routes/auth.ts">
+import { Router } from "express";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import type { Db } from "../db.ts";
+import type { AuthUser, LoginResponse } from "../../shared/types.ts";
+import { login } from "../schemas.ts";
+import { validate, validBody } from "../middleware/validate.ts";
+import { requireAuth } from "../middleware/auth.ts";
+
+export default function authRoutes(db: Db): Router {
+  const r = Router();
+
+  r.post("/login", validate(login), async (req, res) => {
+    const { email, password } = validBody(req, login);
+    const user = db.users.findByEmail(email);
+    if (!user || !(await bcrypt.compare(password, user.password_hash))) {
+      res.status(401).json({ error: { message: "អ៊ីមែល ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ" } });
+      return;
+    }
+    const payload: AuthUser = { id: user.id, name: user.name, role: user.role };
+    const token = jwt.sign(payload, process.env.JWT_SECRET ?? "", { algorithm: "HS256", expiresIn: "2h" });
+    const body: LoginResponse = { token, user: payload };
+    res.json(body);
+  });
+
+  r.get("/me", requireAuth, (req, res) => { res.json(req.user); });
+  return r;
+}
+</script>
+  <script type="text/x-code" data-lang="ts" data-label="src/app.ts · src/server.ts">
+import express, { type Express } from "express";
+import cors from "cors";
+import type { Db } from "./db.ts";
+import authRoutes from "./routes/auth.ts";
+import productRoutes from "./routes/products.ts";
+import { notFound, errorHandler } from "./middleware/errors.ts";
+
+export function createApp(db: Db): Express {
+  const app = express();
+  app.use(cors({ origin: process.env.CLIENT_URL ?? "http://localhost:5173" }));
+  app.use(express.json({ limit: "100kb" }));
+  app.get("/api/health", (_req, res) => { res.json({ ok: true }); });
+  app.use("/api/auth", authRoutes(db));
+  app.use("/api/products", productRoutes(db));
+  app.use(notFound);
+  app.use(errorHandler);
+  return app;
+}
+
+import { openDb } from "./db.ts";
+import { createApp } from "./app.ts";
+
+const port = Number(process.env.PORT ?? 3000);
+if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET is required");
+createApp(openDb()).listen(port, () => console.log(`🚀 http://localhost:${port}/api/health`));
+</script>
+  <script type="text/x-code" data-lang="ts" data-label="shared/api-client.ts">
+// Typed API client សម្រាប់ React (client/src/api.ts) — ប្រើ Types ដូចគ្នានឹង Backend
+import type { ApiErrorBody, LoginResponse, Paginated, Product, Category } from "./types.ts";
+
+export class ApiError extends Error {
+  readonly status: number;
+  readonly details: Record<string, string> | undefined;
+  constructor(status: number, body: ApiErrorBody | undefined) {
+    super(body?.error.message ?? `HTTP ${status}`);
+    this.status = status;
+    this.details = body?.error.details;
+  }
+}
+
+export type Result<T> = { ok: true; data: T } | { ok: false; error: ApiError };
+
+export function createClient(base: string, getToken: () => string | null = () => null) {
+  async function request<T>(path: string, init: { method?: "GET" | "POST" | "PATCH" | "DELETE"; body?: unknown; signal?: AbortSignal } = {}): Promise<Result<T>> {
+    const token = getToken();
+    const res = await fetch(base + path, {
+      method: init.method ?? "GET",
+      ...(init.signal ? { signal: init.signal } : {}),
+      headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      ...(init.body !== undefined ? { body: JSON.stringify(init.body) } : {}),
+    });
+    if (res.status === 204) return { ok: true, data: undefined as T };
+    const json: unknown = await res.json().catch(() => undefined);
+    return res.ok ? { ok: true, data: json as T } : { ok: false, error: new ApiError(res.status, json as ApiErrorBody | undefined) };
+  }
+
+  return {
+    login: (email: string, password: string) => request<LoginResponse>("/auth/login", { method: "POST", body: { email, password } }),
+    listProducts: (q: { search?: string; category?: Category; page?: number; limit?: number } = {}, signal?: AbortSignal) => {
+      const qs = new URLSearchParams(Object.entries(q).filter(([, v]) => v !== undefined && v !== "").map(([k, v]) => [k, String(v)]));
+      return request<Paginated<Product>>(`/products?${qs}`, signal ? { signal } : {});
+    },
+    getProduct: (id: number) => request<Product>(`/products/${id}`),
+    createProduct: (p: Omit<Product, "id">) => request<Product>("/products", { method: "POST", body: p }),
+    updateProduct: (id: number, p: Partial<Omit<Product, "id">>) => request<Product>(`/products/${id}`, { method: "PATCH", body: p }),
+    deleteProduct: (id: number) => request<void>(`/products/${id}`, { method: "DELETE" }),
+  };
+}
+export type KafeClient = ReturnType<typeof createClient>;
+</script>
+  <script type="text/x-code" data-lang="ts" data-label="tests/products.test.ts">
+import { test, before, after } from "node:test";
+import assert from "node:assert/strict";
+import type { AddressInfo } from "node:net";
+import type { Server } from "node:http";
+import { openDb } from "../src/db.ts";
+import { createApp } from "../src/app.ts";
+import { createClient, type KafeClient } from "../shared/api-client.ts";
+
+process.env.JWT_SECRET = "test-secret-test-secret-test-secret";
+let server: Server, api: KafeClient, token: string | null = null;
+
+before(async () => {
+  server = createApp(openDb(":memory:")).listen(0);
+  await new Promise<void>(r => server.once("listening", () => r()));
+  api = createClient(`http://localhost:${(server.address() as AddressInfo).port}/api`, () => token);
+  const r = await api.login("admin@kafe.com", "secret123");
+  assert.ok(r.ok);
+  token = r.data.token;                       // Narrowing: r.ok === true → r.data មាន
+});
+after(() => server.close());
+
+test("list + pagination (typed)", async () => {
+  const r = await api.listProducts({ limit: 2 });
+  assert.ok(r.ok);
+  assert.equal(r.data.data.length, 2);
+  assert.deepEqual(r.data.meta, { page: 1, limit: 2, total: 4, pages: 2 });
+});
+
+test("filter by category", async () => {
+  const r = await api.listProducts({ category: "tea" });
+  assert.ok(r.ok);
+  assert.deepEqual(r.data.data.map(p => p.name), ["Green Tea"]);
+});
+
+test("validation → ApiError 422 with details", async () => {
+  const r = await api.createProduct({ name: "M", category: "coffee", price: -1, stock: 0 });
+  assert.ok(!r.ok);
+  assert.equal(r.error.status, 422);
+  assert.ok(r.error.details?.["name"] && r.error.details["price"]);
+});
+
+test("CRUD flow", async () => {
+  const c = await api.createProduct({ name: "Mocha", category: "coffee", price: 3, stock: 5 });
+  assert.ok(c.ok);
+  const u = await api.updateProduct(c.data.id, { price: 3.25 });
+  assert.ok(u.ok);
+  assert.equal(u.data.price, 3.25);
+  assert.ok((await api.deleteProduct(c.data.id)).ok);
+  const g = await api.getProduct(c.data.id);
+  assert.ok(!g.ok);
+  assert.equal(g.error.status, 404);
+});
+
+test("no token → 401", async () => {
+  const saved = token; token = null;
+  const r = await api.createProduct({ name: "Tea Latte", category: "tea", price: 2, stock: 1 });
+  token = saved;
+  assert.ok(!r.ok);
+  assert.equal(r.error.status, 401);
+});
+</script>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+cd kafe-api-ts
+npm install
+cp .env.example .env            # JWT_SECRET=...
+npm run typecheck               # tsc --noEmit → 0 errors
+npm test                        # ✔ 5 tests pass
+npm run dev                     # 🚀 http://localhost:3000/api/health
+</script>
+</section>
+
+<section id="pro-app">
+  <h2>▶ Typed client ផ្ទាល់ (tsc + រត់ជាមួយ Mock API)</h2>
+  <p>កូដខាងក្រោមត្រូវបាន Type-check ដោយ tsc ពិត ហើយរត់ក្នុង Browser ជាមួយ Mock API ដែលមាន Contract ដូច Kafe API៖ GET, POST មុន Login (401), Login, POST ទិន្នន័យខុស (422 + details), POST/PATCH/DELETE។ មើលពីរបៀបដែល <code class="i">Result&lt;T&gt;</code> បង្ខំឱ្យពិនិត្យ <code class="i">r.ok</code> មុនប្រើ <code class="i">r.data</code>។</p>
+  <script type="text/x-code" data-lang="ts" data-label="Kafe typed client (TypeScript)" data-demo data-mock data-tsrun="21">
+// ===== shared/types.ts (Backend + Frontend ប្រើរួមគ្នា) =====
+type Category = "coffee" | "tea" | "bakery";
+interface Product { id: number; name: string; category: Category; price: number; stock: number }
+interface Paginated<T> { data: T[]; meta: { page: number; limit: number; total: number; pages: number } }
+interface ApiErrorBody { error: { message: string; details?: Record<string, string> } }
+interface LoginResponse { token: string; user: { id: number; name: string; role: "admin" | "staff" } }
+
+// ===== Result<T>: Discriminated union — បង្ខំឱ្យដោះស្រាយ Error =====
+type Result<T> = { ok: true; data: T } | { ok: false; status: number; message: string; details?: Record<string, string> };
+
+// ===== shared/api-client.ts =====
+function createClient(base: string) {
+  let token: string | null = null;
+
+  async function request<T>(path: string, method: "GET" | "POST" | "PATCH" | "DELETE" = "GET", body?: unknown): Promise<Result<T>> {
+    const res = await fetch(base + path, {
+      method,
+      headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      body: body === undefined ? undefined : JSON.stringify(body),
+    });
+    if (res.status === 204) return { ok: true, data: undefined as T };
+    const json: unknown = await res.json();
+    if (res.ok) return { ok: true, data: json as T };
+    const err = (json as ApiErrorBody).error;
+    return { ok: false, status: res.status, message: err.message, details: err.details };
+  }
+
+  return {
+    async login(email: string, password: string): Promise<Result<LoginResponse>> {
+      const r = await request<LoginResponse>("/auth/login", "POST", { email, password });
+      if (r.ok) token = r.data.token;
+      return r;
+    },
+    listProducts: (q: { search?: string; category?: Category; limit?: number } = {}) =>
+      request<Paginated<Product>>("/products?" + new URLSearchParams(Object.entries(q).map(([k, v]) => [k, String(v)]))),
+    createProduct: (p: Omit<Product, "id">) => request<Product>("/products", "POST", p),
+    updateProduct: (id: number, p: Partial<Omit<Product, "id">>) => request<Product>(`/products/${id}`, "PATCH", p),
+    deleteProduct: (id: number) => request<void>(`/products/${id}`, "DELETE"),
+  };
+}
+
+// ===== ប្រើប្រាស់ (ដូចក្នុង React component) =====
+function show<T>(label: string, r: Result<T>, pick: (data: T) => unknown): void {
+  if (r.ok) console.log(`✅ ${label}:`, pick(r.data));        // r.data មាន Type T
+  else console.warn(`❌ ${label}: ${r.status} ${r.message}`, r.details ?? "");
+}
+
+async function main(): Promise<void> {
+  const api = createClient("/api");
+
+  show("GET coffee", await api.listProducts({ category: "coffee", limit: 3 }),
+       d => d.data.map(p => `${p.name} $${p.price.toFixed(2)}`));
+
+  show("POST មុន Login", await api.createProduct({ name: "Mocha", category: "coffee", price: 3, stock: 5 }), p => p.name);
+
+  show("Login", await api.login("admin@kafe.com", "secret123"), d => d.user);
+
+  show("POST invalid", await api.createProduct({ name: "M", category: "tea", price: 0, stock: 0 }), p => p.name);
+
+  const created = await api.createProduct({ name: "Mocha", category: "coffee", price: 3, stock: 5 });
+  show("POST Mocha", created, p => p);
+  if (created.ok) {
+    show("PATCH price", await api.updateProduct(created.data.id, { price: 3.25 }), p => p.price);
+    show("DELETE", await api.deleteProduct(created.data.id), () => "204 No Content");
+  }
+
+  // ❗ បើបើកបន្ទាត់ខាងក្រោម tsc នឹងរាយការណ៍ Error មុនរត់:
+  // api.createProduct({ name: "Tea", category: "juice", price: "2" });
+}
+main();
+</script>
+</section>
+
+<section id="pro-check">
+  <h2>✅ Checklist & គម្រោងចុងក្រោយ</h2>
+  <table>
+    <tr><th>ពិនិត្យ</th><th>✔</th></tr>
+    <tr><td><code class="i">strict: true</code> + <code class="i">noUncheckedIndexedAccess</code> · <code class="i">tsc --noEmit</code> = 0 errors ក្នុង CI</td><td>☐</td></tr>
+    <tr><td>គ្មាន <code class="i">any</code> (ESLint no-explicit-any) · ទិន្នន័យខាងក្រៅជា <code class="i">unknown</code> + Zod</td><td>☐</td></tr>
+    <tr><td>Types រួម Backend/Frontend (shared/) · Types ចេញពី Zod (<code class="i">z.infer</code>)</td><td>☐</td></tr>
+    <tr><td>Discriminated unions សម្រាប់ State/Result · Exhaustive checks</td><td>☐</td></tr>
+    <tr><td><code class="i">import type</code> · គ្មាន enum/parameter properties (erasable)</td><td>☐</td></tr>
+  </table>
+  <div class="ex"><h4>🏁 លំហាត់គម្រោងចុងក្រោយ</h4>
+    <ol>
+      <li>បំប្លែង React client (វគ្គ React) ទៅ <code class="i">react-ts</code> ហើយប្រើ <code class="i">shared/types.ts</code> និង <code class="i">createClient()</code></li>
+      <li>បន្ថែម Resource <b>orders</b>៖ Schema (Zod), Types, Repository, Routes, Tests</li>
+      <li>Typed hook <code class="i">useProducts()</code> ដែល Return Discriminated union State</li>
+      <li>GitHub Actions៖ <code class="i">npm run typecheck</code> + <code class="i">npm test</code> រាល់ PR</li>
+      <li>(បន្ថែម) Monorepo ដោយ npm workspaces៖ <code class="i">packages/shared</code>, <code class="i">apps/api</code>, <code class="i">apps/web</code></li>
+    </ol>
+  </div>
+</section>
+
+<section id="roadmap">
+  <h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+  <ol class="steps">
+    <li><b>TypeScript</b> — មេរៀន ១–១៤ ✅</li>
+    <li><b>PostgreSQL + Prisma/Drizzle</b> — ORM ដែលបង្កើត Type ពី Database</li>
+    <li><b>Testing</b> — Vitest, Playwright (TypeScript)</li>
+    <li><b>Next.js</b> + Tailwind CSS (TypeScript ជា Default)</li>
+    <li><b>tRPC / OpenAPI codegen</b> — Type-safe API ពី Server ទៅ Client ដោយស្វ័យប្រវត្តិ</li>
+  </ol>
+  <p><b>ប្រភពរៀនបន្ថែម:</b> <a href="https://www.typescriptlang.org/docs/handbook/intro.html" target="_blank">TypeScript Handbook</a> · <a href="https://www.typescriptlang.org/play" target="_blank">TS Playground</a> · <a href="https://nodejs.org/api/typescript.html" target="_blank">Node.js TypeScript</a> · <a href="https://react-typescript-cheatsheet.netlify.app" target="_blank">React TS Cheatsheet</a> · <a href="https://zod.dev" target="_blank">zod.dev</a></p>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http') ? 'm' : '') : esc(code);
+
+const TSRUNS = [{"js": "(() => {\n  let shop = \"Kafe\";\n  let price = 2.5;\n  const open = true;\n  let maybe = null;\n  price = price * 2;\n  console.log(shop, price, open, maybe);\n  price = \"\\u1790\\u17D2\\u179B\\u17C3\";\n  console.log(shop.toUppercase());\n})();\n", "diags": [{"line": 10, "col": 1, "code": 2322, "msg": "Type 'string' is not assignable to type 'number'."}, {"line": 11, "col": 18, "code": 2551, "msg": "Property 'toUppercase' does not exist on type 'string'. Did you mean 'toUpperCase'?"}]}, {"js": "(() => {\n  const name = \"\\u179F\\u17BB\\u1781 \\u178A\\u17B6\\u179A\\u17B6\";\n  const age = 20;\n  let paid = false;\n  let phone = null;\n  phone = \"012345678\";\n  console.log({ name, age, paid, phone });\n})();\n", "diags": []}, {"js": "(() => {\n  const prices = [2.5, 2, 1.5];\n  const names = [\"Latte\", \"Tea\"];\n  const pair = [\"Latte\", 2.5];\n  const product = {\n    id: 1,\n    name: \"Latte\",\n    price: 2.5\n  };\n  product.price = 2.8;\n  console.log(prices.map((p) => p * 2), names.join(\", \"), pair[0], product);\n  console.log(product.note?.toUpperCase() ?? \"\\u1782\\u17D2\\u1798\\u17B6\\u1793 note\");\n  product.id = 2;\n  prices.push(\"3\");\n})();\n", "diags": [{"line": 13, "col": 9, "code": 2540, "msg": "Cannot assign to 'id' because it is a read-only property."}, {"line": 14, "col": 13, "code": 2345, "msg": "Argument of type 'string' is not assignable to parameter of type 'number'."}, {"line": 15, "col": 32, "code": 2322, "msg": "Type 'number' is not assignable to type 'string'."}, {"line": 15, "col": 37, "code": 2322, "msg": "Type 'string' is not assignable to type 'number'."}]}, {"js": "(() => {\n  const orders = [\n    { id: 1, items: [[\"Latte\", 2], [\"Croissant\", 1]], paid: true },\n    { id: 2, items: [[\"Green Tea\", 3]], paid: false, note: \"\\u179F\\u17D2\\u1780\\u179A\\u178F\\u17B7\\u1785\" }\n  ];\n  const cups = orders.flatMap((o) => o.items).reduce((sum, [, qty]) => sum + qty, 0);\n  console.log(\"\\u1785\\u17C6\\u1793\\u17BD\\u1793\\u179F\\u179A\\u17BB\\u1794:\", cups);\n})();\n", "diags": []}, {"js": "(() => {\n  function total(price, qty = 1, discount) {\n    const sum = price * qty;\n    return discount ? sum * (1 - discount) : sum;\n  }\n  const khr = (usd) => `${(usd * 4100).toLocaleString()} \\u17DB`;\n  function applyAll(values, fn) {\n    return values.map(fn);\n  }\n  function log(msg) {\n    console.log(\"\\u{1F4DD}\", msg);\n  }\n  log(`\\u179F\\u179A\\u17BB\\u1794: $${total(2.5, 3, 0.1)}`);\n  log(khr(10));\n  log(String(applyAll([1, 2, 3], (v) => v * 10)));\n  total(2.5, \"3\");\n  total();\n})();\n", "diags": [{"line": 21, "col": 12, "code": 2345, "msg": "Argument of type 'string' is not assignable to parameter of type 'number'."}, {"line": 22, "col": 1, "code": 2554, "msg": "Expected 1-3 arguments, but got 0."}]}, {"js": "(() => {\n  function formatPrice(amount, currency = \"USD\") {\n    return currency === \"USD\" ? `$${amount.toFixed(2)}` : `${Math.round(amount).toLocaleString()} \\u17DB`;\n  }\n  console.log(formatPrice(2.5), formatPrice(10250, \"KHR\"));\n})();\n", "diags": []}, {"js": "(() => {\n  function priceFor(size) {\n    switch (size) {\n      case \"S\":\n        return 2;\n      case \"M\":\n        return 2.5;\n      case \"L\":\n        return 3;\n    }\n  }\n  function describe(id) {\n    if (typeof id === \"number\") return `#${id.toFixed(0)}`;\n    return id.toUpperCase();\n  }\n  function paymentText(p) {\n    switch (p.status) {\n      case \"paid\":\n        return `\\u1794\\u17B6\\u1793\\u1794\\u1784\\u17CB $${p.amount} (${p.method})`;\n      case \"pending\":\n        return `\\u179A\\u1784\\u17CB\\u1785\\u17B6\\u17C6 \\u178A\\u179B\\u17CB ${p.dueDate}`;\n      case \"failed\":\n        return `\\u1794\\u179A\\u17B6\\u1787\\u17D0\\u1799: ${p.reason}`;\n      default: {\n        const never = p;\n        return never;\n      }\n    }\n  }\n  console.log(priceFor(\"M\"), describe(7), describe(\"kafe-01\"));\n  console.log(paymentText({ status: \"paid\", amount: 5, method: \"khqr\" }));\n  console.log(paymentText({ status: \"failed\", reason: \"\\u179F\\u1798\\u178F\\u17BB\\u179B\\u17D2\\u1799\\u1798\\u17B7\\u1793\\u1782\\u17D2\\u179A\\u1794\\u17CB\" }));\n  priceFor(\"XL\");\n})();\n", "diags": [{"line": 38, "col": 10, "code": 2345, "msg": "Argument of type '\"XL\"' is not assignable to parameter of type 'Size'."}]}, {"js": "(() => {\n  function area(s) {\n    return s.kind === \"circle\" ? Math.PI * s.radius ** 2 : s.width * s.height;\n  }\n  console.log(area({ kind: \"circle\", radius: 1 }).toFixed(2), area({ kind: \"rect\", width: 2, height: 3 }));\n})();\n", "diags": []}, {"js": "(() => {\n  const item = { id: 1, createdAt: /* @__PURE__ */ new Date(\"2026-01-05\"), name: \"Latte\", price: 2.5, category: \"coffee\", stock: 40 };\n  const usd = (m) => `$${m.toFixed(2)}`;\n  console.log(item.name, usd(item.price), item.stock);\n})();\n", "diags": [{"line": 19, "col": 7, "code": 2741, "msg": "Property 'category' is missing in type '{ id: number; createdAt: Date; name: string; price: number; }' but required in type 'Product'."}]}, {"js": "(() => {\n  const a = { id: 1, name: \"Dara\", email: \"dara@kafe.com\", permissions: [\"products:write\", \"users:read\"] };\n  console.log(`${a.name} \\u1798\\u17B6\\u1793\\u179F\\u17B7\\u1791\\u17D2\\u1792\\u17B7 ${a.permissions.length}`);\n})();\n", "diags": []}, {"js": "(() => {\n  function first(items) {\n    return items[0];\n  }\n  const n = first([10, 20]);\n  const s = first([\"Latte\", \"Tea\"]);\n  const page = { data: [{ id: 1, name: \"Latte\", price: 2.5 }], meta: { page: 1, total: 1 } };\n  function byId(items, id) {\n    return items.find((x) => x.id === id);\n  }\n  function pluck(items, key) {\n    return items.map((x) => x[key]);\n  }\n  console.log(n, s, byId(page.data, 1)?.name, pluck(page.data, \"price\"));\n  pluck(page.data, \"cost\");\n})();\n", "diags": [{"line": 24, "col": 18, "code": 2345, "msg": "Argument of type '\"cost\"' is not assignable to parameter of type 'keyof Product'."}]}, {"js": "(() => {\n  function groupBy(items, getKey) {\n    const out = {};\n    for (const item of items) (out[getKey(item)] ??= []).push(item);\n    return out;\n  }\n  const menu = [\n    { name: \"Latte\", category: \"coffee\" },\n    { name: \"Green Tea\", category: \"tea\" },\n    { name: \"Americano\", category: \"coffee\" }\n  ];\n  const g = groupBy(menu, (p) => p.category);\n  console.log(g.coffee?.map((p) => p.name), g.tea?.length);\n})();\n", "diags": []}, {"js": "(() => {\n  const patch = { price: 2.8 };\n  const card = { name: \"Latte\", price: 2.5 };\n  const stock = { Latte: 40, Tea: 25 };\n  const frozen = { id: 1, name: \"Latte\", price: 2.5, stock: 40, category: \"coffee\" };\n  console.log(patch, card, stock);\n  frozen.price = 3;\n})();\n", "diags": [{"line": 21, "col": 8, "code": 2540, "msg": "Cannot assign to 'price' because it is a read-only property."}, {"line": 22, "col": 7, "code": 2739, "msg": "Type '{ name: string; price: number; }' is missing the following properties from type 'NewProduct': stock, category"}]}, {"js": "(() => {\n  const toPublic = ({ passwordHash, ...rest }) => rest;\n  const u = { id: 1, name: \"Dara\", email: \"d@kafe.com\", passwordHash: \"$2b$\\u2026\", role: \"staff\" };\n  const upd = { name: \"Sok Dara\" };\n  console.log(toPublic(u), upd);\n})();\n", "diags": []}, {"js": "(() => {\n  const CATEGORIES = [\"coffee\", \"tea\", \"bakery\"];\n  const PRICES = { coffee: 2.5, tea: 2.2, bakery: 1.5 };\n  const touched = { name: true };\n  const ev = \"product:created\";\n  console.log(CATEGORIES, PRICES.tea, touched, ev);\n})();\n", "diags": [{"line": 26, "col": 7, "code": 2322, "msg": "Type '\"juice\"' is not assignable to type '\"coffee\" | \"tea\" | \"bakery\"'."}, {"line": 27, "col": 7, "code": 2322, "msg": "Type '\"product:archived\"' is not assignable to type '\"product:created\" | \"product:updated\" | \"product:deleted\"'."}]}, {"js": "(() => {\n  function validate(f) {\n    const e = {};\n    if (f.name.trim().length < 2) e.name = \"\\u1788\\u17D2\\u1798\\u17C4\\u17C7\\u1781\\u17D2\\u179B\\u17B8\\u1796\\u17C1\\u1780\";\n    if (!(f.price > 0)) e.price = \"\\u178F\\u1798\\u17D2\\u179B\\u17C3\\u178F\\u17D2\\u179A\\u17BC\\u179C > 0\";\n    return e;\n  }\n  console.log(validate({ name: \"M\", price: 0, category: \"tea\" }));\n})();\n", "diags": []}, {"js": "(() => {\n  class Cash {\n    name = \"Cash\";\n    pay(amount) {\n      return `\\u1791\\u1791\\u17BD\\u179B\\u179F\\u17B6\\u1785\\u17CB\\u1794\\u17D2\\u179A\\u17B6\\u1780\\u17CB $${amount}`;\n    }\n  }\n  class Khqr {\n    name = \"KHQR\";\n    #merchantId;\n    // # = Private ពិត (JavaScript)\n    constructor(merchantId) {\n      this.#merchantId = merchantId;\n    }\n    pay(amount) {\n      return `\\u179F\\u17D2\\u1780\\u17C1\\u1793 QR ${this.#merchantId} \\xB7 $${amount}`;\n    }\n  }\n  class Discount {\n    describe(total) {\n      return `$${total} \\u2192 $${this.apply(total).toFixed(2)}`;\n    }\n  }\n  class Percent extends Discount {\n    rate;\n    constructor(rate) {\n      super();\n      this.rate = rate;\n    }\n    apply(total) {\n      return total * (1 - this.rate);\n    }\n  }\n  const methods = [new Cash(), new Khqr(\"KAFE-001\")];\n  methods.forEach((m) => console.log(m.name, \"\\u2192\", m.pay(7.5)));\n  console.log(new Percent(0.1).describe(20));\n  new Discount();\n})();\n", "diags": [{"line": 31, "col": 1, "code": 2511, "msg": "Cannot create an instance of an abstract class."}]}, {"js": "(() => {\n  class Card {\n    name = \"Card\";\n    feeRate = 0.02;\n    pay(amount) {\n      const total = amount * (1 + this.feeRate);\n      return `\\u1780\\u17B6\\u178F $${amount} + \\u179F\\u17C1\\u179C\\u17B6 = $${total.toFixed(2)}`;\n    }\n  }\n  console.log(new Card().pay(10));\n})();\n", "diags": []}, {"js": "(() => {\n  const fromApi = JSON.parse('{\"name\":\"Latte\",\"price\":2.5}');\n  function isProduct(x) {\n    return typeof x === \"object\" && x !== null && \"name\" in x && typeof x.name === \"string\" && \"price\" in x && typeof x.price === \"number\";\n  }\n  if (isProduct(fromApi)) console.log(\"\\u2705\", fromApi.name, fromApi.price);\n  const risky = fromApi;\n  console.log(risky.prcie);\n  console.log(fromApi.name);\n  const el = document.getElementById(\"out\");\n  console.log(el.tagName);\n})();\n", "diags": [{"line": 15, "col": 13, "code": 18046, "msg": "'fromApi' is of type 'unknown'."}]}, {"js": "(() => {\n  function isStringArray(x) {\n    return Array.isArray(x) && x.every((v) => typeof v === \"string\");\n  }\n  const data = JSON.parse('[\"Latte\",\"Tea\"]');\n  if (isStringArray(data)) console.log(data.map((s) => s.toUpperCase()));\n})();\n", "diags": []}, {"js": "(() => {\n  function render(s) {\n    switch (s.status) {\n      case \"loading\":\n        return \"\\u23F3\";\n      case \"error\":\n        return `\\u26A0 ${s.error}`;\n      case \"success\":\n        return s.data.map((p) => p.name).join(\", \");\n    }\n  }\n  console.log(render({ status: \"loading\" }), render({ status: \"success\", data: [{ id: 1, name: \"Latte\" }] }));\n})();\n", "diags": []}, {"js": "(() => {\n  function createClient(base) {\n    let token = null;\n    async function request(path, method = \"GET\", body) {\n      const res = await fetch(base + path, {\n        method,\n        headers: { \"Content-Type\": \"application/json\", ...token ? { Authorization: `Bearer ${token}` } : {} },\n        body: body === void 0 ? void 0 : JSON.stringify(body)\n      });\n      if (res.status === 204) return { ok: true, data: void 0 };\n      const json = await res.json();\n      if (res.ok) return { ok: true, data: json };\n      const err = json.error;\n      return { ok: false, status: res.status, message: err.message, details: err.details };\n    }\n    return {\n      async login(email, password) {\n        const r = await request(\"/auth/login\", \"POST\", { email, password });\n        if (r.ok) token = r.data.token;\n        return r;\n      },\n      listProducts: (q = {}) => request(\"/products?\" + new URLSearchParams(Object.entries(q).map(([k, v]) => [k, String(v)]))),\n      createProduct: (p) => request(\"/products\", \"POST\", p),\n      updateProduct: (id, p) => request(`/products/${id}`, \"PATCH\", p),\n      deleteProduct: (id) => request(`/products/${id}`, \"DELETE\")\n    };\n  }\n  function show(label, r, pick) {\n    if (r.ok) console.log(`\\u2705 ${label}:`, pick(r.data));\n    else console.warn(`\\u274C ${label}: ${r.status} ${r.message}`, r.details ?? \"\");\n  }\n  async function main() {\n    const api = createClient(\"/api\");\n    show(\n      \"GET coffee\",\n      await api.listProducts({ category: \"coffee\", limit: 3 }),\n      (d) => d.data.map((p) => `${p.name} $${p.price.toFixed(2)}`)\n    );\n    show(\"POST \\u1798\\u17BB\\u1793 Login\", await api.createProduct({ name: \"Mocha\", category: \"coffee\", price: 3, stock: 5 }), (p) => p.name);\n    show(\"Login\", await api.login(\"admin@kafe.com\", \"secret123\"), (d) => d.user);\n    show(\"POST invalid\", await api.createProduct({ name: \"M\", category: \"tea\", price: 0, stock: 0 }), (p) => p.name);\n    const created = await api.createProduct({ name: \"Mocha\", category: \"coffee\", price: 3, stock: 5 });\n    show(\"POST Mocha\", created, (p) => p);\n    if (created.ok) {\n      show(\"PATCH price\", await api.updateProduct(created.data.id, { price: 3.25 }), (p) => p.price);\n      show(\"DELETE\", await api.deleteProduct(created.data.id), () => \"204 No Content\");\n    }\n  }\n  main();\n})();\n", "diags": []}], RUNS = [], RUNTIME = "", MOCK = "/* Mock REST API in the browser: same contract as the Express API in the course (/api/...). */\n(() => {\n  const realFetch = window.fetch.bind(window);\n  let nextId = 9;\n  const db = {\n    products: [\n      { id: 1, name: \"Latte\", category: \"coffee\", price: 2.5, stock: 40 },\n      { id: 2, name: \"Americano\", category: \"coffee\", price: 2.0, stock: 35 },\n      { id: 3, name: \"Iced Khmer Coffee\", category: \"coffee\", price: 1.8, stock: 50 },\n      { id: 4, name: \"Cappuccino\", category: \"coffee\", price: 2.8, stock: 20 },\n      { id: 5, name: \"Green Tea\", category: \"tea\", price: 2.2, stock: 25 },\n      { id: 6, name: \"Lemon Tea\", category: \"tea\", price: 1.5, stock: 30 },\n      { id: 7, name: \"Croissant\", category: \"bakery\", price: 1.5, stock: 12 },\n      { id: 8, name: \"Banana Cake\", category: \"bakery\", price: 1.2, stock: 0 },\n    ],\n    users: [{ id: 1, name: \"Admin\", email: \"admin@kafe.com\", password: \"secret123\", role: \"admin\" }],\n  };\n  const TOKEN = \"demo.jwt.admin\";\n  const json = (status, body, extra = {}) =>\n    new Response(status === 204 ? null : JSON.stringify(body), { status, headers: { \"Content-Type\": \"application/json\", ...extra } });\n  const err = (status, message, details) => json(status, { error: { message, ...(details ? { details } : {}) } });\n\n  function validate(b, partial) {\n    const d = {};\n    if (!partial || \"name\" in b) { if (typeof b.name !== \"string\" || b.name.trim().length < 2) d.name = \"name ត្រូវមានយ៉ាងតិច 2 តួ\"; }\n    if (!partial || \"price\" in b) { if (typeof b.price !== \"number\" || !(b.price > 0)) d.price = \"price ត្រូវជាលេខ > 0\"; }\n    if (\"category\" in b && ![\"coffee\", \"tea\", \"bakery\"].includes(b.category)) d.category = \"category: coffee | tea | bakery\";\n    if (\"stock\" in b && !(Number.isInteger(b.stock) && b.stock >= 0)) d.stock = \"stock ត្រូវជាចំនួនគត់ ≥ 0\";\n    return Object.keys(d).length ? d : null;\n  }\n\n  function handle(method, url, headers, body) {\n    const auth = headers.get(\"Authorization\") === \"Bearer \" + TOKEN;\n    const p = url.pathname, q = url.searchParams;\n    if (p === \"/api/auth/login\" && method === \"POST\") {\n      const u = db.users.find(u => u.email === body?.email && u.password === body?.password);\n      return u ? json(200, { token: TOKEN, user: { id: u.id, name: u.name, role: u.role } }) : err(401, \"អ៊ីមែល ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ\");\n    }\n    if (p === \"/api/auth/me\" && method === \"GET\") return auth ? json(200, { id: 1, name: \"Admin\", role: \"admin\" }) : err(401, \"Unauthorized\");\n    if (p === \"/api/products\" && method === \"GET\") {\n      let rows = [...db.products];\n      const s = (q.get(\"search\") || \"\").toLowerCase();\n      if (s) rows = rows.filter(r => r.name.toLowerCase().includes(s));\n      if (q.get(\"category\")) rows = rows.filter(r => r.category === q.get(\"category\"));\n      const sort = q.get(\"sort\") || \"id\";\n      const desc = sort.startsWith(\"-\"), key = sort.replace(\"-\", \"\");\n      rows.sort((a, b) => (a[key] > b[key] ? 1 : a[key] < b[key] ? -1 : 0) * (desc ? -1 : 1));\n      const limit = Math.min(Math.max(parseInt(q.get(\"limit\")) || 10, 1), 50);\n      const page = Math.max(parseInt(q.get(\"page\")) || 1, 1);\n      const total = rows.length;\n      return json(200, { data: rows.slice((page - 1) * limit, page * limit), meta: { page, limit, total, pages: Math.max(1, Math.ceil(total / limit)) } });\n    }\n    const m = p.match(/^\\/api\\/products\\/(\\d+)$/);\n    if (p === \"/api/products\" && method === \"POST\") {\n      if (!auth) return err(401, \"ត្រូវ Login ជាមុន\");\n      const d = validate(body || {}, false); if (d) return err(422, \"ទិន្នន័យមិនត្រឹមត្រូវ\", d);\n      const row = { id: nextId++, name: body.name.trim(), category: body.category || \"coffee\", price: body.price, stock: body.stock ?? 0 };\n      db.products.push(row);\n      return json(201, row, { Location: \"/api/products/\" + row.id });\n    }\n    if (m) {\n      const i = db.products.findIndex(r => r.id === +m[1]);\n      if (method === \"GET\") return i < 0 ? err(404, \"រកមិនឃើញផលិតផល\") : json(200, db.products[i]);\n      if (!auth) return err(401, \"ត្រូវ Login ជាមុន\");\n      if (i < 0) return err(404, \"រកមិនឃើញផលិតផល\");\n      if (method === \"PUT\" || method === \"PATCH\") {\n        const d = validate(body || {}, method === \"PATCH\"); if (d) return err(422, \"ទិន្នន័យមិនត្រឹមត្រូវ\", d);\n        db.products[i] = { ...db.products[i], ...body, id: db.products[i].id };\n        return json(200, db.products[i]);\n      }\n      if (method === \"DELETE\") { db.products.splice(i, 1); return json(204); }\n    }\n    return err(p.startsWith(\"/api/products\") ? 405 : 404, \"Not found: \" + method + \" \" + p);\n  }\n\n  window.fetch = async (input, init = {}) => {\n    const url = new URL(typeof input === \"string\" ? input : input.url, \"http://localhost:3000\");\n    if (!url.pathname.startsWith(\"/api/\")) return realFetch(input, init);\n    const method = (init.method || \"GET\").toUpperCase();\n    const headers = new Headers(init.headers || {});\n    let body = null;\n    try { body = init.body ? JSON.parse(init.body) : null; } catch { body = \"__bad__\"; }\n    const t0 = performance.now();\n    await new Promise((res, rej) => {\n      const t = setTimeout(res, 250 + Math.random() * 250);\n      init.signal?.addEventListener(\"abort\", () => { clearTimeout(t); rej(new DOMException(\"Aborted\", \"AbortError\")); });\n    });\n    const resp = body === \"__bad__\" ? err(400, \"JSON មិនត្រឹមត្រូវ\") : handle(method, url, headers, body);\n    window.dispatchEvent(new CustomEvent(\"api\", { detail: { method, url: url.pathname + url.search, status: resp.status, ms: Math.round(performance.now() - t0) } }));\n    return resp;\n  };\n})();\n";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="ts"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

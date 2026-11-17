@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyber Security កម្រិតខ្ពស់</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#5f3dc4; --accent2:#7950f2; --accent-soft:#f3f0ff;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#b197fc; --accent2:#d0bfff; --accent-soft:#1a1233;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#b197fc; --accent2:#d0bfff; --accent-soft:#1a1233;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#0f0a22,#5f3dc4 55%,#15aabf);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/cy3.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/cy3.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Cyber Security កម្រិតខ្ពស់៖ SOC · Incident Response · Cloud</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Cyber Security ជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#setup">២. ត្រៀមខ្លួន</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Frameworks — NIST CSF 2.0 · ISO 27001 · CIS</a>
+<a href="#l2">មេរៀន ២: Risk management</a>
+<a href="#l3">មេរៀន ៣: Logging &amp; SIEM</a>
+<a href="#l4">មេរៀន ៤: Threat intelligence &amp; MITRE ATT&amp;CK</a>
+<a href="#l5">មេរៀន ៥: Detection engineering</a>
+<a href="#l6">មេរៀន ៦: Incident response (NIST SP 800-61)</a>
+<a href="#l7">មេរៀន ៧: Digital forensics — Evidence &amp; Chain of custody</a>
+<a href="#l8">មេរៀន ៨: Vulnerability management &amp; CVSS</a>
+<a href="#l9">មេរៀន ៩: Cloud security &amp; IAM</a>
+<a href="#l10">មេរៀន ១០: Zero Trust</a>
+<a href="#l11">មេរៀន ១១: BCP/DR — RTO · RPO</a>
+<a href="#l12">មេរៀន ១២: អាជីព SOC &amp; វិញ្ញាបនបត្រ</a>
+<a href="#cheat">📋 សង្ខេប</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោង</a>
+<a href="#pro-app">💻 Cyber Lab (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🛰️ Cyber Security កម្រិតខ្ពស់ (៣/៣) — SOC &amp; Incident Response</h2>
+  <p><b>NIST CSF 2.0</b>, ISO 27001, Risk, <b>Log &amp; SIEM</b>, <b>MITRE ATT&amp;CK</b>, Detection rules, <b>Incident response</b>, Forensics, <b>CVSS</b>, Cloud IAM, <b>Zero Trust</b>, RTO/RPO និងអាជីព — Code Python តិចតួច សម្រាប់វិភាគ Log។</p>
+  <p><span class="badge">📘 ១២ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">💻 Code មានពណ៌ + លទ្ធផល</span><span class="badge">🛡️ Cyber Lab</span></p>
+</section>
+<section id="intro">
+<h2>១. Cyber Security ជាអ្វី? អ្នកណាបង្កើត?</h2>
+
+<div class="warn">⚠️ វគ្គនេះសម្រាប់ <b>ការពារ (Defensive)</b>។ ការចូលប្រព័ន្ធ/គណនីរបស់អ្នកដទៃ ឬស្កេន/វាយប្រហារបណ្តាញ <b>ដោយគ្មានការអនុញ្ញាតជាលាយលក្ខណ៍អក្សរ</b> គឺខុសច្បាប់ ហើយអាចបង្កគ្រោះថ្នាក់ពិត។ ហាត់តែលើឧបករណ៍ផ្ទាល់ខ្លួន Lab ឬ CTF ស្របច្បាប់ប៉ុណ្ណោះ។</div>
+
+<p>កម្រិតខ្ពស់៖ <b>Security operations</b> — ការគ្រប់គ្រងហានិភ័យ, Logging &amp; <b>SIEM</b>, Threat intelligence &amp; <b>MITRE ATT&amp;CK</b>, Detection rules, <b>Incident response</b> (NIST), Digital forensics, Vulnerability management (CVSS), <b>Cloud security</b>, <b>Zero Trust</b>, BCP/DR និងអាជីព SOC — មាន Code Python តិចតួច សម្រាប់វិភាគ Log និងទិន្នន័យ។</p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#868e96"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#868e96">1988</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">CERT/CC</text><circle cx="200" cy="115" r="11" fill="#1c7ed6"/><text x="200" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#1c7ed6">2005</text><text x="200" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">ISO 27001</text><circle cx="320" cy="115" r="11" fill="#7048e8"/><text x="320" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#7048e8">2008</text><text x="320" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">CIS Controls</text><circle cx="440" cy="115" r="11" fill="#0ca678"/><text x="440" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#0ca678">2010</text><text x="440" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Zero Trust (Forrester)</text><circle cx="560" cy="115" r="11" fill="#e8590c"/><text x="560" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#e8590c">2013</text><text x="560" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">MITRE ATT&amp;CK</text><circle cx="680" cy="115" r="11" fill="#e03131"/><text x="680" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#e03131">2020</text><text x="680" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">SolarWinds · NIST 800-207</text><circle cx="800" cy="115" r="11" fill="#d6336c"/><text x="800" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#d6336c">2022</text><text x="800" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">ISO 27001:2022</text><circle cx="920" cy="115" r="11" fill="#495057"/><text x="920" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#495057">2024</text><text x="920" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">NIST CSF 2.0</text></svg><figcaption>🖼️ ប្រវត្តិសុវត្ថិភាពព័ត៌មានវិទ្យា</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>1988</td><td><b>CERT/CC</b> (Carnegie Mellon)</td><td>ក្រុមឆ្លើយតបឧប្បត្តិហេតុដំបូង បន្ទាប់ពី Morris worm</td></tr><tr><td>2010</td><td><b>John Kindervag</b> (Forrester)</td><td>គំនិត <b>Zero Trust</b> — «Never trust, always verify»</td></tr><tr><td>2013–2015</td><td><b>MITRE</b></td><td><b>ATT&amp;CK</b> — Tactics &amp; techniques របស់អ្នកវាយប្រហារ</td></tr><tr><td>2020</td><td><b>SolarWinds</b> supply-chain attack · <b>NIST SP 800-207</b></td><td>Supply chain risk · Zero Trust architecture</td></tr><tr><td>2024</td><td><b>NIST CSF 2.0</b></td><td>Govern · Identify · Protect · Detect · Respond · Recover</td></tr></table>
+
+<div class="grid"><div class="card"><b>🛰️ SOC</b><br>តាមដាន ២៤/៧</div><div class="card"><b>🚒 Incident response</b><br>ឆ្លើយតប Ransomware/Phishing</div><div class="card"><b>☁️ Cloud</b><br>AWS · Azure · GCP</div><div class="card"><b>🏦 ធនាគារ/Telco</b><br>តម្រូវការបទប្បញ្ញត្តិ</div></div>
+
+</section>
+<section id="setup">
+<h2>២. ត្រៀមខ្លួន</h2>
+<ol class='steps'><li>Python 3 (Standard library)។</li><li>Lab ស្របច្បាប់៖ Security Onion / Wazuh / Elastic (ដំណើរការលើ VM ខ្លួនឯង) · Blue team labs (TryHackMe SOC, CyberDefenders)។</li><li>អាន៖ NIST CSF 2.0 · NIST SP 800-61 · MITRE ATT&amp;CK។</li></ol><div class="warn">⚠️ វគ្គនេះសម្រាប់ <b>ការពារ (Defensive)</b>។ ការចូលប្រព័ន្ធ/គណនីរបស់អ្នកដទៃ ឬស្កេន/វាយប្រហារបណ្តាញ <b>ដោយគ្មានការអនុញ្ញាតជាលាយលក្ខណ៍អក្សរ</b> គឺខុសច្បាប់ ហើយអាចបង្កគ្រោះថ្នាក់ពិត។ ហាត់តែលើឧបករណ៍ផ្ទាល់ខ្លួន Lab ឬ CTF ស្របច្បាប់ប៉ុណ្ណោះ។</div>
+</section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>Frameworks — NIST CSF 2.0 · ISO 27001 · CIS</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="125.0" height="96" rx="14" fill="#495057"/><text x="82.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Govern</text><text x="82.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">គោលនយោបាយ</text><line x1="147.0" y1="82" x2="173.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="175.0" y="34" width="125.0" height="96" rx="14" fill="#1c7ed6"/><text x="237.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Identify</text><text x="237.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ទ្រព្យ &amp; ហានិភ័យ</text><line x1="302.0" y1="82" x2="328.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="330.0" y="34" width="125.0" height="96" rx="14" fill="#2f9e44"/><text x="392.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Protect</text><text x="392.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ការពារ</text><line x1="457.0" y1="82" x2="483.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="485.0" y="34" width="125.0" height="96" rx="14" fill="#f59f00"/><text x="547.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Detect</text><text x="547.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">រកឃើញ</text><line x1="612.0" y1="82" x2="638.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="640.0" y="34" width="125.0" height="96" rx="14" fill="#e8590c"/><text x="702.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Respond</text><text x="702.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ឆ្លើយតប</text><line x1="767.0" y1="82" x2="793.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="795.0" y="34" width="125.0" height="96" rx="14" fill="#7048e8"/><text x="857.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Recover</text><text x="857.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ស្តារ</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">NIST CSF 2.0 — ៦ មុខងារ</text></svg><figcaption>🖼️ Frameworks — NIST CSF 2.0 · ISO 27001 · CIS</figcaption></figure>
+<table><tr><th>Framework</th><th>ប្រើសម្រាប់</th></tr><tr><td>NIST CSF 2.0</td><td>រចនាសម្ព័ន្ធកម្មវិធីសុវត្ថិភាព</td></tr><tr><td>ISO/IEC 27001:2022</td><td>ISMS — វិញ្ញាបនបត្រ (Annex A ៩៣ Controls)</td></tr><tr><td>CIS Controls v8</td><td>បញ្ជីការងារជាក់ស្តែង ១៨ ក្រុម</td></tr><tr><td>PCI DSS</td><td>កាតទូទាត់</td></tr></table>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>ក្រុមហ៊ុនចង់បានវិញ្ញាបនបត្រដែលអតិថិជនអន្តរជាតិទទួលស្គាល់។ Framework អ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>ISO/IEC 27001</b>។</p></details></div>
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>Risk management</h2>
+<script type="text/x-code" data-lang="py" data-label="risk.py">
+risks = [("Phishing → Account takeover", 4, 4), ("Ransomware on file server", 3, 5), ("Laptop stolen (unencrypted)", 3, 3), ("DDoS on website", 2, 3), ("Insider data leak", 2, 4)]
+print(f"{'Risk':32s} L  I  Score  Level")
+for name, l, i in sorted(risks, key=lambda r: -r[1] * r[2]):
+    s = l * i; lvl = "🔴 High" if s >= 15 else "🟠 Medium" if s >= 8 else "🟢 Low"
+    print(f"{name:32s} {l}  {i}  {s:>5}  {lvl}")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>Risk                             L  I  Score  Level
+Phishing → Account takeover      4  4     16  🔴 High
+Ransomware on file server        3  5     15  🔴 High
+Laptop stolen (unencrypted)      3  3      9  🟠 Medium
+Insider data leak                2  4      8  🟠 Medium
+DDoS on website                  2  3      6  🟢 Low</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Risk = Likelihood × Impact (Matrix 5×5)។</li><li>ការឆ្លើយតប៖ <b>Mitigate</b> · Transfer (ធានារ៉ាប់រង) · Avoid · Accept។</li><li>Risk register ត្រូវពិនិត្យជាប្រចាំ។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>Laptop មិន Encrypt ត្រូវលួច — Mitigation ល្អបំផុត?</p><details><summary>មើលចម្លើយ</summary><p><b>Full-disk encryption</b> (BitLocker/FileVault) + MDM ដើម្បីលុបពីចម្ងាយ។</p></details></div>
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Logging &amp; SIEM</h2>
+<script type="text/x-code" data-lang="py" data-label="siem.py">
+import re
+from collections import Counter
+log = """Nov 16 01:02:11 web sshd[811]: Failed password for root from 198.51.100.23 port 51512
+Nov 16 01:02:13 web sshd[811]: Failed password for root from 198.51.100.23 port 51518
+Nov 16 01:02:15 web sshd[811]: Failed password for admin from 198.51.100.23 port 51522
+Nov 16 01:02:18 web sshd[811]: Failed password for root from 198.51.100.23 port 51530
+Nov 16 01:02:20 web sshd[811]: Failed password for ubuntu from 198.51.100.23 port 51541
+Nov 16 08:15:40 web sshd[902]: Accepted publickey for dara from 10.0.0.15 port 60011
+Nov 16 23:40:01 web sshd[999]: Failed password for root from 203.0.113.99 port 40001
+Nov 16 23:40:09 web sshd[999]: Accepted password for root from 203.0.113.99 port 40009"""
+fails = Counter(re.findall(r"Failed password for \S+ from ([\d.]+)", log))
+ok = set(re.findall(r"Accepted \w+ for \S+ from ([\d.]+)", log))
+for ip, n in fails.items():
+    print(f"{ip:15s} failed={n} success={'YES' if ip in ok else 'no'} → {'🔴 Possible compromise' if ip in ok else '🟠 Brute force' if n >= 5 else '🟢'}")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>198.51.100.23   failed=5 success=no → 🟠 Brute force
+203.0.113.99    failed=1 success=YES → 🔴 Possible compromise</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Log សំខាន់៖ Authentication · Firewall · DNS · Proxy · Endpoint (EDR) · Cloud audit។</li><li>SIEM (Splunk, Elastic, Wazuh, Sentinel) ប្រមូល Log → Correlate → Alert។</li><li>Root login ដោយ Password ពី IP ក្រៅ បន្ទាប់ពីបរាជ័យ = <b>Alert ខ្ពស់</b>។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>Alert៖ User Login ពីភ្នំពេញ ហើយ ១០ នាទីក្រោយពីប្រទេសផ្សេង។ ហៅថាអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Impossible travel</b> — សញ្ញាគណនីត្រូវលួច។</p></details></div>
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Threat intelligence &amp; MITRE ATT&amp;CK</h2>
+<table><tr><th>Tactic (គោលដៅ)</th><th>Technique ឧទាហរណ៍</th><th>Detection</th></tr><tr><td>Initial access</td><td>Phishing (T1566)</td><td>Email gateway · User reports</td></tr><tr><td>Execution</td><td>PowerShell (T1059.001)</td><td>Script block logging</td></tr><tr><td>Persistence</td><td>Scheduled task (T1053)</td><td>Monitor task creation</td></tr><tr><td>Credential access</td><td>Brute force (T1110)</td><td>Failed login spikes</td></tr><tr><td>Exfiltration</td><td>Over web service (T1567)</td><td>Unusual upload volume</td></tr></table>
+<div class="note">💡 IOC (Indicators of compromise)៖ IP, Domain, Hash · TTP (Tactics, Techniques, Procedures) មានតម្លៃជាងព្រោះពិបាកប្តូរ (Pyramid of Pain — David Bianco)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>ហេតុអ្វី TTP មានតម្លៃជាង IP address ក្នុង Threat intel?</p><details><summary>មើលចម្លើយ</summary><p>អ្នកវាយប្រហារប្តូរ IP បានងាយ តែប្តូរ <b>វិធីធ្វើការ (TTP)</b> ពិបាក។</p></details></div>
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>Detection engineering</h2>
+<script type="text/x-code" data-lang="py" data-label="detect.py">
+events = [{"proc": "winword.exe", "child": "powershell.exe", "cmd": "-enc SQBFAFgA"},
+          {"proc": "explorer.exe", "child": "chrome.exe", "cmd": ""},
+          {"proc": "excel.exe", "child": "cmd.exe", "cmd": "/c whoami"}]
+rule = {"name": "Office spawning shell", "parents": {"winword.exe", "excel.exe", "outlook.exe"}, "children": {"powershell.exe", "cmd.exe", "wscript.exe"} }
+for e in events:
+    hit = e["proc"] in rule["parents"] and e["child"] in rule["children"]
+    print(f"{e['proc']:12s} → {e['child']:15s} {'🚨 ' + rule['name'] if hit else 'ok'}")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>winword.exe  → powershell.exe  🚨 Office spawning shell
+explorer.exe → chrome.exe      ok
+excel.exe    → cmd.exe         🚨 Office spawning shell</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Rule ល្អ៖ ផ្អែកលើ <b>ឥរិយាបថ</b> (Office បើក PowerShell) ជាង Hash ជាក់លាក់។</li><li>ស្តង់ដារចែករំលែក Rule៖ <b>Sigma</b>។</li><li>វាស់៖ True positive / False positive — កែ Rule កុំឲ្យ Alert fatigue។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>ហេតុអ្វី Word បើក PowerShell ជាសញ្ញាគួរឲ្យសង្ស័យ?</p><details><summary>មើលចម្លើយ</summary><p>ឯកសារ Office ធម្មតាមិនត្រូវការ Shell — ជាសញ្ញា Macro អាក្រក់ពី Phishing។</p></details></div>
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Incident response (NIST SP 800-61)</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="125.0" height="96" rx="14" fill="#1c7ed6"/><text x="82.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Preparation</text><text x="82.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Playbook · Tools</text><line x1="147.0" y1="82" x2="173.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="175.0" y="34" width="125.0" height="96" rx="14" fill="#f59f00"/><text x="237.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Detection &amp; Analysis</text><text x="237.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Triage</text><line x1="302.0" y1="82" x2="328.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="330.0" y="34" width="125.0" height="96" rx="14" fill="#e8590c"/><text x="392.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Containment</text><text x="392.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ញែក</text><line x1="457.0" y1="82" x2="483.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="485.0" y="34" width="125.0" height="96" rx="14" fill="#e03131"/><text x="547.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Eradication</text><text x="547.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">លុបចោល</text><line x1="612.0" y1="82" x2="638.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="640.0" y="34" width="125.0" height="96" rx="14" fill="#2f9e44"/><text x="702.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Recovery</text><text x="702.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ស្តារ</text><line x1="767.0" y1="82" x2="793.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="795.0" y="34" width="125.0" height="96" rx="14" fill="#7048e8"/><text x="857.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Lessons learned</text><text x="857.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">កែលម្អ</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">វដ្ត Incident response</text></svg><figcaption>🖼️ Incident response (NIST SP 800-61)</figcaption></figure>
+<table><tr><th>Phishing playbook</th><th>សកម្មភាព</th></tr><tr><td>1. Triage</td><td>បញ្ជាក់ថាជា Phishing · អ្នកណាទទួល/ចុច?</td></tr><tr><td>2. Contain</td><td>លុប Email ពីប្រអប់ទាំងអស់ · Block domain · Reset password + Revoke sessions</td></tr><tr><td>3. Investigate</td><td>ពិនិត្យ Login · Mailbox rules · Endpoint</td></tr><tr><td>4. Recover</td><td>ផ្ទៀងផ្ទាត់គណនី · MFA</td></tr><tr><td>5. Lessons</td><td>Awareness · កែ Filter</td></tr></table>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>Ransomware រកឃើញលើកុំព្យូទ័រ ១ គ្រឿង។ ជំហាន Containment ដំបូង?</p><details><summary>មើលចម្លើយ</summary><p><b>ញែកម៉ាស៊ីនចេញពីបណ្តាញ</b> (ផ្តាច់ Network — កុំបិទភ្លាមបើត្រូវរក្សាភស្តុតាង Memory) ហើយជូនដំណឹងក្រុម IR។</p></details></div>
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Digital forensics — Evidence &amp; Chain of custody</h2>
+<script type="text/x-code" data-lang="py" data-label="forensics.py">
+import hashlib, tempfile, os
+p = os.path.join(tempfile.mkdtemp(), "evidence.log"); open(p, "w").write("auth log copy …\n" * 100)
+def sha256(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(8192), b""): h.update(chunk)
+    return h.hexdigest()
+h1 = sha256(p); print("Acquired hash:", h1[:32] + "…")
+print("Verify later :", "✅ unchanged" if sha256(p) == h1 else "❌ modified")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>Acquired hash: 96f3463f16727f559edef72ded459dcf…
+Verify later : ✅ unchanged</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li><b>Order of volatility</b>៖ Memory → Network → Disk → Logs → Backups។</li><li>ថតចម្លង (Image) ហើយធ្វើការលើច្បាប់ចម្លង · Hash ផ្ទៀងផ្ទាត់។</li><li><b>Chain of custody</b>៖ កត់អ្នកណាកាន់ ពេលណា ហេតុអ្វី — សំខាន់សម្រាប់តុលាការ។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>ហេតុអ្វីត្រូវ Hash ភស្តុតាង?</p><details><summary>មើលចម្លើយ</summary><p>ដើម្បីបង្ហាញថា <b>មិនត្រូវកែប្រែ</b> តាំងពីប្រមូល (Integrity)។</p></details></div>
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Vulnerability management &amp; CVSS</h2>
+<script type="text/x-code" data-lang="py" data-label="vuln.py">
+vulns = [("CVE-A web RCE", 9.8, True, True), ("CVE-B printer info leak", 5.3, False, False), ("CVE-C VPN auth bypass", 9.1, True, True), ("CVE-D internal app XSS", 6.1, False, False)]
+sla = lambda s, exposed, exploited: "48 ម៉ោង" if s >= 9 and (exposed or exploited) else "7 ថ្ងៃ" if s >= 7 else "30 ថ្ងៃ" if s >= 4 else "90 ថ្ងៃ"
+for name, cvss, exposed, kev in sorted(vulns, key=lambda v: (-(v[3]), -v[1])):
+    print(f"{name:24s} CVSS {cvss:>4}  Internet={exposed!s:5s} Known-exploited={kev!s:5s} → Patch {sla(cvss, exposed, kev)}")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>CVE-A web RCE            CVSS  9.8  Internet=True  Known-exploited=True  → Patch 48 ម៉ោង
+CVE-C VPN auth bypass    CVSS  9.1  Internet=True  Known-exploited=True  → Patch 48 ម៉ោង
+CVE-D internal app XSS   CVSS  6.1  Internet=False Known-exploited=False → Patch 30 ថ្ងៃ
+CVE-B printer info leak  CVSS  5.3  Internet=False Known-exploited=False → Patch 30 ថ្ងៃ</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li><b>CVSS</b> (0–10) វាស់ភាពធ្ងន់ · ប៉ុន្តែអាទិភាពពិតគិតពី <b>Exposure</b> និង <b>Known exploited</b> (ឧ. CISA KEV)។</li><li>វដ្ត៖ Discover → Prioritise → Remediate → Verify → Report។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>CVE CVSS 9.8 លើ Server ខាងក្នុងគ្មាន Internet vs CVE 8.1 លើ VPN ដែលកំពុងត្រូវវាយ។ មួយណាមុន?</p><details><summary>មើលចម្លើយ</summary><p><b>VPN 8.1 (Known exploited + Internet-facing)</b> មុន។</p></details></div>
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Cloud security &amp; IAM</h2>
+<table><tr><th>Shared responsibility</th><th>Cloud provider</th><th>អតិថិជន</th></tr><tr><td>Data centre រូបវន្ត</td><td>✅</td><td></td></tr><tr><td>Hypervisor/Hardware</td><td>✅</td><td></td></tr><tr><td>IAM · Data · Config</td><td></td><td>✅</td></tr><tr><td>Bucket សាធារណៈ (Misconfig)</td><td></td><td>✅ — មូលហេតុលេចធ្លាយញឹកញាប់</td></tr></table>
+<script type="text/x-code" data-lang="py" data-label="iam.py">
+policy = {"user": "intern", "actions": ["s3:GetObject", "s3:*", "iam:*"], "resource": "*"}
+issues = []
+if any(a.endswith(":*") or a == "*" for a in policy["actions"]): issues.append("Wildcard actions — មិន Least privilege")
+if policy["resource"] == "*": issues.append("Resource * — ចូលបានគ្រប់ Bucket")
+if any(a.startswith("iam:") for a in policy["actions"]): issues.append("IAM permissions → Privilege escalation")
+print("\n".join("⚠️ " + i for i in issues))
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>⚠️ Wildcard actions — មិន Least privilege
+⚠️ Resource * — ចូលបានគ្រប់ Bucket
+⚠️ IAM permissions → Privilege escalation</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>Bucket S3 មានទិន្នន័យអតិថិជន ត្រូវកំណត់ Public។ អ្នកណាទទួលខុសត្រូវ?</p><details><summary>មើលចម្លើយ</summary><p><b>អតិថិជន</b> (Configuration) — តាម Shared responsibility model។</p></details></div>
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>Zero Trust</h2>
+<table><tr><th>ចាស់ (Perimeter)</th><th>Zero Trust</th></tr><tr><td>ខាងក្នុង = ទុកចិត្ត</td><td>គ្មានអ្វីទុកចិត្តដោយស្វ័យប្រវត្តិ</td></tr><tr><td>VPN ចូលទាំងបណ្តាញ</td><td>ចូលតែ App ដែលត្រូវការ (ZTNA)</td></tr><tr><td>Password តែម្យ៉ាង</td><td>MFA + Device posture</td></tr></table>
+<div class="grid"><div class="card"><b>🔍 Verify explicitly</b><br>Identity · Device health · Location គ្រប់ Request</div><div class="card"><b>🔒 Least privilege</b><br>Just-in-time · Just-enough access</div><div class="card"><b>💥 Assume breach</b><br>Segmentation · Monitor · Encrypt</div></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>បុគ្គលិកភ្ជាប់ VPN រួច អាចចូល Server ទាំងអស់។ ខុស Zero Trust ត្រង់ណា?</p><details><summary>មើលចម្លើយ</summary><p>ខុស <b>Least privilege</b> និង <b>Verify explicitly</b> — គួរចូលបានតែ App ដែលត្រូវការ។</p></details></div>
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>BCP/DR — RTO · RPO</h2>
+<script type="text/x-code" data-lang="py" data-label="bcp.py">
+systems = [("Core banking", 1, 0.25, 0.25), ("Email", 8, 4, 4), ("Website", 4, 24, 24), ("HR system", 24, 24, 168)]
+print(f"{'System':14s} RTO(h) RPO(h) Backup every(h)  OK?")
+for name, rto, rpo, backup_every in systems:
+    print(f"{name:14s} {rto:>6} {rpo:>6} {backup_every:>15}  {'✅' if backup_every <= rpo else '❌ Backup យឺតជាង RPO'}")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>System         RTO(h) RPO(h) Backup every(h)  OK?
+Core banking        1   0.25            0.25  ✅
+Email               8      4               4  ✅
+Website             4     24              24  ✅
+HR system          24     24             168  ❌ Backup យឺតជាង RPO</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li><b>RTO</b> = រយៈពេលអតិបរមាដែលប្រព័ន្ធអាចគាំង · <b>RPO</b> = ទិន្នន័យអតិបរមាដែលអាចបាត់ (គិតជាពេល)។</li><li>Backup ញឹកញាប់ជាង RPO · Immutable/Offline backup ការពារ Ransomware។</li><li>ធ្វើ <b>Tabletop exercise</b> និង DR test ជាប្រចាំ។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>RPO 1 ម៉ោង តែ Backup រៀងរាល់ថ្ងៃ។ បញ្ហា?</p><details><summary>មើលចម្លើយ</summary><p>អាចបាត់ទិន្នន័យដល់ ២៤ ម៉ោង — <b>មិនបំពេញ RPO</b> → Backup/Replication ញឹកជាង។</p></details></div>
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>អាជីព SOC &amp; វិញ្ញាបនបត្រ</h2>
+<table><tr><th>កម្រិត</th><th>វិញ្ញាបនបត្រ (ឧ.)</th><th>តួនាទី</th></tr><tr><td>ចាប់ផ្តើម</td><td>CompTIA Security+ · ISC2 CC</td><td>SOC Analyst L1</td></tr><tr><td>មធ្យម</td><td>CompTIA CySA+ · Blue Team Level 1 · GIAC</td><td>SOC L2 · Incident responder</td></tr><tr><td>Offensive (មានការអនុញ្ញាត)</td><td>eJPT · OSCP</td><td>Penetration tester</td></tr><tr><td>គ្រប់គ្រង</td><td>CISSP · CISM · ISO 27001 Lead Auditor</td><td>Security manager · CISO</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ហាត់ស្របច្បាប់៖ CTF (picoCTF), Blue team labs, Home lab (Wazuh/Security Onion)។</li><li>សរសេរ Blog/Write-up · GitHub Detection rules → Portfolio។</li><li>ចូលរួមសហគមន៍សុវត្ថិភាពក្នុងស្រុក និង OWASP chapter។</li></ol></div>
+<div class="warn">⚠️ ក្រមសីលធម៌៖ ការស្កេន ឬតេស្តប្រព័ន្ធដោយគ្មាន <b>ការអនុញ្ញាតជាលាយលក្ខណ៍អក្សរ (Scope)</b> គឺខុសច្បាប់ ទោះមានចេតនាល្អក៏ដោយ។ បើរកឃើញចន្លោះប្រហោង ប្រើ <b>Responsible disclosure</b>។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>អ្នករកឃើញចន្លោះប្រហោងលើ Website ក្រុមហ៊ុនមួយដោយចៃដន្យ។ ធ្វើអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>កុំទាញយក/កែទិន្នន័យ · ជូនដំណឹងក្រុមហ៊ុនតាមឆានែលផ្លូវការ (security.txt/Bug bounty) · រង់ចាំគេជួសជុលមុនផ្សព្វផ្សាយ (Responsible disclosure)។</p></details></div>
+</section>
+<section id="cheat">
+<h2>📋 សង្ខេប</h2>
+<table><tr><th>គោលការណ៍</th><th>ន័យ</th></tr><tr><td>NIST CSF 2.0</td><td>Govern · Identify · Protect · Detect · Respond · Recover</td></tr><tr><td>Risk = L × I</td><td></td></tr><tr><td>IR</td><td>Prepare → Detect → Contain → Eradicate → Recover → Lessons</td></tr><tr><td>Order of volatility</td><td>Memory → Network → Disk</td></tr><tr><td>Patch priority</td><td>Known exploited + Exposed មុន</td></tr><tr><td>Zero Trust</td><td>Verify explicitly · Least privilege · Assume breach</td></tr><tr><td>RTO / RPO</td><td>ពេលគាំង / ទិន្នន័យបាត់</td></tr></table>
+</section>
+<section id="pro">
+<h2>🏆 គម្រោង</h2>
+<ol class='steps'><li>ដំឡើង Home SOC lab (Wazuh ឬ Elastic) លើ VM ខ្លួនឯង ហើយប្រមូល Log ពី Linux + Windows VM។</li><li>សរសេរ Detection rules ៣ (Brute force · Office→Shell · New admin user)។</li><li>ធ្វើ Tabletop exercise «Ransomware លើ File server» តាម NIST IR។</li><li>Risk register ១០ ហានិភ័យ + BCP (RTO/RPO) សម្រាប់ក្រុមហ៊ុនគំរូ។</li><li>Report + Presentation ១០ នាទី។</li></ol></section>
+<section id="pro-app">
+<h2>💻 Cyber Lab (App)</h2>
+
+<p><b>🔑 Password</b> (Entropy &amp; ពេលទាយ) · <b>#️⃣ Hash</b> (SHA-256 &amp; Avalanche) · <b>🎣 Phishing game</b> (១០ ករណីពីកម្ពុជា) · <b>📜 Log analyzer</b> (រក Brute force) · <b>🧱 Firewall</b> (First-match &amp; Default deny) — ទាំងអស់ដំណើរការក្នុង Browser មិនផ្ញើទិន្នន័យចេញ។</p>
+
+<div class="itk" id="cy">
+<div class="itk-tabs"><button class="on" data-t="pw">🔑 Password</button><button data-t="h">#️⃣ Hash</button><button data-t="ph">🎣 Phishing game</button><button data-t="lg">📜 Log analyzer</button><button data-t="fw">🧱 Firewall</button></div>
+
+<div class="itk-p on" data-p="pw">
+ <p class="vl-tip">វាយពាក្យសម្ងាត់សាកល្បង (កុំវាយពាក្យសម្ងាត់ពិតរបស់អ្នក) — ការគណនាធ្វើក្នុង Browser របស់អ្នក មិនផ្ញើទៅណាទេ។</p>
+ <div class="itk-row"><label>ពាក្យសម្ងាត់<input id="pw_in" type="text" value="Phnom Penh 2026!" autocomplete="off" style="width:240px"></label>
+ <label>ល្បឿនទាយ<select id="pw_sp"><option value="1e4">10K/វិនាទី (Online)</option><option value="1e10" selected>10 ពាន់លាន/វិនាទី (GPU offline)</option></select></label></div>
+ <div class="itk-out" id="pw_out"></div>
+</div>
+
+<div class="itk-p" data-p="h">
+ <div class="itk-row"><label>អក្សរ<input id="h_in" value="xCenBar Rean Free" style="width:240px"></label><label>Algorithm<select id="h_alg"><option>SHA-256</option><option>SHA-1</option><option>SHA-512</option></select></label></div>
+ <div class="itk-out" id="h_out" style="font-family:monospace;font-size:13px;word-break:break-all"></div>
+</div>
+
+<div class="itk-p" data-p="ph">
+ <div class="itk-out" id="ph_q"></div>
+ <div class="itk-row"><button class="btn" id="ph_ok">✅ ពិត/សុវត្ថិភាព</button><button class="btn" id="ph_bad" style="background:#e03131;color:#fff;border-color:#e03131">🎣 បោក (Phishing)</button><button class="btn" id="ph_next">⏭ បន្ទាប់</button></div>
+ <div class="itk-out" id="ph_out"></div>
+</div>
+
+<div class="itk-p" data-p="lg">
+ <div class="itk-row"><label>កម្រិតបរាជ័យ (ដង)<input id="lg_th" type="number" value="5" style="width:80px"></label><button class="btn" id="lg_go">🔍 វិភាគ</button><button class="btn" id="lg_demo">📋 Log គំរូ</button></div>
+ <textarea id="lg_in" rows="8" style="width:100%;font-family:monospace;font-size:12.5px"></textarea>
+ <div class="itk-out" id="lg_out"></div>
+</div>
+
+<div class="itk-p" data-p="fw">
+ <p class="vl-tip">ច្បាប់អានពីលើចុះក្រោម — ច្បាប់ដំបូងដែលត្រូវ ជាអ្នកសម្រេច (First match)។ ចុងក្រោយ <b>Default deny</b>។</p>
+ <textarea id="fw_rules" rows="6" style="width:100%;font-family:monospace;font-size:12.5px">allow tcp 443 any
+allow tcp 80 any
+allow tcp 22 10.0.0.0/24
+deny tcp 3389 any
+allow udp 53 any</textarea>
+ <div class="itk-row"><label>Protocol<select id="fw_p"><option>tcp</option><option>udp</option></select></label><label>Port<input id="fw_port" type="number" value="22" style="width:90px"></label><label>Source IP<input id="fw_ip" value="203.0.113.7" style="width:140px"></label><button class="btn" id="fw_go">▶ តេស្ត Packet</button></div>
+ <div class="itk-out" id="fw_out"></div>
+</div>
+</div>
+<script>
+(() => {
+const $ = id => document.getElementById(id), root = $("cy");
+root.querySelectorAll(".itk-tabs button").forEach(b => b.onclick = () => { root.querySelectorAll(".itk-tabs button").forEach(x => x.classList.toggle("on", x === b)); root.querySelectorAll(".itk-p").forEach(p => p.classList.toggle("on", p.dataset.p === b.dataset.t)); });
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+/* password */
+const COMMON = ["123456", "password", "123456789", "qwerty", "111111", "abc123", "iloveyou", "admin", "welcome", "khmer123", "cambodia", "password1", "000000", "123123"];
+function human(sec) { const u = [["ឆ្នាំ", 31536000], ["ថ្ងៃ", 86400], ["ម៉ោង", 3600], ["នាទី", 60], ["វិនាទី", 1]]; if (sec > 1e12 * 31536000) return "> ១ លានលានឆ្នាំ"; for (const [n, s] of u) if (sec >= s) return (sec / s).toLocaleString("en-US", { maximumFractionDigits: 1 }) + " " + n; return "ភ្លាមៗ"; }
+function pw() { const p = $("pw_in").value; let pool = 0; if (/[a-z]/.test(p)) pool += 26; if (/[A-Z]/.test(p)) pool += 26; if (/\d/.test(p)) pool += 10; if (/[^A-Za-z0-9]/.test(p)) pool += 33;
+  const bits = p.length * Math.log2(pool || 1), sec = Math.pow(2, bits) / 2 / +$("pw_sp").value, warn = [];
+  if (COMMON.includes(p.toLowerCase())) warn.push("❌ ពាក្យសម្ងាត់ពេញនិយមខ្លាំង — ត្រូវគេទាយភ្លាម"); if (p.length < 12) warn.push("⚠️ ខ្លីជាង ១២ តួ"); if (/(.)\1{2,}/.test(p)) warn.push("⚠️ តួអក្សរដដែលៗ"); if (/(19|20)\d\d/.test(p)) warn.push("ℹ️ មានឆ្នាំ — ងាយទាយបើជាថ្ងៃកំណើត");
+  const lvl = COMMON.includes(p.toLowerCase()) ? 0 : bits < 40 ? 1 : bits < 60 ? 2 : bits < 80 ? 3 : 4, col = ["#e03131", "#e8590c", "#f59f00", "#2f9e44", "#1c7ed6"][lvl];
+  $("pw_out").innerHTML = `ប្រវែង <b>${p.length}</b> · តួអក្សរប្រើ ${pool} ប្រភេទ · Entropy ≈ <b>${bits.toFixed(0)} bits</b><div style="height:10px;border-radius:6px;background:#eee;margin:6px 0"><div style="height:100%;width:${Math.min(100, bits)}%;background:${col};border-radius:6px"></div></div>
+  ពេលទាយ (ប៉ាន់ស្មាន)៖ <b style="color:${col}">${COMMON.includes(p.toLowerCase()) ? "ភ្លាមៗ" : human(sec)}</b><br>${warn.join("<br>") || "✅ ល្អ — ប្រើតែកន្លែងមួយ ហើយទុកក្នុង Password manager"}<br><small style="color:var(--muted)">💡 Passphrase វែង (ពាក្យ ៤–៥) ងាយចាំ និងរឹងមាំជាងពាក្យខ្លីស្មុគស្មាញ</small>`; }
+["pw_in", "pw_sp"].forEach(id => $(id).oninput = pw);
+/* hash */
+async function hh() { const t = $("h_in").value, alg = $("h_alg").value;
+  if (!(window.crypto && crypto.subtle)) { $("h_out").textContent = "Browser នេះមិនគាំទ្រ Web Crypto"; return; }
+  const hx = async s => [...new Uint8Array(await crypto.subtle.digest(alg, new TextEncoder().encode(s)))].map(b => b.toString(16).padStart(2, "0")).join("");
+  const a = await hx(t), b = await hx(t + "."), diff = [...a].filter((c, i) => c !== b[i]).length;
+  $("h_out").innerHTML = `<b>${alg}("${esc(t)}")</b><br>${a}<br><br><b>បន្ថែម "." ១ តួ</b><br>${b}<br><br>Avalanche effect៖ ${diff}/${a.length} តួខុសគ្នា (${(diff / a.length * 100).toFixed(0)}%) · Hash មិនអាចបង្វិលត្រឡប់ (One-way)${alg === "SHA-1" ? '<br><span style="color:#e03131">⚠️ SHA-1 ខ្សោយ (Collision 2017) — កុំប្រើសម្រាប់សុវត្ថិភាព</span>' : ""}`; }
+["h_in", "h_alg"].forEach(id => $(id).oninput = hh);
+/* phishing game */
+const PH = [
+ ["📱 SMS: «ABA: គណនីរបស់អ្នកត្រូវបានផ្អាក។ ចុច http://aba-verify-kh.com ដើម្បីបើកវិញ ក្នុង ២៤ ម៉ោង»", 1, "Domain មិនមែនរបស់ធនាគារ + បង្ខំពេល + គំរាម → Phishing។ ធនាគារមិនផ្ញើ Link ឲ្យបញ្ចូល PIN/OTP ទេ។"],
+ ["📧 Email ពី it@xcenbar-school.edu.kh: «ការប្រជុំគ្រូ ថ្ងៃសុក្រ ម៉ោង ២ — មើលកាលវិភាគក្នុង Portal សាលា» (គ្មាន Link គ្មានឯកសារភ្ជាប់)", 0, "គ្មាន Link/ឯកសារ គ្មានការសុំព័ត៌មាន — ទំនងជាពិត (នៅតែត្រូវពិនិត្យអ្នកផ្ញើ)។"],
+ ["💬 Telegram: «ការងារ Online ងាយៗ ថ្ងៃ $50–$200! គ្រាន់តែ Like វីដេអូ។ ដាក់ប្រាក់ $30 ដើម្បីចាប់ផ្តើម»", 1, "Job/Task scam — សន្យាលុយងាយ ហើយសុំឲ្យដាក់ប្រាក់មុន។"],
+ ["🔗 URL: https://www.paypa1.com/login", 1, "Typosquatting — «1» ជំនួស «l»។"],
+ ["🔗 URL: https://accounts.google.com/signin", 0, "Domain ពិតរបស់ Google (accounts.google.com)។"],
+ ["📞 ហៅទូរស័ព្ទ: «ខ្ញុំនៅប៉ុស្តិ៍ប៉ូលិស ឈ្មោះអ្នកជាប់ពាក់ព័ន្ធលុយកខ្វក់ ត្រូវផ្ទេរលុយទៅគណនីសុវត្ថិភាពភ្លាម»", 1, "Impersonation scam — អាជ្ញាធរពិតមិនសុំឲ្យផ្ទេរលុយតាមទូរស័ព្ទទេ។ បិទទូរស័ព្ទ ហើយហៅលេខផ្លូវការវិញ។"],
+ ["📧 «អ្នកឈ្នះ iPhone 17! បង់ថ្លៃដឹកជញ្ជូន $5 តាម KHQR ខាងក្រោម»", 1, "Prize scam — អ្នកមិនបានចូលរួមប្រកួតទេ។"],
+ ["📱 SMS ពី Bank App ផ្ទាល់ (Notification ក្នុង App): «អ្នកបានទូទាត់ $12.50 នៅ Coffee Shop»", 0, "Notification ក្នុង App ផ្លូវការ គ្មាន Link — ពិនិត្យថាពិតជាអ្នកទូទាត់មែន។"],
+ ["💬 មិត្តភក្តិ Facebook: «សុំខ្ចី $100 បន្ទាន់ ផ្ទេរទៅគណនីនេះ (ឈ្មោះផ្សេង) ខ្ញុំសងស្អែក»", 1, "Account takeover — ហៅទូរស័ព្ទផ្ទៀងផ្ទាត់មិត្តផ្ទាល់មុនផ្ទេរ។"],
+ ["📧 Email: «Microsoft 365: ពាក្យសម្ងាត់ផុតកំណត់ ចុចទីនេះ» Link → https://m365-login.support-help.co", 1, "Domain ក្លែង + Credential harvesting។ ចូលតាម URL ដែលអ្នកស្គាល់ផ្ទាល់។"]];
+let pi = 0, score = 0, seen = 0, ans = false;
+function phq() { ans = false; $("ph_q").innerHTML = `<b>${pi + 1}/${PH.length}</b> ${esc(PH[pi][0])}`; $("ph_out").innerHTML = `ពិន្ទុ ${score}/${seen}`; }
+function pha(g) { if (ans) return; ans = true; seen++; const ok = g === PH[pi][1]; if (ok) score++; $("ph_out").innerHTML = `${ok ? "✅ ត្រឹមត្រូវ!" : "❌ មិនត្រូវ"} — ${PH[pi][2]}<br>ពិន្ទុ <b>${score}/${seen}</b>`; }
+$("ph_ok").onclick = () => pha(0); $("ph_bad").onclick = () => pha(1); $("ph_next").onclick = () => { pi = (pi + 1) % PH.length; phq(); };
+/* log analyzer */
+const DEMO = ["Nov 16 01:02:11 web sshd[811]: Failed password for root from 198.51.100.23 port 51512", "Nov 16 01:02:13 web sshd[811]: Failed password for root from 198.51.100.23 port 51518", "Nov 16 01:02:15 web sshd[811]: Failed password for admin from 198.51.100.23 port 51522",
+ "Nov 16 01:02:18 web sshd[811]: Failed password for root from 198.51.100.23 port 51530", "Nov 16 01:02:20 web sshd[811]: Failed password for ubuntu from 198.51.100.23 port 51541", "Nov 16 01:02:23 web sshd[811]: Failed password for root from 198.51.100.23 port 51555",
+ "Nov 16 08:15:40 web sshd[902]: Accepted publickey for dara from 10.0.0.15 port 60011", "Nov 16 09:01:02 web sshd[930]: Failed password for sokha from 10.0.0.22 port 60100", "Nov 16 09:01:30 web sshd[930]: Accepted password for sokha from 10.0.0.22 port 60102",
+ "Nov 16 23:40:01 web sshd[999]: Failed password for root from 203.0.113.99 port 40001", "Nov 16 23:40:03 web sshd[999]: Failed password for root from 203.0.113.99 port 40003", "Nov 16 23:40:09 web sshd[999]: Accepted password for root from 203.0.113.99 port 40009"].join("\n");
+function lg() { const th = +$("lg_th").value, fail = {}, ok = {}; $("lg_in").value.split("\n").forEach(l => { const m = l.match(/(Failed|Accepted) \w+ for (\S+) from ([\d.]+)/); if (!m) return; const o = m[1] === "Failed" ? fail : ok; (o[m[3]] = o[m[3]] || []).push(m[2]); });
+  const rows = Object.keys({ ...fail, ...ok }).map(ip => { const f = (fail[ip] || []).length, s = (ok[ip] || []).length, priv = /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(ip);
+    const sev = f >= th && s ? "🔴 CRITICAL — Brute force ហើយ Login បាន!" : f >= th ? "🟠 HIGH — Brute force" : f && s && !priv && (ok[ip] || []).includes("root") ? "🔴 HIGH — Root login ពី IP ក្រៅ" : f && s ? "🟡 ពិនិត្យ" : "🟢 ធម្មតា";
+    return `<tr><td>${ip}${priv ? " (internal)" : ""}</td><td>${f}</td><td>${s}</td><td>${[...new Set([...(fail[ip] || []), ...(ok[ip] || [])])].join(", ")}</td><td>${sev}</td></tr>`; }).join("");
+  $("lg_out").innerHTML = rows ? `<div style="overflow-x:auto"><table><tr><th>IP</th><th>Failed</th><th>Success</th><th>Users</th><th>Severity</th></tr>${rows}</table></div>💡 ឆ្លើយតប៖ Block IP · បិទ Password login (ប្រើ SSH key) · បិទ root login · ពិនិត្យ Session ដែល Login បាន` : "រកមិនឃើញ Log SSH"; }
+$("lg_go").onclick = lg; $("lg_demo").onclick = () => { $("lg_in").value = DEMO; lg(); };
+/* firewall */
+function ip2n(ip) { return ip.split(".").reduce((a, b) => a * 256 + (+b), 0); }
+function inNet(ip, cidr) { if (cidr === "any") return true; const [n, b] = cidr.split("/"); const bits = +(b || 32), mask = bits ? 2 ** 32 - 2 ** (32 - bits) : 0; return (ip2n(ip) & mask) >>> 0 === (ip2n(n) & mask) >>> 0; }
+function fw() { const p = $("fw_p").value, port = +$("fw_port").value, ip = $("fw_ip").value.trim(); const rules = $("fw_rules").value.split("\n").map(s => s.trim()).filter(Boolean);
+  for (let i = 0; i < rules.length; i++) { const [act, pr, pt, src] = rules[i].split(/\s+/); if (pr === p && (+pt === port || pt === "any") && inNet(ip, src || "any")) { $("fw_out").innerHTML = `ច្បាប់ទី ${i + 1} <code>${esc(rules[i])}</code> → <b style="color:${act === "allow" ? "#2f9e44" : "#e03131"}">${act.toUpperCase()}</b>`; return; } }
+  $("fw_out").innerHTML = `គ្មានច្បាប់ត្រូវ → <b style="color:#e03131">DENY (Default deny)</b>`; }
+$("fw_go").onclick = fw;
+pw(); hh(); phq(); fw();
+})();
+</script>
+
+<h3>🏆 Quiz ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["NIST CSF 2.0 មានមុខងារ?", ["4", "5", "6", "10"], 2], ["ISO 27001 ជា?", ["ISMS", "Firewall", "Antivirus", "Protocol"], 0], ["Risk =", ["L × I", "L + I", "I − L", "CVSS × 2"], 0], ["Impossible travel ជាសញ្ញា?", ["Account compromise", "Normal", "Backup", "Patch"], 0], ["MITRE ATT&CK ជា?", ["Tactics & techniques", "Antivirus", "Law", "Cipher"], 0], ["Pyramid of Pain៖ ពិបាកប្តូរបំផុត?", ["IP", "Hash", "TTPs", "Domain"], 2], ["Word → PowerShell?", ["ធម្មតា", "គួរសង្ស័យ", "Backup", "Update"], 1], ["Sigma ជា?", ["Detection rule format", "Malware", "VPN", "Cloud"], 0], ["Ransomware — ជំហានដំបូង?", ["ញែកពីបណ្តាញ", "បង់លុយ", "Format", "Ignore"], 0], ["NIST IR ចុងក្រោយ?", ["Lessons learned", "Detection", "Preparation", "Containment"], 0], ["Order of volatility ដំបូង?", ["Disk", "Memory", "Backup", "Paper"], 1], ["Chain of custody សម្រាប់?", ["ភស្តុតាងតុលាការ", "Speed", "Backup", "VPN"], 0], ["Hash ភស្តុតាង បង្ហាញ?", ["Integrity", "Speed", "Size", "Owner"], 0], ["Patch មុនគេ?", ["CVSS ខ្ពស់តែខាងក្នុង", "Known exploited + Internet-facing", "ចាស់បំផុត", "ថោក"], 1], ["Bucket public misconfig — អ្នកណាទទួលខុសត្រូវ?", ["Cloud provider", "អតិថិជន", "គ្មាន", "ISP"], 1], ["Zero Trust មកពី?", ["John Kindervag", "Pacioli", "Diffie", "Morris"], 0], ["Zero Trust principle?", ["Trust inside", "Never trust, always verify", "No MFA", "Open VPN"], 1], ["RPO =", ["ទិន្នន័យអតិបរមាអាចបាត់", "ពេលគាំង", "ថ្លៃ", "Users"], 0], ["Security+ ជា?", ["វិញ្ញាបនបត្រចាប់ផ្តើម", "Law", "Malware", "Firewall"], 0], ["រកឃើញចន្លោះប្រហោងដោយចៃដន្យ?", ["Responsible disclosure", "លក់", "Post សាធារណៈភ្លាម", "ទាញយកទិន្នន័យ"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+<ol class='steps'><li>កម្រិតដំបូង ✅ · កម្រិតមធ្យម ✅</li><li><b>កម្រិតខ្ពស់</b> (វគ្គនេះ) ✅</li><li>Security+ → CySA+ → (CISSP ក្រោយបទពិសោធន៍)</li><li>វគ្គពាក់ព័ន្ធ៖ Linux · Networking · Python · Cloud</li></ol></section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="cy3"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

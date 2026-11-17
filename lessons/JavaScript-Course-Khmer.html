@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន JavaScript ពីដើមដល់ចប់</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#faf9f4; --panel:#ffffff; --text:#1f1d14; --muted:#5b6b61; --line:#e8e4d4;
+  --accent:#b8860b; --accent2:#d4a017; --accent-soft:#fdf6dc;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#f7df1e; --accent2:#d4a017; --accent-soft:#2b2610;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#f7df1e; --accent2:#d4a017; --accent-soft:#2b2610;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:#f7df1e;color:#222;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#8a6400,#d4a017);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.c{color:#8b949e;font-style:italic}.sel{color:#ffa657}.at{color:#ff7b72}.pr{color:#79c0ff}
+.s{color:#a5d6ff}.n{color:#79c0ff}.f{color:#d2a8ff}.v{color:#a5d6ff}.tg{color:#7ee787}.pn{color:#8b949e}.at2{color:#79c0ff}
+.sw{display:inline-block;width:.9em;height:.9em;border-radius:3px;border:1px solid #888;margin-right:4px;vertical-align:-1px}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.level{font-size:12px;background:#fde68a;color:#92400e;padding:1px 8px;border-radius:99px;margin-left:6px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em}
+
+</style>
+<link rel="icon" href="../assets/icons/js.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/js.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>វគ្គសិក្សា JavaScript ពីដើមដល់កម្រិតអាជីព</h1>
+  <button class="btn" id="themeBtn">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#j0">១. JavaScript ជាអ្វី?</a>
+<a href="#history">២. ប្រវត្តិ JavaScript</a>
+<a href="#install">៣. ដំឡើង + VS Code</a>
+<a href="#elements">៤. ធាតុនីមួយៗរបស់ JS</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#j1">មេរៀន ១: អថេរ (Variables) និងប្រភេទទិន្នន័យ</a>
+<a href="#j2">មេរៀន ២: Operators (សញ្ញាប្រមាណវិធី)</a>
+<a href="#j3">មេរៀន ៣: លក្ខខណ្ឌ (if / else / switch / ternary)</a>
+<a href="#j4">មេរៀន ៤: Loops (រង្វិលជុំ)</a>
+<a href="#j5">មេរៀន ៥: Functions (អនុគមន៍)</a>
+<a href="#j6">មេរៀន ៦: Array និង Method សំខាន់ៗ</a>
+<a href="#j7">មេរៀន ៧: Object, JSON, Destructuring, Spread</a>
+<a href="#j8">មេរៀន ៨: DOM — ជ្រើស និងកែ HTML ដោយ JS</a>
+<a href="#j9">មេរៀន ៩: Events (ព្រឹត្តិការណ៍)</a>
+<a href="#j10">មេរៀន ១០: Form និងការត្រួតពិនិត្យទិន្នន័យ</a>
+<a href="#j11">មេរៀន ១១: ES6+: Template, Spread, Modules និងផ្សេងៗ</a>
+<a href="#j12">មេរៀន ១២: Asynchronous: setTimeout, Promise, async/await, fetch</a>
+<a href="#j13">មេរៀន ១៣: try/catch និង localStorage</a>
+<h4>សង្ខេប លំហាត់ & គម្រោង</h4>
+<a href="#cheat">📚 តារាងសង្ខេប JavaScript</a>
+<a href="#exercises">✍️ លំហាត់ JavaScript (មានចម្លើយ)</a>
+<a href="#project">🚀 គម្រោងចុងក្រោយ៖ To-Do List App</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">App កម្រិតអាជីព</a>
+<a href="#pro-structure">រចនាសម្ព័ន្ធ Project</a>
+<a href="#pro-code">កូដ App ពេញលេញ</a>
+<a href="#pro-test">Unit Tests</a>
+<a href="#pro-deploy">Build & Deploy</a>
+<a href="#roadmap">ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>⚡ មេរៀន JavaScript ពីដើមដល់ចប់</h2>
+  <p>រៀនពីអថេរ Function Array DOM Events រហូតដល់ Async/Fetch និង localStorage — មាន <b>Console បង្ហាញលទ្ធផលផ្ទាល់</b> ក្រោមកូដ លំហាត់ គម្រោង To-Do App និង App កម្រិតអាជីព។</p>
+  <p><span class="badge">📘 ១៤ មេរៀន</span><span class="badge">✍️ ៨ លំហាត់</span><span class="badge">🚀 To-Do App</span><span class="badge">🏆 App កម្រិតអាជីព</span></p>
+</section>
+
+
+<!-- J0 -->
+<section id="j0">
+<h2>១. JavaScript ជាអ្វី? អ្នកណាបង្កើត? ប្រើធ្វើអ្វី?</h2>
+<p><b>JavaScript (JS)</b> ជាភាសាសរសេរកម្មវិធីដែលធ្វើឲ្យគេហទំព័រ <b>មានជីវិត និងអន្តរកម្ម</b>។ ប្រៀបធៀប៖ HTML = គ្រោងឆ្អឹង, CSS = សម្លៀកបំពាក់, <b>JavaScript = ខួរក្បាល និងចលនា</b>។</p>
+<h3>👤 អ្នកបង្កើត</h3>
+<p><b>Brendan Eich</b> បានបង្កើត JavaScript ក្នុងឆ្នាំ <b>1995</b> នៅក្រុមហ៊ុន <b>Netscape</b> ដោយប្រើពេលប្រហែល <b>១០ ថ្ងៃ</b>។ ឈ្មោះដើមគឺ Mocha → LiveScript → JavaScript។ ស្តង់ដារផ្លូវការហៅថា <b>ECMAScript</b> (ES6/ES2015 ជាកំណែធំបំផុតដែលបន្ថែម <code class="i">let, const, =&gt;, class</code>…)។</p>
+<div class="warn"><b>⚠️</b> JavaScript <b>មិនមែនជា Java</b> ទេ! ជាភាសាពីរផ្សេងគ្នាទាំងស្រុង ឈ្មោះគ្រាន់តែស្រដៀងគ្នាដោយសារការទីផ្សារនៅសម័យនោះ។</div>
+<h3>🎯 គេប្រើ JavaScript ដើម្បីធ្វើអ្វី?</h3>
+<ul>
+<li>ធ្វើឲ្យ web មានអន្តរកម្ម៖ ប៊ូតុង, ម៉ឺនុយ, slider, popup, form validation</li>
+<li>ផ្លាស់ប្តូរ HTML/CSS ភ្លាមៗដោយមិនបាច់ផ្ទុកទំព័រថ្មី (DOM)</li>
+<li>ទាញទិន្នន័យពី server (API) ដូចជា ផ្ទាំងអាកាសធាតុ, news</li>
+<li>សរសេរ <b>Web App</b> (React, Vue, Angular), <b>Mobile App</b> (React Native), <b>Desktop App</b> (Electron)</li>
+<li>សរសេរ <b>Server/Backend</b> ដោយ <b>Node.js</b></li>
+<li>ហ្គេមក្នុង browser, ការគូរក្រាហ្វ (Canvas, Chart.js)</li>
+</ul>
+
+<h3>🛠️ ត្រៀម និងភ្ជាប់ JavaScript</h3>
+<p>មិនចាំបាច់ install អ្វីទេ — browser មាន JavaScript ស្រាប់។ ប្រើ <b>VS Code + Live Server</b> (មើល <a href="#install">ផ្នែកដំឡើង</a>)។ ចុច <kbd>F12</kbd> → tab <b>Console</b> ដើម្បីមើលលទ្ធផលពី <code class="i">console.log()</code>។ ភ្ជាប់ JS បាន ៣ វិធី៖</p>
+<script type="text/x-code" data-lang="html">
+<!-- ១. Inline (មិនគួរប្រើច្រើន) -->
+<button onclick="alert('សួស្តី!')">ចុច</button>
+
+<!-- ២. Internal -->
+<script>
+  console.log("សួស្តី JavaScript");
+<\/script>
+
+<!-- ៣. External ⭐ (ល្អបំផុត) ដាក់មុន </body> ឬប្រើ defer -->
+<script src="app.js" defer><\/script>
+</script>
+<div class="note"><b>💡</b> <code class="i">defer</code> ប្រាប់ browser ឲ្យរង់ចាំ HTML ផ្ទុកចប់សិន ទើបរត់ JS — ជៀសវាងកំហុស "element not found"។</div>
+<p>ពីមេរៀនទី ១ ដល់ ៨ ខ្ញុំប្រើផ្នែក <b>Console</b> បង្ហាញលទ្ធផលក្រោម code ផ្ទាល់ (អ្នកអាច copy ទៅសាកល្បងក្នុង VS Code ដែរ)។</p>
+</section>
+
+<!-- J1 -->
+
+<section id="history">
+  <h2>២. ប្រវត្តិ JavaScript</h2>
+  <div class="grid">
+    <div class="card"><b>អ្នកបង្កើត</b><br><b style="font-size:20px">Brendan Eich</b><br>នៅក្រុមហ៊ុន Netscape</div>
+    <div class="card"><b>ឆ្នាំ</b><br><b style="font-size:20px">1995</b><br>សរសេរកំណែដំបូងក្នុងប្រហែល ១០ ថ្ងៃ</div>
+    <div class="card"><b>ស្តង់ដារ</b><br><b>ECMAScript</b> (ECMA-262) ដោយ TC39</div>
+    <div class="card"><b>Version ថ្មី</b><br>ចេញរៀងរាល់ឆ្នាំ (ES2015, ES2016 ... )</div>
+  </div>
+  <table>
+    <tr><th>ឆ្នាំ</th><th>ព្រឹត្តិការណ៍</th></tr>
+    <tr><td>1995</td><td>Brendan Eich បង្កើត Mocha → LiveScript → JavaScript សម្រាប់ Netscape Navigator</td></tr>
+    <tr><td>1996</td><td>Microsoft ចេញ JScript ក្នុង Internet Explorer</td></tr>
+    <tr><td>1997</td><td>ECMAScript 1 — ស្តង់ដារផ្លូវការដំបូង</td></tr>
+    <tr><td>2005</td><td>AJAX ពេញនិយម (Gmail, Google Maps) — Web App ពិតប្រាកដ</td></tr>
+    <tr><td>2008</td><td>Google Chrome និង V8 Engine ធ្វើឱ្យ JS លឿនខ្លាំង</td></tr>
+    <tr><td>2009</td><td>ES5 និង <b>Node.js</b> (JS នៅខាង Server)</td></tr>
+    <tr><td>2015</td><td><b>ES6 / ES2015</b> — let/const, Arrow function, Class, Module, Promise</td></tr>
+    <tr><td>2017</td><td>async / await (ES2017)</td></tr>
+    <tr><td>បច្ចុប្បន្ន</td><td>ECMAScript ថ្មីរៀងរាល់ឆ្នាំ — JS ដំណើរការគ្រប់ Browser, Server, Mobile, Desktop</td></tr>
+  </table>
+</section>
+
+<section id="install">
+  <h2>៣. ត្រៀម VS Code សម្រាប់ JavaScript</h2>
+  <ol class="steps">
+    <li>ទាញយក <b>VS Code</b> ពី <a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a> ហើយដំឡើង</li>
+    <li>ចុច Extensions (<b>Ctrl + Shift + X</b>) → ដំឡើង <b>Live Server</b> (បើកទំព័រ ហើយ Refresh ស្វ័យប្រវត្តិពេល Save)</li>
+    <li>បង្កើត Folder <code class="i">js-learning</code> → <b>File → Open Folder</b> → បង្កើត <code class="i">index.html</code> និង <code class="i">app.js</code></li>
+    <li>Right-click លើ <code class="i">index.html</code> → <b>Open with Live Server</b></li>
+    <li>ក្នុង Browser ចុច <b>F12</b> → tab <b>Console</b> ដើម្បីមើល <code class="i">console.log()</code> និង Error</li>
+  </ol>
+  <script type="text/x-code" data-lang="html" data-label="index.html">
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <title>JS ដំបូង</title>
+  <script src="app.js" defer><\/script>
+</head>
+<body>
+  <h1 id="title">សួស្តី!</h1>
+</body>
+</html>
+</script>
+  <script type="text/x-code" data-lang="js" data-label="app.js">
+console.log("JavaScript ដំណើរការហើយ ✅");
+document.querySelector("#title").textContent = "សួស្តី JavaScript!";
+</script>
+  <table>
+    <tr><th>Extension / ឧបករណ៍</th><th>មុខងារ</th></tr>
+    <tr><td><b>Live Server</b></td><td>បើកទំព័រក្នុង Browser + Auto refresh</td></tr>
+    <tr><td><b>Prettier</b></td><td>រៀបចំទម្រង់កូដស្វ័យប្រវត្តិ</td></tr>
+    <tr><td><b>ESLint</b></td><td>រកកំហុស និងកូដមិនល្អ</td></tr>
+    <tr><td><b>Node.js</b> (ជម្រើស)</td><td>រត់ JS ក្នុង Terminal៖ <code class="i">node app.js</code> និងប្រើ npm</td></tr>
+  </table>
+</section>
+
+<section id="elements">
+  <h2>៤. ធាតុ (Components) នីមួយៗរបស់ JavaScript</h2>
+  <table>
+    <tr><th>ធាតុ</th><th>ពន្យល់</th></tr>
+    <tr><td><b>ECMAScript</b></td><td>ស្តង់ដារភាសា (Syntax, Types, Functions...) — JS គឺជាការអនុវត្ត ECMAScript</td></tr>
+    <tr><td><b>JS Engine</b></td><td>ម៉ាស៊ីនរត់ JS៖ <b>V8</b> (Chrome, Edge, Node.js), <b>SpiderMonkey</b> (Firefox), <b>JavaScriptCore</b> (Safari)</td></tr>
+    <tr><td><b>Call Stack</b></td><td>លំដាប់ Function កំពុងរត់ — JS រត់ម្តងមួយ (Single-thread)</td></tr>
+    <tr><td><b>Event Loop</b></td><td>បញ្ជូន Callback (setTimeout, fetch, click) មករត់ពេល Call Stack ទំនេរ</td></tr>
+    <tr><td><b>Web APIs</b></td><td>មុខងារ Browser៖ DOM, <code class="i">fetch</code>, <code class="i">setTimeout</code>, <code class="i">localStorage</code></td></tr>
+    <tr><td><b>DOM</b></td><td>Document Object Model — HTML ជា Object ដែល JS អាចកែបាន (មេរៀនទី ៨)</td></tr>
+    <tr><td><b>BOM</b></td><td>Browser Object Model៖ <code class="i">window</code>, <code class="i">location</code>, <code class="i">history</code>, <code class="i">navigator</code></td></tr>
+    <tr><td><b>Dynamic Typing</b></td><td>អថេរមិនមានប្រភេទថេរ — តម្លៃទើបមានប្រភេទ</td></tr>
+    <tr><td><b>Prototype & Class</b></td><td>OOP ផ្អែកលើ Prototype (<code class="i">class</code> ជា Syntax ងាយយល់ពីលើវា)</td></tr>
+    <tr><td><b>Modules</b></td><td><code class="i">import</code> / <code class="i">export</code> បំបែកកូដជា File (មេរៀនទី ១១)</td></tr>
+    <tr><td><b>npm</b></td><td>កន្លែងផ្ទុក Package ធំបំផុតលើពិភពលោក (ប្រើជាមួយ Node.js)</td></tr>
+  </table>
+  <h3>ប្រភេទទិន្នន័យ (8 ប្រភេទ)</h3>
+  <div class="grid">
+    <div class="card"><b>string</b><br><code class="i">"សួស្តី"</code></div>
+    <div class="card"><b>number</b><br><code class="i">42</code>, <code class="i">3.14</code></div>
+    <div class="card"><b>bigint</b><br><code class="i">9007199254740993n</code></div>
+    <div class="card"><b>boolean</b><br><code class="i">true</code> / <code class="i">false</code></div>
+    <div class="card"><b>undefined</b><br>មិនទាន់កំណត់</div>
+    <div class="card"><b>null</b><br>ទទេដោយចេតនា</div>
+    <div class="card"><b>symbol</b><br>តម្លៃមិនស្ទួន</div>
+    <div class="card"><b>object</b><br>Object, Array, Function, Date...</div>
+  </div>
+</section>
+
+<section id="j1">
+<h2><span class="badge">មេរៀន ១</span>អថេរ (Variables) និងប្រភេទទិន្នន័យ</h2>
+<p>អថេរ = "ប្រអប់" សម្រាប់ទុកតម្លៃ។ ប្រើ <code class="i">const</code> ជាចម្បង (តម្លៃមិនប្តូរ) បើត្រូវប្តូរប្រើ <code class="i">let</code>។ <b>ចៀសវាង</b> <code class="i">var</code> (ចាស់ មានបញ្ហា scope)។</p>
+<script type="text/x-code" data-lang="js" data-demo>
+const name = "សុខា";          // String
+let age = 20;                  // Number
+let isStudent = true;          // Boolean
+let nothing = null;            // Null (ទទេដោយចេតនា)
+let notSet;                    // undefined (មិនទាន់កំណត់)
+const skills = ["HTML", "CSS", "JS"];            // Array
+const person = { name: "ដារ៉ា", age: 22 };       // Object
+
+age = 21;                      // let ប្តូរបាន
+log("ឈ្មោះ:", name);
+log("អាយុ:", age);
+log("typeof age:", typeof age);
+log("typeof name:", typeof name);
+log("typeof skills:", typeof skills, "(Array ក៏ជា object)");
+log("notSet:", notSet);
+log("person:", person);
+</script>
+<table>
+<tr><th>ប្រភេទ</th><th>ឧទាហរណ៍</th></tr>
+<tr><td>String</td><td><code>"ជំរាបសួរ"</code>, <code>'hi'</code>, <code>`សួស្តី ${name}`</code></td></tr>
+<tr><td>Number</td><td><code>10</code>, <code>3.14</code>, <code>-5</code>, <code>NaN</code>, <code>Infinity</code></td></tr>
+<tr><td>Boolean</td><td><code>true</code>, <code>false</code></td></tr>
+<tr><td>null / undefined</td><td>ទទេ / មិនទាន់កំណត់</td></tr>
+<tr><td>Array / Object</td><td>បញ្ជី / ក្រុមទិន្នន័យ key:value</td></tr>
+</table>
+<div class="note"><b>📌 ច្បាប់ដាក់ឈ្មោះ៖</b> ចាប់ផ្តើមដោយអក្សរ <code class="i">_</code> ឬ <code class="i">$</code>, ប្រើ camelCase (<code class="i">firstName</code>), case-sensitive (<code class="i">age</code> ≠ <code class="i">Age</code>)។</div>
+</section>
+
+<!-- J2 -->
+<section id="j2">
+<h2><span class="badge">មេរៀន ២</span>Operators (សញ្ញាប្រមាណវិធី)</h2>
+<table>
+<tr><th>ក្រុម</th><th>Operator</th></tr>
+<tr><td>គណិត</td><td><code>+ - * / % **</code> (% = សល់, ** = ស្វ័យគុណ)</td></tr>
+<tr><td>Assignment</td><td><code>= += -= *= /= ++ --</code></td></tr>
+<tr><td>ប្រៀបធៀប</td><td><code>== (តម្លៃ) === (តម្លៃ+ប្រភេទ ⭐) != !== &gt; &lt; &gt;= &lt;=</code></td></tr>
+<tr><td>Logic</td><td><code>&amp;&amp; (និង) || (ឬ) ! (មិន)</code></td></tr>
+<tr><td>ផ្សេងៗ</td><td><code>?? (nullish)</code>, <code>?. (optional chaining)</code>, <code>? :</code></td></tr>
+</table>
+<script type="text/x-code" data-lang="js" data-demo>
+let a = 10, b = 3;
+log("a + b =", a + b);
+log("a / b =", a / b);
+log("a % b =", a % b, "(សល់)");
+log("a ** b =", a ** b);
+
+log("5 == '5' :", 5 == "5");      // true  (មិនប្រៀបធៀបប្រភេទ)
+log("5 === '5':", 5 === "5");     // false (ប្រើ === ជានិច្ច)
+log("true && false:", true && false);
+log("true || false:", true || false);
+
+const user = { profile: { city: "ភ្នំពេញ" } };
+log("optional chaining:", user?.profile?.city, user?.address?.street);
+log("nullish ??:", null ?? "តម្លៃលំនាំដើម");
+
+let n = 5; n += 2; n++;
+log("n =", n);
+log("'ជំរាប' + 'សួរ' =", "ជំរាប" + "សួរ");
+</script>
+</section>
+
+<!-- J3 -->
+<section id="j3">
+<h2><span class="badge">មេរៀន ៣</span>លក្ខខណ្ឌ (if / else / switch / ternary)</h2>
+<script type="text/x-code" data-lang="js" data-demo>
+const score = 78;
+
+if (score >= 90) {
+  log("ថ្នាក់ A");
+} else if (score >= 75) {
+  log("ថ្នាក់ B");
+} else if (score >= 50) {
+  log("ថ្នាក់ C");
+} else {
+  log("ធ្លាក់");
+}
+
+// Ternary: លក្ខខណ្ឌ ? បើពិត : បើមិនពិត
+log(score >= 50 ? "ជាប់ ✅" : "ធ្លាក់ ❌");
+
+// switch
+const day = 3;
+switch (day) {
+  case 1: log("ច័ន្ទ"); break;
+  case 2: log("អង្គារ"); break;
+  case 3: log("ពុធ"); break;
+  default: log("ថ្ងៃផ្សេង");
+}
+
+// Falsy values: false, 0, "", null, undefined, NaN
+if (!"") log("string ទទេ គឺ falsy");
+</script>
+</section>
+
+<!-- J4 -->
+<section id="j4">
+<h2><span class="badge">មេរៀន ៤</span>Loops (រង្វិលជុំ)</h2>
+<script type="text/x-code" data-lang="js" data-demo>
+// for
+for (let i = 1; i <= 5; i++) {
+  log("for:", i);
+}
+
+// while
+let n = 3;
+while (n > 0) {
+  log("while:", n);
+  n--;
+}
+
+// for...of (Array)
+const fruits = ["ស្វាយ", "ចេក", "ក្រូច"];
+for (const f of fruits) log("for...of:", f);
+
+// for...in (Object)
+const person = { name: "ដារ៉ា", age: 22 };
+for (const key in person) log(key, "=", person[key]);
+
+// break / continue
+for (let i = 1; i <= 6; i++) {
+  if (i === 2) continue;   // រំលង
+  if (i === 5) break;      // ឈប់
+  log("i =", i);
+}
+</script>
+</section>
+
+<!-- J5 -->
+<section id="j5">
+<h2><span class="badge">មេរៀន ៥</span>Functions (អនុគមន៍)</h2>
+<p>Function = ក្រុម code ដែលប្រើឡើងវិញបាន។ មាន <b>parameter</b> (ទទួល) និង <b>return</b> (បញ្ជូនលទ្ធផល)។</p>
+<script type="text/x-code" data-lang="js" data-demo>
+// Function declaration
+function add(a, b) {
+  return a + b;
+}
+
+// Arrow function ⭐ (ខ្លី)
+const multiply = (a, b) => a * b;
+const square = x => x * x;               // មាន parameter តែមួយ មិនបាច់ ()
+
+// Default parameter
+function greet(name = "ភ្ញៀវ") {
+  return `សួស្តី ${name}!`;
+}
+
+// Rest parameter
+const sum = (...nums) => nums.reduce((t, n) => t + n, 0);
+
+log(add(2, 3));
+log(multiply(4, 5));
+log(square(6));
+log(greet());
+log(greet("សុខា"));
+log(sum(1, 2, 3, 4, 5));
+
+// Callback: បញ្ជូន function ជា argument
+function repeat(times, fn) { for (let i = 0; i < times; i++) fn(i); }
+repeat(3, i => log("ជុំទី", i + 1));
+</script>
+<div class="note"><b>💡 Scope៖</b> អថេរដែលប្រកាសក្នុង <code class="i">{ }</code> ដោយ <code class="i">let/const</code> ប្រើបានតែក្នុងប្លុកនោះ (block scope)។ Closure គឺពេល function ចងចាំអថេរពីខាងក្រៅរបស់វា។</div>
+<script type="text/x-code" data-lang="js" data-demo>
+// Closure: counter ចងចាំតម្លៃ
+function makeCounter() {
+  let count = 0;
+  return () => ++count;
+}
+const c1 = makeCounter();
+log(c1(), c1(), c1());   // 1 2 3
+</script>
+</section>
+
+<!-- J6 -->
+<section id="j6">
+<h2><span class="badge">មេរៀន ៦</span>Array និង Method សំខាន់ៗ</h2>
+<table>
+<tr><th>Method</th><th>ពន្យល់</th></tr>
+<tr><td><code>push / pop</code></td><td>បន្ថែម / ដកចុងក្រោយ</td></tr>
+<tr><td><code>unshift / shift</code></td><td>បន្ថែម / ដកដើម</td></tr>
+<tr><td><code>map(fn)</code></td><td>បំលែងធាតុនីមួយៗ → array ថ្មី ⭐</td></tr>
+<tr><td><code>filter(fn)</code></td><td>ជ្រើសតែធាតុដែលត្រូវលក្ខខណ្ឌ ⭐</td></tr>
+<tr><td><code>reduce(fn, init)</code></td><td>បូកសរុបជាតម្លៃតែមួយ ⭐</td></tr>
+<tr><td><code>find / findIndex</code></td><td>រកធាតុដំបូងដែលត្រូវ</td></tr>
+<tr><td><code>includes</code></td><td>ពិនិត្យថាមានឬអត់</td></tr>
+<tr><td><code>sort / reverse</code></td><td>តម្រៀប / ត្រឡប់</td></tr>
+<tr><td><code>slice / splice</code></td><td>កាត់ចម្លង / កាត់ផ្តាច់</td></tr>
+<tr><td><code>join / split</code></td><td>ភ្ជាប់ array ជា string / បំបែក string</td></tr>
+</table>
+<script type="text/x-code" data-lang="js" data-demo>
+const nums = [5, 2, 8, 1, 9];
+
+nums.push(10);
+log("push:", nums);
+
+log("map ×2:", nums.map(n => n * 2));
+log("filter >4:", nums.filter(n => n > 4));
+log("reduce សរុប:", nums.reduce((t, n) => t + n, 0));
+log("find >7:", nums.find(n => n > 7));
+log("includes 8:", nums.includes(8));
+log("sort:", [...nums].sort((a, b) => a - b));   // [...nums] ចម្លង
+log("join:", ["ក", "ខ", "គ"].join(" - "));
+
+const students = [
+  { name: "សុខា", score: 85 },
+  { name: "ដារ៉ា", score: 62 },
+  { name: "ចាន់ណា", score: 95 },
+];
+const passed = students.filter(s => s.score >= 70).map(s => s.name);
+log("ជាប់ ≥70:", passed);
+</script>
+</section>
+
+<!-- J7 -->
+<section id="j7">
+<h2><span class="badge">មេរៀន ៧</span>Object, JSON, Destructuring, Spread</h2>
+<script type="text/x-code" data-lang="js" data-demo>
+const user = {
+  name: "សុខា",
+  age: 20,
+  skills: ["HTML", "CSS"],
+  greet() { return `ខ្ញុំឈ្មោះ ${this.name}`; }   // method
+};
+
+log(user.name, user["age"]);          // ចូលដំណើរការ property
+user.city = "សៀមរាប";                 // បន្ថែម
+delete user.age;                      // លុប
+log(user.greet());
+log(Object.keys(user));
+
+// Destructuring
+const { name, skills } = user;
+const [first, second] = skills;
+log(name, first, second);
+
+// Spread ចម្លង + បញ្ចូល
+const copy = { ...user, age: 25 };
+const more = [...skills, "JS"];
+log(copy.age, more);
+
+// JSON ↔ Object
+const text = JSON.stringify({ a: 1, b: [2, 3] });
+log(text);
+log(JSON.parse(text).b[1]);
+</script>
+</section>
+
+<!-- J8 -->
+<section id="j8">
+<h2><span class="badge">មេរៀន ៨</span>DOM — ជ្រើស និងកែ HTML ដោយ JS</h2>
+<p><b>DOM</b> (Document Object Model) = ដើមឈើតំណាង HTML ដែល JS អាចអាន និងកែបាន។</p>
+<table>
+<tr><th>ការងារ</th><th>Code</th></tr>
+<tr><td>ជ្រើស element ១</td><td><code>document.querySelector(".card")</code></td></tr>
+<tr><td>ជ្រើសទាំងអស់</td><td><code>document.querySelectorAll("li")</code></td></tr>
+<tr><td>ប្តូរអត្ថបទ</td><td><code>el.textContent = "..."</code></td></tr>
+<tr><td>ប្តូរ HTML</td><td><code>el.innerHTML = "&lt;b&gt;..&lt;/b&gt;"</code></td></tr>
+<tr><td>ប្តូរ style</td><td><code>el.style.color = "red"</code></td></tr>
+<tr><td>ប្តូរ class</td><td><code>el.classList.add / remove / toggle("x")</code></td></tr>
+<tr><td>Attribute</td><td><code>el.setAttribute("src", "a.png")</code>, <code>el.id</code>, <code>el.value</code></td></tr>
+<tr><td>បង្កើត/បន្ថែម/លុប</td><td><code>createElement</code>, <code>append</code>, <code>remove</code></td></tr>
+</table>
+<script type="text/x-code" data-lang="html" data-demo>
+<style>
+  .box { padding:14px; border-radius:10px; background:#e0e7ff; margin-bottom:10px; transition:.3s; }
+  .on  { background:#4f46e5; color:#fff; transform:scale(1.03); }
+  button { padding:8px 14px; border:0; border-radius:8px; background:#4f46e5; color:#fff; cursor:pointer; margin-right:6px; font-family:inherit; }
+</style>
+<div class="box" id="box">ប្រអប់នេះនឹងផ្លាស់ប្តូរ</div>
+<button id="b1">ប្តូរអត្ថបទ</button>
+<button id="b2">Toggle class</button>
+<button id="b3">បន្ថែម item</button>
+<ul id="list"></ul>
+
+<script>
+  const box = document.querySelector("#box");
+  const list = document.querySelector("#list");
+  let n = 0;
+
+  document.querySelector("#b1").addEventListener("click", () => {
+    box.textContent = "បានប្តូរ! " + new Date().toLocaleTimeString();
+  });
+  document.querySelector("#b2").addEventListener("click", () => {
+    box.classList.toggle("on");
+  });
+  document.querySelector("#b3").addEventListener("click", () => {
+    const li = document.createElement("li");   // បង្កើត element
+    li.textContent = "ធាតុទី " + (++n);
+    list.append(li);                           // បន្ថែមចូល DOM
+  });
+<\/script>
+</script>
+</section>
+
+<!-- J9 -->
+<section id="j9">
+<h2><span class="badge">មេរៀន ៩</span>Events (ព្រឹត្តិការណ៍)</h2>
+<p>ប្រើ <code class="i">element.addEventListener("ឈ្មោះព្រឹត្តិការណ៍", function)</code>។</p>
+<table>
+<tr><th>Event</th><th>កើតពេល</th></tr>
+<tr><td><code>click / dblclick</code></td><td>ចុច / ចុចពីរដង</td></tr>
+<tr><td><code>mouseover / mouseout</code></td><td>mouse ចូល / ចេញ</td></tr>
+<tr><td><code>keydown / keyup</code></td><td>ចុចក្តារចុច</td></tr>
+<tr><td><code>input / change</code></td><td>ពេលវាយ / ប្តូរតម្លៃ</td></tr>
+<tr><td><code>submit</code></td><td>បញ្ជូន form</td></tr>
+<tr><td><code>scroll / resize</code></td><td>រំកិល / ប្តូរទំហំបង្អួច</td></tr>
+<tr><td><code>DOMContentLoaded</code></td><td>HTML ផ្ទុកចប់</td></tr>
+</table>
+<script type="text/x-code" data-lang="html" data-demo>
+<style>
+  .pad { height:90px; background:linear-gradient(135deg,#06b6d4,#6366f1); border-radius:12px; color:#fff; display:flex; align-items:center; justify-content:center; }
+  input { padding:8px 12px; border:2px solid #cbd5e1; border-radius:8px; width:100%; margin-top:10px; font-family:inherit; }
+  #echo { margin-top:6px; color:#4f46e5; font-weight:600; }
+</style>
+<div class="pad" id="pad">ដាក់ mouse ឬចុចលើខ្ញុំ</div>
+<input id="inp" placeholder="វាយអ្វីមួយ…">
+<div id="echo"></div>
+<script>
+  const pad = document.getElementById("pad");
+  pad.addEventListener("mouseover", () => pad.textContent = "👆 mouse នៅលើ");
+  pad.addEventListener("mouseout",  () => pad.textContent = "ដាក់ mouse ឬចុចលើខ្ញុំ");
+  pad.addEventListener("click", (e) => pad.textContent = `ចុចត្រង់ x=${e.offsetX}, y=${e.offsetY}`);
+
+  document.getElementById("inp").addEventListener("input", (e) => {
+    document.getElementById("echo").textContent = "អ្នកវាយ៖ " + e.target.value + " (" + e.target.value.length + " តួអក្សរ)";
+  });
+  document.addEventListener("keydown", (e) => { if (e.key === "Enter") pad.textContent = "⏎ ចុច Enter"; });
+<\/script>
+</script>
+<div class="note"><b>💡 Event Delegation៖</b> ជំនួសឲ្យដាក់ listener លើ <code class="i">li</code> ទាំងអស់ ដាក់តែមួយលើ <code class="i">ul</code> ហើយពិនិត្យ <code class="i">e.target</code> — ដំណើរការជាមួយ element ដែលបន្ថែមក្រោយផង។</div>
+</section>
+
+<!-- J10 -->
+<section id="j10">
+<h2><span class="badge">មេរៀន ១០</span>Form និងការត្រួតពិនិត្យទិន្នន័យ</h2>
+<script type="text/x-code" data-lang="html" data-demo>
+<style>
+  form { max-width:320px; }
+  label { display:block; margin-top:10px; font-weight:600; }
+  input { width:100%; padding:8px 10px; border:2px solid #cbd5e1; border-radius:8px; font-family:inherit; }
+  input.bad { border-color:#dc2626; background:#fef2f2; }
+  .err { color:#dc2626; font-size:.85rem; min-height:1.2em; }
+  button { margin-top:12px; padding:9px 20px; background:#16a34a; color:#fff; border:0; border-radius:8px; cursor:pointer; font-family:inherit; }
+  #result { margin-top:10px; padding:10px; background:#dcfce7; border-radius:8px; display:none; }
+</style>
+<form id="f" novalidate>
+  <label for="email">អ៊ីមែល</label>
+  <input id="email" type="email" placeholder="you@example.com">
+  <div class="err" id="e1"></div>
+  <label for="pw">លេខសម្ងាត់ (≥ 6 តួ)</label>
+  <input id="pw" type="password">
+  <div class="err" id="e2"></div>
+  <button>ចុះឈ្មោះ</button>
+</form>
+<div id="result"></div>
+<script>
+  const f = document.getElementById("f");
+  f.addEventListener("submit", (e) => {
+    e.preventDefault();                          // បញ្ឈប់ការ reload ទំព័រ
+    const email = f.email.value.trim();
+    const pw = f.pw.value;
+    const okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const okPw = pw.length >= 6;
+
+    f.email.classList.toggle("bad", !okEmail);
+    f.pw.classList.toggle("bad", !okPw);
+    // ជ្រើស element ឱ្យច្បាស់ — កុំពឹងលើ id ជាអថេរ global (e1, e2)
+    document.getElementById("e1").textContent = okEmail ? "" : "អ៊ីមែលមិនត្រឹមត្រូវ";
+    document.getElementById("e2").textContent = okPw ? "" : "លេខសម្ងាត់ខ្លីពេក";
+
+    const res = document.getElementById("result");
+    res.style.display = okEmail && okPw ? "block" : "none";
+    res.textContent = "✅ ជោគជ័យ៖ " + email;
+  });
+<\/script>
+</script>
+</section>
+
+<!-- J11 -->
+<section id="j11">
+<h2><span class="badge">មេរៀន ១១</span>ES6+: Template, Spread, Modules និងផ្សេងៗ</h2>
+<script type="text/x-code" data-lang="js" data-demo>
+// Template literal
+const name = "ដារ៉ា", score = 92;
+log(`${name} ទទួលបាន ${score} ពិន្ទុ (${score >= 90 ? "ល្អណាស់" : "ល្អ"})`);
+
+// String methods
+const s = "  Learn JavaScript  ";
+log(s.trim().toUpperCase());
+log("abc".padStart(6, "*"), "JavaScript".slice(0, 4), "a,b,c".split(","));
+log("សួស្តី".length, "hello".replace("l", "L"), "hello".includes("ell"));
+
+// Math & Number
+log(Math.round(4.6), Math.floor(4.9), Math.ceil(4.1), Math.max(3, 9, 5));
+log(Math.floor(Math.random() * 10) + 1, "(លេខចៃដន្យ 1–10)");
+log((1234.5678).toFixed(2), Number("42") + 1, parseInt("12px"));
+
+// Date
+const d = new Date();
+log(d.getFullYear(), d.getMonth() + 1, d.getDate());
+
+// Set & Map
+log([...new Set([1, 2, 2, 3, 3, 3])]);     // លុបស្ទួន
+const m = new Map([["a", 1]]); m.set("b", 2);
+log([...m.keys()]);
+</script>
+<h3>Modules (ចែក code ជា file)</h3>
+<script type="text/x-code" data-lang="js">
+// math.js
+export const PI = 3.14159;
+export function area(r) { return PI * r * r; }
+export default function hello() { return "សួស្តី"; }
+
+// main.js
+import hello, { area, PI } from "./math.js";
+console.log(area(5));
+
+// ក្នុង HTML ត្រូវប្រើ type="module"
+// <script type="module" src="main.js"><\/script>
+</script>
+</section>
+
+<!-- J12 -->
+<section id="j12">
+<h2><span class="badge">មេរៀន ១២</span>Asynchronous: setTimeout, Promise, async/await, fetch</h2>
+<p>JS ធ្វើការម្តងមួយ (single-thread) ប៉ុន្តែការងារយូរ (ទាញទិន្នន័យ, timer) ដំណើរការ <b>asynchronous</b> — មិនរារាំងទំព័រ។</p>
+<script type="text/x-code" data-lang="js" data-demo>
+log("1. ចាប់ផ្តើម");
+
+setTimeout(() => log("3. setTimeout 1 វិនាទី"), 1000);
+
+// Promise
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+wait(500).then(() => log("2.5 Promise .then"));
+
+// async / await ⭐
+async function run() {
+  log("→ ចាប់ផ្តើម async");
+  await wait(1500);
+  log("→ រង់ចាំ 1.5 វិនាទីចប់");
+  return "ចប់ហើយ";
+}
+run().then(r => log("4.", r));
+
+log("2. បន្ទាត់ចុងក្រោយ (រត់មុន ព្រោះមិនរង់ចាំ)");
+</script>
+<h3>fetch — ទាញទិន្នន័យពី API</h3>
+<script type="text/x-code" data-lang="js">
+async function loadUsers() {
+  try {
+    const res = await fetch("https://jsonplaceholder.typicode.com/users");
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const users = await res.json();
+    users.slice(0, 3).forEach(u => console.log(u.name, "-", u.email));
+  } catch (err) {
+    console.error("មានបញ្ហា:", err.message);
+  } finally {
+    console.log("បញ្ចប់");
+  }
+}
+loadUsers();
+
+// ផ្ញើទិន្នន័យ (POST) — ត្រូវការ server ផ្ទាល់ខ្លួន (ឧ. Node.js + Express)
+fetch("/api/save", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ name: "សុខា" })
+});
+</script>
+<div class="warn"><b>⚠️</b> API ខ្លះមិនអនុញ្ញាតឲ្យ web ផ្សេងហៅ (CORS)។ ហើយ fetch ត្រូវការអ៊ីនធឺណិត។ ត្រូវដាក់ code នេះក្នុង file ក្នុង VS Code ដើម្បីសាកល្បង។</div>
+</section>
+
+<!-- J13 -->
+<section id="j13">
+<h2><span class="badge">មេរៀន ១៣</span>try/catch និង localStorage</h2>
+<h3>ការចាប់កំហុស</h3>
+<script type="text/x-code" data-lang="js" data-demo>
+function parse(text) {
+  try {
+    return JSON.parse(text);
+  } catch (err) {
+    log("❌ កំហុស:", err.name);
+    return null;
+  } finally {
+    log("(ពិនិត្យរួច)");
+  }
+}
+log(parse('{"ok": true}'));
+log(parse("មិនមែន JSON"));
+
+function divide(a, b) {
+  if (b === 0) throw new Error("ចែកនឹង 0 មិនបាន");
+  return a / b;
+}
+try { divide(5, 0); } catch (e) { log("⚠️", e.message); }
+</script>
+<h3>localStorage — រក្សាទុកក្នុង browser</h3>
+<p>ទិន្នន័យនៅតែមាន ទោះបិទ browser (ទុកបាន ~5MB ជា string ប៉ុណ្ណោះ)។</p>
+<script type="text/x-code" data-lang="js">
+localStorage.setItem("theme", "dark");               // រក្សាទុក
+const t = localStorage.getItem("theme");             // អាន
+localStorage.removeItem("theme");                    // លុប
+localStorage.clear();                                // លុបទាំងអស់
+
+// រក្សាទុក object/array ត្រូវតែបំលែងជា JSON
+const todos = [{ text: "រៀន JS", done: false }];
+localStorage.setItem("todos", JSON.stringify(todos));
+const saved = JSON.parse(localStorage.getItem("todos") || "[]");
+</script>
+<div class="note"><b>💡</b> ក្នុង DevTools → tab <b>Application</b> → Local Storage ដើម្បីមើល/កែ data។ មិនគួររក្សាទុកលេខសម្ងាត់ក្នុង localStorage។</div>
+</section>
+
+<!-- CHEAT -->
+<section id="cheat">
+<h2>📚 តារាងសង្ខេប JavaScript</h2>
+<table>
+<tr><th>ប្រធានបទ</th><th>ចាំបាច់ត្រូវចាំ</th></tr>
+<tr><td>អថេរ</td><td><code>const</code> (ចម្បង), <code>let</code>; ជៀស <code>var</code></td></tr>
+<tr><td>ប្រៀបធៀប</td><td>ប្រើ <code>===</code> ជានិច្ច</td></tr>
+<tr><td>Function</td><td>Arrow <code>(a, b) =&gt; a + b</code></td></tr>
+<tr><td>Array</td><td><code>map / filter / reduce / find</code></td></tr>
+<tr><td>Object</td><td>Destructuring <code>{ a, b }</code> និង Spread <code>...</code></td></tr>
+<tr><td>DOM</td><td><code>querySelector, textContent, classList, addEventListener</code></td></tr>
+<tr><td>Async</td><td><code>async/await</code> + <code>try/catch</code> + <code>fetch</code></td></tr>
+<tr><td>រក្សាទុក</td><td><code>localStorage</code> + <code>JSON.stringify/parse</code></td></tr>
+<tr><td>Debug</td><td><code>console.log</code>, <code>console.table</code>, DevTools Sources → breakpoint</td></tr>
+</table>
+</section>
+
+<!-- EXERCISES -->
+<section id="exercises">
+<h2>✍️ លំហាត់ JavaScript (មានចម្លើយ)</h2>
+<div class="note"><b>📝</b> ព្យាយាមសរសេរដោយខ្លួនឯងមុន រួចចុច "មើលចម្លើយ"។</div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១ — គណនាអាយុ <span class="level">ងាយ</span></h4>
+<p>ប្រកាសឆ្នាំកំណើត ហើយគណនាអាយុបច្ចុប្បន្ន បង្ហាញជា "ខ្ញុំអាយុ ... ឆ្នាំ"។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="js" data-demo>
+const birthYear = 2000;
+const age = new Date().getFullYear() - birthYear;
+log(`ខ្ញុំអាយុ ${age} ឆ្នាំ`);
+</script></details></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ២ — គូ ឬ សេស <span class="level">ងាយ</span></h4>
+<p>សរសេរ function ពិនិត្យថាលេខមួយជាលេខគូឬសេស។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="js" data-demo>
+const parity = n => (n % 2 === 0 ? "គូ" : "សេស");
+log(7, parity(7));
+log(10, parity(10));
+</script></details></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៣ — តារាងគុណ <span class="level">ងាយ</span></h4>
+<p>បង្ហាញតារាងគុណនៃលេខ 7 ពី 1 ដល់ 10។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="js" data-demo>
+for (let i = 1; i <= 10; i++) log(`7 × ${i} = ${7 * i}`);
+</script></details></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៤ — FizzBuzz <span class="level">មធ្យម</span></h4>
+<p>ពី 1 ដល់ 20៖ ចែកដាច់នឹង 3 បង្ហាញ "Fizz", ដាច់នឹង 5 បង្ហាញ "Buzz", ដាច់ទាំងពីរ "FizzBuzz" ក្រៅពីនេះបង្ហាញលេខ។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="js" data-demo>
+for (let i = 1; i <= 20; i++) {
+  if (i % 15 === 0) log("FizzBuzz");
+  else if (i % 3 === 0) log("Fizz");
+  else if (i % 5 === 0) log("Buzz");
+  else log(i);
+}
+</script></details></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៥ — ពិន្ទុជាមធ្យម <span class="level">មធ្យម</span></h4>
+<p>ពី array ពិន្ទុ <code class="i">[80, 65, 92, 70]</code> រកមធ្យមភាគ ពិន្ទុខ្ពស់បំផុត និងចំនួនអ្នកជាប់ (≥ 70)។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="js" data-demo>
+const scores = [80, 65, 92, 70];
+const avg = scores.reduce((t, n) => t + n, 0) / scores.length;
+log("មធ្យមភាគ:", avg);
+log("ខ្ពស់បំផុត:", Math.max(...scores));
+log("ជាប់:", scores.filter(s => s >= 70).length, "នាក់");
+</script></details></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៦ — Palindrome <span class="level">មធ្យម</span></h4>
+<p>សរសេរ function ពិនិត្យថា string មួយអានពីមុខ/ក្រោយដូចគ្នាឬអត់ (ឧ. "level")។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="js" data-demo>
+const isPalindrome = s => {
+  const t = s.toLowerCase().replace(/[^a-z0-9]/g, "");
+  return t === [...t].reverse().join("");
+};
+log(isPalindrome("level"), isPalindrome("hello"), isPalindrome("A man, a plan, a canal: Panama"));
+</script></details></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៧ — Counter ដោយ DOM <span class="level">មធ្យម</span></h4>
+<p>ធ្វើប៊ូតុង + និង − ហើយបង្ហាញលេខ (មិនឲ្យតិចជាង 0)។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="html" data-demo>
+<style>
+  .c { display:flex; align-items:center; gap:14px; font-size:28px; }
+  button { width:44px; height:44px; font-size:24px; border:0; border-radius:50%; background:#4f46e5; color:#fff; cursor:pointer; }
+</style>
+<div class="c"><button id="minus">−</button><span id="n">0</span><button id="plus">+</button></div>
+<script>
+  let count = 0;
+  const n = document.getElementById("n");
+  const render = () => n.textContent = count;
+  document.getElementById("plus").onclick  = () => { count++; render(); };
+  document.getElementById("minus").onclick = () => { if (count > 0) count--; render(); };
+<\/script>
+</script></details></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៨ — Dark mode ចងចាំ <span class="level">ពិបាក</span></h4>
+<p>ធ្វើប៊ូតុងប្តូរ Dark/Light ហើយរក្សាទុកជម្រើសក្នុង <code class="i">localStorage</code> (ក្នុង VS Code ទើបចងចាំពេល refresh)។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="js">
+// HTML: <button id="theme">🌓 ប្តូរ</button>
+const btn = document.querySelector("#theme");
+const apply = (t) => document.documentElement.dataset.theme = t;
+
+apply(localStorage.getItem("theme") || "light");      // ផ្ទុកពេលបើក
+
+btn.addEventListener("click", () => {
+  const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  apply(next);
+  localStorage.setItem("theme", next);                // រក្សាទុក
+});
+</script>
+<p>ប្រើជាមួយ CSS Variables៖ <code class="i">[data-theme="dark"] { --bg: #111; --text: #eee; }</code>។</p>
+</details></div>
+</section>
+
+<!-- PROJECT -->
+<section id="project">
+<h2>🚀 គម្រោងចុងក្រោយ៖ To-Do List App</h2>
+<p>មុខងារ៖ បន្ថែម, ធីកបញ្ចប់, លុប, ត្រង (ទាំងអស់/មិនទាន់ធ្វើ/ធ្វើរួច), រាប់ចំនួន និង <b>រក្សាទុកក្នុង localStorage</b>។ ប្រើ DOM, Events, Array methods, JSON, Event Delegation។</p>
+<script type="text/x-code" data-lang="html" data-demo>
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  * { box-sizing:border-box; margin:0; }
+  body { font-family:"Noto Sans Khmer",system-ui,sans-serif; background:linear-gradient(135deg,#6366f1,#ec4899); min-height:100vh; padding:20px; }
+  .app { max-width:440px; margin:0 auto; background:#fff; border-radius:18px; padding:20px; box-shadow:0 20px 40px rgba(0,0,0,.25); }
+  h1 { font-size:1.4rem; color:#1e293b; margin-bottom:14px; }
+  form { display:flex; gap:8px; }
+  input[type=text] { flex:1; padding:10px 14px; border:2px solid #e2e8f0; border-radius:10px; font-family:inherit; font-size:15px; }
+  input:focus-visible { outline:3px solid #a5b4fc; }
+  .add { padding:0 18px; border:0; border-radius:10px; background:#6366f1; color:#fff; font-size:20px; cursor:pointer; }
+  .filters { display:flex; gap:6px; margin:14px 0 6px; }
+  .filters button { flex:1; padding:6px; border:1px solid #e2e8f0; background:#f8fafc; border-radius:8px; cursor:pointer; font-family:inherit; }
+  .filters button.active { background:#6366f1; color:#fff; border-color:#6366f1; }
+  ul { list-style:none; padding:0; }
+  li { display:flex; align-items:center; gap:10px; padding:10px 6px; border-bottom:1px solid #f1f5f9; animation:in .25s ease-out; }
+  li span { flex:1; }
+  li.done span { text-decoration:line-through; color:#94a3b8; }
+  .del { border:0; background:none; color:#ef4444; cursor:pointer; font-size:18px; }
+  .info { margin-top:12px; color:#64748b; font-size:.9rem; display:flex; justify-content:space-between; }
+  .clear { background:none; border:0; color:#6366f1; cursor:pointer; font-family:inherit; }
+  @keyframes in { from { opacity:0; transform:translateY(-8px);} to { opacity:1; transform:none; } }
+</style>
+</head>
+<body>
+  <div class="app">
+    <h1>📝 បញ្ជីការងារ</h1>
+    <form id="form">
+      <input type="text" id="text" placeholder="បន្ថែមការងារថ្មី…" autocomplete="off" required>
+      <button class="add" aria-label="បន្ថែម">＋</button>
+    </form>
+    <div class="filters" id="filters">
+      <button data-f="all" class="active">ទាំងអស់</button>
+      <button data-f="active">មិនទាន់ធ្វើ</button>
+      <button data-f="done">ធ្វើរួច</button>
+    </div>
+    <ul id="list"></ul>
+    <div class="info"><span id="count"></span><button class="clear" id="clear">លុបអ្វីដែលធ្វើរួច</button></div>
+  </div>
+
+<script>
+  // ---------- State ----------
+  // try/catch: បើទិន្នន័យក្នុង localStorage ខូច App មិនគាំង
+  let todos;
+  try { todos = JSON.parse(localStorage.getItem("todos") || "[]"); } catch { todos = []; }
+  let filter = "all";
+  const save = () => localStorage.setItem("todos", JSON.stringify(todos));
+
+  // ---------- DOM ----------
+  const form = document.getElementById("form");
+  const input = document.getElementById("text");
+  const list = document.getElementById("list");
+  const count = document.getElementById("count");
+
+  // ---------- Render ----------
+  function render() {
+    const shown = todos.filter(t =>
+      filter === "all" ? true : filter === "done" ? t.done : !t.done);
+
+    list.innerHTML = "";
+    shown.forEach(t => {
+      const li = document.createElement("li");
+      li.dataset.id = t.id;
+      li.className = t.done ? "done" : "";
+      const cb = document.createElement("input");
+      cb.type = "checkbox"; cb.checked = t.done;
+      const span = document.createElement("span");
+      span.textContent = t.text;                 // textContent ការពារ XSS
+      const del = document.createElement("button");
+      del.className = "del"; del.textContent = "✕";
+      li.append(cb, span, del);
+      list.append(li);
+    });
+
+    const left = todos.filter(t => !t.done).length;
+    count.textContent = `នៅសល់ ${left} ការងារ`;
+    save();
+  }
+
+  // ---------- Events ----------
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
+    todos.push({ id: Date.now(), text, done: false });
+    input.value = "";
+    render();
+  });
+
+  // Event Delegation: listener តែមួយលើ ul
+  list.addEventListener("click", (e) => {
+    const li = e.target.closest("li");
+    if (!li) return;
+    const id = Number(li.dataset.id);
+    if (e.target.matches(".del")) todos = todos.filter(t => t.id !== id);
+    else if (e.target.matches("input[type=checkbox]")) {
+      const t = todos.find(t => t.id === id); t.done = !t.done;
+    } else return;
+    render();
+  });
+
+  document.getElementById("filters").addEventListener("click", (e) => {
+    if (!e.target.dataset.f) return;
+    filter = e.target.dataset.f;
+    document.querySelectorAll("#filters button").forEach(b => b.classList.toggle("active", b === e.target));
+    render();
+  });
+
+  document.getElementById("clear").addEventListener("click", () => {
+    todos = todos.filter(t => !t.done);
+    render();
+  });
+
+  render();
+<\/script>
+</body>
+</html>
+</script>
+<div class="note"><b>🏆 អបអរសាទរ!</b> អ្នកបានបញ្ចប់មេរៀន JavaScript មូលដ្ឋាន ហើយអាចបង្កើតកម្មវិធី web តូចៗបាន។ ជំហានបន្ទាប់៖ <b>Git/GitHub</b> (ដាក់ស្នាដៃ), <b>API និង fetch</b> ឲ្យជ្រៅ, <b>Node.js</b>, <b>React</b> ឬ <b>TypeScript</b>, និងអនុវត្តគម្រោងពិតៗច្រើនទៀត។</div>
+<h3>🔗 ប្រភពរៀនបន្ថែម</h3>
+<ul>
+<li>MDN Web Docs — <code class="i">developer.mozilla.org/en-US/docs/Web/JavaScript</code></li>
+<li>javascript.info — មេរៀន JS ពេញលេញ និងទំនើប</li>
+<li>freeCodeCamp — វគ្គ JavaScript ឥតគិតថ្លៃ</li>
+<li>Exercism / Codewars — លំហាត់ code ច្រើន</li>
+</ul>
+</section>
+
+
+
+<section class="hero" id="pro">
+  <h2>🏆 ផ្នែកទី ៣: App កម្រិតអាជីព (Professional Upgrade)</h2>
+  <p>យើងនឹងលើកកម្រិត <b>To-Do App</b> ខាងលើទៅជារចនាសម្ព័ន្ធដែលក្រុមហ៊ុនប្រើ៖ បំបែកជា <b>ES Modules</b> (Logic / Storage / View / Controller), Pure functions + Immutable state, Validation, កែការងារ (ចុចពីរដង), ស្វែងរក, តម្រងតាម URL, Accessibility, Sync រវាង Tab និង <b>Unit Tests</b> ជាមួយ <code>node:test</code>។</p>
+  <p><span class="badge">✔ Test រួច</span> Unit Tests ឆ្លងកាត់ ហើយ App ត្រូវបានសាកក្នុង Browser (បន្ថែម កែ តម្រង ស្វែងរក លុប Reload)។</p>
+</section>
+
+<section id="pro-structure">
+  <h2>📁 រចនាសម្ព័ន្ធ Project</h2>
+  <script type="text/x-code" data-lang="txt" data-label="Folder Structure">
+todo-pro/
+├── index.html
+├── css/
+│   └── style.css
+├── js/
+│   ├── store.js      # Business logic (Pure functions) — គ្មាន DOM
+│   ├── storage.js    # localStorage (ការពារកំហុស)
+│   ├── ui.js         # View: បង្ហាញ State ទៅលើ DOM
+│   └── app.js        # Controller: Events + State
+├── tests/
+│   └── store.test.js # Unit tests (node:test)
+└── package.json
+</script>
+  <div class="note">💡 <b>ហេតុអ្វីបំបែកបែបនេះ?</b> <code class="i">store.js</code> មិនប៉ះ DOM ទេ ដូច្នេះអាចសរសេរ Test ដោយ Node.js បាន និងប្រើឡើងវិញក្នុង React/Vue បាន។ State ប្តូរតាមរយៈ <code class="i">update()</code> តែមួយកន្លែង → Bug តិច ងាយតាមដាន។</div>
+  <div class="warn"><b>⚠️ ES Modules</b> មិនដំណើរការពេលបើក File ដោយចុចពីរដង (<code class="i">file://</code>) ទេ — ត្រូវប្រើ <b>Live Server</b> ឬ <code class="i">npm run dev</code>។</div>
+</section>
+
+<section id="pro-code">
+  <h2>🧱 កូដ App ពេញលេញ</h2>
+  <h3>1) HTML & CSS</h3>
+  <script type="text/x-code" data-lang="html" data-label="index.html">
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>បញ្ជីការងារ Pro</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/app.js"><\/script>
+</head>
+<body>
+  <main class="app">
+    <h1>📝 បញ្ជីការងារ</h1>
+
+    <form id="form" class="add-form">
+      <label for="text" class="sr-only">ការងារថ្មី</label>
+      <input id="text" type="text" placeholder="បន្ថែមការងារថ្មី…" maxlength="200" autocomplete="off">
+      <button type="submit" aria-label="បន្ថែម">＋</button>
+    </form>
+    <p id="error" class="error" role="alert"></p>
+
+    <input id="search" type="search" placeholder="🔍 ស្វែងរក…" aria-label="ស្វែងរក">
+
+    <nav class="filters" aria-label="តម្រង">
+      <a href="#/all">ទាំងអស់</a>
+      <a href="#/active">មិនទាន់ធ្វើ</a>
+      <a href="#/done">ធ្វើរួច</a>
+    </nav>
+
+    <ul id="list" class="list" aria-live="polite"></ul>
+    <p id="empty" class="empty" hidden>មិនមានការងារ 🎉</p>
+
+    <footer class="info">
+      <span id="count"></span>
+      <button id="clear" type="button">លុបអ្វីដែលធ្វើរួច</button>
+    </footer>
+    <p class="hint">ចុចពីរដងលើការងារដើម្បីកែ · Enter = រក្សាទុក · Esc = បោះបង់</p>
+  </main>
+
+  <template id="item-template">
+    <li class="item">
+      <input type="checkbox" class="toggle">
+      <span class="title"></span>
+      <button type="button" class="delete" aria-label="លុប">✕</button>
+    </li>
+  </template>
+</body>
+</html>
+</script>
+  <script type="text/x-code" data-lang="css" data-label="css/style.css">
+:root { --brand: #6366f1; --danger: #ef4444; --muted: #64748b; --line: #e2e8f0; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; padding: 20px 16px; font-family: "Noto Sans Khmer", system-ui, sans-serif;
+       background: linear-gradient(135deg, #6366f1, #ec4899); }
+.app { max-width: 460px; margin: 0 auto; background: #fff; border-radius: 18px; padding: 20px; box-shadow: 0 20px 40px rgba(0,0,0,.25); }
+h1 { margin: 0 0 14px; font-size: 1.4rem; color: #1e293b; }
+.add-form { display: flex; gap: 8px; }
+input[type=text], input[type=search] { flex: 1; width: 100%; padding: 10px 14px; border: 2px solid var(--line); border-radius: 10px; font: inherit; }
+input:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid #a5b4fc; outline-offset: 2px; }
+.add-form button { padding: 0 18px; border: 0; border-radius: 10px; background: var(--brand); color: #fff; font-size: 20px; cursor: pointer; }
+#search { margin-top: 10px; }
+.error { color: var(--danger); min-height: 1.2em; margin: 4px 0 0; font-size: .9rem; }
+.filters { display: flex; gap: 6px; margin: 12px 0 6px; }
+.filters a { flex: 1; text-align: center; padding: 6px; border: 1px solid var(--line); border-radius: 8px; color: inherit; text-decoration: none; }
+.filters a.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+.list { list-style: none; margin: 0; padding: 0; }
+.item { display: flex; align-items: center; gap: 10px; padding: 10px 6px; border-bottom: 1px solid #f1f5f9; }
+.item .title { flex: 1; word-break: break-word; }
+.item.done .title { text-decoration: line-through; color: #94a3b8; }
+.item .edit { flex: 1; padding: 6px 10px; border: 2px solid var(--brand); border-radius: 8px; font: inherit; }
+.delete { border: 0; background: none; color: var(--danger); font-size: 18px; cursor: pointer; }
+.empty { text-align: center; color: var(--muted); }
+.info { display: flex; justify-content: space-between; margin-top: 12px; color: var(--muted); font-size: .9rem; }
+.info button { border: 0; background: none; color: var(--brand); cursor: pointer; font: inherit; }
+.hint { color: var(--muted); font-size: .8rem; text-align: center; margin: 10px 0 0; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</script>
+  <h3>2) store.js – Business Logic</h3>
+  <script type="text/x-code" data-lang="js" data-label="js/store.js">
+// ===== Business logic (Pure functions) =====
+// មិនប៉ះ DOM ឬ localStorage → ងាយសរសេរ Test និងប្រើឡើងវិញ
+// គ្រប់ function ត្រឡប់ array ថ្មី (immutable) មិនកែ array ចាស់
+
+export const MAX_LENGTH = 200;
+export const FILTERS = ["all", "active", "done"];
+
+export function validateText(text) {
+  const t = String(text ?? "").trim();
+  if (!t) return { ok: false, error: "សូមបញ្ចូលការងារ" };
+  if (t.length > MAX_LENGTH) return { ok: false, error: `យ៉ាងច្រើន ${MAX_LENGTH} តួអក្សរ` };
+  return { ok: true, value: t };
+}
+
+export function createId() {
+  return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+export function addTodo(todos, text, id = createId()) {
+  const v = validateText(text);
+  if (!v.ok) throw new Error(v.error);
+  return [...todos, { id, text: v.value, done: false, createdAt: new Date().toISOString() }];
+}
+
+export const toggleTodo = (todos, id) =>
+  todos.map((t) => (t.id === id ? { ...t, done: !t.done } : t));
+
+export const removeTodo = (todos, id) => todos.filter((t) => t.id !== id);
+
+export function editTodo(todos, id, text) {
+  const v = validateText(text);
+  if (!v.ok) throw new Error(v.error);
+  return todos.map((t) => (t.id === id ? { ...t, text: v.value } : t));
+}
+
+export const clearDone = (todos) => todos.filter((t) => !t.done);
+
+export function visibleTodos(todos, filter = "all", query = "") {
+  const q = query.trim().toLowerCase();
+  return todos.filter((t) => {
+    if (filter === "active" && t.done) return false;
+    if (filter === "done" && !t.done) return false;
+    return !q || t.text.toLowerCase().includes(q);
+  });
+}
+
+export function stats(todos) {
+  const done = todos.filter((t) => t.done).length;
+  return { total: todos.length, done, left: todos.length - done };
+}
+</script>
+  <h3>3) storage.js – រក្សាទុកដោយសុវត្ថិភាព</h3>
+  <script type="text/x-code" data-lang="js" data-label="js/storage.js">
+// ===== Storage layer =====
+// localStorage អាចបរាជ័យ (Private mode, ពេញ, ទិន្នន័យខូច) — កុំឱ្យ App គាំង
+
+const KEY = "todo-pro:v1";
+
+export function loadTodos() {
+  try {
+    const data = JSON.parse(localStorage.getItem(KEY) ?? "[]");
+    return Array.isArray(data)
+      ? data.filter((t) => t && typeof t.id === "string" && typeof t.text === "string")
+      : [];
+  } catch (err) {
+    console.warn("មិនអាចអានទិន្នន័យ:", err);
+    return [];
+  }
+}
+
+export function saveTodos(todos) {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(todos));
+    return true;
+  } catch (err) {
+    console.warn("មិនអាចរក្សាទុក:", err);
+    return false;
+  }
+}
+</script>
+  <h3>4) ui.js – View</h3>
+  <script type="text/x-code" data-lang="js" data-label="js/ui.js">
+// ===== View layer: បង្ហាញ State ទៅលើ DOM =====
+
+const $ = (sel) => document.querySelector(sel);
+const template = () => $("#item-template");
+
+export function render({ todos, visible, filter, stats, editingId }) {
+  const list = $("#list");
+  const fragment = document.createDocumentFragment();     // សរសេរ DOM ម្តងគត់ → លឿន
+
+  for (const todo of visible) {
+    const li = template().content.firstElementChild.cloneNode(true);
+    li.dataset.id = todo.id;
+    li.classList.toggle("done", todo.done);
+    li.querySelector(".toggle").checked = todo.done;
+    li.querySelector(".toggle").setAttribute("aria-label", `សម្គាល់ "${todo.text}" ថាធ្វើរួច`);
+
+    if (todo.id === editingId) {
+      const input = document.createElement("input");
+      input.className = "edit";
+      input.value = todo.text;                            // .value / textContent ការពារ XSS
+      input.maxLength = 200;
+      li.querySelector(".title").replaceWith(input);
+    } else {
+      li.querySelector(".title").textContent = todo.text;
+    }
+    fragment.append(li);
+  }
+  list.replaceChildren(fragment);
+
+  $("#empty").hidden = visible.length > 0;
+  $("#count").textContent = `នៅសល់ ${stats.left} / ${stats.total}`;
+  $("#clear").hidden = stats.done === 0;
+  document.querySelectorAll(".filters a").forEach((a) =>
+    a.classList.toggle("active", a.getAttribute("href") === `#/${filter}`));
+
+  $("#list .edit")?.focus();
+  return todos;
+}
+
+export function showError(message = "") {
+  $("#error").textContent = message;
+}
+</script>
+  <h3>5) app.js – Controller</h3>
+  <script type="text/x-code" data-lang="js" data-label="js/app.js">
+// ===== Controller: ភ្ជាប់ State + Events + View =====
+import * as store from "./store.js";
+import { loadTodos, saveTodos } from "./storage.js";
+import { render, showError } from "./ui.js";
+
+const state = {
+  todos: loadTodos(),
+  filter: "all",
+  query: "",
+  editingId: null,
+};
+
+function update(changes = {}) {
+  Object.assign(state, changes);
+  if ("todos" in changes) saveTodos(state.todos);
+  render({
+    ...state,
+    visible: store.visibleTodos(state.todos, state.filter, state.query),
+    stats: store.stats(state.todos),
+  });
+}
+
+// ការពារកំហុស: បើ store throw → បង្ហាញសារ មិនឱ្យ App គាំង
+function safely(fn) {
+  try {
+    fn();
+    showError();
+  } catch (err) {
+    showError(err.message);
+  }
+}
+
+const idOf = (el) => el.closest(".item")?.dataset.id;
+
+// ---- បន្ថែម ----
+document.querySelector("#form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const input = document.querySelector("#text");
+  safely(() => {
+    update({ todos: store.addTodo(state.todos, input.value) });
+    input.value = "";
+  });
+});
+
+// ---- ធីក / លុប (Event Delegation) ----
+const list = document.querySelector("#list");
+list.addEventListener("click", (e) => {
+  const id = idOf(e.target);
+  if (!id) return;
+  if (e.target.matches(".toggle")) update({ todos: store.toggleTodo(state.todos, id) });
+  if (e.target.matches(".delete")) update({ todos: store.removeTodo(state.todos, id) });
+});
+
+// ---- កែ: ចុចពីរដង → Enter រក្សាទុក, Esc បោះបង់ ----
+list.addEventListener("dblclick", (e) => {
+  if (e.target.matches(".title")) update({ editingId: idOf(e.target) });
+});
+
+list.addEventListener("keydown", (e) => {
+  if (!e.target.matches(".edit")) return;
+  if (e.key === "Escape") update({ editingId: null });
+  if (e.key === "Enter") {
+    safely(() => update({ todos: store.editTodo(state.todos, state.editingId, e.target.value), editingId: null }));
+  }
+});
+
+list.addEventListener("focusout", (e) => {
+  if (e.target.matches(".edit") && state.editingId) update({ editingId: null });
+});
+
+// ---- ស្វែងរក ----
+document.querySelector("#search").addEventListener("input", (e) => update({ query: e.target.value }));
+
+// ---- លុបអ្វីដែលធ្វើរួច ----
+document.querySelector("#clear").addEventListener("click", () => update({ todos: store.clearDone(state.todos) }));
+
+// ---- តម្រងតាម URL (#/active) → Refresh ឬ Share link នៅតែដដែល ----
+function readHash() {
+  const f = location.hash.replace("#/", "");
+  update({ filter: store.FILTERS.includes(f) ? f : "all" });
+}
+window.addEventListener("hashchange", readHash);
+
+// ---- Sync រវាង Tab ច្រើន ----
+window.addEventListener("storage", () => update({ todos: loadTodos() }));
+
+readHash();
+</script>
+</section>
+
+<section id="pro-test">
+  <h2>🧪 Unit Tests (node:test)</h2>
+  <p>Node.js មាន Test runner ស្រាប់ — មិនចាំបាច់ដំឡើងអ្វីបន្ថែម។</p>
+  <script type="text/x-code" data-lang="js" data-label="tests/store.test.js">
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import * as store from "../js/store.js";
+
+test("validateText trims and rejects empty / too long", () => {
+  assert.deepEqual(store.validateText("  រៀន JS  "), { ok: true, value: "រៀន JS" });
+  assert.equal(store.validateText("   ").ok, false);
+  assert.equal(store.validateText("x".repeat(201)).ok, false);
+});
+
+test("addTodo returns a new array and does not mutate", () => {
+  const before = [];
+  const after = store.addTodo(before, "A", "1");
+  assert.equal(before.length, 0);
+  assert.equal(after.length, 1);
+  assert.equal(after[0].done, false);
+  assert.throws(() => store.addTodo(before, ""), /សូមបញ្ចូល/);
+});
+
+test("toggle, edit, remove, clearDone", () => {
+  let list = store.addTodo([], "A", "1");
+  list = store.addTodo(list, "B", "2");
+  list = store.toggleTodo(list, "1");
+  assert.equal(list[0].done, true);
+  list = store.editTodo(list, "2", " B2 ");
+  assert.equal(list[1].text, "B2");
+  assert.equal(store.clearDone(list).length, 1);
+  assert.equal(store.removeTodo(list, "2").length, 1);
+});
+
+test("visibleTodos filters by status and search", () => {
+  let list = store.addTodo([], "Learn JavaScript", "1");
+  list = store.addTodo(list, "Buy rice", "2");
+  list = store.toggleTodo(list, "2");
+  assert.equal(store.visibleTodos(list, "active").length, 1);
+  assert.equal(store.visibleTodos(list, "done")[0].id, "2");
+  assert.equal(store.visibleTodos(list, "all", "java").length, 1);
+  assert.deepEqual(store.stats(list), { total: 2, done: 1, left: 1 });
+});
+</script>
+  <script type="text/x-code" data-lang="js" data-label="package.json">
+{
+  "name": "todo-pro",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npx vite",
+    "build": "npx vite build",
+    "test": "node --test"
+  }
+}
+</script>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+npm test
+</script>
+  <script type="text/x-code" data-lang="txt" data-label="លទ្ធផល">
+✔ validateText trims and rejects empty / too long
+✔ addTodo returns a new array and does not mutate
+✔ toggle, edit, remove, clearDone
+✔ visibleTodos filters by status and search
+ℹ tests 4
+ℹ pass 4
+ℹ fail 0
+</script>
+</section>
+
+<section id="pro-deploy">
+  <h2>🚀 Build & Deploy</h2>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+npm run dev      # Vite dev server (Auto reload)
+npm run build    # បង្កើត Folder dist/ សម្រាប់ Deploy
+</script>
+  <table>
+    <tr><th>Checklist កម្រិតអាជីព</th><th>ក្នុង App នេះ</th></tr>
+    <tr><td>ការពារ XSS</td><td>ប្រើ <code class="i">textContent</code> / <code class="i">.value</code> មិនប្រើ <code class="i">innerHTML</code> ជាមួយ Input របស់ User</td></tr>
+    <tr><td>Validation</td><td><code class="i">validateText()</code> — ទទេ ឬវែងពេក បង្ហាញសារ</td></tr>
+    <tr><td>Error handling</td><td><code class="i">safely()</code> និង try/catch ក្នុង storage</td></tr>
+    <tr><td>Accessibility</td><td><code class="i">label</code>, <code class="i">aria-label</code>, <code class="i">aria-live</code>, <code class="i">:focus-visible</code>, ប្រើក្តារចុចបាន</td></tr>
+    <tr><td>Performance</td><td><code class="i">DocumentFragment</code> + <code class="i">replaceChildren</code> សរសេរ DOM ម្តង</td></tr>
+    <tr><td>Testing</td><td>Unit tests សម្រាប់ Logic ទាំងអស់</td></tr>
+  </table>
+  <p><b>Deploy ឥតគិតថ្លៃ:</b> GitHub Pages, Netlify, Vercel, Cloudflare Pages — Upload Folder (ឬ <code class="i">dist/</code>) ប៉ុណ្ណោះ។</p>
+  <div class="ex"><h4>🏁 លំហាត់គម្រោងចុងក្រោយ</h4>
+    <ol>
+      <li>បន្ថែមកាលបរិច្ឆេទផុតកំណត់ (<code class="i">&lt;input type="date"&gt;</code>) ហើយបង្ហាញពណ៌ក្រហមបើហួសថ្ងៃ</li>
+      <li>បន្ថែមការអូសតម្រៀប (Drag & Drop)</li>
+      <li>Export / Import ជា File JSON</li>
+      <li>សរសេរ Test បន្ថែមសម្រាប់មុខងារថ្មីៗ</li>
+      <li>ប្តូរការរក្សាទុកពី localStorage ទៅ REST API (មើលវគ្គ Node.js)</li>
+    </ol>
+  </div>
+</section>
+
+<section id="roadmap">
+  <h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+  <ol class="steps">
+    <li><b>មូលដ្ឋាន</b> – អថេរ, លក្ខខណ្ឌ, Loop, Function, Array, Object (មេរៀន ១–៧)</li>
+    <li><b>Browser</b> – DOM, Events, Form (មេរៀន ៨–១០)</li>
+    <li><b>Modern JS</b> – ES6+, Modules, Async/Fetch, localStorage (មេរៀន ១១–១៣)</li>
+    <li><b>Git & GitHub</b> – រក្សាទុក និងបង្ហាញស្នាដៃ</li>
+    <li><b>TypeScript</b> – JS ដែលមាន Type (ក្រុមហ៊ុនភាគច្រើនប្រើ)</li>
+    <li><b>Framework</b> – React, Vue ឬ Svelte</li>
+    <li><b>Backend</b> – Node.js + Express + Database (វគ្គ Node.js និង SQL)</li>
+    <li><b>Testing & Build</b> – Vitest/Jest, Vite, ESLint, Prettier</li>
+  </ol>
+</section>
+
+</main>
+</div>
+<script>
+/* ---------- Syntax highlighter ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const sp = (c,t) => `<span class="${c}">${esc(t)}</span>`;
+function tok(s, re, fn){
+  let out='', last=0, m; re.lastIndex = 0;
+  while((m = re.exec(s))){
+    out += esc(s.slice(last, m.index)) + fn(m);
+    last = m.index + m[0].length;
+    if(m[0]==='') re.lastIndex++;
+  }
+  return out + esc(s.slice(last));
+}
+const NAMED = new Set('red green blue yellow orange purple pink black white gray grey tomato crimson royalblue skyblue teal navy gold coral salmon orchid violet indigo lime cyan magenta brown maroon olive silver aqua khaki plum turquoise'.split(' '));
+function hlValue(v){
+  const re = /(\/\*[\s\S]*?\*\/)|("[^"]*"|'[^']*')|(#[0-9a-fA-F]{3,8}\b)|((?<![\w#-])-?\d*\.?\d+(?:px|rem|em|%|vh|vw|s|ms|deg|fr|ch)?)|([a-zA-Z-]+)(?=\()|(!?[a-zA-Z][a-zA-Z-]*)/g;
+  return tok(v, re, m => {
+    if(m[1]) return sp('c', m[1]);
+    if(m[2]) return sp('s', m[2]);
+    if(m[3]) return `<span class="sw" style="background:${m[3]}"></span>` + sp('n', m[3]);
+    if(m[4]) return sp('n', m[4]);
+    if(m[5]) return sp('f', m[5]);
+    if(m[6]){
+      if(NAMED.has(m[6])) return `<span class="sw" style="background:${m[6]}"></span>` + sp('v', m[6]);
+      return sp('v', m[6]);
+    }
+    return esc(m[0]);
+  });
+}
+function hlSelector(s){
+  return tok(s, /\/\*[\s\S]*?\*\//g, m => sp('c', m[0])).replace(
+    /(^|<\/span>)([^<]+?)(?=<span|$)/g, (all, a, b) => {
+      if(!b.trim()) return all;
+      return a + (b.trim().startsWith('@') ? `<span class="at">${b}</span>` : `<span class="sel">${b}</span>`);
+    });
+}
+function hlCSS(code){
+  const re = /(\/\*[\s\S]*?\*\/)|([^{};]+?)(\s*\{)|([\w-]+)(\s*:\s*)([^;{}]*)(;?)|([{}])/g;
+  return tok(code, re, m => {
+    if(m[1]) return sp('c', m[1]);
+    if(m[2] !== undefined && m[3]) return hlSelector(m[2]) + sp('pn', m[3]);
+    if(m[4]) return sp('pr', m[4]) + sp('pn', m[5]) + hlValue(m[6]) + sp('pn', m[7]);
+    return sp('pn', m[0]);
+  });
+}
+function hlTag(tag){
+  const m = tag.match(/^(<\/?)([\w-]+)([\s\S]*?)(\/?>)$/);
+  if(!m) return esc(tag);
+  const attrs = tok(m[3], /([\w:@-]+)(=)("[^"]*"|'[^']*')|([\w-]+)/g, a =>
+    a[1] ? sp('at2', a[1]) + sp('pn', a[2]) + sp('s', a[3]) : sp('at2', a[4]));
+  return sp('pn', m[1]) + sp('tg', m[2]) + attrs + sp('pn', m[4]);
+}
+const JS_KW = new Set('const let var function return if else for while do switch case break continue new class extends import export from default async await try catch finally throw typeof instanceof of in this delete void yield static get set'.split(' '));
+const JS_LIT = new Set(['true','false','null','undefined','NaN','Infinity']);
+function hlJS(code){
+  const re = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|(`(?:\\[\s\S]|[^`\\])*`|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*')|(\b\d+\.?\d*\b)|([A-Za-z_$][\w$]*)(?=\s*\()|([A-Za-z_$][\w$]*)/g;
+  return tok(code, re, m => {
+    if(m[1]) return sp('c', m[1]);
+    if(m[2]) return sp('s', m[2]);
+    if(m[3]) return sp('n', m[3]);
+    if(m[4]) return JS_KW.has(m[4]) ? sp('at', m[4]) : sp('f', m[4]);
+    if(m[5]){
+      if(JS_KW.has(m[5])) return sp('at', m[5]);
+      if(JS_LIT.has(m[5])) return sp('tg', m[5]);
+      if(/^[A-Z]/.test(m[5])) return sp('sel', m[5]);
+      return sp('pr', m[5]);
+    }
+    return esc(m[0]);
+  });
+}
+function hlHTML(code){
+  const re = /(<!--[\s\S]*?-->)|(<style[^>]*>)([\s\S]*?)(<\/style>)|(<script[^>]*>)([\s\S]*?)(<\/script>)|(<!DOCTYPE[^>]*>)|(<\/?[a-zA-Z][^>]*>)/gi;
+  return tok(code, re, m => {
+    if(m[1]) return sp('c', m[1]);
+    if(m[2]) return hlTag(m[2]) + hlCSS(m[3]) + hlTag(m[4]);
+    if(m[5]) return hlTag(m[5]) + hlJS(m[6]) + hlTag(m[7]);
+    if(m[8]) return sp('pn', m[8]);
+    return hlTag(m[9]);
+  });
+}
+
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;600;800&display=swap" rel="stylesheet"><style>body{font-family:"Noto Sans Khmer",system-ui,sans-serif;margin:12px;line-height:1.7}</style>';
+const FRAME_JS = '<style>#out{background:#0f172a;color:#a7f3d0;font-family:"Fira Code",monospace;font-size:13px;line-height:1.6;padding:10px 12px;border-radius:8px;white-space:pre-wrap;margin:8px 0 0;min-height:36px}</style><script>function log(){var o=document.getElementById("out");if(!o){o=document.createElement("pre");o.id="out";document.body.appendChild(o);}var a=[].slice.call(arguments).map(function(x){return typeof x==="object"&&x!==null?JSON.stringify(x):String(x)});o.textContent+=a.join(" ")+"\\n";}window.onerror=function(m){log("❌",m)};window.addEventListener("unhandledrejection",function(e){log("❌",e.reason)});<\/script>';
+const FRAME_HEAD_FULL = FRAME_HEAD + FRAME_JS;
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'css';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || ({ js: 'JavaScript', html: 'HTML', css: 'CSS', bash: 'Terminal', txt: 'Text' }[lang] || lang.toUpperCase());
+  const pre = document.createElement('pre');
+  const code = document.createElement('code');
+  code.innerHTML = lang === 'html' ? hlHTML(raw) : lang === 'js' ? hlJS(raw) : lang === 'css' ? hlCSS(raw) : esc(raw);
+  pre.appendChild(code);
+  const btn = document.createElement('button');
+  btn.className = 'btn copy';
+  btn.textContent = 'ចម្លង';
+  btn.onclick = async () => {
+    try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+    catch { btn.textContent = 'បរាជ័យ'; }
+    setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+  };
+  box.append(label, pre, btn);
+  if (sc.hasAttribute('data-demo')) {
+    const res = document.createElement('div');
+    res.className = 'result';
+    res.innerHTML = '<div class="lbl">' + (lang === 'js' ? '▶ លទ្ធផល (Console)' : '▶ លទ្ធផល (Result)') + '</div>';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = 'លទ្ធផល';
+    fr.srcdoc = FRAME_HEAD_FULL + (lang === 'js' ? '<pre id="out"></pre><script>' + raw + '<\/script>' : raw);
+    const fit = () => {
+      try { fr.style.height = Math.max(90, fr.contentDocument.documentElement.scrollHeight + 4) + 'px'; }
+      catch (e) { fr.style.height = '240px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 1800); };   // demo async បន្ថែមបន្ទាត់ក្រោយ
+    res.appendChild(fr);
+    box.appendChild(res);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="js"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

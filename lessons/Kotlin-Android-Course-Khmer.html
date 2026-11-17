@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន Kotlin Android App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#7f52ff; --accent2:#b125ea; --accent-soft:#f2edff;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#b49bff; --accent2:#d17cf5; --accent-soft:#1d1433;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#b49bff; --accent2:#d17cf5; --accent-soft:#1d1433;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#1b1035,#7f52ff 55%,#e44857);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/kotlin.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/kotlin.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Android App ជាមួយ Kotlin &amp; Jetpack Compose</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Kotlin ជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#install">២. ដំឡើង Android Studio</a>
+<a href="#elements">៣. ធាតុនីមួយៗរបស់ Android + Compose</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Kotlin មូលដ្ឋាន៖ val/var, Type &amp; Null Safety</a>
+<a href="#l2">មេរៀន ២: Function, Class, data class &amp; Collections</a>
+<a href="#l3">មេរៀន ៣: Coroutines &amp; Flow (Async)</a>
+<a href="#l4">មេរៀន ៤: App Compose ដំបូង</a>
+<a href="#l5">មេរៀន ៥: Composables &amp; Modifier</a>
+<a href="#l6">មេរៀន ៦: Layout៖ Column, Row, Box &amp; LazyColumn</a>
+<a href="#l7">មេរៀន ៧: State៖ remember &amp; mutableStateOf</a>
+<a href="#l8">មេរៀន ៨: Navigation Compose</a>
+<a href="#l9">មេរៀន ៩: ViewModel + StateFlow (MVVM)</a>
+<a href="#l10">មេរៀន ១០: Retrofit &amp; JSON (REST API)</a>
+<a href="#l11">មេរៀន ១១: Room Database &amp; DataStore</a>
+<a href="#l12">មេរៀន ១២: Permission &amp; Publish លើ Google Play</a>
+<a href="#cheat">📋 Cheat Sheet</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងអាជីព៖ Kafe Order App (Compose)</a>
+<a href="#pro-app">💻 Compose Playground Pro (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🤖 Kotlin + Jetpack Compose — App Android ទំនើប</h2>
+  <p>ភាសាផ្លូវការរបស់ Android៖ <b>Kotlin, Null safety, Coroutines, Compose, Modifier, LazyColumn, State, Navigation, ViewModel + StateFlow (MVVM), Retrofit, Room</b> និង Publish លើ Google Play។</p>
+  <p><span class="badge">📘 ១២ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">💻 Code មានពណ៌ + លទ្ធផល</span><span class="badge">🤖 Compose Playground Pro</span></p>
+</section>
+<section id="intro">
+<h2>១. Kotlin ជាអ្វី? អ្នកណាបង្កើត?</h2>
+
+<p><b>Kotlin</b> គឺជាភាសាសរសេរកម្មវិធីទំនើប បង្កើតដោយក្រុមហ៊ុន <b>JetBrains</b> (អ្នកបង្កើត IntelliJ IDEA) នៅប្រទេសឆែក/រុស្ស៊ី ដឹកនាំដោយ <b>Andrey Breslav</b>។ ឈ្មោះ Kotlin មកពី <b>កោះ Kotlin</b> ជិតក្រុង St. Petersburg។ ឆ្នាំ <b>2019</b> Google ប្រកាស <b>"Kotlin-first"</b> → ភាសាផ្លូវការលេខ ១ សម្រាប់ Android។ <button class="btn say" data-say="Kotlin and Jetpack Compose">🔊 អានពាក្យ</button></p>
+<table><tr><th>ឆ្នាំ</th><th>ព្រឹត្តិការណ៍</th></tr><tr><td>2008</td><td><b>Android</b> 1.0 (Google) — ប្រើ Java</td></tr><tr><td>2011</td><td>JetBrains ប្រកាស <b>Kotlin</b></td></tr><tr><td>2016</td><td>Kotlin <b>1.0</b></td></tr><tr><td>2017</td><td>Google I/O៖ Kotlin ជាភាសាផ្លូវការរបស់ Android</td></tr><tr><td>2019</td><td>Android <b>Kotlin-first</b></td></tr><tr><td>2021</td><td><b>Jetpack Compose 1.0</b> — UI ទំនើបដោយ Kotlin (Declarative ដូច Flutter/SwiftUI)</td></tr><tr><td>2024</td><td>Kotlin <b>2.0</b> (K2 compiler) · Kotlin Multiplatform stable</td></tr></table>
+
+<div class="grid"><div class="card"><b>📱 Android App</b><br>Google Play — 95% នៃ App ល្បីប្រើ Kotlin</div><div class="card"><b>🖥️ Server</b><br>Spring Boot, Ktor</div><div class="card"><b>🌐 Multiplatform</b><br>Share code Android + iOS (KMP)</div><div class="card"><b>🏢 អ្នកប្រើ</b><br>Google, Netflix, Pinterest, Uber, Duolingo</div></div>
+
+<figure class="fig"><svg viewBox="0 0 900 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="900" height="230" fill="#fff"/><text x="90" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">Framework</text><text x="230" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">ភាសា</text><text x="360" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">ក្រុមហ៊ុន</text><text x="520" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">ល្បឿន</text><text x="660" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">Cross-platform</text><text x="810" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">Native API</text><rect x="10" y="40" width="880" height="36" rx="8" fill="#02569b" fill-opacity=".08"/><text x="90" y="64" text-anchor="middle" font-size="14" font-weight="800" fill="#02569b">Flutter</text><text x="230" y="64" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">Dart</text><text x="360" y="64" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">Google</text><circle cx="480" cy="60" r="6" fill="#02569b"/><circle cx="498" cy="60" r="6" fill="#02569b"/><circle cx="516" cy="60" r="6" fill="#02569b"/><circle cx="534" cy="60" r="6" fill="#02569b"/><circle cx="552" cy="60" r="6" fill="#02569b"/><circle cx="625" cy="60" r="6" fill="#02569b"/><circle cx="643" cy="60" r="6" fill="#02569b"/><circle cx="661" cy="60" r="6" fill="#02569b"/><circle cx="679" cy="60" r="6" fill="#02569b"/><circle cx="697" cy="60" r="6" fill="#02569b"/><circle cx="770" cy="60" r="6" fill="#02569b"/><circle cx="788" cy="60" r="6" fill="#02569b"/><circle cx="806" cy="60" r="6" fill="#02569b"/><circle cx="824" cy="60" r="6" fill="#02569b"/><circle cx="842" cy="60" r="6" fill="#e2e8f0"/><rect x="10" y="82" width="880" height="36" rx="8" fill="#0ea5e9" fill-opacity=".08"/><text x="90" y="106" text-anchor="middle" font-size="14" font-weight="800" fill="#0ea5e9">React Native</text><text x="230" y="106" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">JS/TS</text><text x="360" y="106" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">Meta</text><circle cx="480" cy="102" r="6" fill="#0ea5e9"/><circle cx="498" cy="102" r="6" fill="#0ea5e9"/><circle cx="516" cy="102" r="6" fill="#0ea5e9"/><circle cx="534" cy="102" r="6" fill="#0ea5e9"/><circle cx="552" cy="102" r="6" fill="#e2e8f0"/><circle cx="625" cy="102" r="6" fill="#0ea5e9"/><circle cx="643" cy="102" r="6" fill="#0ea5e9"/><circle cx="661" cy="102" r="6" fill="#0ea5e9"/><circle cx="679" cy="102" r="6" fill="#0ea5e9"/><circle cx="697" cy="102" r="6" fill="#0ea5e9"/><circle cx="770" cy="102" r="6" fill="#0ea5e9"/><circle cx="788" cy="102" r="6" fill="#0ea5e9"/><circle cx="806" cy="102" r="6" fill="#0ea5e9"/><circle cx="824" cy="102" r="6" fill="#0ea5e9"/><circle cx="842" cy="102" r="6" fill="#e2e8f0"/><rect x="10" y="124" width="880" height="36" rx="8" fill="#7c3aed" fill-opacity=".08"/><text x="90" y="148" text-anchor="middle" font-size="14" font-weight="800" fill="#7c3aed">Kotlin (Android)</text><text x="230" y="148" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">Kotlin</text><text x="360" y="148" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">JetBrains/Google</text><circle cx="480" cy="144" r="6" fill="#7c3aed"/><circle cx="498" cy="144" r="6" fill="#7c3aed"/><circle cx="516" cy="144" r="6" fill="#7c3aed"/><circle cx="534" cy="144" r="6" fill="#7c3aed"/><circle cx="552" cy="144" r="6" fill="#7c3aed"/><circle cx="625" cy="144" r="6" fill="#7c3aed"/><circle cx="643" cy="144" r="6" fill="#7c3aed"/><circle cx="661" cy="144" r="6" fill="#e2e8f0"/><circle cx="679" cy="144" r="6" fill="#e2e8f0"/><circle cx="697" cy="144" r="6" fill="#e2e8f0"/><circle cx="770" cy="144" r="6" fill="#7c3aed"/><circle cx="788" cy="144" r="6" fill="#7c3aed"/><circle cx="806" cy="144" r="6" fill="#7c3aed"/><circle cx="824" cy="144" r="6" fill="#7c3aed"/><circle cx="842" cy="144" r="6" fill="#7c3aed"/><rect x="10" y="166" width="880" height="36" rx="8" fill="#ea580c" fill-opacity=".08"/><text x="90" y="190" text-anchor="middle" font-size="14" font-weight="800" fill="#ea580c">Swift (iOS)</text><text x="230" y="190" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">Swift</text><text x="360" y="190" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">Apple</text><circle cx="480" cy="186" r="6" fill="#ea580c"/><circle cx="498" cy="186" r="6" fill="#ea580c"/><circle cx="516" cy="186" r="6" fill="#ea580c"/><circle cx="534" cy="186" r="6" fill="#ea580c"/><circle cx="552" cy="186" r="6" fill="#ea580c"/><circle cx="625" cy="186" r="6" fill="#ea580c"/><circle cx="643" cy="186" r="6" fill="#ea580c"/><circle cx="661" cy="186" r="6" fill="#e2e8f0"/><circle cx="679" cy="186" r="6" fill="#e2e8f0"/><circle cx="697" cy="186" r="6" fill="#e2e8f0"/><circle cx="770" cy="186" r="6" fill="#ea580c"/><circle cx="788" cy="186" r="6" fill="#ea580c"/><circle cx="806" cy="186" r="6" fill="#ea580c"/><circle cx="824" cy="186" r="6" fill="#ea580c"/><circle cx="842" cy="186" r="6" fill="#ea580c"/></svg><figcaption>🖼️ ប្រៀបធៀប Framework Mobile</figcaption></figure>
+
+</section>
+<section id="install">
+<h2>២. ដំឡើង Android Studio</h2>
+
+<ol class="steps"><li>ទាញយក <b>Android Studio</b> (developer.android.com/studio) — មាន JDK + Android SDK + Emulator ស្រាប់។</li>
+<li><b>New Project → Empty Activity</b> (Compose) · Language: Kotlin · Minimum SDK: API 24។</li>
+<li>បង្កើត Emulator៖ <b>Device Manager → Pixel</b> ឬភ្ជាប់ទូរស័ព្ទពិត (បើក <b>Developer options → USB debugging</b>)។</li>
+<li>ចុច ▶ <b>Run</b>។ សាក Kotlin លើ Browser៖ <b>play.kotlinlang.org</b>។</li></ol>
+<script type="text/x-code" data-lang="txt" data-label="Project">
+KafeApp/
+├── app/
+│   ├── build.gradle.kts            ← Dependencies (Compose, Retrofit, Room)
+│   └── src/main/
+│       ├── AndroidManifest.xml     ← Permission, Activity
+│       ├── java/com/kafe/app/
+│       │   ├── MainActivity.kt     ← ចំណុចចាប់ផ្តើម
+│       │   ├── ui/ (screens, theme)
+│       │   └── data/ (api, db, repository)
+│       └── res/ (drawable, values/strings.xml)
+└── settings.gradle.kts
+</script>
+
+<div class="warn">⚠️ Code Kotlin មូលដ្ឋាន (មេរៀន ១–៣) <b>Compile និងរត់ពិត</b> ដោយ Kotlin 2.0.21។ Jetpack Compose/Android ត្រូវការ Android SDK ដូច្នេះមេរៀន UI ជាលទ្ធផលគំរូ។ សាក Kotlin លើ Browser៖ <b>play.kotlinlang.org</b>។</div>
+
+</section>
+<section id="elements">
+<h2>៣. ធាតុនីមួយៗរបស់ Android + Compose</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="230" fill="#fff"/><rect x="20" y="60" width="230" height="100" rx="14" fill="#16a34a"/><text x="135.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">UI (Composable / View)</text><text x="135.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">បង្ហាញ State · ផ្ញើ Event</text><rect x="355" y="60" width="230" height="100" rx="14" fill="#7c3aed"/><text x="470.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">ViewModel</text><text x="470.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">StateFlow / @Observable</text><rect x="690" y="60" width="230" height="100" rx="14" fill="#ea580c"/><text x="805.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Repository</text><text x="805.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">API (Retrofit/URLSession) + DB</text><line x1="252" y1="90" x2="351" y2="90" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="301.5" y="82.0" text-anchor="middle" font-size="13" fill="#334155">event: onAddClick()</text><line x1="351" y1="130" x2="252" y2="130" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="301.5" y="122.0" text-anchor="middle" font-size="13" fill="#334155">state: UiState</text><line x1="587" y1="90" x2="686" y2="90" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="636.5" y="82.0" text-anchor="middle" font-size="13" fill="#334155">getMenu()</text><line x1="686" y1="130" x2="587" y2="130" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="636.5" y="122.0" text-anchor="middle" font-size="13" fill="#334155">data</text><text x="470" y="205" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">MVVM — UI មិនហៅ API ផ្ទាល់ · State ហូរមួយទិស (Unidirectional data flow)</text></svg><figcaption>🖼️ ស្ថាបត្យកម្ម MVVM ដែល Google ណែនាំ</figcaption></figure>
+
+<table><tr><th>ធាតុ</th><th>តួនាទី</th><th>Flutter ប្រៀបធៀប</th></tr><tr><td>Activity</td><td>អេក្រង់មេ (ចំណុចចាប់ផ្តើម App)</td><td>main()</td></tr><tr><td>@Composable</td><td>Function បង្កើត UI</td><td>Widget</td></tr><tr><td>Modifier</td><td>ទំហំ, Padding, ពណ៌, Click</td><td>Padding/Container</td></tr><tr><td>Column / Row / Box</td><td>Layout</td><td>Column/Row/Stack</td></tr><tr><td>LazyColumn</td><td>បញ្ជីវែង</td><td>ListView.builder</td></tr><tr><td>remember { mutableStateOf }</td><td>State</td><td>setState</td></tr><tr><td>ViewModel</td><td>រក្សា State + Logic (រស់រានពេលបង្វិលអេក្រង់)</td><td>ChangeNotifier</td></tr><tr><td>Coroutine / Flow</td><td>Async</td><td>Future / Stream</td></tr><tr><td>Retrofit · Room</td><td>API · Database</td><td>http · sqflite</td></tr></table>
+
+</section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>Kotlin មូលដ្ឋាន៖ val/var, Type &amp; Null Safety</h2>
+
+<script type="text/x-code" data-lang="kotlin" data-label="Basics.kt">
+fun main() {
+    val shop = "Kafe Angkor"          // val = មិនប្តូរ (ដូច final)
+    var cups = 3                      // var = ប្តូរបាន
+    val price: Double = 2.5           // Type ច្បាស់
+    cups += 2
+
+    println("$shop លក់ $cups កែវ = ${cups * price} \$")
+
+    var coupon: String? = null        // ? = អាចជា null
+    println(coupon?.length)           // Safe call → null
+    println(coupon ?: "គ្មាន Coupon")  // Elvis operator
+    coupon = "KH10"
+    println(coupon!!.length)          // !! = ប្រាកដថាមិន null (ប្រយ័ត្ន)
+
+    val level = when {
+        cups >= 10 -> "Gold"
+        cups >= 5  -> "Silver"
+        else       -> "Member"
+    }
+    println("Level: $level")
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Kotlin 2.0.21 (JVM target)</span></div><pre>Kafe Angkor លក់ 5 កែវ = 12.5 $
+null
+គ្មាន Coupon
+4
+Level: Silver</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>val</code> មិនអាចប្តូរ · <code class='i'>var</code> ប្តូរបាន — ប្រើ val ជាលំនាំដើម។</li><li><code class='i'>"$shop ${cups * price}"</code> — String template។</li><li><code class='i'>String?</code> — Nullable · <code class='i'>?.</code> Safe call · <code class='i'>?:</code> Elvis (តម្លៃជំនួស) — ការពារ NullPointerException (Bug ធំបំផុតក្នុង Java)។</li><li><code class='i'>when</code> — ដូច switch តែខ្លាំងជាង ហើយត្រឡប់តម្លៃបាន។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>បើ <code class='i'>val name: String? = null</code> បង្ហាញប្រវែង ឬ 0 បើ null។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="kotlin" data-label="answer.kt">
+println(name?.length ?: 0)   // 0
+</script>
+</details></div>
+
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>Function, Class, data class &amp; Collections</h2>
+
+<script type="text/x-code" data-lang="kotlin" data-label="Collections.kt">
+data class MenuItem(val id: Int, val name: String, val price: Double, val hot: Boolean = true)
+
+fun total(items: List<MenuItem>, tax: Double = 0.1): Double =
+    items.sumOf { it.price } * (1 + tax)
+
+fun main() {
+    val menu = listOf(
+        MenuItem(1, "Americano", 2.0),
+        MenuItem(2, "Iced Latte", 2.5, hot = false),
+        MenuItem(3, "Mocha", 2.75),
+    )
+    val hot = menu.filter { it.hot }.map { it.name }
+    println(hot)
+    println("%.2f".format(total(menu)))
+
+    val latte = menu[1]
+    val big = latte.copy(name = "Iced Latte L", price = 3.0)   // data class copy
+    println(big)
+
+    val stock = mutableMapOf("Latte" to 10, "Mocha" to 4)
+    stock["Mocha"] = stock.getValue("Mocha") - 1
+    for ((name, n) in stock) println("$name: $n")
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Kotlin 2.0.21 (JVM target)</span></div><pre>[Americano, Mocha]
+7.98
+MenuItem(id=2, name=Iced Latte L, price=3.0, hot=false)
+Latte: 10
+Mocha: 3</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>data class</code> — បង្កើត equals/toString/copy ស្វ័យប្រវត្តិ (ល្អសម្រាប់ Model)។</li><li>Parameter លំនាំដើម <code class='i'>hot: Boolean = true</code> + Named argument <code class='i'>hot = false</code>។</li><li>Lambda <code class='i'>{ it.price }</code> — <code class='i'>it</code> = ធាតុនីមួយៗ · <code class='i'>filter/map/sumOf</code>។</li><li><code class='i'>listOf</code> មិនប្តូរ · <code class='i'>mutableMapOf("a" to 1)</code> ប្តូរបាន · <code class='i'>for ((k, v) in map)</code> Destructuring។</li><li>Single-expression function <code class='i'>fun f() = ...</code></li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>(2.0+2.5+2.75)×1.1 = ?</p><details><summary>មើលចម្លើយ</summary><p>7.25 × 1.1 = <b>7.975</b> → format <b>7.98</b>។</p></details></div>
+
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Coroutines &amp; Flow (Async)</h2>
+
+<script type="text/x-code" data-lang="kotlin" data-label="Coroutines.kt">
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
+
+suspend fun fetchMenu(): List<String> {
+    delay(500)                            // ក្លែង Network (មិនបាំង Thread)
+    return listOf("Latte", "Mocha")
+}
+
+fun orderStatus(): Flow<String> = flow {
+    for (s in listOf("⏳ Pending", "☕ Brewing", "✅ Ready")) {
+        delay(300); emit(s)
+    }
+}
+
+fun main() = runBlocking {
+    println("កំពុងទាញ...")
+    val menu = fetchMenu()
+    println(menu)
+
+    val a = async { fetchMenu() }         // រត់ស្របគ្នា
+    val b = async { fetchMenu() }
+    println(a.await().size + b.await().size)
+
+    orderStatus().collect { println(it) }
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Kotlin 2.0.21 (JVM target)</span></div><pre>កំពុងទាញ...
+[Latte, Mocha]
+4
+⏳ Pending
+☕ Brewing
+✅ Ready</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>suspend fun</code> — Function ដែលអាចផ្អាក (រង់ចាំ Network) ដោយមិនគាំង UI។</li><li><code class='i'>delay</code> ដូច sleep តែមិនបាំង Thread · <code class='i'>runBlocking</code> សម្រាប់ main/test ប៉ុណ្ណោះ។</li><li><code class='i'>async { } + await()</code> — រត់ការងារច្រើនស្របគ្នា។</li><li><code class='i'>Flow</code> — ស្ទ្រីមតម្លៃច្រើនតាមពេល (ដូច Dart Stream) · <code class='i'>emit</code> ផ្ញើ · <code class='i'>collect</code> ទទួល។</li><li>ក្នុង App ប្រើ <code class='i'>viewModelScope.launch</code> (មេរៀន ៩)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>fetchMenu ២ ដង ដោយ async ស្របគ្នា ប្រើពេលប្រហែលប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>≈ <b>500ms</b> (ស្របគ្នា) មិនមែន 1000ms ទេ។</p></details></div>
+
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>App Compose ដំបូង</h2>
+
+<script type="text/x-code" data-lang="kotlin" data-label="MainActivity.kt">
+package com.kafe.app
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent { KafeTheme { HomeScreen() } }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreen() {
+    Scaffold(topBar = { TopAppBar(title = { Text("Kafe Angkor") }) }) { padding ->
+        Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
+            Text("សួស្តី Jetpack Compose! ☕", fontSize = 22.sp)
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomePreview() = HomeScreen()
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar" style="background:#6750a4">Kafe Angkor</div><div class="ph-body"><div class="ph-center" style="font-size:18px">សួស្តី Jetpack Compose! ☕</div></div></div><figcaption>📱 លទ្ធផលលើ Emulator</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>ComponentActivity</code> — អេក្រង់មេ · <code class='i'>setContent { }</code> ដាក់ UI Compose។</li><li><code class='i'>@Composable</code> — Function បង្កើត UI (ដូច Widget) · ឈ្មោះចាប់ផ្តើមអក្សរធំ។</li><li><code class='i'>Scaffold</code> + <code class='i'>TopAppBar</code> — គ្រោង Material 3 · <code class='i'>padding -&gt;</code> កុំឲ្យបាំងដោយ TopBar។</li><li><code class='i'>@Preview</code> — មើល UI ក្នុង Android Studio ដោយមិនបាច់ Run · <code class='i'>22.sp</code> ទំហំអក្សរ (sp), ចម្ងាយប្រើ <code class='i'>dp</code>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>ហេតុអ្វីអក្សរប្រើ sp តែ padding ប្រើ dp?</p><details><summary>មើលចម្លើយ</summary><p><b>sp</b> ធំតាមការកំណត់ទំហំអក្សររបស់អ្នកប្រើ (Accessibility) · <b>dp</b> មិនប្តូរ។</p></details></div>
+
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>Composables &amp; Modifier</h2>
+
+<script type="text/x-code" data-lang="kotlin" data-label="ProductCard.kt">
+@Composable
+fun ProductCard(name: String, price: Double, onAdd: () -> Unit) {
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(8.dp),
+        shape = RoundedCornerShape(18.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Column(Modifier.padding(12.dp)) {
+            Image(
+                painter = painterResource(R.drawable.latte),
+                contentDescription = name,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxWidth().height(140.dp).clip(RoundedCornerShape(14.dp))
+            )
+            Text(name, style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
+            Text("$%.2f".format(price), color = Color(0xFF8D6E63))
+            Button(onClick = onAdd, modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
+                Icon(Icons.Default.Add, null); Spacer(Modifier.width(6.dp)); Text("បន្ថែម")
+            }
+        }
+    }
+}
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar" style="background:#6750a4">Menu</div><div class="ph-body"><div class="ph-card"><div class="ph-img" style="background:linear-gradient(135deg,#a1887f,#4e342e)">🧋</div><b>Iced Latte</b><div style="color:#8d6e63">$2.50</div><span class="ph-btn" style="display:block;text-align:center;background:#6750a4">＋ បន្ថែម</span></div></div></div><figcaption>📱 Card + Image + Button</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>Parameter <code class='i'>onAdd: () -&gt; Unit</code> — Function ផ្ញើចូល (Callback) ដូច onPressed។</li><li><b>Modifier</b> ជាច្រវាក់៖ <code class='i'>fillMaxWidth().padding(8.dp).clip(...)</code> — <b>លំដាប់សំខាន់</b> (padding មុន background ≠ background មុន padding)។</li><li><code class='i'>painterResource(R.drawable.latte)</code> — រូបក្នុង res/drawable · រូប Internet ប្រើ Library <b>Coil</b> <code class='i'>AsyncImage(url)</code>។</li><li><code class='i'>contentDescription</code> — សម្រាប់ TalkBack (អ្នកមើលមិនឃើញ)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>ធ្វើឲ្យ Card ចុចបាន?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="kotlin" data-label="answer.kt">
+Card(onClick = { navController.navigate("detail/1") }) { ... }
+// ឬ Modifier.clickable { ... }
+</script>
+</details></div>
+
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Layout៖ Column, Row, Box &amp; LazyColumn</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 250" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="250" fill="#fff"/><rect x="20" y="30" width="200" height="190" rx="18" fill="#f1f5f9" stroke="#0f172a" stroke-width="3"/><text x="120" y="22" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">Column ↓</text><rect x="60" y="50" width="120" height="45" rx="8" fill="#2563eb"/><rect x="60" y="105" width="120" height="45" rx="8" fill="#16a34a"/><rect x="60" y="160" width="120" height="45" rx="8" fill="#ea580c"/><rect x="255" y="30" width="200" height="190" rx="18" fill="#f1f5f9" stroke="#0f172a" stroke-width="3"/><text x="355" y="22" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">Row →</text><rect x="270" y="100" width="50" height="50" rx="8" fill="#2563eb"/><rect x="330" y="100" width="50" height="50" rx="8" fill="#16a34a"/><rect x="390" y="100" width="50" height="50" rx="8" fill="#ea580c"/><rect x="490" y="30" width="200" height="190" rx="18" fill="#f1f5f9" stroke="#0f172a" stroke-width="3"/><text x="590" y="22" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">Stack ⧉</text><rect x="510" y="50" width="160" height="150" rx="10" fill="#93c5fd"/><circle cx="590" cy="125" r="45" fill="#16a34a"/><rect x="620" y="60" width="44" height="24" rx="12" fill="#e11d48"/><rect x="725" y="30" width="200" height="190" rx="18" fill="#f1f5f9" stroke="#0f172a" stroke-width="3"/><text x="825" y="22" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">Expanded</text><rect x="740" y="100" width="40" height="50" rx="8" fill="#2563eb"/><rect x="785" y="100" width="110" height="50" rx="8" fill="#16a34a"/><text x="840" y="130" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">flex: 1</text><text x="470" y="245" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">mainAxisAlignment = តាមទិសមេ · crossAxisAlignment = តាមទិសទទឹង (ដូច CSS Flexbox)</text></svg><figcaption>🖼️ Layout ក្នុង Mobile</figcaption></figure>
+
+<script type="text/x-code" data-lang="kotlin" data-label="Layout.kt">
+@Composable
+fun ProfileRow() {
+    Row(Modifier.fillMaxWidth().padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+        Box(Modifier.size(48.dp).clip(CircleShape).background(Color(0xFFD7CCC8)))
+        Spacer(Modifier.width(12.dp))
+        Column(Modifier.weight(1f)) {                       // weight = យកចន្លោះសល់
+            Text("Dara", fontWeight = FontWeight.Bold)
+            Text("Gold member · 1,250 points", color = Color.Gray, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        }
+        BadgedBox(badge = { Badge { Text("3") } }) { Icon(Icons.Default.Notifications, null) }
+    }
+}
+
+@Composable
+fun MenuList(items: List<MenuItem>, onClick: (MenuItem) -> Unit) {
+    LazyColumn(contentPadding = PaddingValues(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        items(items, key = { it.id }) { item ->
+            ListItem(
+                headlineContent = { Text(item.name) },
+                trailingContent = { Text("$${item.price}") },
+                modifier = Modifier.clickable { onClick(item) }
+            )
+        }
+    }
+}
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar" style="background:#6750a4">Profile</div><div class="ph-body"><div class="ph-row"><span class="ph-av">D</span><div style="flex:1"><b>Dara</b><div style="font-size:12px;color:#777">Gold member · 1,250 points</div></div><span style="position:relative;font-size:22px">🔔<i class="ph-badge">3</i></span></div><div class="ph-tile"><div style="flex:1">Coffee #1</div>$1.75</div><div class="ph-tile"><div style="flex:1">Coffee #2</div>$2.00</div><div class="ph-tile"><div style="flex:1">Coffee #3</div>$2.25</div><div class="ph-tile"><div style="flex:1">Coffee #4</div>$2.50</div><div class="ph-tile"><div style="flex:1">Coffee #5</div>$2.75</div></div></div><figcaption>📱 Row + weight · LazyColumn</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>Column</code> បញ្ឈរ · <code class='i'>Row</code> ផ្តេក · <code class='i'>Box</code> ត្រួតគ្នា (ដូច Stack)។</li><li><code class='i'>Modifier.weight(1f)</code> — ដូច Expanded/flex:1។</li><li><code class='i'>Arrangement</code> = តាមទិសមេ · <code class='i'>Alignment</code> = តាមទិសទទឹង។</li><li><code class='i'>LazyColumn</code> + <code class='i'>items(list, key)</code> — សង់តែធាតុដែលឃើញ · Grid៖ <code class='i'>LazyVerticalGrid(GridCells.Fixed(2))</code>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>ប៊ូតុង ៣ ចែកទទឹងស្មើ?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="kotlin" data-label="answer.kt">
+Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    listOf("S", "M", "L").forEach { OutlinedButton(onClick = {}, modifier = Modifier.weight(1f)) { Text(it) } }
+}
+</script>
+</details></div>
+
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>State៖ remember &amp; mutableStateOf</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="230" fill="#fff"/><rect x="20" y="30" width="260" height="90" rx="14" fill="#64748b"/><text x="150.0" y="69.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">StatelessWidget</text><text x="150.0" y="91.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">មិនប្តូរ: Text, Icon, Logo</text><rect x="330" y="30" width="260" height="90" rx="14" fill="#02569b"/><text x="460.0" y="69.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">StatefulWidget + State</text><text x="460.0" y="91.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ប្តូរបាន: Counter, Form, Like ❤</text><rect x="640" y="10" width="280" height="50" rx="14" fill="#16a34a"/><text x="780.0" y="41.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">① User ចុច (onPressed)</text><rect x="640" y="70" width="280" height="50" rx="14" fill="#ea580c"/><text x="780.0" y="101.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">② setState(() => count++)</text><rect x="640" y="130" width="280" height="50" rx="14" fill="#7c3aed"/><text x="780.0" y="161.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">③ build() ម្តងទៀត → UI ថ្មី</text><line x1="780" y1="62" x2="780" y2="68" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="780" y1="122" x2="780" y2="128" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><path d="M920 155 Q 935 90 922 35" fill="none" stroke="#475569" stroke-width="2.5" stroke-dasharray="5 4" marker-end="url(#ar)"/><text x="470" y="200" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">State = ទិន្នន័យដែលប្តូរ · UI = build(State)</text></svg><figcaption>🖼️ State ប្តូរ → Recomposition</figcaption></figure>
+
+<script type="text/x-code" data-lang="kotlin" data-label="QtyPicker.kt">
+@Composable
+fun QtyPicker(price: Double = 2.5) {
+    var qty by remember { mutableIntStateOf(1) }
+    var name by rememberSaveable { mutableStateOf("") }   // រស់រានពេលបង្វិលអេក្រង់
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            IconButton(onClick = { qty-- }, enabled = qty > 1) { Icon(Icons.Default.Remove, null) }
+            Text("$qty", fontSize = 30.sp, fontWeight = FontWeight.Bold)
+            IconButton(onClick = { qty++ }) { Icon(Icons.Default.Add, null) }
+        }
+        Text("សរុប $%.2f".format(qty * price))
+        OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("ឈ្មោះលើកែវ") })
+    }
+}
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar" style="background:#6750a4">Detail</div><div class="ph-body"><div class="ph-center"><div style="text-align:center"><span class="ph-chip">−</span> <b style="font-size:30px;margin:0 14px">2</b> <span class="ph-chip">＋</span><div>សរុប $5.00</div><div class="ph-field">ឈ្មោះលើកែវ: Dara</div></div></div></div></div><figcaption>📱 State qty + TextField</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>mutableStateOf</code> — State ដែល Compose តាមដាន · ប្តូរ → Recompose តែ Composable ដែលប្រើវា។</li><li><code class='i'>remember</code> — រក្សាតម្លៃឆ្លងការ Recompose · <code class='i'>rememberSaveable</code> — រស់រានពេលបង្វិលអេក្រង់។</li><li><code class='i'>by</code> — Delegate ឲ្យសរសេរ <code class='i'>qty++</code> ជំនួស <code class='i'>qty.value++</code>។</li><li>TextField = <code class='i'>value</code> + <code class='i'>onValueChange</code> (Controlled ដូច React)។</li><li><b>State hoisting</b>៖ ផ្ទេរ State ទៅ Composable មេ ឬ ViewModel ពេលចែករំលែក។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>ភ្លេច <code class='i'>remember</code> (សរសេរ <code class='i'>var qty by mutableStateOf(1)</code>) កើតអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>រាល់ Recompose qty ត្រឡប់ទៅ 1 វិញ → ចុច ＋ ហាក់ដូចមិនដើរ។ Android Studio ក៏ព្រមាន Lint error ដែរ។</p></details></div>
+
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Navigation Compose</h2>
+
+<figure class="fig"><svg viewBox="0 0 900 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="900" height="230" fill="#fff"/><rect x="60" y="40" width="190" height="150" rx="14" fill="#64748b" stroke="#0f172a" stroke-width="2"/><text x="155" y="80" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Home</text><rect x="84" y="58" width="190" height="150" rx="14" fill="#0175c2" stroke="#0f172a" stroke-width="2"/><text x="179" y="98" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Menu</text><rect x="108" y="76" width="190" height="150" rx="14" fill="#02569b" stroke="#0f172a" stroke-width="2"/><text x="203" y="116" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Detail ☕</text><rect x="420" y="40" width="200" height="56" rx="14" fill="#16a34a"/><text x="520.0" y="62.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Navigator.push</text><text x="520.0" y="84.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ដាក់ទំព័រថ្មីពីលើ</text><rect x="420" y="120" width="200" height="56" rx="14" fill="#dc2626"/><text x="520.0" y="142.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Navigator.pop</text><text x="520.0" y="164.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ត្រឡប់ក្រោយ</text><rect x="660" y="70" width="220" height="70" rx="14" fill="#7c3aed"/><text x="770.0" y="99.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">go_router</text><text x="770.0" y="121.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">context.go('/menu/7')</text><text x="155" y="222" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Navigation = Stack នៃទំព័រ</text></svg><figcaption>🖼️ Navigation stack</figcaption></figure>
+
+<script type="text/x-code" data-lang="kotlin" data-label="Navigation.kt">
+@Composable
+fun KafeNavHost() {
+    val nav = rememberNavController()
+    NavHost(navController = nav, startDestination = "menu") {
+        composable("menu") {
+            MenuScreen(onOpen = { id -> nav.navigate("detail/$id") })
+        }
+        composable("detail/{id}", arguments = listOf(navArgument("id") { type = NavType.IntType })) { entry ->
+            val id = entry.arguments!!.getInt("id")
+            DetailScreen(id, onBack = { nav.popBackStack() })
+        }
+        composable("login") {
+            LoginScreen(onSuccess = {
+                nav.navigate("menu") { popUpTo("login") { inclusive = true } }   // មិនឲ្យ Back ទៅ Login
+            })
+        }
+    }
+}
+
+// Bottom navigation
+NavigationBar {
+    NavigationBarItem(selected = tab == 0, onClick = { tab = 0 }, icon = { Icon(Icons.Default.LocalCafe, null) }, label = { Text("Menu") })
+    NavigationBarItem(selected = tab == 1, onClick = { tab = 1 }, icon = { Icon(Icons.Default.Receipt, null) }, label = { Text("Orders") })
+}
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar" style="background:#6750a4">Menu</div><div class="ph-body"><div class="ph-center" style="color:#777">Menu</div><div class="ph-nav"><span class="on" style="--pc:#e8def8">☕<br>Menu</span><span>🧾<br>Orders</span><span>👤<br>Profile</span></div></div></div><figcaption>📱 NavigationBar Material 3</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>NavHost</code> + <code class='i'>composable("route")</code> — បញ្ជី Screen។</li><li><code class='i'>"detail/{id}"</code> + navArgument — ផ្ញើ id · <code class='i'>nav.navigate("detail/7")</code>។</li><li><code class='i'>popBackStack()</code> ត្រឡប់ · <code class='i'>popUpTo(...){ inclusive = true }</code> លុបទំព័រចាស់ពី Stack។</li><li>កំណែថ្មីមាន <b>Type-safe navigation</b> ដោយ <code class='i'>@Serializable data class Detail(val id: Int)</code>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>ផ្ញើ Object ធំ (MenuItem ទាំងមូល) តាម Route បានទេ?</p><details><summary>មើលចម្លើយ</summary><p>មិនគួរ — ផ្ញើតែ <b>id</b> ហើយ Screen ថ្មីទាញទិន្នន័យពី Repository/ViewModel។</p></details></div>
+
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>ViewModel + StateFlow (MVVM)</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="230" fill="#fff"/><rect x="20" y="60" width="230" height="100" rx="14" fill="#16a34a"/><text x="135.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">UI (Composable / View)</text><text x="135.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">បង្ហាញ State · ផ្ញើ Event</text><rect x="355" y="60" width="230" height="100" rx="14" fill="#7c3aed"/><text x="470.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">ViewModel</text><text x="470.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">StateFlow / @Observable</text><rect x="690" y="60" width="230" height="100" rx="14" fill="#ea580c"/><text x="805.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Repository</text><text x="805.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">API (Retrofit/URLSession) + DB</text><line x1="252" y1="90" x2="351" y2="90" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="301.5" y="82.0" text-anchor="middle" font-size="13" fill="#334155">event: onAddClick()</text><line x1="351" y1="130" x2="252" y2="130" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="301.5" y="122.0" text-anchor="middle" font-size="13" fill="#334155">state: UiState</text><line x1="587" y1="90" x2="686" y2="90" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="636.5" y="82.0" text-anchor="middle" font-size="13" fill="#334155">getMenu()</text><line x1="686" y1="130" x2="587" y2="130" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="636.5" y="122.0" text-anchor="middle" font-size="13" fill="#334155">data</text><text x="470" y="205" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">MVVM — UI មិនហៅ API ផ្ទាល់ · State ហូរមួយទិស (Unidirectional data flow)</text></svg><figcaption>🖼️ View ↔ ViewModel ↔ Repository</figcaption></figure>
+
+<script type="text/x-code" data-lang="kotlin" data-label="CartViewModel.kt">
+data class CartLine(val item: MenuItem, val qty: Int)
+data class CartUiState(val lines: List<CartLine> = emptyList()) {
+    val count get() = lines.sumOf { it.qty }
+    val total get() = lines.sumOf { it.qty * it.item.price }
+}
+
+class CartViewModel : ViewModel() {
+    private val _state = MutableStateFlow(CartUiState())
+    val state: StateFlow<CartUiState> = _state.asStateFlow()
+
+    fun add(item: MenuItem) = _state.update { s ->
+        val i = s.lines.indexOfFirst { it.item.id == item.id }
+        if (i < 0) s.copy(lines = s.lines + CartLine(item, 1))
+        else s.copy(lines = s.lines.toMutableList().also { it[i] = it[i].copy(qty = it[i].qty + 1) })
+    }
+    fun clear() = _state.update { CartUiState() }
+}
+
+@Composable
+fun CartBadge(vm: CartViewModel = viewModel()) {
+    val s by vm.state.collectAsStateWithLifecycle()
+    BadgedBox(badge = { if (s.count > 0) Badge { Text("${s.count}") } }) {
+        Icon(Icons.Default.ShoppingCart, null)
+    }
+}
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>MVVM</b>៖ View (Compose) បង្ហាញ · <b>ViewModel</b> កាន់ State + Logic · Repository ទាញទិន្នន័យ។</li><li><code class='i'>MutableStateFlow</code> ឯកជន (_state) · បង្ហាញ <code class='i'>StateFlow</code> អានបានតែប៉ុណ្ណោះ → មានតែ ViewModel អាចប្តូរ។</li><li><code class='i'>_state.update { s -&gt; s.copy(...) }</code> — Immutable update (Thread-safe)។</li><li><code class='i'>collectAsStateWithLifecycle()</code> — UI ស្តាប់ State · ViewModel រស់រានពេលបង្វិលអេក្រង់។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>Latte ($2.5) ×2 + Mocha ($2.75) ×1 → count និង total?</p><details><summary>មើលចម្លើយ</summary><p>count = <b>3</b> · total = 5.0 + 2.75 = <b>$7.75</b>។</p></details></div>
+
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>Retrofit &amp; JSON (REST API)</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 220" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="220" fill="#fff"/><rect x="20" y="70" width="170" height="80" rx="14" fill="#02569b"/><text x="105.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">📱 Flutter UI</text><text x="105.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">FutureBuilder</text><rect x="250" y="70" width="170" height="80" rx="14" fill="#0891b2"/><text x="335.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Repository</text><text x="335.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">http.get()</text><rect x="480" y="70" width="170" height="80" rx="14" fill="#ea580c"/><text x="565.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🌐 REST API</text><text x="565.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">GET /menu</text><rect x="710" y="70" width="200" height="80" rx="14" fill="#16a34a"/><text x="810.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🗄️ Server + DB</text><text x="810.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Node.js · PostgreSQL</text><line x1="192" y1="100" x2="246" y2="100" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="219.0" y="92.0" text-anchor="middle" font-size="13" fill="#334155">request</text><line x1="422" y1="100" x2="476" y2="100" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="652" y1="100" x2="706" y2="100" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="706" y1="130" x2="652" y2="130" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="476" y1="130" x2="422" y2="130" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="449.0" y="122.0" text-anchor="middle" font-size="13" fill="#334155">JSON</text><line x1="246" y1="130" x2="192" y2="130" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="219.0" y="122.0" text-anchor="middle" font-size="13" fill="#334155">List<Item></text><text x="470" y="200" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">JSON → jsonDecode → Model (fromJson) → Widget</text></svg><figcaption>🖼️ Data flow ពី API ទៅ UI</figcaption></figure>
+
+<script type="text/x-code" data-lang="kotlin" data-label="Api.kt">
+// build.gradle.kts: retrofit2, converter-kotlinx-serialization
+@Serializable
+data class MenuDto(val id: Int, val name: String, val price: Double)
+
+interface KafeApi {
+    @GET("menu") suspend fun menu(): List<MenuDto>
+    @POST("orders") suspend fun order(@Body body: OrderDto): OrderDto
+}
+
+val api: KafeApi = Retrofit.Builder()
+    .baseUrl("https://api.example.com/")
+    .addConverterFactory(Json { ignoreUnknownKeys = true }.asConverterFactory("application/json".toMediaType()))
+    .build().create(KafeApi::class.java)
+
+sealed interface MenuUi {
+    data object Loading : MenuUi
+    data class Success(val items: List<MenuDto>) : MenuUi
+    data class Error(val msg: String) : MenuUi
+}
+
+class MenuViewModel : ViewModel() {
+    var ui by mutableStateOf<MenuUi>(MenuUi.Loading); private set
+    init { load() }
+    fun load() = viewModelScope.launch {
+        ui = MenuUi.Loading
+        ui = try { MenuUi.Success(api.menu()) } catch (e: Exception) { MenuUi.Error(e.message ?: "Error") }
+    }
+}
+
+@Composable
+fun MenuScreen(vm: MenuViewModel = viewModel()) = when (val u = vm.ui) {
+    MenuUi.Loading -> CircularProgressIndicator()
+    is MenuUi.Error -> Text("⚠️ ${u.msg}")
+    is MenuUi.Success -> MenuList(u.items) {}
+}
+</script>
+
+<script type="text/x-code" data-lang="html" data-label="AndroidManifest.xml">
+<uses-permission android:name="android.permission.INTERNET" />
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Retrofit</b> — សរសេរ API ជា interface · <code class='i'>@GET/@POST</code> + <code class='i'>suspend</code>។</li><li><code class='i'>@Serializable</code> (kotlinx.serialization) — JSON ↔ data class ស្វ័យប្រវត្តិ។</li><li><code class='i'>sealed interface MenuUi</code> — State ៣ ច្បាស់លាស់ (Loading/Success/Error) · <code class='i'>when</code> ត្រូវគ្រប់ករណី។</li><li><code class='i'>viewModelScope.launch</code> — Coroutine បោះបង់ស្វ័យប្រវត្តិពេល ViewModel ត្រូវលុប។</li><li>កុំភ្លេច Permission <b>INTERNET</b> ក្នុង Manifest!</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>App crash ពេលហៅ API លើ Main thread (Java ចាស់)។ ហេតុអ្វី Kotlin Coroutine មិនមានបញ្ហា?</p><details><summary>មើលចម្លើយ</summary><p>Retrofit <code class='i'>suspend</code> ប្តូរទៅ Background thread ស្វ័យប្រវត្តិ ហើយត្រឡប់លទ្ធផលមក Main វិញ — UI មិនគាំង។</p></details></div>
+
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>Room Database &amp; DataStore</h2>
+
+<script type="text/x-code" data-lang="kotlin" data-label="Storage.kt">
+@Entity(tableName = "orders")
+data class OrderEntity(@PrimaryKey(autoGenerate = true) val id: Long = 0, val items: String, val total: Double, val time: Long)
+
+@Dao
+interface OrderDao {
+    @Query("SELECT * FROM orders ORDER BY time DESC") fun all(): Flow<List<OrderEntity>>
+    @Insert suspend fun insert(o: OrderEntity)
+    @Query("DELETE FROM orders") suspend fun clear()
+}
+
+@Database(entities = [OrderEntity::class], version = 1)
+abstract class KafeDb : RoomDatabase() { abstract fun orders(): OrderDao }
+
+val db = Room.databaseBuilder(context, KafeDb::class.java, "kafe.db").build()
+
+// DataStore: ការកំណត់តូចៗ (ជំនួស SharedPreferences)
+val Context.settings by preferencesDataStore("settings")
+val DARK = booleanPreferencesKey("dark")
+suspend fun setDark(ctx: Context, on: Boolean) = ctx.settings.edit { it[DARK] = on }
+val darkFlow: Flow<Boolean> = context.settings.data.map { it[DARK] ?: false }
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Room</b> = SQLite + Annotation · <code class='i'>@Entity</code> តារាង · <code class='i'>@Dao</code> Query SQL (មើលវគ្គ SQL)។</li><li>Query ត្រឡប់ <code class='i'>Flow</code> → UI Update ស្វ័យប្រវត្តិពេលទិន្នន័យប្តូរ។</li><li><b>DataStore</b> — Key-value async សម្រាប់ Setting (Dark mode, Language)។</li><li>ទិន្នន័យសម្ងាត់ (Token)៖ <b>EncryptedSharedPreferences</b> / Android Keystore។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>សរសេរ Query ទាញ Orders ដែល total &gt; 5។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="kotlin" data-label="answer.kt">
+@Query("SELECT * FROM orders WHERE total > :min") fun bigOrders(min: Double = 5.0): Flow<List<OrderEntity>>
+</script>
+</details></div>
+
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>Permission &amp; Publish លើ Google Play</h2>
+
+<figure class="fig"><svg viewBox="0 0 980 160" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="980" height="160" fill="#fff"/><path d="M12 30h118l18 40-18 40h-118l18-40z" fill="#02569b"/><text x="80" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Code</text><text x="80" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">flutter run</text><path d="M151 30h118l18 40-18 40h-118l18-40z" fill="#0175c2"/><text x="219" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Test</text><text x="219" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">flutter test</text><path d="M290 30h118l18 40-18 40h-118l18-40z" fill="#0891b2"/><text x="358" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Icon + Name</text><text x="358" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">launcher icons</text><path d="M429 30h118l18 40-18 40h-118l18-40z" fill="#7c3aed"/><text x="497" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Sign</text><text x="497" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">keystore</text><path d="M568 30h118l18 40-18 40h-118l18-40z" fill="#ea580c"/><text x="636" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Build</text><text x="636" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">appbundle / ipa</text><path d="M707 30h118l18 40-18 40h-118l18-40z" fill="#16a34a"/><text x="775" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Store</text><text x="775" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">Play · App Store</text><path d="M846 30h118l18 40-18 40h-118l18-40z" fill="#ca8a04"/><text x="914" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Update</text><text x="914" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">version +1</text><text x="490" y="145" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">ដំណើរការ Publish App</text></svg><figcaption>🖼️ ពី Code ទៅ Store</figcaption></figure>
+
+<script type="text/x-code" data-lang="kotlin" data-label="Permission.kt + CartTest.kt">
+// Camera permission (Compose)
+val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+    if (granted) openCamera() else showMessage("សូមអនុញ្ញាត Camera ក្នុង Settings")
+}
+Button(onClick = { launcher.launch(Manifest.permission.CAMERA) }) { Text("📷 ថតរូប") }
+
+// Unit test (JUnit)
+class CartTest {
+    @Test fun addTwice() {
+        val vm = CartViewModel()
+        val latte = MenuItem(2, "Latte", 2.5)
+        vm.add(latte); vm.add(latte)
+        assertEquals(2, vm.state.value.count)
+        assertEquals(5.0, vm.state.value.total, 0.001)
+    }
+}
+</script>
+
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+./gradlew test                    # Unit tests
+./gradlew bundleRelease           # → app/build/outputs/bundle/release/app-release.aab
+# Android Studio: Build → Generate Signed Bundle → បង្កើត Keystore (.jks) — រក្សាទុកឲ្យល្អ!
+</script>
+
+<ol class="steps"><li>បង្កើតគណនី <b>Google Play Console</b> ($25 តែម្តង)។</li><li>Create app → បំពេញ Store listing (Icon 512px, Screenshots, Privacy policy)។</li>
+<li>Upload <b>.aab</b> ទៅ Internal testing → Closed testing (គណនីថ្មីត្រូវការអ្នកសាក ១២ នាក់ × ១៤ ថ្ងៃ) → Production។</li><li>រាល់ Update ដំឡើង <code class='i'>versionCode</code>។</li></ol>
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>rememberLauncherForActivityResult</code> — ស្នើ Permission ក្នុង Compose · ប្រកាសក្នុង Manifest ផងដែរ។</li><li><b>JUnit</b> test ViewModel · <b>Compose UI test</b> <code class='i'>composeTestRule.onNodeWithText("បន្ថែម").performClick()</code>។</li><li><b>.aab</b> (Android App Bundle) — ទម្រង់ដែល Google Play ទាមទារ · ចុះហត្ថលេខាដោយ Keystore។</li><li>បាត់ Keystore = Update App មិនបាន (បើមិនប្រើ Play App Signing)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>versionCode និង versionName ខុសគ្នាអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>versionCode</b> លេខគត់សម្រាប់ Play (ត្រូវកើនរាល់ Upload) · <b>versionName</b> អក្សរបង្ហាញអ្នកប្រើ ឧ. "1.2.0"។</p></details></div>
+
+</section>
+<section id="cheat">
+<h2>📋 Cheat Sheet</h2>
+
+<table><tr><th>Flutter</th><th>Jetpack Compose</th></tr><tr><td>StatelessWidget</td><td>@Composable fun</td></tr><tr><td>Column / Row / Stack</td><td>Column / Row / Box</td></tr><tr><td>Expanded</td><td>Modifier.weight(1f)</td></tr><tr><td>Padding / Container</td><td>Modifier.padding / background</td></tr><tr><td>ListView.builder</td><td>LazyColumn { items() }</td></tr><tr><td>setState</td><td>remember { mutableStateOf() }</td></tr><tr><td>ChangeNotifier / Provider</td><td>ViewModel + StateFlow</td></tr><tr><td>Future / Stream</td><td>suspend / Flow</td></tr><tr><td>http</td><td>Retrofit</td></tr><tr><td>sqflite</td><td>Room</td></tr></table>
+
+<script type="text/x-code" data-lang="kotlin" data-label="Kotlin">
+val · var · String? · ?. · ?: · when · data class · listOf · map/filter · suspend · launch · Flow
+</script>
+
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងអាជីព៖ Kafe Order App (Compose)</h2>
+
+<p>App Android ពេញលេញ៖ <b>NavigationBar (Menu · Orders · Profile) → Detail → Cart (ViewModel + StateFlow) → Checkout → Orders (Room + Flow)</b> + Retrofit + Dark mode (DataStore) + Material 3 Dynamic color។</p>
+<script type="text/x-code" data-lang="txt" data-label="Project structure">
+com.kafe.app/
+├── MainActivity.kt               ← setContent { KafeTheme { KafeApp() } }
+├── ui/
+│   ├── theme/ (Color, Type, Theme.kt)
+│   ├── menu/ MenuScreen.kt · MenuViewModel.kt
+│   ├── detail/ DetailScreen.kt
+│   ├── cart/ CartScreen.kt · CartViewModel.kt
+│   └── orders/ OrdersScreen.kt
+├── data/
+│   ├── remote/ KafeApi.kt (Retrofit)
+│   ├── local/ KafeDb.kt (Room) · Settings.kt (DataStore)
+│   └── MenuRepository.kt
+└── di/ AppModule.kt (Hilt)
+</script>
+
+<script type="text/x-code" data-lang="kotlin" data-label="DetailScreen.kt">
+@Composable
+fun DetailScreen(item: MenuItem, cart: CartViewModel, onDone: () -> Unit) {
+    var qty by rememberSaveable { mutableIntStateOf(1) }
+    var size by rememberSaveable { mutableStateOf("M") }
+    val price = item.price + when (size) { "L" -> 0.5; "S" -> -0.25; else -> 0.0 }
+
+    Column(Modifier.verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        AsyncImage(model = item.image, contentDescription = item.name,
+            modifier = Modifier.fillMaxWidth().height(240.dp).clip(RoundedCornerShape(20.dp)), contentScale = ContentScale.Crop)
+        Text(item.name, style = MaterialTheme.typography.headlineMedium)
+        SingleChoiceSegmentedButtonRow {
+            listOf("S", "M", "L").forEachIndexed { i, s ->
+                SegmentedButton(selected = size == s, onClick = { size = s }, shape = SegmentedButtonDefaults.itemShape(i, 3)) { Text(s) }
+            }
+        }
+        QtyPicker(qty) { qty = it }
+        Button(onClick = { repeat(qty) { cart.add(item.copy(price = price)) }; onDone() }, modifier = Modifier.fillMaxWidth()) {
+            Text("បន្ថែម $%.2f".format(price * qty))
+        }
+    }
+}
+</script>
+
+<table><tr><th>ជំហាន</th><th>មេរៀន</th></tr><tr><td>Model + Kotlin</td><td>១ · ២</td></tr><tr><td>UI Card/Grid</td><td>៤ · ៥ · ៦</td></tr><tr><td>Qty, Size</td><td>៧</td></tr><tr><td>Tabs + Detail</td><td>៨</td></tr><tr><td>Cart MVVM</td><td>៩</td></tr><tr><td>API</td><td>១០</td></tr><tr><td>Orders + Setting</td><td>១១</td></tr><tr><td>Permission + Publish</td><td>១២</td></tr></table>
+
+</section>
+<section id="pro-app">
+<h2>💻 Compose Playground Pro (App)</h2>
+
+<p><b>UI Builder</b>៖ ជ្រើស Component ប្តូរពណ៌ Dark mode NavigationBar FAB → មើលលើទូរស័ព្ទ ហើយទទួលបាន <b>Code Jetpack Compose</b> ចម្លងទៅ Android Studio។ <b>Layout Lab</b>៖ សាក Column/Row + Arrangement/Alignment + weight។</p>
+
+<div class="fb" id="fb">
+  <div class="itk-tabs fb-tabs"><button class="on" data-t="build">🧱 UI Builder</button><button data-t="lay">📐 Layout Lab</button></div>
+  <div class="fb-p on" data-t="build">
+    <div class="fb-grid">
+      <div class="fb-ctl">
+        <label>AppBar title <input id="b_title" value="Kafe Angkor"></label>
+        <label>Seed color <input type="color" id="b_seed" value="#795548"></label>
+        <label><input type="checkbox" id="b_dark"> Dark mode</label>
+        <label><input type="checkbox" id="b_nav" checked> NavigationBar</label>
+        <label><input type="checkbox" id="b_fab" checked> FloatingActionButton</label>
+        <div class="fb-add"><b>បន្ថែម Widget៖</b>
+          <button class="btn" data-w="text">Text</button><button class="btn" data-w="image">Image</button><button class="btn" data-w="card">Card</button>
+          <button class="btn" data-w="tile">ListTile</button><button class="btn" data-w="button">Button</button><button class="btn" data-w="field">TextField</button>
+          <button class="btn" data-w="switch">Switch</button><button class="btn" data-w="chips">Chips</button><button class="btn" data-w="space">SizedBox</button></div>
+        <div id="b_list" class="fb-list"></div>
+      </div>
+      <div class="fb-phone"><div class="ph big" id="b_ph"></div></div>
+    </div>
+    <pre class="vl-code" id="b_code"></pre>
+  </div>
+  <div class="fb-p" data-t="lay">
+    <div class="fb-row">
+      <label>Widget <select id="l_dir"><option value="col">Column</option><option value="row">Row</option></select></label>
+      <label>mainAxisAlignment <select id="l_main"><option>start</option><option>center</option><option>end</option><option>spaceBetween</option><option>spaceAround</option><option>spaceEvenly</option></select></label>
+      <label>crossAxisAlignment <select id="l_cross"><option>center</option><option>start</option><option>end</option><option>stretch</option></select></label>
+      <label>Children <input type="range" id="l_n" min="1" max="5" value="3"></label>
+      <label><input type="checkbox" id="l_exp"> Expanded លើទី ២</label>
+    </div>
+    <div class="fb-lay"><div id="l_box"></div></div>
+    <pre class="vl-code" id="l_code"></pre>
+  </div>
+</div>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  document.querySelectorAll(".fb-tabs button").forEach(b => b.onclick = () => document.querySelectorAll(".fb-tabs button,.fb-p").forEach(x => x.classList.toggle("on", x.dataset.t === b.dataset.t)));
+  let W = [{ t: "text", v: "សួស្តី 👋 ថ្ងៃនេះផឹកអ្វី?" }, { t: "image" }, { t: "tile", v: "Iced Latte" }, { t: "button", v: "បញ្ជាទិញ" }];
+  const DEF = { text: "Text ថ្មី", tile: "Americano", button: "ចុចខ្ញុំ", field: "ឈ្មោះ", switch: "ការជូនដំណឹង", card: "Card title" };
+  const esc = s => String(s).replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[m]);
+  const dq = s => String(s).replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/\$/g, "\\$");
+  function mix(hex, t, to) { const n = parseInt(hex.slice(1), 16), a = [n >> 16, n >> 8 & 255, n & 255], b = to === "w" ? [255, 255, 255] : [20, 20, 22]; return "rgb(" + a.map((v, i) => Math.round(v + (b[i] - v) * t)).join(",") + ")"; }
+  function render() {
+    const seed = $("b_seed").value, dark = $("b_dark").checked, title = $("b_title").value;
+    const bg = dark ? "#151517" : mix(seed, .94, "w"), fg = dark ? "#eee" : "#1c1b1f", prim = dark ? mix(seed, .45, "w") : seed, card = dark ? "#232326" : "#fff", cont = dark ? mix(seed, .65, "d") : mix(seed, .8, "w");
+    let h = `<div class="ph-notch"></div><div class="ph-bar" style="background:${dark ? "#232326" : cont};color:${fg}">${esc(title)}</div><div class="ph-body" style="background:${bg};color:${fg}">`;
+    W.forEach(w => {
+      if (w.t === "text") h += `<div style="font-size:17px;font-weight:600;margin:4px 2px 8px">${esc(w.v)}</div>`;
+      if (w.t === "image") h += `<div class="ph-img" style="background:linear-gradient(135deg,${mix(seed, .3, "w")},${seed})">☕</div>`;
+      if (w.t === "card") h += `<div class="ph-card" style="background:${card}"><b>${esc(w.v)}</b><div style="font-size:12px;opacity:.7">Card subtitle</div></div>`;
+      if (w.t === "tile") h += `<div class="ph-tile" style="background:${card}"><span class="ph-av" style="background:${cont};color:${dark ? "#fff" : seed}">☕</span><div style="flex:1"><b>${esc(w.v)}</b><div style="font-size:12px;opacity:.65">$2.50</div></div>›</div>`;
+      if (w.t === "button") h += `<span class="ph-btn" style="background:${prim};color:${dark ? "#111" : "#fff"};display:block;text-align:center;margin:8px 0">${esc(w.v)}</span>`;
+      if (w.t === "field") h += `<div class="ph-field" style="background:${card};border-color:${prim}"><small style="color:${prim}">${esc(w.v)}</small></div>`;
+      if (w.t === "switch") h += `<div class="ph-tile" style="background:${card}"><div style="flex:1">${esc(w.v)}</div><span class="ph-sw" style="background:${prim}"></span></div>`;
+      if (w.t === "chips") h += `<div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0">${["Hot", "Iced", "Frappe"].map((c, i) => `<span class="ph-chip" style="${i === 0 ? `background:${cont};` : ""}border-color:${prim}">${c}</span>`).join("")}</div>`;
+      if (w.t === "space") h += `<div style="height:16px"></div>`;
+    });
+    h += `</div>`;
+    if ($("b_fab").checked) h += `<div class="ph-fab" style="background:${cont};color:${fg};bottom:${$("b_nav").checked ? 70 : 18}px">＋</div>`;
+    if ($("b_nav").checked) h += `<div class="ph-nav" style="color:${fg};background:${dark ? "#1d1d20" : mix(seed, .9, "w")}"><span class="on" style="--pc:${cont}">🏠<br>Home</span><span>🧾<br>Orders</span><span>👤<br>Profile</span></div>`;
+    $("b_ph").innerHTML = h;
+    $("b_list").innerHTML = W.map((w, i) => `<div class="fb-item"><b>${w.t}</b>${w.v !== undefined ? `<input data-i="${i}" value="${esc(w.v)}">` : "<span></span>"}<button data-up="${i}" title="ឡើង">↑</button><button data-del="${i}" title="លុប">✕</button></div>`).join("");
+
+    const q = s => String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\$/g, "\\$");
+    const kids = W.map(w => "                " + ({
+      text: `item { Text("${q(w.v)}", style = MaterialTheme.typography.titleMedium) }`,
+      image: `item { Image(painterResource(R.drawable.coffee), null, Modifier.fillMaxWidth().height(140.dp).clip(RoundedCornerShape(16.dp)), contentScale = ContentScale.Crop) }`,
+      card: `item { Card(Modifier.fillMaxWidth()) { Column(Modifier.padding(16.dp)) { Text("${q(w.v)}", fontWeight = FontWeight.Bold); Text("Card subtitle") } } }`,
+      tile: `item { Card { ListItem(headlineContent = { Text("${q(w.v)}") }, supportingContent = { Text("\\$2.50") }, leadingContent = { Icon(Icons.Default.Coffee, null) }) } }`,
+      button: `item { Button(onClick = { }, Modifier.fillMaxWidth()) { Text("${q(w.v)}") } }`,
+      field: `item { OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("${q(w.v)}") }, modifier = Modifier.fillMaxWidth()) }`,
+      switch: `item { ListItem(headlineContent = { Text("${q(w.v)}") }, trailingContent = { Switch(checked = on, onCheckedChange = { on = it }) }) }`,
+      chips: `item { Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) { listOf("Hot", "Iced", "Frappe").forEach { FilterChip(selected = it == "Hot", onClick = { }, label = { Text(it) }) } } }`,
+      space: `item { Spacer(Modifier.height(16.dp)) }`,
+    })[w.t]).join("\n");
+    $("b_code").textContent = `// MainActivity.kt — Jetpack Compose + Material 3
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreen() {
+    var name by remember { mutableStateOf("") }
+    var on by remember { mutableStateOf(true) }
+    MaterialTheme(colorScheme = ${dark ? "darkColorScheme" : "lightColorScheme"}(primary = Color(0xFF${seed.slice(1).toUpperCase()}))) {
+        Scaffold(
+            topBar = { TopAppBar(title = { Text("${q(title)}") }) },${$("b_fab").checked ? `
+            floatingActionButton = { FloatingActionButton(onClick = { }) { Icon(Icons.Default.Add, null) } },` : ""}${$("b_nav").checked ? `
+            bottomBar = {
+                NavigationBar {
+                    NavigationBarItem(selected = true, onClick = { }, icon = { Icon(Icons.Default.Home, null) }, label = { Text("Home") })
+                    NavigationBarItem(selected = false, onClick = { }, icon = { Icon(Icons.Default.Receipt, null) }, label = { Text("Orders") })
+                    NavigationBarItem(selected = false, onClick = { }, icon = { Icon(Icons.Default.Person, null) }, label = { Text("Profile") })
+                }
+            },` : ""}
+        ) { padding ->
+            LazyColumn(Modifier.padding(padding).padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+${kids}
+            }
+        }
+    }
+}`;
+
+  }
+  document.querySelectorAll("[data-w]").forEach(b => b.onclick = () => { W.push({ t: b.dataset.w, v: DEF[b.dataset.w] }); render(); });
+  $("b_list").addEventListener("input", e => { const i = e.target.dataset.i; if (i !== undefined) { W[i].v = e.target.value; const keep = e.target.selectionStart; render(); const n = $("b_list").querySelector(`[data-i="${i}"]`); n.focus(); n.setSelectionRange(keep, keep); } });
+  $("b_list").addEventListener("click", e => { const d = e.target.dataset; if (d.del !== undefined) { W.splice(+d.del, 1); render(); } if (d.up !== undefined && +d.up > 0) { const i = +d.up; [W[i - 1], W[i]] = [W[i], W[i - 1]]; render(); } });
+  ["b_title", "b_seed", "b_dark", "b_nav", "b_fab"].forEach(i => $(i).addEventListener("input", render));
+  render();
+  // ---------- Layout lab
+  const COL = ["#2563eb", "#16a34a", "#ea580c", "#7c3aed", "#db2777"];
+  const MAP = { start: "flex-start", center: "center", end: "flex-end", spaceBetween: "space-between", spaceAround: "space-around", spaceEvenly: "space-evenly", stretch: "stretch" };
+  function lay() {
+    const col = $("l_dir").value === "col", n = +$("l_n").value, exp = $("l_exp").checked && n >= 2, m = $("l_main").value, c = $("l_cross").value;
+    const box = $("l_box"); box.style.flexDirection = col ? "column" : "row"; box.style.justifyContent = MAP[m]; box.style.alignItems = MAP[c];
+    box.innerHTML = Array.from({ length: n }, (_, i) => { const s = 34 + (i % 3) * 14, grow = exp && i === 1; return `<div style="background:${COL[i]};${col ? `height:${s}px;width:${c === "stretch" ? "auto" : 40 + i * 18 + "px"}` : `width:${s}px;height:${c === "stretch" ? "auto" : 40 + i * 18 + "px"}`};${grow ? "flex:1" : ""}">${grow ? "Expanded" : i + 1}</div>`; }).join("");
+
+    const ARR = { start: "Top", center: "Center", end: "Bottom", spaceBetween: "SpaceBetween", spaceAround: "SpaceAround", spaceEvenly: "SpaceEvenly" };
+    const ARRH = { start: "Start", center: "Center", end: "End", spaceBetween: "SpaceBetween", spaceAround: "SpaceAround", spaceEvenly: "SpaceEvenly" };
+    const AL = col ? { start: "Start", center: "CenterHorizontally", end: "End", stretch: "CenterHorizontally" } : { start: "Top", center: "CenterVertically", end: "Bottom", stretch: "CenterVertically" };
+    const kids = Array.from({ length: n }, (_, i) => `    Box(Modifier${exp && i === 1 ? ".weight(1f)" : ""}${c === "stretch" ? (col ? ".fillMaxWidth()" : ".fillMaxHeight()") : ""}.size(${col ? 40 + i * 18 : 34 + (i % 3) * 14}.dp, ${col ? 34 + (i % 3) * 14 : 40 + i * 18}.dp).background(Color(0xFF${COL[i].slice(1).toUpperCase()})))`).join("\n");
+    $("l_code").textContent = `${col ? "Column" : "Row"}(\n  modifier = Modifier.fillMaxSize(),\n  ${col ? "verticalArrangement = Arrangement." + ARR[m] : "horizontalArrangement = Arrangement." + ARRH[m]},\n  ${col ? "horizontalAlignment" : "verticalAlignment"} = Alignment.${AL[c]}\n) {\n${kids}\n}`;
+  }
+  ["l_dir", "l_main", "l_cross", "l_n", "l_exp"].forEach(i => $(i).addEventListener("input", lay)); lay();
+})();
+</script>
+
+<h3>🏆 Quiz Kotlin &amp; Compose ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["Kotlin ត្រូវបានបង្កើតដោយក្រុមហ៊ុន?", ["Google", "JetBrains", "Oracle", "Apple"], 1], ["Google ប្រកាស Kotlin ជាភាសាផ្លូវការ Android ឆ្នាំ?", ["2011", "2014", "2017", "2021"], 2], ["Jetpack Compose 1.0 ចេញឆ្នាំ?", ["2017", "2019", "2021", "2023"], 2], ["val និង var ខុសគ្នា?", ["val ប្តូរបាន", "val មិនប្តូរ · var ប្តូរបាន", "ដូចគ្នា", "var សម្រាប់ String"], 1], ["String? មានន័យថា?", ["String វែង", "អាចជា null", "Array", "Error"], 1], ["Operator ?: ហៅថា?", ["Safe call", "Elvis", "Lambda", "Range"], 1], ["data class បង្កើតអ្វីស្វ័យប្រវត្តិ?", ["UI", "equals/toString/copy", "Database", "Thread"], 1], ["suspend fun ប្រើសម្រាប់?", ["UI", "ការងារ Async (Coroutine)", "Style", "Test"], 1], ["ស្ទ្រីមតម្លៃច្រើនតាមពេល ក្នុង Kotlin?", ["List", "Flow", "Map", "Pair"], 1], ["Function UI ក្នុង Compose ត្រូវមាន Annotation?", ["@UI", "@Widget", "@Composable", "@View"], 2], ["ស្មើ Expanded/flex:1 ក្នុង Compose?", ["Modifier.weight(1f)", "Modifier.size()", "Spacer", "Box"], 0], ["ត្រួតធាតុលើគ្នា ប្រើ?", ["Row", "Column", "Box", "LazyColumn"], 2], ["បញ្ជីវែង ប្រើ?", ["Column", "LazyColumn", "Row", "ScrollView"], 1], ["State រស់រានពេលបង្វិលអេក្រង់?", ["remember", "rememberSaveable", "val", "const"], 1], ["ViewModel បង្ហាញ State ដោយ?", ["var public", "StateFlow", "static", "Intent"], 1], ["Library ហៅ REST API ពេញនិយម?", ["Room", "Retrofit", "Coil", "Hilt"], 1], ["Database SQLite ក្នុង Jetpack?", ["Room", "Realm", "Firebase", "DataStore"], 0], ["ហៅ Internet ត្រូវ Permission អ្វីក្នុង Manifest?", ["CAMERA", "INTERNET", "STORAGE", "NETWORK"], 1], ["Google Play ទាមទារទម្រង់ File?", [".apk តែប៉ុណ្ណោះ", ".aab", ".ipa", ".exe"], 1], ["ថ្លៃគណនី Google Play Console?", ["$99/ឆ្នាំ", "$25 តែម្តង", "ឥតគិតថ្លៃ", "$5/ខែ"], 1]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+
+<ol class="steps"><li><b>Kotlin + Compose</b> (វគ្គនេះ) ✅</li><li>Hilt (Dependency Injection), Paging 3, WorkManager</li>
+<li>Animation &amp; Material 3 កម្រិតខ្ពស់ · Accessibility</li><li><b>Kotlin Multiplatform</b> — Share code ជាមួយ iOS (មើលវគ្គ <b>Swift</b>)</li>
+<li>Backend៖ <b>Ktor</b> ឬ Spring Boot + PostgreSQL</li><li>Publish App ១ លើ Google Play → Portfolio</li></ol>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="kotlin"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

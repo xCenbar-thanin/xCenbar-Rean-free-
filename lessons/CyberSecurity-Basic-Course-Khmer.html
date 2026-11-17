@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyber Security កម្រិតដំបូង</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#0b7285; --accent2:#15aabf; --accent-soft:#e3fafc;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#66d9e8; --accent2:#99e9f2; --accent-soft:#0b2226;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#66d9e8; --accent2:#99e9f2; --accent-soft:#0b2226;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#06141b,#0b7285 55%,#15aabf);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/cy1.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/cy1.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Cyber Security កម្រិតដំបូង៖ ការពារខ្លួនអនឡាញ</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Cyber Security ជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#setup">២. ត្រៀមខ្លួន</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Cyber security &amp; CIA triad</a>
+<a href="#l2">មេរៀន ២: ការគំរាមកំហែងទូទៅ</a>
+<a href="#l3">មេរៀន ៣: ពាក្យសម្ងាត់ខ្លាំង &amp; Password manager</a>
+<a href="#l4">មេរៀន ៤: MFA / 2FA &amp; Passkeys</a>
+<a href="#l5">មេរៀន ៥: Phishing &amp; ការបោកប្រាស់នៅកម្ពុជា</a>
+<a href="#l6">មេរៀន ៦: បណ្តាញសង្គម · ឯកជនភាព · សុវត្ថិភាពផ្លូវចិត្ត</a>
+<a href="#l7">មេរៀន ៧: សុវត្ថិភាពឧបករណ៍</a>
+<a href="#l8">មេរៀន ៨: Wi-Fi សាធារណៈ · HTTPS · VPN</a>
+<a href="#l9">មេរៀន ៩: Backup 3-2-1 &amp; Ransomware</a>
+<a href="#l10">មេរៀន ១០: ធនាគារ &amp; ទូទាត់អនឡាញ (KHQR)</a>
+<a href="#l11">មេរៀន ១១: ច្បាប់ &amp; ការរាយការណ៍នៅកម្ពុជា</a>
+<a href="#l12">មេរៀន ១២: ក្រមសីលធម៌ &amp; អាជីព Cyber security</a>
+<a href="#cheat">📋 សង្ខេប</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោង</a>
+<a href="#pro-app">💻 Cyber Lab (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🛡️ Cyber Security កម្រិតដំបូង (១/៣) — ការពារខ្លួន គ្រួសារ និងគណនី</h2>
+  <p><b>CIA triad</b>, Malware &amp; Ransomware, <b>ពាក្យសម្ងាត់ខ្លាំង</b> &amp; Password manager, <b>MFA/Passkey</b>, សម្គាល់ <b>Phishing &amp; ការបោកប្រាស់នៅកម្ពុជា</b>, ឯកជនភាពបណ្តាញសង្គម, Wi-Fi/HTTPS/VPN, <b>Backup 3-2-1</b>, ធនាគារ &amp; KHQR, ច្បាប់ និងការរាយការណ៍ — <b>គ្មាន Code</b>។ សម្រាប់ការការពារ (Defensive) តែប៉ុណ្ណោះ។</p>
+  <p><span class="badge">📘 ១២ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">📊 ឧទាហរណ៍គណនា (គ្មាន Code)</span><span class="badge">🛡️ Cyber Lab</span></p>
+</section>
+<section id="intro">
+<h2>១. Cyber Security ជាអ្វី? អ្នកណាបង្កើត?</h2>
+
+<div class="warn">⚠️ វគ្គនេះសម្រាប់ <b>ការពារ (Defensive)</b>។ ការចូលប្រព័ន្ធ/គណនីរបស់អ្នកដទៃ ឬស្កេន/វាយប្រហារបណ្តាញ <b>ដោយគ្មានការអនុញ្ញាតជាលាយលក្ខណ៍អក្សរ</b> គឺខុសច្បាប់ ហើយអាចបង្កគ្រោះថ្នាក់ពិត។ ហាត់តែលើឧបករណ៍ផ្ទាល់ខ្លួន Lab ឬ CTF ស្របច្បាប់ប៉ុណ្ណោះ។</div>
+
+<p><b>Cyber security</b> = ការការពារ <b>មនុស្ស ឧបករណ៍ គណនី និងទិន្នន័យ</b> ពីការវាយប្រហារតាម Internet។ កម្រិតដំបូងនេះសម្រាប់ <b>គ្រប់គ្នា</b> (សិស្ស និស្សិត ឪពុកម្តាយ) — <b>គ្មាន Code</b> — រៀនការពារខ្លួនពី Phishing, ការបោកប្រាស់តាម Telegram/Facebook, ការលួចគណនី និង Ransomware។</p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#868e96"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#868e96">1971</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Creeper</text><circle cx="200" cy="115" r="11" fill="#1c7ed6"/><text x="200" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#1c7ed6">1977</text><text x="200" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">RSA</text><circle cx="320" cy="115" r="11" fill="#e03131"/><text x="320" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#e03131">1988</text><text x="320" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Morris worm</text><circle cx="440" cy="115" r="11" fill="#7048e8"/><text x="440" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#7048e8">2001</text><text x="440" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">AES · OWASP</text><circle cx="560" cy="115" r="11" fill="#0ca678"/><text x="560" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#0ca678">2010</text><text x="560" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Stuxnet</text><circle cx="680" cy="115" r="11" fill="#e8590c"/><text x="680" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#e8590c">2017</text><text x="680" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">WannaCry</text><circle cx="800" cy="115" r="11" fill="#d6336c"/><text x="800" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#d6336c">2024</text><text x="800" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">NIST CSF 2.0</text><circle cx="920" cy="115" r="11" fill="#495057"/><text x="920" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#495057">2026</text><text x="920" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">KH Cybercrime law</text></svg><figcaption>🖼️ ប្រវត្តិសុវត្ថិភាពព័ត៌មានវិទ្យា</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>1971</td><td><b>Creeper</b> &amp; <b>Reaper</b> (ARPANET)</td><td>កម្មវិធីចម្លងខ្លួនឯងដំបូង និង «Antivirus» ដំបូង</td></tr><tr><td>1976–1977</td><td><b>Diffie–Hellman</b> · <b>RSA</b> (Rivest, Shamir, Adleman)</td><td>Public-key cryptography — មូលដ្ឋាន HTTPS</td></tr><tr><td>1988</td><td><b>Morris worm</b></td><td>Worm ធំដំបូងលើ Internet → បង្កើត <b>CERT/CC</b></td></tr><tr><td>2001</td><td><b>AES</b> (NIST) · <b>OWASP</b></td><td>ស្តង់ដារ Encryption · សហគមន៍សុវត្ថិភាព Web</td></tr><tr><td>2017</td><td><b>WannaCry</b> Ransomware</td><td>វាយប្រហារកុំព្យូទ័ររាប់សែនក្នុង ១៥០ ប្រទេស — មេរៀនពី Patch &amp; Backup</td></tr><tr><td>2024</td><td><b>NIST CSF 2.0</b></td><td>បន្ថែមមុខងារ <b>Govern</b></td></tr><tr><td>2026</td><td>កម្ពុជា — រដ្ឋសភាអនុម័ត <b>ច្បាប់ប្រឆាំងបទល្មើសបច្ចេកវិទ្យា (Cybercrime)</b> (មេសា 2026)</td><td>ផ្តោតលើការបោកប្រាស់អនឡាញ — ពិនិត្យស្ថានភាពប្រកាសឲ្យប្រើ · ច្បាប់ការពារទិន្នន័យផ្ទាល់ខ្លួន និងច្បាប់សន្តិសុខអ៊ីនធឺណិត នៅជាសេចក្តីព្រាង</td></tr></table>
+
+<div class="grid"><div class="card"><b>🛡️ ការពារខ្លួន</b><br>គណនីធនាគារ Facebook Telegram</div><div class="card"><b>👨‍👩‍👧 គ្រួសារ</b><br>ជួយឪពុកម្តាយកុំឲ្យត្រូវបោក</div><div class="card"><b>🏢 ការងារ</b><br>បុគ្គលិកគ្រប់រូបត្រូវការ</div><div class="card"><b>💼 អាជីព</b><br>Security analyst · SOC · Pentester (មានការអនុញ្ញាត)</div></div>
+
+</section>
+<section id="setup">
+<h2>២. ត្រៀមខ្លួន</h2>
+<ol class='steps'><li>ឧបករណ៍ផ្ទាល់ខ្លួន (ទូរស័ព្ទ/កុំព្យូទ័រ) — យើងនឹងពង្រឹងសុវត្ថិភាពវាតាមមេរៀន។</li><li>Password manager (Bitwarden, 1Password ឬ Google/Apple Password manager)។</li><li>កម្មវិធី Authenticator (Google/Microsoft Authenticator) សម្រាប់ MFA។</li><li>ប្រើ <b>Cyber Lab</b> នៅចុងវគ្គ ដើម្បីហាត់សម្គាល់ Phishing និងពិនិត្យពាក្យសម្ងាត់។</li></ol></section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>Cyber security &amp; CIA triad</h2>
+<p>ការវាយប្រហារភាគច្រើនមិនមែនដោយ «Hacker ពូកែ» ទេ — គឺដោយ <b>បោកមនុស្ស</b> (Social engineering) និងប្រើ <b>ពាក្យសម្ងាត់ខ្សោយ</b>។</p><figure class="fig"><svg viewBox="0 0 940 220" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="220" fill="#fff"/><rect x="30" y="40" width="270" height="120" rx="14" fill="#1c7ed6"/><text x="165.0" y="94.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Confidentiality</text><text x="165.0" y="116.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">តែអ្នកមានសិទ្ធិអាចមើល</text><rect x="335" y="40" width="270" height="120" rx="14" fill="#2f9e44"/><text x="470.0" y="94.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Integrity</text><text x="470.0" y="116.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ទិន្នន័យមិនត្រូវកែដោយខុស</text><rect x="640" y="40" width="270" height="120" rx="14" fill="#e8590c"/><text x="775.0" y="94.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Availability</text><text x="775.0" y="116.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ប្រើបានពេលត្រូវការ</text><text x="470" y="200" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">CIA Triad — គោលដៅ ៣ នៃសុវត្ថិភាពព័ត៌មាន</text></svg><figcaption>🖼️ Cyber security &amp; CIA triad</figcaption></figure>
+<table><tr><th>ឧទាហរណ៍</th><th>ប៉ះពាល់ CIA មួយណា?</th></tr><tr><td>មិត្តលួចមើល Messenger របស់អ្នក</td><td>Confidentiality</td></tr><tr><td>នរណាម្នាក់កែពិន្ទុក្នុងប្រព័ន្ធសាលា</td><td>Integrity</td></tr><tr><td>Website ក្រុមហ៊ុនគាំងដោយសារ DDoS</td><td>Availability</td></tr><tr><td>Ransomware ចាក់សោឯកសារ</td><td>Availability (+ Confidentiality បើលួចផង)</td></tr></table>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>ធនាគារ App មិនដំណើរការ ៥ ម៉ោង ដោយសារការវាយប្រហារ។ ប៉ះពាល់ CIA មួយណា?</p><details><summary>មើលចម្លើយ</summary><p><b>Availability</b>។</p></details></div>
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>ការគំរាមកំហែងទូទៅ</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="156.0" height="96" rx="14" fill="#e03131"/><text x="98.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">មនុស្ស</text><text x="98.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ចំណេះដឹង · Phishing</text><line x1="178.0" y1="82" x2="204.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="206.0" y="34" width="156.0" height="96" rx="14" fill="#e8590c"/><text x="284.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">ឧបករណ៍</text><text x="284.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Update · Lock</text><line x1="364.0" y1="82" x2="390.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="392.0" y="34" width="156.0" height="96" rx="14" fill="#f59f00"/><text x="470.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">គណនី</text><text x="470.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Password · MFA</text><line x1="550.0" y1="82" x2="576.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="578.0" y="34" width="156.0" height="96" rx="14" fill="#1c7ed6"/><text x="656.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">បណ្តាញ</text><text x="656.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Wi-Fi · VPN</text><line x1="736.0" y1="82" x2="762.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="764.0" y="34" width="156.0" height="96" rx="14" fill="#2f9e44"/><text x="842.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">ទិន្នន័យ</text><text x="842.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Backup · Encrypt</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Defense in depth — ការពារច្រើនស្រទាប់</text></svg><figcaption>🖼️ ការគំរាមកំហែងទូទៅ</figcaption></figure>
+<table><tr><th>ប្រភេទ</th><th>ន័យ</th><th>ការពារ</th></tr><tr><td>Malware / Virus</td><td>កម្មវិធីអាក្រក់</td><td>កុំដំឡើង App ពីប្រភពមិនស្គាល់ (APK Mod) · Update</td></tr><tr><td>Ransomware</td><td>ចាក់សោឯកសារ ទាមទារលុយ</td><td>Backup 3-2-1 · Update</td></tr><tr><td>Phishing</td><td>ក្លែងជាធនាគារ/ក្រុមហ៊ុន ដើម្បីលួចព័ត៌មាន</td><td>ពិនិត្យ Link · កុំឲ្យ OTP</td></tr><tr><td>Social engineering</td><td>បោកដោយចិត្តសាស្ត្រ (បន្ទាន់ ភ័យ លោភ)</td><td>ផ្អាក · ផ្ទៀងផ្ទាត់</td></tr><tr><td>Account takeover</td><td>លួចគណនី Facebook/Telegram</td><td>MFA · Password ខ្លាំង</td></tr><tr><td>Spyware / Stalkerware</td><td>តាមដានទូរស័ព្ទ</td><td>ពិនិត្យ App permissions</td></tr></table>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>ហេតុអ្វីអ្នកវាយប្រហារចូលចិត្ត «បោកមនុស្ស» ជាងវាយប្រព័ន្ធ?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះងាយជាង ថោកជាង — មនុស្សអាចភ័យ ប្រញាប់ ឬជឿ ចំណែកប្រព័ន្ធទំនើបពិបាកវាយ។</p></details></div>
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>ពាក្យសម្ងាត់ខ្លាំង &amp; Password manager</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>123456                      6 តួ ·    20 bits → 0.000 វិនាទី
+dara2008                    8 តួ ·    41 bits → 141.055 វិនាទី
+Dara@2008                   9 តួ ·    59 bits → 364.7 ថ្ងៃ
+mango-river-cloud-tiger    23 តួ ·   109 bits → 1,322,909,006,105,840 ឆ្នាំ
+Tg7#kq2!Zp9@Lm4$           16 តួ ·   105 bits → 69,781,625,547,274 ឆ្នាំ</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ប្រវែងសំខាន់ជាងភាពស្មុគស្មាញ — <b>Passphrase ៤–៥ ពាក្យ</b> ងាយចាំ និងខ្លាំង។</li><li><b>កុំប្រើពាក្យសម្ងាត់ដដែលគ្រប់កន្លែង</b> — Website មួយលេចធ្លាយ គណនីទាំងអស់គ្រោះថ្នាក់ (Credential stuffing)។</li><li>ប្រើ <b>Password manager</b> ចាំជំនួស — អ្នកចាំតែ Master password មួយ។</li><li>ពិនិត្យថាអ៊ីមែលធ្លាប់លេចធ្លាយ៖ haveibeenpwned.com។</li></ol></div>
+<div class="note">💡 លទ្ធផលខាងលើជាការប៉ាន់ស្មាន Brute force — ពាក្យដូច «dara2008» ពិតជាងាយទាយជាងនេះទៅទៀត ព្រោះអ្នកវាយប្រហារប្រើបញ្ជីឈ្មោះ និងឆ្នាំកំណើត។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>ពាក្យសម្ងាត់មួយណាល្អជាង៖ «P@ss1» ឬ «nom-banh-chok-ngam-nas»?</p><details><summary>មើលចម្លើយ</summary><p><b>nom-banh-chok-ngam-nas</b> — វែងជាង (២២ តួ) ពិបាកទាយជាង ហើយងាយចាំ។</p></details></div>
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>MFA / 2FA &amp; Passkeys</h2>
+<table><tr><th>វិធី</th><th>កម្រិតសុវត្ថិភាព</th><th>ចំណាំ</th></tr><tr><td>SMS OTP</td><td>⭐⭐</td><td>ប្រសើរជាងគ្មាន តែអាចត្រូវ SIM swap</td></tr><tr><td>Authenticator app (TOTP)</td><td>⭐⭐⭐</td><td>កូដប្តូររៀងរាល់ ៣០ វិនាទី</td></tr><tr><td>Security key / Passkey</td><td>⭐⭐⭐⭐</td><td>ការពារ Phishing ខ្លាំងបំផុត</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>បើក 2FA លើ៖ Gmail · Facebook · Telegram (Two-step verification + Password) · TikTok · App ធនាគារ។</li><li>រក្សាទុក <b>Backup codes</b> នៅកន្លែងសុវត្ថិភាព។</li><li><b>កុំប្រាប់កូដ OTP</b> ទៅនរណាម្នាក់ — សូម្បីតែ «បុគ្គលិកធនាគារ»។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>មាននរណាម្នាក់ Telegram មកថា «ខ្ញុំផ្ញើកូដទៅអ្នកដោយច្រឡំ សូមផ្ញើវាមកខ្ញុំវិញ»។ ធ្វើអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>កុំផ្ញើ</b> — នោះជាកូដ Login គណនីអ្នក។ គេកំពុងព្យាយាមលួចគណនី។ បើក Two-step verification។</p></details></div>
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>Phishing &amp; ការបោកប្រាស់នៅកម្ពុជា</h2>
+<table><tr><th>ល្បិច</th><th>សញ្ញាគ្រោះថ្នាក់</th></tr><tr><td>SMS ក្លែងធនាគារ (ABA, ACLEDA, Wing…)</td><td>Link ចម្លែក · «គណនីត្រូវផ្អាក» · សុំ PIN/OTP</td></tr><tr><td>ការងារ Online (Like/Review)</td><td>ឲ្យដាក់ប្រាក់មុន · ចំណេញខ្ពស់មិនប្រក្រតី</td></tr><tr><td>ក្លែងប៉ូលិស/តុលាការ តាមទូរស័ព្ទ</td><td>គំរាម + ឲ្យផ្ទេរលុយ «សុវត្ថិភាព»</td></tr><tr><td>ក្លែងមិត្ត (គណនីត្រូវលួច)</td><td>សុំខ្ចីលុយបន្ទាន់ ទៅគណនីឈ្មោះផ្សេង</td></tr><tr><td>រង្វាន់/Lucky draw</td><td>ឈ្នះដោយមិនបានចូលរួម · បង់ថ្លៃដឹក</td></tr><tr><td>វិនិយោគ Crypto/Forex</td><td>ធានាចំណេញ · ក្រុម Telegram VIP</td></tr><tr><td>ស្នេហា (Romance/Pig-butchering)</td><td>ស្គាល់តាម App · ក្រោយមកអូសទៅវិនិយោគ</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ច្បាប់ <b>STOP</b>៖ <b>S</b>top (ផ្អាក) · <b>T</b>hink (គិត) · <b>O</b>bserve (ពិនិត្យ Link/លេខ) · <b>P</b>rotect (ផ្ទៀងផ្ទាត់តាមលេខផ្លូវការ)។</li><li>ពិនិត្យ Domain ពិត៖ <code class='i'>aba-verify-kh.com</code> ≠ ធនាគារពិត។</li><li>លេងហ្គេម <b>🎣 Phishing</b> ក្នុង Cyber Lab។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>SMS៖ «ACLEDA: គណនីត្រូវបានចាក់សោ ចុច bit.ly/xxx»។ ធ្វើអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>កុំចុច</b> — បើកកម្មវិធីធនាគារផ្ទាល់ ឬហៅលេខផ្លូវការលើកាតធនាគារ ដើម្បីផ្ទៀងផ្ទាត់។ រាយការណ៍ SMS ទៅធនាគារ។</p></details></div>
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>បណ្តាញសង្គម · ឯកជនភាព · សុវត្ថិភាពផ្លូវចិត្ត</h2>
+<div class="grid"><div class="card"><b>🔒 Facebook</b><br>Privacy Checkup · Login alerts</div><div class="card"><b>✈️ Telegram</b><br>Two-step verification · Phone number: Nobody</div><div class="card"><b>🎵 TikTok</b><br>Private account សម្រាប់អាយុក្រោម ១៨</div><div class="card"><b>📸 Instagram</b><br>Close friends · Hide story</div></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>កំណត់ Privacy៖ Profile/Friends list ឲ្យមើលតែមិត្ត · បិទ Location ក្នុងរូប។</li><li><b>Digital footprint</b>៖ អ្វីដែលបង្ហោះ នៅជារៀងរហូត — គិតមុនបង្ហោះ។</li><li>កុំបង្ហាញ៖ លេខអត្តសញ្ញាណប័ណ្ណ · កាតធនាគារ · Boarding pass · អាសយដ្ឋានផ្ទះ។</li><li>បើមាននរណាម្នាក់ <b>គំរាម ឬទាមទារ</b> រូបភាពឯកជន ឬលុយ — <b>កុំឆ្លើយតប កុំផ្ញើលុយ</b> រក្សាភស្តុតាង ហើយប្រាប់ <b>ឪពុកម្តាយ/គ្រូ</b> និងប៉ូលិសភ្លាម — វាមិនមែនជាកំហុសរបស់អ្នកទេ។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>មិត្តថតរូបអ្នកអាម៉ាស់ ហើយគំរាមបង្ហោះ។ ធ្វើអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>កុំភ័យ កុំចុះចាញ់ · Screenshot ភស្តុតាង · Report/Block · ប្រាប់ឪពុកម្តាយ ឬគ្រូភ្លាម។</p></details></div>
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>សុវត្ថិភាពឧបករណ៍</h2>
+<table><tr><th>សកម្មភាព</th><th>ហេតុអ្វី</th></tr><tr><td>Update OS &amp; App ជានិច្ច</td><td>បិទចន្លោះប្រហោង (Vulnerabilities)</td></tr><tr><td>Screen lock (PIN ៦ ខ្ទង់ / Biometric)</td><td>បើបាត់ទូរស័ព្ទ</td></tr><tr><td>ដំឡើងពី Play Store/App Store តែប៉ុណ្ណោះ</td><td>APK Mod ច្រើនមាន Malware</td></tr><tr><td>ពិនិត្យ App permissions</td><td>App ពិល មិនត្រូវការ Contacts/SMS</td></tr><tr><td>Find My Device</td><td>ចាក់សោ/លុបពីចម្ងាយ</td></tr><tr><td>កុំ Root/Jailbreak</td><td>បិទការការពាររបស់ប្រព័ន្ធ</td></tr></table>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>App «Flashlight» សុំសិទ្ធិអាន SMS និង Contacts។ ធ្វើអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>បដិសេធ ហើយលុប App</b> — ពិលមិនត្រូវការ SMS ទេ (អាចលួច OTP)។</p></details></div>
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Wi-Fi សាធារណៈ · HTTPS · VPN</h2>
+<table><tr><th></th><th>ចំណាំ</th></tr><tr><td>🔒 HTTPS (Padlock)</td><td>ការតភ្ជាប់ត្រូវ Encrypt — <b>មិនមែនមានន័យថា Website ពិតទេ</b> (Phishing ក៏មាន HTTPS)</td></tr><tr><td>☕ Wi-Fi ហាងកាហ្វេ</td><td>ជៀសចូលធនាគារ — ប្រើ 4G/5G ឬ VPN</td></tr><tr><td>🛜 Wi-Fi ផ្ទះ</td><td>ប្តូរ Password Router លំនាំដើម · WPA2/WPA3 · Update firmware</td></tr><tr><td>🔐 VPN</td><td>Encrypt ពីឧបករណ៍ទៅ VPN — ជ្រើស VPN ដែលទុកចិត្ត (VPN ឥតគិតថ្លៃខ្លះលក់ទិន្នន័យ)</td></tr></table>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>Website មាន 🔒 HTTPS។ មានន័យថាសុវត្ថិភាព ១០០% ទេ?</p><details><summary>មើលចម្លើយ</summary><p><b>ទេ</b> — HTTPS គ្រាន់តែការពារការលួចស្តាប់ពេលបញ្ជូន។ ត្រូវពិនិត្យ Domain ផង។</p></details></div>
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Backup 3-2-1 &amp; Ransomware</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="280.0" height="96" rx="14" fill="#1c7ed6"/><text x="160.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">3 ច្បាប់</text><text x="160.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ទិន្នន័យ ៣ ច្បាប់</text><line x1="302.0" y1="82" x2="328.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="330.0" y="34" width="280.0" height="96" rx="14" fill="#7048e8"/><text x="470.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">2 ប្រភេទ</text><text x="470.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">កុំព្យូទ័រ + Hard disk</text><line x1="612.0" y1="82" x2="638.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="640.0" y="34" width="280.0" height="96" rx="14" fill="#2f9e44"/><text x="780.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">1 នៅក្រៅ</text><text x="780.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Cloud/ផ្ទះផ្សេង</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">ច្បាប់ Backup 3-2-1</text></svg><figcaption>🖼️ Backup 3-2-1 &amp; Ransomware</figcaption></figure>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Backup ស្វ័យប្រវត្តិ (Google Photos/Drive, iCloud, OneDrive)។</li><li>Hard disk Backup ត្រូវ <b>ផ្តាច់</b> ក្រោយ Backup — Ransomware ចាក់សោ Drive ដែលភ្ជាប់។</li><li><b>សាកស្តារ (Restore)</b> ម្តងម្កាល — Backup ដែលស្តារមិនបាន = គ្មាន Backup។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>ឯកសារសាលាទាំងអស់ត្រូវ Ransomware ចាក់សោ។ គួរបង់លុយ?</p><details><summary>មើលចម្លើយ</summary><p>ទូទៅ <b>មិនគួរ</b> — គ្មានការធានាថាបានវិញ ហើយលើកទឹកចិត្តឧក្រិដ្ឋកម្ម។ ផ្តាច់ Internet · ស្តារពី Backup · រាយការណ៍។</p></details></div>
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>ធនាគារ &amp; ទូទាត់អនឡាញ (KHQR)</h2>
+<div class="grid"><div class="card"><b>✅ ធ្វើ</b><br>ចូល App ផ្ទាល់ · ពិនិត្យឈ្មោះ · Limit · Notification</div><div class="card"><b>❌ កុំធ្វើ</b><br>ចុច Link ក្នុង SMS · ឲ្យ OTP · ស្កេន QR ពីមនុស្សមិនស្គាល់ ដើម្បី «ទទួលលុយ»</div></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li><b>កុំប្រាប់ PIN/OTP</b> — ធនាគារមិនដែលសុំ។</li><li>ពិនិត្យ <b>ឈ្មោះអ្នកទទួល</b> លើអេក្រង់មុនចុចបញ្ជាក់ KHQR។</li><li>កំណត់ <b>Transaction limit</b> និងបើក Notification គ្រប់ប្រតិបត្តិការ។</li><li>បាត់ទូរស័ព្ទ → ហៅធនាគារ ដើម្បីបង្កក (Freeze) គណនីភ្លាម។</li><li>ប្រុងប្រយ័ត្ន QR ក្លែងបិទពីលើ QR ពិតនៅហាង។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>មនុស្សម្នាក់ថា «ស្កេន QR នេះ ដើម្បីទទួលលុយពីខ្ញុំ»។ ត្រឹមត្រូវទេ?</p><details><summary>មើលចម្លើយ</summary><p><b>ទេ</b> — ស្កេន KHQR គឺសម្រាប់ <b>បង់</b> លុយ មិនមែនទទួលទេ។ ជាល្បិចបោក។</p></details></div>
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>ច្បាប់ &amp; ការរាយការណ៍នៅកម្ពុជា</h2>
+<table><tr><th>ប្រធានបទ</th><th>ស្ថានភាព (យោងប្រភពខែ ១១ ឆ្នាំ 2026)</th></tr><tr><td>ច្បាប់ប្រឆាំងបទល្មើសបច្ចេកវិទ្យា/ការបោកប្រាស់អនឡាញ</td><td>រដ្ឋសភាអនុម័ត (មេសា 2026) — ទោសដាក់ពន្ធនាគារ និងពិន័យលើការបោកប្រាស់អនឡាញ · ពិនិត្យការប្រកាសឲ្យប្រើ</td></tr><tr><td>ច្បាប់ការពារទិន្នន័យផ្ទាល់ខ្លួន</td><td>សេចក្តីព្រាង</td></tr><tr><td>ច្បាប់សន្តិសុខអ៊ីនធឺណិត</td><td>សេចក្តីព្រាង</td></tr><tr><td>ក្រមព្រហ្មទណ្ឌ</td><td>បទល្មើសបោកប្រាស់ គំរាមកំហែង… អនុវត្តចំពោះទម្រង់អនឡាញផង</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ត្រូវបោក៖ ហៅ <b>ធនាគាររបស់អ្នក</b> ភ្លាម (ព្យាយាមបង្កកប្រតិបត្តិការ)។</li><li>រក្សាភស្តុតាង៖ Screenshot ការជជែក លេខគណនី ថ្ងៃម៉ោង។</li><li>រាយការណ៍ទៅ <b>នគរបាល</b> (ក្នុងករណីបន្ទាន់ <b>117</b>)។</li><li>Report គណនីបោកលើ Facebook/Telegram។</li></ol></div>
+<div class="note">💡 ស្ថានភាពច្បាប់ផ្លាស់ប្តូរ — ពិនិត្យព័ត៌មានផ្លូវការ។ អ្នកអាយុក្រោម ១៨ ឆ្នាំ សូមប្រាប់ឪពុកម្តាយ ឬគ្រូជានិច្ច។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>ត្រូវបោកផ្ទេរ $200។ ធ្វើអ្វីមុនគេ?</p><details><summary>មើលចម្លើយ</summary><p><b>ហៅធនាគារភ្លាម</b> ដើម្បីព្យាយាមបង្កក → រក្សាភស្តុតាង → រាយការណ៍ប៉ូលិស។</p></details></div>
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>ក្រមសីលធម៌ &amp; អាជីព Cyber security</h2>
+<table><tr><th>តួនាទី</th><th>ធ្វើអ្វី</th></tr><tr><td>SOC Analyst</td><td>តាមដាន Alert ២៤/៧</td></tr><tr><td>Penetration tester (Ethical hacker)</td><td>តេស្តប្រព័ន្ធ <b>ដោយមានការអនុញ្ញាតជាលាយលក្ខណ៍អក្សរ</b></td></tr><tr><td>Security engineer</td><td>កសាង Firewall, IAM, Monitoring</td></tr><tr><td>GRC / Compliance</td><td>គោលនយោបាយ ISO 27001 ច្បាប់</td></tr><tr><td>Incident responder / Forensics</td><td>ឆ្លើយតប និងស៊ើបអង្កេត</td></tr></table>
+<div class="warn">⚠️ ការ «Hack» គណនីមិត្ត ឬ Wi-Fi អ្នកជិតខាង សូម្បីតែ «លេងៗ» ក៏ខុសច្បាប់ និងខុសក្រមសីលធម៌។ ហាត់លើ Lab ផ្ទាល់ខ្លួន ឬ CTF ស្របច្បាប់ (picoCTF, TryHackMe) ប៉ុណ្ណោះ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>មិត្តសុំឲ្យអ្នក «ជួយបើក» Facebook របស់ Crush គេ។ ធ្វើយ៉ាងណា?</p><details><summary>មើលចម្លើយ</summary><p><b>បដិសេធ</b> — ខុសច្បាប់ និងរំលោភឯកជនភាព។</p></details></div>
+</section>
+<section id="cheat">
+<h2>📋 សង្ខេប</h2>
+<table><tr><th>គោលការណ៍</th><th>ន័យ</th></tr><tr><td>CIA</td><td>Confidentiality · Integrity · Availability</td></tr><tr><td>Password</td><td>Passphrase វែង · មិនដដែល · Password manager</td></tr><tr><td>MFA</td><td>Authenticator / Passkey > SMS</td></tr><tr><td>STOP</td><td>Stop · Think · Observe · Protect</td></tr><tr><td>Backup 3-2-1</td><td>3 ច្បាប់ · 2 ប្រភេទ · 1 នៅក្រៅ</td></tr><tr><td>OTP/PIN</td><td>មិនប្រាប់នរណាម្នាក់</td></tr></table>
+</section>
+<section id="pro">
+<h2>🏆 គម្រោង</h2>
+<ol class='steps'><li><b>Security checkup</b> លើទូរស័ព្ទផ្ទាល់ខ្លួន៖ Update · Screen lock · App permissions · លុប App មិនប្រើ។</li><li>បើក 2FA លើគណនី ៥ (Gmail, Facebook, Telegram, TikTok, ធនាគារ)។</li><li>ដំឡើង Password manager ហើយប្តូរពាក្យសម្ងាត់ដែលប្រើដដែល។</li><li>រៀបចំ Backup 3-2-1 សម្រាប់រូបថត/ឯកសារសាលា។</li><li>ធ្វើបទបង្ហាញខ្លី ១០ នាទីឲ្យគ្រួសារ៖ «របៀបសម្គាល់ SMS បោក»។</li></ol></section>
+<section id="pro-app">
+<h2>💻 Cyber Lab (App)</h2>
+
+<p><b>🔑 Password</b> (Entropy &amp; ពេលទាយ) · <b>#️⃣ Hash</b> (SHA-256 &amp; Avalanche) · <b>🎣 Phishing game</b> (១០ ករណីពីកម្ពុជា) · <b>📜 Log analyzer</b> (រក Brute force) · <b>🧱 Firewall</b> (First-match &amp; Default deny) — ទាំងអស់ដំណើរការក្នុង Browser មិនផ្ញើទិន្នន័យចេញ។</p>
+
+<div class="itk" id="cy">
+<div class="itk-tabs"><button class="on" data-t="pw">🔑 Password</button><button data-t="h">#️⃣ Hash</button><button data-t="ph">🎣 Phishing game</button><button data-t="lg">📜 Log analyzer</button><button data-t="fw">🧱 Firewall</button></div>
+
+<div class="itk-p on" data-p="pw">
+ <p class="vl-tip">វាយពាក្យសម្ងាត់សាកល្បង (កុំវាយពាក្យសម្ងាត់ពិតរបស់អ្នក) — ការគណនាធ្វើក្នុង Browser របស់អ្នក មិនផ្ញើទៅណាទេ។</p>
+ <div class="itk-row"><label>ពាក្យសម្ងាត់<input id="pw_in" type="text" value="Phnom Penh 2026!" autocomplete="off" style="width:240px"></label>
+ <label>ល្បឿនទាយ<select id="pw_sp"><option value="1e4">10K/វិនាទី (Online)</option><option value="1e10" selected>10 ពាន់លាន/វិនាទី (GPU offline)</option></select></label></div>
+ <div class="itk-out" id="pw_out"></div>
+</div>
+
+<div class="itk-p" data-p="h">
+ <div class="itk-row"><label>អក្សរ<input id="h_in" value="xCenBar Rean Free" style="width:240px"></label><label>Algorithm<select id="h_alg"><option>SHA-256</option><option>SHA-1</option><option>SHA-512</option></select></label></div>
+ <div class="itk-out" id="h_out" style="font-family:monospace;font-size:13px;word-break:break-all"></div>
+</div>
+
+<div class="itk-p" data-p="ph">
+ <div class="itk-out" id="ph_q"></div>
+ <div class="itk-row"><button class="btn" id="ph_ok">✅ ពិត/សុវត្ថិភាព</button><button class="btn" id="ph_bad" style="background:#e03131;color:#fff;border-color:#e03131">🎣 បោក (Phishing)</button><button class="btn" id="ph_next">⏭ បន្ទាប់</button></div>
+ <div class="itk-out" id="ph_out"></div>
+</div>
+
+<div class="itk-p" data-p="lg">
+ <div class="itk-row"><label>កម្រិតបរាជ័យ (ដង)<input id="lg_th" type="number" value="5" style="width:80px"></label><button class="btn" id="lg_go">🔍 វិភាគ</button><button class="btn" id="lg_demo">📋 Log គំរូ</button></div>
+ <textarea id="lg_in" rows="8" style="width:100%;font-family:monospace;font-size:12.5px"></textarea>
+ <div class="itk-out" id="lg_out"></div>
+</div>
+
+<div class="itk-p" data-p="fw">
+ <p class="vl-tip">ច្បាប់អានពីលើចុះក្រោម — ច្បាប់ដំបូងដែលត្រូវ ជាអ្នកសម្រេច (First match)។ ចុងក្រោយ <b>Default deny</b>។</p>
+ <textarea id="fw_rules" rows="6" style="width:100%;font-family:monospace;font-size:12.5px">allow tcp 443 any
+allow tcp 80 any
+allow tcp 22 10.0.0.0/24
+deny tcp 3389 any
+allow udp 53 any</textarea>
+ <div class="itk-row"><label>Protocol<select id="fw_p"><option>tcp</option><option>udp</option></select></label><label>Port<input id="fw_port" type="number" value="22" style="width:90px"></label><label>Source IP<input id="fw_ip" value="203.0.113.7" style="width:140px"></label><button class="btn" id="fw_go">▶ តេស្ត Packet</button></div>
+ <div class="itk-out" id="fw_out"></div>
+</div>
+</div>
+<script>
+(() => {
+const $ = id => document.getElementById(id), root = $("cy");
+root.querySelectorAll(".itk-tabs button").forEach(b => b.onclick = () => { root.querySelectorAll(".itk-tabs button").forEach(x => x.classList.toggle("on", x === b)); root.querySelectorAll(".itk-p").forEach(p => p.classList.toggle("on", p.dataset.p === b.dataset.t)); });
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+/* password */
+const COMMON = ["123456", "password", "123456789", "qwerty", "111111", "abc123", "iloveyou", "admin", "welcome", "khmer123", "cambodia", "password1", "000000", "123123"];
+function human(sec) { const u = [["ឆ្នាំ", 31536000], ["ថ្ងៃ", 86400], ["ម៉ោង", 3600], ["នាទី", 60], ["វិនាទី", 1]]; if (sec > 1e12 * 31536000) return "> ១ លានលានឆ្នាំ"; for (const [n, s] of u) if (sec >= s) return (sec / s).toLocaleString("en-US", { maximumFractionDigits: 1 }) + " " + n; return "ភ្លាមៗ"; }
+function pw() { const p = $("pw_in").value; let pool = 0; if (/[a-z]/.test(p)) pool += 26; if (/[A-Z]/.test(p)) pool += 26; if (/\d/.test(p)) pool += 10; if (/[^A-Za-z0-9]/.test(p)) pool += 33;
+  const bits = p.length * Math.log2(pool || 1), sec = Math.pow(2, bits) / 2 / +$("pw_sp").value, warn = [];
+  if (COMMON.includes(p.toLowerCase())) warn.push("❌ ពាក្យសម្ងាត់ពេញនិយមខ្លាំង — ត្រូវគេទាយភ្លាម"); if (p.length < 12) warn.push("⚠️ ខ្លីជាង ១២ តួ"); if (/(.)\1{2,}/.test(p)) warn.push("⚠️ តួអក្សរដដែលៗ"); if (/(19|20)\d\d/.test(p)) warn.push("ℹ️ មានឆ្នាំ — ងាយទាយបើជាថ្ងៃកំណើត");
+  const lvl = COMMON.includes(p.toLowerCase()) ? 0 : bits < 40 ? 1 : bits < 60 ? 2 : bits < 80 ? 3 : 4, col = ["#e03131", "#e8590c", "#f59f00", "#2f9e44", "#1c7ed6"][lvl];
+  $("pw_out").innerHTML = `ប្រវែង <b>${p.length}</b> · តួអក្សរប្រើ ${pool} ប្រភេទ · Entropy ≈ <b>${bits.toFixed(0)} bits</b><div style="height:10px;border-radius:6px;background:#eee;margin:6px 0"><div style="height:100%;width:${Math.min(100, bits)}%;background:${col};border-radius:6px"></div></div>
+  ពេលទាយ (ប៉ាន់ស្មាន)៖ <b style="color:${col}">${COMMON.includes(p.toLowerCase()) ? "ភ្លាមៗ" : human(sec)}</b><br>${warn.join("<br>") || "✅ ល្អ — ប្រើតែកន្លែងមួយ ហើយទុកក្នុង Password manager"}<br><small style="color:var(--muted)">💡 Passphrase វែង (ពាក្យ ៤–៥) ងាយចាំ និងរឹងមាំជាងពាក្យខ្លីស្មុគស្មាញ</small>`; }
+["pw_in", "pw_sp"].forEach(id => $(id).oninput = pw);
+/* hash */
+async function hh() { const t = $("h_in").value, alg = $("h_alg").value;
+  if (!(window.crypto && crypto.subtle)) { $("h_out").textContent = "Browser នេះមិនគាំទ្រ Web Crypto"; return; }
+  const hx = async s => [...new Uint8Array(await crypto.subtle.digest(alg, new TextEncoder().encode(s)))].map(b => b.toString(16).padStart(2, "0")).join("");
+  const a = await hx(t), b = await hx(t + "."), diff = [...a].filter((c, i) => c !== b[i]).length;
+  $("h_out").innerHTML = `<b>${alg}("${esc(t)}")</b><br>${a}<br><br><b>បន្ថែម "." ១ តួ</b><br>${b}<br><br>Avalanche effect៖ ${diff}/${a.length} តួខុសគ្នា (${(diff / a.length * 100).toFixed(0)}%) · Hash មិនអាចបង្វិលត្រឡប់ (One-way)${alg === "SHA-1" ? '<br><span style="color:#e03131">⚠️ SHA-1 ខ្សោយ (Collision 2017) — កុំប្រើសម្រាប់សុវត្ថិភាព</span>' : ""}`; }
+["h_in", "h_alg"].forEach(id => $(id).oninput = hh);
+/* phishing game */
+const PH = [
+ ["📱 SMS: «ABA: គណនីរបស់អ្នកត្រូវបានផ្អាក។ ចុច http://aba-verify-kh.com ដើម្បីបើកវិញ ក្នុង ២៤ ម៉ោង»", 1, "Domain មិនមែនរបស់ធនាគារ + បង្ខំពេល + គំរាម → Phishing។ ធនាគារមិនផ្ញើ Link ឲ្យបញ្ចូល PIN/OTP ទេ។"],
+ ["📧 Email ពី it@xcenbar-school.edu.kh: «ការប្រជុំគ្រូ ថ្ងៃសុក្រ ម៉ោង ២ — មើលកាលវិភាគក្នុង Portal សាលា» (គ្មាន Link គ្មានឯកសារភ្ជាប់)", 0, "គ្មាន Link/ឯកសារ គ្មានការសុំព័ត៌មាន — ទំនងជាពិត (នៅតែត្រូវពិនិត្យអ្នកផ្ញើ)។"],
+ ["💬 Telegram: «ការងារ Online ងាយៗ ថ្ងៃ $50–$200! គ្រាន់តែ Like វីដេអូ។ ដាក់ប្រាក់ $30 ដើម្បីចាប់ផ្តើម»", 1, "Job/Task scam — សន្យាលុយងាយ ហើយសុំឲ្យដាក់ប្រាក់មុន។"],
+ ["🔗 URL: https://www.paypa1.com/login", 1, "Typosquatting — «1» ជំនួស «l»។"],
+ ["🔗 URL: https://accounts.google.com/signin", 0, "Domain ពិតរបស់ Google (accounts.google.com)។"],
+ ["📞 ហៅទូរស័ព្ទ: «ខ្ញុំនៅប៉ុស្តិ៍ប៉ូលិស ឈ្មោះអ្នកជាប់ពាក់ព័ន្ធលុយកខ្វក់ ត្រូវផ្ទេរលុយទៅគណនីសុវត្ថិភាពភ្លាម»", 1, "Impersonation scam — អាជ្ញាធរពិតមិនសុំឲ្យផ្ទេរលុយតាមទូរស័ព្ទទេ។ បិទទូរស័ព្ទ ហើយហៅលេខផ្លូវការវិញ។"],
+ ["📧 «អ្នកឈ្នះ iPhone 17! បង់ថ្លៃដឹកជញ្ជូន $5 តាម KHQR ខាងក្រោម»", 1, "Prize scam — អ្នកមិនបានចូលរួមប្រកួតទេ។"],
+ ["📱 SMS ពី Bank App ផ្ទាល់ (Notification ក្នុង App): «អ្នកបានទូទាត់ $12.50 នៅ Coffee Shop»", 0, "Notification ក្នុង App ផ្លូវការ គ្មាន Link — ពិនិត្យថាពិតជាអ្នកទូទាត់មែន។"],
+ ["💬 មិត្តភក្តិ Facebook: «សុំខ្ចី $100 បន្ទាន់ ផ្ទេរទៅគណនីនេះ (ឈ្មោះផ្សេង) ខ្ញុំសងស្អែក»", 1, "Account takeover — ហៅទូរស័ព្ទផ្ទៀងផ្ទាត់មិត្តផ្ទាល់មុនផ្ទេរ។"],
+ ["📧 Email: «Microsoft 365: ពាក្យសម្ងាត់ផុតកំណត់ ចុចទីនេះ» Link → https://m365-login.support-help.co", 1, "Domain ក្លែង + Credential harvesting។ ចូលតាម URL ដែលអ្នកស្គាល់ផ្ទាល់។"]];
+let pi = 0, score = 0, seen = 0, ans = false;
+function phq() { ans = false; $("ph_q").innerHTML = `<b>${pi + 1}/${PH.length}</b> ${esc(PH[pi][0])}`; $("ph_out").innerHTML = `ពិន្ទុ ${score}/${seen}`; }
+function pha(g) { if (ans) return; ans = true; seen++; const ok = g === PH[pi][1]; if (ok) score++; $("ph_out").innerHTML = `${ok ? "✅ ត្រឹមត្រូវ!" : "❌ មិនត្រូវ"} — ${PH[pi][2]}<br>ពិន្ទុ <b>${score}/${seen}</b>`; }
+$("ph_ok").onclick = () => pha(0); $("ph_bad").onclick = () => pha(1); $("ph_next").onclick = () => { pi = (pi + 1) % PH.length; phq(); };
+/* log analyzer */
+const DEMO = ["Nov 16 01:02:11 web sshd[811]: Failed password for root from 198.51.100.23 port 51512", "Nov 16 01:02:13 web sshd[811]: Failed password for root from 198.51.100.23 port 51518", "Nov 16 01:02:15 web sshd[811]: Failed password for admin from 198.51.100.23 port 51522",
+ "Nov 16 01:02:18 web sshd[811]: Failed password for root from 198.51.100.23 port 51530", "Nov 16 01:02:20 web sshd[811]: Failed password for ubuntu from 198.51.100.23 port 51541", "Nov 16 01:02:23 web sshd[811]: Failed password for root from 198.51.100.23 port 51555",
+ "Nov 16 08:15:40 web sshd[902]: Accepted publickey for dara from 10.0.0.15 port 60011", "Nov 16 09:01:02 web sshd[930]: Failed password for sokha from 10.0.0.22 port 60100", "Nov 16 09:01:30 web sshd[930]: Accepted password for sokha from 10.0.0.22 port 60102",
+ "Nov 16 23:40:01 web sshd[999]: Failed password for root from 203.0.113.99 port 40001", "Nov 16 23:40:03 web sshd[999]: Failed password for root from 203.0.113.99 port 40003", "Nov 16 23:40:09 web sshd[999]: Accepted password for root from 203.0.113.99 port 40009"].join("\n");
+function lg() { const th = +$("lg_th").value, fail = {}, ok = {}; $("lg_in").value.split("\n").forEach(l => { const m = l.match(/(Failed|Accepted) \w+ for (\S+) from ([\d.]+)/); if (!m) return; const o = m[1] === "Failed" ? fail : ok; (o[m[3]] = o[m[3]] || []).push(m[2]); });
+  const rows = Object.keys({ ...fail, ...ok }).map(ip => { const f = (fail[ip] || []).length, s = (ok[ip] || []).length, priv = /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(ip);
+    const sev = f >= th && s ? "🔴 CRITICAL — Brute force ហើយ Login បាន!" : f >= th ? "🟠 HIGH — Brute force" : f && s && !priv && (ok[ip] || []).includes("root") ? "🔴 HIGH — Root login ពី IP ក្រៅ" : f && s ? "🟡 ពិនិត្យ" : "🟢 ធម្មតា";
+    return `<tr><td>${ip}${priv ? " (internal)" : ""}</td><td>${f}</td><td>${s}</td><td>${[...new Set([...(fail[ip] || []), ...(ok[ip] || [])])].join(", ")}</td><td>${sev}</td></tr>`; }).join("");
+  $("lg_out").innerHTML = rows ? `<div style="overflow-x:auto"><table><tr><th>IP</th><th>Failed</th><th>Success</th><th>Users</th><th>Severity</th></tr>${rows}</table></div>💡 ឆ្លើយតប៖ Block IP · បិទ Password login (ប្រើ SSH key) · បិទ root login · ពិនិត្យ Session ដែល Login បាន` : "រកមិនឃើញ Log SSH"; }
+$("lg_go").onclick = lg; $("lg_demo").onclick = () => { $("lg_in").value = DEMO; lg(); };
+/* firewall */
+function ip2n(ip) { return ip.split(".").reduce((a, b) => a * 256 + (+b), 0); }
+function inNet(ip, cidr) { if (cidr === "any") return true; const [n, b] = cidr.split("/"); const bits = +(b || 32), mask = bits ? 2 ** 32 - 2 ** (32 - bits) : 0; return (ip2n(ip) & mask) >>> 0 === (ip2n(n) & mask) >>> 0; }
+function fw() { const p = $("fw_p").value, port = +$("fw_port").value, ip = $("fw_ip").value.trim(); const rules = $("fw_rules").value.split("\n").map(s => s.trim()).filter(Boolean);
+  for (let i = 0; i < rules.length; i++) { const [act, pr, pt, src] = rules[i].split(/\s+/); if (pr === p && (+pt === port || pt === "any") && inNet(ip, src || "any")) { $("fw_out").innerHTML = `ច្បាប់ទី ${i + 1} <code>${esc(rules[i])}</code> → <b style="color:${act === "allow" ? "#2f9e44" : "#e03131"}">${act.toUpperCase()}</b>`; return; } }
+  $("fw_out").innerHTML = `គ្មានច្បាប់ត្រូវ → <b style="color:#e03131">DENY (Default deny)</b>`; }
+$("fw_go").onclick = fw;
+pw(); hh(); phq(); fw();
+})();
+</script>
+
+<h3>🏆 Quiz ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["CIA = ?", ["Confidentiality Integrity Availability", "Cyber Internet Access", "Code Input Attack", "Central Intelligence"], 0], ["Ransomware ចាក់សោឯកសារ ប៉ះពាល់?", ["Availability", "Integrity តែប៉ុណ្ណោះ", "គ្មាន", "Speed"], 0], ["Morris worm ឆ្នាំ?", ["1971", "1988", "2017", "2001"], 1], ["WannaCry ជា?", ["Ransomware", "Antivirus", "Firewall", "VPN"], 0], ["ពាក្យសម្ងាត់ល្អបំផុត?", ["123456", "Dara2008", "Passphrase វែង ៤–៥ ពាក្យ", "password"], 2], ["ប្រើពាក្យសម្ងាត់ដដែលគ្រប់កន្លែង?", ["ល្អ ងាយចាំ", "គ្រោះថ្នាក់ (Credential stuffing)", "តម្រូវដោយច្បាប់", "លឿន"], 1], ["MFA ខ្លាំងបំផុត?", ["SMS", "Passkey/Security key", "Email", "Security question"], 1], ["គេសុំ OTP ដែលផ្ញើ «ច្រឡំ»?", ["ផ្ញើឲ្យ", "កុំផ្ញើ", "ផ្ញើពាក់កណ្តាល", "Post"], 1], ["STOP ពាក្យ S =", ["Send", "Stop", "Share", "Save"], 1], ["aba-verify-kh.com ជា?", ["Domain ធនាគារពិត", "សញ្ញា Phishing", "Government", "VPN"], 1], ["Job ឲ្យដាក់ប្រាក់មុន?", ["ល្អ", "Scam", "ធម្មតា", "Bank"], 1], ["APK Mod ពីគេហទំព័រក្រៅ?", ["សុវត្ថិភាព", "អាចមាន Malware", "លឿន", "ផ្លូវការ"], 1], ["HTTPS 🔒 មានន័យថា?", ["Website ពិតជាពិត", "ការតភ្ជាប់ត្រូវ Encrypt", "គ្មាន Virus", "Government"], 1], ["Wi-Fi ហាងកាហ្វេ ចូលធនាគារ?", ["ល្អ", "ជៀស ឬប្រើ VPN/4G", "ចាំបាច់", "លឿន"], 1], ["Backup 3-2-1: «1» =", ["១ ច្បាប់", "១ នៅក្រៅទីតាំង", "១ ថ្ងៃ", "១ ពាក្យសម្ងាត់"], 1], ["ស្កេន KHQR ពីមនុស្សមិនស្គាល់ «ដើម្បីទទួលលុយ»?", ["ត្រឹមត្រូវ", "ល្បិចបោក (KHQR សម្រាប់បង់)", "Bonus", "Safe"], 1], ["ត្រូវបោកផ្ទេរលុយ — ធ្វើមុនគេ?", ["ហៅធនាគារភ្លាម", "រង់ចាំ", "Post Facebook", "ផ្ទេរបន្ថែម"], 0], ["Ethical hacking ត្រូវការ?", ["ការអនុញ្ញាតជាលាយលក្ខណ៍អក្សរ", "Wi-Fi លឿន", "គ្មាន", "លុយ"], 0], ["App ពិលសុំសិទ្ធិ SMS?", ["អនុញ្ញាត", "បដិសេធ ហើយលុប", "Restart", "Update"], 1], ["NIST CSF 2.0 បន្ថែមមុខងារ?", ["Govern", "Hack", "Mine", "Sell"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+<ol class='steps'><li><b>កម្រិតដំបូង</b> (វគ្គនេះ) ✅</li><li><b>កម្រិតមធ្យម</b>៖ Network, Cryptography, Linux, Web security (OWASP)</li><li>កម្រិតខ្ពស់៖ SOC, SIEM, Incident response, Cloud, Zero Trust</li><li>វគ្គពាក់ព័ន្ធ៖ Linux · Networking · Python</li></ol></section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="cy1"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

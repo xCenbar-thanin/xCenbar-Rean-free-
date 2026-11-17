@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន Mobile UI Animation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#5f3dc4; --accent2:#7950f2; --accent-soft:#f3f0ff;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#b197fc; --accent2:#d0bfff; --accent-soft:#1a1233;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#b197fc; --accent2:#d0bfff; --accent-soft:#1a1233;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#1a1033,#5f3dc4 45%,#f76707);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/motion.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/motion.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Mobile UI &amp; Animation កម្រិតខ្ពស់</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. ហេតុអ្វី Animation សំខាន់?</a>
+<a href="#install">២. ឧបករណ៍ &amp; API តាម Framework</a>
+<a href="#elements">៣. ធាតុនីមួយៗរបស់ Motion</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Duration &amp; គោលការណ៍ Motion</a>
+<a href="#l2">មេរៀន ២: Easing &amp; Cubic Bézier</a>
+<a href="#l3">មេរៀន ៣: Spring Physics</a>
+<a href="#l4">មេរៀន ៤: Implicit Animation (ងាយបំផុត)</a>
+<a href="#l5">មេរៀន ៥: Explicit Animation, Sequence &amp; Stagger</a>
+<a href="#l6">មេរៀន ៦: Shared Element / Hero Transition</a>
+<a href="#l7">មេរៀន ៧: Gesture-driven Animation៖ Bottom Sheet</a>
+<a href="#l8">មេរៀន ៨: Micro-interactions</a>
+<a href="#l9">មេរៀន ៩: Loading States៖ Skeleton, Progress &amp; Optimistic UI</a>
+<a href="#l10">មេរៀន ១០: Lottie &amp; Rive</a>
+<a href="#l11">មេរៀន ១១: Performance៖ 60/120 FPS</a>
+<a href="#l12">មេរៀន ១២: Accessibility &amp; Motion Design System</a>
+<a href="#cheat">📋 Cheat Sheet</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងអាជីព៖ Kafe App Motion Polish</a>
+<a href="#pro-app">💻 Motion Lab Pro (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>✨ Motion Design សម្រាប់ App ទូរស័ព្ទ</h2>
+  <p>Duration, <b>Easing &amp; Cubic Bézier</b>, <b>Spring physics</b>, Implicit/Explicit, Stagger, <b>Hero/Shared element</b>, Gesture-driven Bottom sheet, Micro-interactions, Skeleton, <b>Lottie &amp; Rive</b>, 60/120 FPS និង Reduce motion — Flutter · Compose · SwiftUI · React Native · Demo ចុចសាកបាន + ការគណនាពិត។</p>
+  <p><span class="badge">📘 ១២ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">💻 Code មានពណ៌ + លទ្ធផល</span><span class="badge">✨ Motion Lab Pro</span></p>
+</section>
+<section id="intro">
+<h2>១. ហេតុអ្វី Animation សំខាន់?</h2>
+
+<p>Animation ល្អ <b>មិនមែនសម្រាប់ស្អាតតែប៉ុណ្ណោះ</b> — វាប្រាប់អ្នកប្រើថា <b>អ្វីកើតឡើង</b> (បន្ថែមចូលកន្ត្រក), <b>វត្ថុមកពីណា</b> (រូបពង្រីកទៅទំព័រលម្អិត), និង <b>App កំពុងធ្វើការ</b> (Loading)។ App ល្បីៗ (Apple, Google, Airbnb, Duolingo) ប្រើ <b>Motion design</b> ធ្វើឲ្យ App មានអារម្មណ៍ "រស់" និងងាយយល់។ <button class="btn say" data-say="Motion design">🔊 អានពាក្យ</button></p>
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th></tr><tr><td>1981</td><td><b>Ollie Johnston &amp; Frank Thomas</b> (Disney) — សៀវភៅ <i>The Illusion of Life</i>៖ <b>គោលការណ៍ Animation ១២</b> (Squash &amp; stretch, Anticipation, Ease in/out …)</td></tr><tr><td>2001</td><td><b>Robert Penner</b> — សមីការ <b>Easing</b> (easeInOutQuad …) ដែល Library ទាំងអស់ប្រើ</td></tr><tr><td>2014</td><td>Google <b>Material Design</b> — Motion ជាផ្នែកមួយនៃ Design system</td></tr><tr><td>2017</td><td><b>Airbnb</b> បញ្ចេញ <b>Lottie</b> (ផ្អែកលើ Bodymovin របស់ Hernan Torrisi) — Animation ពី After Effects ទៅ App</td></tr><tr><td>2019→</td><td>SwiftUI/Compose/Flutter — Animation ជា API ងាយៗ · <b>Rive</b> (Guido &amp; Luigi Rosso) — Interactive animation + State machine</td></tr></table>
+
+<table><tr><th>តួនាទី</th><th>ឧទាហរណ៍</th><th>មេរៀន</th></tr><tr><td>ប្រាប់ទំនាក់ទំនង</td><td>Hero/Shared element រូបកាហ្វេ → ទំព័រលម្អិត</td><td>៦</td></tr><tr><td>ផ្តល់ Feedback</td><td>ចុចប៊ូតុងរួមតូច · ❤️ ផ្ទុះ · បន្ថែមកន្ត្រក</td><td>៨</td></tr><tr><td>បង្ហាញស្ថានភាព</td><td>Skeleton loading · Pull to refresh</td><td>៩</td></tr><tr><td>ណែនាំការផ្តោត</td><td>Stagger បញ្ជីលេចម្តងមួយ</td><td>៥</td></tr><tr><td>ធ្វើឲ្យមានជីវិត</td><td>Spring ពេលអូស Bottom sheet</td><td>៣ · ៧</td></tr></table>
+
+</section>
+<section id="install">
+<h2>២. ឧបករណ៍ &amp; API តាម Framework</h2>
+
+<table><tr><th></th><th>Flutter</th><th>Jetpack Compose</th><th>SwiftUI</th><th>React Native</th></tr><tr><td>Implicit (ងាយ)</td><td>AnimatedContainer · AnimatedOpacity</td><td>animate*AsState · AnimatedVisibility</td><td>withAnimation · .animation()</td><td>Reanimated useAnimatedStyle + withTiming</td></tr><tr><td>Explicit</td><td>AnimationController + Tween</td><td>Animatable · updateTransition</td><td>PhaseAnimator · KeyframeAnimator</td><td>useSharedValue · withSequence</td></tr><tr><td>Spring</td><td>SpringSimulation</td><td>spring(dampingRatio, stiffness)</td><td>.spring(response, dampingFraction)</td><td>withSpring({ damping, stiffness })</td></tr><tr><td>Shared element</td><td>Hero</td><td>SharedTransitionLayout</td><td>matchedGeometryEffect · .navigationTransition(.zoom)</td><td>Reanimated sharedTransitionTag</td></tr><tr><td>Gesture</td><td>GestureDetector · Draggable</td><td>Modifier.draggable · AnchoredDraggable</td><td>DragGesture</td><td>react-native-gesture-handler</td></tr><tr><td>Vector anim</td><td>lottie · rive</td><td>lottie-compose · rive-android</td><td>lottie-ios · RiveRuntime</td><td>lottie-react-native · rive-react-native</td></tr></table>
+
+<div class="note">💡 Animation ក្នុងវគ្គនេះមាន <b>Demo ដែលចុចសាកបានពិត</b> (CSS/JS ក្នុង Browser ដែលធ្វើតាមគោលការណ៍ដូចគ្នា) ហើយ <b>ការគណនា Easing និង Spring រត់ពិត</b> ដោយ Node.js និង Python (មាន Chart ពិត)។ Code Flutter/Compose/SwiftUI/RN ជាលទ្ធផលគំរូដែលពិនិត្យដោយដៃ (ត្រូវការ SDK រត់)។</div>
+
+</section>
+<section id="elements">
+<h2>៣. ធាតុនីមួយៗរបស់ Motion</h2>
+
+<table><tr><th>ធាតុ</th><th>ពន្យល់</th><th>មេរៀន</th></tr><tr><td>Duration</td><td>រយៈពេល — 100–200ms (តូច) · 250–400ms (អេក្រង់) · ≤ 500ms</td><td>១</td></tr><tr><td>Easing</td><td>ល្បឿនប្តូរតាមពេល (cubic-bezier)</td><td>២</td></tr><tr><td>Spring</td><td>Physics (stiffness, damping) — ធម្មជាតិ រំខានបាន</td><td>៣</td></tr><tr><td>Implicit / Explicit</td><td>ប្រាប់ "ទៅណា" ឬគ្រប់គ្រងគ្រប់ Frame</td><td>៤ · ៥</td></tr><tr><td>Stagger · Sequence</td><td>ម្តងមួយៗ · តាមលំដាប់</td><td>៥</td></tr><tr><td>Shared element</td><td>វត្ថុដដែលផ្លាស់ពីអេក្រង់មួយទៅមួយ</td><td>៦</td></tr><tr><td>Gesture-driven</td><td>Animation តាមម្រាមដៃ + Velocity</td><td>៧</td></tr><tr><td>Micro-interaction</td><td>Feedback តូចៗ</td><td>៨ · ៩</td></tr><tr><td>Lottie / Rive</td><td>Animation ពី Designer</td><td>១០</td></tr><tr><td>Performance · Accessibility</td><td>60/120 FPS · Reduce motion</td><td>១១ · ១២</td></tr></table>
+
+</section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>Duration &amp; គោលការណ៍ Motion</h2>
+
+<script type="text/x-code" data-lang="html" data-label="duration.html · ▶ ចុចសាក" data-demo>
+<style>body{margin:0;font-family:sans-serif;background:#f8f9fa;color:#222;user-select:none}.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin:8px 0}button{border:0;border-radius:10px;padding:8px 12px;background:#5f3dc4;color:#fff;font-weight:700}</style>
+<div class="bar"><button id="go">▶ Play</button> <label>Duration <input id="d" type="range" min="100" max="1500" step="50" value="300"> <b id="dv">300ms</b></label></div>
+<div id="track" style="position:relative;height:150px">
+  <div class="b" data-e="linear" style="top:0">linear</div>
+  <div class="b" data-e="cubic-bezier(.2,0,0,1)" style="top:50px">ease (Material)</div>
+  <div class="b" data-e="cubic-bezier(.34,1.56,.64,1)" style="top:100px">overshoot</div>
+</div>
+<style>.b{position:absolute;left:0;width:110px;height:40px;border-radius:12px;background:#7048e8;color:#fff;display:grid;place-items:center;font-size:12px}</style>
+<script>
+let on = false;
+const d = document.getElementById("d");
+d.oninput = () => document.getElementById("dv").textContent = d.value + "ms" + (d.value < 150 ? " 😵 លឿនពេក" : d.value > 600 ? " 🐢 យឺតពេក" : " ✅");
+document.getElementById("go").onclick = () => {
+  on = !on;
+  document.querySelectorAll(".b").forEach((b) => {
+    b.style.transition = `transform ${d.value}ms ${b.dataset.e}`;
+    b.style.transform = on ? "translateX(190px)" : "none";
+  });
+};
+<\/script>
+</script>
+
+<table><tr><th>ប្រភេទ</th><th>Duration ណែនាំ</th><th>ឧទាហរណ៍</th></tr><tr><td>តូច (Icon, Switch, Ripple)</td><td>100–200ms</td><td>❤️ Like, Checkbox</td></tr><tr><td>មធ្យម (Card ពង្រីក, Dialog)</td><td>200–300ms</td><td>Bottom sheet</td></tr><tr><td>ធំ (ប្តូរអេក្រង់)</td><td>300–500ms</td><td>Hero transition</td></tr><tr><td>ចេញ (Exit)</td><td>លឿនជាងចូល ~20–30%</td><td>Dialog បិទ</td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>ចលនាក្នុងពិភពពិត <b>មិនដែលល្បឿនថេរ (linear)</b> — វាចាប់ផ្តើមយឺត លឿន ហើយយឺតវិញ (Ease)។ សាកប្រៀបធៀប ៣ ប្រអប់ក្នុង Demo។</li><li>Duration ខ្លីពេក → អ្នកប្រើមើលមិនទាន់ · វែងពេក → App ហាក់ដូចយឺត (រំខានពេលប្រើញឹកញាប់)។</li><li>ទំហំធំ/ចម្ងាយឆ្ងាយ → Duration វែងបន្តិច · វត្ថុតូច → ខ្លី។</li><li>គោលការណ៍ Disney ដែលប្រើញឹកញាប់ក្នុង UI៖ <b>Ease in/out</b>, <b>Anticipation</b> (ថយក្រោយបន្តិចមុនលោត), <b>Follow-through</b> (លើសបន្តិចហើយត្រឡប់ — Overshoot), <b>Squash &amp; stretch</b>។</li><li>Animation មានគោលបំណង៖ សួរខ្លួនឯងថា "វាជួយអ្នកប្រើយល់អ្វី?" — បើគ្មាន កុំ Animate។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>Dialog បើក 300ms។ គួរបិទប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>ប្រហែល <b>200–250ms</b> — ការចេញគួរលឿនជាងចូល ព្រោះអ្នកប្រើបានសម្រេចចិត្តរួចហើយ។</p></details></div>
+
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>Easing &amp; Cubic Bézier</h2>
+
+<script type="text/x-code" data-lang="js" data-label="easing.mjs">
+// cubic-bezier(x1, y1, x2, y2): គណនា y (progress) ពី x (time) — ដូច Browser/Flutter/Compose
+function cubicBezier(x1, y1, x2, y2) {
+  const bx = (t) => 3 * x1 * t * (1 - t) ** 2 + 3 * x2 * t * t * (1 - t) + t ** 3;
+  const by = (t) => 3 * y1 * t * (1 - t) ** 2 + 3 * y2 * t * t * (1 - t) + t ** 3;
+  return (x) => {                         // រក t ដែល bx(t) = x (Binary search)
+    let lo = 0, hi = 1;
+    for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; bx(m) < x ? (lo = m) : (hi = m); }
+    return by((lo + hi) / 2);
+  };
+}
+
+const curves = {
+  "linear      ": (x) => x,
+  "ease        ": cubicBezier(0.25, 0.1, 0.25, 1),
+  "ease-out    ": cubicBezier(0, 0, 0.58, 1),
+  "emphasized  ": cubicBezier(0.2, 0, 0, 1),      // Material 3
+  "overshoot   ": cubicBezier(0.34, 1.56, 0.64, 1),
+};
+
+console.log("time →        0%   20%   40%   60%   80%  100%");
+for (const [name, f] of Object.entries(curves)) {
+  const row = [0, 0.2, 0.4, 0.6, 0.8, 1].map((x) => (f(x) * 100).toFixed(0).padStart(4) + "%");
+  console.log(name, row.join(" "));
+}
+const o = curves["overshoot   "];
+let peak = 0; for (let x = 0; x <= 1; x += 0.001) peak = Math.max(peak, o(x));
+console.log(`overshoot ឡើងដល់ ${(peak * 100).toFixed(1)}% មុនត្រឡប់ 100%`);
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Node.js</span></div><pre>time →        0%   20%   40%   60%   80%  100%
+linear          0%   20%   40%   60%   80%  100%
+ease            0%   30%   68%   89%   98%  100%
+ease-out        0%   31%   57%   79%   94%  100%
+emphasized      0%   50%   80%   93%   98%  100%
+overshoot       0%   70%  103%  110%  104%  100%
+overshoot ឡើងដល់ 109.8% មុនត្រឡប់ 100%</pre></div>
+
+<table><tr><th>Framework</th><th>Custom curve</th></tr><tr><td>CSS</td><td><code class='i'>transition: transform 300ms cubic-bezier(.2,0,0,1)</code></td></tr><tr><td>Flutter</td><td><code class='i'>Cubic(0.2, 0, 0, 1)</code> · <code class='i'>Curves.easeOutCubic</code></td></tr><tr><td>Compose</td><td><code class='i'>tween(300, easing = CubicBezierEasing(0.2f, 0f, 0f, 1f))</code></td></tr><tr><td>SwiftUI</td><td><code class='i'>.timingCurve(0.2, 0, 0, 1, duration: 0.3)</code></td></tr><tr><td>RN Reanimated</td><td><code class='i'>withTiming(1, { duration: 300, easing: Easing.bezier(0.2, 0, 0, 1) })</code></td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Cubic Bézier</b> មានចំណុចបញ្ជា ២ <code class='i'>(x1,y1) (x2,y2)</code> · x = ពេលវេលា · y = ភាពរីកចម្រើន (progress)។</li><li>លទ្ធផលពិត៖ នៅ 20% នៃពេល <b>emphasized</b> ទៅដល់ 50% · <b>ease-out</b> 31% · <b>linear</b> ត្រឹម 20% → ខ្សែកោងចាប់ផ្តើមលឿន មានអារម្មណ៍ឆ្លើយតបភ្លាម។</li><li>y &gt; 1 (ឧ. 1.56) → <b>Overshoot</b> (ទៅហួស ~10% ហើយត្រឡប់) — ល្អសម្រាប់ Icon/Badge លេចឡើង។</li><li>ចូលអេក្រង់ → <b>ease-out (decelerate)</b> · ចេញ → <b>ease-in (accelerate)</b> · ផ្លាស់ក្នុងអេក្រង់ → <b>ease-in-out</b>។</li><li>សាករចនាខ្សែកោងផ្ទាល់ (អូសចំណុច) ក្នុង <b>Motion Lab Pro → Easing editor</b>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>Toast លេចពីក្រោម។ ប្រើ Easing ប្រភេទណា?</p><details><summary>មើលចម្លើយ</summary><p><b>ease-out / decelerate</b> (ឧ. <code class='i'>cubic-bezier(0, 0, 0.2, 1)</code>) — ចូលលឿន ហើយយឺតមុនឈប់ ដូចវត្ថុពិតដែលមកដល់។</p></details></div>
+
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Spring Physics</h2>
+
+<script type="text/x-code" data-lang="py" data-label="spring.py">
+import numpy as np
+import matplotlib.pyplot as plt
+
+def spring(stiffness, damping, mass=1.0, dt=1/240, T=1.6):
+    """x'' = (-k(x-1) - c·v) / m  — ចាប់ពី 0 ទៅ 1"""
+    x, v, xs = 0.0, 0.0, []
+    for _ in range(int(T / dt)):
+        a = (-stiffness * (x - 1) - damping * v) / mass
+        v += a * dt; x += v * dt
+        xs.append(x)
+    return np.array(xs)
+
+presets = {"bouncy (ζ=0.3)": (300, 10.4), "smooth (ζ=0.7)": (300, 24.2), "critical (ζ=1.0)": (300, 34.6), "stiff (k=800, ζ=0.8)": (800, 45.3)}
+t = np.arange(int(1.6 * 240)) / 240
+plt.figure(figsize=(7.2, 3.4))
+for name, (k, c) in presets.items():
+    xs = spring(k, c)
+    zeta = c / (2 * np.sqrt(k))
+    overshoot = max(0, xs.max() - 1) * 100
+    settle = t[np.where(np.abs(xs - 1) > 0.01)[0][-1]] if np.any(np.abs(xs - 1) > 0.01) else 0
+    print(f"{name:22s} ζ={zeta:.2f} overshoot={overshoot:5.1f}%  settle(±1%)={settle * 1000:4.0f}ms")
+    plt.plot(t * 1000, xs, lw=2.2, label=name)
+plt.axhline(1, color="gray", ls="--", lw=1)
+plt.xlabel("time (ms)"); plt.ylabel("progress"); plt.title("Spring animations (mass = 1)"); plt.legend(fontsize=8)
+plt.savefig("springs.png", dpi=110, bbox_inches="tight")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>bouncy (ζ=0.3)         ζ=0.30 overshoot= 36.8%  settle(±1%)= 808ms
+smooth (ζ=0.7)         ζ=0.70 overshoot=  3.9%  settle(±1%)= 362ms
+critical (ζ=1.0)       ζ=1.00 overshoot=  0.0%  settle(±1%)= 392ms
+stiff (k=800, ζ=0.8)   ζ=0.80 overshoot=  0.7%  settle(±1%)= 138ms</pre></div>
+<figure class="fig"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAArYAAAGGCAYAAACOkcLcAAAAOnRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjExLjIsIGh0dHBzOi8vbWF0cGxvdGxpYi5vcmcvgI3uAAAAAAlwSFlzAAAQ6wAAEOsBUJTofAAAoNtJREFUeF7t3QdYU9f7B/A37CEgCgiignvvvVetq621e9ja1la77N572Nr+uvdu7fJva4e11da99964wYmiKHuT//M9eG9uQoCggEn4fp4nD5Dc3HFySd6c+573mMxms1mIiIiIiFych4vvPxERERGRwsCWiIiIiNwCA1siIiIicgsMbImIiIjILTCwJSIiIiK3wMCWiIiIiNwCA1siIiIicgsMbImIiIjILTCwJSIiIiK3wMCWiIiIiNwCA1siIiIicgsMbImIiIjILTCwJSKii8JsNsvp06clKyvromzflaWmpkqDBg3k6aefduXDIKpwDGyJqqnc3FxZtmyZfPvttzJ9+nSJi4ur1Jb4+++/5eGHH5bMzMxK3U5Veu+99+R///tfVW6yVHhNH330Ufntt9+cZp9K8/PPP0tYWJisWLHCJfb3Ylq5cqUsWbJETp06pXYjODhYOnfuLB988IGcPHnyYu4akVMxmfGVmYiqlVmzZsn9998v8fHxVsc9cuRI+frrryUyMrLC26NXr16yatUqWbp0qfTt27fC11/VEESGhIRIQUGBnDlzRgIDA6t0FxDoZGRkyJAhQ/Ttbty4UQU77dq1ky1btlTp/pQXPnpatmwp6enpcujQIfHwYD+LPejRvv3229UXQ8CXlquvvlr9PmPGDBk9erS89dZb8thjj5X3JSByS3wnIapmNmzYINdcc40KxGbOnClHjhyRXbt2yUsvvST//fefjBo1SgoLCyu8VX766Sf1QdynT58KX/fF4OPjI4sWLVK3qg5q4cUXX5Tx48dbHXqnTp1UAIQeeGeHXtrdu3fLLbfcwqC2BLii0r59e3WOXXvttcWWwhfR2rVry6+//ursLzdRlfGqsi0RkVP47rvvJCcnR/7991+pX7++vk8IlLKzs+WNN95QwW/Xrl3t7i96KD09PR06FvQo+vn5qeUbNWqkbqVBQO1Iz1159sGe/Px88fJy7O1Pu6hlMpmKrapHjx6lHo+WO+rv72+13NmzZ9Wl5LKONS8v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du1yaF8KCgrknXfekRtvvFEtn5iYKPHx8XL48GGZOXOmfPnllw6tBx555BF5/PHHJTc3V818dueddxZ7roof4uKsbt9++60Kqj09PdWUuu+++67D23RG7LF1cua8PMk9ckTfS9SwTUrPkeSMXBmkVUNgmS8iIqrG0tLSZNu2bdKsWTMJCwtTLZGdnS179uyR1q1by5o1a1RvZEREhKSnp6u/W7RoIdHR0VathqASwSV6PDGDmFFKSors2LFDGjVqJJGRkeqhhIQEta5jx45Jp06d1LY0J06ckAMHDqhpam3XpVm6dKnqlR04cKC66+6771Y/N23aJFOnTpWFCxc69Kru379fvvvuO9m3b5/Url1bHnvsMXW8mzdvlg4dOujr8PDwkI8++kj/Oz8/X7XZyy+/rO679dZb1b4goPbycs0Q0TX3uhrJPXxEJD9fP2IEttvOzTjWVatfa8ivZZkvIiKqNHlZIqeLpnCvMrUbi3hbD5A2WrlypVx99dUqgERgOmzYMHn//fdV0Inf+/Xrp4LVjRs3qp7VRx99VKKiolTwOH/+fJU2gJ7TsWPHyvLly1Xgil7NH374QS655BK1qZ9++kn1iCLgRXB72223qZ7aP//8U136Rw9tXl6efP7552r53377TSZOnChZWVmqJ3T9+vV6wG2Eferfv78KODXJycly1VVXyYcffqiCU0fMnj1bHSuCWggODpYrrrhCZs2aZRXY2poyZYp6DtIQAEEwenURkCPgdUUMbJ1crmHGMUAN27i4opq2nT32yHFPT9nv46MfBashEBFRpUFQ+3nvSlu9XXevEIksOefziy++kNtvv11ef/11ycnJkQ8++EBdjofjx4+rgLRbt27qEjsu+aN3tWbNmip39fvvv1eBLQI89PgioPXz81N5pgh00RN65swZmTBhgqxatUoFtgg80TM7ZMgQeeihh1SgiwD0ySef1HcfvcLImy0sLJTOnTur3tcHHnig2OGhh9UYvCKovOWWW+T666+XK6+80mp9Wq+u0ZtvvimDBg2SI0eOSGxs0RgcDf5GSkNJEIhPmjRJPvnkE6tFsD/YLwa2VCmM+bUegYHiFR4ucYuPia/kSnvTfvnLkIYADGyJiKg6ufTSS+WJJ56QGjVqyIgRI9TvGgSwCGoBwWirVq3UfdClSxfVYwtz585VgSSCWsB6MjIyZPv27XLw4EEVJCKohVq1aqneUTwHQaU91157rRq4hd5a9Poi8LQHgXOvXr30h9577z3Vy4sg3QipDMiDtaUFswigsS0jbB/3lwS5tUjNGDlypNUijRs3VoGtq+LgMSdnrGGLNAScqJhKt43poPia8sWYhsAyX0REVN3cfPPNqocVPbEIThGooecTbPNEbasEaJCjGx5uKZOJIBGX6HG/7WOAgBD3lyQwMFB/yNvbW98fW1guMzNTvxuB7bPPPmuVmgA4HuTD2t60wBVVDQ4dOmS1evyN++1BjzaCZy231ggBPb4kuCqmIjg5Yw1bBLbZeQWy50SajPPYI3kissaQX8veWiIiqlTId0VqQFXCNkuxevVq1XP58ccfq8AQASpyWpFn6ijklqL39v7771dPQU8qLuOj7FVISIjcc889KuDTAlb01t53331qWQTLyNE9H7jcj5QFDXprtTxZI9yv7ZsRglOkKKDXGkEqBrhhf7GvqKqA8mGAANiYx/vNN9+oAXDDhw8vttsYcNe8efPzORynwMDWydnWsN2dmCb5hWbp4r1blfnKNCScM7AlIqJKhUFcpeS7XgwLFixQPbbjxo1TAa2/v7/KEz158qTDu/Pwww9Lx44d1YAvpCt89tlnKqUBQTJuGJyG9ISbbrpJlixZogJZ5MICBn8h17Vu3bpqUFl5YMCbMccVObuoP4sbHkPgiXq46EFFjm9JWrZsqQacITXimmuuUUFtnz59pHv37uopWNeYMWNUHjDykBEQf/XVV8VWl5SUpAJ6rM9VMbB1YgUpKVKQnKzvoS8qIhxNEZMUqoFj3xrLfHkHSfvw9k58NERERBUPwVrbtm1l2bJlEhMTo6oUhIaGqsv3zz//vL5B9I4aez0R9NWpU0c9juAVpbFQMgu9ta+99poKLjU///yzGgCGwBk5sch39fX1VQ9joFdQUJDKxwVswzjwCvm4JeW6IhhFMItBayg/9txzz8nQoUNl7dq1qtICJlPYsmWLQ42GQBWTQ6DSwr333quCcM1TTz2lglvABBAI2rFftlAJAukcyCN2VSazlojipFJTU1X3eXnyPZCDgtIe+PZk7Hp3FJK869evr761lJSfUhWyNm+W+BuKijZDwxl/yks7cmXd+tWywPdxuTI6Uq+IcGnMpfLOgHeqYreIiKiaQPkssB1xTxUHwTfybDFRgxFiGeTn4qftwLDKgp5aVIjQenqrWknnW3niMqcdPIb6c/hWhG9duCGHBGU7SoNkaFxOQBCMwBT5NZh9w8lj9xLlHCx6Q9H4xMSoHtsuHnvkmBfLfBEREbm6Z555RsUutjDwDb3IVRXUolcZdW8vVlBbUZwysMU3F+SG4JsKksIxMwfuQ5Fl1F0rCb71oPjyL7/8ogJjdOEj78W2RpurMObXetWNkjxvHzVwDBMzLPe3LlbN/FoiIiLXg5zgkq4Oa+kDVQFXuDE5hatzysAWM3ycPn1ajebr2rWr9OzZU/766y/VRf3777+X2ObIgcGMIqNGjVLJ1pgaDkWbEei6ImNg6xvbUA0cyyswS1dTnCwzVENoWaulhAdYypQQERERVUdOOXgMAS1GHyIFQYOyFBjth8duuOEGu68VRipqieAazBCC/JTSII8XN01ZKQ9VJWe/ZdpCn8aNVRpCXTklUR4nZY2/pTYde2uJiIiIxDl7bJEkbG8qt6ZNm5Y6PRxmyzAOMkNx4n/++UdNoVcaTLOHnFztps1ScjGZc3MlNyFB3wXfxo1l+9EU6e6xSzb4+UoWy3wRERERWXHKVIQTJ05Y9dZqULQYjzkCxYmvuOIKlZ+iFVEuCeaRRgUE7YYyGxdbLmYQMRR89m3cSPXY9vDYJcuNZb58gqRdeNE0f0RERETVmVOmIiCAxewZts6ePWt3Rg5bGGCGeZox3d2cOXPKHFGI6gnlmaGkKuTss6QhKMixnbFWenjulJ8NA8d61e0lXh5O+TISERERVSmnjIgwOvDgwYPFGgL3RUdHl9pAKO2FAWMoULx8+fJiObeuImf/Pn1XPWvVkv053hJekCRe/qfloI+lDZhfS0RERFTEKVMRMOcxaqlhbmQNemvnzZunZuQoDWbwwHMxjzOm1HNVuYaBY76NtDSEnSzzRURERFQCpwxsMd8zel5vvvlmlfeKMl+Ysg4DwzDXMeB+THeHKfQ0kyZNko8//lg++OADCQwMVNPiaTdXm6QhZ/8B/bh8mhRVREB+7TJDfi3KfIX5h/HkJiIichGoy19aTf7KhkpRGIfkrpwysEWZr4ULF6pBXKhH27BhQ9m3b58sXrxYBaywd+9eVfFg1apV6u+cnBw1QQNmzhg7dqzqrTXecCK5CnN+vnUN28ZNZOuRs9LJc6es9Suamxr61uvrKodERER00aGT67rrrtNjByMEfKNHj5ZNmzZd0H6+/PLLViVEjRCLYBIExDCJiYkqbjHeFi1a5PC2//zzT/VcXNG2B/MBvP322/Lggw/K7Nmz9UVQ0hSxlb2xTO7AKQNb6Ny5s+qV3bVrl+zZs0f1vLZu3Vpvc9S0PXbsmDzxxBPqPl9fX1UmrKRbQECAy7xeeUeOqHJfGnNMrKQmHpCTAWlWZb76RjOwJSIicpTJZFLxRUREhHoKrhBrEz9hCttOnTo5NEi9NG+88YYavG7P1KlTVVDZqlUrNbC9Zs2a+g2zpBpr6pcEHXkTJkxQQe1rr71mN0DFenr37i07duxQpVAnTpwoH374oVolSpt26NBBpkyZ4mizuRSnHDymwQnYokWLEhs0KirK6rGyBpa5CuPEDLDXL1y6yt+yyJCGEOIdJG3C2rjKIREREVUaBHurV6+WgoIC6dOnj/j4+KhtbdmyRUJCQiQ9PV11lg0fPly6d+8utWrVknXr1sm2bdtUVSQMWsf9vXr1UoGm5uTJk2q9CA6NnWuQkJAgGzZskLCwMOnbt6+KWcqCIBqzokJ4eLiaLRVQbx+plpg5tSxxcXGqdxn7X1JFp++++07V/sdP6N+/v+oQvOuuu9QUvrfccot88803qjfX3Th1YFtdGfNrPYKCZEO6h/Tw2CFfGQLbfvUHsMwXERFVqez8bElItUweVBVigmPEz8uvxE2hvv2QIUNUgIl0xZtuukmNv0Fg9/7776vJmhCEInhEYHvPPffI119/rQJDXJZfv3691K1bVwW2t912m0pzRA18XL5Hjy6CQlw5RpokBqajpxW9pV9++aVccsklKrhFTy96Y8uCQBs9ukZvvfWWGkv0ww8/lPV0pW3btiooLc38+fNV2VMNjgfBPNIsELwj+H/ggQcc2p6rYWDrhHINpb4w49jGhDNym/8uSfSypFMMbDDQCfeciIjcGYLaa/6+pkoP8bfLf5PmtZqXuE3ktLZr105++ukntQwCzKVLl6rAFtCLi5xW2x5VVFFasGCBXHPNNWpsjhEGd6F387PPPpMrr7xS5eY+/PDDsnPnThVYogcX44BiYmLk1KlTKjDGsugdLgkGbCGvFs/VIADHgHf0Cnt7e+v3v/fee2pWVKPIyEgVjHsYZh4tCdIykXJghL/Raw2xsbGq8lRSUpLqOXYnDGydkHFyBp/GjSX18DbZHoyc26LA1tvkqSZmICIiqu6WLFkir7zyit4M6LE1GjFihENpAkYYsJ6cnCzDhg1TdyMoRu+vBr2/GLz+/fffq7r5CIQRtJYW2KIWP3qVUeEJEOjecMMNKiBHKoTR+PHjix2HIwGtBr3KGExvhAAfecSAn9gmxi8xsKVKZS4slJwDllJf6ZH1pEPiellkGPzWrU4XCfQuqg5BRERUneXm5pY6QBxBXnlhncjTNfaiavBYx44dVa8ncmKRJ2ssPVoSpDKgEgECTOzTzJkzVU/vwIHFr8BicDzSH4z8/Pxk8ODBDh0KgtYDBw5YLY/A2hhAnzlzRqUnuBv22DqZ/OPHxWyYmAIDx9r6bJJpvkWJ8DAo9lIn22siIqoOkO+K1ICqhG2Wplu3bvLff/+p/FnAZE7IndUGaZUGAaa9mrLNmjVTT1u5cqUaGAbIhUUPLtISkLeLfFkEvrt371ZBYlkQxKKnFM9FGVP0ApcUdKMXeNq0aVarrF27dqmBbXZ2turVRUB+xRVXyLfffit33HGH2gZybtGDi4oQgBQE9BhjP9wNA1snY1sRYUO+tzSqcVRELKM0+9Xr52R7TURE1QEGcZWW73oxvPTSS2qAFwI7lPZEju2MGTMc2hXMZooyWKgycPfdd+vPQeWAd955R6UDIP8WwStKZ913330qIEWQicoC6LVdvny5XmO/NHgeBplheQSUCD6RR9umTRtVmguD15CagGPApFS4lQd6j5Hq8PPPP6v9RkUEVELA+qdPny4fffSRnoqAfUCusL0eaVfHwNbJGPNrTf7+knpqpywLs0zK0CqooUQGRjrZXhMREV0cGCS2efNm+euvv1RvKqocaAOn7rzzTqvyXTB58mR9YBnqwaKMlzaoCoEm6swCnoseTkwYhSAWaQBaTXwMHEMAib9RMgupCFoJ0q+++kqlHdhz7733yueff67Wh+di0BiCTFRFQF1ZBOdYxlGojoBgFpBnjHQFwE/0XM+aNUuOHj2qBskhkNWgKkR5tuNKTGZXm2u2CmijCXGi2yZ0V7ZjTz8jKX/+qTbj0bylLGlvls8a7ZX8c/Xx7mt/r9zd4Z7K3g0iIiIVcAF6JunCIe0BvbVIDbCt048eYrQ3elYrE2IcBOzYFnqmnUlJ51t54jL22DqZ7Lg4fY9ORTYQ7xr/Sb7JUgJkAMt8ERERuSRc+kfFBa06gRHq62JgWWVDzzLq+mq9u+6Gga0TwTS6Ofv26Xt02M9PNgTlo8CXuq+Bby1pHlpyLT8iIiJybiUFlFqaQ2XDYLLzqRThKjxcZUerAzVwLC9PP9Qz5iOywt8y28qwhiPLXYuPiIiIqLpgYOtEsndZ0hAgPWK3nlsLw5td5UR7S0RERORcGNg6key4XfreZIfVkd21z+p/N/YKkSahTZxob4mIiIicCwNbJ5Jj6LFNDvaSdf6WMl8jGhYVniYiIiIi+xjYOglUXTNWREgKPS2F50p8wbDWY5xkT4mIiIicEwNbJ5F7MF4K09L0vYmrl6n/3twzRBqElD6lIBEREVF1x8DWSWRt2mS1J3NiLbVrL2vENAQiIiKisjCwdRJZmy2B7dmaJkkPMKk9M5lFhrW7w0n2koiIyL3YTsBa2oSsqampahYsKj9MF6zNLFaZGNg6iazNm/U92VnfrP/exTtSImtEOcleEhERuabNmzdL165dJTOzKNVv3bp16m9MjJCSkqIe7969u5pA4dSpU3YP8r777pPvvvtOPfbmm2+q55yPwsJC+fbbb+Xaa6+V22+/XVauXGm1mqysLJk0aZJcc8016if+NtqzZ4889NBDcuONN8r//d//ObQLmMb3rrvusrphPY76/fff5eabb5aJEyfKzp07S3waZjV78MEH5corr1T7np6erpbFdMIdOnRQj1cmBrZOoCA1VXL2WmYc21rP8rLc1IG9tUREROejZs2acvToUfXUmJgYGTdunD7D13vvvSd9+/ZVQW1ISIh8+OGH0qVLF9UrGxYWVmxzCHZ/+eUXueWWW9Rj//zzz3kHaa+++qq89dZbMmLECGnevLkMHz5cBdqayy+/XDZt2iQ33XSTbNiwQf2tOXz4sPTr109q1aolV1xxhbz44ovy/vvvl9k89erVkwEDBsjAgQMlNjZW/v77b3Xcjvjqq6/kiSeekJEjR0rdunWlf//+ampgW2fPnpWePXuqIBZB97Jly+Tqq69WiwUFBclll10mn332mSObPG+cUtcJZG3ZYrUXu+sVpSGEFpikf8trnGAPiYiInNe2bdtUENWiRQvp06eP+Pj4yJQpUyQjI0OmTp0qQ4cOVYFtjRo1VKoBekt37NihgtzffvtNXSbfunWrtGnTRn799Vc9eDWaOXOm9OrVSwWF9kybNk3atm0rrVu3LrOhZsyYIS+99JJcf/31atnt27erQBM9yDiO/fv3q8ARU98ieG3YsKEsX75cHdvHH38so0ePlhdeeEE9t2nTpirgvPfee9VxlwRtg9vx48flmWeekZ9//lnq1KlT5r4WFBSonle0Y+/evdXyJ06cUME09sVozZo14uvrK59++qm6G8vXr19fvQ6BgYEyZswY1Zv7xhtvlLnd88XA1glkrl2r70W6n8ix2kV/XhbWS7w9LIPIiIiILqbC7GzJreRLybZ8YmLEw88yvbyt6dOnywMPPCBjx46VOXPmqBSB//77TwWHCGKR13nmzBkVcD388MOqFxRBI4ItBGgHDx5U6Qm4ZH7y5Ek5cOCA3SZG8NmjRw+7jyFYi4uLU8GvI9AzvHTpUpWKgG2jV/a6665TT0Vgi55cBLXg5eWlenS1wBaPP//88/pmsC4si7QCBOalyc/PV9sZP368DB482JFdVb3SaCstqAUE24888kix5yPVAG2K9m3SpIksXrxYWrZsqYJaQKrH3r171RcJpHxUBga2TiBt0SJ9L3Y2MInZZBLfQrPcOfgVJ9g7IiKiIghqD466skqbo+FfM8SvefMStzl79my588471eV9mDt3rgrg8Pfbb7+teiejo6Nl9+7d6nEPDw+ZPHmyClRvuOEGlTcKCAyHDRum0hXsQbCGgM4IgTMu0WNdSE1A8AxYJ3p+jQYNGqQCb/jggw9UYIn9QuoDAnNt3UidwOV+I/yNFAQo7fGyAtunnnpKateuLU8//bTV+i+55BJZsmSJ1X34AvD999+r7UVFWY/1Me6PEXqA8UUDwSxSH3BsxhSL0NBQdcOXCSxTGRjYXmS5hw5J7r79+l6sb1qUhtDPq6HUCoy4yHtHRETk3G699VZ1SR+BK3o6EZB5e1f81U70/CKdwQgBMlIYEHT6+/vrD+EyP24lQW8n8lu//PJLSUxMVPm+SGHApXoExzk5OVZPxd/a+st6vCToPUXQibQNk2ECKMDAspKUZ3t4DRCkv/zyy6p3FgPOrrrqKtXLjBxbQBuiLRnYuql0Q29toYhsbGwSL7NZ7h3E3loiIqKyYDAUeluRK4vA7ZVXXlFpAaXlm56PiIgIlapg1KhRIzXQDCkOP/74o/7QokWLiqU0oJcTKQVIi/jpp5/UYDTtcjzW/eyzz6rAtkGDBipX1QiX7zHQDfA4/u7WrZv6Ozc3V6ULIJe1ND/88IPKHQ4ODi62GHq9kXtr1LhxYzXYDNtDiTNUZtCCa2zf3vZwXBgshl5yQK80BpP99ddf6tggKSnJodze8+XUPbaI9JEng0sKQ4YMUd/CyrJ+/Xo1ahEvMr4tTJgwQSWLO6u0hZY0hD3RIqmBJhluaiRNojs66y4TEVE1hXxXpAZUJWyzNAim2rVrp9IRbrvtNhVobty4UeXDIrhFPmdFaNasWbHyWEhlQIWCzp07q4FU999/v9oU8nQRjxhh4BYCW8A+IZDEoDA4dOiQXqEAA8MwsAz3IahE7ybSK9599121LEqAffHFF6qXGvm3CKiRz4pAtDSIhVC1wB70tNqW/kLKBgLbyMhI6dSpkypzhgFqKFX2+eefq/xgQP4t1ou0CsRr2G8NeprxZUCrvoB8YqQ2YMBbZXHawBbRPl5EdGHjkgISnZH/gRezJLNmzVIvOL4dtGrVSuWwYJQiTgjkdDibgpQUyVi3ToqSD0Q2NPWQ4IJCeeKqT5xtV4mIiNQgrtLyXS8GXFZHVQDkqKKuLAI8DGIC1FLFoDL0qJaVf1oWdJahmoItxBfoiEMQ2LFjRzXICnm6JeXqYnn0Krdv3171NqPnFj3M6NUEXKpH3i62h6AZg8yQE4sgF3A86J1GBQVUaFixYoX8+eef6jHktCLARJ1Z2x7VRx99VOXSIkDHgDPsL2IrQPuUBhUQUKoLOcIITNFzqz0X8dqCBQtUnjFq66IUGIJ4vAZIf8BxIEUE8DfKm2lpCZXC7IR27dplNplM5qlTp+p7N2fOHMxaYF65cqXdPc7PzzfHxMSY77jjDv3xo0ePmiMjI82vvPJKuY7y8OHDalv4WZkOLZ9nXtyjhXln86Lb0Ldbmz+d8URlbpKIiMhhBw8eVDdnl5CQYP7pp5/Ms2bNMufl5em7W1BQYF62bJl58+bN5vT0dPOCBQv0xzZs2GA+duyY/vemTZtK/dzPysoyh4eHm+Pi4tRzVq9ebT5x4oT+fGxj/fr1DjfV3r17VZwzY8YM85kzZ4o9b/v27epx/LSVm5trXrx4sXn69OnmxMRE/eG1a9eamzVrVuI+oG02btxo/vvvv81NmzZVbeCokydPmn///XfzwoULzTk5OfrTjh8/ro5dg32bO3eu+fvvvzevWbPGavWjR482f/LJJyVusqTzrTxxmQlrr5SI+QLgWwW+fdiW3MC3EyRXozadrX///Vd9I8CoRWN3PL7loJu+tCnw8A0HNw0uDyB3BcngGNVXWT6Y/pB8nblAok6bpW28WQraRsn7d5WcwE1ERFSVtClQS6rdWt1gUBQmH0BdV2eEtAzk53700Udl7h4mfUDqhjaBQmVDzzRSNtCbrJX/slXS+YYYDj3QjsRlTpmKsGvXLtX9bguJ0+hytwfPQfe7bY4JnoNCwGlpaSV2fSPlASdrVXvw2vfFf8Zz8k3hn5JQw0t+GFO1eUtERETkOMzy5cyQhong0RGYEKIqIfe5sqfTBacMbBGZ28uFQX00rY6bLTwHowptabNq4Hl4we1B2Q0knWu0HtuqMP7KSdJuWz+p4R8qAf7OO8iNiIiInBsGeVV3ThnY2tZX0yBrAqP07CntOVDS8wClL+yVv6gqPdpeWlWbIiIiInJb9qPEiwwpBShYbAvTtOExe0p7DpT0PCIiIiJyD04Z2CJlAKW9bMe1oeBxSekEuB8pBNqUeRo8BwPAKrW0BBERkRtCnVRMAFBRtWCJSoJzDOcazrkLcWHPriSojYYBXagXp9WBmzFjhmzZskUVBQYEvZgCDrXYUBPu0ksvVYWOMQgM09ghNQFzEWOe4wcffLCS9pSIiMh94fMVRfXxeYqpVUtL6yM6X5j0AZM5eHp6XvC8A04Z2KJ48AsvvCB33323KvuF6B0zkE2cOFHNJAIrV65UwSyCVhQOxj8bgl7M2IFSXSgAjIkZMBsHnkdERETlg7JMmDYWpZrQm4YAhKiiIc4LCAhQlRMutMfWKevYajB3MWa5KCgoUPMNI2jV4Bvk5MmT1ZRumEpPs23bNjUjB6Z0Q4CLGTrQWOVRnnppRERERFR5yhOXOXVge7GUpwGJiIiIqPKUJy5zysFjRERERETlxcCWiIiIiNyCUw4eu9jy8/PVLqB8GBERERFdPFo8psVnpWFga0dSUpK6F4PPiIiIiOjiQ3wWGxtb6o5w8JgdKBKM6grh4eEXXHbCEfgmgiB67dq1EhUV5chTqgW2i31sF7aLo3iu8FwpD54vPF/KoyrPF/TUIqht27at+Pn5lbqb7LG1A43WtWvX8ry+FQJBLWZJI2tsF/vYLmwXR/Fc4blSHjxfeL6UR1WdL2X11Go4eIyIiIiI3AIDWyIiIiJyCwxsnUBwcLC8+OKL6idZsF3sY7uwXRzFc4XnSnnwfOH5Uh7Oer5w8BgRERERuQX22BIRERGRW2BgS0RERERugYEtEREREbkFBrZERERE5BYY2BIRERGRW2BgS0RERERugYEtEREREbkFL7c4ChdlNptl8eLFsnr1aqlfv75ceumlEhER4aJH45j169erY8axDxw4ULp06VLsiRkZGTJ//nzZtm2btGvXToYMGSL+/v7Fljt48KBaLiUlRfr37y9du3Z1bCec2L59+2TBggWqXTp37my1p2izhQsXypo1ayQmJkadL+Hh4cWOJjk5WebOnSv79+9XbTJ48GDx9PR04qMuWXx8vHqNT548Kb1791avs63U1FSZN2+e7Nq1Szp16iSXXHKJ+Pj4FFtu7969al3Z2dkyaNAgad++vUu2Cc6Df//9VzZs2CA1a9aUESNGSOPGjc/7PNixY4c65zw8PNS50rJlS5dpF7wH4FzHHPJDhw612m/8nyxdulRq1aqlzgn8z9hy1/eaEydOyIwZM9TnyejRo60Oe/bs2ercqV27towcOdJuuyQmJqr/qSNHjkjPnj1lwIABds8JrAfv50FBQaqNGzVq5NTnzooVK2T79u3Sq1cvadu2rd19Xb58ufqfuOyyyyQ6OtpqGZwvaBesA+8f+Gzy8/Mrtp4DBw6o95q0tDTVdrbv5c5m69atsmrVKtUmaBujjRs3qtfYZDLJ8OHDpUWLFsV2H+cJ2iUpKUn69OlTbB0abGPZsmUSFhamzpcGDRpUTlOY6aLIy8sz33LLLWZvb29zr169zFFRUebIyEjzpk2bLsr+VIXnn3/e7OnpqY63e/fuZg8PD/MLL7xgtemTJ0+aO3fubA4ODjb37dvXHBQUpJY9deqU1XKzZ882BwQEmBs1amTu0qWLWteLL75YFYdRaQoKCtSxioj5pZdestpObm6u+aabbtLPF5wrOGe2bNlitdzu3bvNMTEx5vDwcHOfPn3Mvr6+5lGjRpmzsrIqbb8ry99//2329/c3N2nSxNyyZUvVLuPGjbPa3OHDh9VjNWvWVOcLzomBAweaU1JSrJb79ddfzT4+PubmzZubO3TooM6Xd999t7J2vdLgPLjkkkvUcQ4ZMsTcvn17dVw//PDDeZ0HX375pfqfbNu2rbl169ZmLy8v83fffVdp+1+Rpk+fbg4JCVGv5ZVXXmm16meeeUbd37VrV3PDhg3NNWrUMM+dO7davNfMmzfPXKdOHXX8PXr00I8ZnzmXXnqpOTAw0Dxo0CD1v4DzaObMmVbtsn79evX+UbduXXPPnj3Vew7+7/Lz862WmzRpktpGp06d1P8o/ldt1+UssO/4/MH5jfeR999/3+6uJSYmmkNDQ9Uy8+fPt1oGj+G9Q/tswjmF9jl9+rTVctr7VuPGjdVnGdrolVdecZamKOaTTz5RnxPYz4ceesjq8Zdfflm9P+A1xmcO2g/vGUZLly5V/4cNGjRQn19YHuspLCy0Wu7JJ59U2+jWrZs5NjZWfbYvWLCgUtqFge1F8vXXX6s3glWrVqk9wJvO8OHDza1atbpIe1S5ELCbTCbzb7/9pm/o//7v/9R9O3fu1O+77bbb1BvCiRMn1H3Hjx9XH0zjx4/Xl0lPT1eBzD333KPfhw85rAv/ZK7qo48+MkdERKg3ENvA9vPPP1cfQmvXrlWHhwAHH1Lt2rWzOlwEs/jikJmZqe7fvn27aqv//e9/LtUsSUlJZj8/P/Pbb7+t7/e0adPUBw4+ODQIaNq0aWM+e/asuuvgwYOq/Z544gl9GXwpwrqefvpp/T78/2FdW7dudal2+eKLL9SxxMXF6fuNY8W5kZ2drd/nyHlw4MAB9UHzzjvv6M9744031AfToUOHnLpdEMgj4HrrrbfMI0aMsApsEZDgveCPP/7Qj+Guu+4y165d2+oLnju+1/z3338q+MC5PnbsWKvA9uOPP1bBxN69e1W7IPC4//77VRCrBSH42axZM/Nll12mB7LLly9X55zxy9Pq1avV/89PP/2ktzGCGQR7tl8qncEdd9yh3lvnzJmj9rGkwPb6669X76n2AtsxY8aYmzZtqt6b4OjRoyqYu/fee/VDTE1NVYHvxIkT9fvwOYf1rVy50hmawgoCbrTHjz/+qN5HjYHtv//+q2KUhQsXqufgy8GDDz6o/u+0z2d8DqGDBZ0u2jmknYPGLzm4D+81xvtuv/12de4Z37cqCgPbi6Rjx47qjdVo27Zt6h9g0aJFF2mvKg+CkWHDhlltAME83oTxTwX45os3UAQdRp999pn64NaCF3y44xum9remd+/e6o3JFaHnER86eBNs0aJFscAWPWp33nmn1aHhywLOl2XLlqn70XuLvxcvXmy13KOPPqp6cV3J5MmT7X7Jw7mifRlE8IUgzPhlCfDcWrVq6W+Yb775pupRsH0DRQ/lhAkTXKlZzI8//rjqNTJCe+B1R6BanvMA66pfv75VzwquGqCn7tlnn3XqdsH/yZo1a9Q+Iggz9tiOHj3aPGDAAKv9x3sLPpC13mh3fa/BlSz02ALeL4w9tq+//rrVFz7AewfOHXwhBAR++Nv4xQluvvlm1RunwdVGXCkzQocD3qfxBd3Z4D0AnSRQUmA7a9Ys9fmDANQ2sEUwiysjU6ZMsTo0HCvWh4AW0PuJYFD7W4O2Qxs6G3y27tmzR+2WbWA7cuRIqw4lSEtLU50s8fHx6u9ffvlFBawI8o3w3KFDh+p3XX755epKkxHa1Pj5X5E4eOwiyM/Ply1btsiwYcOstt6mTRuV04O8JXeDfCXkBRoh3wZtoeVlIa8J+Y+27YK/MzMzJS4uTj0d7YO8r5CQEKv1YTlXbbv7779f5ZDecMMNxV763NxcldNl2y4dOnSQOnXq6MeMYw8ICJC+ffsWa5eEhAQ5ffq0y5xWyCVG/h9ytn788Ud5/fXXVW7WmDFjpEePHuo4Nm/eLAUFBXbPF+QZIz9XO1+Qz+3r6+vy5wtyYPfs2aNySzXImcT/UMOGDfXjdeQ8wPmCvFTkzmmQZ4u8QWf/P8L/Sbdu3eyez9h32/8V5Nliee243PW9BjmQyF205+mnn5Y333zT6iH8TwUGBqr3Ee1/BfnKzZs3L/a/glxL5Hdry9m2MdaD9x5nPHeeeOIJiYyMLPH9D7mz9957rzz//PPSrFmzYsthvAfeh+19NqWnp6v/Sa1d8D6OnGMjZ/1suvvuu6Vp06Z220V7D8axffzxx/L+++/L0aNHZcKECXpeNl5rjIOpW7duqcdr738SebbIPa6M84WB7UVw/PhxKSwslKioqGJbx32HDx++CHtVtXJyctSbTb9+/fREcySg40NWe5PVaO2ktQuWK6nt8Jir+eOPP9RAg88++8zuruPNBB8oZZ0vOHa0HYITI9v2cwU4lrNnz0rHjh3lww8/VANhMHDsvvvu03cfy+ADBB+opR1vaeeLq/2vYcDgG2+8Id27d5frr79etclvv/0mf/31l1W7OHIeuFO7aPC+euzYMYf+V6rje40Rvvi999578uCDD+qDc0s7J/Ly8tSgNHC3cwcBLd5LHn/8cbtvjzheDMC1Haxbns8mV3qvQcdAVlaW6nzCF8Lp06fLJ598ooLYKVOmWL3XlPS5dOrUKbUOdF5hMGJZn18ViYHtRYAXG2x7kLT70Dvp7saNG6d6ndAbp0G7eHl5qZuRt7e3Cta0dsFyJbUdvlXjH8lVoKLDxIkT5ZVXXlE9JfY4er6U1i7gSucV3gi//vpr1VOwbt06Wbt2rfzyyy/y6aefyj///KOOx9HjLW05V2oTQNA2depUVfUB/wP4MD506JD8+uuvVv9HJf1/GM8Dd2oXDYIv/P+X9d5aHd9rjFBJ5IorrlC9dS+99FK5zx1cWSurjV0FKvXgfebLL79UnzUlvQdrn0NGWhs48tmEzhx88XIFeP8FvAejusiSJUtUzy16tdG5gM4WR96D8X+Gz2Qcd1WeLwxsLwKthAgus9pCWaN69epdhL2qOuipRQ/TrFmzrMp9oF3wwYSeOiN888M/htYuWK6ktkNPlW1g7MxweRCXyNBrUhJHz5fS2gVc6bxCeTdcUr3yyiv1Zrn22mtVGbT//vtP3YfjRc8C0hGM8D9kPN7S2sWV2gRw6RAfkPiQ+eGHH1SQj/+lSZMm6QG/o+eBO7WLBh+euMRZ1ntrdXyv0eD8GTVqlAo4Zs6caRXMlXXuaO9FuPRcVhu7Arx3jB8/Xt2Q3lbaezCCeaQdnO97DXosba+mOSutvCY6XbS0FFzheO2119T5gxQW7T24pPMA60AKENKiUJawKs8XBrYXAS6dor4geqGMEMChF9PZawFeiP/973/6pWXb2n7acdu2C3rsQHscP5GXY/vtF8u5UtshKPv8889V7itq/+GNFTdcIsQ3Ze2NFrnEqDlp2y64LIjeOmO7YF2ooWiEdsGbjL1LQc4KPUmhoaHFdg89lKgNqZ0POAdsc7RwvPgA0eqWon20c8i2XVzpfAHUm7355pvVh4UGebc4DtSR1NrFkfMAz7E9p8DV/o9s2Tsu9OIiJ9v4vwLV5b1Gg0DuxhtvVO8ROF/wvmKE9kG9Z9vOBZwTCGq1Xjd7bYx0KfwvutL/FMZ9bNq0SfVIau+/Wj1kBHXIJzV+9pR0vmj57Th29AC7+mcTvvDjM8P2PRivP3quje/ByD9G0F/ae6u98wWdWBhrVCnnS0WORCPHoUQPSoUYR/ajZhxKhWDkoTv69ttv1SjIP//8s8TDQ6kqjHLWSodglDZGV/bv319/zr59+9RIzKlTp+r3YUQ4RuR+9dVXLtN0GRkZqpyV7Q1liVDKy1jq6pFHHlFlz4yldFCXETUXsR5AlYno6GjzAw88oLcBHsPof9v6r84OlS9QpuzYsWP6rqJMEUYtY+SxBuXxjKONUX4G5xBq92o2bNigRjljxLgGZdBwLqJMnCtBuSGUcTJC7Wec+yh9VZ7zAHVd0S5adQFAaSdXq8xiWxXh008/VRVGEhIS9Gb6/vvv1XuGNvof3P29xrYqAuB9ACWWbKseaPD+glH+qKCgQQUJvK8YK2Wg9Bcq02ilw+D3339X546xfKMzMlZFQN1v2/df1FbHcaDEJKpvaFB/Fe8rxs8mjPQfPHiwvgzaFaXmUDdbg88rvG85e31o26oIqHyBYzbWL9ZKl23evFkdHipNoFoE/uc0eM9GVRrt/Qg+/PBDVZkG1X8033zzTaWVFmRge5GgPAZKMKHAOk4A1FnEG29J9fVcHT5EtULwTz31lNXNGOii1BnKpaBcCAroo0QYPrRt69Oi/iKWe+yxx1ShcBR8RjFsLchzZSh2blvHFm8IKM2EMnE4X/ChhfMFtSmN8IGD+/GmhPqkKDODYu14A3cleDPFseLLHz5kUW8Rx4H/l5ycHP1QUBcRZZyuvvpqdb6gzBPeQBHMGqEGJb40or4nvkCipBUmdMCXAVeCuqH40L3hhhtU2R2UMcL5gvcSrb4mOHIe4AMatbMR6ODD/LnnnlMfSCjN40psA1uUnUJJNEzegnMHXwoRhD388MNWh+Xu7zW2gS3+h3Du4DW3fQ82TgyEQA/vIXfffbeqf41Sg/hSrZXLAvwP4r0F/594/0XpOLxP43PM2ZVWxxYwEYO9Oraoj4wAFf8feK/RJrtYsWKF1SGj3dAWaBO0DdoIE4U4+yQ5toEtyinivRSTUCAuQQ1bBLG2ZSfxvoH3YHSooA426iCjw+HMmTN6u6D8Gc4jvFehHCPq5WJdaKPKwMD2IkJwizqa+ADHPwtqwrkr9K4iSLV3w7c5I9TlvPHGG1WhbPTGaZMS2MLz8I0Z3yoR4LpLTzcKVxsLn2sQ3KIXAR/aV1xxRYm9jagZjFqeCALRQ4MeA1eEAAVXNlAvE71rmE0K99lCAfFrr71WnS/ozbQ36QJ6/vEhjcAXb9RYl7N/0JRkyZIl5muuuUZ9EKFd8OFgDGo1jpwH6OHGlyhM6IBA/9VXX3W5YB9BOb6sGKHnEYEsAgoEIMYeperyXvPee+9ZFdxHj2tJ78G2M0D9/PPPqnMBM05hAgJjUKvR/j8R4KLXEtuznW3KGaHmcWlXDZOTk1U72ZsFFFc08KUS7zX4soxZ2uxBIIg2QdvgPcze+5azQSyCL8tGuOqBThIEpZjpEHVv7b3GuFKKNsN7NQJc29nYAIEuAlosg6uwttuqSCaszFnz7IiIiIiIHMXBY0RERETkFhjYEhEREZFbYGBLRERERG6BgS0RERERuQUGtkRERETkFhjYEhEREZFbYGBLRERERG6BgS0RERERuQUGtkRERETkFhjYEhEREZFbYGBLRERERG6BgS0RURU6ffp0FW6tuCVLlsgXX3xRafuQnp4ur732mhw5cqTStkFEVBIGtkRElaSgoEAKCwv1tW/dulXCw8Pl448/rqQtlg77c+edd8ru3bsrbfs1atSQadOmyaRJkyptG0REDGyJiKpYhw4d5MUXX9S32qRJE3n++edl2LBhVbwnRf7991/Zt2+fjB07tlK3j/VPmTJFUlNTK3U7RES22GNLRFQJcnJyVG9tfn6++t1sNktAQIA888wz0qhRI7VFPI7HtN9PnTpltScZGRly4sSJEvcOzy/tcVu//fabtG/fXt0A+6RtH2zXlZeXV2pKQUn7d/PNN6vj/vvvvyuhZYmISsbAloiogiGP1s/PT3bu3ClvvPGG+n3lypWSkpKifp83b57a4v/93/9JWFiY6kmtU6eOREREyOjRo1VAedNNN0mtWrUkMjJShg8fbhWA4vHHHntMatasqR6vXbu2fPLJJ2UexYIFC9T6NUiNwP78999/Ehsbq9bVpUsX1dP67LPPqvXWr19fOnbsKMeOHdOfh98vvfRSlXaA5+C5q1ev1h+PioqSTp06ycKFC8vcJyKiisTAloiogoWGhkp8fLw0a9ZM7r//fvU7AkZ70GM6Y8YMWb9+vcyePVsN7urWrZtKWzhw4IAKfhcvXiyff/65/vRHH31Upk+frnJZDx06pAZrPfDAA/Lnn3+WeCTojcWALqzb1meffaa2vWrVKsnKypIBAwbIwYMHVWA+d+5c1ZNsTKm499575fDhw7Jx40a1zhEjRqj0g9zcXH3VTZs2lXXr1lVwyxIRlc6LDUREVLE8PDwkJiZGfHx8VK8qfofs7OxiG0Lv6yuvvKJ6bLHcDTfcoIJZ9Jj6+vqqv7///nvZsGGDem5SUpIKcv/55x/Vawp33323zJw5U9577z2rHlkjBKqAgNPWgw8+KK1atVJ333fffeqGwLlevXrqhn1Ab69mx44dKvhFTy58+OGHKi0Bx6tBYM5UBCKqagxsiYguIk9PTxXUanD5H8EkgloNLvmjJxW2b9+ugmGkDyxatEhfBr2lCDhLcubMGfUQ0hts1a1b12r70LhxY7vbB/TOYhDc/v375YorrlCD4Vq0aGG1WuQRp6WlqX319vYucb+IiCoSUxGIiC4ik8lUrq0jWAT8PHv2rH5DT+x1111nVV7MCLm8YDtADcq7D88995zMmTNHGjZsqEqXtWzZUsaMGaMGo2mwbyEhIQxqiahKsceWiMiFaKkEEydOlHbt2jm859rz9uzZo3J/LxTSILRUiK+//lruuusuVSMXKQqwd+9ead68+YVuhoioXNhjS0RUSQIDA62qCVQEXPLv0aOHPPXUU5KZmalWiTSEwYMHy0MPPVTiJpDri8kh4uLiLmg3kCeMHtq3335bXw+qIoC/v79+X0UF0ERE5cHAloiokmDQ1XfffSetW7eWpUuXVshWkDbw7bffqvxWpAL0799f5ehu2bJF1Y8tDYJfVDm4ECgPhuN64oknVI8xJqFAzy3ybrt3765WjWl1ly9fLoMGDbqQTRERlZvJbEyKIiKiCoX6teglRZCHQWGzZs2Snj17qpq1KJWFklkYgKXZtWuXHD9+3Coo1Mpmde3aVV8OvbUoA4bpcRHYXn755RIUFFTqvq9Zs0Z69+6tSoRhwBjq1WIAGgJeDFCDo0ePqtJjo0aN0teFbWBfsZxm8+bNKnhFoI39MpYR+/HHH1WdXWzHOAiOiKiyMbAlIqpGEFQjyEbt28qCQPeyyy6zqn1LRFQVOHiMiKgaQQ3cffv2VdoRoycZdXWvvPLKStsGEVFJ2GNLRERERG6Bg8eIiIiIyC0wsCUiIiIit8DAloiIiIjcAgNbIiIiInILDGyJiIiIyC0wsCUiIiIit8DAloiIiIjcAgNbIiIiInILDGyJiIiIyC0wsCUiIiIit8DAloiIiIjcwv8Do4SE4YvO3cYAAAAASUVORK5CYII=" alt="ខ្សែកោង Spring ៤ ប្រភេទ — ζ តូច = លោតច្រើន" style="max-width:100%;background:#fff;border-radius:10px"><figcaption>📊 ខ្សែកោង Spring ៤ ប្រភេទ — ζ តូច = លោតច្រើន (Chart ពិតដែល Code បង្កើត)</figcaption></figure>
+
+<script type="text/x-code" data-lang="dart" data-label="flutter">
+// Flutter
+final sim = SpringSimulation(const SpringDescription(mass: 1, stiffness: 300, damping: 24), 0, 1, 0);
+_controller.animateWith(sim);
+</script>
+
+<script type="text/x-code" data-lang="kotlin" data-label="compose">
+// Jetpack Compose
+val scale by animateFloatAsState(
+    targetValue = if (pressed) 0.92f else 1f,
+    animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessMedium),
+)
+</script>
+
+<script type="text/x-code" data-lang="swift" data-label="swiftui">
+// SwiftUI — response ≈ ពេលមួយជុំ · dampingFraction = ζ
+withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) { isExpanded.toggle() }
+// iOS 17: .snappy · .smooth · .bouncy
+</script>
+
+<script type="text/x-code" data-lang="jsx" data-label="reanimated">
+// React Native Reanimated
+offset.value = withSpring(0, { mass: 1, stiffness: 300, damping: 24 });
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Spring</b> = ផ្ទាំងរ៉ឺស័រ៖ <b>stiffness (k)</b> ខ្លាំង = លឿន · <b>damping (c)</b> = កម្លាំងបន្ថយ · <b>mass</b> = ធ្ងន់។</li><li><b>Damping ratio ζ = c / (2√(k·m))</b>៖ ζ &lt; 1 លោត (Bouncy) · ζ = 1 មិនលោតលឿនបំផុត (Critical) · ζ &gt; 1 យឺត។</li><li>លទ្ធផលពិត៖ ζ=0.3 លើស ~37% · ζ=0.7 លើសតែ ~4% (ល្អសម្រាប់ UI ភាគច្រើន) · ζ=1 គ្មានលើស។</li><li>Spring <b>គ្មាន Duration ថេរ</b> — វាឆ្លើយតបនឹង <b>Velocity</b> (ឧ. អូសលឿនហើយលែង) និងអាចរំខានពាក់កណ្តាលបានរលូន → ល្អសម្រាប់ Gesture។</li><li>Apple ប្រើ Spring ជាលំនាំដើម (iOS 17+) · សាកកែ k/c/m ក្នុង <b>Motion Lab Pro → Spring</b>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>ប៊ូតុង "Add to cart" ចង់លោតតិចៗពេលចុច។ ជ្រើស ζ ប្រហែលប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>ζ ≈ <b>0.5–0.6</b> (Medium bouncy) — លោតឃើញ តែមិនរញ៉េរញ៉ៃ។ Navigation/អេក្រង់ ប្រើ ζ ≈ 0.8–1។</p></details></div>
+
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Implicit Animation (ងាយបំផុត)</h2>
+
+<script type="text/x-code" data-lang="html" data-label="implicit.html · ▶ ចុចសាក" data-demo>
+<style>body{margin:0;font-family:sans-serif;background:#f8f9fa;color:#222;user-select:none}.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin:8px 0}button{border:0;border-radius:10px;padding:8px 12px;background:#5f3dc4;color:#fff;font-weight:700}</style>
+<div id="card" style="width:260px;border-radius:18px;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.1);padding:12px;transition:all .32s cubic-bezier(.2,0,0,1);overflow:hidden;height:64px;cursor:pointer">
+  <div style="display:flex;align-items:center;gap:10px"><div id="img" style="width:40px;height:40px;border-radius:12px;background:#d0bfff;transition:all .32s cubic-bezier(.2,0,0,1);display:grid;place-items:center">☕</div><b>Iced Latte</b><span style="margin-left:auto">$2.50</span></div>
+  <p style="font-size:13px;color:#666">Espresso + ទឹកដោះគោត្រជាក់ + ទឹកកក។ ជ្រើសទំហំ S/M/L។</p>
+  <button>＋ បន្ថែម</button>
+</div>
+<p style="font-size:13px">👆 ចុចលើ Card</p>
+<script>
+let open = false;
+document.getElementById("card").onclick = () => {
+  open = !open;
+  const c = document.getElementById("card"), i = document.getElementById("img");
+  c.style.height = open ? "170px" : "64px";              // ប្តូរតែតម្លៃគោលដៅ
+  c.style.background = open ? "#f3f0ff" : "#fff";
+  i.style.transform = open ? "scale(1.25) rotate(-8deg)" : "none";
+};
+<\/script>
+</script>
+
+<script type="text/x-code" data-lang="dart" data-label="AnimatedContainer (Flutter)">
+AnimatedContainer(
+  duration: const Duration(milliseconds: 320),
+  curve: Curves.easeOutCubic,
+  height: open ? 170 : 64,
+  decoration: BoxDecoration(
+    color: open ? const Color(0xFFF3F0FF) : Colors.white,
+    borderRadius: BorderRadius.circular(18),
+  ),
+  child: ...,
+)
+</script>
+
+<script type="text/x-code" data-lang="kotlin" data-label="animate*AsState (Compose)">
+val height by animateDpAsState(if (open) 170.dp else 64.dp, tween(320, easing = EaseOutCubic), label = "h")
+val bg by animateColorAsState(if (open) Color(0xFFF3F0FF) else Color.White, label = "bg")
+Card(Modifier.height(height).clickable { open = !open }, colors = CardDefaults.cardColors(bg)) { ... }
+AnimatedVisibility(visible = open, enter = fadeIn() + expandVertically()) { Text("Espresso + …") }
+</script>
+
+<script type="text/x-code" data-lang="swift" data-label="withAnimation (SwiftUI)">
+VStack { ... }
+    .frame(height: open ? 170 : 64)
+    .background(open ? Color.purple.opacity(0.08) : .white, in: .rect(cornerRadius: 18))
+    .onTapGesture { withAnimation(.snappy) { open.toggle() } }
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Implicit</b> = ប្រាប់តែ <b>តម្លៃគោលដៅ</b> (height 170) — Framework គណនា Frame នីមួយៗស្វ័យប្រវត្តិ (ដូច CSS transition ក្នុង Demo)។</li><li>Flutter៖ <code class='i'>Animated*</code> Widgets · Compose៖ <code class='i'>animate*AsState</code>, <code class='i'>AnimatedVisibility</code>, <code class='i'>animateContentSize()</code> · SwiftUI៖ <code class='i'>withAnimation { }</code>។</li><li>ប្រើបាន ៨០% នៃករណី — ចាប់ផ្តើមពី Implicit មុន ទើបប្រើ Explicit (មេរៀន ៥) ពេលត្រូវការគ្រប់គ្រងច្រើន។</li><li>Animate <b>Transform/Opacity</b> បើអាច (លឿនជាង height/width — មេរៀន ១១)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>Compose៖ ចង់ឲ្យ Card ពង្រីកតាមខ្លឹមសារ ដោយមិនកំណត់ height ដោយដៃ?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="kotlin" data-label="answer.kt">
+Card(Modifier.animateContentSize(spring(stiffness = Spring.StiffnessMediumLow))) {
+    Text(title)
+    if (open) Text(description)
+}
+</script>
+</details></div>
+
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>Explicit Animation, Sequence &amp; Stagger</h2>
+
+<script type="text/x-code" data-lang="html" data-label="stagger.html · ▶ ចុចសាក" data-demo>
+<style>body{margin:0;font-family:sans-serif;background:#f8f9fa;color:#222;user-select:none}.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin:8px 0}button{border:0;border-radius:10px;padding:8px 12px;background:#5f3dc4;color:#fff;font-weight:700}</style>
+<button id="go">▶ បង្ហាញ Menu (Stagger)</button>
+<div id="list" style="margin-top:10px"></div>
+<style>.it{opacity:0;transform:translateY(16px);background:#fff;border-radius:12px;padding:10px 12px;margin:6px 0;box-shadow:0 2px 8px rgba(0,0,0,.06);width:240px}
+.it.in{animation:in .42s cubic-bezier(.2,0,0,1) forwards}@keyframes in{to{opacity:1;transform:none}}</style>
+<script>
+const items = ["☕ Americano", "🧋 Iced Latte", "🍫 Mocha", "🍵 Green Tea", "🥐 Croissant"];
+document.getElementById("go").onclick = () => {
+  const L = document.getElementById("list");
+  L.innerHTML = items.map((t) => `<div class="it">${t}</div>`).join("");
+  [...L.children].forEach((el, i) => setTimeout(() => el.classList.add("in"), i * 60));   // delay = index × 60ms
+};
+<\/script>
+</script>
+
+<script type="text/x-code" data-lang="dart" data-label="Stagger (Flutter)">
+class MenuList extends StatefulWidget { ... }
+class _MenuListState extends State<MenuList> with SingleTickerProviderStateMixin {
+  late final c = AnimationController(vsync: this, duration: const Duration(milliseconds: 700))..forward();
+
+  @override
+  Widget build(BuildContext context) => ListView.builder(
+        itemCount: items.length,
+        itemBuilder: (_, i) {
+          final start = (i * 0.1).clamp(0.0, 0.6);                       // Stagger
+          final a = CurvedAnimation(parent: c, curve: Interval(start, start + 0.4, curve: Curves.easeOutCubic));
+          return FadeTransition(
+            opacity: a,
+            child: SlideTransition(position: Tween(begin: const Offset(0, .2), end: Offset.zero).animate(a), child: ProductTile(items[i])),
+          );
+        },
+      );
+
+  @override
+  void dispose() { c.dispose(); super.dispose(); }
+}
+</script>
+
+<script type="text/x-code" data-lang="kotlin" data-label="Sequence (Compose)">
+// Compose: Sequence ដោយ Animatable + Coroutine
+val y = remember { Animatable(0f) }
+LaunchedEffect(addedToCart) {
+    y.animateTo(-12f, tween(120))                   // ① លោតឡើង
+    y.animateTo(0f, spring(dampingRatio = 0.4f))    // ② ធ្លាក់លោត
+}
+Icon(Icons.Default.ShoppingCart, null, Modifier.graphicsLayer { translationY = y.value })
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Explicit</b> — គ្រប់គ្រង Animation ផ្ទាល់៖ ចាប់ផ្តើម/ឈប់/ថយក្រោយ/ធ្វើម្តងទៀត (<code class='i'>AnimationController</code>, <code class='i'>Animatable</code>)។</li><li><b>Stagger</b> — ធាតុនីមួយៗចាប់ផ្តើមយឺតជាងមុន 30–80ms → ភ្នែកតាមដានលំដាប់បាន (Demo)។ កុំ Stagger លើស ~8 ធាតុ (យឺតពេក)។</li><li><code class='i'>Interval(start, end)</code> (Flutter) — ចែកពេល Controller មួយឲ្យធាតុច្រើន។</li><li><b>Sequence</b>៖ <code class='i'>animateTo</code> បន្តគ្នាក្នុង Coroutine (Compose) · <code class='i'>withSequence</code> (Reanimated) · <code class='i'>PhaseAnimator</code> (SwiftUI)។</li><li>Flutter៖ ត្រូវ <code class='i'>dispose()</code> Controller ជានិច្ច (ការពារ Memory leak)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>Reanimated៖ សរសេរ Shake (ឆ្វេង-ស្តាំ ៣ ដង) ពេល Password ខុស។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="jsx" data-label="answer.tsx">
+x.value = withSequence(
+  withTiming(-10, { duration: 50 }),
+  withRepeat(withTiming(10, { duration: 100 }), 3, true),
+  withTiming(0, { duration: 50 }),
+);
+</script>
+</details></div>
+
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Shared Element / Hero Transition</h2>
+
+<script type="text/x-code" data-lang="html" data-label="hero_flip.html · ▶ ចុចសាក" data-demo>
+<style>body{margin:0;font-family:sans-serif;background:#f8f9fa;color:#222;user-select:none}.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin:8px 0}button{border:0;border-radius:10px;padding:8px 12px;background:#5f3dc4;color:#fff;font-weight:700}</style>
+<div id="grid" style="display:grid;grid-template-columns:repeat(3,80px);gap:10px"></div>
+<div id="detail" style="display:none;position:fixed;inset:0;background:#fff;padding:14px">
+  <button id="back">← Back</button>
+  <div id="big" style="height:180px;border-radius:20px;margin-top:10px;display:grid;place-items:center;font-size:70px"></div>
+  <h3 id="title"></h3><p style="color:#666;font-size:13px">ចុច Back ដើម្បីមើល Animation ត្រឡប់</p>
+</div>
+<script>
+const items = [["☕", "#ffe8cc", "Americano"], ["🧋", "#e5dbff", "Iced Latte"], ["🍵", "#d3f9d8", "Green Tea"]];
+const grid = document.getElementById("grid"), big = document.getElementById("big");
+grid.innerHTML = items.map(([e, c, n], i) => `<div data-i="${i}" style="height:80px;border-radius:14px;background:${c};display:grid;place-items:center;font-size:34px;cursor:pointer">${e}</div>`).join("");
+let from;
+// FLIP: First → Last → Invert → Play
+function flip(a, b, reverse) {
+  const A = a.getBoundingClientRect(), B = b.getBoundingClientRect();
+  const dx = A.left - B.left, dy = A.top - B.top, sx = A.width / B.width, sy = A.height / B.height;
+  b.animate([{ transform: `translate(${dx}px,${dy}px) scale(${sx},${sy})`, borderRadius: "14px" }, { transform: "none", borderRadius: "20px" }],
+            { duration: 380, easing: "cubic-bezier(.2,0,0,1)", direction: reverse ? "reverse" : "normal" });
+}
+grid.onclick = (e) => {
+  const t = e.target.closest("[data-i]"); if (!t) return; from = t;
+  const [em, c, n] = items[t.dataset.i];
+  big.textContent = em; big.style.background = c; document.getElementById("title").textContent = n;
+  document.getElementById("detail").style.display = "block"; flip(from, big);
+};
+document.getElementById("back").onclick = () => {
+  const a = big.animate([{ transform: "none" }], { duration: 1 });
+  flip(from, big, true);
+  setTimeout(() => document.getElementById("detail").style.display = "none", 370);
+};
+<\/script>
+</script>
+
+<script type="text/x-code" data-lang="dart" data-label="Hero (Flutter)">
+// Flutter — tag ដូចគ្នាទាំង ២ អេក្រង់
+Hero(tag: 'product-${p.id}', child: Image.asset(p.image))     // ក្នុង Grid
+Hero(tag: 'product-${p.id}', child: Image.asset(p.image, height: 280))   // ក្នុង Detail
+</script>
+
+<script type="text/x-code" data-lang="swift" data-label="matchedTransitionSource (SwiftUI)">
+// SwiftUI (iOS 18) — Zoom transition
+NavigationLink(value: p) {
+    ProductCard(p).matchedTransitionSource(id: p.id, in: ns)
+}
+.navigationDestination(for: Product.self) { p in
+    DetailView(p).navigationTransition(.zoom(sourceID: p.id, in: ns))
+}
+// ក្នុងអេក្រង់តែមួយ: .matchedGeometryEffect(id: p.id, in: ns)
+</script>
+
+<script type="text/x-code" data-lang="kotlin" data-label="sharedElement (Compose)">
+// Compose — SharedTransitionLayout + AnimatedContent / Navigation
+SharedTransitionLayout {
+    AnimatedContent(selected) { p ->
+        if (p == null) Grid(onClick = { selected = it }, scope = this@SharedTransitionLayout, anim = this)
+        else Detail(p, Modifier.sharedElement(rememberSharedContentState("img-${p.id}"), animatedVisibilityScope = this))
+    }
+}
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Shared element</b> — វត្ថុដដែល (រូបកាហ្វេ) ផ្លាស់ទី/ពង្រីកពីអេក្រង់មួយទៅមួយ → អ្នកប្រើដឹងថា Detail មកពីណា។</li><li>Demo ប្រើបច្ចេកទេស <b>FLIP</b>៖ <b>F</b>irst (ទីតាំងដើម) → <b>L</b>ast (ទីតាំងចុង) → <b>I</b>nvert (ផ្លាស់ទៅដើមវិញដោយ transform) → <b>P</b>lay (Animate ទៅ none) — Framework ធ្វើដូចនេះខាងក្រោយ។</li><li>Flutter <code class='i'>Hero(tag)</code> · SwiftUI <code class='i'>.navigationTransition(.zoom)</code> / <code class='i'>matchedGeometryEffect</code> · Compose <code class='i'>Modifier.sharedElement</code> · RN Reanimated <code class='i'>sharedTransitionTag</code>។</li><li>Tag/ID ត្រូវ <b>មិនស្ទួន</b> ក្នុងអេក្រង់ (ប្រើ id ទំនិញ)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>Grid មាន Iced Latte ២ (Hot/Iced) ដែលមានរូបដូចគ្នា។ Hero tag ប្រើអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>ប្រើ <b>id មិនស្ទួន</b> (<code class='i'>product-12</code>, <code class='i'>product-13</code>) មិនមែនឈ្មោះ ឬ URL រូបភាព — tag ស្ទួន = Error/Animation ខុស។</p></details></div>
+
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Gesture-driven Animation៖ Bottom Sheet</h2>
+
+<script type="text/x-code" data-lang="html" data-label="bottom_sheet.html · ▶ ចុចសាក" data-demo>
+<style>body{margin:0;font-family:sans-serif;background:#f8f9fa;color:#222;user-select:none}.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin:8px 0}button{border:0;border-radius:10px;padding:8px 12px;background:#5f3dc4;color:#fff;font-weight:700}</style>
+<div style="position:relative;height:300px;width:280px;border-radius:24px;overflow:hidden;background:linear-gradient(#e5dbff,#fff);box-shadow:0 6px 20px rgba(0,0,0,.12)">
+  <p style="padding:14px;margin:0">🗺️ Map / Content</p>
+  <div id="sheet" style="position:absolute;left:0;right:0;bottom:0;height:280px;background:#fff;border-radius:22px 22px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,.15);touch-action:none;transform:translateY(200px)">
+    <div style="width:40px;height:5px;border-radius:3px;background:#ccc;margin:8px auto"></div>
+    <div style="padding:0 14px"><b>🛒 កន្ត្រក (3)</b><p style="font-size:13px;color:#666">អូសឡើង/ចុះ — លែងលឿនៗ (Fling) ក៏បាន</p><p>Iced Latte ×2 · Mocha ×1</p><b>សរុប $7.75</b></div>
+  </div>
+</div>
+<div class="bar" id="info"></div>
+<script>
+const sheet = document.getElementById("sheet"), SNAPS = [0, 120, 200];   // translateY: full · half · peek
+let y = 200, startY = 0, startT = 0, lastY = 0, lastT = 0, v = 0, dragging = false, anim;
+const set = (val) => { y = val; sheet.style.transform = `translateY(${y}px)`; };
+sheet.onpointerdown = (e) => { dragging = true; cancelAnimationFrame(anim); startY = e.clientY - y; lastY = e.clientY; lastT = performance.now(); sheet.setPointerCapture(e.pointerId); };
+sheet.onpointermove = (e) => {
+  if (!dragging) return;
+  let ny = e.clientY - startY;
+  if (ny < 0) ny = ny * 0.3;                                   // Rubber banding ពេលអូសហួស
+  const now = performance.now(); v = (e.clientY - lastY) / Math.max(1, now - lastT) * 1000; lastY = e.clientY; lastT = now;
+  set(ny);
+};
+sheet.onpointerup = () => {
+  dragging = false;
+  const projected = y + v * 0.15;                              // Project តាម Velocity
+  const target = SNAPS.reduce((a, b) => Math.abs(b - projected) < Math.abs(a - projected) ? b : a);
+  let vel = v; const k = 300, c = 26;                          // Spring ζ≈0.75
+  let last = performance.now();
+  (function step(now) {
+    const dt = Math.min(0.032, (now - last) / 1000); last = now;
+    const a = -k * (y - target) - c * vel; vel += a * dt; set(y + vel * dt);
+    if (Math.abs(y - target) > 0.5 || Math.abs(vel) > 5) anim = requestAnimationFrame(step); else set(target);
+  })(last);
+  document.getElementById("info").textContent = `velocity ${v.toFixed(0)} px/s → snap ${["Full", "Half", "Peek"][SNAPS.indexOf(target)]}`;
+};
+<\/script>
+</script>
+
+<script type="text/x-code" data-lang="kotlin" data-label="AnchoredDraggable (Compose)">
+// Compose — AnchoredDraggable (Snap points + fling)
+enum class Sheet { Peek, Half, Full }
+val state = remember {
+    AnchoredDraggableState(initialValue = Sheet.Peek)
+}
+SideEffect {
+    state.updateAnchors(DraggableAnchors { Sheet.Full at 0f; Sheet.Half at 360f; Sheet.Peek at 600f })
+}
+Box(Modifier
+    .offset { IntOffset(0, state.requireOffset().roundToInt()) }
+    .anchoredDraggable(state, Orientation.Vertical))
+</script>
+
+<script type="text/x-code" data-lang="swift" data-label="presentationDetents (SwiftUI)">
+// SwiftUI — Sheet មាន Detents ស្រាប់
+.sheet(isPresented: $showCart) {
+    CartView()
+        .presentationDetents([.height(120), .medium, .large])
+        .presentationDragIndicator(.visible)
+}
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Gesture-driven</b>៖ ពេលអូស → វត្ថុតាមម្រាមដៃ <b>១:១</b> (គ្មាន Animation) · ពេលលែង → Animation ពី <b>ទីតាំង + Velocity</b> បច្ចុប្បន្ន។</li><li><b>Velocity projection</b>៖ ទាយទីតាំងបញ្ចប់ <code class='i'>y + v × 0.15</code> → ជ្រើស Snap point ជិតបំផុត (Fling លឿនទៅឆ្ងាយ)។</li><li><b>Spring</b> ទទួល Velocity ដំបូង → បន្តចលនារលូនពីម្រាមដៃ (Timing animation ធ្វើមិនបាន)។</li><li><b>Rubber banding</b> — អូសហួសដែនកំណត់ → ផ្លាស់តែ 30% (ដូច iOS scroll)។</li><li>Production៖ Compose <code class='i'>AnchoredDraggable</code> · SwiftUI <code class='i'>presentationDetents</code> · Flutter <code class='i'>DraggableScrollableSheet</code> · RN Gesture handler + Reanimated។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>Swipe-to-dismiss Card៖ លែងពេលណាគួរលុប?</p><details><summary>មើលចម្លើយ</summary><p>លុបពេល <b>អូសលើស ~40% ទទឹង</b> ឬ <b>Velocity &gt; ~800 px/s</b> (Fling) · ផ្សេងពីនេះ Spring ត្រឡប់ទៅកន្លែងដើម។</p></details></div>
+
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Micro-interactions</h2>
+
+<script type="text/x-code" data-lang="html" data-label="micro.html · ▶ ចុចសាក" data-demo>
+<style>body{margin:0;font-family:sans-serif;background:#f8f9fa;color:#222;user-select:none}.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin:8px 0}button{border:0;border-radius:10px;padding:8px 12px;background:#5f3dc4;color:#fff;font-weight:700}</style>
+<div style="display:flex;gap:18px;align-items:center">
+  <button id="like" style="background:#fff;color:#e03131;font-size:30px;padding:4px 10px;position:relative">♡</button>
+  <button id="add">＋ បន្ថែមកន្ត្រក</button>
+  <div id="cart" style="font-size:28px;position:relative">🛒<span id="badge" style="position:absolute;top:-6px;right:-10px;background:#e03131;color:#fff;font-size:12px;border-radius:10px;padding:1px 6px">0</span></div>
+</div>
+<div id="fly" style="position:fixed;font-size:22px;pointer-events:none;opacity:0">☕</div>
+<style>button{transition:transform .12s}button:active{transform:scale(.92)}</style>
+<script>
+let liked = false, n = 0;
+const like = document.getElementById("like");
+like.onclick = () => {
+  liked = !liked; like.textContent = liked ? "♥" : "♡";
+  like.animate([{ transform: "scale(1)" }, { transform: "scale(1.35)" }, { transform: "scale(1)" }], { duration: 320, easing: "cubic-bezier(.34,1.56,.64,1)" });
+  if (liked) for (let i = 0; i < 8; i++) {                                   // Burst
+    const s = document.createElement("span"); s.textContent = "•"; s.style.cssText = "position:absolute;left:22px;top:14px;color:#e03131";
+    like.appendChild(s); const a = i / 8 * 2 * Math.PI;
+    s.animate([{ transform: "translate(0,0)", opacity: 1 }, { transform: `translate(${Math.cos(a) * 30}px,${Math.sin(a) * 30}px)`, opacity: 0 }], { duration: 450, easing: "ease-out" }).onfinish = () => s.remove();
+  }
+};
+document.getElementById("add").onclick = (e) => {
+  const f = document.getElementById("fly"), A = e.target.getBoundingClientRect(), B = document.getElementById("cart").getBoundingClientRect();
+  f.style.left = A.left + "px"; f.style.top = A.top + "px";
+  f.animate([{ transform: "translate(0,0) scale(1)", opacity: 1 }, { transform: `translate(${(B.left - A.left) / 2}px,-40px) scale(1.2)`, opacity: 1, offset: .5 },
+             { transform: `translate(${B.left - A.left}px,${B.top - A.top}px) scale(.4)`, opacity: .2 }], { duration: 600, easing: "cubic-bezier(.2,0,0,1)" })
+   .onfinish = () => { document.getElementById("badge").textContent = ++n;
+     document.getElementById("cart").animate([{ transform: "rotate(0)" }, { transform: "rotate(-12deg)" }, { transform: "rotate(10deg)" }, { transform: "rotate(0)" }], { duration: 300 }); };
+  try { navigator.vibrate && navigator.vibrate(15); } catch (e) {}
+};
+<\/script>
+</script>
+
+<script type="text/x-code" data-lang="swift" data-label="Like (SwiftUI)">
+// SwiftUI — Symbol effects + Haptics (iOS 17)
+Image(systemName: liked ? "heart.fill" : "heart")
+    .foregroundStyle(.red)
+    .symbolEffect(.bounce, value: liked)
+    .sensoryFeedback(.impact(weight: .light), trigger: liked)
+    .onTapGesture { liked.toggle() }
+</script>
+
+<script type="text/x-code" data-lang="dart" data-label="Press scale (Flutter)">
+// Flutter — ប៊ូតុងរួមតូចពេលចុច + Haptic
+GestureDetector(
+  onTapDown: (_) => setState(() => pressed = true),
+  onTapUp: (_) { setState(() => pressed = false); HapticFeedback.lightImpact(); onAdd(); },
+  onTapCancel: () => setState(() => pressed = false),
+  child: AnimatedScale(scale: pressed ? 0.92 : 1, duration: const Duration(milliseconds: 120), child: addButton),
+)
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Micro-interaction</b> = Trigger (ចុច) → Feedback (រួមតូច/ពង្រីក/Burst/Vibration) → ស្ថានភាពថ្មី (♥ · Badge +1)។</li><li><b>Press state</b>៖ scale 0.92–0.96 ពេលចុច → ប៊ូតុងមានអារម្មណ៍ "ចុចបាន"។</li><li><b>Add to cart fly</b> — វត្ថុហោះទៅកន្ត្រក (Keyframes ៣ ចំណុច) + Badge កើន + កន្ត្រករញ្ជួយ → អ្នកប្រើដឹងច្បាស់ថាបានបន្ថែម។</li><li><b>Haptics</b> (Vibration ស្រាល) — iOS <code class='i'>.sensoryFeedback</code> · Flutter <code class='i'>HapticFeedback</code> · Android <code class='i'>performHapticFeedback</code>។</li><li>កុំបន្ថែមលើសលប់ — Micro-interaction ល្អគឺ "មានអារម្មណ៍" ប៉ុន្តែស្ទើរតែមិនកត់សម្គាល់។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>ពេលចុច "បញ្ជាទិញ" Server ត្រូវការ 2 វិនាទី។ Micro-interaction អ្វីខ្លះគួរមាន?</p><details><summary>មើលចម្លើយ</summary><p>ប៊ូតុង Press scale → ប្តូរជា Spinner/បិទចុចស្ទួន → ជោគជ័យ៖ ✓ Checkmark animation + Haptic success · បរាជ័យ៖ Shake + សារ។</p></details></div>
+
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Loading States៖ Skeleton, Progress &amp; Optimistic UI</h2>
+
+<script type="text/x-code" data-lang="html" data-label="skeleton.html · ▶ ចុចសាក" data-demo>
+<style>body{margin:0;font-family:sans-serif;background:#f8f9fa;color:#222;user-select:none}.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin:8px 0}button{border:0;border-radius:10px;padding:8px 12px;background:#5f3dc4;color:#fff;font-weight:700}</style>
+<button id="load">🔄 Load menu</button>
+<div id="list" style="margin-top:10px;width:260px"></div>
+<style>.sk{height:56px;border-radius:12px;margin:8px 0;background:linear-gradient(90deg,#eee 25%,#f8f8f8 50%,#eee 75%);background-size:200% 100%;animation:sh 1.2s infinite linear}
+@keyframes sh{from{background-position:200% 0}to{background-position:-200% 0}}
+.row{display:flex;align-items:center;gap:10px;background:#fff;border-radius:12px;padding:10px;margin:8px 0;animation:fi .3s ease-out}@keyframes fi{from{opacity:0}}</style>
+<script>
+document.getElementById("load").onclick = () => {
+  const L = document.getElementById("list");
+  L.innerHTML = '<div class="sk"></div>'.repeat(4);                       // Skeleton ភ្លាម
+  setTimeout(() => {
+    L.innerHTML = [["☕", "Americano", "$2.00"], ["🧋", "Iced Latte", "$2.50"], ["🍫", "Mocha", "$2.75"], ["🍵", "Green Tea", "$1.50"]]
+      .map(([e, n, p]) => `<div class="row"><span style="font-size:24px">${e}</span><b>${n}</b><span style="margin-left:auto">${p}</span></div>`).join("");
+  }, 1500);
+};
+<\/script>
+</script>
+
+<table><tr><th>រយៈពេលរង់ចាំ</th><th>បង្ហាញ</th></tr><tr><td>&lt; 0.3s</td><td>គ្មាន (កុំបង្ហាញ Spinner ភ្លឹបភ្លែត)</td></tr><tr><td>0.3–2s</td><td>Skeleton (រាងខ្លឹមសារ) ឬ Spinner តូច</td></tr><tr><td>&gt; 2s / ដឹង %</td><td>Progress bar + សារ ("កំពុង Upload 68%")</td></tr><tr><td>សកម្មភាពទំនងជាជោគជ័យ</td><td><b>Optimistic UI</b> — បង្ហាញលទ្ធផលភ្លាម រួច Rollback បើខុស</td></tr></table>
+
+<script type="text/x-code" data-lang="kotlin" data-label="Optimistic UI">
+// Optimistic like (Compose ViewModel)
+fun toggleLike(id: String) = viewModelScope.launch {
+    val before = _state.value
+    _state.update { it.withLiked(id, !it.isLiked(id)) }   // ① UI ប្តូរភ្លាម
+    runCatching { api.toggleLike(id) }
+        .onFailure { _state.value = before; _events.emit("មិនអាចរក្សាទុក សូមព្យាយាមម្តងទៀត") }   // ② Rollback
+}
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Skeleton</b> — បង្ហាញរាងខ្លឹមសារមុន + Shimmer → អ្នកប្រើមានអារម្មណ៍ថាលឿនជាង Spinner (Perceived performance)។</li><li>Shimmer = Gradient រំកិល (<code class='i'>background-position</code>) · Flutter <code class='i'>shimmer</code>/<code class='i'>skeletonizer</code> · Compose <code class='i'>placeholder</code> · SwiftUI <code class='i'>.redacted(reason: .placeholder)</code>។</li><li>កុំបង្ហាញ Spinner សម្រាប់ការងារ &lt; 300ms (ភ្លឹបភ្លែតរំខាន)។</li><li><b>Optimistic UI</b>៖ Like/Add to cart ប្តូរភ្លាម → Server បរាជ័យ → ត្រឡប់វិញ + សារ។</li><li>Content លេច៖ Fade-in ខ្លី (200–300ms) ជំនួសការលោតភ្លាម។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>SwiftUI៖ ធ្វើ Skeleton ដោយប្រើ View ដដែលយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="swift" data-label="answer.swift">
+ProductList(items: isLoading ? Product.placeholders : items)
+    .redacted(reason: isLoading ? .placeholder : [])
+    .shimmering(active: isLoading)   // modifier ផ្ទាល់ខ្លួន ឬ Package
+</script>
+</details></div>
+
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>Lottie &amp; Rive</h2>
+
+<script type="text/x-code" data-lang="dart" data-label="Lottie &amp; Rive (Flutter)">
+// Flutter — pubspec: lottie, rive
+Lottie.asset('assets/anim/coffee_success.json', repeat: false, width: 160)
+
+// Rive: Animation មាន State machine (Input: isPressed, progress)
+RiveAnimation.asset('assets/anim/coffee_button.riv', stateMachines: const ['Button'],
+  onInit: (artboard) {
+    final ctrl = StateMachineController.fromArtboard(artboard, 'Button')!;
+    artboard.addController(ctrl);
+    pressed = ctrl.findInput<bool>('isPressed') as SMIBool;
+  })
+</script>
+
+<script type="text/x-code" data-lang="swift" data-label="Lottie (SwiftUI)">
+// iOS — lottie-ios
+LottieView(animation: .named("coffee_success"))
+    .playing(loopMode: .playOnce)
+    .frame(width: 160, height: 160)
+</script>
+
+<script type="text/x-code" data-lang="kotlin" data-label="Lottie (Compose)">
+// Android — lottie-compose
+val comp by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.coffee_success))
+LottieAnimation(comp, iterations = 1, modifier = Modifier.size(160.dp))
+</script>
+
+<table><tr><th></th><th>Lottie</th><th>Rive</th><th>Code animation</th></tr><tr><td>ធ្វើដោយ</td><td>After Effects + Bodymovin / LottieFiles</td><td>Rive Editor</td><td>Developer</td></tr><tr><td>File</td><td>.json / .lottie (dotLottie)</td><td>.riv (Binary តូច)</td><td>—</td></tr><tr><td>Interactive</td><td>តិច (Play/Seek)</td><td>✅ State machine + Input</td><td>✅</td></tr><tr><td>ល្អសម្រាប់</td><td>Illustration · Success · Onboarding</td><td>ប៊ូតុង/Character ឆ្លើយតប · Game UI</td><td>UI transitions · Gestures</td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Lottie</b> (Airbnb) — Designer ធ្វើ Animation ក្នុង After Effects → Export JSON → App Play ជា Vector (ច្បាស់គ្រប់ទំហំ តូចជាង GIF/Video)។</li><li><b>Rive</b> — Editor + Runtime មាន <b>State machine</b>៖ App ផ្ញើ Input (isPressed, progress) → Animation ប្តូរ State (ល្អសម្រាប់ Interactive)។</li><li>ប្រើ Lottie/Rive សម្រាប់ Illustration ស្មុគស្មាញ · ប្រើ Code សម្រាប់ UI transition (ងាយកែ/Theme/Accessibility)។</li><li>ពិនិត្យទំហំ File និង Performance លើទូរស័ព្ទខ្សោយ · ផ្តល់ Static fallback ពេល Reduce motion (មេរៀន ១២)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>ប៊ូតុង "Brew" មាន Animation ៣ ស្ថានភាព (idle, brewing, done) ដែល App គ្រប់គ្រង។ Lottie ឬ Rive?</p><details><summary>មើលចម្លើយ</summary><p><b>Rive</b> — State machine មាន Input ពី Code (<code class='i'>state = 0/1/2</code>) ផ្លាស់ប្តូររលូនរវាង State · Lottie ត្រូវកាត់ Segment ដោយដៃ។</p></details></div>
+
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>Performance៖ 60/120 FPS</h2>
+
+<script type="text/x-code" data-lang="js" data-label="frame_budget.mjs">
+// Frame budget: ពេលដែលមានសម្រាប់ Frame មួយ
+for (const hz of [60, 90, 120]) {
+  console.log(`${hz} Hz → ${(1000 / hz).toFixed(1)} ms/frame (UI + Layout + Paint + GPU)`);
+}
+
+// ក្លែង: Animation 300ms ពេល Frame ខ្លះយឺត (Jank)
+function simulate(costs, budget = 16.7) {
+  let t = 0, frames = 0, dropped = 0;
+  while (t < 300) {
+    const c = costs[frames % costs.length];
+    const slots = Math.ceil(c / budget);           // Frame យឺតកាន់ Slot ច្រើន
+    dropped += slots - 1; t += slots * budget; frames++;
+  }
+  return { frames, dropped, fps: (frames / (t / 1000)).toFixed(0) };
+}
+console.log("transform/opacity (4ms) :", simulate([4]));
+console.log("height + layout (11ms)  :", simulate([11]));
+console.log("layout + image decode    :", simulate([11, 11, 38, 11]));
+console.log("height + layout @120Hz   :", simulate([11], 8.3), "← លើស 8.3ms ធ្លាក់ពាក់កណ្តាល");
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Node.js</span></div><pre>60 Hz → 16.7 ms/frame (UI + Layout + Paint + GPU)
+90 Hz → 11.1 ms/frame (UI + Layout + Paint + GPU)
+120 Hz → 8.3 ms/frame (UI + Layout + Paint + GPU)
+transform/opacity (4ms) : { frames: 18, dropped: 0, fps: &#x27;60&#x27; }
+height + layout (11ms)  : { frames: 18, dropped: 0, fps: &#x27;60&#x27; }
+layout + image decode    : { frames: 12, dropped: 6, fps: &#x27;40&#x27; }
+height + layout @120Hz   : { frames: 19, dropped: 19, fps: &#x27;60&#x27; } ← លើស 8.3ms ធ្លាក់ពាក់កណ្តាល</pre></div>
+
+<table><tr><th>✅ ល្អ</th><th>⚠️ ជៀស</th></tr><tr><td>Animate <b>transform</b> (translate/scale/rotate) និង <b>opacity</b></td><td>Animate width/height/top/left ក្នុង List ធំ (Layout រាល់ Frame)</td></tr><tr><td>Flutter <code class='i'>RepaintBoundary</code>, <code class='i'>AnimatedBuilder(child:)</code> មិន Rebuild Subtree</td><td>setState លើ Widget ធំរាល់ Frame</td></tr><tr><td>Compose <code class='i'>Modifier.graphicsLayer { }</code> / Lambda modifiers (អាន State ក្នុង Draw phase)</td><td>អាន Animated value ក្នុង Composition (Recompose រាល់ Frame)</td></tr><tr><td>RN <b>Reanimated worklets</b> (UI thread)</td><td>Animated ធម្មតាឆ្លង JS bridge ពេល JS រវល់</td></tr><tr><td>Decode រូបមុន · ទំហំរូបត្រឹមត្រូវ</td><td>Decode រូបធំពេលកំពុង Animation</td></tr><tr><td>Profile លើទូរស័ព្ទពិត (Release/Profile mode)</td><td>វាស់ក្នុង Debug mode / Emulator</td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Frame budget</b>៖ 60Hz = 16.7ms · 120Hz (ProMotion) = 8.3ms — លើស = Frame ធ្លាក់ (Jank) (លទ្ធផលពិតខាងលើ)។</li><li><code class='i'>transform/opacity</code> → GPU compositing (រំលង Layout/Paint) → ស្រាល។</li><li>Frame យឺតម្តងៗ (Image decode 38ms) ធ្វើឲ្យ Animation "ទាក់" ទោះមធ្យមល្អ — ត្រូវមើល <b>Worst frame</b>។</li><li>ឧបករណ៍៖ Flutter DevTools (Performance overlay) · Android Studio Profiler / Layout Inspector (Recomposition counts) · Xcode Instruments (Animation Hitches) · RN Perf Monitor។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>Compose៖ <code class='i'>Modifier.offset(x = animatedX)</code> ធ្វើឲ្យ Recompose រាល់ Frame។ កែយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="kotlin" data-label="answer.kt">
+Modifier.offset { IntOffset(animatedX.roundToPx(), 0) }   // Lambda: អានក្នុង Layout phase
+// ឬ Modifier.graphicsLayer { translationX = animatedX.toPx() }
+</script>
+</details></div>
+
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>Accessibility &amp; Motion Design System</h2>
+
+<script type="text/x-code" data-lang="html" data-label="reduce_motion.html · ▶ ចុចសាក" data-demo>
+<style>body{margin:0;font-family:sans-serif;background:#f8f9fa;color:#222;user-select:none}.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;margin:8px 0}button{border:0;border-radius:10px;padding:8px 12px;background:#5f3dc4;color:#fff;font-weight:700}</style>
+<label style="font-size:14px"><input type="checkbox" id="rm"> ក្លែង "Reduce motion" (Settings → Accessibility)</label>
+<div class="bar"><button id="open">បើក Detail</button></div>
+<div id="panel" style="width:240px;height:120px;border-radius:16px;background:#7048e8;color:#fff;display:grid;place-items:center;opacity:0">Detail ☕</div>
+<p id="note" style="font-size:13px"></p>
+<script>
+const sys = matchMedia("(prefers-reduced-motion: reduce)").matches;
+document.getElementById("note").textContent = "ប្រព័ន្ធរបស់អ្នក: prefers-reduced-motion = " + (sys ? "reduce" : "no-preference");
+document.getElementById("rm").checked = sys;
+let shown = false;
+document.getElementById("open").onclick = () => {
+  shown = !shown;
+  const reduce = document.getElementById("rm").checked, p = document.getElementById("panel");
+  if (reduce)                                   // ✅ Crossfade ខ្លី ជំនួសចលនា/ពង្រីក
+    p.animate([{ opacity: shown ? 0 : 1 }, { opacity: shown ? 1 : 0 }], { duration: 150, fill: "forwards" });
+  else
+    p.animate([{ opacity: shown ? 0 : 1, transform: shown ? "translateY(60px) scale(.8) rotate(-6deg)" : "none" },
+               { opacity: shown ? 1 : 0, transform: shown ? "none" : "translateY(60px) scale(.8) rotate(-6deg)" }],
+              { duration: 450, easing: "cubic-bezier(.34,1.56,.64,1)", fill: "forwards" });
+};
+<\/script>
+</script>
+
+<script type="text/x-code" data-lang="dart" data-label="Flutter">
+// Flutter
+final reduce = MediaQuery.of(context).disableAnimations;
+final duration = reduce ? Duration.zero : Motion.medium;
+</script>
+
+<script type="text/x-code" data-lang="swift" data-label="SwiftUI">
+// SwiftUI
+@Environment(\.accessibilityReduceMotion) private var reduceMotion
+withAnimation(reduceMotion ? .easeInOut(duration: 0.15) : .bouncy) { expanded.toggle() }
+</script>
+
+<script type="text/x-code" data-lang="kotlin" data-label="Motion tokens">
+// Compose (Android: Settings → Remove animations → ANIMATOR_DURATION_SCALE = 0)
+object Motion {
+    const val SHORT = 150; const val MEDIUM = 300; const val LONG = 450
+    val Emphasized = CubicBezierEasing(0.2f, 0f, 0f, 1f)
+    val EmphasizedDecelerate = CubicBezierEasing(0.05f, 0.7f, 0.1f, 1f)
+    val SpringDefault = spring<Float>(dampingRatio = 0.8f, stiffness = Spring.StiffnessMediumLow)
+}
+</script>
+
+<table><tr><th>Token</th><th>តម្លៃ</th><th>ប្រើ</th></tr><tr><td>motion.short</td><td>150ms · standard</td><td>Icon, Switch, Ripple</td></tr><tr><td>motion.medium</td><td>300ms · emphasized</td><td>Card, Sheet, Dialog</td></tr><tr><td>motion.long</td><td>450ms · emphasized-decelerate</td><td>ប្តូរអេក្រង់, Hero</td></tr><tr><td>motion.spring.default</td><td>ζ 0.8 · stiffness medium-low</td><td>Gesture, Drag</td></tr><tr><td>reduce-motion</td><td>Crossfade ≤ 150ms</td><td>គ្រប់ចលនាធំ</td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>អ្នកខ្លះ <b>វិលមុខ/ចង្អោរ</b> ពេលឃើញចលនាធំ (Parallax, Zoom, Spin) → គោរពការកំណត់ <b>Reduce motion</b> របស់ប្រព័ន្ធ (Demo អាន <code class='i'>prefers-reduced-motion</code> ពិត)។</li><li>Reduce motion ≠ គ្មាន Feedback — ប្តូរទៅ <b>Crossfade ខ្លី</b> ជំនួស Slide/Zoom/Bounce។</li><li>កុំឲ្យអ្វីលោតភ្លឹប &gt; 3 ដង/វិនាទី (WCAG) · Animation ស្វ័យប្រវត្តិ &gt; 5s ត្រូវមានប៊ូតុងផ្អាក។</li><li><b>Motion tokens</b> — Duration/Easing/Spring ជាឈ្មោះរួម (ដូច Color tokens) → App ទាំងមូលមានចលនាស៊ីគ្នា · Designer និង Developer និយាយភាសាដូចគ្នា (Figma → Code)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>Onboarding មាន Parallax ៣ ស្រទាប់។ ពេល Reduce motion ធ្វើអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>បិទ Parallax (ស្រទាប់រំកិលជាមួយគ្នា) · ប្តូរទំព័រដោយ Crossfade · Lottie បង្ហាញ Frame ចុងក្រោយជា Static។</p></details></div>
+
+</section>
+<section id="cheat">
+<h2>📋 Cheat Sheet</h2>
+
+<table><tr><th>ចង់</th><th>Flutter</th><th>Compose</th><th>SwiftUI</th><th>RN Reanimated</th></tr><tr><td>ប្តូរតម្លៃរលូន</td><td>AnimatedContainer</td><td>animate*AsState</td><td>withAnimation</td><td>withTiming</td></tr><tr><td>Spring</td><td>SpringSimulation</td><td>spring(ζ, k)</td><td>.spring(response:dampingFraction:)</td><td>withSpring</td></tr><tr><td>បង្ហាញ/លាក់</td><td>AnimatedSwitcher</td><td>AnimatedVisibility</td><td>.transition()</td><td>entering/exiting</td></tr><tr><td>Shared element</td><td>Hero</td><td>sharedElement</td><td>matchedGeometryEffect · .zoom</td><td>sharedTransitionTag</td></tr><tr><td>Sequence</td><td>Interval / TweenSequence</td><td>Animatable.animateTo ×n</td><td>PhaseAnimator</td><td>withSequence</td></tr><tr><td>Reduce motion</td><td>disableAnimations</td><td>ANIMATOR_DURATION_SCALE</td><td>accessibilityReduceMotion</td><td>useReducedMotion()</td></tr></table>
+
+<script type="text/x-code" data-lang="txt" data-label="Motion rules">
+Duration: 100–200 តូច · 250–400 មធ្យម · ≤ 500 ធំ · Exit លឿនជាង Enter
+Easing: ចូល = decelerate · ចេញ = accelerate · ក្នុងអេក្រង់ = standard/emphasized
+Spring: ζ 0.5–0.6 លោត · 0.8 UI · 1.0 គ្មានលោត
+Perf: transform + opacity · 16.7ms/60Hz · 8.3ms/120Hz
+</script>
+
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងអាជីព៖ Kafe App Motion Polish</h2>
+
+<p>យក App Kafe (Flutter/Compose/SwiftUI/RN) មកបន្ថែម Motion ពេញលេញតាម Motion tokens៖ <b>Splash Lottie → Menu stagger → Card press spring → Hero ទៅ Detail → Add-to-cart fly + Badge bounce → Cart bottom sheet (gesture + snap) → Checkout success Rive → Skeleton loading → Reduce motion</b>។</p>
+<table><tr><th>អេក្រង់</th><th>Motion</th><th>Token</th><th>មេរៀន</th></tr><tr><td>Splash</td><td>Lottie logo ☕ (≤ 1.2s, រំលងបាន)</td><td>—</td><td>១០</td></tr><tr><td>Menu</td><td>Stagger 50ms · Skeleton</td><td>medium · emphasized</td><td>៥ · ៩</td></tr><tr><td>Product card</td><td>Press scale 0.96 spring</td><td>spring.ui (ζ 0.7)</td><td>៣ · ៨</td></tr><tr><td>Detail</td><td>Hero/Zoom ពី Card</td><td>long · emphasized-decelerate</td><td>៦</td></tr><tr><td>Add to cart</td><td>Fly + Badge bounce + Haptic</td><td>short · overshoot</td><td>៨</td></tr><tr><td>Cart</td><td>Bottom sheet gesture + snap</td><td>spring.gesture (ζ 0.8)</td><td>៧</td></tr><tr><td>Checkout</td><td>Rive brewing → done · Optimistic</td><td>—</td><td>៩ · ១០</td></tr><tr><td>គ្រប់អេក្រង់</td><td>Reduce motion → crossfade</td><td>short</td><td>១២</td></tr></table>
+
+<script type="text/x-code" data-lang="dart" data-label="motion.dart">
+// lib/theme/motion.dart — Motion tokens (Flutter)
+abstract final class Motion {
+  static const short = Duration(milliseconds: 150);
+  static const medium = Duration(milliseconds: 300);
+  static const long = Duration(milliseconds: 450);
+  static const emphasized = Cubic(0.2, 0, 0, 1);
+  static const emphasizedDecelerate = Cubic(0.05, 0.7, 0.1, 1);
+  static const spring = SpringDescription(mass: 1, stiffness: 300, damping: 24);   // ζ ≈ 0.7
+
+  static Duration of(BuildContext c, Duration d) =>
+      MediaQuery.of(c).disableAnimations ? Duration.zero : d;
+}
+</script>
+
+</section>
+<section id="pro-app">
+<h2>💻 Motion Lab Pro (App)</h2>
+
+<p><b>Easing Editor</b>៖ អូសចំណុចបញ្ជា Bézier ឬជ្រើស Preset → មើលចលនា → ចម្លង Code CSS/Flutter/Compose/SwiftUI/RN។ <b>Spring Playground</b>៖ កែ mass/stiffness/damping → ខ្សែកោងពិត, ζ, overshoot, settle time + Code ៤ Framework (SwiftUI response/dampingFraction គណនាស្វ័យប្រវត្តិ)។ <b>Transition Gallery</b>៖ សាក Slide, Fade through, Shared axis, Zoom (Hero), Bottom sheet លើទូរស័ព្ទ + Reduce motion។</p>
+
+<div class="itk" id="ml">
+<div class="itk-tabs"><button class="on" data-t="e">〰️ Easing Editor</button><button data-t="s">🌀 Spring Playground</button><button data-t="t">📱 Transition Gallery</button></div>
+
+<div class="itk-p on" data-p="e">
+ <div class="fb-grid" style="grid-template-columns:260px 1fr">
+  <div><svg id="e_svg" viewBox="-20 -125 260 370" width="260" height="370" style="background:var(--panel);border-radius:12px;touch-action:none"></svg>
+   <div style="font-size:12.5px;color:var(--muted)">អូសចំណុច 🟣 និង 🟠</div></div>
+  <div>
+   <div class="itk-row" id="e_pre"></div>
+   <label>Duration <input id="e_d" type="range" min="100" max="1200" step="50" value="400"> <b id="e_dv">400ms</b></label>
+   <div style="position:relative;height:56px;background:var(--panel);border-radius:12px;margin:8px 0"><div id="e_ball" style="position:absolute;left:8px;top:8px;width:40px;height:40px;border-radius:12px;background:#7048e8"></div></div>
+   <button class="btn" id="e_play">▶ Play</button>
+   <pre id="e_code" class="itk-out" style="white-space:pre-wrap;font:12.5px/1.6 'JetBrains Mono',monospace;color:var(--text)"></pre>
+  </div>
+ </div>
+</div>
+
+<div class="itk-p" data-p="s">
+ <div class="itk-row">
+  <label>mass <b id="s_mv"></b><input id="s_m" type="range" min="0.5" max="4" step="0.1" value="1"></label>
+  <label>stiffness <b id="s_kv"></b><input id="s_k" type="range" min="50" max="1200" step="10" value="300"></label>
+  <label>damping <b id="s_cv"></b><input id="s_c" type="range" min="2" max="80" step="1" value="20"></label>
+  <button class="btn" id="s_play">▶ Play</button>
+ </div>
+ <div class="fb-grid" style="grid-template-columns:1fr 200px">
+  <div id="s_chart"></div>
+  <div style="position:relative;height:200px;background:var(--panel);border-radius:12px;overflow:hidden"><div id="s_card" style="position:absolute;left:30px;width:140px;height:70px;border-radius:16px;background:#e8590c;color:#fff;display:grid;place-items:center;font-weight:700;top:120px">🛒 Cart</div></div>
+ </div>
+ <div class="itk-out" id="s_out"></div>
+ <pre id="s_code" class="itk-out" style="white-space:pre-wrap;font:12.5px/1.6 'JetBrains Mono',monospace;color:var(--text)"></pre>
+</div>
+
+<div class="itk-p" data-p="t">
+ <div class="itk-row">
+  <label>Transition<select id="t_k"><option value="slide">Slide (Stack push)</option><option value="fade">Fade through</option><option value="axis">Shared axis Z (scale)</option><option value="zoom">Zoom ពី Card (Hero)</option><option value="sheet">Bottom sheet</option></select></label>
+  <label>Duration <input id="t_d" type="range" min="150" max="900" step="50" value="350"> <b id="t_dv">350ms</b></label>
+  <label><span><input type="checkbox" id="t_rm"> Reduce motion</span></label>
+  <button class="btn" id="t_go">▶ Open / Back</button>
+ </div>
+ <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
+  <div class="ph" style="position:relative;overflow:hidden"><div class="ph-notch"></div><div class="ph-bar ios">Kafe</div>
+   <div class="ph-body" id="t_a"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div id="t_card" style="height:90px;border-radius:14px;background:#e5dbff;display:grid;place-items:center;font-size:34px">🧋</div><div style="height:90px;border-radius:14px;background:#ffe8cc;display:grid;place-items:center;font-size:34px">☕</div><div style="height:90px;border-radius:14px;background:#d3f9d8;display:grid;place-items:center;font-size:34px">🍵</div><div style="height:90px;border-radius:14px;background:#fff3bf;display:grid;place-items:center;font-size:34px">🥐</div></div></div>
+   <div class="ph-body" id="t_b" style="background:#fff;visibility:hidden"><div id="t_img" style="height:170px;border-radius:18px;background:#e5dbff;display:grid;place-items:center;font-size:70px">🧋</div><h3 style="margin:10px 0 4px">Iced Latte</h3><div style="color:#777;font-size:13px">$2.50 · Espresso + ទឹកដោះគោ</div><span class="ph-btn" style="display:block;text-align:center;margin-top:12px;background:#7048e8">＋ បន្ថែម</span></div>
+  </div>
+  <pre id="t_code" class="itk-out" style="flex:1;min-width:260px;white-space:pre-wrap;font:12.5px/1.6 'JetBrains Mono',monospace;color:var(--text);margin:0"></pre>
+ </div>
+</div>
+</div>
+<script>
+(()=>{
+const $=id=>document.getElementById(id),R=$("ml");
+R.querySelectorAll(":scope>.itk-tabs button").forEach(b=>b.onclick=()=>{R.querySelectorAll(":scope>.itk-tabs button").forEach(x=>x.classList.toggle("on",x===b));R.querySelectorAll(":scope>.itk-p").forEach(p=>p.classList.toggle("on",p.dataset.p===b.dataset.t))});
+const f2=v=>(+v).toFixed(2).replace(/0$/,"").replace(/\.0$/,"");
+/* ---------- Easing ---------- */
+let P=[.2,0,0,1];const S=200;
+const PRE={"linear":[0,0,1,1],"ease":[.25,.1,.25,1],"ease-out":[0,0,.58,1],"emphasized":[.2,0,0,1],"decelerate":[.05,.7,.1,1],"accelerate":[.3,0,.8,.15],"overshoot":[.34,1.56,.64,1],"anticipate":[.36,-0.4,.6,1]};
+$("e_pre").innerHTML=Object.keys(PRE).map(k=>`<button class="btn" data-p="${k}" style="font-size:12px;padding:4px 8px">${k}</button>`).join(" ");
+$("e_pre").querySelectorAll("button").forEach(b=>b.onclick=()=>{P=PRE[b.dataset.p].slice();edraw();play()});
+const X=v=>v*S,Y=v=>S-v*S;
+function edraw(){const[x1,y1,x2,y2]=P;
+ $("e_svg").innerHTML=`<rect x="0" y="0" width="${S}" height="${S}" fill="none" stroke="currentColor" opacity=".2"/><text x="0" y="${S+16}" font-size="11" fill="currentColor">time →</text><text x="-14" y="10" font-size="11" fill="currentColor" transform="rotate(-90 -14 10)">progress</text>
+ <line x1="0" y1="${S}" x2="${X(x1)}" y2="${Y(y1)}" stroke="#7048e8" stroke-width="1.5"/><line x1="${S}" y1="0" x2="${X(x2)}" y2="${Y(y2)}" stroke="#e8590c" stroke-width="1.5"/>
+ <path d="M0 ${S} C ${X(x1)} ${Y(y1)} ${X(x2)} ${Y(y2)} ${S} 0" fill="none" stroke="currentColor" stroke-width="3"/>
+ <circle data-h="1" cx="${X(x1)}" cy="${Y(y1)}" r="9" fill="#7048e8" style="cursor:grab"/><circle data-h="2" cx="${X(x2)}" cy="${Y(y2)}" r="9" fill="#e8590c" style="cursor:grab"/>`;
+ const c=P.map(f2),cf=P.map(v=>f2(v)+"f");
+ $("e_code").textContent=`CSS      transition: transform ${$("e_d").value}ms cubic-bezier(${c.join(", ")});
+Flutter  curve: const Cubic(${c.join(", ")}), duration: Duration(milliseconds: ${$("e_d").value})
+Compose  tween(${$("e_d").value}, easing = CubicBezierEasing(${cf.join(", ")}))
+SwiftUI  .timingCurve(${c.join(", ")}, duration: ${($("e_d").value/1000).toFixed(2)})
+RN       withTiming(1, { duration: ${$("e_d").value}, easing: Easing.bezier(${c.join(", ")}) })`;}
+let drag=0;const svg=$("e_svg");
+svg.onpointerdown=e=>{const h=e.target.dataset&&e.target.dataset.h;if(h){drag=+h;svg.setPointerCapture(e.pointerId)}};
+svg.onpointermove=e=>{if(!drag)return;const r=svg.getBoundingClientRect(),vx=(e.clientX-r.left)/r.width*260-20,vy=(e.clientY-r.top)/r.height*370-125;
+ const x=Math.min(1,Math.max(0,vx/S)),y=Math.min(1.6,Math.max(-.6,(S-vy)/S));if(drag===1){P[0]=+x.toFixed(2);P[1]=+y.toFixed(2)}else{P[2]=+x.toFixed(2);P[3]=+y.toFixed(2)}edraw()};
+svg.onpointerup=()=>{if(drag){drag=0;play()}};
+let on=false;function play(){const b=$("e_ball");on=!on;b.animate([{left:on?"8px":"calc(100% - 48px)"},{left:on?"calc(100% - 48px)":"8px"}],{duration:+$("e_d").value,easing:`cubic-bezier(${P.join(",")})`,fill:"forwards"});}
+$("e_play").onclick=play;$("e_d").oninput=()=>{$("e_dv").textContent=$("e_d").value+"ms";edraw()};edraw();
+/* ---------- Spring ---------- */
+function sim(m,k,c){const dt=1/240;let x=0,v=0,xs=[];for(let i=0;i<480;i++){const a=(-k*(x-1)-c*v)/m;v+=a*dt;x+=v*dt;xs.push(x)}return xs;}
+function spring(){const m=+$("s_m").value,k=+$("s_k").value,c=+$("s_c").value;$("s_mv").textContent=m;$("s_kv").textContent=k;$("s_cv").textContent=c;
+ const xs=sim(m,k,c),z=c/(2*Math.sqrt(k*m)),resp=2*Math.PI*Math.sqrt(m/k),over=Math.max(0,Math.max(...xs)-1)*100;
+ let settle=0;xs.forEach((x,i)=>{if(Math.abs(x-1)>0.01)settle=i});const st=(settle+1)/240*1000;
+ const W=420,H=200,Xs=i=>30+i/480*(W-40),Ys=v=>H-20-v/1.6*(H-30);
+ $("s_chart").innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;background:var(--panel);border-radius:12px;font:11px sans-serif"><line x1="30" x2="${W-10}" y1="${Ys(1)}" y2="${Ys(1)}" stroke="currentColor" stroke-dasharray="4 4" opacity=".4"/><text x="4" y="${Ys(1)+4}" fill="currentColor">1.0</text><text x="${W-40}" y="${H-6}" fill="currentColor">2000ms</text><polyline fill="none" stroke="${z<1?"#e8590c":"#1c7ed6"}" stroke-width="2.5" points="${xs.map((x,i)=>i%2?"":Xs(i)+","+Ys(Math.max(-.2,x))).filter(Boolean).join(" ")}"/>${settle<479?`<line x1="${Xs(settle)}" x2="${Xs(settle)}" y1="10" y2="${H-20}" stroke="#2f9e44" stroke-dasharray="3 3"/><text x="${Xs(settle)+4}" y="20" fill="#2f9e44">settle ${st.toFixed(0)}ms</text>`:""}</svg>`;
+ $("s_out").innerHTML=`ζ (damping ratio) = <b>${z.toFixed(2)}</b> ${z<0.5?"🏀 លោតខ្លាំង":z<0.85?"✨ លោតបន្តិច (ល្អសម្រាប់ UI)":z<=1.05?"✅ Critical — គ្មានលោត":"🐢 Overdamped — យឺត"} · overshoot <b>${over.toFixed(1)}%</b> · settle ±1% <b>${settle>=479?"> 2000":st.toFixed(0)}ms</b> · response ≈ ${resp.toFixed(2)}s`;
+ $("s_code").textContent=`SwiftUI  .spring(response: ${resp.toFixed(2)}, dampingFraction: ${z.toFixed(2)})
+Compose  spring(dampingRatio = ${z.toFixed(2)}f, stiffness = ${(k/m).toFixed(0)}f)
+Flutter  SpringDescription(mass: ${m}, stiffness: ${k}, damping: ${c})
+RN       withSpring(target, { mass: ${m}, stiffness: ${k}, damping: ${c} })`;return xs;}
+["s_m","s_k","s_c"].forEach(i=>$(i).oninput=spring);spring();
+$("s_play").onclick=()=>{const xs=spring(),card=$("s_card");let i=0;const t0=performance.now();(function f(now){i=Math.min(479,Math.floor((now-t0)/1000*240));card.style.top=(120-xs[i]*100)+"px";if(i<479)requestAnimationFrame(f)})(t0);};
+/* ---------- Transitions ---------- */
+let open=false;
+const CODE={slide:"Flutter  MaterialPageRoute / CupertinoPageRoute\nCompose  slideInHorizontally { it } + fadeIn()\nSwiftUI  NavigationStack (push ស្រាប់)\nRN       Stack.Screen options={{ animation: 'slide_from_right' }}",
+ fade:"Flutter  FadeThroughTransition (package: animations)\nCompose  fadeIn(tween(210, 90)) togetherWith fadeOut(tween(90))\nSwiftUI  .transition(.opacity)\nRN       animation: 'fade'",
+ axis:"Flutter  SharedAxisTransition(transitionType: SharedAxisTransitionType.scaled)\nCompose  scaleIn(initialScale = .92f) + fadeIn() togetherWith scaleOut(1.08f) + fadeOut()\nSwiftUI  .transition(.scale(scale: 0.92).combined(with: .opacity))",
+ zoom:"Flutter  Hero(tag: 'p-12', child: …) / OpenContainer (animations)\nCompose  Modifier.sharedElement(rememberSharedContentState(\"p-12\"), this)\nSwiftUI  .navigationTransition(.zoom(sourceID: id, in: ns))\nRN       sharedTransitionTag=\"p-12\" (Reanimated)",
+ sheet:"Flutter  showModalBottomSheet(...)\nCompose  ModalBottomSheet { … }\nSwiftUI  .sheet { … }.presentationDetents([.medium, .large])\nRN       @gorhom/bottom-sheet"};
+function tcode(){$("t_dv").textContent=$("t_d").value+"ms";$("t_code").textContent=CODE[$("t_k").value]+($("t_rm").checked?"\n\n♿ Reduce motion → Crossfade 150ms":"");}
+["t_k","t_d","t_rm"].forEach(i=>$(i).oninput=tcode);tcode();
+$("t_go").onclick=()=>{open=!open;const a=$("t_a"),b=$("t_b"),k=$("t_k").value,d=+$("t_d").value,E="cubic-bezier(.2,0,0,1)";b.style.visibility="visible";
+ const run=(el,frames,opt={})=>el.animate(frames,{duration:d,easing:E,fill:"forwards",...opt});
+ if($("t_rm").checked){run(b,[{opacity:open?0:1},{opacity:open?1:0}],{duration:150});run(a,[{opacity:open?1:0},{opacity:open?0:1}],{duration:150});return;}
+ const fw=open?{}:{direction:"reverse"};
+ if(k==="slide"){run(b,[{transform:"translateX(100%)"},{transform:"none"}],fw);run(a,[{transform:"none"},{transform:"translateX(-30%)",opacity:.6}],fw);}
+ else if(k==="fade"){run(a,[{opacity:1},{opacity:0}],{...fw,duration:d*.4});run(b,[{opacity:0,transform:"scale(.92)"},{opacity:1,transform:"none"}],{...fw,delay:open?d*.3:0,duration:d*.7});}
+ else if(k==="axis"){run(a,[{opacity:1,transform:"none"},{opacity:0,transform:"scale(1.1)"}],fw);run(b,[{opacity:0,transform:"scale(.85)"},{opacity:1,transform:"none"}],fw);}
+ else if(k==="zoom"){const A=$("t_card").getBoundingClientRect(),B=$("t_img").getBoundingClientRect(),L=b.getBoundingClientRect();
+  run(b,[{clipPath:`inset(${A.top-L.top}px ${L.right-A.right}px ${L.bottom-A.bottom}px ${A.left-L.left}px round 14px)`,opacity:.9},{clipPath:"inset(0 0 0 0 round 0)",opacity:1}],fw);run(a,[{opacity:1},{opacity:.3}],fw);}
+ else{run(b,[{transform:"translateY(100%)"},{transform:"translateY(35%)"}],{...fw,easing:"cubic-bezier(.05,.7,.1,1)"});run(a,[{filter:"brightness(1)"},{filter:"brightness(.6)"}],fw);}
+ if(!open)setTimeout(()=>{b.style.visibility="hidden";a.getAnimations().forEach(x=>x.cancel());b.getAnimations().forEach(x=>x.cancel())},d+60);};
+})();
+</script>
+
+<h3>🏆 Quiz Motion &amp; Animation ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["សៀវភៅ The Illusion of Life (គោលការណ៍ Animation ១២) ដោយ?", ["Ollie Johnston &amp; Frank Thomas", "Robert Penner", "Steve Jobs", "Hernan Torrisi"], 0], ["Robert Penner ល្បីដោយ?", ["Lottie", "សមីការ Easing", "Rive", "Flutter"], 1], ["Lottie ត្រូវបានបញ្ចេញដោយ?", ["Google", "Airbnb", "Apple", "Meta"], 1], ["Duration ល្អសម្រាប់ Icon/Switch តូច?", ["100–200ms", "800ms", "2s", "0ms"], 0], ["Animation ចេញ (Exit) គួរ?", ["យឺតជាងចូល", "លឿនជាងចូល", "ដូចគ្នាជានិច្ច", "គ្មាន"], 1], ["វត្ថុចូលអេក្រង់ គួរប្រើ Easing?", ["ease-in (accelerate)", "ease-out (decelerate)", "linear", "step"], 1], ["cubic-bezier មាន y &gt; 1 មានន័យថា?", ["Error", "Overshoot (ហួសបន្តិច)", "យឺត", "ផ្ទុយទិស"], 1], ["Damping ratio ζ = 1 មានន័យថា?", ["លោតច្រើន", "Critical — គ្មានលោត លឿនបំផុត", "មិនឈប់", "យឺតខ្លាំង"], 1], ["Spring ល្អជាង Timing សម្រាប់ Gesture ព្រោះ?", ["Code ខ្លី", "ទទួល Velocity + រំខានបានរលូន", "តូច", "Color"], 1], ["Flutter Animation ងាយបំផុត (Implicit)?", ["AnimationController", "AnimatedContainer", "CustomPainter", "Ticker"], 1], ["Compose ប្តូរតម្លៃរលូន?", ["animate*AsState", "LaunchedEffect only", "remember", "Modifier.clickable"], 0], ["SwiftUI ផ្លាស់វត្ថុដដែលរវាង View?", ["matchedGeometryEffect", "onAppear", "GeometryReader", "List"], 0], ["Flutter Shared element?", ["Hero", "Stack", "Navigator.pop", "PageView"], 0], ["បច្ចេកទេស FLIP គឺ?", ["First, Last, Invert, Play", "Fast Layout In Page", "Frame Limit", "Font"], 0], ["Bottom sheet ជ្រើស Snap point ពេលលែងដោយ?", ["Random", "ទីតាំង + Velocity projection", "Duration", "Color"], 1], ["Skeleton loading ជួយ?", ["Server លឿន", "Perceived performance", "SEO", "Security"], 1], ["Optimistic UI គឺ?", ["រង់ចាំ Server", "បង្ហាញលទ្ធផលភ្លាម Rollback បើបរាជ័យ", "លុប Cache", "បិទ Animation"], 1], ["Animation ដែលមាន State machine + Input?", ["GIF", "Rive", "PNG", "Lottie only"], 1], ["Frame budget នៅ 120Hz?", ["16.7ms", "8.3ms", "33ms", "1ms"], 1], ["Reduce motion គួរប្តូរ Slide/Zoom ទៅជា?", ["គ្មាន Feedback", "Crossfade ខ្លី", "Bounce", "Parallax"], 1]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+
+<ol class="steps"><li><b>Mobile UI/Animation</b> (វគ្គនេះ) ✅</li><li>រចនា៖ វគ្គ <b>UX/UI Design</b> (Figma Smart animate/Prototype) · វគ្គ <b>After Effects</b> → Lottie</li>
+<li>អនុវត្ត៖ វគ្គ <b>Flutter · Compose (Kotlin) · SwiftUI · React Native</b> · Game feel ក្នុងវគ្គ <b>Unity</b></li><li>កម្រិតខ្ពស់៖ Custom painter/Canvas, Shaders (Flutter FragmentProgram, AGSL, Metal), Rive State machines</li>
+<li>Portfolio៖ ថត Screen recording (Before/After motion) · Dribbble/Behance</li></ol>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="motion"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

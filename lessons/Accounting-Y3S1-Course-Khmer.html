@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>គណនេយ្យ ៣·១ — គណនេយ្យហិរញ្ញវត្ថុកម្រិតមធ្យម ២ &amp; Group</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#5f3dc4; --accent2:#9775fa; --accent-soft:#f1f8ff;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#9775fa; --accent2:#9775fa; --accent-soft:#0f1a24;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#9775fa; --accent2:#9775fa; --accent-soft:#0f1a24;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#0b1220,#5f3dc4 55%,#9775fa);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/acc5.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/acc5.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Accounting Y3S1 · គណនេយ្យហិរញ្ញវត្ថុកម្រិតមធ្យម ២ &amp; Group</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. មុខវិជ្ជានេះជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#setup">២. ទីតាំងក្នុងកម្មវិធីសិក្សា ៤ ឆ្នាំ</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: IAS 12 — Current &amp; Deferred tax</a>
+<a href="#l2">មេរៀន ២: IAS 19 — Employee benefits</a>
+<a href="#l3">មេរៀន ៣: IFRS 9 — Classification &amp; Amortised cost</a>
+<a href="#l4">មេរៀន ៤: IFRS 9 — Expected credit loss (ECL)</a>
+<a href="#l5">មេរៀន ៥: IAS 32 — Equity vs Liability</a>
+<a href="#l6">មេរៀន ៦: IAS 33 — Earnings per share</a>
+<a href="#l7">មេរៀន ៧: IAS 7 — Cash flows (Indirect ពេញ)</a>
+<a href="#l8">មេរៀន ៨: IFRS 10 &amp; 3 — Consolidation &amp; Goodwill</a>
+<a href="#l9">មេរៀន ៩: IAS 28 — Associates (Equity method)</a>
+<a href="#l10">មេរៀន ១០: IAS 21 — រូបិយប័ណ្ណបរទេស (USD/KHR)</a>
+<a href="#l11">មេរៀន ១១: IFRS 5 — Held for sale &amp; Discontinued</a>
+<a href="#l12">មេរៀន ១២: CIFRS for SMEs — ភាពខុសគ្នា</a>
+<a href="#cheat">📋 សង្ខេបរូបមន្ត</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងចុងឆមាស</a>
+<a href="#pro-app">💻 Accounting Lab (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>📗 ឆ្នាំទី ៣ ឆមាសទី ១ — Intermediate Accounting II &amp; Group</h2>
+  <p>Deferred tax · IFRS 9 · EPS · Cash flows · Consolidation · FX — ១២ មេរៀន · លំហាត់ + ចម្លើយ · ឧទាហរណ៍គណនាពិត (គ្មាន Code) · Accounting Lab · Quiz · ស្តង់ដារ <b>CIFRS (IFRS)</b> និងច្បាប់ <b>កម្ពុជា</b>។</p>
+  <p><span class="badge">📘 ១២ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">📊 ឧទាហរណ៍គណនា (គ្មាន Code)</span><span class="badge">📒 Accounting Lab</span></p>
+</section>
+<section id="intro">
+<h2>១. មុខវិជ្ជានេះជាអ្វី? អ្នកណាបង្កើត?</h2>
+
+<p>ប្រធានបទកម្រិតខ្ពស់នៃ CIFRS ដែលធនាគារ ក្រុមហ៊ុនមហាជន និងក្រុមហ៊ុនមានក្រុមហ៊ុនបុត្រសម្ព័ន្ធ ត្រូវការ៖ <b>Deferred tax (IAS 12)</b>, Employee benefits, <b>Financial instruments (IFRS 9 &amp; ECL)</b>, Equity vs Liability, <b>EPS</b>, Cash flows ពេញ, <b>Consolidation (IFRS 10 &amp; 3)</b>, Associates, <b>រូបិយប័ណ្ណបរទេស USD/KHR (IAS 21)</b>, Held for sale និង CIFRS for SMEs។</p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#868e96"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#868e96">1990s</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">IAS 12 · IAS 19</text><circle cx="200" cy="115" r="11" fill="#1c7ed6"/><text x="200" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#1c7ed6">1998</text><text x="200" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">IAS 33 EPS</text><circle cx="320" cy="115" r="11" fill="#7048e8"/><text x="320" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#7048e8">2008</text><text x="320" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">IFRS 3 (revised)</text><circle cx="440" cy="115" r="11" fill="#0ca678"/><text x="440" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#0ca678">2011</text><text x="440" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">IFRS 10/11/12</text><circle cx="560" cy="115" r="11" fill="#e8590c"/><text x="560" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#e8590c">2018</text><text x="560" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">IFRS 9 · ECL</text><circle cx="680" cy="115" r="11" fill="#c92a2a"/><text x="680" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#c92a2a">2021</text><text x="680" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">ACAR</text><circle cx="800" cy="115" r="11" fill="#d6336c"/><text x="800" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#d6336c">2023</text><text x="800" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Pillar Two</text><circle cx="920" cy="115" r="11" fill="#495057"/><text x="920" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#495057">2028</text><text x="920" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">IFRS 9/17 ធានារ៉ាប់រងកម្ពុជា</text></svg><figcaption>🖼️ ប្រវត្តិ និងអ្នកបង្កើតគំនិតសំខាន់ៗ</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>2008</td><td>IASB — <b>Global financial crisis</b></td><td>មេរៀនពី Loss ពេលយឺត → កើត <b>IFRS 9 Expected credit loss</b> (ចូលជាធរមាន 2018)</td></tr><tr><td>2011</td><td>IASB</td><td><b>IFRS 10</b> (Control) ជំនួសការគិត Consolidation ចាស់</td></tr><tr><td>2016</td><td>កម្ពុជា</td><td>ធនាគារ និងស្ថាប័នហិរញ្ញវត្ថុ ត្រូវអនុវត្ត CIFRS (ពី 1 មករា 2016 យោងតាម IFRS Foundation profile)</td></tr><tr><td>2028</td><td>កម្ពុជា</td><td>ក្រុមហ៊ុនធានារ៉ាប់រងត្រូវអនុវត្ត IFRS 9 និង IFRS 17</td></tr></table>
+
+<div class="grid"><div class="card"><b>🏦 ធនាគារ/MFI</b><br>IFRS 9 ECL · Financial instruments</div><div class="card"><b>🏢 Group</b><br>ក្រុមហ៊ុនមេ + បុត្រសម្ព័ន្ធ</div><div class="card"><b>💱 USD/KHR</b><br>ប្រតិបត្តិការ និងរបាយការណ៍ពីររូបិយប័ណ្ណ</div><div class="card"><b>📈 វិនិយោគិន</b><br>EPS · Cash flows</div></div>
+
+<div class="note">💡 ឧទាហរណ៍ក្រុមហ៊ុន និងតួលេខក្នុងវគ្គ ជា <b>ទិន្នន័យគំរូ</b> សម្រាប់រៀន។ អត្រាពន្ធ និងបទប្បញ្ញត្តិ អាចផ្លាស់ប្តូរ — ពិនិត្យជានិច្ចជាមួយ <b>អគ្គនាយកដ្ឋានពន្ធដារ (GDT)</b>, <b>ACAR</b> និងគណនេយ្យករជំនាញ មុនប្រើក្នុងការងារពិត។</div>
+
+</section>
+<section id="setup">
+<h2>២. ទីតាំងក្នុងកម្មវិធីសិក្សា ៤ ឆ្នាំ</h2>
+
+<table><tr><th>ឆ្នាំ</th><th>ឆមាសទី ១</th><th>ឆមាសទី ២</th></tr><tr><td>ឆ្នាំទី ១</td><td>គោលការណ៍គណនេយ្យ ១</td><td>គោលការណ៍គណនេយ្យ ២</td></tr><tr><td>ឆ្នាំទី ២</td><td>គណនេយ្យហិរញ្ញវត្ថុកម្រិតមធ្យម ១ (CIFRS)</td><td>គណនេយ្យថ្លៃដើម &amp; គ្រប់គ្រង</td></tr><tr><td>ឆ្នាំទី ៣</td><td>គណនេយ្យហិរញ្ញវត្ថុកម្រិតមធ្យម ២ &amp; Group</td><td>ពន្ធដារកម្ពុជា</td></tr><tr><td>ឆ្នាំទី ៤</td><td>សវនកម្ម &amp; ការធានា</td><td>ការគ្រប់គ្រងហិរញ្ញវត្ថុ &amp; Capstone</td></tr></table>
+
+<p>អ្នកកំពុងរៀន៖ <b>ឆ្នាំទី ៣ · ឆមាសទី ១ — គណនេយ្យហិរញ្ញវត្ថុកម្រិតមធ្យម ២ &amp; Group</b>។ តម្រូវការមុន៖ <b>គណនេយ្យហិរញ្ញវត្ថុកម្រិតមធ្យម ១</b>។</p>
+<ol class="steps"><li>អានមេរៀន → ធ្វើឧទាហរណ៍តាម (Excel ឬក្រដាស) → ធ្វើលំហាត់ មុនមើលចម្លើយ។</li><li>ប្រើ <b>Accounting Lab</b> នៅចុងវគ្គ ដើម្បីហាត់ Journal, Depreciation, ពន្ធ, Ratios, Break-even។</li><li>ប្រអប់ <b>📊 ឧទាហរណ៍គណនា</b> បង្ហាញលទ្ធផលគណនាពិត — <b>មិនចាំបាច់ចេះ Code ទេ</b>។ សាកគណនាតាមដោយ Excel ឬម៉ាស៊ីនគិតលេខ។</li></ol>
+</section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>IAS 12 — Current &amp; Deferred tax</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Carrying 80,000 · Tax base 60,000 → Taxable temporary difference 20,000
+Deferred tax liability = 20,000 × 20% = 4,000
+Current tax 48,000 + Deferred 4,000 = Tax expense 52,000 (effective 20.8%)</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li><b>Temporary difference</b> = Carrying amount − Tax base។</li><li>Asset៖ Carrying > Tax base → <b>DTL</b> · Carrying < Tax base → <b>DTA</b> (បើទំនងមានប្រាក់ចំណេញជាប់ពន្ធ)។</li><li>អត្រា ToI កម្ពុជា 20% (ស្តង់ដារ)។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>Carrying 50,000 Tax base 60,000 (Asset)។ DTA/DTL ប៉ុន្មាន (20%)?</p><details><summary>មើលចម្លើយ</summary><p>Deductible difference 10,000 → <b>DTA 2,000</b>។</p></details></div>
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>IAS 19 — Employee benefits</h2>
+<table><tr><th>ប្រភេទ</th><th>ឧទាហរណ៍</th><th>គណនេយ្យ</th></tr><tr><td>Short-term</td><td>ប្រាក់ខែ ច្បាប់សម្រាក ប្រាក់រង្វាន់</td><td>កត់ពេលបុគ្គលិកធ្វើការ</td></tr><tr><td>Seniority / Termination</td><td>ប្រាក់អតីតភាពការងារ (ច្បាប់ការងារកម្ពុជា)</td><td>Provision តាមកាតព្វកិច្ច</td></tr><tr><td>Defined contribution</td><td>NSSF សោធន</td><td>ចំណាយ = ភាគទានដែលត្រូវបង់</td></tr><tr><td>Defined benefit</td><td>សោធនធានាចំនួន</td><td>Actuarial valuation · Remeasurement → OCI</td></tr></table>
+<div class="note">💡 ពិនិត្យច្បាប់ការងារ និងប្រកាស NSSF បច្ចុប្បន្ន សម្រាប់អត្រាប្រាក់អតីតភាព និងភាគទានសោធន។</div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>ច្បាប់ឈប់សម្រាកដែលបុគ្គលិកមិនទាន់ប្រើ (អាចយកទៅឆ្នាំក្រោយ) ត្រូវកត់ទេ?</p><details><summary>មើលចម្លើយ</summary><p>បាទ — <b>Accrual</b> សម្រាប់ Accumulating paid absences។</p></details></div>
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>IFRS 9 — Classification &amp; Amortised cost</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>EIR ≈ 7.2269%
+ឆ្នាំ 1: Interest income 6,866 · Cash 6,000 · Amortised cost 95,866
+ឆ្នាំ 2: Interest income 6,928 · Cash 6,000 · Amortised cost 96,794
+ឆ្នាំ 3: Interest income 6,995 · Cash 6,000 · Amortised cost 97,789
+ឆ្នាំ 4: Interest income 7,067 · Cash 6,000 · Amortised cost 98,856
+ឆ្នាំ 5: Interest income 7,144 · Cash 6,000 · Amortised cost 100,000</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ចាត់ថ្នាក់៖ <b>Amortised cost</b> (Hold to collect + SPPI) · <b>FVOCI</b> · <b>FVTPL</b>។</li><li>Interest income = Amortised cost ដើមគ្រា × <b>EIR</b>។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>Bond ទិញ 95,000 EIR 7.2%។ Interest income ឆ្នាំ ១?</p><details><summary>មើលចម្លើយ</summary><p>95,000 × 7.2% = <b>6,840</b>។</p></details></div>
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>IFRS 9 — Expected credit loss (ECL)</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Stage 1: EAD  800,000 × PD   2% × LGD 45% =    7,200 (12-month)
+Stage 2: EAD  120,000 × PD  15% × LGD 50% =    9,000 (Lifetime)
+Stage 3: EAD   30,000 × PD 100% × LGD 60% =   18,000 (Lifetime)
+Loss allowance 34,200</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li><b>ECL = PD × LGD × EAD</b> (+ ការបញ្ចុះតម្លៃ និងសេណារីយ៉ូអនាគត)។</li><li>Stage 1 = 12 ខែ · Stage 2 (ហានិភ័យកើនខ្លាំង) &amp; Stage 3 (Credit-impaired) = Lifetime។</li><li>សំខាន់ណាស់សម្រាប់ធនាគារ និង MFI ក្នុងកម្ពុជា។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>EAD 50,000 PD 4% LGD 50%។ ECL?</p><details><summary>មើលចម្លើយ</summary><p><b>1,000</b>។</p></details></div>
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>IAS 32 — Equity vs Liability</h2>
+<table><tr><th>ឧបករណ៍</th><th>ចាត់ថ្នាក់</th><th>ហេតុផល</th></tr><tr><td>Ordinary shares</td><td>Equity</td><td>គ្មានកាតព្វកិច្ចបង់</td></tr><tr><td>Redeemable preference shares (ត្រូវប្រោសលោះ)</td><td><b>Liability</b></td><td>កាតព្វកិច្ចបង់សាច់ប្រាក់</td></tr><tr><td>Convertible bond</td><td>Compound — Liability + Equity</td><td>បំបែកពីរផ្នែក</td></tr></table>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Liability component 89,692 · Equity component 10,308</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>Preference shares ដែលក្រុមហ៊ុនត្រូវប្រោសលោះថ្ងៃកំណត់ ជា?</p><details><summary>មើលចម្លើយ</summary><p><b>Financial liability</b>។</p></details></div>
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>IAS 33 — Earnings per share</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Weighted shares 1,100,000 · Basic EPS $2.000
+Diluted EPS $1.913</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>Profit 1,000,000 Shares 500,000 (មិនប្តូរ)។ Basic EPS?</p><details><summary>មើលចម្លើយ</summary><p><b>$2.00</b>។</p></details></div>
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>IAS 7 — Cash flows (Indirect ពេញ)</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>CFO 118,000 · CFI -52,000 · CFF 5,000 · Net 71,000</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Gain លក់ទ្រព្យ ដកចេញពី CFO (ព្រោះសាច់ប្រាក់ទាំងមូលនៅ CFI)។</li><li>Interest/Dividends paid អាចនៅ Operating ឬ Financing — ជ្រើសហើយប្រើស្ថិរ។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>លក់ម៉ាស៊ីនបាន 18,000 Gain 5,000។ បង្ហាញក្នុង Cash flow យ៉ាងណា?</p><details><summary>មើលចម្លើយ</summary><p>CFO៖ <b>ដក Gain 5,000</b> · CFI៖ <b>+18,000</b>។</p></details></div>
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>IFRS 10 &amp; 3 — Consolidation &amp; Goodwill</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Goodwill = 900,000 + NCI 200,000 − Net assets 1,000,000 = 100,000
+Group receivables: លុប intra-group 50,000 ចេញ</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li><b>Control</b> = Power + Exposure to variable returns + Ability to use power (IFRS 10)។</li><li>Goodwill = Consideration + NCI − Fair value of net assets។</li><li>លុប Intra-group balances, sales និង Unrealised profit។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>ទិញ 100% ក្នុងតម្លៃ 500,000 · FV net assets 420,000។ Goodwill?</p><details><summary>មើលចម្លើយ</summary><p><b>80,000</b>។</p></details></div>
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>IAS 28 — Associates (Equity method)</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Investment in associate = 300,000 + 60,000 − 15,000 = 345,000</pre></div>
+<div class="note">💡 <b>Significant influence</b> ជាធម្មតា 20–50% នៃសិទ្ធិបោះឆ្នោត → Equity method (មិនមែន Consolidation)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>កាន់ 25% ក្រុមហ៊ុន X ចំណេញ 400,000។ ចំណែក?</p><details><summary>មើលចម្លើយ</summary><p><b>100,000</b> បន្ថែមលើ Investment ហើយចូល P/L។</p></details></div>
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>IAS 21 — រូបិយប័ណ្ណបរទេស (USD/KHR)</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>ថ្ងៃប្រតិបត្តិការ: $10,000.00 · ចុងឆ្នាំ: $10,123.46 → FX loss $123.46 (P/L)
+ថ្ងៃបង់: $10,049.02 → FX gain ពីចុងឆ្នាំ $74.44</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ក្រុមហ៊ុនកម្ពុជាច្រើនមាន <b>Functional currency = USD</b> (ពិនិត្យតាមកត្តា IAS 21)។</li><li>Monetary items (A/P, A/R, Cash) បំលែងតាមអត្រាចុងគ្រា → FX gain/loss ក្នុង P/L។</li><li>ច្បាប់ពន្ធ និងរបាយការណ៍ខ្លះតម្រូវបង្ហាញជា KHR តាមអត្រាផ្លូវការ — ពិនិត្យ GDT/NBC។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>ជំពាក់ ៨,២០០,០០០ ៛ អត្រា 4,100 → ចុងឆ្នាំ 4,000។ FX?</p><details><summary>មើលចម្លើយ</summary><p>$2,000 → $2,050 → <b>Loss $50</b>។</p></details></div>
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>IFRS 5 — Held for sale &amp; Discontinued</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Held for sale = min(500,000, 450,000) = 450,000 → Impairment 50,000 · ឈប់រំលោះ</pre></div>
+<div class="note">💡 លក្ខខណ្ឌ៖ មានស្រាប់សម្រាប់លក់ · លក់ទំនង (Highly probable) ក្នុង ១២ ខែ · ផែនការសកម្ម។ Discontinued operation បង្ហាញដាច់ដោយឡែកក្នុង P/L។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>Held for sale នៅតែរំលោះទេ?</p><details><summary>មើលចម្លើយ</summary><p><b>ទេ</b>។</p></details></div>
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>CIFRS for SMEs — ភាពខុសគ្នា</h2>
+<table><tr><th>ប្រធានបទ</th><th>CIFRS ពេញ</th><th>CIFRS for SMEs</th></tr><tr><td>Goodwill</td><td>Impairment test ប្រចាំឆ្នាំ</td><td>Amortise (≤ 10 ឆ្នាំ បើមិនអាចប៉ាន់ស្មាន)</td></tr><tr><td>Development costs</td><td>Capitalise បើគ្រប់លក្ខខណ្ឌ</td><td>ចំណាយ (តាមកំណែមុន ៗ) — ពិនិត្យការកែប្រែ 2025</td></tr><tr><td>Borrowing costs</td><td>Capitalise</td><td>ចំណាយ</td></tr><tr><td>Financial instruments</td><td>IFRS 9 ស្មុគស្មាញ</td><td>សាមញ្ញជាង (Section 11/12)</td></tr><tr><td>Disclosure</td><td>ច្រើន</td><td>តិចជាង</td></tr></table>
+<div class="note">💡 SME ដែលត្រូវសវនកម្មតាមលក្ខណៈវិនិច្ឆ័យ (ចំណូល ទ្រព្យ បុគ្គលិក) ត្រូវប្រើ CIFRS for SMEs ឬ CIFRS ពេញ — ពិនិត្យកម្រិតបច្ចុប្បន្នរបស់ ACAR។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>ក្រុមហ៊ុនមិនមែនមហាជន ចំណូលធំ ត្រូវសវនកម្ម។ ជម្រើសស្តង់ដារ?</p><details><summary>មើលចម្លើយ</summary><p><b>CIFRS for SMEs</b> ឬ <b>CIFRS ពេញ</b> (តាមការជ្រើស)។</p></details></div>
+</section>
+<section id="cheat">
+<h2>📋 សង្ខេបរូបមន្ត</h2>
+<table><tr><th>រូបមន្ត / គោលការណ៍</th><th>ន័យ</th></tr><tr><td>Temp diff = Carrying − Tax base</td><td>IAS 12</td></tr><tr><td>ECL = PD × LGD × EAD</td><td>IFRS 9</td></tr><tr><td>Basic EPS = (Profit − Pref div)/WA shares</td><td>IAS 33</td></tr><tr><td>Goodwill = Consideration + NCI − FV net assets</td><td>IFRS 3</td></tr><tr><td>Associate = Cost + share profit − share dividends</td><td>IAS 28</td></tr><tr><td>HFS = min(Carrying, FV − CTS)</td><td>IFRS 5</td></tr></table>
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងចុងឆមាស</h2>
+<p>Group «Angkor Holdings»៖ ក្រុមហ៊ុនមេ + បុត្រសម្ព័ន្ធ 80% + Associate 30%។ រៀបចំ Consolidated SoFP (Goodwill, NCI, លុប Intra-group), Deferred tax លើរំលោះ, ECL លើអតិថិជន, និង FX លើប្រាក់កម្ចី KHR។</p></section>
+<section id="pro-app">
+<h2>💻 Accounting Lab (App)</h2>
+
+<p><b>📒 Journal → Statements</b>៖ ចុះ Journal (Dr/Cr) → Ledger → Trial balance → Income statement &amp; Financial position ដោយស្វ័យប្រវត្តិ · <b>🏗️ Depreciation</b> (SL, DDB, SYD) · <b>🇰🇭 ពន្ធ</b> (Salary tax, ToI, VAT) · <b>📊 Ratios</b> + DuPont · <b>⚖️ Break-even</b>។</p>
+
+<div class="itk" id="al">
+<div class="itk-tabs"><button class="on" data-t="j">📒 Journal → Statements</button><button data-t="d">🏗️ Depreciation</button><button data-t="t">🇰🇭 ពន្ធ</button><button data-t="r">📊 Ratios</button><button data-t="b">⚖️ Break-even</button></div>
+
+<div class="itk-p on" data-p="j">
+ <div class="itk-row">
+  <label>ថ្ងៃ<input id="j_dt" type="date" style="width:140px"></label>
+  <label>ពិពណ៌នា<input id="j_ds" value="លក់សេវាជាសាច់ប្រាក់" style="width:190px"></label>
+  <label>Debit<select id="j_dr"></select></label>
+  <label>Credit<select id="j_cr"></select></label>
+  <label>ចំនួន ($)<input id="j_am" type="number" value="500" style="width:100px"></label>
+  <button class="btn" id="j_add">➕ ចុះ Journal</button><button class="btn" id="j_demo">📋 គំរូ</button><button class="btn" id="j_clr">♻ លុប</button>
+ </div>
+ <div class="itk-out" id="j_list" style="font-size:13.5px;max-height:220px;overflow:auto"></div>
+ <div class="itk-out" id="j_tb" style="font-size:13.5px"></div>
+</div>
+
+<div class="itk-p" data-p="d">
+ <div class="itk-row">
+  <label>ថ្លៃដើម ($)<input id="d_c" type="number" value="12000" style="width:110px"></label>
+  <label>តម្លៃនៅសល់ ($)<input id="d_s" type="number" value="2000" style="width:110px"></label>
+  <label>អាយុ (ឆ្នាំ)<input id="d_n" type="number" value="5" style="width:80px"></label>
+  <label>វិធី<select id="d_m"><option value="sl">Straight-line</option><option value="ddb">Double-declining</option><option value="syd">Sum-of-years</option></select></label>
+ </div>
+ <div class="itk-out" id="d_out" style="font-size:13.5px"></div>
+</div>
+
+<div class="itk-p" data-p="t">
+ <div class="itk-row">
+  <label>ប្រាក់ខែប្រចាំខែ (៛)<input id="t_s" type="number" value="3000000" style="width:140px"></label>
+  <label>ប្រាក់ចំណេញមុនពន្ធ ($)<input id="t_p" type="number" value="80000" style="width:120px"></label>
+  <label>ការលក់មិនរាប់ VAT ($)<input id="t_v" type="number" value="25000" style="width:120px"></label>
+  <label>ការទិញមាន VAT ($)<input id="t_i" type="number" value="12000" style="width:120px"></label>
+ </div>
+ <div class="itk-out" id="t_out" style="font-size:13.5px"></div>
+</div>
+
+<div class="itk-p" data-p="r">
+ <div class="itk-row">
+  <label>Revenue<input id="r_rev" type="number" value="500000" style="width:100px"></label>
+  <label>Net profit<input id="r_np" type="number" value="45000" style="width:100px"></label>
+  <label>Current assets<input id="r_ca" type="number" value="180000" style="width:100px"></label>
+  <label>Inventory<input id="r_inv" type="number" value="60000" style="width:100px"></label>
+  <label>Current liabilities<input id="r_cl" type="number" value="100000" style="width:100px"></label>
+  <label>Total assets<input id="r_ta" type="number" value="600000" style="width:100px"></label>
+  <label>Total liabilities<input id="r_tl" type="number" value="280000" style="width:100px"></label>
+ </div>
+ <div class="itk-out" id="r_out" style="font-size:13.5px"></div>
+</div>
+
+<div class="itk-p" data-p="b">
+ <div class="itk-row">
+  <label>Fixed cost ($/ខែ)<input id="b_f" type="number" value="6000" style="width:100px"></label>
+  <label>Price ($/unit)<input id="b_p" type="number" value="2.5" step="0.1" style="width:90px"></label>
+  <label>Variable cost ($/unit)<input id="b_v" type="number" value="1.0" step="0.1" style="width:90px"></label>
+  <label>Units sold<input id="b_q" type="number" value="5000" style="width:90px"></label>
+ </div>
+ <canvas id="b_cv" width="900" height="260" style="width:100%;background:#fff;border:1px solid var(--line);border-radius:10px"></canvas>
+ <div class="itk-out" id="b_out" style="font-size:13.5px"></div>
+</div>
+</div>
+<script>
+(() => {
+const $ = id => document.getElementById(id), root = $("al");
+const K = "acc5_", st = { get(k, d) { try { const v = localStorage.getItem(K + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(K + k, JSON.stringify(v)); } catch (e) {} } };
+const f$ = (x, d = 2) => (x < 0 ? "(" : "") + "$" + Math.abs(x).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d }) + (x < 0 ? ")" : "");
+const fr = x => Math.round(x).toLocaleString("en-US") + " ៛";
+root.querySelectorAll(".itk-tabs button").forEach(b => b.onclick = () => { root.querySelectorAll(".itk-tabs button").forEach(x => x.classList.toggle("on", x === b)); root.querySelectorAll(".itk-p").forEach(p => p.classList.toggle("on", p.dataset.p === b.dataset.t)); if (b.dataset.t === "b") be(); });
+
+/* ---- journal → ledger → TB → statements ---- */
+const COA = [["1010","Cash (សាច់ប្រាក់)","A"],["1020","Bank (ធនាគារ)","A"],["1100","Accounts receivable (អតិថិជនជំពាក់)","A"],["1200","Inventory (ស្តុក)","A"],["1300","Prepaid rent (ជួលបង់មុន)","A"],["1500","Equipment (បរិក្ខារ)","A"],["1510","Accumulated depreciation","XA"],
+ ["2010","Accounts payable (ជំពាក់អ្នកផ្គត់ផ្គង់)","L"],["2100","Salaries payable","L"],["2200","VAT payable","L"],["2300","Loan payable (ប្រាក់កម្ចី)","L"],["3010","Owner's capital (ដើមទុន)","E"],["3020","Drawings (ដកប្រើផ្ទាល់ខ្លួន)","XE"],
+ ["4010","Service revenue (ចំណូលសេវា)","R"],["4020","Sales revenue (ចំណូលលក់)","R"],["5010","Cost of goods sold","X"],["5020","Salaries expense","X"],["5030","Rent expense","X"],["5040","Utilities expense","X"],["5050","Depreciation expense","X"]];
+const NAME = Object.fromEntries(COA.map(a => [a[0], a[1]])), TYPE = Object.fromEntries(COA.map(a => [a[0], a[2]]));
+$("j_dr").innerHTML = $("j_cr").innerHTML = COA.map(a => `<option value="${a[0]}">${a[0]} ${a[1]}</option>`).join("");
+$("j_dr").value = "1010"; $("j_cr").value = "4010"; $("j_dt").valueAsDate = new Date();
+let J = st.get("j", []);
+const DEMO = [["ម្ចាស់ដាក់ដើមទុន","1020","3010",20000],["ទិញបរិក្ខារជាសាច់ប្រាក់ធនាគារ","1500","1020",6000],["បង់ថ្លៃជួល ៣ ខែមុន","1300","1020",1500],["ទិញស្តុកជំពាក់","1200","2010",4000],["លក់សេវាជាសាច់ប្រាក់","1010","4010",3500],["លក់សេវាជំពាក់","1100","4010",2200],
+ ["បង់ប្រាក់ខែបុគ្គលិក","5020","1010",1800],["ថ្លៃទឹកភ្លើង","5040","1010",300],["កែតម្រូវ៖ ជួល ១ ខែប្រើរួច","5030","1300",500],["កែតម្រូវ៖ រំលោះបរិក្ខារ","5050","1510",100],["ម្ចាស់ដកប្រើផ្ទាល់ខ្លួន","3020","1010",400]];
+function jr() {
+  $("j_list").innerHTML = J.length ? `<b>General Journal (${J.length})</b><br>` + J.map((e, i) => `${e.d} · ${e.s.replace(/[<>&]/g, "")}<br>&nbsp;&nbsp;Dr ${NAME[e.dr]} <b>${f$(e.a)}</b><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cr ${NAME[e.cr]} <b>${f$(e.a)}</b> <button class="btn" data-del="${i}" style="padding:0 6px;font-size:12px">🗑</button>`).join("<br>") : "Journal ទទេ — ចុច 📋 គំរូ ឬបញ្ចូល Transaction";
+  $("j_list").querySelectorAll("[data-del]").forEach(b => b.onclick = () => { J.splice(+b.dataset.del, 1); st.set("j", J); jr(); });
+  const bal = {}; J.forEach(e => { bal[e.dr] = (bal[e.dr] || 0) + e.a; bal[e.cr] = (bal[e.cr] || 0) - e.a; });
+  const rows = Object.keys(bal).sort().filter(k => Math.abs(bal[k]) > 1e-9);
+  let td = 0, tc = 0; const tb = rows.map(k => { const v = bal[k]; if (v > 0) td += v; else tc -= v; return `<tr><td>${k}</td><td>${NAME[k]}</td><td style="text-align:right">${v > 0 ? f$(v) : ""}</td><td style="text-align:right">${v < 0 ? f$(-v) : ""}</td></tr>`; }).join("");
+  const sum = t => rows.filter(k => TYPE[k] === t).reduce((s, k) => s + bal[k], 0);
+  const rev = -sum("R"), exp = sum("X"), ni = rev - exp, assets = sum("A") + sum("XA"), liab = -sum("L"), cap = -sum("E"), draw = sum("XE");
+  $("j_tb").innerHTML = rows.length ? `<b>Trial Balance</b> ${Math.abs(td - tc) < 1e-6 ? "✅ Balanced" : "❌ មិនស្មើ"}<div style="overflow-x:auto"><table><tr><th>Code</th><th>Account</th><th>Debit</th><th>Credit</th></tr>${tb}<tr><td></td><td><b>Total</b></td><td style="text-align:right"><b>${f$(td)}</b></td><td style="text-align:right"><b>${f$(tc)}</b></td></tr></table></div>
+   <b>Income Statement</b><br>Revenue ${f$(rev)} − Expenses ${f$(exp)} = <b>Net ${ni >= 0 ? "income" : "loss"} ${f$(ni)}</b><br>
+   <b>Statement of Financial Position</b><br>Assets <b>${f$(assets)}</b> = Liabilities ${f$(liab)} + Equity ${f$(cap + ni - draw)} <small>(Capital ${f$(cap)} + Net income ${f$(ni)} − Drawings ${f$(draw)})</small> ${Math.abs(assets - (liab + cap + ni - draw)) < 1e-6 ? "✅" : "❌"}` : "";
+}
+$("j_add").onclick = () => { const a = +$("j_am").value; if (!(a > 0) || $("j_dr").value === $("j_cr").value) return; J.push({ d: $("j_dt").value, s: $("j_ds").value, dr: $("j_dr").value, cr: $("j_cr").value, a }); st.set("j", J); jr(); };
+$("j_demo").onclick = () => { const d = new Date().toISOString().slice(0, 10); J = DEMO.map(([s, dr, cr, a]) => ({ d, s, dr, cr, a })); st.set("j", J); jr(); };
+$("j_clr").onclick = () => { J = []; st.set("j", J); jr(); };
+
+/* ---- depreciation ---- */
+function dep() { const c = +$("d_c").value, s = +$("d_s").value, n = Math.max(1, Math.round(+$("d_n").value)), m = $("d_m").value; let bv = c, acc = 0, rows = [];
+  for (let y = 1; y <= n; y++) { let d = m === "sl" ? (c - s) / n : m === "ddb" ? Math.min(bv * 2 / n, bv - s) : (c - s) * (n - y + 1) / (n * (n + 1) / 2);
+    if (m === "ddb" && y === n) d = bv - s; d = Math.max(0, d); acc += d; bv -= d; rows.push(`<tr><td>${y}</td><td style="text-align:right">${f$(d)}</td><td style="text-align:right">${f$(acc)}</td><td style="text-align:right">${f$(bv)}</td></tr>`); }
+  $("d_out").innerHTML = `<div style="overflow-x:auto"><table><tr><th>ឆ្នាំ</th><th>Depreciation</th><th>Accumulated</th><th>Carrying amount</th></tr>${rows.join("")}</table></div>Journal ប្រចាំឆ្នាំ៖ Dr Depreciation expense / Cr Accumulated depreciation`; }
+["d_c", "d_s", "d_n", "d_m"].forEach(id => $(id).oninput = dep);
+
+/* ---- Cambodia tax (illustrative) ---- */
+const BR = [[1500000, 0], [2000000, .05], [8500000, .10], [12500000, .15], [Infinity, .20]];
+function tax() { const sal = +$("t_s").value; let prev = 0, t = 0, rows = [];
+  for (const [cap, r] of BR) { const part = Math.max(0, Math.min(sal, cap) - prev); if (part > 0) rows.push(`${fr(prev + 1)}–${cap === Infinity ? "…" : fr(cap)} × ${r * 100}% = ${fr(part * r)}`); t += part * r; prev = cap; if (sal <= cap) break; }
+  const p = +$("t_p").value, v = +$("t_v").value, i = +$("t_i").value;
+  $("t_out").innerHTML = `<b>Tax on Salary (និវាសនជន)</b> — ប្រាក់ខែ ${fr(sal)}<br>${rows.join("<br>")}<br>ពន្ធសរុប <b>${fr(t)}</b> · ប្រាក់ខែសុទ្ធ <b>${fr(sal - t)}</b> · អត្រាមធ្យម ${(t / sal * 100 || 0).toFixed(2)}%<br><br>
+  <b>Tax on Income</b> (អត្រាស្តង់ដារ 20%)៖ ${f$(p)} × 20% = <b>${f$(p * .2)}</b><br>
+  <b>VAT 10%</b>៖ Output ${f$(v * .1)} − Input ${f$(i * .1)} = <b>${(v - i) * .1 >= 0 ? "ត្រូវបង់ " + f$((v - i) * .1) : "ឥណទានយោង " + f$((i - v) * .1)}</b><br>
+  <small style="color:var(--muted)">⚠️ សម្រាប់រៀន — អត្រា និងលក្ខខណ្ឌពិត (Dependent allowance, Fringe benefit 20%, អ្នកមិនមែននិវាសនជន 20%…) ត្រូវពិនិត្យជាមួយ GDT</small>`; }
+["t_s", "t_p", "t_v", "t_i"].forEach(id => $(id).oninput = tax);
+
+/* ---- ratios ---- */
+function ratio() { const g = id => +$(id).value, rev = g("r_rev"), np = g("r_np"), ca = g("r_ca"), inv = g("r_inv"), cl = g("r_cl"), ta = g("r_ta"), tl = g("r_tl"), eq = ta - tl;
+  const R = [["Current ratio", ca / cl, "x", "≥ 1.5 ល្អ"], ["Quick ratio", (ca - inv) / cl, "x", "≥ 1"], ["Net profit margin", np / rev * 100, "%", "ខ្ពស់ = ល្អ"], ["ROA", np / ta * 100, "%", ""], ["ROE", np / eq * 100, "%", ""], ["Debt ratio", tl / ta * 100, "%", "ទាប = សុវត្ថិភាព"], ["Debt-to-equity", tl / eq, "x", ""], ["Asset turnover", rev / ta, "x", ""]];
+  $("r_out").innerHTML = `<div style="overflow-x:auto"><table><tr><th>Ratio</th><th>លទ្ធផល</th><th>អាន</th></tr>${R.map(([n, v, u, c]) => `<tr><td>${n}</td><td style="text-align:right"><b>${isFinite(v) ? v.toFixed(2) + u : "—"}</b></td><td>${c}</td></tr>`).join("")}</table></div>DuPont៖ ROE = Margin ${(np / rev * 100).toFixed(1)}% × Turnover ${(rev / ta).toFixed(2)} × Equity multiplier ${(ta / eq).toFixed(2)} = <b>${(np / eq * 100).toFixed(1)}%</b>`; }
+["r_rev", "r_np", "r_ca", "r_inv", "r_cl", "r_ta", "r_tl"].forEach(id => $(id).oninput = ratio);
+
+/* ---- break-even ---- */
+function be() { const F = +$("b_f").value, P = +$("b_p").value, V = +$("b_v").value, Q = +$("b_q").value, cm = P - V, bq = cm > 0 ? F / cm : Infinity;
+  const cv = $("b_cv"), g = cv.getContext("2d"), W = cv.width, H = cv.height, qmax = Math.max(Q, isFinite(bq) ? bq : Q) * 1.6 || 1, ymax = qmax * P * 1.05 || 1;
+  const X = q => 60 + q / qmax * (W - 80), Y = v => H - 30 - v / ymax * (H - 50); g.fillStyle = "#fff"; g.fillRect(0, 0, W, H); g.font = "12px sans-serif";
+  g.strokeStyle = "#94a3b8"; g.beginPath(); g.moveTo(60, H - 30); g.lineTo(W - 20, H - 30); g.moveTo(60, 10); g.lineTo(60, H - 30); g.stroke();
+  [[q => q * P, "#2f9e44", "Revenue"], [q => F + q * V, "#e03131", "Total cost"], [q => F, "#adb5bd", "Fixed cost"]].forEach(([fn, c, l], k) => { g.strokeStyle = c; g.lineWidth = 2.5; g.beginPath(); g.moveTo(X(0), Y(fn(0))); g.lineTo(X(qmax), Y(fn(qmax))); g.stroke(); g.fillStyle = c; g.fillText(l, 70 + k * 110, 22); });
+  if (isFinite(bq)) { g.fillStyle = "#7048e8"; g.beginPath(); g.arc(X(bq), Y(bq * P), 6, 0, 7); g.fill(); g.fillText("BEP " + Math.ceil(bq).toLocaleString() + " units", X(bq) + 8, Y(bq * P) - 8); }
+  g.strokeStyle = "#1c7ed6"; g.setLineDash([5, 4]); g.beginPath(); g.moveTo(X(Q), H - 30); g.lineTo(X(Q), 10); g.stroke(); g.setLineDash([]); g.lineWidth = 1;
+  const prof = Q * cm - F;
+  $("b_out").innerHTML = `Contribution margin = ${f$(cm)}/unit (CM ratio ${(cm / P * 100).toFixed(1)}%) · Break-even <b>${isFinite(bq) ? Math.ceil(bq).toLocaleString() + " units = " + f$(bq * P) : "—"}</b><br>លក់ ${Q.toLocaleString()} units → ប្រាក់ចំណេញ <b style="color:${prof >= 0 ? "#2f9e44" : "#e03131"}">${f$(prof)}</b> · Margin of safety ${isFinite(bq) ? ((Q - bq) / Q * 100).toFixed(1) + "%" : "—"}`; }
+["b_f", "b_p", "b_v", "b_q"].forEach(id => $(id).oninput = be);
+jr(); dep(); tax(); ratio(); be();
+})();
+</script>
+
+<h3>🏆 Quiz ឆ្នាំទី ៣ · ឆមាសទី ១ — គណនេយ្យហិរញ្ញវត្ថុកម្រិតមធ្យម ២ &amp; Group ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["Temporary difference =", ["Carrying − Tax base", "Profit − Tax", "Cash − Profit", "Revenue − Cost"], 0], ["Carrying > Tax base (asset) →", ["DTA", "DTL", "គ្មាន", "Equity"], 1], ["ToI ស្តង់ដារកម្ពុជា?", ["10%", "20%", "30%", "25%"], 1], ["NSSF សោធន ជា?", ["Defined benefit", "Defined contribution", "Equity", "Revenue"], 1], ["IFRS 9 ECL ចាប់ពីឆ្នាំ?", ["2005", "2018", "2023", "2012"], 1], ["ECL =", ["PD × LGD × EAD", "PD + LGD", "EAD − PD", "Profit × 20%"], 0], ["Stage 1 ECL?", ["Lifetime", "12-month", "0", "100%"], 1], ["Redeemable preference shares?", ["Equity", "Liability", "Revenue", "Asset"], 1], ["Basic EPS (1,000,000/500,000)?", ["$0.5", "$2", "$5", "$1"], 1], ["Gain លក់ទ្រព្យក្នុង CFO Indirect?", ["បូក", "ដក", "មិនគិត", "Financing"], 1], ["Control តាម?", ["IFRS 10", "IAS 16", "IFRS 15", "IAS 2"], 0], ["Goodwill (500k − 420k)?", ["80,000", "920,000", "0", "420,000"], 0], ["Associate ជាធម្មតា?", ["< 20%", "20–50%", "> 50%", "100%"], 1], ["Equity method: Dividend ពី Associate?", ["បង្កើន Investment", "បន្ថយ Investment", "Revenue", "OCI"], 1], ["FX loss លើ A/P (monetary) ទៅ?", ["OCI", "P/L", "Equity", "Notes"], 1], ["Held for sale រំលោះ?", ["បាទ", "ទេ", "ពាក់កណ្តាល", "DDB"], 1], ["HFS វាស់?", ["max", "min(Carrying, FV−CTS)", "Cost", "FV"], 1], ["Goodwill ក្រោម SMEs?", ["Impairment only", "Amortise", "Revalue", "Expense"], 1], ["Convertible bond?", ["Equity", "Liability", "Compound", "Revenue"], 2], ["ធានារ៉ាប់រងកម្ពុជា IFRS 17 ពី?", ["2018", "2023", "2028", "2012"], 2]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+
+<ol class="steps"><li>ឆ្នាំ ២ ✅</li><li><b>ឆ្នាំ ៣ ឆមាស ១</b> (វគ្គនេះ) ✅</li><li><b>ឆ្នាំ ៣ ឆមាស ២</b>៖ ពន្ធដារកម្ពុជា</li><li>ACCA SBR (Strategic Business Reporting)</li></ol>
+<p class="muted">វិញ្ញាបនបត្រអាជីព៖ <b>CAT/ACCA</b> (អន្តរជាតិ) · <b>CPA/CA Cambodia</b> តាម KICPAA · <b>CIMA</b> (គណនេយ្យគ្រប់គ្រង) · <b>CFA</b> (វិនិយោគ)។</p>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="acc5"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

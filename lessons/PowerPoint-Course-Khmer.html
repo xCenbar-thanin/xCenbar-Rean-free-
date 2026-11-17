@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន PowerPoint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#faf7f6; --panel:#ffffff; --text:#2a1d19; --muted:#5b6b61; --line:#ecdeda;
+  --accent:#c43e1c; --accent2:#e0663f; --accent-soft:#fcebe5;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#ff9a76; --accent2:#e0663f; --accent-soft:#2e1a14;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#ff9a76; --accent2:#e0663f; --accent-soft:#2e1a14;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#9a2f14,#e0663f);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+</style>
+<link rel="icon" href="../assets/icons/ppt.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/ppt.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>វគ្គសិក្សា Microsoft PowerPoint ពីដើមដល់កម្រិតអាជីព</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. PowerPoint ជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#install">២. របៀបដំឡើង PowerPoint (និងភ្ជាប់ជាមួយ VS Code)</a>
+<a href="#elements">៣. ធាតុនីមួយៗរបស់ PowerPoint</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Slide ដំបូង: Layout, Placeholder, Views</a>
+<a href="#l2">មេរៀន ២: អក្សរ: ច្បាប់ ១ គំនិត ក្នុង ១ Slide</a>
+<a href="#l3">មេរៀន ៣: Design: CRAP, ពណ៌, White space, Designer</a>
+<a href="#l4">មេរៀន ៤: រូបភាព, Icons, Shapes &amp; Merge Shapes</a>
+<a href="#l5">មេរៀន ៥: SmartArt, Tables &amp; Charts</a>
+<a href="#l6">មេរៀន ៦: Slide Master &amp; Template</a>
+<a href="#l7">មេរៀន ៧: Transitions, Animations &amp; Morph</a>
+<a href="#l8">មេរៀន ៨: Zoom, Hyperlinks &amp; Slide អន្តរកម្ម</a>
+<a href="#l9">មេរៀន ៩: វីដេអូ, សំឡេង, Recording &amp; Export Video</a>
+<a href="#l10">មេរៀន ១០: Presenter View, Speaker Notes &amp; Speaker Coach</a>
+<a href="#l11">មេរៀន ១១: ធ្វើការជាក្រុម, Copilot, Accessibility &amp; Export</a>
+<a href="#l12">មេរៀន ១២: Macro &amp; VBA ក្នុង PowerPoint</a>
+<a href="#cheat">📋 Cheat Sheet: Slide ល្អ</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងអាជីព: Pitch Deck សម្រាប់វិនិយោគិន</a>
+<a href="#pro-structure">🧭 រចនាសម្ព័ន្ធ Pitch Deck ១០ Slide</a>
+<a href="#pro-app">🎬 Pitch Deck ផ្ទាល់ (ចុចមើលបាន)</a>
+<a href="#pro-check">✅ Checklist មុនបង្ហាញ &amp; គម្រោងចុងក្រោយ</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+
+</nav>
+<main>
+<section class="hero">
+  <h2>🎤 Microsoft PowerPoint ពីដើមដល់ចប់</h2>
+  <p>រៀនបង្កើតបទបង្ហាញ (Presentation) ដែល <b>ស្អាត ច្បាស់ និងទាក់ទាញ</b>៖ Layout, Design, Slide Master, Chart, Animation, Morph, Presenter View, Copilot រហូតដល់ <b>Pitch Deck កម្រិតអាជីព</b>។ មាន Shortcut និងកូដ VBA ពណ៌ ហើយរូបឧទាហរណ៍ Slide ផ្ទាល់។</p>
+  <p><span class="badge">📘 ១៤ មេរៀន</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">🎨 Design</span><span class="badge">🏆 Pitch Deck</span></p>
+</section>
+
+<!-- NAV: ផ្នែកទី ១ – មូលដ្ឋាន -->
+<section id="intro">
+  <h2>១. PowerPoint ជាអ្វី? អ្នកណាបង្កើត?</h2>
+  <p><b>Microsoft PowerPoint</b> គឺជាកម្មវិធីបង្កើត <b>បទបង្ហាញជាស្លាយ (Slides)</b> ដែលមានអក្សរ រូបភាព ក្រាហ្វ វីដេអូ និងចលនា ដើម្បីបង្ហាញលើអេក្រង់ធំ ឬចែករំលែកជា File។</p>
+  <div class="grid">
+    <div class="card"><b>អ្នកបង្កើតគំនិត</b><br><b style="font-size:19px">Robert Gaskins</b><br>ក្រុមហ៊ុន Forethought, Inc. (1984)</div>
+    <div class="card"><b>អ្នកសរសេរកម្មវិធី</b><br><b style="font-size:19px">Dennis Austin</b><br>ជាមួយ Thomas Rudkin</div>
+    <div class="card"><b>ចេញដំបូង</b><br><b>មេសា 1987</b> សម្រាប់ Macintosh (ឈ្មោះដើម «Presenter»)</div>
+    <div class="card"><b>Microsoft</b><br>ទិញ Forethought ក្នុងឆ្នាំ <b>1987</b> តម្លៃ <b>$14 លាន</b> · Windows version ឆ្នាំ 1990</div>
+  </div>
+  <h3>ប្រវត្តិសង្ខេប</h3>
+  <table>
+    <tr><th>ឆ្នាំ</th><th>ព្រឹត្តិការណ៍</th></tr>
+    <tr><td>1987</td><td>PowerPoint 1.0 (Mac) ស-ខ្មៅ សម្រាប់បោះពុម្ពលើស្លាយថ្លា (Overhead transparencies)</td></tr>
+    <tr><td>1990</td><td>PowerPoint 2.0 សម្រាប់ Windows 3.0 · ចូលកញ្ចប់ Microsoft Office</td></tr>
+    <tr><td>2007</td><td>Ribbon, ទម្រង់ <b>.pptx</b>, SmartArt</td></tr>
+    <tr><td>2010</td><td>Transition 3D, ភ្ជាប់វីដេអូ, Export ជាវីដេអូ</td></tr>
+    <tr><td>2016–2019</td><td><b>Designer</b> (Design Ideas), <b>Morph</b>, <b>Zoom</b>, ធ្វើការជាក្រុមពេលជាក់ស្តែង</td></tr>
+    <tr><td>2020–បច្ចុប្បន្ន</td><td>Speaker Coach, Cameo (Camera ក្នុង Slide), <b>Copilot</b> បង្កើត Slide ពី Prompt ឬ File Word</td></tr>
+  </table>
+  <h3>គេប្រើ PowerPoint សម្រាប់ធ្វើអ្វី?</h3>
+  <div class="grid">
+    <div class="card">🏫 <b>ការអប់រំ</b><br>មេរៀន, Thesis defense, ការពារគម្រោង</div>
+    <div class="card">💼 <b>អាជីវកម្ម</b><br>របាយការណ៍ប្រចាំខែ, Pitch ទៅវិនិយោគិន, Sales</div>
+    <div class="card">🎤 <b>សន្និសីទ</b><br>Keynote, Workshop, Training</div>
+    <div class="card">🖼️ <b>ក្រាហ្វិក</b><br>Poster, Infographic, Social media post, Certificate</div>
+    <div class="card">🎬 <b>វីដេអូ</b><br>Explainer video, Screen recording, Animation សាមញ្ញ</div>
+    <div class="card">🧭 <b>Prototype</b><br>គំរូ App ដែលចុចបាន (Hyperlink)</div>
+  </div>
+</section>
+
+<section id="install">
+  <h2>២. របៀបដំឡើង PowerPoint (និងភ្ជាប់ជាមួយ VS Code)</h2>
+  <div class="warn">⚠️ <b>PowerPoint មិនដំឡើងក្នុង VS Code ទេ</b>។ វាជាកម្មវិធីក្នុង <b>Microsoft 365</b>។ VS Code ប្រើតែពេលអ្នក <b>សរសេរកូដ</b> បង្កើត Add-in ឬបង្កើត Slide ដោយស្វ័យប្រវត្តិ (Python / JavaScript)។</div>
+  <h3>ជំហានទី ១: ដំឡើង PowerPoint</h3>
+  <ol class="steps">
+    <li><b>ឥតគិតថ្លៃ៖</b> ចូល <a href="https://www.office.com" target="_blank">office.com</a> → Sign in → <b>PowerPoint for the web</b></li>
+    <li><b>ពេញលេញ៖</b> Microsoft 365 (ឬគណនីសាលា) → office.com → <b>Install apps</b> → ដំឡើង → Sign in</li>
+    <li>ទូរស័ព្ទ៖ <b>Microsoft PowerPoint</b> ឬ <b>Microsoft 365 Copilot</b> app</li>
+    <li>អក្សរខ្មែរ៖ ប្រើ Font Unicode ដូចជា <b>Khmer OS Battambang</b>, <b>Kantumruy Pro</b>, <b>Noto Sans Khmer</b> · ពេលផ្ញើ File ទៅកុំព្យូទ័រផ្សេង៖ File → Options → Save → ធីក <b>Embed fonts in the file</b></li>
+    <li>បើក <b>Developer tab</b>៖ File → Options → Customize Ribbon → ធីក Developer (សម្រាប់ VBA)</li>
+  </ol>
+  <h3>ជំហានទី ២ (ជម្រើសសម្រាប់អ្នកសរសេរកូដ): VS Code</h3>
+  <ol class="steps">
+    <li>ដំឡើង <b>VS Code</b> + <b>Node.js LTS</b></li>
+    <li>Extensions → <b>Office Add-ins Development Kit</b> → Create a new Add-in → ជ្រើស <b>PowerPoint</b></li>
+    <li>ឬប្រើ Python៖ <code class="i">pip install python-pptx</code> ដើម្បីបង្កើត Slide ពីទិន្នន័យ</li>
+  </ol>
+  <script type="text/x-code" data-lang="js" data-label="PowerPoint Add-in (Office.js)">
+// បន្ថែម Slide ថ្មី ហើយដាក់ចំណងជើង
+async function addTitleSlide() {
+  await PowerPoint.run(async (context) => {
+    context.presentation.slides.add({ layoutId: undefined });
+    await context.sync();
+    const slides = context.presentation.slides;
+    slides.load("items");
+    await context.sync();
+    const last = slides.items[slides.items.length - 1];
+    const box = last.shapes.addTextBox("សួស្តី PowerPoint!", { left: 60, top: 60, width: 600, height: 80 });
+    box.textFrame.textRange.font.size = 40;
+    await context.sync();
+  });
+}
+</script>
+  <script type="text/x-code" data-lang="py" data-label="make_slides.py (python-pptx)">
+from pptx import Presentation
+from pptx.util import Pt
+
+prs = Presentation()
+for title, body in [("ចំណូលខែមករា", "$11,461"), ("ផលិតផលល្អបំផុត", "Latte")]:
+    s = prs.slides.add_slide(prs.slide_layouts[1])      # Title and Content
+    s.shapes.title.text = title
+    s.placeholders[1].text = body
+    s.placeholders[1].text_frame.paragraphs[0].font.size = Pt(48)
+prs.save("report.pptx")
+</script>
+</section>
+
+<section id="elements">
+  <h2>៣. ធាតុនីមួយៗរបស់ PowerPoint</h2>
+  <table>
+    <tr><th>ធាតុ</th><th>ពន្យល់</th></tr>
+    <tr><td><b>Presentation</b></td><td>File មួយ (.pptx) មាន Slide ច្រើន</td></tr>
+    <tr><td><b>Slide</b></td><td>ទំព័រមួយ · ទំហំស្តង់ដារ <b>16:9</b> (Widescreen 13.33 × 7.5 inch)</td></tr>
+    <tr><td><b>Layout</b></td><td>គំរូទីតាំង៖ Title Slide, Title and Content, Two Content, Section Header, Blank…</td></tr>
+    <tr><td><b>Placeholder</b></td><td>ប្រអប់ចំណុចដាច់ៗ «Click to add title» សម្រាប់ដាក់អក្សរ/រូប</td></tr>
+    <tr><td><b>Theme</b></td><td>ពណ៌ + Font + Effect រួមគ្នា (Design tab)</td></tr>
+    <tr><td><b>Slide Master</b></td><td>Slide មេដែលគ្រប់គ្រងរចនាប័ទ្មគ្រប់ Slide (View → Slide Master)</td></tr>
+    <tr><td><b>Shape / Text box / Icon / Picture</b></td><td>វត្ថុដែលដាក់លើ Slide</td></tr>
+    <tr><td><b>SmartArt / Table / Chart</b></td><td>ដ្យាក្រាម តារាង ក្រាហ្វ</td></tr>
+    <tr><td><b>Transition</b></td><td>ចលនាពេលប្តូរពី Slide មួយទៅមួយ (ឧ. Fade, <b>Morph</b>)</td></tr>
+    <tr><td><b>Animation</b></td><td>ចលនារបស់វត្ថុលើ Slide (Entrance, Emphasis, Exit, Motion Path)</td></tr>
+    <tr><td><b>Speaker Notes</b></td><td>កំណត់ចំណាំសម្រាប់អ្នកនិយាយ (មិនបង្ហាញលើអេក្រង់ធំ)</td></tr>
+    <tr><td><b>Views</b></td><td>Normal, Outline, <b>Slide Sorter</b>, Notes Page, Reading, <b>Presenter View</b></td></tr>
+  </table>
+  <h3>ផ្ទៃកម្មវិធី</h3>
+  <div class="mock">
+    <div class="ribbon"><span>File</span><span>Home</span><span>Insert</span><span>Draw</span><span>Design</span><span>Transitions</span><span>Animations</span><span>Slide Show</span><span>Record</span><span>Review</span><span>View</span></div>
+    <p style="margin:0">ខាងឆ្វេង = <b>Thumbnails</b> (បញ្ជី Slide) · កណ្តាល = <b>Slide pane</b> · ខាងក្រោម = <b>Notes</b> · Status bar = Zoom និងប៊ូតុង Views</p>
+  </div>
+</section>
+
+<!-- NAV: ផ្នែកទី ២ – មេរៀន -->
+<section id="l1">
+  <h2><span class="badge">មេរៀន ១</span>Slide ដំបូង: Layout, Placeholder, Views</h2>
+  <ol class="steps">
+    <li>File → New → <b>Blank Presentation</b> (ឬជ្រើស Template)</li>
+    <li>Home → <b>New Slide</b> (<kbd>Ctrl</kbd>+<kbd>M</kbd>) → ជ្រើស Layout</li>
+    <li>ចុចក្នុង Placeholder ហើយវាយ · ប្តូរ Layout៖ Home → <b>Layout</b></li>
+    <li>ផ្លាស់ទីលំដាប់៖ អូស Thumbnail ឬប្រើ <b>Slide Sorter</b> · <b>Section</b> (ចុចស្តាំ → Add Section) ដើម្បីបែងចែកជំពូក</li>
+    <li>រក្សាទុក <kbd>Ctrl</kbd>+<kbd>S</kbd> → .pptx</li>
+  </ol>
+  <script type="text/x-code" data-lang="keys" data-label="Shortcuts សំខាន់ៗ">
+Ctrl + M           # Slide ថ្មី
+Ctrl + D           # Duplicate វត្ថុ ឬ Slide
+F5                 # Slide Show ពី Slide ទី ១
+Shift + F5         # Slide Show ពី Slide បច្ចុប្បន្ន
+Alt + F5           # Presenter View
+B / W              # អេក្រង់ខ្មៅ / ស ពេលបង្ហាញ (ទាក់ទាញការយកចិត្តទុកដាក់)
+Number + Enter     # លោតទៅ Slide លេខនោះពេលបង្ហាញ
+Ctrl + G           # Group  ·  Ctrl + Shift + G = Ungroup
+Shift + Drag       # ផ្លាស់ទីត្រង់ ឬរក្សាសមាមាត្រពេលពង្រីក
+Ctrl + Drag        # ចម្លងវត្ថុ
+Alt + Shift + Arrow  # ប្តូរកម្រិត Bullet (Promote/Demote)
+Ctrl + Shift + C / V # ចម្លង / បិទភ្ជាប់ Format
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១</h4>
+    <p>បង្កើត Presentation ៥ Slide «ខ្លួនខ្ញុំ»៖ Title, អំពីខ្ញុំ, ចំណូលចិត្ត, គោលដៅ, សូមអរគុណ។ តើគួរប្រើ Layout អ្វីសម្រាប់ Slide នីមួយៗ?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ol>
+        <li><b>Title Slide</b> — ឈ្មោះ + ចំណងជើងរង</li>
+        <li><b>Two Content</b> — រូបថតខាងឆ្វេង ព័ត៌មានខាងស្តាំ</li>
+        <li><b>Title Only</b> + Icons ៣–៤ (Insert → Icons)</li>
+        <li><b>Title and Content</b> — ៣ ចំណុចខ្លីៗ</li>
+        <li><b>Section Header</b> ឬ Blank + អក្សរធំ «សូមអរគុណ»</li>
+      </ol>
+    </details>
+  </div>
+</section>
+
+<section id="l2">
+  <h2><span class="badge">មេរៀន ២</span>អក្សរ: ច្បាប់ ១ គំនិត ក្នុង ១ Slide</h2>
+  <ul>
+    <li><b>Assertion-Evidence៖</b> ចំណងជើង = <b>ប្រយោគសារ</b> (ឧ. «ចំណូលកើន 18% ដោយសារ Latte») + រូប/ក្រាហ្វជាភស្តុតាង</li>
+    <li>ជៀសវាង <b>Bullet ច្រើនពេក</b> — អ្នកស្តាប់អាន មិនស្តាប់។ ប្រើ <b>ប្រហែល ៦ ពាក្យ × ៦ បន្ទាត់</b> ជាអតិបរមា</li>
+    <li>ទំហំអក្សរ៖ ចំណងជើង <b>32–44pt</b> · អត្ថបទ <b>≥ 20–24pt</b> (Guy Kawasaki៖ ≥ 30pt)</li>
+    <li>Font ២ ប្រភេទប៉ុណ្ណោះ · អក្សរខ្មែរ Line spacing <b>1.1–1.3</b></li>
+  </ul>
+  <script type="text/x-code" data-lang="html" data-label="មុន vs ក្រោយ" data-demo>
+<style>
+  .wrap { display:flex; gap:16px; flex-wrap:wrap; }
+  .s { width:300px; aspect-ratio:16/9; border-radius:8px; box-shadow:0 2px 10px #0002; padding:14px 18px; position:relative; overflow:hidden; }
+  .bad { background:#fff; font-size:10.5px; line-height:1.45; }
+  .bad h3 { font-size:15px; margin:0 0 4px; }
+  .bad ul { margin:0; padding-left:16px; }
+  .good { background:#1e293b; color:#fff; display:flex; flex-direction:column; justify-content:center; }
+  .good h3 { font-size:17px; margin:0 0 6px; line-height:1.4; }
+  .big { font-size:46px; font-weight:800; color:#fb923c; line-height:1.1; }
+  .tag { position:absolute; top:6px; right:8px; font-size:11px; font-weight:700; }
+</style>
+<div class="wrap">
+  <div class="s bad"><span class="tag">❌</span><h3>លទ្ធផលលក់</h3>
+    <ul><li>ក្នុងត្រីមាសទី ១ ក្រុមហ៊ុនយើងបានលក់ច្រើនជាងមុន</li><li>ចំណូលកើនឡើងប្រហែល 18% ធៀបនឹងត្រីមាសមុន</li><li>មូលហេតុចម្បងគឺផលិតផល Latte ដែលពេញនិយម</li><li>សាខាភ្នំពេញលក់បានច្រើនជាងគេ</li><li>យើងគ្រោងបើកសាខាថ្មីនៅឆ្នាំក្រោយ</li><li>បុគ្គលិកទាំងអស់ធ្វើការបានល្អ</li></ul></div>
+  <div class="s good"><span class="tag">✅</span><h3>ចំណូលកើនឡើង ដោយសារ Latte</h3><div class="big">+18%</div><div style="font-size:12px;opacity:.85">ត្រីមាសទី ១ ធៀបនឹងត្រីមាសមុន</div></div>
+</div>
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ២</h4>
+    <p>សរសេរ Slide ខាងក្រោមឡើងវិញតាម Assertion-Evidence៖ ចំណងជើង «ការស្ទង់មតិ» ជាមួយ Bullet ៖ «សិស្ស 200 នាក់ត្រូវបានសួរ / 72% ចូលចិត្តរៀនអនឡាញ / 28% ចូលចិត្តរៀនក្នុងថ្នាក់»។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p><b>ចំណងជើង៖</b> «សិស្ស ៣ ក្នុង ៤ នាក់ ចូលចិត្តរៀនអនឡាញ»<br><b>ភស្តុតាង៖</b> Doughnut chart 72% / 28% (ពណ៌ Accent តែលើ 72%) + អក្សរតូចខាងក្រោម «ស្ទង់មតិសិស្ស 200 នាក់, មីនា 2026»។ ដក Bullet ទាំងអស់ចេញ — និយាយវាដោយមាត់។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l3">
+  <h2><span class="badge">មេរៀន ៣</span>Design: CRAP, ពណ៌, White space, Designer</h2>
+  <table>
+    <tr><th>គោលការណ៍</th><th>អនុវត្តលើ Slide</th></tr>
+    <tr><td><b>C</b>ontrast</td><td>អ្វីសំខាន់ធំ ដិត ពណ៌ Accent · ផ្ទៃងងឹត + អក្សរភ្លឺ (ឬផ្ទុយ)</td></tr>
+    <tr><td><b>R</b>epetition</td><td>ពណ៌ Font ទីតាំងចំណងជើង ដូចគ្នាគ្រប់ Slide (Slide Master)</td></tr>
+    <tr><td><b>A</b>lignment</td><td>តម្រឹមលើ Guides (View → <b>Guides</b>, Arrange → <b>Align</b>)</td></tr>
+    <tr><td><b>P</b>roximity</td><td>រូប និងពាក្យពន្យល់នៅជិតគ្នា</td></tr>
+    <tr><td><b>White space</b></td><td>ទុកគែម ≥ 0.5 inch · កុំបំពេញ Slide ពេញ</td></tr>
+    <tr><td><b>ពណ៌</b></td><td>60-30-10 · ពណ៌ម៉ាក ១ + Neutral ២ + Accent ១</td></tr>
+  </table>
+  <ul>
+    <li><b>Designer</b> (Home → <b>Designer</b>)៖ AI ផ្តល់ Layout ស្អាតពីរូប និងអក្សររបស់អ្នក</li>
+    <li><b>Design → Variants → Colors → Customize Colors</b>៖ ដាក់ពណ៌ម៉ាក (HEX) ជា Theme ដើម្បីឱ្យ Chart/SmartArt ប្រើពណ៌ដូចគ្នា</li>
+    <li><b>Eyedropper</b>៖ យកពណ៌ពី Logo</li>
+  </ul>
+  <script type="text/x-code" data-lang="html" data-label="Layout ៣ ប្រភេទដែលប្រើញឹកញាប់" data-demo>
+<style>
+  .wrap { display:flex; gap:12px; flex-wrap:wrap; }
+  .s { width:240px; aspect-ratio:16/9; border-radius:8px; box-shadow:0 2px 10px #0002; overflow:hidden; position:relative; font-size:11px; background:#fff; }
+  .cap { font-size:12px; text-align:center; margin-top:4px; color:#475569; }
+  .split { display:grid; grid-template-columns:1fr 1fr; height:100%; }
+  .img { background:linear-gradient(135deg,#fb923c,#c43e1c); }
+  .txt { padding:12px; display:flex; flex-direction:column; justify-content:center; }
+  .txt b { font-size:14px; }
+  .full { background:linear-gradient(0deg,#0009,#0000 60%),linear-gradient(135deg,#0ea5e9,#6366f1); height:100%; color:#fff; display:flex; align-items:flex-end; padding:12px; font-size:15px; font-weight:700; }
+  .three { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:26px 12px 12px; height:100%; }
+  .three div { background:#fcebe5; border-radius:6px; display:grid; place-items:center; text-align:center; }
+  .three i { font-size:20px; font-style:normal; }
+  .t { position:absolute; top:6px; left:12px; font-weight:700; font-size:12px; }
+</style>
+<div class="wrap">
+  <div><div class="s"><div class="split"><div class="img"></div><div class="txt"><b>រូប + អត្ថបទ</b>រូបពាក់កណ្តាល អត្ថបទខ្លីម្ខាង</div></div></div><div class="cap">Split layout</div></div>
+  <div><div class="s"><div class="full">រូបពេញ Slide + ចំណងជើង</div></div><div class="cap">Full-bleed image</div></div>
+  <div><div class="s"><span class="t">៣ ចំណុចសំខាន់</span><div class="three"><div><i>⚡</i>លឿន</div><div><i>💰</i>ថោក</div><div><i>🔒</i>សុវត្ថិភាព</div></div></div><div class="cap">3 columns + icons</div></div>
+</div>
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ៣</h4>
+    <p>ក្រុមហ៊ុនមួយមាន Logo ពណ៌ក្រហម #C43E1C។ រៀបចំ Theme colors (Dark 1, Light 1, Accent 1–3) សម្រាប់បទបង្ហាញ។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <table>
+        <tr><th>Theme slot</th><th>ពណ៌</th><th>ប្រើសម្រាប់</th></tr>
+        <tr><td>Text/Background – Dark 1</td><td><span class="sw" style="display:inline-block;width:12px;height:12px;background:#1f2937"></span> #1F2937</td><td>អក្សរ</td></tr>
+        <tr><td>Text/Background – Light 1</td><td>#FFFFFF</td><td>ផ្ទៃ</td></tr>
+        <tr><td>Accent 1</td><td><span style="display:inline-block;width:12px;height:12px;background:#c43e1c"></span> #C43E1C</td><td>ពណ៌ម៉ាក · ចំណុចសំខាន់</td></tr>
+        <tr><td>Accent 2</td><td>#F59E0B</td><td>ពណ៌ទី ២ ក្នុង Chart</td></tr>
+        <tr><td>Accent 3</td><td>#94A3B8</td><td>ទិន្នន័យមិនសំខាន់ (ប្រផេះ)</td></tr>
+      </table>
+      <p>Design → Variants → Colors → <b>Customize Colors</b> → វាយ HEX → Save ជា «Brand»។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l4">
+  <h2><span class="badge">មេរៀន ៤</span>រូបភាព, Icons, Shapes & Merge Shapes</h2>
+  <ul>
+    <li>Insert → <b>Pictures</b> (Stock Images ឥតគិតថ្លៃក្នុង Microsoft 365) · <b>Icons</b> · <b>3D Models</b></li>
+    <li>Picture Format → <b>Crop to Shape</b> (រូបរង្វង់), <b>Aspect Ratio 16:9</b>, <b>Remove Background</b></li>
+    <li>Shape Format → <b>Merge Shapes</b>៖ Union, Combine, Fragment, <b>Intersect</b>, Subtract — បង្កើត Icon/Logo ផ្ទាល់ខ្លួន</li>
+    <li><b>Transparency</b> លើ Shape ខ្មៅ 40% ដាក់លើរូប → អក្សរសអានច្បាស់</li>
+    <li><b>Compress Pictures</b> (Picture Format) ដើម្បីបន្ថយទំហំ File</li>
+    <li>ប្រើតែរូបដែលមានសិទ្ធិ៖ Stock Images, Unsplash, Pexels ឬរូបផ្ទាល់ខ្លួន</li>
+  </ul>
+  <div class="ex"><h4>✍️ លំហាត់ ៤</h4>
+    <p>ធ្វើអក្សរ «KHMER» ដែលមានរូបភាពនៅខាងក្នុងអក្សរ (Text fill ដោយរូប) ដោយ Merge Shapes។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ol>
+        <li>Insert រូបភាព (ឧ. អង្គរវត្ត) ពេញ Slide</li>
+        <li>Insert Text box «KHMER» Font ក្រាស់ (Arial Black) 150pt ដាក់លើរូប</li>
+        <li>ចុចរូបមុន → <kbd>Shift</kbd>+ចុចអក្សរ → Shape Format → <b>Merge Shapes → Intersect</b></li>
+      </ol>
+      <p>លំដាប់ជ្រើសសំខាន់៖ វត្ថុជ្រើសមុនគេ ផ្តល់ Format (រូប) ដល់លទ្ធផល។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l5">
+  <h2><span class="badge">មេរៀន ៥</span>SmartArt, Tables & Charts</h2>
+  <ul>
+    <li><b>SmartArt</b> (Insert → SmartArt)៖ Process (ជំហាន), Cycle, Hierarchy (Organization chart), Relationship · ចុចស្តាំលើ Bullet → <b>Convert to SmartArt</b></li>
+    <li><b>Table</b>៖ Table Design → ពណ៌ស្រាល, ដក Gridlines បញ្ឈរ, តម្រឹមលេខស្តាំ, Highlight ជួរសំខាន់</li>
+    <li><b>Chart</b>៖ Insert → Chart → ទិន្នន័យបើកក្នុង Excel តូច · ឬ Copy Chart ពី Excel → Paste Special → <b>Paste Link</b> (Update ពេល Excel ប្តូរ)</li>
+    <li>Chart ក្នុង Slide ត្រូវ <b>សាមញ្ញ</b>ជាង Excel៖ ដក Gridlines, Legend → Data labels ផ្ទាល់, ពណ៌ Accent តែលើទិន្នន័យសំខាន់</li>
+  </ul>
+  <script type="text/x-code" data-lang="html" data-label="Chart ក្នុង Slide: ផ្តោតលើសារ" data-demo>
+<style>
+  .s { width:420px; max-width:100%; aspect-ratio:16/9; background:#fff; border-radius:8px; box-shadow:0 2px 10px #0002; padding:16px 20px; display:flex; flex-direction:column; }
+  h3 { margin:0 0 10px; font-size:17px; }
+  .bars { flex:1; display:flex; align-items:flex-end; gap:14px; padding-bottom:4px; border-bottom:2px solid #e5e7eb; }
+  .b { flex:1; background:#cbd5e1; border-radius:4px 4px 0 0; position:relative; }
+  .b.hi { background:#c43e1c; }
+  .b span { position:absolute; top:-18px; width:100%; text-align:center; font-size:11px; font-weight:700; }
+  .lbl { display:flex; gap:14px; font-size:11px; color:#64748b; } .lbl div { flex:1; text-align:center; }
+</style>
+<div class="s">
+  <h3>ខែមិថុនា ចំណូលខ្ពស់បំផុត ក្នុង ៦ ខែ</h3>
+  <div class="bars">
+    <div class="b" style="height:62%"><span>$1.8k</span></div><div class="b" style="height:66%"><span>$1.9k</span></div>
+    <div class="b" style="height:69%"><span>$2.0k</span></div><div class="b" style="height:69%"><span>$2.0k</span></div>
+    <div class="b" style="height:68%"><span>$2.0k</span></div><div class="b hi" style="height:88%"><span>$2.5k</span></div>
+  </div>
+  <div class="lbl"><div>មក</div><div>កម</div><div>មន</div><div>មស</div><div>ឧស</div><div>មថ</div></div>
+</div>
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ៥</h4>
+    <p>អ្នកមាន Bullet ៥ ពីដំណើរការបញ្ជាទិញ៖ ជ្រើសទំនិញ → ដាក់កន្ត្រក → បង់ប្រាក់ → ដឹកជញ្ជូន → ទទួល។ ធ្វើឱ្យវាក្លាយជាដ្យាក្រាមក្នុង ១០ វិនាទី។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p>ជ្រើស Text box → Home → <b>Convert to SmartArt</b> → ជ្រើស <b>Basic Chevron Process</b> ឬ <b>Continuous Block Process</b> → SmartArt Design → Change Colors → Accent 1 → បន្ថែម Icon ក្នុងប្រអប់នីមួយៗ (ជម្រើស)។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l6">
+  <h2><span class="badge">មេរៀន ៦</span>Slide Master & Template</h2>
+  <p><b>Slide Master</b> = «Design System» របស់ PowerPoint។ ប្តូរម្តង → គ្រប់ Slide ប្តូរតាម។</p>
+  <ol class="steps">
+    <li>View → <b>Slide Master</b> → Slide ធំខាងលើ = Master (Logo, Font, ពណ៌ទាំងអស់)</li>
+    <li>Slide តូចៗខាងក្រោម = <b>Layouts</b> · កែ ឬ <b>Insert Layout</b> ហើយ <b>Insert Placeholder</b> (Picture, Chart, Text)</li>
+    <li>Slide Master → <b>Fonts → Customize Fonts</b>៖ Heading = Kantumruy Pro Bold, Body = Kantumruy Pro</li>
+    <li>ដាក់ Logo, លេខ Slide (Insert → Header & Footer → Slide number) និងបន្ទាត់ពណ៌ម៉ាក</li>
+    <li>Close Master View → File → Save As → <b>PowerPoint Template (.potx)</b></li>
+  </ol>
+  <div class="note">💡 កុំដាក់ Logo ដោយ Copy/Paste ទៅគ្រប់ Slide — ដាក់ក្នុង Master តែម្តង។ Template ល្អជួយឱ្យក្រុមទាំងមូលបង្កើត Slide ស្របគ្នា។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៦</h4>
+    <p>បង្កើត Template សាលា ដែលមាន Layout ៤៖ Title, Section, Content + Picture ខាងស្តាំ, Quote។ ពន្យល់ជំហានបង្កើត Layout «Content + Picture»។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ol>
+        <li>View → Slide Master → <b>Insert Layout</b> → Rename «Content + Picture»</li>
+        <li>Insert Placeholder → <b>Content</b> អូសពាក់កណ្តាលឆ្វេង</li>
+        <li>Insert Placeholder → <b>Picture</b> អូសពាក់កណ្តាលស្តាំ (ពេញកម្ពស់)</li>
+        <li>កែ Title placeholder ឱ្យនៅលើផ្នែកឆ្វេង · Close Master → New Slide → ជ្រើស Layout ថ្មី</li>
+      </ol>
+    </details>
+  </div>
+</section>
+
+<section id="l7">
+  <h2><span class="badge">មេរៀន ៧</span>Transitions, Animations & Morph</h2>
+  <ul>
+    <li><b>Transitions</b>៖ ប្រើ ១ ប្រភេទស្រាលៗ (Fade, Push) គ្រប់ Slide · ជៀសវាង Vortex, Origami…</li>
+    <li><b>Animations</b>៖ Entrance (Fade, Wipe, Appear) ដើម្បីបង្ហាញម្តងមួយចំណុច · <b>Animation Pane</b> ដើម្បីកំណត់លំដាប់ និង Timing (On Click / With Previous / After Previous)</li>
+    <li><b>Morph</b> ⭐៖ Duplicate Slide (<kbd>Ctrl</kbd>+<kbd>D</kbd>) → ផ្លាស់ទី/ពង្រីក/ប្តូរពណ៌វត្ថុក្នុង Slide ទី ២ → Transitions → <b>Morph</b>។ PowerPoint បង្កើតចលនារលូនដោយខ្លួនឯង</li>
+    <li>បង្ខំ Morph ឱ្យផ្គូផ្គងវត្ថុ៖ ដាក់ឈ្មោះដូចគ្នាក្នុង <b>Selection Pane</b> (<kbd>Alt</kbd>+<kbd>F10</kbd>) ដោយផ្តើមដោយ <code class="i">!!</code> ឧ. <code class="i">!!circle</code></li>
+    <li><b>Trigger</b>៖ Animation ចាប់ផ្តើមពេលចុចវត្ថុជាក់លាក់ (Quiz)</li>
+  </ul>
+  <script type="text/x-code" data-lang="html" data-label="Morph: ចុចដើម្បីមើល" data-demo>
+<style>
+  .s { width:400px; max-width:100%; aspect-ratio:16/9; background:#0f172a; border-radius:8px; position:relative; overflow:hidden; cursor:pointer; color:#fff; }
+  .circle { position:absolute; border-radius:50%; background:#c43e1c; transition:all .9s cubic-bezier(.65,0,.35,1); }
+  .title { position:absolute; font-weight:800; transition:all .9s cubic-bezier(.65,0,.35,1); }
+  .s1 .circle { width:160px; height:160px; left:-30px; top:30px; } .s1 .title { left:150px; top:80px; font-size:28px; }
+  .s2 .circle { width:60px; height:60px; left:320px; top:20px; background:#f59e0b; } .s2 .title { left:24px; top:150px; font-size:18px; opacity:.9; }
+  p { font-size:13px; color:#475569; }
+  @media (prefers-reduced-motion: reduce) { .circle, .title { transition:none; } }
+</style>
+<div class="s s1" id="s" role="button" tabindex="0" aria-label="ប្តូរ Slide">
+  <div class="circle"></div><div class="title">Morph ✨</div>
+</div>
+<p>ចុចលើ Slide ដើម្បីប្តូររវាង Slide 1 និង Slide 2 (វត្ថុដដែល ទីតាំងផ្សេង)</p>
+<script>
+  const s = document.getElementById("s");
+  const go = () => s.classList.toggle("s1") + s.classList.toggle("s2");
+  s.onclick = go; s.onkeydown = e => (e.key === "Enter" || e.key === " ") && go();
+<\/script>
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ៧</h4>
+    <p>បង្កើត Slide ៣ ដែល Morph ពីរូបតូចៗ ៣ (Product A, B, C) ទៅពង្រីកមួយៗពេញ Slide។ សរសេរជំហាន។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ol>
+        <li>Slide 1៖ រូប A, B, C តូចៗតម្រៀបជួរ (Align → Distribute Horizontally)</li>
+        <li><kbd>Ctrl</kbd>+<kbd>D</kbd> → Slide 2៖ ពង្រីករូប A ពេញខាងឆ្វេង, B/C រុញចេញក្រៅ Slide ឬតូចនៅជ្រុង + អក្សរពិពណ៌នា A</li>
+        <li><kbd>Ctrl</kbd>+<kbd>D</kbd> → Slide 3៖ ធ្វើដូចគ្នាសម្រាប់ B</li>
+        <li>ជ្រើស Slide 2–3 → Transitions → <b>Morph</b>, Duration 1.0s</li>
+      </ol>
+    </details>
+  </div>
+</section>
+
+<section id="l8">
+  <h2><span class="badge">មេរៀន ៨</span>Zoom, Hyperlinks & Slide អន្តរកម្ម</h2>
+  <ul>
+    <li>Insert → <b>Zoom</b> → <b>Summary Zoom</b>៖ បង្កើត Menu ពី Section ទាំងអស់ — ចុចដើម្បីលោតទៅជំពូកណាមួយ ហើយត្រឡប់មកវិញ</li>
+    <li><b>Slide Zoom</b>៖ ដាក់ Slide តូចមួយក្នុង Slide ផ្សេង</li>
+    <li>Insert → <b>Link</b> (<kbd>Ctrl</kbd>+<kbd>K</kbd>) → <b>Place in This Document</b> → ជ្រើស Slide</li>
+    <li>Insert → <b>Action</b>៖ ប៊ូតុង Next/Back/Home · Hyperlink to Website</li>
+    <li>ប្រើ Hyperlink + Kiosk mode (Slide Show → Set Up → <b>Browsed at a kiosk</b>) បង្កើត Quiz ឬ App Prototype</li>
+  </ul>
+  <div class="ex"><h4>✍️ លំហាត់ ៨</h4>
+    <p>បង្កើត Quiz ១ សំណួរ ៣ ចម្លើយ ដែលចុចចម្លើយត្រូវទៅ Slide «ត្រឹមត្រូវ ✅» ហើយចុចខុសទៅ Slide «ព្យាយាមម្តងទៀត ❌» ដែលមានប៊ូតុងត្រឡប់។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ol>
+        <li>Slide 1៖ សំណួរ + Shape ៣ (ចម្លើយ)</li>
+        <li>Slide 2៖ «ត្រឹមត្រូវ ✅» · Slide 3៖ «ព្យាយាមម្តងទៀត ❌» + ប៊ូតុង «ត្រឡប់»</li>
+        <li>ចម្លើយត្រូវ → <kbd>Ctrl</kbd>+<kbd>K</kbd> → Place in This Document → Slide 2 · ចម្លើយខុស → Slide 3</li>
+        <li>ប៊ូតុង «ត្រឡប់» លើ Slide 3 → Link → Slide 1</li>
+        <li>Transitions → ដោះធីក <b>On Mouse Click</b> លើ Slide ទាំងអស់ (ដើម្បីកុំឱ្យចុចកន្លែងទទេហើយទៅ Slide បន្ទាប់)</li>
+      </ol>
+    </details>
+  </div>
+</section>
+
+<section id="l9">
+  <h2><span class="badge">មេរៀន ៩</span>វីដេអូ, សំឡេង, Recording & Export Video</h2>
+  <ul>
+    <li>Insert → <b>Video</b> → This Device · Playback → <b>Trim Video</b>, Start: Automatically, <b>Play Full Screen</b></li>
+    <li>Insert → <b>Screen Recording</b>៖ ថតអេក្រង់ (Tutorial)</li>
+    <li>Record tab → <b>Record</b>៖ ថតសំឡេង + Camera (Cameo) + Ink ក្នុង Slide នីមួយៗ</li>
+    <li>File → Export → <b>Create a Video</b> → Full HD (1080p) / 4K → Use Recorded Timings → .mp4</li>
+    <li>Export ជា <b>GIF</b> ឬ <b>PDF</b> ក៏បាន</li>
+  </ul>
+  <div class="ex"><h4>✍️ លំហាត់ ៩</h4>
+    <p>បង្កើតវីដេអូ Explainer 30 វិនាទី សម្រាប់ Social Media (ទម្រង់បញ្ឈរ)។ ត្រូវកំណត់អ្វីខ្លះ?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ol>
+        <li>Design → <b>Slide Size → Custom</b>៖ Width 10.8 cm × Height 19.2 cm (9:16)</li>
+        <li>Slide ៦ × 5 វិនាទី · Transitions → <b>After 00:05.00</b> (ដោះ On Mouse Click)</li>
+        <li>Animation <b>With/After Previous</b> ជំនួស On Click</li>
+        <li>Insert → Audio → តន្ត្រីគ្មានសិទ្ធិ (Play Across Slides)</li>
+        <li>File → Export → Create a Video → <b>1080p</b> → Use Recorded Timings</li>
+      </ol>
+    </details>
+  </div>
+</section>
+
+<section id="l10">
+  <h2><span class="badge">មេរៀន ១០</span>Presenter View, Speaker Notes & Speaker Coach</h2>
+  <ul>
+    <li><b>Presenter View</b> (<kbd>Alt</kbd>+<kbd>F5</kbd>)៖ អ្នកឃើញ Slide បច្ចុប្បន្ន + Slide បន្ទាប់ + Notes + ម៉ោង · អ្នកស្តាប់ឃើញតែ Slide</li>
+    <li>Slide Show → <b>Rehearse Timings</b>៖ វាស់ពេលសម្រាប់ Slide នីមួយៗ</li>
+    <li>Slide Show → <b>Rehearse with Coach (Speaker Coach)</b>៖ AI វាយតម្លៃល្បឿននិយាយ ពាក្យ «អឹម/អា» និងការអានពី Slide</li>
+    <li>ពេលបង្ហាញ៖ <kbd>Ctrl</kbd>+<kbd>L</kbd> = Laser pointer · <kbd>Ctrl</kbd>+<kbd>P</kbd> = Pen · <kbd>B</kbd> = អេក្រង់ខ្មៅ</li>
+    <li><b>Live Subtitles</b> (Slide Show → Subtitle Settings) បកប្រែការនិយាយជាអក្សរ</li>
+  </ul>
+  <h3>រចនាសម្ព័ន្ធការនិយាយ (10-20-30 Rule — Guy Kawasaki)</h3>
+  <p><b>10</b> Slides · <b>20</b> នាទី · អក្សរ <b>≥ 30pt</b>។ ចាប់ផ្តើមដោយ <b>Hook</b> (សំណួរ/លេខគួរឱ្យភ្ញាក់ផ្អើល) → បញ្ហា → ដំណោះស្រាយ → ភស្តុតាង → Call to action។</p>
+  <div class="ex"><h4>✍️ លំហាត់ ១០</h4>
+    <p>សរសេរ Speaker Notes សម្រាប់ Slide «+18%» (មេរៀន ២) ដែលនិយាយបាន 40 វិនាទី។</p>
+    <details><summary>មើលចម្លើយគំរូ</summary>
+      <p>«[ផ្អាក ២ វិនាទី] ដប់ប្រាំបីភាគរយ។ នេះជាកំណើនខ្ពស់បំផុតក្នុងរយៈពេលពីរឆ្នាំរបស់យើង។ មូលហេតុចម្បងគឺ Latte — ដែលយើងបន្ថែមទំហំធំកាលពីខែមករា។ វាតែមួយមុខរកចំណូលបានមួយភាគបួន។ [ចុច → Slide បន្ទាប់] ដូច្នេះសំណួរសម្រាប់ត្រីមាសក្រោយគឺ៖ តើយើងធ្វើបែបនេះជាមួយផលិតផលផ្សេងបានដូចម្តេច?»</p>
+      <p>ចំណាំ៖ Notes ជាពាក្យគន្លឹះ និងសញ្ញា [ផ្អាក] [ចុច] មិនមែនអានពាក្យម្តងមួយៗទេ។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l11">
+  <h2><span class="badge">មេរៀន ១១</span>ធ្វើការជាក្រុម, Copilot, Accessibility & Export</h2>
+  <ul>
+    <li><b>Share</b> (OneDrive/SharePoint)៖ មនុស្សច្រើនកែព្រមគ្នា · <b>Comments</b> @mention · <b>Version History</b></li>
+    <li><b>Copilot</b> (Microsoft 365 Copilot)៖ «Create a presentation about…», «Create from file» (Word/PDF), «Summarize this presentation», «Add a slide about…» — <b>ពិនិត្យការពិតជានិច្ច</b></li>
+    <li><b>Review → Check Accessibility</b>៖ Alt text លើរូប, Contrast, លំដាប់អាន (Selection Pane), ចំណងជើង Slide មិនទទេ</li>
+    <li>File → Export → <b>PDF</b> (Handouts 3 slides/page សម្រាប់បោះពុម្ព)</li>
+    <li>File → Info → <b>Compress Media</b> និង Compress Pictures បើ File ធំ</li>
+  </ul>
+  <div class="ex"><h4>✍️ លំហាត់ ១១</h4>
+    <p>Accessibility Checker រាយការណ៍ «Missing alternative text (5)» និង «Missing slide title (2)»។ កែយ៉ាងដូចម្តេច?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ul>
+        <li><b>Alt text៖</b> ចុចស្តាំលើរូប → <b>View Alt Text</b> → សរសេរពិពណ៌នា ១ ប្រយោគ («ក្រាហ្វចំណូលកើន 18%») · រូបតុបតែង → ធីក <b>Mark as decorative</b></li>
+        <li><b>Slide title៖</b> បន្ថែម Title placeholder (Layout ដែលមាន Title) · បើមិនចង់ឃើញ អាចដាក់វាក្រៅ Slide ឬក្នុង Selection Pane លាក់ — Screen reader នៅតែអានបាន</li>
+      </ul>
+    </details>
+  </div>
+</section>
+
+<section id="l12">
+  <h2><span class="badge">មេរៀន ១២</span>Macro & VBA ក្នុង PowerPoint</h2>
+  <p><kbd>Alt</kbd>+<kbd>F11</kbd> → Insert → Module · រក្សាទុកជា <b>.pptm</b>។ (PowerPoint មិនមាន Record Macro ទេ — ត្រូវសរសេរកូដ)</p>
+  <script type="text/x-code" data-lang="vba" data-label="ប្តូរ Font ទាំងអស់ + បន្ថែមលេខ Slide">
+Sub FixAllFonts()
+    Dim sld As Slide, shp As Shape
+    For Each sld In ActivePresentation.Slides
+        For Each shp In sld.Shapes
+            If shp.HasTextFrame Then
+                If shp.TextFrame.HasText Then
+                    shp.TextFrame.TextRange.Font.Name = "Kantumruy Pro"
+                End If
+            End If
+        Next shp
+    Next sld
+    MsgBox "បានប្តូរ Font លើ " & ActivePresentation.Slides.Count & " Slides"
+End Sub
+</script>
+  <script type="text/x-code" data-lang="vba" data-label="បង្កើត Slide ពីបញ្ជីឈ្មោះ (Certificate)">
+Sub MakeCertificates()
+    Dim names As Variant, i As Long, s As Slide
+    names = Array("សុខ ដារា", "ចាន់ លីណា", "ហេង វិចិត្រ")
+    For i = 0 To UBound(names)
+        Set s = ActivePresentation.Slides(1).Duplicate()(1)
+        s.MoveTo ActivePresentation.Slides.Count
+        s.Shapes("Name").TextFrame.TextRange.Text = names(i)   ' Shape ឈ្មោះ "Name" ក្នុង Selection Pane
+    Next i
+End Sub
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១២</h4>
+    <p>សរសេរ Macro ដែលលុប Speaker Notes ចេញពីគ្រប់ Slide (មុនផ្ញើ File ទៅអតិថិជន)។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="vba" data-label="Answer">
+Sub ClearAllNotes()
+    Dim sld As Slide
+    For Each sld In ActivePresentation.Slides
+        If sld.HasNotesPage Then
+            sld.NotesPage.Shapes.Placeholders(2).TextFrame.TextRange.Text = ""
+        End If
+    Next sld
+End Sub
+' ឬគ្មានកូដ: File → Info → Check for Issues → Inspect Document → Presentation Notes → Remove All
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="cheat">
+  <h2>📋 Cheat Sheet: Slide ល្អ</h2>
+  <table>
+    <tr><th>ប្រធានបទ</th><th>ច្បាប់</th></tr>
+    <tr><td>ទំហំ</td><td>16:9 · គែម ≥ 0.5"</td></tr>
+    <tr><td>អក្សរ</td><td>ចំណងជើង 32–44pt · អត្ថបទ ≥ 24pt · Font ≤ 2</td></tr>
+    <tr><td>មាតិកា</td><td>១ គំនិត / Slide · ចំណងជើងជាប្រយោគសារ</td></tr>
+    <tr><td>ពណ៌</td><td>Theme colors · 60-30-10 · Contrast ≥ 4.5:1</td></tr>
+    <tr><td>ចលនា</td><td>Transition ១ ប្រភេទ · Morph · Animation មានគោលបំណង</td></tr>
+    <tr><td>ពេល</td><td>~1–2 នាទី / Slide · 10-20-30</td></tr>
+  </table>
+</section>
+
+<!-- NAV: ផ្នែកទី ៣ – កម្រិតអាជីព -->
+<section class="hero" id="pro">
+  <h2>🏆 គម្រោងអាជីព: Pitch Deck សម្រាប់វិនិយោគិន</h2>
+  <p>បង្កើត Pitch Deck ១០ Slide សម្រាប់ Startup «Kafe» ដោយប្រើ <b>Slide Master</b>, <b>Theme colors</b>, <b>Assertion-Evidence</b>, <b>Chart ពី Excel</b>, <b>Morph</b>, <b>Summary Zoom</b> និង <b>Presenter View</b>។ ខាងក្រោមមាន Deck ផ្ទាល់ដែលចុចមើលបាន។</p>
+</section>
+
+<section id="pro-structure">
+  <h2>🧭 រចនាសម្ព័ន្ធ Pitch Deck ១០ Slide</h2>
+  <table>
+    <tr><th>#</th><th>Slide</th><th>ចំណងជើងសារ (Assertion)</th><th>ភស្តុតាង</th></tr>
+    <tr><td>1</td><td>Title</td><td>Kafe — កាហ្វេក្នុង ២ នាទី សម្រាប់និស្សិត</td><td>Logo + រូបពេញ</td></tr>
+    <tr><td>2</td><td>Problem</td><td>និស្សិតចំណាយ ១០ នាទីតម្រង់ជួររាល់ព្រឹក</td><td>លេខធំ «10 នាទី»</td></tr>
+    <tr><td>3</td><td>Solution</td><td>កុម្ម៉ង់មុន មកយកភ្លាម</td><td>រូបអេក្រង់ App</td></tr>
+    <tr><td>4</td><td>Market</td><td>និស្សិត 250,000 នាក់នៅភ្នំពេញ</td><td>TAM/SAM/SOM រង្វង់</td></tr>
+    <tr><td>5</td><td>Product</td><td>៣ ជំហាន៖ ជ្រើស → បង់ KHQR → យក</td><td>SmartArt Process</td></tr>
+    <tr><td>6</td><td>Traction</td><td>ចំណូលកើន 18% ក្នុង ១ ត្រីមាស</td><td>Chart (Paste Link ពី Excel)</td></tr>
+    <tr><td>7</td><td>Business Model</td><td>ចំណេញ 63% ក្នុងមួយកែវ</td><td>Waterfall chart</td></tr>
+    <tr><td>8</td><td>Competition</td><td>យើងតែមួយគត់ដែលលឿន + ថោក</td><td>2×2 Matrix</td></tr>
+    <tr><td>9</td><td>Team</td><td>ក្រុមមានបទពិសោធន៍ F&amp;B + Tech</td><td>រូបរង្វង់ ៣–៤</td></tr>
+    <tr><td>10</td><td>The Ask</td><td>ស្នើសុំ $50,000 សម្រាប់ ៣ សាខាថ្មី</td><td>Doughnut ការប្រើប្រាស់ថវិកា</td></tr>
+  </table>
+  <h3>ជំហានសាងសង់</h3>
+  <ol class="steps">
+    <li><b>Storyline មុន Slide៖</b> សរសេរចំណងជើង ១០ ក្នុង <b>Outline View</b> (View → Outline) — អានតែចំណងជើងគួរតែយល់រឿងទាំងមូល</li>
+    <li><b>Slide Master៖</b> Theme colors (Brand), Fonts, Layouts ៥ (Title, Statement, Split, Chart, Team)</li>
+    <li><b>Content៖</b> Assertion-Evidence · Chart ពី Excel (Paste Link) · Icons ពណ៌ Accent</li>
+    <li><b>Motion៖</b> Morph រវាង Problem → Solution · Fade ផ្សេងៗ</li>
+    <li><b>Navigation៖</b> Summary Zoom ដើម្បីលោតទៅ Slide ណាមួយពេលវិនិយោគិនសួរ · Appendix slides ក្រោយ Slide 10</li>
+    <li><b>Rehearse៖</b> Speaker Coach · Rehearse Timings ≤ 10 នាទី</li>
+    <li><b>Deliver៖</b> Presenter View · Export PDF សម្រាប់ផ្ញើតាមអ៊ីមែល</li>
+  </ol>
+</section>
+
+<section id="pro-app">
+  <h2>🎬 Pitch Deck ផ្ទាល់ (ចុចមើលបាន)</h2>
+  <p>ប្រើ <kbd>←</kbd> <kbd>→</kbd> ឬប៊ូតុង, ចុច <b>Zoom</b> ដើម្បីមើល Summary Zoom, ហើយ <b>Notes</b> ដើម្បីមើល Speaker Notes ដូច Presenter View។ Slide 2 → 3 ប្រើចលនាស្រដៀង <b>Morph</b>។</p>
+  <script type="text/x-code" data-lang="html" data-label="Professional Pitch Deck" data-demo>
+<style>
+  :root { --brand:#c43e1c; --amber:#f59e0b; --ink:#1f2937; --muted:#64748b; --dark:#111827; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#e5e7eb; font-family:"Kantumruy Pro",system-ui,sans-serif; color:var(--ink); }
+  .app { padding:12px; display:grid; gap:10px; }
+  .stage { position:relative; width:100%; aspect-ratio:16/9; background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 6px 24px #0003; container-type:inline-size; }
+  .stage.dark { background:var(--dark); color:#fff; }
+  /* Morph object: វត្ថុដដែលប្តូរទីតាំងគ្រប់ Slide */
+  .orb { position:absolute; border-radius:50%; background:var(--brand); transition:all .8s cubic-bezier(.65,0,.35,1); z-index:0; }
+  .content { position:absolute; inset:0; padding:6cqw 7cqw; z-index:1; display:flex; flex-direction:column; justify-content:center; animation:fade .5s ease both; }
+  @keyframes fade { from { opacity:0; transform:translateY(8px); } }
+  h1 { font-size:6cqw; margin:0; line-height:1.25; } h2 { font-size:3.8cqw; margin:0 0 2cqw; line-height:1.3; }
+  .sub { font-size:2.2cqw; color:var(--muted); } .dark .sub { color:#cbd5e1; }
+  .big { font-size:13cqw; font-weight:800; color:var(--brand); line-height:1; }
+  .row { display:flex; gap:3cqw; align-items:center; }
+  .steps { display:flex; gap:1.5cqw; } .steps div { flex:1; background:#fcebe5; border-radius:1.2cqw; padding:2cqw; font-size:2.2cqw; text-align:center; }
+  .steps b { display:block; font-size:4cqw; }
+  .chart { display:flex; align-items:flex-end; gap:2cqw; height:22cqw; border-bottom:.3cqw solid #e5e7eb; }
+  .chart div { flex:1; background:#cbd5e1; border-radius:.6cqw .6cqw 0 0; position:relative; font-size:1.8cqw; }
+  .chart div.hi { background:var(--brand); }
+  .chart span { position:absolute; top:-3cqw; width:100%; text-align:center; font-weight:700; }
+  .circles { position:relative; height:24cqw; width:24cqw; }
+  .circles div { position:absolute; border-radius:50%; display:grid; place-items:center; color:#fff; font-size:1.8cqw; text-align:center; left:50%; transform:translateX(-50%); }
+  .matrix { display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; width:30cqw; height:22cqw; border-left:.3cqw solid #94a3b8; border-bottom:.3cqw solid #94a3b8; position:relative; }
+  .dot { position:absolute; padding:.4cqw 1cqw; border-radius:99px; font-size:1.8cqw; background:#e5e7eb; transform:translate(-50%,50%); white-space:nowrap; }
+  .dot.us { background:var(--brand); color:#fff; font-weight:700; }
+  .team { display:flex; gap:3cqw; } .team div { text-align:center; font-size:2cqw; }
+  .team i { display:block; width:11cqw; height:11cqw; border-radius:50%; background:linear-gradient(135deg,#fb923c,var(--brand)); margin-bottom:1cqw; }
+  .donut { width:20cqw; height:20cqw; border-radius:50%; background:conic-gradient(var(--brand) 0 60%, var(--amber) 0 85%, #94a3b8 0); position:relative; }
+  .donut::after { content:"$50k"; position:absolute; inset:4cqw; background:#fff; border-radius:50%; display:grid; place-items:center; font-weight:800; font-size:3.4cqw; }
+  .legend div { font-size:2.2cqw; margin:.8cqw 0; } .legend i { display:inline-block; width:2cqw; height:2cqw; border-radius:.4cqw; margin-right:1cqw; vertical-align:-.3cqw; }
+  .num { position:absolute; right:2cqw; bottom:1.5cqw; font-size:1.6cqw; color:var(--muted); z-index:2; }
+  .bar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .bar button { min-height:40px; padding:0 14px; border:1px solid #cbd5e1; background:#fff; border-radius:8px; font:inherit; cursor:pointer; }
+  .bar button[aria-pressed="true"] { background:var(--brand); color:#fff; border-color:var(--brand); }
+  .bar .pos { margin-left:auto; color:var(--muted); font-size:14px; }
+  .notes { background:#fff; border-radius:8px; padding:10px 14px; font-size:14px; border-left:4px solid var(--brand); }
+  .zoom { position:absolute; inset:0; background:#111827f2; z-index:5; display:grid; grid-template-columns:repeat(5,1fr); gap:1.5cqw; padding:4cqw; align-content:center; }
+  .zoom button { aspect-ratio:16/9; border:0; border-radius:.8cqw; background:#fff; font:inherit; font-size:1.7cqw; cursor:pointer; padding:.5cqw; }
+  .zoom button b { display:block; color:var(--brand); font-size:2.4cqw; }
+  .zoom button:hover, .zoom button:focus-visible { outline:.4cqw solid var(--amber); }
+  @media (prefers-reduced-motion: reduce) { .orb { transition:none; } .content { animation:none; } }
+</style>
+
+<div class="app">
+  <div class="stage" id="stage" tabindex="0" aria-roledescription="slide deck" aria-live="polite">
+    <div class="orb" id="orb"></div>
+    <div id="content"></div>
+    <div class="num" id="num"></div>
+  </div>
+  <div class="bar">
+    <button id="prev" aria-label="Slide មុន">◀ មុន</button>
+    <button id="next" aria-label="Slide បន្ទាប់">បន្ទាប់ ▶</button>
+    <button id="zoomBtn" aria-pressed="false">🔎 Zoom</button>
+    <button id="notesBtn" aria-pressed="false">📝 Notes</button>
+    <span class="pos" id="pos"></span>
+  </div>
+  <div class="notes" id="notes" hidden></div>
+</div>
+
+<script>
+  // Slide = { title, dark, orb:[left%, top%, size%, color], html, notes }
+  const S = [
+    { t: "Title", dark: true, orb: [62, 10, 50, "#c43e1c"],
+      html: `<h1>☕ Kafe</h1><div class="sub" style="font-size:3cqw">កាហ្វេក្នុង ២ នាទី សម្រាប់និស្សិត</div><div class="sub" style="margin-top:3cqw">Seed round · 2026</div>`,
+      notes: "សួស្តី។ ខ្ញុំឈ្មោះ… យើងជួយនិស្សិតទទួលកាហ្វេក្នុង ២ នាទី។ [ផ្អាក] មុននិយាយពី Kafe សូមសួរ៖ ព្រឹកនេះអ្នកណាតម្រង់ជួរទិញកាហ្វេ?" },
+    { t: "Problem", dark: false, orb: [70, 18, 26, "#c43e1c"],
+      html: `<h2>និស្សិតចំណាយពេលតម្រង់ជួររាល់ព្រឹក</h2><div class="row"><div class="big">10</div><div class="sub" style="font-size:3cqw">នាទី<br>ក្នុងពេលសម្រាកតែ ១៥ នាទី</div></div><div class="sub" style="margin-top:2cqw">ស្ទង់មតិនិស្សិត 120 នាក់ · មករា 2026</div>`,
+      notes: "១០ នាទី — នេះជាពេលមធ្យមដែលនិស្សិតរង់ចាំ។ ពួកគេមានពេលសម្រាកតែ ១៥ នាទី។ [ចុច] ដូច្នេះយើងបង្កើត…" },
+    { t: "Solution", dark: false, orb: [6, 58, 14, "#f59e0b"],
+      html: `<h2>កុម្ម៉ង់មុន — មកដល់យកភ្លាម</h2><div class="steps"><div><b>📱</b>ជ្រើសកាហ្វេ</div><div><b>💳</b>បង់ KHQR</div><div><b>☕</b>យកក្នុង ២ នាទី</div></div>`,
+      notes: "Morph៖ រង្វង់ក្រហម (បញ្ហា) ក្លាយជារង្វង់តូចពណ៌មាស (ដំណោះស្រាយ)។ ៣ ជំហាន គ្មានការរង់ចាំ។" },
+    { t: "Market", dark: false, orb: [86, 70, 8, "#c43e1c"],
+      html: `<div class="row"><div style="flex:1"><h2>និស្សិត 250,000 នាក់នៅភ្នំពេញ</h2><div class="sub">SOM៖ ៥ សាកលវិទ្យាល័យជុំវិញ Kafe = 40,000 នាក់</div></div>
+        <div class="circles"><div style="width:24cqw;height:24cqw;background:#fcd5c7;color:#9a2f14;align-items:start;padding-top:1.5cqw">TAM 250k</div><div style="width:15cqw;height:15cqw;top:9cqw;background:#e0663f">SAM 90k</div><div style="width:8cqw;height:8cqw;top:16cqw;background:#9a2f14">SOM 40k</div></div></div>`,
+      notes: "TAM → SAM → SOM។ យើងចាប់ផ្តើមតូច៖ ៥ សាកលវិទ្យាល័យ។" },
+    { t: "Product", dark: false, orb: [-10, -20, 20, "#f59e0b"],
+      html: `<h2>App សាមញ្ញ ៣ អេក្រង់</h2><div class="steps"><div><b>①</b>Menu + កុម្ម៉ង់ដដែល</div><div><b>②</b>KHQR ១ ចុច</div><div><b>③</b>ជូនដំណឹងពេលរួច</div></div>`,
+      notes: "បង្ហាញ Demo ពិតបើមានពេល (Hyperlink ទៅវីដេអូ)។" },
+    { t: "Traction", dark: false, orb: [90, 6, 6, "#c43e1c"],
+      html: `<h2>ចំណូលកើន 18% ក្នុងខែមិថុនា</h2><div class="chart"><div style="height:62%"><span>1.8k</span></div><div style="height:66%"><span>1.9k</span></div><div style="height:69%"><span>2.0k</span></div><div style="height:69%"><span>2.0k</span></div><div style="height:68%"><span>2.0k</span></div><div class="hi" style="height:88%"><span>2.5k</span></div></div><div class="sub">មករា – មិថុនា 2026 · Chart Paste Link ពី Excel</div>`,
+      notes: "Chart ភ្ជាប់ពី Excel Dashboard — Update ដោយខ្លួនឯង។ ចំណុចសំខាន់៖ ខែមិថុនា (ពណ៌ក្រហម)។" },
+    { t: "Business", dark: true, orb: [70, 40, 40, "#c43e1c"],
+      html: `<h2>ចំណេញ 63% ក្នុងមួយកែវ</h2><div class="row"><div class="big" style="color:#fff">$2.50</div><div class="sub" style="font-size:2.6cqw">តម្លៃលក់<br>− $0.93 ថ្លៃដើម<br>= <b style="color:#fdba74">$1.57 ចំណេញ</b></div></div>`,
+      notes: "Unit economics។ Break-even = 1,200 កែវ/ខែ/សាខា (គណនាក្នុង Excel What-If)។" },
+    { t: "Competition", dark: false, orb: [4, 6, 6, "#f59e0b"],
+      html: `<div class="row"><div style="flex:1"><h2>តែ Kafe ដែលលឿន និងថោក</h2><div class="sub">ប្រៀបធៀបហាងកាហ្វេជុំវិញសាកលវិទ្យាល័យ</div></div>
+        <div class="matrix"><span class="sub" style="position:absolute;left:-1cqw;top:-3cqw">លឿន ↑</span><span class="sub" style="position:absolute;right:0;bottom:-3.5cqw">ថោក →</span>
+        <span class="dot" style="left:25%;bottom:20%">Brand A</span><span class="dot" style="left:70%;bottom:25%">ហាងតូច</span><span class="dot" style="left:30%;bottom:70%">Brand B</span><span class="dot us" style="left:78%;bottom:80%">Kafe</span></div></div>`,
+      notes: "2×2 matrix៖ យើងនៅជ្រុងស្តាំខាងលើ — លឿន និងថោក។" },
+    { t: "Team", dark: false, orb: [80, 75, 30, "#c43e1c"],
+      html: `<h2>ក្រុម F&amp;B + Tech</h2><div class="team"><div><i></i><b>ដារា</b><br>CEO · 6 ឆ្នាំ F&amp;B</div><div><i></i><b>លីណា</b><br>CTO · App Dev</div><div><i></i><b>វិចិត្រ</b><br>Operations</div></div>`,
+      notes: "និយាយហេតុអ្វីក្រុមនេះឈ្នះ មិនមែនតែឈ្មោះ និងតំណែង។" },
+    { t: "The Ask", dark: false, orb: [-20, 60, 30, "#f59e0b"],
+      html: `<div class="row"><div style="flex:1"><h2>ស្នើសុំ $50,000 សម្រាប់ ៣ សាខាថ្មី</h2><div class="legend"><div><i style="background:#c43e1c"></i>សាខា & ឧបករណ៍ 60%</div><div><i style="background:#f59e0b"></i>Marketing 25%</div><div><i style="background:#94a3b8"></i>Tech 15%</div></div></div><div class="donut" role="img" aria-label="Doughnut chart 60/25/15"></div></div>`,
+      notes: "Call to action ច្បាស់៖ ចំនួនប្រាក់ ការប្រើប្រាស់ ហើយបញ្ចប់ដោយ «សូមអរគុណ — តើមានសំណួរទេ?» → Summary Zoom ដើម្បីត្រឡប់ទៅ Slide ណាមួយ។" },
+  ];
+
+  let i = 0;
+  const $ = id => document.getElementById(id);
+  function show(n) {
+    i = Math.max(0, Math.min(S.length - 1, n));
+    const s = S[i], [l, t, size, c] = s.orb;
+    $("stage").classList.toggle("dark", s.dark);
+    Object.assign($("orb").style, { left: l + "%", top: t + "%", width: size + "cqw", height: size + "cqw", background: c });
+    $("content").innerHTML = `<div class="content">${s.html}</div>`;
+    $("num").textContent = i + 1;
+    $("pos").textContent = `Slide ${i + 1} / ${S.length} · ${s.t}`;
+    $("notes").textContent = "📝 " + s.notes;
+    $("prev").disabled = i === 0; $("next").disabled = i === S.length - 1;
+  }
+  $("prev").onclick = () => show(i - 1);
+  $("next").onclick = () => show(i + 1);
+  $("notesBtn").onclick = e => { const on = $("notes").hidden; $("notes").hidden = !on; e.currentTarget.setAttribute("aria-pressed", on); };
+  $("zoomBtn").onclick = e => {
+    const z = $("stage").querySelector(".zoom");
+    if (z) { z.remove(); e.currentTarget.setAttribute("aria-pressed", "false"); return; }
+    e.currentTarget.setAttribute("aria-pressed", "true");
+    const grid = document.createElement("div"); grid.className = "zoom";
+    grid.innerHTML = S.map((s, k) => `<button data-k="${k}"><b>${k + 1}</b>${s.t}</button>`).join("");
+    grid.onclick = ev => { const b = ev.target.closest("button"); if (!b) return; grid.remove(); $("zoomBtn").setAttribute("aria-pressed", "false"); show(+b.dataset.k); };
+    $("stage").appendChild(grid); grid.querySelector("button").focus();
+  };
+  document.addEventListener("keydown", e => {
+    if (e.key === "ArrowRight" || e.key === "PageDown") show(i + 1);
+    if (e.key === "ArrowLeft" || e.key === "PageUp") show(i - 1);
+    if (e.key === "Home") show(0);
+    if (e.key === "End") show(S.length - 1);
+  });
+  show(0);
+<\/script>
+</script>
+</section>
+
+<section id="pro-check">
+  <h2>✅ Checklist មុនបង្ហាញ & គម្រោងចុងក្រោយ</h2>
+  <table>
+    <tr><th>ពិនិត្យ</th><th>✔</th></tr>
+    <tr><td>អានតែចំណងជើងទាំង ១០ យល់រឿងទាំងមូល</td><td>☐</td></tr>
+    <tr><td>គ្រប់ Slide ប្រើ Layout ពី Master (គ្មាន Text box អណ្តែតចៃដន្យ)</td><td>☐</td></tr>
+    <tr><td>Font Embed · តេស្តលើកុំព្យូទ័រ/Projector ពិត</td><td>☐</td></tr>
+    <tr><td>Check Accessibility = 0 Errors</td><td>☐</td></tr>
+    <tr><td>Rehearse ≥ ៣ ដង · ពេលវេលាត្រឹមត្រូវ</td><td>☐</td></tr>
+    <tr><td>មាន PDF backup នៅ USB/Cloud</td><td>☐</td></tr>
+  </table>
+  <div class="ex"><h4>🏁 លំហាត់គម្រោងចុងក្រោយ</h4>
+    <ol>
+      <li>ជ្រើសគំនិតអាជីវកម្ម/គម្រោងសាលារបស់អ្នក ហើយសរសេរចំណងជើង ១០ ក្នុង Outline View</li>
+      <li>បង្កើត Template (.potx) ជាមួយ Theme colors, Fonts, Layout ≥ ៥</li>
+      <li>បង្កើត Slide ១០ តាម Assertion-Evidence · Chart ១ ពី Excel (Paste Link)</li>
+      <li>Morph យ៉ាងតិច ១ កន្លែង · Summary Zoom</li>
+      <li>Speaker Notes គ្រប់ Slide · Rehearse with Coach</li>
+      <li>Export PDF និងវីដេអូ 1080p</li>
+    </ol>
+  </div>
+</section>
+
+<section id="roadmap">
+  <h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+  <ol class="steps">
+    <li><b>PowerPoint</b> — មេរៀន ១–១២ ✅</li>
+    <li><b>Storytelling with Data</b> — ជ្រើសក្រាហ្វ និងសារ (ភ្ជាប់វគ្គ Excel)</li>
+    <li><b>Public Speaking</b> — ហាត់និយាយ ភាសាកាយ ការគ្រប់គ្រងពេល</li>
+    <li><b>Visual Design</b> — Figma / Canva (វគ្គ UX/UI)</li>
+    <li><b>Automation</b> — VBA, python-pptx, Office Add-ins</li>
+  </ol>
+  <p><b>ប្រភពរៀនបន្ថែម:</b> <a href="https://support.microsoft.com/powerpoint" target="_blank">PowerPoint Help & Learning</a> · <a href="https://learn.microsoft.com/office/dev/add-ins/" target="_blank">Office Add-ins docs</a> · <a href="https://create.microsoft.com" target="_blank">Microsoft Create (Templates)</a></p>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]*'|`[^`]*`", 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|await|async|new|try|catch|import|from|export|default)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console)\\b', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], lang === 'bash' ? 'm' : '') : esc(code);
+
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.append(label, res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="ppt"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

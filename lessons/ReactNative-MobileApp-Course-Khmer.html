@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន React Native Mobile App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#0a7ea4; --accent2:#61dafb; --accent-soft:#e6f8fd;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#61dafb; --accent2:#38bdf8; --accent-soft:#0b2230;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#61dafb; --accent2:#38bdf8; --accent-soft:#0b2230;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#20232a,#0a5872 55%,#61dafb);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/reactnative.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/reactnative.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Mobile App ជាមួយ React Native (Expo) ពីដើមដល់ Publish</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. React Native ជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#install">២. ដំឡើង Expo &amp; ត្រៀម</a>
+<a href="#elements">៣. ធាតុនីមួយៗរបស់ React Native</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: JavaScript/TypeScript សម្រាប់ React Native</a>
+<a href="#l2">មេរៀន ២: App ដំបូង៖ View, Text &amp; StyleSheet</a>
+<a href="#l3">មេរៀន ៣: Core Components៖ Image, Pressable, ScrollView</a>
+<a href="#l4">មេរៀន ៤: Styling &amp; Flexbox</a>
+<a href="#l5">មេរៀន ៥: State &amp; Hooks៖ useState, useEffect</a>
+<a href="#l6">មេរៀន ៦: FlatList (បញ្ជីវែង)</a>
+<a href="#l7">មេរៀន ៧: TextInput &amp; Form</a>
+<a href="#l8">មេរៀន ៨: Navigation៖ Expo Router (Stack &amp; Tabs)</a>
+<a href="#l9">មេរៀន ៩: Global State៖ Context &amp; Zustand (Cart)</a>
+<a href="#l10">មេរៀន ១០: Fetch API &amp; Loading/Error</a>
+<a href="#l11">មេរៀន ១១: Storage៖ AsyncStorage &amp; SecureStore</a>
+<a href="#l12">មេរៀន ១២: Device៖ Camera, Location &amp; Notification</a>
+<a href="#l13">មេរៀន ១៣: Backend៖ Supabase / Firebase</a>
+<a href="#l14">មេរៀន ១៤: Testing &amp; Publish (EAS Build)</a>
+<a href="#cheat">📋 Cheat Sheet</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងអាជីព៖ Kafe Order App (RN)</a>
+<a href="#pro-app">💻 React Native Playground Pro (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>⚛️ React Native + Expo — App Android &amp; iPhone ដោយ JavaScript</h2>
+  <p>សម្រាប់អ្នកចេះ JavaScript/React៖ <b>View, Text, StyleSheet, Flexbox, Hooks, FlatList, Form, Expo Router, Zustand, Fetch API, Storage, Camera/Location, Supabase, EAS Build</b> និង Publish។</p>
+  <p><span class="badge">📘 ១៤ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">💻 Code មានពណ៌ + លទ្ធផល</span><span class="badge">⚛️ RN Playground Pro</span></p>
+</section>
+<section id="intro">
+<h2>១. React Native ជាអ្វី? អ្នកណាបង្កើត?</h2>
+
+<p><b>React Native</b> គឺជា Framework របស់ <b>Meta (Facebook)</b> សម្រាប់ធ្វើ App <b>Android និង iPhone</b> ដោយប្រើ <b>JavaScript/TypeScript + React</b>។ វាបង្ហាញ <b>UI Native ពិតៗ</b> (មិនមែន Website ក្នុង App)។ បើអ្នកបានរៀន <b>JavaScript និង React</b> ក្នុង xCenBar រួចហើយ អ្នកអាចធ្វើ Mobile App បានភ្លាម! <button class="btn say" data-say="React Native">🔊 អានពាក្យ</button></p>
+<table><tr><th>ឆ្នាំ</th><th>ព្រឹត្តិការណ៍</th></tr><tr><td>2013</td><td><b>Jordan Walke</b> (Facebook) បង្កើត <b>React</b> សម្រាប់ Web</td></tr><tr><td>2015</td><td>Facebook បញ្ចេញ <b>React Native</b> (iOS ខែមីនា, Android ខែកញ្ញា) — គំនិតពី Hackathon ឆ្នាំ 2013 (Christopher Chedeau និងក្រុម)</td></tr><tr><td>2016</td><td><b>Expo</b> (Charlie Cheever &amp; James Ide) — ធ្វើឲ្យ React Native ងាយប្រើ</td></tr><tr><td>2024</td><td><b>New Architecture</b> (JSI, Fabric, TurboModules) ក្លាយជាលំនាំដើម</td></tr></table>
+
+<div class="grid"><div class="card"><b>📘 Facebook · Instagram</b><br>ផ្នែកខ្លះធ្វើដោយ React Native</div><div class="card"><b>🛍️ Shopify</b><br>App ទាំងអស់ប្តូរមក RN</div><div class="card"><b>🎮 Discord · Microsoft</b><br>Office, Xbox, Teams ខ្លះ</div><div class="card"><b>💼 ការងារ</b><br>Web dev អាចធ្វើ Mobile ដោយចំណេះដឹងដដែល</div></div>
+
+<figure class="fig"><svg viewBox="0 0 900 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="900" height="230" fill="#fff"/><text x="90" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">Framework</text><text x="230" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">ភាសា</text><text x="360" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">ក្រុមហ៊ុន</text><text x="520" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">ល្បឿន</text><text x="660" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">Cross-platform</text><text x="810" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">Native API</text><rect x="10" y="40" width="880" height="36" rx="8" fill="#02569b" fill-opacity=".08"/><text x="90" y="64" text-anchor="middle" font-size="14" font-weight="800" fill="#02569b">Flutter</text><text x="230" y="64" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">Dart</text><text x="360" y="64" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">Google</text><circle cx="480" cy="60" r="6" fill="#02569b"/><circle cx="498" cy="60" r="6" fill="#02569b"/><circle cx="516" cy="60" r="6" fill="#02569b"/><circle cx="534" cy="60" r="6" fill="#02569b"/><circle cx="552" cy="60" r="6" fill="#02569b"/><circle cx="625" cy="60" r="6" fill="#02569b"/><circle cx="643" cy="60" r="6" fill="#02569b"/><circle cx="661" cy="60" r="6" fill="#02569b"/><circle cx="679" cy="60" r="6" fill="#02569b"/><circle cx="697" cy="60" r="6" fill="#02569b"/><circle cx="770" cy="60" r="6" fill="#02569b"/><circle cx="788" cy="60" r="6" fill="#02569b"/><circle cx="806" cy="60" r="6" fill="#02569b"/><circle cx="824" cy="60" r="6" fill="#02569b"/><circle cx="842" cy="60" r="6" fill="#e2e8f0"/><rect x="10" y="82" width="880" height="36" rx="8" fill="#0ea5e9" fill-opacity=".08"/><text x="90" y="106" text-anchor="middle" font-size="14" font-weight="800" fill="#0ea5e9">React Native</text><text x="230" y="106" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">JS/TS</text><text x="360" y="106" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">Meta</text><circle cx="480" cy="102" r="6" fill="#0ea5e9"/><circle cx="498" cy="102" r="6" fill="#0ea5e9"/><circle cx="516" cy="102" r="6" fill="#0ea5e9"/><circle cx="534" cy="102" r="6" fill="#0ea5e9"/><circle cx="552" cy="102" r="6" fill="#e2e8f0"/><circle cx="625" cy="102" r="6" fill="#0ea5e9"/><circle cx="643" cy="102" r="6" fill="#0ea5e9"/><circle cx="661" cy="102" r="6" fill="#0ea5e9"/><circle cx="679" cy="102" r="6" fill="#0ea5e9"/><circle cx="697" cy="102" r="6" fill="#0ea5e9"/><circle cx="770" cy="102" r="6" fill="#0ea5e9"/><circle cx="788" cy="102" r="6" fill="#0ea5e9"/><circle cx="806" cy="102" r="6" fill="#0ea5e9"/><circle cx="824" cy="102" r="6" fill="#0ea5e9"/><circle cx="842" cy="102" r="6" fill="#e2e8f0"/><rect x="10" y="124" width="880" height="36" rx="8" fill="#7c3aed" fill-opacity=".08"/><text x="90" y="148" text-anchor="middle" font-size="14" font-weight="800" fill="#7c3aed">Kotlin (Android)</text><text x="230" y="148" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">Kotlin</text><text x="360" y="148" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">JetBrains/Google</text><circle cx="480" cy="144" r="6" fill="#7c3aed"/><circle cx="498" cy="144" r="6" fill="#7c3aed"/><circle cx="516" cy="144" r="6" fill="#7c3aed"/><circle cx="534" cy="144" r="6" fill="#7c3aed"/><circle cx="552" cy="144" r="6" fill="#7c3aed"/><circle cx="625" cy="144" r="6" fill="#7c3aed"/><circle cx="643" cy="144" r="6" fill="#7c3aed"/><circle cx="661" cy="144" r="6" fill="#e2e8f0"/><circle cx="679" cy="144" r="6" fill="#e2e8f0"/><circle cx="697" cy="144" r="6" fill="#e2e8f0"/><circle cx="770" cy="144" r="6" fill="#7c3aed"/><circle cx="788" cy="144" r="6" fill="#7c3aed"/><circle cx="806" cy="144" r="6" fill="#7c3aed"/><circle cx="824" cy="144" r="6" fill="#7c3aed"/><circle cx="842" cy="144" r="6" fill="#7c3aed"/><rect x="10" y="166" width="880" height="36" rx="8" fill="#ea580c" fill-opacity=".08"/><text x="90" y="190" text-anchor="middle" font-size="14" font-weight="800" fill="#ea580c">Swift (iOS)</text><text x="230" y="190" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">Swift</text><text x="360" y="190" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">Apple</text><circle cx="480" cy="186" r="6" fill="#ea580c"/><circle cx="498" cy="186" r="6" fill="#ea580c"/><circle cx="516" cy="186" r="6" fill="#ea580c"/><circle cx="534" cy="186" r="6" fill="#ea580c"/><circle cx="552" cy="186" r="6" fill="#ea580c"/><circle cx="625" cy="186" r="6" fill="#ea580c"/><circle cx="643" cy="186" r="6" fill="#ea580c"/><circle cx="661" cy="186" r="6" fill="#e2e8f0"/><circle cx="679" cy="186" r="6" fill="#e2e8f0"/><circle cx="697" cy="186" r="6" fill="#e2e8f0"/><circle cx="770" cy="186" r="6" fill="#ea580c"/><circle cx="788" cy="186" r="6" fill="#ea580c"/><circle cx="806" cy="186" r="6" fill="#ea580c"/><circle cx="824" cy="186" r="6" fill="#ea580c"/><circle cx="842" cy="186" r="6" fill="#ea580c"/></svg><figcaption>🖼️ ប្រៀបធៀប Framework Mobile</figcaption></figure>
+
+</section>
+<section id="install">
+<h2>២. ដំឡើង Expo &amp; ត្រៀម</h2>
+
+<ol class="steps"><li>ដំឡើង <b>Node.js LTS</b> (nodejs.org) + <b>VS Code</b>។</li><li>ដំឡើង App <b>Expo Go</b> លើទូរស័ព្ទ (Play Store / App Store)។</li>
+<li>បង្កើត Project ហើយស្កេន QR ដោយ Expo Go → App លេចលើទូរស័ព្ទភ្លាម (មិនបាច់ Android Studio/Xcode!)។</li><li>សាក Online៖ <b>snack.expo.dev</b>។</li></ol>
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+npx create-expo-app@latest kafe-rn     # Template មាន Expo Router + TypeScript
+cd kafe-rn
+npx expo start                          # ស្កេន QR ដោយ Expo Go · a = Android emulator · i = iOS simulator
+</script>
+
+<script type="text/x-code" data-lang="txt" data-label="Project">
+kafe-rn/
+├── app/                  ← Expo Router: File = Screen
+│   ├── _layout.tsx       ← Stack / Tabs
+│   ├── (tabs)/index.tsx  ← Home
+│   └── menu/[id].tsx     ← Detail (dynamic route)
+├── components/  assets/
+├── app.json              ← ឈ្មោះ App, Icon, Permission
+└── package.json
+</script>
+
+</section>
+<section id="elements">
+<h2>៣. ធាតុនីមួយៗរបស់ React Native</h2>
+
+<figure class="fig"><svg viewBox="0 0 900 270" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="900" height="270" fill="#fff"/><rect x="30" y="30" width="260" height="90" rx="14" fill="#0ea5e9"/><text x="160.0" y="69.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">⚛️ JavaScript / TypeScript</text><text x="160.0" y="91.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">React components · Hooks · Logic</text><rect x="320" y="30" width="260" height="90" rx="14" fill="#7c3aed"/><text x="450.0" y="69.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">JSI / New Architecture</text><text x="450.0" y="91.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Fabric (UI) · TurboModules</text><rect x="610" y="30" width="260" height="90" rx="14" fill="#16a34a"/><text x="740.0" y="69.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">📱 Native UI ពិត</text><text x="740.0" y="91.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Android View · iOS UIView</text><line x1="292" y1="75" x2="316" y2="75" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="582" y1="75" x2="606" y2="75" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="30" y="160" width="260" height="70" rx="14" fill="#0f172a"/><text x="160.0" y="189.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Expo</text><text x="160.0" y="211.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Tools · Router · EAS Build · SDK</text><rect x="320" y="160" width="260" height="70" rx="14" fill="#ea580c"/><text x="450.0" y="189.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Metro bundler</text><text x="450.0" y="211.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Fast Refresh ⚡</text><rect x="610" y="160" width="260" height="70" rx="14" fill="#64748b"/><text x="740.0" y="189.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Native modules</text><text x="740.0" y="211.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Camera · Location · Notifications</text><text x="450" y="258" text-anchor="middle" font-size="13.5" font-weight="600" fill="#334155">&lt;View&gt; → android.view.ViewGroup / UIView · &lt;Text&gt; → TextView / UILabel</text></svg><figcaption>🖼️ ស្ថាបត្យកម្ម React Native + Expo</figcaption></figure>
+
+<table><tr><th>Web (React)</th><th>React Native</th><th>Android / iOS</th></tr><tr><td>&lt;div&gt;</td><td>&lt;View&gt;</td><td>ViewGroup / UIView</td></tr><tr><td>&lt;p&gt;, &lt;span&gt;</td><td>&lt;Text&gt; (អក្សរត្រូវនៅក្នុង Text ជានិច្ច)</td><td>TextView / UILabel</td></tr><tr><td>&lt;img&gt;</td><td>&lt;Image&gt;</td><td>ImageView / UIImageView</td></tr><tr><td>&lt;button&gt; onClick</td><td>&lt;Pressable&gt; onPress</td><td>Touch</td></tr><tr><td>&lt;input&gt;</td><td>&lt;TextInput&gt;</td><td>EditText / UITextField</td></tr><tr><td>CSS</td><td>StyleSheet (camelCase, Flexbox)</td><td>—</td></tr><tr><td>React Router</td><td>Expo Router / React Navigation</td><td>Navigation stack</td></tr></table>
+
+<table><tr><th>ធាតុ</th><th>មេរៀន</th></tr><tr><td>JavaScript/TypeScript</td><td>១</td></tr><tr><td>Components &amp; Style</td><td>២–៤</td></tr><tr><td>State &amp; Hooks</td><td>៥</td></tr><tr><td>List</td><td>៦</td></tr><tr><td>Form</td><td>៧</td></tr><tr><td>Navigation</td><td>៨</td></tr><tr><td>Global state</td><td>៩</td></tr><tr><td>API</td><td>១០</td></tr><tr><td>Storage</td><td>១១</td></tr><tr><td>Device</td><td>១២</td></tr><tr><td>Backend</td><td>១៣</td></tr><tr><td>Test &amp; Publish</td><td>១៤</td></tr></table>
+
+</section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>JavaScript/TypeScript សម្រាប់ React Native</h2>
+
+<p>RN ប្រើ JavaScript ទំនើប (ES2015+)។ Code ខាងក្រោមរត់ពិតដោយ Node.js៖</p>
+<script type="text/x-code" data-lang="js" data-label="basics.mjs">
+const menu = [
+  { id: 1, name: "Americano", price: 2.0, hot: true },
+  { id: 2, name: "Iced Latte", price: 2.5, hot: false },
+  { id: 3, name: "Mocha", price: 2.75, hot: true },
+];
+
+// Destructuring + template string
+for (const { name, price, hot } of menu) {
+  console.log(`${hot ? "☕" : "🧊"} ${name} — $${price.toFixed(2)}`);
+}
+
+// map / filter / reduce (ប្រើរាល់ថ្ងៃក្នុង RN)
+const cheap = menu.filter(m => m.price < 2.6).map(m => m.name);
+const total = menu.reduce((sum, m) => sum + m.price, 0);
+console.log("Cheap:", cheap, "| Total:", total);
+
+// Spread: ប្តូរ State ដោយមិនកែ Object ដើម (Immutable)
+const cart = { items: [], count: 0 };
+const next = { ...cart, items: [...cart.items, menu[1]], count: cart.count + 1 };
+console.log(cart.count, "→", next.count, next.items[0].name);
+
+// async/await
+const wait = ms => new Promise(r => setTimeout(r, ms));
+async function order() { await wait(100); return "✅ Order #1024 ready"; }
+console.log(await order());
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Node.js</span></div><pre>☕ Americano — $2.00
+🧊 Iced Latte — $2.50
+☕ Mocha — $2.75
+Cheap: [ &#x27;Americano&#x27;, &#x27;Iced Latte&#x27; ] | Total: 7.25
+0 → 1 Iced Latte
+✅ Order #1024 ready</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>const { name, price } = obj</code> — Destructuring ដកយក Property។</li><li><code class='i'>`${x}`</code> — Template string · <code class='i'>toFixed(2)</code> ២ ខ្ទង់ក្រោយក្បៀស។</li><li><code class='i'>filter/map/reduce</code> — បំលែង List (ដូច Dart where/map/fold)។</li><li><code class='i'>{...cart}</code> Spread — បង្កើត Object ថ្មី (React ត្រូវការ State ថ្មី មិនមែនកែចាស់)។</li><li>TypeScript បន្ថែម Type៖ <code class='i'>type Item = { id: number; name: string; price: number }</code> — ចាប់ Error មុនរត់។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>រកមធ្យមតម្លៃ Menu ខាងលើ។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="js" data-label="answer.js">
+const avg = menu.reduce((s, m) => s + m.price, 0) / menu.length;  // 2.4166...
+console.log(avg.toFixed(2));  // 2.42
+</script>
+</details></div>
+
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>App ដំបូង៖ View, Text &amp; StyleSheet</h2>
+
+<script type="text/x-code" data-lang="jsx" data-label="app/(tabs)/index.tsx">
+import { View, Text, StyleSheet } from 'react-native';
+
+export default function Home() {
+  return (
+    <View style={s.screen}>
+      <Text style={s.title}>Kafe Angkor ☕</Text>
+      <Text style={s.sub}>សួស្តី React Native!</Text>
+    </View>
+  );
+}
+
+const s = StyleSheet.create({
+  screen: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff8f1' },
+  title: { fontSize: 28, fontWeight: '800', color: '#4e342e' },
+  sub: { fontSize: 16, color: '#8d6e63', marginTop: 6 },
+});
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar ios" style="color:#111">Home</div><div class="ph-body"><div class="ph-center" style="background:#fff8f1;margin:-12px;height:calc(100% + 24px)"><div style="text-align:center"><b style="font-size:24px;color:#4e342e">Kafe Angkor ☕</b><div style="color:#8d6e63">សួស្តី React Native!</div></div></div></div></div><figcaption>📱 លទ្ធផលលើ Expo Go</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>export default function Home()</code> — Component = Function ត្រឡប់ JSX។</li><li><code class='i'>&lt;View&gt;</code> ប្រអប់ · <code class='i'>&lt;Text&gt;</code> អក្សរ (អក្សរគ្រប់ត្រូវនៅក្នុង Text បើមិនដូច្នោះ Error)។</li><li><code class='i'>StyleSheet.create</code> — Style ដូច CSS តែ camelCase (<code class='i'>fontSize</code>) និងលេខគ្មាន px (= dp)។</li><li><code class='i'>flex: 1</code> — ពេញអេក្រង់ · Save → <b>Fast Refresh ⚡</b> ឃើញលើទូរស័ព្ទភ្លាម។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>ហេតុអ្វី <code class='i'>&lt;View&gt;សួស្តី&lt;/View&gt;</code> បង្ហាញ Error?</p><details><summary>មើលចម្លើយ</summary><p>RN តម្រូវឲ្យអក្សរនៅក្នុង <code class='i'>&lt;Text&gt;</code> ជានិច្ច៖ <code class='i'>&lt;View&gt;&lt;Text&gt;សួស្តី&lt;/Text&gt;&lt;/View&gt;</code>។</p></details></div>
+
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Core Components៖ Image, Pressable, ScrollView</h2>
+
+<script type="text/x-code" data-lang="jsx" data-label="menu.tsx">
+import { ScrollView, View, Text, Image, Pressable, StyleSheet } from 'react-native';
+
+export function ProductCard({ name, price, onAdd }: { name: string; price: number; onAdd: () => void }) {
+  return (
+    <View style={s.card}>
+      <Image source={{ uri: 'https://picsum.photos/400/240' }} style={s.img} />
+      <Text style={s.name}>{name}</Text>
+      <Text style={s.price}>${price.toFixed(2)}</Text>
+      <Pressable onPress={onAdd} style={({ pressed }) => [s.btn, pressed && { opacity: 0.6 }]}>
+        <Text style={s.btnText}>＋ បន្ថែម</Text>
+      </Pressable>
+    </View>
+  );
+}
+
+export default function Menu() {
+  return (
+    <ScrollView contentContainerStyle={{ padding: 16, gap: 12 }}>
+      <ProductCard name="Iced Latte" price={2.5} onAdd={() => alert('បានបន្ថែម!')} />
+      <ProductCard name="Mocha" price={2.75} onAdd={() => {}} />
+    </ScrollView>
+  );
+}
+
+const s = StyleSheet.create({
+  card: { backgroundColor: '#fff', borderRadius: 18, padding: 12, elevation: 3, shadowOpacity: 0.1, shadowRadius: 8 },
+  img: { width: '100%', height: 140, borderRadius: 14 },
+  name: { fontSize: 18, fontWeight: '700', marginTop: 8 },
+  price: { color: '#8d6e63' },
+  btn: { marginTop: 10, backgroundColor: '#795548', borderRadius: 999, padding: 10, alignItems: 'center' },
+  btnText: { color: '#fff', fontWeight: '700' },
+});
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar ios" style="color:#111">Menu</div><div class="ph-body"><div class="ph-card"><div class="ph-img" style="background:linear-gradient(135deg,#a1887f,#4e342e)">🧋</div><b>Iced Latte</b><div style="color:#8d6e63">$2.50</div><span class="ph-btn" style="display:block;text-align:center">＋ បន្ថែម</span></div><div class="ph-card"><b>Mocha</b> <span style="color:#8d6e63">$2.75</span></div></div></div><figcaption>📱 ScrollView + Card</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Props</b> <code class='i'>{ name, price, onAdd }</code> — ផ្ញើទិន្នន័យពី Component មេ ទៅកូន · TypeScript កំណត់ Type។</li><li><code class='i'>&lt;Image source={{ uri }}&gt;</code> — រូបពី Internet ត្រូវកំណត់ width/height · រូបក្នុង App៖ <code class='i'>require('./a.png')</code>។</li><li><code class='i'>Pressable</code> — ចុចបាន · style ជា Function <code class='i'>({ pressed })</code> ធ្វើ Effect ពេលចុច។</li><li><code class='i'>elevation</code> (Android) + <code class='i'>shadow*</code> (iOS) — ស្រមោល។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>ScrollView និង FlatList ខុសគ្នាអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>ScrollView សង់ធាតុទាំងអស់ភ្លាម (ល្អពេលតិច) · <b>FlatList</b> សង់តែធាតុដែលឃើញ (ល្អពេលច្រើន — មេរៀន ៦)។</p></details></div>
+
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Styling &amp; Flexbox</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 250" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="250" fill="#fff"/><rect x="20" y="30" width="200" height="190" rx="18" fill="#f1f5f9" stroke="#0f172a" stroke-width="3"/><text x="120" y="22" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">Column ↓</text><rect x="60" y="50" width="120" height="45" rx="8" fill="#2563eb"/><rect x="60" y="105" width="120" height="45" rx="8" fill="#16a34a"/><rect x="60" y="160" width="120" height="45" rx="8" fill="#ea580c"/><rect x="255" y="30" width="200" height="190" rx="18" fill="#f1f5f9" stroke="#0f172a" stroke-width="3"/><text x="355" y="22" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">Row →</text><rect x="270" y="100" width="50" height="50" rx="8" fill="#2563eb"/><rect x="330" y="100" width="50" height="50" rx="8" fill="#16a34a"/><rect x="390" y="100" width="50" height="50" rx="8" fill="#ea580c"/><rect x="490" y="30" width="200" height="190" rx="18" fill="#f1f5f9" stroke="#0f172a" stroke-width="3"/><text x="590" y="22" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">Stack ⧉</text><rect x="510" y="50" width="160" height="150" rx="10" fill="#93c5fd"/><circle cx="590" cy="125" r="45" fill="#16a34a"/><rect x="620" y="60" width="44" height="24" rx="12" fill="#e11d48"/><rect x="725" y="30" width="200" height="190" rx="18" fill="#f1f5f9" stroke="#0f172a" stroke-width="3"/><text x="825" y="22" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">Expanded</text><rect x="740" y="100" width="40" height="50" rx="8" fill="#2563eb"/><rect x="785" y="100" width="110" height="50" rx="8" fill="#16a34a"/><text x="840" y="130" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">flex: 1</text><text x="470" y="245" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">mainAxisAlignment = តាមទិសមេ · crossAxisAlignment = តាមទិសទទឹង (ដូច CSS Flexbox)</text></svg><figcaption>🖼️ Layout ក្នុង Mobile (RN ប្រើ Flexbox ដូច Web)</figcaption></figure>
+
+<table><tr><th>Property</th><th>លំនាំដើម RN</th><th>ចំណាំ</th></tr><tr><td>flexDirection</td><td><b>'column'</b></td><td>Web លំនាំដើម 'row'</td></tr><tr><td>justifyContent</td><td>'flex-start'</td><td>តាមទិសមេ</td></tr><tr><td>alignItems</td><td>'stretch'</td><td>តាមទិសទទឹង</td></tr><tr><td>flex</td><td>—</td><td>flex: 1 = យកចន្លោះសល់ (ដូច Expanded)</td></tr><tr><td>gap / rowGap</td><td>—</td><td>ចន្លោះរវាងកូន</td></tr><tr><td>position: 'absolute'</td><td>—</td><td>ដាក់ត្រួត (ដូច Stack)</td></tr></table>
+
+<script type="text/x-code" data-lang="jsx" data-label="profile-row.tsx">
+<View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: 16 }}>
+  <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: '#d7ccc8' }} />
+  <View style={{ flex: 1 }}>                               {/* យកចន្លោះសល់ */}
+    <Text style={{ fontWeight: '700' }}>Dara</Text>
+    <Text style={{ color: 'gray' }} numberOfLines={1}>Gold member · 1,250 points</Text>
+  </View>
+  <View>
+    <Text style={{ fontSize: 24 }}>🔔</Text>
+    <View style={{ position: 'absolute', top: -4, right: -6, backgroundColor: 'red', borderRadius: 9, paddingHorizontal: 5 }}>
+      <Text style={{ color: '#fff', fontSize: 10 }}>3</Text>
+    </View>
+  </View>
+</View>
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar ios" style="color:#111">Profile</div><div class="ph-body"><div class="ph-row"><span class="ph-av">D</span><div style="flex:1"><b>Dara</b><div style="font-size:12px;color:#777">Gold member · 1,250 points</div></div><span style="position:relative;font-size:24px">🔔<i class="ph-badge">3</i></span></div></div></div><figcaption>📱 Row + flex:1 + absolute badge</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>flexDirection: 'row'</code> — ផ្តេក (RN លំនាំដើមជា column)។</li><li><code class='i'>flex: 1</code> — យកចន្លោះសល់ · <code class='i'>numberOfLines={1}</code> — កាត់អក្សរវែងជា …</li><li><code class='i'>position: 'absolute'</code> — Badge លើ Icon។ សាកផ្ទាល់ក្នុង <b>Layout Lab</b> ខាងក្រោម។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>ប៊ូតុង ៣ ចែកទទឹងស្មើក្នុងជួរមួយ?</p><details><summary>មើលចម្លើយ</summary><p>Container <code class='i'>flexDirection: 'row', gap: 8</code> · ប៊ូតុងនីមួយៗ <code class='i'>flex: 1</code>។</p></details></div>
+
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>State &amp; Hooks៖ useState, useEffect</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="230" fill="#fff"/><rect x="20" y="30" width="260" height="90" rx="14" fill="#64748b"/><text x="150.0" y="69.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">StatelessWidget</text><text x="150.0" y="91.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">មិនប្តូរ: Text, Icon, Logo</text><rect x="330" y="30" width="260" height="90" rx="14" fill="#02569b"/><text x="460.0" y="69.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">StatefulWidget + State</text><text x="460.0" y="91.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ប្តូរបាន: Counter, Form, Like ❤</text><rect x="640" y="10" width="280" height="50" rx="14" fill="#16a34a"/><text x="780.0" y="41.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">① User ចុច (onPressed)</text><rect x="640" y="70" width="280" height="50" rx="14" fill="#ea580c"/><text x="780.0" y="101.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">② setState(() => count++)</text><rect x="640" y="130" width="280" height="50" rx="14" fill="#7c3aed"/><text x="780.0" y="161.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">③ build() ម្តងទៀត → UI ថ្មី</text><line x1="780" y1="62" x2="780" y2="68" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="780" y1="122" x2="780" y2="128" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><path d="M920 155 Q 935 90 922 35" fill="none" stroke="#475569" stroke-width="2.5" stroke-dasharray="5 4" marker-end="url(#ar)"/><text x="470" y="200" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">State = ទិន្នន័យដែលប្តូរ · UI = build(State)</text></svg><figcaption>🖼️ State ប្តូរ → Component render ម្តងទៀត (ដូច Flutter)</figcaption></figure>
+
+<script type="text/x-code" data-lang="jsx" data-label="QtyPicker.tsx">
+import { useState, useEffect } from 'react';
+import { View, Text, Pressable } from 'react-native';
+
+export function QtyPicker({ price = 2.5 }) {
+  const [qty, setQty] = useState(1);                 // State
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {                                  // រត់ពេល Component បង្ហាញ
+    const t = setInterval(() => setSeconds(s => s + 1), 1000);
+    return () => clearInterval(t);                   // Cleanup ពេលចាកចេញ
+  }, []);                                            // [] = តែម្តង
+
+  return (
+    <View style={{ alignItems: 'center', gap: 8 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
+        <Pressable disabled={qty <= 1} onPress={() => setQty(q => q - 1)}><Text style={{ fontSize: 28 }}>−</Text></Pressable>
+        <Text style={{ fontSize: 30, fontWeight: '700' }}>{qty}</Text>
+        <Pressable onPress={() => setQty(q => q + 1)}><Text style={{ fontSize: 28 }}>＋</Text></Pressable>
+      </View>
+      <Text>សរុប ${(qty * price).toFixed(2)} · បើក {seconds}s</Text>
+    </View>
+  );
+}
+</script>
+
+<div class="ph-live"><script type="text/x-code" data-lang="html" data-label="QtyPicker (ក្លែងក្នុង Browser) · ▶ ចុចសាក" data-demo>
+<style>body{font-family:sans-serif;text-align:center}button{width:44px;height:44px;border-radius:50%;border:0;background:#d7ccc8;font-size:22px}b{font-size:30px;margin:0 18px;vertical-align:middle}button:disabled{opacity:.35}</style>
+<button id="m" disabled>−</button><b id="q">1</b><button id="p">+</button><p id="t"></p>
+<script>let qty=1,sec=0;const r=()=>{q.textContent=qty;t.textContent="សរុប $"+(qty*2.5).toFixed(2)+" · បើក "+sec+"s";m.disabled=qty<=1};p.onclick=()=>{qty++;r()};m.onclick=()=>{qty--;r()};setInterval(()=>{sec++;r()},1000);r();<\/script>
+</script>
+</div>
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>const [qty, setQty] = useState(1)</code> — State + Function ប្តូរ (ដូច setState)។</li><li><code class='i'>setQty(q =&gt; q + 1)</code> — Functional update ប្រើតម្លៃចុងក្រោយ (សុវត្ថិភាពជាង setQty(qty+1))។</li><li><code class='i'>useEffect(fn, [])</code> — Side effect (Timer, API) ពេល Mount · <code class='i'>return</code> Cleanup ការពារ Memory leak។</li><li><code class='i'>disabled</code> — បិទប៊ូតុង ពេល qty ≤ 1។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>useEffect ដែលមាន Dependency <code class='i'>[qty]</code> រត់ពេលណា?</p><details><summary>មើលចម្លើយ</summary><p>ពេល Mount និងរាល់ពេល <b>qty ប្តូរ</b>។ គ្មាន array = រត់រាល់ render · <code class='i'>[]</code> = តែម្តង។</p></details></div>
+
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>FlatList (បញ្ជីវែង)</h2>
+
+<script type="text/x-code" data-lang="jsx" data-label="MenuList.tsx">
+import { FlatList, Text, View, Pressable } from 'react-native';
+
+const DATA = Array.from({ length: 50 }, (_, i) => ({ id: String(i + 1), name: `Coffee #${i + 1}`, price: 1.5 + i * 0.25 }));
+
+export default function MenuList() {
+  return (
+    <FlatList
+      data={DATA}
+      keyExtractor={item => item.id}
+      contentContainerStyle={{ padding: 12, gap: 8 }}
+      renderItem={({ item }) => (
+        <Pressable style={{ flexDirection: 'row', padding: 14, backgroundColor: '#fff', borderRadius: 14 }}
+                   onPress={() => console.log(item.name)}>
+          <Text style={{ flex: 1, fontWeight: '600' }}>{item.name}</Text>
+          <Text>${item.price.toFixed(2)} ›</Text>
+        </Pressable>
+      )}
+      ListEmptyComponent={<Text>មិនមានទំនិញ</Text>}
+      onEndReached={() => console.log('load more...')}     // Infinite scroll
+      refreshing={false}
+      onRefresh={() => console.log('pull to refresh')}
+    />
+  );
+}
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar ios" style="color:#111">Menu (50)</div><div class="ph-body"><div class="ph-tile"><div style="flex:1"><b>Coffee #1</b></div>$1.50 ›</div><div class="ph-tile"><div style="flex:1"><b>Coffee #2</b></div>$1.75 ›</div><div class="ph-tile"><div style="flex:1"><b>Coffee #3</b></div>$2.00 ›</div><div class="ph-tile"><div style="flex:1"><b>Coffee #4</b></div>$2.25 ›</div><div class="ph-tile"><div style="flex:1"><b>Coffee #5</b></div>$2.50 ›</div><div class="ph-tile"><div style="flex:1"><b>Coffee #6</b></div>$2.75 ›</div><div class="ph-tile"><div style="flex:1"><b>Coffee #7</b></div>$3.00 ›</div><div class="ph-tile"><div style="flex:1"><b>Coffee #8</b></div>$3.25 ›</div></div></div><figcaption>📱 FlatList រំកិល + Pull to refresh</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>data</code> + <code class='i'>renderItem</code> — សង់តែធាតុដែលឃើញ (Virtualized) → លឿនទោះ 10,000 ធាតុ។</li><li><code class='i'>keyExtractor</code> — Key មិនស្ទួន ឲ្យ React ដឹងធាតុណាប្តូរ។</li><li><code class='i'>onEndReached</code> — ទាញទំព័របន្ទាប់ពេលរំកិលដល់ចុង · <code class='i'>onRefresh</code> — ទាញចុះដើម្បី Refresh។</li><li>Grid៖ <code class='i'>numColumns={2}</code> · Section (ក្រុម)៖ <code class='i'>SectionList</code>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>បង្ហាញ Menu ជា ២ ជួរឈរ។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="jsx" data-label="answer.tsx">
+<FlatList data={DATA} numColumns={2} columnWrapperStyle={{ gap: 8 }} renderItem={({ item }) => <ProductCard {...item} />} />
+</script>
+</details></div>
+
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>TextInput &amp; Form</h2>
+
+<script type="text/x-code" data-lang="jsx" data-label="checkout.tsx">
+import { useState } from 'react';
+import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform } from 'react-native';
+
+export default function Checkout() {
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [errors, setErrors] = useState<{ name?: string; phone?: string }>({});
+
+  const submit = () => {
+    const e: typeof errors = {};
+    if (!name.trim()) e.name = 'សូមបញ្ចូលឈ្មោះ';
+    if (!/^[1-9]\d{7,8}$/.test(phone)) e.phone = 'លេខទូរស័ព្ទមិនត្រឹមត្រូវ';
+    setErrors(e);
+    if (Object.keys(e).length === 0) alert(`✅ Order for +855 ${phone}`);
+  };
+
+  return (
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ padding: 16, gap: 6 }}>
+      <TextInput placeholder="ឈ្មោះ" value={name} onChangeText={setName} style={inp} />
+      {errors.name && <Text style={{ color: 'crimson' }}>{errors.name}</Text>}
+      <TextInput placeholder="លេខទូរស័ព្ទ" keyboardType="phone-pad" value={phone} onChangeText={setPhone} style={inp} />
+      {errors.phone && <Text style={{ color: 'crimson' }}>{errors.phone}</Text>}
+      <Pressable onPress={submit} style={{ backgroundColor: '#795548', padding: 14, borderRadius: 999, marginTop: 10 }}>
+        <Text style={{ color: '#fff', textAlign: 'center', fontWeight: '700' }}>បញ្ជាទិញ</Text>
+      </Pressable>
+    </KeyboardAvoidingView>
+  );
+}
+const inp = { borderWidth: 1, borderColor: '#ccc', borderRadius: 10, padding: 12 } as const;
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Controlled input</b>៖ <code class='i'>value</code> + <code class='i'>onChangeText</code> ភ្ជាប់ទៅ State។</li><li><code class='i'>keyboardType="phone-pad"</code> — ក្តារលេខ · <code class='i'>secureTextEntry</code> សម្រាប់ Password។</li><li><code class='i'>{errors.name &amp;&amp; &lt;Text&gt;}</code> — បង្ហាញ Error តែពេលមាន (Conditional rendering)។</li><li><code class='i'>KeyboardAvoidingView</code> — កុំឲ្យក្តារចុចបាំង Input លើ iOS។</li><li>Form ធំ៖ ប្រើ Library <b>react-hook-form</b> + <b>zod</b>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>បន្ថែម Field Password ៨ តួយ៉ាងតិច។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="jsx" data-label="answer.tsx">
+<TextInput placeholder="Password" secureTextEntry value={pw} onChangeText={setPw} style={inp} />
+// validate: if (pw.length < 8) e.pw = 'យ៉ាងតិច ៨ តួ';
+</script>
+</details></div>
+
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Navigation៖ Expo Router (Stack &amp; Tabs)</h2>
+
+<figure class="fig"><svg viewBox="0 0 900 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="900" height="230" fill="#fff"/><rect x="60" y="40" width="190" height="150" rx="14" fill="#64748b" stroke="#0f172a" stroke-width="2"/><text x="155" y="80" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Home</text><rect x="84" y="58" width="190" height="150" rx="14" fill="#0175c2" stroke="#0f172a" stroke-width="2"/><text x="179" y="98" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Menu</text><rect x="108" y="76" width="190" height="150" rx="14" fill="#02569b" stroke="#0f172a" stroke-width="2"/><text x="203" y="116" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Detail ☕</text><rect x="420" y="40" width="200" height="56" rx="14" fill="#16a34a"/><text x="520.0" y="62.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Navigator.push</text><text x="520.0" y="84.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ដាក់ទំព័រថ្មីពីលើ</text><rect x="420" y="120" width="200" height="56" rx="14" fill="#dc2626"/><text x="520.0" y="142.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Navigator.pop</text><text x="520.0" y="164.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ត្រឡប់ក្រោយ</text><rect x="660" y="70" width="220" height="70" rx="14" fill="#7c3aed"/><text x="770.0" y="99.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">go_router</text><text x="770.0" y="121.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">context.go('/menu/7')</text><text x="155" y="222" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Navigation = Stack នៃទំព័រ</text></svg><figcaption>🖼️ Navigation stack</figcaption></figure>
+
+<script type="text/x-code" data-lang="jsx" data-label="navigation.tsx">
+// app/(tabs)/_layout.tsx — Tabs ខាងក្រោម
+import { Tabs } from 'expo-router';
+import Ionicons from '@expo/vector-icons/Ionicons';
+
+export default function TabLayout() {
+  return (
+    <Tabs screenOptions={{ tabBarActiveTintColor: '#795548' }}>
+      <Tabs.Screen name="index" options={{ title: 'Menu', tabBarIcon: ({ color }) => <Ionicons name="cafe" size={22} color={color} /> }} />
+      <Tabs.Screen name="orders" options={{ title: 'Orders', tabBarIcon: ({ color }) => <Ionicons name="receipt" size={22} color={color} /> }} />
+      <Tabs.Screen name="profile" options={{ title: 'Profile', tabBarIcon: ({ color }) => <Ionicons name="person" size={22} color={color} /> }} />
+    </Tabs>
+  );
+}
+
+// ទៅ Detail: app/menu/[id].tsx
+import { Link, router, useLocalSearchParams } from 'expo-router';
+<Link href={`/menu/${item.id}`}>មើលលម្អិត</Link>     // ឬ router.push(`/menu/${item.id}`)
+
+export function Detail() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  return <Text onPress={() => router.back()}>ទំនិញ #{id} · ត្រឡប់</Text>;
+}
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar ios" style="color:#111">Menu</div><div class="ph-body"><div class="ph-center" style="color:#777">Menu</div><div class="ph-nav" style="background:#fff;border-top:1px solid #eee"><span class="on" style="--pc:#efebe9;color:#795548">☕<br>Menu</span><span>🧾<br>Orders</span><span>👤<br>Profile</span></div></div></div><figcaption>📱 Tabs ខាងក្រោម</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Expo Router</b>៖ File ក្នុង <code class='i'>app/</code> = Screen (ដូច Next.js) · <code class='i'>(tabs)</code> = ក្រុម Tab។</li><li><code class='i'>[id].tsx</code> — Dynamic route · <code class='i'>useLocalSearchParams</code> យក id។</li><li><code class='i'>router.push / back / replace</code> — ផ្លាស់ទី · <code class='i'>&lt;Link href&gt;</code> ដូច &lt;a&gt;។</li><li>Deep link <code class='i'>kafe://menu/7</code> ដំណើរការដោយស្វ័យប្រវត្តិ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>ក្រោយ Login ជោគជ័យ មិនចង់ឲ្យចុច Back ត្រឡប់ទៅ Login វិញ។ ប្រើអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><code class='i'>router.replace('/(tabs)')</code> — ជំនួសទំព័របច្ចុប្បន្ន (មិនដាក់លើ Stack)។</p></details></div>
+
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Global State៖ Context &amp; Zustand (Cart)</h2>
+
+<script type="text/x-code" data-lang="jsx" data-label="store/cart.ts">
+// store/cart.ts — npm i zustand
+import { create } from 'zustand';
+
+type Item = { id: string; name: string; price: number };
+type Cart = {
+  lines: Record<string, { item: Item; qty: number }>;
+  add: (it: Item) => void;
+  clear: () => void;
+};
+
+export const useCart = create<Cart>((set) => ({
+  lines: {},
+  add: (it) => set((s) => ({
+    lines: { ...s.lines, [it.id]: { item: it, qty: (s.lines[it.id]?.qty ?? 0) + 1 } },
+  })),
+  clear: () => set({ lines: {} }),
+}));
+
+// Selector: គណនាពី State
+export const cartCount = (s: Cart) => Object.values(s.lines).reduce((n, l) => n + l.qty, 0);
+export const cartTotal = (s: Cart) => Object.values(s.lines).reduce((t, l) => t + l.qty * l.item.price, 0);
+
+// ក្នុង Screen ណាក៏បាន
+const add = useCart((s) => s.add);
+const count = useCart(cartCount);       // Re-render តែពេល count ប្តូរ
+</script>
+
+<script type="text/x-code" data-lang="js" data-label="cart-test.mjs">
+// សាក Logic Cart ដោយគ្មាន React (Store សាមញ្ញ)
+let state = { lines: {} };
+const set = fn => { state = { ...state, ...fn(state) }; };
+const add = it => set(s => ({ lines: { ...s.lines, [it.id]: { item: it, qty: (s.lines[it.id]?.qty ?? 0) + 1 } } }));
+const count = s => Object.values(s.lines).reduce((n, l) => n + l.qty, 0);
+const total = s => Object.values(s.lines).reduce((t, l) => t + l.qty * l.item.price, 0);
+
+const latte = { id: "2", name: "Iced Latte", price: 2.5 };
+add(latte); add(latte); add({ id: "3", name: "Mocha", price: 2.75 });
+console.log("count:", count(state), "| total: $" + total(state).toFixed(2));
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Node.js</span></div><pre>count: 3 | total: $7.75</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Zustand</b> — Store តូច ងាយ ជំនួស Redux · <code class='i'>create</code> បង្កើត Hook <code class='i'>useCart</code>។</li><li><code class='i'>set(s =&gt; ...)</code> — ត្រឡប់ State ថ្មីដោយ Spread (Immutable)។</li><li><code class='i'>?.qty ?? 0</code> — Optional chaining + Nullish (ដូច Dart)។</li><li>Selector <code class='i'>useCart(cartCount)</code> — Component render តែពេលតម្លៃនោះប្តូរ → លឿន។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>បន្ថែម <code class='i'>remove(id)</code> បន្ថយ qty ១ ហើយលុបពេលដល់ 0។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="jsx" data-label="answer.ts">
+remove: (id) => set((s) => {
+  const l = s.lines[id]; if (!l) return s;
+  const lines = { ...s.lines };
+  if (l.qty <= 1) delete lines[id]; else lines[id] = { ...l, qty: l.qty - 1 };
+  return { lines };
+}),
+</script>
+</details></div>
+
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>Fetch API &amp; Loading/Error</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 220" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="220" fill="#fff"/><rect x="20" y="70" width="170" height="80" rx="14" fill="#02569b"/><text x="105.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">📱 Flutter UI</text><text x="105.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">FutureBuilder</text><rect x="250" y="70" width="170" height="80" rx="14" fill="#0891b2"/><text x="335.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Repository</text><text x="335.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">http.get()</text><rect x="480" y="70" width="170" height="80" rx="14" fill="#ea580c"/><text x="565.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🌐 REST API</text><text x="565.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">GET /menu</text><rect x="710" y="70" width="200" height="80" rx="14" fill="#16a34a"/><text x="810.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🗄️ Server + DB</text><text x="810.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Node.js · PostgreSQL</text><line x1="192" y1="100" x2="246" y2="100" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="219.0" y="92.0" text-anchor="middle" font-size="13" fill="#334155">request</text><line x1="422" y1="100" x2="476" y2="100" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="652" y1="100" x2="706" y2="100" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="706" y1="130" x2="652" y2="130" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="476" y1="130" x2="422" y2="130" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="449.0" y="122.0" text-anchor="middle" font-size="13" fill="#334155">JSON</text><line x1="246" y1="130" x2="192" y2="130" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="219.0" y="122.0" text-anchor="middle" font-size="13" fill="#334155">List<Item></text><text x="470" y="200" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">JSON → jsonDecode → Model (fromJson) → Widget</text></svg><figcaption>🖼️ Data flow ពី API ទៅ UI</figcaption></figure>
+
+<script type="text/x-code" data-lang="jsx" data-label="products.tsx">
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, Text } from 'react-native';
+
+type Product = { id: number; name: string; price: number };
+
+export default function Products() {
+  const [data, setData] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const ctrl = new AbortController();
+    (async () => {
+      try {
+        const res = await fetch('https://api.example.com/products', { signal: ctrl.signal });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        setData(await res.json());
+      } catch (e: any) {
+        if (e.name !== 'AbortError') setError(e.message);
+      } finally {
+        setLoading(false);
+      }
+    })();
+    return () => ctrl.abort();                      // បោះបង់ពេលចាកចេញ
+  }, []);
+
+  if (loading) return <ActivityIndicator size="large" style={{ flex: 1 }} />;
+  if (error) return <Text>⚠️ {error}</Text>;
+  return <FlatList data={data} keyExtractor={p => String(p.id)} renderItem={({ item }) => <Text>{item.name} ${item.price}</Text>} />;
+}
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>State ៣៖ <b>loading</b> ⏳, <b>error</b> ⚠️, <b>data</b> ✅ — បង្ហាញ UI ត្រូវតាមស្ថានភាព។</li><li><code class='i'>fetch</code> + <code class='i'>res.ok</code> — ពិនិត្យ HTTP status · <code class='i'>res.json()</code> → Object។</li><li><code class='i'>AbortController</code> — បោះបង់ Request ពេលអ្នកប្រើចាកចេញ (ការពារ setState លើ Component ដែលបាត់)។</li><li>App ពិតប្រើ <b>TanStack Query</b> (Cache, Retry, Refetch ស្វ័យប្រវត្តិ)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>Android Emulator ហៅ <code class='i'>http://localhost:3000</code> មិនបាន។ ហេតុអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>localhost ក្នុង Emulator = Emulator ខ្លួនឯង។ ប្រើ <code class='i'>http://10.0.2.2:3000</code> (Android emulator) ឬ IP កុំព្យូទ័រ (ទូរស័ព្ទពិត) — ហើយពេញ Production ត្រូវប្រើ HTTPS។</p></details></div>
+
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>Storage៖ AsyncStorage &amp; SecureStore</h2>
+
+<script type="text/x-code" data-lang="jsx" data-label="storage.ts">
+// npx expo install @react-native-async-storage/async-storage expo-secure-store
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
+
+// ការកំណត់ធម្មតា (មិនសម្ងាត់)
+await AsyncStorage.setItem('theme', 'dark');
+const theme = (await AsyncStorage.getItem('theme')) ?? 'light';
+
+// Object → JSON
+await AsyncStorage.setItem('recent', JSON.stringify(['Latte', 'Mocha']));
+const recent: string[] = JSON.parse((await AsyncStorage.getItem('recent')) ?? '[]');
+
+// Token សម្ងាត់ → Keychain / Keystore (អ៊ិនគ្រីប)
+await SecureStore.setItemAsync('token', jwt);
+const token = await SecureStore.getItemAsync('token');
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>AsyncStorage</b> — Key-value (String) ដូច localStorage តែ async · Object ត្រូវ JSON.stringify/parse។</li><li><b>SecureStore</b> — រក្សា Token/Password ក្នុង iOS Keychain / Android Keystore (អ៊ិនគ្រីប)។</li><li>Database ធំ Offline៖ <b>expo-sqlite</b> ឬ WatermelonDB។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>Zustand Cart បាត់ពេលបិទ App។ ធ្វើយ៉ាងម៉េចឲ្យនៅជាប់?</p><details><summary>មើលចម្លើយ</summary><p>ប្រើ Middleware <code class='i'>persist</code> របស់ Zustand ជាមួយ <code class='i'>createJSONStorage(() =&gt; AsyncStorage)</code>។</p></details></div>
+
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>Device៖ Camera, Location &amp; Notification</h2>
+
+<script type="text/x-code" data-lang="jsx" data-label="device.ts">
+// npx expo install expo-image-picker expo-location expo-notifications
+import * as ImagePicker from 'expo-image-picker';
+import * as Location from 'expo-location';
+import * as Notifications from 'expo-notifications';
+
+export async function takePhoto() {
+  const { granted } = await ImagePicker.requestCameraPermissionsAsync();
+  if (!granted) return alert('សូមអនុញ្ញាត Camera ក្នុង Settings');
+  const r = await ImagePicker.launchCameraAsync({ quality: 0.7, allowsEditing: true, aspect: [1, 1] });
+  if (!r.canceled) return r.assets[0].uri;
+}
+
+export async function distanceToShop() {
+  const { status } = await Location.requestForegroundPermissionsAsync();
+  if (status !== 'granted') return null;
+  const { coords } = await Location.getCurrentPositionAsync({});
+  return haversineKm(coords.latitude, coords.longitude, 11.5564, 104.9282);   // ភ្នំពេញ
+}
+
+export async function notifyReady() {
+  await Notifications.requestPermissionsAsync();
+  await Notifications.scheduleNotificationAsync({
+    content: { title: '☕ Kafe Angkor', body: 'Order របស់អ្នករួចរាល់ហើយ!' },
+    trigger: { seconds: 5 },
+  });
+}
+</script>
+
+<script type="text/x-code" data-lang="js" data-label="haversine.mjs">
+// រូបមន្ត Haversine — ចម្ងាយលើផែនដី (km)
+function haversineKm(lat1, lon1, lat2, lon2) {
+  const R = 6371, rad = d => d * Math.PI / 180;
+  const dLat = rad(lat2 - lat1), dLon = rad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+// វិមានឯករាជ្យ → ផ្សារធំថ្មី (ប្រហាក់ប្រហែល)
+console.log(haversineKm(11.5564, 104.9282, 11.5696, 104.9210).toFixed(2), "km");
+// ភ្នំពេញ → សៀមរាប
+console.log(haversineKm(11.5564, 104.9282, 13.3671, 103.8448).toFixed(0), "km (បន្ទាត់ត្រង់)");
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Node.js</span></div><pre>1.66 km
+233 km (បន្ទាត់ត្រង់)</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>រាល់មុខងារទូរស័ព្ទ៖ <b>request Permission → ពិនិត្យ → ប្រើ</b>។</li><li><code class='i'>launchCameraAsync({ quality: 0.7 })</code> — ថត + បង្រួម · <code class='i'>r.assets[0].uri</code> = ទីតាំង File។</li><li><code class='i'>getCurrentPositionAsync</code> → lat/lon · Haversine គណនាចម្ងាយ (គណិតពីវគ្គ Math for IT)។</li><li>Permission text កំណត់ក្នុង <code class='i'>app.json</code> → plugins (iOS ត្រូវការហេតុផល)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>ស្កេន QR (KHQR) ប្រើ Package អ្វី?</p><details><summary>មើលចម្លើយ</summary><p><code class='i'>expo-camera</code> (CameraView + <code class='i'>onBarcodeScanned</code>) — ស្នើ Permission Camera មុន។</p></details></div>
+
+</section>
+<section id="l13">
+<h2><span class="badge">មេរៀន ១៣</span>Backend៖ Supabase / Firebase</h2>
+
+<script type="text/x-code" data-lang="jsx" data-label="backend.ts">
+// npm i @supabase/supabase-js
+import { createClient } from '@supabase/supabase-js';
+const supabase = createClient(process.env.EXPO_PUBLIC_SUPABASE_URL!, process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!);
+
+// Login
+const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+// បញ្ចូល Order (Postgres)
+await supabase.from('orders').insert({ user_id: data.user!.id, items: [{ name: 'Latte', qty: 2 }], status: 'pending' });
+
+// Realtime: ស្តាប់ Status ប្តូរ
+supabase.channel('orders')
+  .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'orders' },
+      (p) => console.log('Status:', p.new.status))
+  .subscribe();
+</script>
+
+<script type="text/x-code" data-lang="sql" data-label="Supabase SQL">
+-- Row Level Security: អ្នកប្រើមើលបានតែ Order ខ្លួនឯង
+alter table orders enable row level security;
+create policy "own orders" on orders for select using (auth.uid() = user_id);
+create policy "insert own" on orders for insert with check (auth.uid() = user_id);
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Supabase</b> = Postgres + Auth + Realtime + Storage (Open source) · Firebase ក៏ដូចគ្នា (មើលវគ្គ Flutter មេរៀន ១៥)។</li><li><code class='i'>EXPO_PUBLIC_*</code> — Env variable ដែលចូលក្នុង App (Anon key អាចបង្ហាញ ប៉ុន្តែត្រូវការពារដោយ RLS)។</li><li><b>Row Level Security</b> — ច្បាប់សុវត្ថិភាពនៅក្នុង Database (SQL ពីវគ្គ PostgreSQL)។</li><li>កុំដាក់ Service role key ក្នុង App ជាដាច់ខាត!</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៣</h4><p>ហេតុអ្វីមិនត្រូវដាក់ Secret key ក្នុង Mobile App?</p><details><summary>មើលចម្លើយ</summary><p>គេអាច Decompile App (APK/IPA) ហើយយក Key បាន។ App គួរមានតែ Public key + Security rules · Secret នៅលើ Server ប៉ុណ្ណោះ។</p></details></div>
+
+</section>
+<section id="l14">
+<h2><span class="badge">មេរៀន ១៤</span>Testing &amp; Publish (EAS Build)</h2>
+
+<figure class="fig"><svg viewBox="0 0 980 160" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="980" height="160" fill="#fff"/><path d="M12 30h118l18 40-18 40h-118l18-40z" fill="#02569b"/><text x="80" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Code</text><text x="80" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">flutter run</text><path d="M151 30h118l18 40-18 40h-118l18-40z" fill="#0175c2"/><text x="219" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Test</text><text x="219" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">flutter test</text><path d="M290 30h118l18 40-18 40h-118l18-40z" fill="#0891b2"/><text x="358" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Icon + Name</text><text x="358" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">launcher icons</text><path d="M429 30h118l18 40-18 40h-118l18-40z" fill="#7c3aed"/><text x="497" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Sign</text><text x="497" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">keystore</text><path d="M568 30h118l18 40-18 40h-118l18-40z" fill="#ea580c"/><text x="636" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Build</text><text x="636" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">appbundle / ipa</text><path d="M707 30h118l18 40-18 40h-118l18-40z" fill="#16a34a"/><text x="775" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Store</text><text x="775" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">Play · App Store</text><path d="M846 30h118l18 40-18 40h-118l18-40z" fill="#ca8a04"/><text x="914" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Update</text><text x="914" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">version +1</text><text x="490" y="145" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">ដំណើរការ Publish App</text></svg><figcaption>🖼️ ពី Code ទៅ Store</figcaption></figure>
+
+<script type="text/x-code" data-lang="jsx" data-label="cart.test.ts">
+// __tests__/cart.test.ts — npx jest
+import { useCart, cartCount, cartTotal } from '../store/cart';
+
+test('add items', () => {
+  const latte = { id: '2', name: 'Latte', price: 2.5 };
+  useCart.getState().add(latte);
+  useCart.getState().add(latte);
+  const s = useCart.getState();
+  expect(cartCount(s)).toBe(2);
+  expect(cartTotal(s)).toBe(5);
+});
+</script>
+
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+npm i -g eas-cli
+eas login
+eas build:configure
+eas build -p android --profile preview     # APK សាកផ្ញើមិត្ត
+eas build -p android                        # AAB → Google Play
+eas build -p ios                            # IPA (មិនបាច់ Mac! Build លើ Cloud)
+eas submit -p android                       # Upload ទៅ Store
+eas update --branch production              # OTA update (JS) មិនបាច់ Review ថ្មី
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Jest</b> — Unit test · <b>React Native Testing Library</b> — Test UI (render, fireEvent.press)។</li><li><b>EAS Build</b> — Build លើ Cloud របស់ Expo → ធ្វើ iOS App បានទោះគ្មាន Mac (នៅតែត្រូវ Apple Developer $99/ឆ្នាំ)។</li><li><b>EAS Update</b> — ផ្ញើការកែ JavaScript ទៅអ្នកប្រើភ្លាម (OTA)។ ការប្តូរ Native/Permission ត្រូវ Build ថ្មី។</li><li><code class='i'>app.json</code>៖ name, slug, icon, splash, android.package, ios.bundleIdentifier, version។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៤</h4><p>OTA update អាចប្តូរអ្វីបាន អ្វីមិនបាន?</p><details><summary>មើលចម្លើយ</summary><p>✅ JS/TS Code, Style, រូបភាពក្នុង Bundle · ❌ Native module ថ្មី, Permission, App icon, SDK version → ត្រូវ <code class='i'>eas build</code> + Store review។</p></details></div>
+
+</section>
+<section id="cheat">
+<h2>📋 Cheat Sheet</h2>
+
+<table><tr><th>Web</th><th>React Native</th></tr><tr><td>div / span / p</td><td>View / Text</td></tr><tr><td>img</td><td>Image</td></tr><tr><td>button onClick</td><td>Pressable onPress</td></tr><tr><td>input onChange</td><td>TextInput onChangeText</td></tr><tr><td>ul + map</td><td>FlatList / SectionList</td></tr><tr><td>CSS px</td><td>StyleSheet (dp, camelCase)</td></tr><tr><td>flex row (default)</td><td>flex column (default)</td></tr><tr><td>localStorage</td><td>AsyncStorage / SecureStore</td></tr><tr><td>React Router</td><td>Expo Router</td></tr></table>
+
+<script type="text/x-code" data-lang="bash" data-label="Commands">
+npx create-expo-app · npx expo start · npx expo install <pkg> · eas build · eas submit · eas update
+</script>
+
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងអាជីព៖ Kafe Order App (RN)</h2>
+
+<p>App បញ្ជាទិញកាហ្វេពេញលេញ៖ <b>Tabs (Menu · Orders · Profile) → Detail → Cart (Zustand + persist) → Checkout (Form) → Orders realtime (Supabase)</b> + Dark mode + Notification។</p>
+<script type="text/x-code" data-lang="txt" data-label="Project structure">
+kafe-rn/
+├── app/
+│   ├── _layout.tsx            ← Stack + ThemeProvider + QueryClientProvider
+│   ├── (auth)/login.tsx       ← Supabase auth
+│   ├── (tabs)/_layout.tsx     ← Tabs + Badge cart
+│   ├── (tabs)/index.tsx       ← Menu (FlatList 2 cols + Search)
+│   ├── (tabs)/orders.tsx      ← Realtime orders
+│   ├── menu/[id].tsx          ← Detail: size, sugar, qty
+│   └── cart.tsx · checkout.tsx
+├── store/cart.ts              ← Zustand + persist(AsyncStorage)
+├── lib/supabase.ts · lib/api.ts
+└── components/ProductCard.tsx
+</script>
+
+<script type="text/x-code" data-lang="jsx" data-label="app/menu/[id].tsx">
+// app/menu/[id].tsx (ផ្នែកសំខាន់)
+export default function Detail() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { data: item, isLoading } = useQuery({ queryKey: ['menu', id], queryFn: () => api.menuItem(id) });
+  const add = useCart((s) => s.add);
+  const [qty, setQty] = useState(1);
+  const [size, setSize] = useState<'S' | 'M' | 'L'>('M');
+
+  if (isLoading || !item) return <ActivityIndicator style={{ flex: 1 }} />;
+  const price = item.price + (size === 'L' ? 0.5 : size === 'S' ? -0.25 : 0);
+
+  return (
+    <ScrollView contentContainerStyle={{ padding: 16, gap: 12 }}>
+      <Image source={{ uri: item.image }} style={{ height: 240, borderRadius: 20 }} />
+      <Text style={{ fontSize: 26, fontWeight: '800' }}>{item.name}</Text>
+      <Segmented values={['S', 'M', 'L']} value={size} onChange={setSize} />
+      <QtyPicker value={qty} onChange={setQty} />
+      <Button title={`បន្ថែម $${(price * qty).toFixed(2)}`} onPress={() => {
+        for (let i = 0; i < qty; i++) add({ ...item, id: `${item.id}-${size}`, price });
+        router.back();
+      }} />
+    </ScrollView>
+  );
+}
+</script>
+
+<table><tr><th>ជំហាន</th><th>មេរៀន</th></tr><tr><td>Components + Style</td><td>២ · ៣ · ៤</td></tr><tr><td>Qty, Size (State)</td><td>៥</td></tr><tr><td>Menu grid</td><td>៦</td></tr><tr><td>Checkout</td><td>៧</td></tr><tr><td>Tabs + Detail</td><td>៨</td></tr><tr><td>Cart</td><td>៩</td></tr><tr><td>API</td><td>១០</td></tr><tr><td>Persist</td><td>១១</td></tr><tr><td>Notification</td><td>១២</td></tr><tr><td>Login + Orders</td><td>១៣</td></tr><tr><td>Test + Publish</td><td>១៤</td></tr></table>
+
+</section>
+<section id="pro-app">
+<h2>💻 React Native Playground Pro (App)</h2>
+
+<p><b>UI Builder</b>៖ ជ្រើស Component ប្តូរពណ៌ Dark mode Tabs → មើលលើទូរស័ព្ទ ហើយទទួលបាន <b>Code React Native (Expo)</b> ចម្លងទៅ <b>snack.expo.dev</b> រត់បាន។ <b>Layout Lab</b>៖ សាក Flexbox (flexDirection, justifyContent, alignItems, flex: 1)។</p>
+
+<div class="fb" id="fb">
+  <div class="itk-tabs fb-tabs"><button class="on" data-t="build">🧱 UI Builder</button><button data-t="lay">📐 Layout Lab</button></div>
+  <div class="fb-p on" data-t="build">
+    <div class="fb-grid">
+      <div class="fb-ctl">
+        <label>AppBar title <input id="b_title" value="Kafe Angkor"></label>
+        <label>Seed color <input type="color" id="b_seed" value="#795548"></label>
+        <label><input type="checkbox" id="b_dark"> Dark mode</label>
+        <label><input type="checkbox" id="b_nav" checked> NavigationBar</label>
+        <label><input type="checkbox" id="b_fab" checked> FloatingActionButton</label>
+        <div class="fb-add"><b>បន្ថែម Widget៖</b>
+          <button class="btn" data-w="text">Text</button><button class="btn" data-w="image">Image</button><button class="btn" data-w="card">Card</button>
+          <button class="btn" data-w="tile">ListTile</button><button class="btn" data-w="button">Button</button><button class="btn" data-w="field">TextField</button>
+          <button class="btn" data-w="switch">Switch</button><button class="btn" data-w="chips">Chips</button><button class="btn" data-w="space">SizedBox</button></div>
+        <div id="b_list" class="fb-list"></div>
+      </div>
+      <div class="fb-phone"><div class="ph big" id="b_ph"></div></div>
+    </div>
+    <pre class="vl-code" id="b_code"></pre>
+  </div>
+  <div class="fb-p" data-t="lay">
+    <div class="fb-row">
+      <label>Widget <select id="l_dir"><option value="col">column (លំនាំដើម)</option><option value="row">row</option></select></label>
+      <label>mainAxisAlignment <select id="l_main"><option>start</option><option>center</option><option>end</option><option>spaceBetween</option><option>spaceAround</option><option>spaceEvenly</option></select></label>
+      <label>crossAxisAlignment <select id="l_cross"><option>center</option><option>start</option><option>end</option><option>stretch</option></select></label>
+      <label>Children <input type="range" id="l_n" min="1" max="5" value="3"></label>
+      <label><input type="checkbox" id="l_exp"> Expanded លើទី ២</label>
+    </div>
+    <div class="fb-lay"><div id="l_box"></div></div>
+    <pre class="vl-code" id="l_code"></pre>
+  </div>
+</div>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  document.querySelectorAll(".fb-tabs button").forEach(b => b.onclick = () => document.querySelectorAll(".fb-tabs button,.fb-p").forEach(x => x.classList.toggle("on", x.dataset.t === b.dataset.t)));
+  let W = [{ t: "text", v: "សួស្តី 👋 ថ្ងៃនេះផឹកអ្វី?" }, { t: "image" }, { t: "tile", v: "Iced Latte" }, { t: "button", v: "បញ្ជាទិញ" }];
+  const DEF = { text: "Text ថ្មី", tile: "Americano", button: "ចុចខ្ញុំ", field: "ឈ្មោះ", switch: "ការជូនដំណឹង", card: "Card title" };
+  const esc = s => String(s).replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[m]);
+  const dq = s => String(s).replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/\$/g, "\\$");
+  function mix(hex, t, to) { const n = parseInt(hex.slice(1), 16), a = [n >> 16, n >> 8 & 255, n & 255], b = to === "w" ? [255, 255, 255] : [20, 20, 22]; return "rgb(" + a.map((v, i) => Math.round(v + (b[i] - v) * t)).join(",") + ")"; }
+  function render() {
+    const seed = $("b_seed").value, dark = $("b_dark").checked, title = $("b_title").value;
+    const bg = dark ? "#151517" : mix(seed, .94, "w"), fg = dark ? "#eee" : "#1c1b1f", prim = dark ? mix(seed, .45, "w") : seed, card = dark ? "#232326" : "#fff", cont = dark ? mix(seed, .65, "d") : mix(seed, .8, "w");
+    let h = `<div class="ph-notch"></div><div class="ph-bar" style="background:${dark ? "#232326" : cont};color:${fg}">${esc(title)}</div><div class="ph-body" style="background:${bg};color:${fg}">`;
+    W.forEach(w => {
+      if (w.t === "text") h += `<div style="font-size:17px;font-weight:600;margin:4px 2px 8px">${esc(w.v)}</div>`;
+      if (w.t === "image") h += `<div class="ph-img" style="background:linear-gradient(135deg,${mix(seed, .3, "w")},${seed})">☕</div>`;
+      if (w.t === "card") h += `<div class="ph-card" style="background:${card}"><b>${esc(w.v)}</b><div style="font-size:12px;opacity:.7">Card subtitle</div></div>`;
+      if (w.t === "tile") h += `<div class="ph-tile" style="background:${card}"><span class="ph-av" style="background:${cont};color:${dark ? "#fff" : seed}">☕</span><div style="flex:1"><b>${esc(w.v)}</b><div style="font-size:12px;opacity:.65">$2.50</div></div>›</div>`;
+      if (w.t === "button") h += `<span class="ph-btn" style="background:${prim};color:${dark ? "#111" : "#fff"};display:block;text-align:center;margin:8px 0">${esc(w.v)}</span>`;
+      if (w.t === "field") h += `<div class="ph-field" style="background:${card};border-color:${prim}"><small style="color:${prim}">${esc(w.v)}</small></div>`;
+      if (w.t === "switch") h += `<div class="ph-tile" style="background:${card}"><div style="flex:1">${esc(w.v)}</div><span class="ph-sw" style="background:${prim}"></span></div>`;
+      if (w.t === "chips") h += `<div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0">${["Hot", "Iced", "Frappe"].map((c, i) => `<span class="ph-chip" style="${i === 0 ? `background:${cont};` : ""}border-color:${prim}">${c}</span>`).join("")}</div>`;
+      if (w.t === "space") h += `<div style="height:16px"></div>`;
+    });
+    h += `</div>`;
+    if ($("b_fab").checked) h += `<div class="ph-fab" style="background:${cont};color:${fg};bottom:${$("b_nav").checked ? 70 : 18}px">＋</div>`;
+    if ($("b_nav").checked) h += `<div class="ph-nav" style="color:${fg};background:${dark ? "#1d1d20" : mix(seed, .9, "w")}"><span class="on" style="--pc:${cont}">🏠<br>Home</span><span>🧾<br>Orders</span><span>👤<br>Profile</span></div>`;
+    $("b_ph").innerHTML = h;
+    $("b_list").innerHTML = W.map((w, i) => `<div class="fb-item"><b>${w.t}</b>${w.v !== undefined ? `<input data-i="${i}" value="${esc(w.v)}">` : "<span></span>"}<button data-up="${i}" title="ឡើង">↑</button><button data-del="${i}" title="លុប">✕</button></div>`).join("");
+
+    const q = s => String(s).replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+    const kids = W.map(w => "        " + ({
+      text: `<Text style={s.title}>${esc(w.v)}</Text>`,
+      image: `<Image source={require('./assets/coffee.jpg')} style={s.img} />`,
+      card: `<View style={s.card}><Text style={s.bold}>${esc(w.v)}</Text><Text>Card subtitle</Text></View>`,
+      tile: `<Pressable style={s.tile} onPress={() => {}}><Text style={s.bold}>☕ ${esc(w.v)}</Text><Text>$2.50 ›</Text></Pressable>`,
+      button: `<Pressable style={s.btn} onPress={() => alert('${q(w.v)}')}><Text style={s.btnText}>${esc(w.v)}</Text></Pressable>`,
+      field: `<TextInput placeholder="${esc(w.v)}" style={s.input} />`,
+      switch: `<View style={s.tile}><Text>${esc(w.v)}</Text><Switch value={on} onValueChange={setOn} /></View>`,
+      chips: `<View style={{ flexDirection: 'row', gap: 6 }}>{['Hot', 'Iced', 'Frappe'].map(c => <Text key={c} style={s.chip}>{c}</Text>)}</View>`,
+      space: `<View style={{ height: 16 }} />`,
+    })[w.t]).join("\n");
+    $("b_code").textContent = `import { useState } from 'react';
+import { ScrollView, View, Text, Image, Pressable, TextInput, Switch, StyleSheet } from 'react-native';
+import { Stack } from 'expo-router';
+
+export default function Home() {
+  const [on, setOn] = useState(true);
+  return (
+    <>
+      <Stack.Screen options={{ title: '${q(title)}' }} />
+      <ScrollView contentContainerStyle={s.page}>
+${kids}
+      </ScrollView>${$("b_fab").checked ? `
+      <Pressable style={s.fab}><Text style={{ fontSize: 26 }}>＋</Text></Pressable>` : ""}
+    </>
+  );
+}
+
+const s = StyleSheet.create({
+  page: { padding: 16, gap: 10, backgroundColor: '${dark ? "#151517" : "#ffffff"}' },
+  title: { fontSize: 18, fontWeight: '600', color: '${dark ? "#eeeeee" : "#1c1b1f"}' },
+  img: { width: '100%', height: 140, borderRadius: 16 },
+  card: { padding: 14, borderRadius: 16, backgroundColor: '${dark ? "#232326" : "#ffffff"}', elevation: 2 },
+  tile: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 12, borderRadius: 14, backgroundColor: '${dark ? "#232326" : "#ffffff"}' },
+  bold: { fontWeight: '700' },
+  btn: { backgroundColor: '${seed}', padding: 12, borderRadius: 999, alignItems: 'center' },
+  btnText: { color: '#fff', fontWeight: '700' },
+  input: { borderWidth: 1, borderColor: '${seed}', borderRadius: 8, padding: 10 },
+  chip: { borderWidth: 1, borderColor: '${seed}', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 4 },
+  fab: { position: 'absolute', right: 16, bottom: 24, width: 56, height: 56, borderRadius: 16, alignItems: 'center', justifyContent: 'center', backgroundColor: '#d7ccc8' },
+});
+// Tabs (NavigationBar): app/(tabs)/_layout.tsx ${$("b_nav").checked ? "✅" : "—"}`;
+
+  }
+  document.querySelectorAll("[data-w]").forEach(b => b.onclick = () => { W.push({ t: b.dataset.w, v: DEF[b.dataset.w] }); render(); });
+  $("b_list").addEventListener("input", e => { const i = e.target.dataset.i; if (i !== undefined) { W[i].v = e.target.value; const keep = e.target.selectionStart; render(); const n = $("b_list").querySelector(`[data-i="${i}"]`); n.focus(); n.setSelectionRange(keep, keep); } });
+  $("b_list").addEventListener("click", e => { const d = e.target.dataset; if (d.del !== undefined) { W.splice(+d.del, 1); render(); } if (d.up !== undefined && +d.up > 0) { const i = +d.up; [W[i - 1], W[i]] = [W[i], W[i - 1]]; render(); } });
+  ["b_title", "b_seed", "b_dark", "b_nav", "b_fab"].forEach(i => $(i).addEventListener("input", render));
+  render();
+  // ---------- Layout lab
+  const COL = ["#2563eb", "#16a34a", "#ea580c", "#7c3aed", "#db2777"];
+  const MAP = { start: "flex-start", center: "center", end: "flex-end", spaceBetween: "space-between", spaceAround: "space-around", spaceEvenly: "space-evenly", stretch: "stretch" };
+  function lay() {
+    const col = $("l_dir").value === "col", n = +$("l_n").value, exp = $("l_exp").checked && n >= 2, m = $("l_main").value, c = $("l_cross").value;
+    const box = $("l_box"); box.style.flexDirection = col ? "column" : "row"; box.style.justifyContent = MAP[m]; box.style.alignItems = MAP[c];
+    box.innerHTML = Array.from({ length: n }, (_, i) => { const s = 34 + (i % 3) * 14, grow = exp && i === 1; return `<div style="background:${COL[i]};${col ? `height:${s}px;width:${c === "stretch" ? "auto" : 40 + i * 18 + "px"}` : `width:${s}px;height:${c === "stretch" ? "auto" : 40 + i * 18 + "px"}`};${grow ? "flex:1" : ""}">${grow ? "Expanded" : i + 1}</div>`; }).join("");
+
+    const MAPRN = { start: "flex-start", center: "center", end: "flex-end", spaceBetween: "space-between", spaceAround: "space-around", spaceEvenly: "space-evenly", stretch: "stretch" };
+    const kids = Array.from({ length: n }, (_, i) => `  <View style={{ ${exp && i === 1 ? "flex: 1" : (col ? "height" : "width") + ": " + (34 + (i % 3) * 14)}, ${c === "stretch" ? "" : (col ? "width" : "height") + ": " + (40 + i * 18) + ", "}backgroundColor: '${COL[i]}' }} />`).join("\n");
+    $("l_code").textContent = `<View style={{ flex: 1, flexDirection: '${col ? "column" : "row"}', justifyContent: '${MAPRN[m]}', alignItems: '${MAPRN[c]}' }}>\n${kids}\n</View>\n\n// React Native: flexDirection លំនាំដើម = 'column' (ខុសពី Web)`;
+  }
+  ["l_dir", "l_main", "l_cross", "l_n", "l_exp"].forEach(i => $(i).addEventListener("input", lay)); lay();
+})();
+</script>
+
+<h3>🏆 Quiz React Native ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["React Native ត្រូវបានបង្កើតដោយក្រុមហ៊ុន?", ["Google", "Meta (Facebook)", "Apple", "Microsoft"], 1], ["React Native ចេញជាសាធារណៈឆ្នាំ?", ["2012", "2015", "2018", "2020"], 1], ["React Native ប្រើភាសាអ្វី?", ["Dart", "Kotlin", "JavaScript / TypeScript", "Swift"], 2], ["ធាតុណាជំនួស &lt;div&gt; ក្នុង RN?", ["&lt;Box&gt;", "&lt;View&gt;", "&lt;Div&gt;", "&lt;Container&gt;"], 1], ["អក្សរត្រូវនៅក្នុង Component អ្វី?", ["View", "Label", "Text", "Span"], 2], ["flexDirection លំនាំដើមក្នុង RN?", ["row", "column", "wrap", "none"], 1], ["Component ណាសម្រាប់បញ្ជីវែងរាប់ពាន់ធាតុ?", ["ScrollView", "FlatList", "View", "Map"], 1], ["useState ត្រឡប់អ្វី?", ["តម្លៃតែមួយ", "[តម្លៃ, function ប្តូរ]", "Promise", "Object style"], 1], ["useEffect(fn, []) រត់ពេលណា?", ["រាល់ render", "តែម្តងពេល Mount", "មិនដែលរត់", "ពេលចុច"], 1], ["ចុចប៊ូតុងប្រើ Prop អ្វី?", ["onClick", "onTap", "onPress", "onTouch"], 2], ["TextInput ប្តូរអក្សរ ប្រើ?", ["onChange", "onChangeText", "onInput", "onType"], 1], ["Expo Router: File app/menu/[id].tsx ជា?", ["Component", "Dynamic route", "Style", "Test"], 1], ["ក្រោយ Login មិនចង់ឲ្យ Back ត្រឡប់ ប្រើ?", ["router.push", "router.back", "router.replace", "Link"], 2], ["Library Global state តូចងាយ?", ["Zustand", "Jest", "Expo Go", "Hermes"], 0], ["រក្សា Token សម្ងាត់ ប្រើ?", ["AsyncStorage", "SecureStore", "console.log", "useState"], 1], ["Android Emulator ហៅ Server កុំព្យូទ័រ ប្រើ IP?", ["127.0.0.1", "10.0.2.2", "192.168.0.0", "0.0.0.0"], 1], ["មុនប្រើ Camera ត្រូវ?", ["Restart", "ស្នើ Permission", "Build ថ្មី", "Login"], 1], ["Build App លើ Cloud របស់ Expo ហៅថា?", ["EAS Build", "Xcode Cloud", "Gradle", "Hot reload"], 0], ["OTA update (EAS Update) មិនអាចប្តូរ?", ["Code JS", "Style", "Native module/Permission ថ្មី", "អក្សរ"], 2], ["Expo ងាយ ព្រោះ?", ["សាកលើទូរស័ព្ទដោយ Expo Go ស្កេន QR", "មិនត្រូវការ Code", "ប្រើ Python", "គ្មាន Internet"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+
+<ol class="steps"><li><b>React Native + Expo</b> (វគ្គនេះ) ✅</li><li>TanStack Query, react-hook-form + zod, Reanimated (Animation)</li>
+<li>Backend៖ <b>Node.js / Supabase / PostgreSQL</b> (xCenBar មានវគ្គ)</li><li>Native module៖ <b>Kotlin</b> (Android) · <b>Swift</b> (iOS) — វគ្គបន្ទាប់</li>
+<li>Publish App ផ្ទាល់ខ្លួន ១ → Portfolio</li></ol>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="reactnative"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

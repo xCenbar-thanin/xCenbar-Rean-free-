@@ -1,0 +1,1886 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន Python ពីដើមដល់ចប់</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f5f7fa; --panel:#ffffff; --text:#1b2533; --muted:#5b6b61; --line:#dde4ec;
+  --accent:#306998; --accent2:#4b8bbe; --accent-soft:#e8f0f8;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#7fb4e6; --accent2:#4b8bbe; --accent-soft:#14233a;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#7fb4e6; --accent2:#4b8bbe; --accent-soft:#14233a;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:#306998;color:#ffd43b;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#1e4f7a,#4b8bbe);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.tok-dec{color:#ffd43b}
+.hero .badge{background:#ffd43b;color:#1e4f7a}
+
+</style>
+<link rel="icon" href="../assets/icons/python.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/python.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>វគ្គសិក្សា Python ពីដើមដល់កម្រិតអាជីព</h1>
+  <button class="btn" id="themeBtn">🌓</button>
+</header>
+
+<div class="layout">
+<nav class="side" id="side">
+  <h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+  <a href="#intro">១. Python ជាអ្វី?</a>
+  <a href="#history">២. អ្នកបង្កើត និងប្រវត្តិ</a>
+  <a href="#uses">៣. គេប្រើធ្វើអ្វី?</a>
+  <a href="#install">៤. ដំឡើង Python + VS Code</a>
+  <a href="#elements">៥. ធាតុនីមួយៗរបស់ Python</a>
+  <h4>ផ្នែកទី ២ – មេរៀន</h4>
+  <a href="#l1">មេរៀន ១: Hello World, print និង Comment</a>
+  <a href="#l2">មេរៀន ២: អថេរ និងប្រភេទទិន្នន័យ</a>
+  <a href="#l3">មេរៀន ៣: Input និង f-string</a>
+  <a href="#l4">មេរៀន ៤: Operators</a>
+  <a href="#l5">មេរៀន ៥: លក្ខខណ្ឌ if / elif / else</a>
+  <a href="#l6">មេរៀន ៦: Loops</a>
+  <a href="#l7">មេរៀន ៧: List</a>
+  <a href="#l8">មេរៀន ៨: Tuple, Set និង Dictionary</a>
+  <a href="#l9">មេរៀន ៩: String</a>
+  <a href="#l10">មេរៀន ១០: Function</a>
+  <a href="#l11">មេរៀន ១១: Comprehension, Lambda និងអនុគមន៍ប្រយោជន៍</a>
+  <a href="#l12">មេរៀន ១២: Module, pip និង Virtual Environment</a>
+  <a href="#l13">មេរៀន ១៣: File I/O</a>
+  <a href="#l14">មេរៀន ១៤: Exception Handling</a>
+  <a href="#l15">មេរៀន ១៥: Class និង OOP</a>
+  <a href="#l16">មេរៀន ១៦: Inheritance, Polymorphism និង dataclass</a>
+  <a href="#l17">មេរៀន ១៧: Standard Library៖ json, datetime, random, collections</a>
+  <a href="#l18">មេរៀន ១៨: Generator, Decorator និង Context Manager</a>
+  <a href="#l19">មេរៀន ១៩: Type Hints និង Testing (unittest)</a>
+  <a href="#l20">មេរៀន ២០: Database ជាមួយ SQLite</a>
+  <a href="#l21">មេរៀន ២១: NumPy (គណនាលេខលឿន)</a>
+  <a href="#l22">មេរៀន ២២: pandas (វិភាគទិន្នន័យ)</a>
+  <a href="#l23">មេរៀន ២៣: Web API៖ requests និង Flask</a>
+  <a href="#l24">មេរៀន ២៤: Regular Expression (re)</a>
+  <h4>គម្រោងអនុវត្ត</h4>
+  <a href="#p1">គម្រោង ១: ហ្គេមទាយលេខ</a>
+  <a href="#p2">គម្រោង ២: បញ្ជីការងារ (To-Do) ជាមួយ JSON</a>
+  <a href="#cheat">Cheat Sheet: Python vs C++</a>
+  <h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+  <a href="#pro">App កម្រិតអាជីព</a>
+  <a href="#pro-structure">រចនាសម្ព័ន្ធ Project</a>
+  <a href="#pro-code">កូដ App ពេញលេញ</a>
+  <a href="#pro-test">Testing</a>
+  <a href="#pro-quality">Code Quality & Security</a>
+  <a href="#pro-deploy">Docker & Deploy</a>
+  <a href="#roadmap">ផែនទីបន្តការសិក្សា</a>
+</nav>
+
+<main>
+
+<section class="hero" id="intro">
+  <h2>១. Python ជាអ្វី?</h2>
+  <p><b>Python</b> គឺជាភាសាសរសេរកម្មវិធីកម្រិតខ្ពស់ (High-level) ប្រភេទ <b>Interpreted</b> ដែលមាន Syntax សាមញ្ញ ងាយអាន ស្ទើរតែដូចភាសាអង់គ្លេស។ វាជាភាសាមួយក្នុងចំណោមភាសាដែលពេញនិយមបំផុតលើពិភពលោក។</p>
+  <p>មេរៀននីមួយៗមាន <b>ការពន្យល់ → កូដគំរូ → ចំណាំសំខាន់ → លំហាត់ (មានចម្លើយ)</b>។ ណែនាំឱ្យប្រើ <b>Python 3.10 ឡើងទៅ</b> ដើម្បីឱ្យឧទាហរណ៍ទាំងអស់ (match, type hints) ដំណើរការ។</p>
+</section>
+
+<section id="history">
+  <h2>២. អ្នកបង្កើត និងប្រវត្តិ</h2>
+  <div class="grid">
+    <div class="card"><b>អ្នកបង្កើត</b><br><b style="font-size:20px">Guido van Rossum</b><br>អ្នកសរសេរកម្មវិធីជនជាតិហូឡង់</div>
+    <div class="card"><b>ចាប់ផ្តើម</b><br>ឆ្នាំ <b style="font-size:20px">1989</b><br>ចេញជាសាធារណៈឆ្នាំ 1991</div>
+    <div class="card"><b>ឈ្មោះ</b><br>មកពីកម្មវិធីកំប្លែង <b>Monty Python</b> — មិនមែនពស់ទេ 🐍</div>
+    <div class="card"><b>អ្នកថែទាំបច្ចុប្បន្ន</b><br>Python Software Foundation (PSF) និងសហគមន៍ Open Source</div>
+  </div>
+  <h3>ពេលវេលាសំខាន់ៗ</h3>
+  <table>
+    <tr><th>ឆ្នាំ</th><th>ព្រឹត្តិការណ៍</th></tr>
+    <tr><td>1989</td><td>Guido van Rossum ចាប់ផ្តើមសរសេរ Python ក្នុងអំឡុងថ្ងៃឈប់សម្រាកបុណ្យណូអែល</td></tr>
+    <tr><td>1991</td><td>Python 0.9.0 ចេញជាសាធារណៈ</td></tr>
+    <tr><td>2000</td><td>Python 2.0 ចេញ (មាន List Comprehension, Garbage Collector)</td></tr>
+    <tr><td>2001</td><td>បង្កើត Python Software Foundation</td></tr>
+    <tr><td>2008</td><td>Python 3.0 ចេញ — មិនត្រូវគ្នាជាមួយ Python 2 ទាំងស្រុង</td></tr>
+    <tr><td>2020</td><td>Python 2 ឈប់គាំទ្រជាផ្លូវការ</td></tr>
+    <tr><td>បច្ចុប្បន្ន</td><td>Python 3 ចេញ Version ថ្មីរៀងរាល់ឆ្នាំ (ខែតុលា) ហើយជាភាសាចម្បងសម្រាប់ AI និង Data</td></tr>
+  </table>
+  <div class="note">💡 <b>ភាពខុសគ្នាធំជាមួយ C/C++៖</b> Python ជា Interpreted (រត់ដោយផ្ទាល់ មិនចាំបាច់ Compile) ដើរយឺតជាង ប៉ុន្តែសរសេរលឿនជាង ហើយគ្រប់គ្រង Memory ដោយស្វ័យប្រវត្តិ។ ស្នូលល្បឿនខ្ពស់របស់ Library ដូចជា NumPy ត្រូវបានសរសេរដោយ C/C++។</div>
+</section>
+
+<section id="uses">
+  <h2>៣. គេប្រើប្រាស់ Python សម្រាប់ធ្វើអ្វី?</h2>
+  <div class="grid">
+    <div class="card">🤖 <b>AI & Machine Learning</b><br>TensorFlow, PyTorch, scikit-learn</div>
+    <div class="card">📊 <b>Data Science</b><br>pandas, NumPy, Matplotlib, Jupyter</div>
+    <div class="card">🌐 <b>Web Backend</b><br>Django, Flask, FastAPI</div>
+    <div class="card">⚙️ <b>Automation & Script</b><br>គ្រប់គ្រង File, Excel, ទាញទិន្នន័យពី Website</div>
+    <div class="card">🔐 <b>Cybersecurity</b><br>Pentest tools, វិភាគ Log</div>
+    <div class="card">☁️ <b>DevOps & Cloud</b><br>Script Deploy, Ansible, AWS SDK</div>
+    <div class="card">🔌 <b>IoT</b><br>Raspberry Pi, MicroPython</div>
+    <div class="card">🎓 <b>ការអប់រំ</b><br>ភាសាដំបូងដ៏ល្អ ព្រោះ Syntax សាមញ្ញ</div>
+  </div>
+  <p><b>ក្រុមហ៊ុនល្បីៗដែលប្រើ Python:</b> Google, YouTube, Instagram, Netflix, Spotify, Dropbox, NASA, Reddit ។</p>
+</section>
+
+<section id="install">
+  <h2>៤. របៀបដំឡើង Python និងប្រើក្នុង VS Code</h2>
+  <h3>ជំហានទី ១: ដំឡើង Python</h3>
+  <ol class="steps">
+    <li><b>Windows៖</b> ទាញយកពី <a href="https://www.python.org/downloads/" target="_blank">python.org/downloads</a> ហើយដំឡើង។ <b>សំខាន់បំផុត៖ ត្រូវធីក “Add python.exe to PATH”</b> មុនចុច Install Now</li>
+    <li><b>macOS៖</b> ទាញពី python.org ឬប្រើ <code class="i">brew install python</code></li>
+    <li><b>Linux (Ubuntu/Debian)៖</b> <code class="i">sudo apt update &amp;&amp; sudo apt install python3 python3-pip python3-venv</code></li>
+    <li>បិទ ហើយបើក Terminal ឡើងវិញ រួចពិនិត្យ៖</li>
+  </ol>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">python --version        # Windows
+python3 --version       # macOS / Linux
+pip --version           # Windows
+pip3 --version          # macOS / Linux</code></pre></div>
+
+  <h3>ជំហានទី ២: រៀបចំ VS Code</h3>
+  <ol class="steps">
+    <li>ទាញយក VS Code ពី <a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a> ហើយដំឡើង</li>
+    <li>ចុច Extensions (<b>Ctrl + Shift + X</b>) → ស្វែងរក <b>Python</b> (របស់ Microsoft) → Install (វាដំឡើង Pylance ជាមួយ)</li>
+    <li><b>File → Open Folder</b> → បង្កើត Folder ថ្មីឈ្មោះ <code class="i">python-learning</code></li>
+    <li>ជ្រើស Interpreter៖ <b>Ctrl + Shift + P</b> → <b>Python: Select Interpreter</b></li>
+    <li>បង្កើត File <code class="i">hello.py</code> → ចុចប៊ូតុង <b>▶ Run Python File</b> នៅជ្រុងស្តាំខាងលើ ឬរត់ក្នុង Terminal (<b>Ctrl + `</b>)</li>
+  </ol>
+<div class="codebox"><span class="label">hello.py</span><pre><code class="py">print(&quot;Hello, Cambodia!&quot;)</code></pre></div>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">python hello.py       # Windows
+python3 hello.py      # macOS / Linux</code></pre></div>
+
+  <h3>Extensions ណែនាំ</h3>
+  <table>
+    <tr><th>Extension</th><th>មុខងារ</th></tr>
+    <tr><td><b>Python</b> + <b>Pylance</b></td><td>Run, Debug, IntelliSense, រកកំហុស</td></tr>
+    <tr><td><b>Ruff</b></td><td>Linter + Formatter លឿនបំផុត (រក្សាស្តង់ដារ PEP 8)</td></tr>
+    <tr><td><b>Jupyter</b></td><td>បើក Notebook <code class="i">.ipynb</code> សម្រាប់ Data Science</td></tr>
+    <tr><td><b>Error Lens</b></td><td>បង្ហាញ Error ផ្ទាល់នៅលើបន្ទាត់កូដ</td></tr>
+  </table>
+  <div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul>
+    <li>បើ Windows ឃើញ <i>“python is not recognized”</i> មានន័យថាមិនបានធីក PATH ឬមិនទាន់បើក Terminal ថ្មី — ដំឡើងម្តងទៀត ហើយធីក PATH។</li>
+    <li>Debug ក្នុង VS Code៖ ដាក់ Breakpoint (<b>F9</b>) ហើយចុច <b>F5</b> → Python File។ ប្រើ <b>F10</b> (Step Over), <b>F11</b> (Step Into)។</li>
+    <li>ប្រើ Virtual Environment (<code class="i">python -m venv .venv</code>) ជានិច្ចសម្រាប់គម្រោងនីមួយៗ (មើលមេរៀនទី ១២)។</li>
+  </ul></div>
+</section>
+
+<section id="elements">
+  <h2>៥. ធាតុ (Components) នីមួយៗរបស់ Python</h2>
+  <table>
+    <tr><th>ធាតុ</th><th>ពន្យល់</th></tr>
+    <tr><td><b>Interpreter (CPython)</b></td><td>កម្មវិធីដែលអាន និងដំណើរការកូដ Python។ CPython (សរសេរដោយ C) គឺជា Version ផ្លូវការ</td></tr>
+    <tr><td><b>Bytecode & PVM</b></td><td>កូដ <code class="i">.py</code> ត្រូវបំប្លែងជា Bytecode (<code class="i">.pyc</code>) រួច Python Virtual Machine ដំណើរការវា</td></tr>
+    <tr><td><b>REPL</b></td><td>វាយ <code class="i">python</code> ក្នុង Terminal ដើម្បីសាកកូដភ្លាមៗ (Read-Eval-Print Loop)</td></tr>
+    <tr><td><b>Indentation</b></td><td>ការចូលបន្ទាត់ (៤ ដកឃ្លា) ជាផ្នែកនៃ Syntax — ជំនួស <code class="i">{ }</code></td></tr>
+    <tr><td><b>Keywords</b></td><td>ពាក្យបម្រុង ឧ. <code class="i">if</code>, <code class="i">for</code>, <code class="i">def</code>, <code class="i">class</code>, <code class="i">return</code>, <code class="i">import</code></td></tr>
+    <tr><td><b>Dynamic Typing</b></td><td>មិនចាំបាច់ប្រកាសប្រភេទអថេរ — Python កំណត់ដោយស្វ័យប្រវត្តិ</td></tr>
+    <tr><td><b>Everything is an Object</b></td><td>លេខ, String, Function, Class សុទ្ធតែជា Object</td></tr>
+    <tr><td><b>Garbage Collector</b></td><td>លុប Object ដែលលែងប្រើចេញពី Memory ដោយស្វ័យប្រវត្តិ</td></tr>
+    <tr><td><b>Module & Package</b></td><td>Module = File <code class="i">.py</code> មួយ · Package = Folder នៃ Module</td></tr>
+    <tr><td><b>Standard Library</b></td><td>Module រាប់រយមានស្រាប់ ("Batteries included") ឧ. <code class="i">os</code>, <code class="i">json</code>, <code class="i">sqlite3</code></td></tr>
+    <tr><td><b>pip & PyPI</b></td><td>pip ដំឡើង Package ពី PyPI (Python Package Index) ដែលមាន Package រាប់សែន</td></tr>
+    <tr><td><b>Virtual Environment</b></td><td>បរិស្ថានដាច់ដោយឡែកសម្រាប់គម្រោងនីមួយៗ (<code class="i">venv</code>)</td></tr>
+    <tr><td><b>PEP 8</b></td><td>ស្តង់ដារសរសេរកូដ Python ផ្លូវការ (ដាក់ឈ្មោះ, ដកឃ្លា, ប្រវែងបន្ទាត់)</td></tr>
+  </table>
+
+  <h3>ប្រភេទទិន្នន័យ (Data Types) សំខាន់ៗ</h3>
+  <div class="grid">
+    <div class="card"><b>int</b><br><code class="i">42</code> លេខគត់ (គ្មានដែនកំណត់)</div>
+    <div class="card"><b>float</b><br><code class="i">3.14</code> លេខទសភាគ</div>
+    <div class="card"><b>str</b><br><code class="i">"សួស្តី"</code> អក្សរ</div>
+    <div class="card"><b>bool</b><br><code class="i">True</code> / <code class="i">False</code></div>
+    <div class="card"><b>list</b><br><code class="i">[1, 2, 3]</code> កែប្រែបាន</div>
+    <div class="card"><b>tuple</b><br><code class="i">(1, 2)</code> កែប្រែមិនបាន</div>
+    <div class="card"><b>set</b><br><code class="i">{1, 2}</code> គ្មានស្ទួន</div>
+    <div class="card"><b>dict</b><br><code class="i">{"k": "v"}</code> Key → Value</div>
+    <div class="card"><b>None</b><br>គ្មានតម្លៃ</div>
+  </div>
+
+  <h3>Built-in Functions ប្រើញឹកញាប់</h3>
+  <p><code class="i">print()</code> <code class="i">input()</code> <code class="i">len()</code> <code class="i">type()</code> <code class="i">range()</code> <code class="i">int()</code> <code class="i">str()</code> <code class="i">sum()</code> <code class="i">min()</code> <code class="i">max()</code> <code class="i">sorted()</code> <code class="i">enumerate()</code> <code class="i">zip()</code> <code class="i">map()</code> <code class="i">filter()</code> <code class="i">open()</code> <code class="i">isinstance()</code> <code class="i">help()</code></p>
+
+  <h3>The Zen of Python (ទស្សនវិជ្ជា Python)</h3>
+  <p>វាយ <code class="i">import this</code> ក្នុង REPL ដើម្បីអានគោលការណ៍ ១៩ របស់ Python។ ខ្លឹមសារសំខាន់៖ <b>កូដស្អាតល្អជាងកូដអាក្រក់ · សាមញ្ញល្អជាងស្មុគស្មាញ · ការអានងាយមានតម្លៃ</b>។</p>
+</section>
+
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>Hello World, print និង Comment</h2>
+<p><code class="i">print()</code> បង្ហាញលទ្ធផល។ <code class="i">#</code> ជា comment មួយបន្ទាត់។ Python មិនប្រើ <code class="i">;</code> ឬ <code class="i">{ }</code> ទេ។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">print(&quot;Hello, World!&quot;)
+print(&quot;Hello&quot;, &quot;Python&quot;, sep=&quot;, &quot;)   # sep = សញ្ញាខណ្ឌ
+print(&quot;A&quot;, end=&quot; &quot;)                  # end = អ្វីដែលបោះពុម្ពចុងបន្ទាត់
+print(&quot;B&quot;)
+
+# នេះជា comment មួយបន្ទាត់
+
+def greet():
+    &quot;&quot;&quot;នេះជា docstring៖ ពិពណ៌នាថា function ធ្វើអ្វី&quot;&quot;&quot;
+    print(&quot;Hi&quot;)
+
+print(greet.__doc__)    # អាន docstring</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>Python ញែកអក្សរតូចធំ៖ <code class="i">Print</code> ≠ <code class="i">print</code>។</li><li>ប្រើ quote <code class="i">"..."</code> ឬ <code class="i">'...'</code> បានទាំងពីរ។</li><li>Python 2 ឈប់គាំទ្រតាំងពីឆ្នាំ 2020 — ប្រើ Python 3 ជានិច្ច។</li><li>String បីសញ្ញា <code class="i">"""..."""</code> មិនមែនជា comment ពិតទេ — វាក្លាយជា <b>docstring</b> តែពេលនៅបន្ទាត់ដំបូងនៃ function, class ឬ module។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><ol><li>បោះពុម្ពឈ្មោះ និងអាយុរបស់អ្នក ២ បន្ទាត់។</li><li>បោះពុម្ពរូបផ្កាយ ៣ បន្ទាត់ (*, **, ***)។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer1.py</span><pre><code class="py">print(&quot;Sokha&quot;)
+print(20)
+print(&quot;*\n**\n***&quot;)</code></pre></div></details></div>
+</section>
+
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>អថេរ និងប្រភេទទិន្នន័យ</h2>
+<p>មិនចាំបាច់ប្រកាសប្រភេទ Python កំណត់ដោយស្វ័យប្រវត្តិ (dynamic typing)។ ប្រភេទសំខាន់ៗ៖ <code class="i">int</code>, <code class="i">float</code>, <code class="i">str</code>, <code class="i">bool</code>, <code class="i">None</code>។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">age = 20
+gpa = 3.75
+name = &quot;Dara&quot;
+passed = True
+nothing = None
+
+print(type(age), type(gpa), type(name), type(passed))
+
+a, b = 1, 2
+a, b = b, a            # swap មួយបន្ទាត់
+print(a, b)            # 2 1
+
+print(int(&quot;5&quot;) + 1)    # 6   (str -&gt; int)
+print(float(&quot;2.5&quot;))    # 2.5
+print(str(10) + &quot;kg&quot;)  # 10kg
+
+big = 2 ** 100         # int មិនមានដែនកំណត់
+print(big)</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>ឈ្មោះអថេរប្រើ <code class="i">snake_case</code> (<code class="i">student_name</code>) មិនចាប់ផ្តើមដោយលេខ មិនដូចពាក្យបម្រុង (<code class="i">if</code>, <code class="i">for</code> ។ល។)។</li><li><code class="i">int</code> ក្នុង Python មិនមាន overflow ដូច C/C++។</li><li>ប្រើអថេរមុនដាក់តម្លៃ នឹងកើត <code class="i">NameError</code>។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><ol><li>ប្រកាសអថេរឈ្មោះ អាយុ កម្ពស់ ហើយបង្ហាញលទ្ធផល។</li><li>គណនាក្រឡាផ្ទៃរង្វង់កាំ = 5។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer2.py</span><pre><code class="py">name = &quot;Sokha&quot;
+age = 20
+height = 1.70
+print(f&quot;ឈ្មោះ: {name}, អាយុ: {age}, កម្ពស់: {height} m&quot;)
+
+import math
+r = 5
+print(math.pi * r ** 2)   # 78.5398...</code></pre></div></details></div>
+</section>
+
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Input និង f-string</h2>
+<p><code class="i">input()</code> ត្រឡប់ <b>str</b> ជានិច្ច ត្រូវបម្លែងដោយ <code class="i">int()</code> ឬ <code class="i">float()</code>។ f-string ជួយដាក់អថេរក្នុងអត្ថបទ។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">name = input(&quot;Name: &quot;)
+age = int(input(&quot;Age: &quot;))
+print(f&quot;Hello {name}, next year you are {age + 1}&quot;)
+
+pi = 3.14159
+print(f&quot;{pi:.2f}&quot;)        # 3.14  (ទសភាគ 2 ខ្ទង់)
+print(f&quot;{1234567:,}&quot;)     # 1,234,567</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li><code class="i">input()</code> ជា str ដូច្នេះ <code class="i">"5" + "3"</code> ជា <code class="i">"53"</code> មិនមែន 8 ទេ។</li><li>បញ្ចូលអក្សរ ហើយ <code class="i">int()</code> នឹងកើត <code class="i">ValueError</code> (មើលមេរៀនទី ១៤)។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><ol><li>អានលេខពីរ បង្ហាញ + − × ÷។</li><li>អានប្រវែង និងទទឹង គណនាក្រឡាផ្ទៃ និងបរិមាត្រ។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer3.py</span><pre><code class="py">a = float(input(&quot;a: &quot;))
+b = float(input(&quot;b: &quot;))
+print(a + b, a - b, a * b, a / b)
+
+w = float(input(&quot;width: &quot;))
+h = float(input(&quot;height: &quot;))
+print(&quot;Area =&quot;, w * h, &quot;Perimeter =&quot;, 2 * (w + h))</code></pre></div></details></div>
+</section>
+
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Operators</h2>
+<p>Arithmetic, Comparison, Logical និង Assignment។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">print(10 / 3)    # 3.333...  (/ ជា float ជានិច្ច)
+print(10 // 3)   # 3         (floor division)
+print(10 % 3)    # 1
+print(2 ** 10)   # 1024
+
+x = 5
+print(1 &lt; x &lt; 10)            # True (ប្រៀបធៀបជាខ្សែ)
+print(x &gt; 3 and x &lt; 4)       # False
+print(not (x == 5))          # False
+
+x += 2    # x = x + 2   (គ្មាន x++)
+print(x)  # 7</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>Python គ្មាន <code class="i">++</code> / <code class="i">--</code> ប្រើ <code class="i">x += 1</code>។</li><li><code class="i">==</code> ប្រៀបធៀបតម្លៃ ហើយ <code class="i">is</code> ប្រៀបធៀប object (ប្រើ <code class="i">is None</code>)។</li><li><code class="i">/</code> ត្រឡប់ float ជានិច្ច ចង់បានចំនួនគត់ប្រើ <code class="i">//</code>។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><ol><li>ពិនិត្យលេខគូ ឬសេស។</li><li>បម្លែង Celsius ទៅ Fahrenheit៖ F = C × 9/5 + 32។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer4.py</span><pre><code class="py">n = 7
+print(&quot;even&quot; if n % 2 == 0 else &quot;odd&quot;)
+
+c = 30
+print(c * 9 / 5 + 32)   # 86.0</code></pre></div></details></div>
+</section>
+
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>លក្ខខណ្ឌ if / elif / else</h2>
+<p>Python ប្រើ <b>indentation</b> (ចូលបន្ទាត់ ៤ ដកឃ្លា) ជំនួស <code class="i">{ }</code>។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">score = 85
+
+if score &gt;= 90:
+    grade = &quot;A&quot;
+elif score &gt;= 80:
+    grade = &quot;B&quot;
+elif score &gt;= 50:
+    grade = &quot;Pass&quot;
+else:
+    grade = &quot;Fail&quot;
+print(grade)        # B
+
+# ternary
+print(&quot;adult&quot; if 20 &gt;= 18 else &quot;minor&quot;)
+
+# match (Python 3.10+)
+day = 3
+match day:
+    case 1:
+        print(&quot;Mon&quot;)
+    case 3:
+        print(&quot;Wed&quot;)
+    case _:
+        print(&quot;Other&quot;)</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>Indentation ជាផ្នែកនៃ syntax៖ ខុសចូលបន្ទាត់ នឹងកើត <code class="i">IndentationError</code>។</li><li>ចាំដាក់ <code class="i">:</code> ចុងបន្ទាត់ <code class="i">if/elif/else/for/while/def</code>។</li><li>ពេលប្រើ editor កុំលាយ Tab និងដកឃ្លា។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><ol><li>អានលេខបី រកលេខធំជាងគេ។</li><li>ពិនិត្យឆ្នាំបង្គ្រប់។</li><li>ម៉ាស៊ីនគិតលេខដោយ <code class="i">if/elif</code> (+ − * /)។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer5.py</span><pre><code class="py">a, b, c = 3, 9, 5
+print(max(a, b, c))
+
+y = 2024
+print((y % 4 == 0 and y % 100 != 0) or y % 400 == 0)
+
+op, x, z = &quot;*&quot;, 6, 7
+if op == &quot;+&quot;: print(x + z)
+elif op == &quot;-&quot;: print(x - z)
+elif op == &quot;*&quot;: print(x * z)
+elif op == &quot;/&quot;: print(x / z if z != 0 else &quot;cannot divide by zero&quot;)</code></pre></div></details></div>
+</section>
+
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Loops</h2>
+<p><code class="i">for</code> ដើរលើ sequence, <code class="i">while</code> ធ្វើតាមលក្ខខណ្ឌ, <code class="i">break</code> ឈប់, <code class="i">continue</code> រំលង។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">for i in range(5):            # 0 1 2 3 4
+    print(i, end=&quot; &quot;)
+print()
+
+for i in range(1, 10, 3):     # 1 4 7
+    print(i, end=&quot; &quot;)
+print()
+
+for ch in &quot;abc&quot;:
+    print(ch, end=&quot; &quot;)
+print()
+
+for idx, ch in enumerate(&quot;xyz&quot;):
+    print(idx, ch)
+
+n = 3
+while n &gt; 0:
+    print(n)
+    n -= 1
+
+for i in range(1, 10):
+    if i == 3: continue
+    if i == 6: break
+    print(i, end=&quot; &quot;)        # 1 2 4 5
+print()
+
+for i in range(3):
+    pass
+else:
+    print(&quot;loop finished&quot;)   # for-else ដំណើរការពេលមិន break</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li><code class="i">range(5)</code> ឈប់មុន 5 (មិនរួមបញ្ចូល 5)។</li><li>ប្រយ័ត្ន infinite loop ក្នុង <code class="i">while</code> ភ្លេចកែអថេរ។</li><li>ប្រើ <code class="i">for</code> ដោយផ្ទាល់លើ list ជាជាងប្រើ index ដោយដៃ។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><ol><li>បង្ហាញតារាងគុណនៃលេខមួយ។</li><li>គណនា 1 + 2 + ... + 100។</li><li>បោះពុម្ពត្រីកោណផ្កាយ។</li><li>ពិនិត្យលេខបឋម។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer6.py</span><pre><code class="py">n = 7
+for i in range(1, 13):
+    print(f&quot;{n} x {i} = {n * i}&quot;)
+
+print(sum(range(1, 101)))   # 5050
+
+for i in range(1, 5):
+    print(&quot;*&quot; * i)
+
+def is_prime(n):
+    if n &lt; 2: return False
+    for i in range(2, int(n ** 0.5) + 1):
+        if n % i == 0: return False
+    return True
+print(is_prime(13))</code></pre></div></details></div>
+</section>
+
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>List</h2>
+<p>List ជាបញ្ជីតម្លៃតាមលំដាប់ ដែលអាចកែប្រែបាន ហើយអាចមានប្រភេទផ្សេងគ្នា។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">nums = [5, 2, 8, 1]
+nums.append(9)          # ចុងក្រោយ
+nums.insert(0, 7)       # នៅ index 0
+nums.remove(8)          # លុបតម្លៃ
+last = nums.pop()       # ដកចេញ ហើយបានតម្លៃ
+nums.sort()
+print(nums, last, len(nums))
+
+print(nums[0], nums[-1])     # ដំបូង / ចុងក្រោយ
+print(nums[1:3])             # slicing
+print(nums[::-1])            # បញ្ច្រាស
+print(5 in nums)
+
+matrix = [[1, 2, 3], [4, 5, 6]]
+print(matrix[1][2])          # 6
+
+a = [1, 2]
+b = a            # b ចង្អុលទៅ list ដូចគ្នា!
+b.append(3)
+print(a)         # [1, 2, 3]
+c = a.copy()     # ចម្លងពិតប្រាកដ</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li><code class="i">b = a</code> មិនចម្លង list ទេ គ្រាន់តែចង្អុលដូចគ្នា ប្រើ <code class="i">a.copy()</code>។</li><li>Index ហួសទំហំ → <code class="i">IndexError</code>។ Index អវិជ្ជមានរាប់ពីចុង។</li><li>Slicing <code class="i">[start:stop:step]</code> មិនរួម <code class="i">stop</code>។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><ol><li>រកធំបំផុត និងតូចបំផុត។</li><li>តម្រៀបពីធំទៅតូច។</li><li>លុបតម្លៃស្ទួនពី list។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer7.py</span><pre><code class="py">a = [4, 1, 9, 4, 7]
+print(max(a), min(a))
+print(sorted(a, reverse=True))
+print(list(dict.fromkeys(a)))   # [4, 1, 9, 7] រក្សាលំដាប់</code></pre></div></details></div>
+</section>
+
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Tuple, Set និង Dictionary</h2>
+<p><b>Tuple</b> មិនអាចកែ, <b>Set</b> មិនមានតម្លៃស្ទួន, <b>Dict</b> គូ key → value។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">t = (1, 2, 3)          # tuple
+x, y, z = t            # unpacking
+
+s = {1, 2, 2, 3}       # set
+s.add(4)
+print(s, 2 in s)
+print({1, 2, 3} &amp; {2, 3, 4})   # {2, 3} (ប្រសព្វ)
+print({1, 2} | {2, 3})         # {1, 2, 3} (បូក)
+
+d = {&quot;name&quot;: &quot;Dara&quot;, &quot;age&quot;: 20}
+d[&quot;gpa&quot;] = 3.8
+print(d[&quot;name&quot;], d.get(&quot;phone&quot;, &quot;none&quot;))
+for k, v in d.items():
+    print(k, v)
+del d[&quot;age&quot;]
+print(d)</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li><code class="i">d["x"]</code> បើរកមិនឃើញ នឹងកើត <code class="i">KeyError</code> ប្រើ <code class="i">d.get("x")</code> ជំនួស។</li><li><code class="i">{}</code> ទទេ ជា dict មិនមែន set ទេ (ប្រើ <code class="i">set()</code>)។</li><li>Key របស់ dict ត្រូវជា immutable (str, int, tuple)។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><ol><li>រាប់ភាពញឹកញាប់នៃពាក្យក្នុងប្រយោគ។</li><li>រកធាតុរួមរវាង list ពីរ។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer8.py</span><pre><code class="py">text = &quot;to be or not to be&quot;
+freq = {}
+for w in text.split():
+    freq[w] = freq.get(w, 0) + 1
+print(freq)
+
+print(set([1, 2, 3]) &amp; set([2, 3, 4]))</code></pre></div></details></div>
+</section>
+
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>String</h2>
+<p>String មិនអាចកែប្រែបាន (immutable) ប៉ុន្តែមាន method ច្រើន។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">s = &quot;  Hello Python  &quot;
+print(s.strip())               # កាត់ដកឃ្លា
+print(s.upper(), s.lower())
+print(s.replace(&quot;Python&quot;, &quot;World&quot;))
+print(&quot;a,b,c&quot;.split(&quot;,&quot;))      # [&#x27;a&#x27;, &#x27;b&#x27;, &#x27;c&#x27;]
+print(&quot;-&quot;.join([&quot;x&quot;, &quot;y&quot;, &quot;z&quot;]))   # x-y-z
+
+t = &quot;Hello&quot;
+print(t[0], t[-1], t[1:4])     # H o ell
+print(t.find(&quot;l&quot;), len(t))     # 2 5
+print(t.startswith(&quot;He&quot;))
+print(&quot;py&quot; in &quot;python&quot;)        # True
+print(t * 3)                   # HelloHelloHello</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li><code class="i">s[0] = "X"</code> កើត <code class="i">TypeError</code> ព្រោះ string មិនអាចកែ (ត្រូវបង្កើតថ្មី)។</li><li>ប្រៀបធៀប string ដោយ <code class="i">==</code> បានដោយផ្ទាល់ មិនដូច C។</li><li><code class="i">find()</code> ត្រឡប់ -1 បើរកមិនឃើញ ហើយ <code class="i">index()</code> កើត error។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><ol><li>បញ្ច្រាស string។</li><li>រាប់ស្រៈ។</li><li>ពិនិត្យ Palindrome។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer9.py</span><pre><code class="py">s = &quot;level&quot;
+print(s[::-1])
+print(sum(1 for ch in s.lower() if ch in &quot;aeiou&quot;))
+print(s == s[::-1])</code></pre></div></details></div>
+</section>
+
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>Function</h2>
+<p><code class="i">def</code> កំណត់អនុគមន៍។ អាចមានតម្លៃលំនាំដើម, keyword argument, <code class="i">*args</code>, <code class="i">**kwargs</code> និងត្រឡប់តម្លៃច្រើន។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">def add(a, b=0):
+    return a + b
+
+def stats(nums):
+    return min(nums), max(nums), sum(nums) / len(nums)
+
+def total(*args):            # ទទួលអាគុយម៉ង់ចំនួនណាក៏បាន
+    return sum(args)
+
+def show(**kwargs):          # ទទួល key=value
+    for k, v in kwargs.items():
+        print(k, v)
+
+print(add(3, 4), add(5))
+lo, hi, avg = stats([3, 1, 4, 1, 5])
+print(lo, hi, avg)
+print(total(1, 2, 3, 4))
+show(name=&quot;Dara&quot;, age=20)
+print(add(b=10, a=1))        # keyword argument
+
+def factorial(n):
+    return 1 if n &lt;= 1 else n * factorial(n - 1)
+print(factorial(5))          # 120</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li><b>កុំប្រើ list/dict ជាតម្លៃលំនាំដើម</b> (<code class="i">def f(x=[])</code>) ព្រោះចែករំលែករវាងការហៅ ត្រូវប្រើ <code class="i">None</code> ហើយបង្កើតក្នុងអនុគមន៍។</li><li>អនុគមន៍គ្មាន <code class="i">return</code> ត្រឡប់ <code class="i">None</code>។</li><li>Recursion ត្រូវមាន base case។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><ol><li>សរសេរ <code class="i">is_prime(n)</code> (ដូចមេរៀនទី ៦)។</li><li>សរសេរ <code class="i">max3(a, b, c)</code>។</li><li>Fibonacci ដោយ recursion។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer10.py</span><pre><code class="py">def is_prime(n):
+    if n &lt; 2:
+        return False
+    for i in range(2, int(n ** 0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+def max3(a, b, c):
+    return max(a, b, c)
+
+def fib(n):                  # recursion តាមលំហាត់
+    if n &lt; 0:
+        raise ValueError(&quot;n must be &gt;= 0&quot;)
+    if n &lt; 2:                # base case
+        return n
+    return fib(n - 1) + fib(n - 2)
+
+print(is_prime(13), max3(1, 5, 3), fib(10))   # True 5 55
+# ចំណាំ: fib ដោយ recursion យឺតពេល n ធំ — ប្រើ loop ឬ @functools.cache</code></pre></div></details></div>
+</section>
+
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>Comprehension, Lambda និងអនុគមន៍ប្រយោជន៍</h2>
+<p>Comprehension បង្កើត list/dict/set ក្នុងមួយបន្ទាត់។ Lambda ជាអនុគមន៍តូចគ្មានឈ្មោះ។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">squares = [x * x for x in range(1, 6)]
+print(squares)                         # [1, 4, 9, 16, 25]
+
+evens = [x for x in range(10) if x % 2 == 0]
+print(evens)
+
+d = {w: len(w) for w in [&quot;apple&quot;, &quot;fig&quot;, &quot;banana&quot;]}
+print(d)
+
+square = lambda x: x * x
+print(square(6))                       # 36
+
+people = [(&quot;Dara&quot;, 20), (&quot;Sophea&quot;, 18), (&quot;Vanna&quot;, 25)]
+people.sort(key=lambda p: p[1])        # តម្រៀបតាមអាយុ
+print(people)
+
+print(list(map(lambda x: x * 2, [1, 2, 3])))
+print(list(filter(lambda x: x &gt; 1, [1, 2, 3])))
+print(list(zip([&quot;a&quot;, &quot;b&quot;], [1, 2])))   # [(&#x27;a&#x27;, 1), (&#x27;b&#x27;, 2)]</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>Comprehension ដែលស្មុគស្មាញពេក អានពិបាក ប្រើ <code class="i">for</code> ធម្មតាវិញ។</li><li><code class="i">sorted(x)</code> ត្រឡប់ list ថ្មី ហើយ <code class="i">x.sort()</code> កែ list ដើម។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><ol><li>បង្កើត list នៃលេខគូពី 1 ដល់ 20 ដោយ comprehension។</li><li>តម្រៀប list ពាក្យតាមប្រវែង។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer11.py</span><pre><code class="py">print([x for x in range(1, 21) if x % 2 == 0])
+words = [&quot;banana&quot;, &quot;fig&quot;, &quot;apple&quot;]
+print(sorted(words, key=len))</code></pre></div></details></div>
+</section>
+
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>Module, pip និង Virtual Environment</h2>
+<p>Module ជា file <code class="i">.py</code> ដែលអាច import។ <code class="i">pip</code> ដំឡើង package ខាងក្រៅ។ Virtual environment ញែកបណ្ណាល័យតាមគម្រោង។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">import math
+from random import randint, choice
+import datetime as dt
+
+print(math.sqrt(16), math.pi)
+print(randint(1, 6))
+print(choice([&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]))
+
+# file ផ្ទាល់ខ្លួន mytools.py
+# def greet(name): return f&quot;Hi {name}&quot;
+# ក្នុង main.py៖  from mytools import greet
+
+if __name__ == &quot;__main__&quot;:
+    print(&quot;run directly&quot;)</code></pre></div>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">python -m venv .venv
+.venv\Scripts\activate      # Windows
+source .venv/bin/activate   # macOS/Linux
+pip install requests
+pip freeze &gt; requirements.txt
+pip install -r requirements.txt</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li><code class="i">if __name__ == "__main__":</code> ដំណើរការតែពេលរត់ file ផ្ទាល់ មិនមែនពេល import។</li><li>កុំដាក់ឈ្មោះ file ដូច module ស្តង់ដារ (<code class="i">random.py</code>) នឹងបង្កការច្រឡំ។</li><li>ប្រើ venv ជានិច្ចសម្រាប់គម្រោងនីមួយៗ។</li><li>Windows PowerShell៖ បើ <code class="i">activate</code> ចេញ error អំពី script ត្រូវរត់ <code class="i">Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</code> ម្តង។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><ol><li>បង្កើត <code class="i">mytools.py</code> មានអនុគមន៍ ហើយ import ពី main។</li><li>ដំឡើង <code class="i">requests</code> ក្នុង venv។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer12.py</span><pre><code class="py"># mytools.py
+def square(x):
+    return x * x
+
+# main.py
+# from mytools import square
+# print(square(5))</code></pre></div></details></div>
+</section>
+
+<section id="l13">
+<h2><span class="badge">មេរៀន ១៣</span>File I/O</h2>
+<p>ប្រើ <code class="i">with open(...)</code> ដើម្បីបិទ file ដោយស្វ័យប្រវត្តិ។ Mode៖ <code class="i">"r"</code> អាន, <code class="i">"w"</code> សរសេរ (សរសេរជាន់), <code class="i">"a"</code> បន្ថែម។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">with open(&quot;data.txt&quot;, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+    f.write(&quot;Line 1\n&quot;)
+    f.write(&quot;Line 2\n&quot;)
+
+with open(&quot;data.txt&quot;, &quot;a&quot;, encoding=&quot;utf-8&quot;) as f:
+    f.write(&quot;Line 3\n&quot;)
+
+with open(&quot;data.txt&quot;, encoding=&quot;utf-8&quot;) as f:
+    for line in f:
+        print(line.strip())
+
+with open(&quot;data.txt&quot;, encoding=&quot;utf-8&quot;) as f:
+    content = f.read()
+print(len(content.splitlines()))   # 3</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>ប្រើ <code class="i">encoding="utf-8"</code> ជានិច្ច ជាពិសេសពេលមានអក្សរខ្មែរ។</li><li>Mode <code class="i">"w"</code> លុបខ្លឹមសារចាស់។ ប្រើ <code class="i">"a"</code> បើចង់បន្ថែម។</li><li>File មិនមាន → <code class="i">FileNotFoundError</code> (ចាប់ដោយ try/except)។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣</h4><ol><li>រក្សាទុកឈ្មោះ និងពិន្ទុ ៣នាក់ក្នុង file ហើយអានមកវិញ។</li><li>រាប់បន្ទាត់ក្នុង file។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer13.py</span><pre><code class="py">with open(&quot;scores.txt&quot;, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+    f.write(&quot;Dara 85\nSophea 92\nVanna 78\n&quot;)
+
+with open(&quot;scores.txt&quot;, encoding=&quot;utf-8&quot;) as f:
+    for line in f:
+        name, score = line.split()
+        print(name, int(score))
+
+with open(&quot;scores.txt&quot;, encoding=&quot;utf-8&quot;) as f:
+    print(sum(1 for _ in f))</code></pre></div></details></div>
+</section>
+
+<section id="l14">
+<h2><span class="badge">មេរៀន ១៤</span>Exception Handling</h2>
+<p><code class="i">try</code> សាកល្បង, <code class="i">except</code> ចាប់កំហុស, <code class="i">else</code> ពេលគ្មានកំហុស, <code class="i">finally</code> ដំណើរការជានិច្ច, <code class="i">raise</code> បោះកំហុស។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">def divide(a, b):
+    if b == 0:
+        raise ValueError(&quot;Divide by zero&quot;)
+    return a / b
+
+try:
+    print(divide(10, 2))
+    print(divide(1, 0))
+except ValueError as e:
+    print(&quot;Error:&quot;, e)
+else:
+    print(&quot;no error&quot;)
+finally:
+    print(&quot;always runs&quot;)
+
+try:
+    n = int(&quot;abc&quot;)
+except ValueError:
+    print(&quot;not a number&quot;)
+
+try:
+    open(&quot;missing.txt&quot;)
+except FileNotFoundError:
+    print(&quot;file not found&quot;)
+
+class NegativeError(Exception):      # exception ផ្ទាល់ខ្លួន
+    pass</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>ចាប់កំហុសជាក់លាក់ (<code class="i">except ValueError</code>) ជៀសវាង <code class="i">except:</code> ទទេ ដែលលាក់កំហុសផ្សេងៗ។</li><li>Exception សម្រាប់ស្ថានភាពមិនធម្មតា មិនមែនជំនួស <code class="i">if</code> ធម្មតា។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៤</h4><ol><li>អានលេខពីអ្នកប្រើ ហើយចាប់ <code class="i">ValueError</code> ពេលបញ្ចូលមិនត្រូវ។</li><li>ចែកលេខពីរ ដោយចាប់ <code class="i">ZeroDivisionError</code>។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer14.py</span><pre><code class="py">try:
+    n = int(input(&quot;Number: &quot;))
+    print(10 / n)
+except ValueError:
+    print(&quot;Please enter a number&quot;)
+except ZeroDivisionError:
+    print(&quot;Cannot divide by zero&quot;)</code></pre></div></details></div>
+</section>
+
+<section id="l15">
+<h2><span class="badge">មេរៀន ១៥</span>Class និង OOP</h2>
+<p><code class="i">class</code> កំណត់ប្លង់ object។ <code class="i">__init__</code> ជា constructor, <code class="i">self</code> ជា object ខ្លួនឯង។ <code class="i">__str__</code> កំណត់ការបង្ហាញជាអត្ថបទ។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">class Account:
+    bank = &quot;ABC Bank&quot;            # class attribute
+
+    def __init__(self, owner, balance=0):
+        self.owner = owner
+        self._balance = balance  # _ សំគាល់ថា private តាមប្រពៃណី
+
+    def deposit(self, amount):
+        if amount &lt;= 0:
+            raise ValueError(&quot;Amount must be positive&quot;)
+        self._balance += amount
+
+    def withdraw(self, amount):
+        if amount &gt; self._balance:
+            raise ValueError(&quot;Insufficient funds&quot;)
+        self._balance -= amount
+
+    @property
+    def balance(self):
+        return self._balance
+
+    def __str__(self):
+        return f&quot;{self.owner}: ${self._balance}&quot;
+
+a = Account(&quot;Vanna&quot;, 100)
+a.deposit(50)
+a.withdraw(30)
+print(a)            # Vanna: $120
+print(a.balance)    # 120</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>Method ទាំងអស់ត្រូវមាន <code class="i">self</code> ជាអាគុយម៉ង់ដំបូង។</li><li>Python គ្មាន private ពិតប្រាកដ៖ ប្រើ <code class="i">_name</code> ជាសម្គាល់ ហើយ <code class="i">@property</code> សម្រាប់ getter។</li><li>កុំប្រើ <code class="i">list</code>/<code class="i">dict</code> ជា class attribute បើចង់ឱ្យមួយ object មួយ (ដាក់ក្នុង <code class="i">__init__</code>)។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៥</h4><ol><li>class <code class="i">Rectangle</code> មាន <code class="i">area()</code> និង <code class="i">perimeter()</code>។</li><li>class <code class="i">Student</code> មាន name, scores និង method រកមធ្យមភាគ។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer15.py</span><pre><code class="py">class Rectangle:
+    def __init__(self, w, h):
+        self.w, self.h = w, h
+    def area(self): return self.w * self.h
+    def perimeter(self): return 2 * (self.w + self.h)
+
+r = Rectangle(3, 4)
+print(r.area(), r.perimeter())   # 12 14
+
+class Student:
+    def __init__(self, name, scores=None):
+        self.name = name
+        self.scores = scores if scores is not None else []   # កុំប្រើ [] ជា default
+
+    def average(self):
+        return sum(self.scores) / len(self.scores) if self.scores else 0
+
+s = Student(&quot;Dara&quot;, [80, 90, 85])
+print(s.name, s.average())       # Dara 85.0</code></pre></div></details></div>
+</section>
+
+<section id="l16">
+<h2><span class="badge">មេរៀន ១៦</span>Inheritance, Polymorphism និង dataclass</h2>
+<p>Class កូនទទួលមរតកពី class មេ ហើយអាច override method។ <code class="i">super()</code> ហៅ class មេ។ <code class="i">dataclass</code> កាត់បន្ថយកូដ។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">class Animal:
+    def __init__(self, name):
+        self.name = name
+    def speak(self):
+        return &quot;...&quot;
+
+class Dog(Animal):
+    def speak(self):
+        return &quot;Woof!&quot;
+
+class Cat(Animal):
+    def __init__(self, name, indoor=True):
+        super().__init__(name)
+        self.indoor = indoor
+    def speak(self):
+        return &quot;Meow!&quot;
+
+for pet in [Dog(&quot;Rex&quot;), Cat(&quot;Mimi&quot;)]:
+    print(pet.name, pet.speak())      # polymorphism
+
+from dataclasses import dataclass
+
+@dataclass
+class Point:
+    x: float
+    y: float
+
+p = Point(1, 2)
+print(p)                 # Point(x=1, y=2)
+print(p == Point(1, 2))  # True</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>ភ្លេចហៅ <code class="i">super().__init__()</code> ធ្វើឱ្យអថេរ class មេមិនត្រូវបានកំណត់។</li><li>Python អនុញ្ញាត multiple inheritance ប៉ុន្តែគួរប្រើតិចតួច។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៦</h4><ol><li>បង្កើត <code class="i">Shape</code> មេ ហើយ <code class="i">Circle</code>, <code class="i">Square</code> override <code class="i">area()</code>។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer16.py</span><pre><code class="py">import math
+class Shape:
+    def area(self): raise NotImplementedError
+
+class Circle(Shape):
+    def __init__(self, r): self.r = r
+    def area(self): return math.pi * self.r ** 2
+
+class Square(Shape):
+    def __init__(self, s): self.s = s
+    def area(self): return self.s ** 2
+
+for s in [Circle(1), Square(2)]:
+    print(round(s.area(), 2))</code></pre></div></details></div>
+</section>
+
+<section id="l17">
+<h2><span class="badge">មេរៀន ១៧</span>Standard Library៖ json, datetime, random, collections</h2>
+<p>Python មាន library ស្តង់ដារច្រើនណាស់ មិនចាំបាច់ដំឡើងបន្ថែម។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">import json
+from datetime import datetime, timedelta
+import random
+from collections import Counter
+
+data = {&quot;name&quot;: &quot;Dara&quot;, &quot;scores&quot;: [80, 90]}
+text = json.dumps(data, ensure_ascii=False, indent=2)
+print(text)
+back = json.loads(text)
+print(back[&quot;scores&quot;])
+
+now = datetime(2026, 11, 11, 9, 30)
+print(now.strftime(&quot;%Y-%m-%d %H:%M&quot;))
+print(now + timedelta(days=7))
+
+print(Counter(&quot;mississippi&quot;).most_common(2))   # [(&#x27;i&#x27;, 4), (&#x27;s&#x27;, 4)]
+
+random.seed(1)
+items = list(range(10))
+random.shuffle(items)
+print(len(items), random.choice(items) in items)</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li><code class="i">json.dumps(..., ensure_ascii=False)</code> រក្សាអក្សរខ្មែរ មិនបម្លែងជា <code class="i">\u</code>។</li><li><code class="i">random</code> មិនសមរម្យសម្រាប់ពាក្យសម្ងាត់ ប្រើ <code class="i">secrets</code>។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៧</h4><ol><li>រក្សាទុក dict ក្នុង file JSON ហើយអានមកវិញ។</li><li>គណនាចំនួនថ្ងៃរវាងពីរកាលបរិច្ឆេទ។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer17.py</span><pre><code class="py">import json
+from datetime import date
+
+with open(&quot;d.json&quot;, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+    json.dump({&quot;name&quot;: &quot;ដារ៉ា&quot;, &quot;age&quot;: 20}, f, ensure_ascii=False)
+with open(&quot;d.json&quot;, encoding=&quot;utf-8&quot;) as f:
+    print(json.load(f))
+
+print((date(2026, 12, 25) - date(2026, 11, 11)).days)   # 44</code></pre></div></details></div>
+</section>
+
+<section id="l18">
+<h2><span class="badge">មេរៀន ១៨</span>Generator, Decorator និង Context Manager</h2>
+<p><b>Generator</b> (<code class="i">yield</code>) បង្កើតតម្លៃម្តងមួយៗ សន្សំ memory។ <b>Decorator</b> បន្ថែមមុខងារទៅអនុគមន៍ដោយមិនកែកូដវា។ <b>Context manager</b> គ្រប់គ្រងការបើក/បិទ ក្នុង <code class="i">with</code>។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">def countdown(n):
+    while n &gt; 0:
+        yield n           # ផ្អាក ហើយប្រគល់តម្លៃ
+        n -= 1
+
+for x in countdown(3):
+    print(x)              # 3 2 1
+
+squares = (x * x for x in range(5))   # generator expression
+print(sum(squares))                   # 30
+
+import time, functools
+
+def timer(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.perf_counter()
+        result = func(*args, **kwargs)
+        print(f&quot;{func.__name__} took {time.perf_counter() - start:.4f}s&quot;)
+        return result
+    return wrapper
+
+@timer
+def slow():
+    return sum(range(1_000_000))
+
+print(slow())
+
+from contextlib import contextmanager
+
+@contextmanager
+def section(name):
+    print(&quot;start&quot;, name)
+    try:
+        yield
+    finally:
+        print(&quot;end&quot;, name)
+
+with section(&quot;demo&quot;):
+    print(&quot;working&quot;)</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>Generator ប្រើបានម្តងគត់ ពេលដើរចប់ហើយ ត្រូវបង្កើតថ្មី។</li><li>ត្រូវដាក់ <code class="i">functools.wraps</code> ក្នុង decorator ដើម្បីរក្សាឈ្មោះអនុគមន៍ដើម។</li><li>ប្រើ <code class="i">try/finally</code> ក្នុង context manager ដើម្បីឱ្យចុងក្រោយដំណើរការជានិច្ច។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៨</h4><ol><li>សរសេរ generator <code class="i">fib()</code> ដែលចេញលេខ Fibonacci ដោយមិនកំណត់។</li><li>សរសេរ decorator <code class="i">log</code> ដែលបោះពុម្ពឈ្មោះអនុគមន៍មុនហៅ។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer18.py</span><pre><code class="py">import functools
+
+def fib():
+    a, b = 0, 1
+    while True:
+        yield a
+        a, b = b, a + b
+
+g = fib()
+print([next(g) for _ in range(8)])   # [0, 1, 1, 2, 3, 5, 8, 13]
+
+def log(func):
+    @functools.wraps(func)
+    def wrapper(*a, **k):
+        print(&quot;calling&quot;, func.__name__)
+        return func(*a, **k)
+    return wrapper
+
+@log
+def hello(): return &quot;hi&quot;
+print(hello())</code></pre></div></details></div>
+</section>
+
+<section id="l19">
+<h2><span class="badge">មេរៀន ១៩</span>Type Hints និង Testing (unittest)</h2>
+<p>Type hints ជួយឱ្យកូដអានងាយ និងឱ្យឧបករណ៍ជួយរកកំហុស។ Test ធានាថាអនុគមន៍ដំណើរការត្រឹមត្រូវ ហើយ <code class="i">unittest</code> មានស្រាប់ក្នុង Python។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">def add(a: int, b: int) -&gt; int:
+    return a + b
+
+def average(nums: list[float]) -&gt; float:
+    return sum(nums) / len(nums)
+
+import unittest
+
+class TestMath(unittest.TestCase):
+    def test_add(self):
+        self.assertEqual(add(2, 3), 5)
+
+    def test_average(self):
+        self.assertAlmostEqual(average([1, 2, 4]), 7 / 3)
+
+    def test_empty(self):
+        with self.assertRaises(ZeroDivisionError):
+            average([])
+
+if __name__ == &quot;__main__&quot;:
+    unittest.main()</code></pre></div>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">python -m unittest -v        # រត់ test ទាំងអស់
+pip install pytest
+pytest                       # ជម្រើសងាយជាង</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>Type hints <b>មិនត្រូវបានបង្ខំ</b>ពេលរត់ទេ គ្រាន់តែជាឯកសារ និងសម្រាប់ឧបករណ៍ដូច <code class="i">mypy</code>។</li><li>ឈ្មោះ method test ត្រូវចាប់ផ្តើមដោយ <code class="i">test_</code>។</li><li>សរសេរ test សម្រាប់ករណីព្រំដែន (ទទេ, 0, អវិជ្ជមាន)។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៩</h4><ol><li>សរសេរ <code class="i">is_even(n: int) -&gt; bool</code> ហើយ test ៣ ករណី។</li><li>សរសេរ test សម្រាប់ <code class="i">is_prime</code> (មេរៀនទី ៦)។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer19.py</span><pre><code class="py">import unittest
+
+def is_even(n: int) -&gt; bool:
+    return n % 2 == 0
+
+class T(unittest.TestCase):
+    def test_even(self): self.assertTrue(is_even(4))
+    def test_odd(self): self.assertFalse(is_even(7))
+    def test_zero(self): self.assertTrue(is_even(0))
+
+if __name__ == &quot;__main__&quot;:
+    unittest.main()
+
+def is_prime(n: int) -&gt; bool:
+    if n &lt; 2:
+        return False
+    return all(n % i for i in range(2, int(n ** 0.5) + 1))
+
+class TestPrime(unittest.TestCase):
+    def test_primes(self):
+        for n in (2, 3, 13, 97):
+            self.assertTrue(is_prime(n))
+
+    def test_not_primes(self):
+        for n in (-5, 0, 1, 4, 100):
+            self.assertFalse(is_prime(n))</code></pre></div></details></div>
+</section>
+
+<section id="l20">
+<h2><span class="badge">មេរៀន ២០</span>Database ជាមួយ SQLite</h2>
+<p>SQLite ជា database ក្នុង file តែមួយ មានស្រាប់ក្នុង Python (<code class="i">sqlite3</code>) គ្មានអ្វីត្រូវដំឡើង។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">import sqlite3
+
+conn = sqlite3.connect(&quot;school.db&quot;)
+cur = conn.cursor()
+
+cur.execute(&quot;&quot;&quot;
+CREATE TABLE IF NOT EXISTS students (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    gpa REAL
+)&quot;&quot;&quot;)
+cur.execute(&quot;DELETE FROM students&quot;)
+
+cur.execute(&quot;INSERT INTO students (name, gpa) VALUES (?, ?)&quot;, (&quot;Dara&quot;, 3.5))
+cur.executemany(&quot;INSERT INTO students (name, gpa) VALUES (?, ?)&quot;,
+                [(&quot;Sophea&quot;, 3.9), (&quot;Vanna&quot;, 3.1)])
+conn.commit()
+
+for row in cur.execute(&quot;SELECT id, name, gpa FROM students WHERE gpa &gt;= ? ORDER BY gpa DESC&quot;, (3.3,)):
+    print(row)
+
+cur.execute(&quot;UPDATE students SET gpa = ? WHERE name = ?&quot;, (3.7, &quot;Dara&quot;))
+cur.execute(&quot;DELETE FROM students WHERE name = ?&quot;, (&quot;Vanna&quot;,))
+conn.commit()
+
+print(cur.execute(&quot;SELECT COUNT(*), AVG(gpa) FROM students&quot;).fetchone())
+conn.close()</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li><b>កុំបញ្ចូលអថេរក្នុង SQL ដោយ f-string</b> ប្រើ <code class="i">?</code> ជានិច្ច ការពារ SQL Injection។</li><li>ត្រូវ <code class="i">commit()</code> ទើបការកែប្រែត្រូវបានរក្សា។</li><li>ត្រូវ <code class="i">close()</code> ឬប្រើ <code class="i">with conn:</code>។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ២០</h4><ol><li>បង្កើតតារាង <code class="i">books</code> (title, price) បន្ថែម ៣ ក្បាល ហើយបង្ហាញក្បាលថ្លៃជាងគេ។</li><li>បន្ថែមមុខងារស្វែងរកសិស្សតាមឈ្មោះ (LIKE)។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer20.py</span><pre><code class="py">import sqlite3
+conn = sqlite3.connect(&quot;:memory:&quot;)
+cur = conn.cursor()
+cur.execute(&quot;CREATE TABLE books (title TEXT, price REAL)&quot;)
+cur.executemany(&quot;INSERT INTO books VALUES (?, ?)&quot;, [(&quot;A&quot;, 10), (&quot;B&quot;, 25), (&quot;C&quot;, 15)])
+print(cur.execute(&quot;SELECT title, price FROM books ORDER BY price DESC LIMIT 1&quot;).fetchone())
+print(cur.execute(&quot;SELECT * FROM books WHERE title LIKE ?&quot;, (&quot;%A%&quot;,)).fetchall())
+
+# ស្វែងរកសិស្សតាមឈ្មោះ (school.db ពីមេរៀន)
+def search_students(keyword):
+    conn = sqlite3.connect(&quot;school.db&quot;)
+    try:
+        sql = &quot;SELECT id, name, gpa FROM students WHERE name LIKE ?&quot;
+        return conn.execute(sql, (f&quot;%{keyword}%&quot;,)).fetchall()
+    finally:
+        conn.close()
+
+print(search_students(&quot;So&quot;))</code></pre></div></details></div>
+</section>
+
+<section id="l21">
+<h2><span class="badge">មេរៀន ២១</span>NumPy (គណនាលេខលឿន)</h2>
+<p>NumPy ដំណើរការ array លើទិន្នន័យច្រើនបានលឿន ដោយមិនចាំបាច់ loop។ ដំឡើង៖ <code class="i">pip install numpy</code>។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">import numpy as np
+
+a = np.array([1, 2, 3, 4, 5])
+print(a * 2)              # [ 2  4  6  8 10]  (មិនចាំបាច់ loop)
+print(a.mean(), a.std())  # មធ្យមភាគ, គម្លាតស្តង់ដារ
+print(a[a &gt; 2])           # [3 4 5]  (boolean mask)
+
+m = np.arange(6).reshape(2, 3)
+print(m)                  # [[0 1 2] [3 4 5]]
+print(m.shape)            # (2, 3)
+print(m.sum(axis=0))      # [3 5 7]  (បូកតាមជួរឈរ)
+print(m.sum(axis=1))      # [ 3 12]  (បូកតាមជួរដេក)
+
+print(np.zeros((2, 2)))
+print(np.linspace(0, 1, 5))   # [0.   0.25 0.5  0.75 1.  ]
+print(m @ m.T)                # គុណ matrix</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>Operation លើ array ធ្វើតាមធាតុ (element-wise)៖ <code class="i">a * b</code> មិនមែនគុណ matrix ទេ (ប្រើ <code class="i">@</code>)។</li><li>Array មានប្រភេទតែមួយ (<code class="i">dtype</code>) ដូច្នេះលាយ int/str នឹងប្តូរប្រភេទ។</li><li>Slicing លើ array ជា <i>view</i> (កែ view = កែដើម) ប្រើ <code class="i">.copy()</code> បើចង់ចម្លង។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ២១</h4><ol><li>បង្កើត array 1..10 គណនាផលបូកនៃលេខគូ។</li><li>បង្កើត matrix 3×3 ហើយរកអង្កត់ទ្រូងរបស់វា (<code class="i">np.diag</code>)។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer21.py</span><pre><code class="py">import numpy as np
+a = np.arange(1, 11)
+print(a[a % 2 == 0].sum())      # 30
+
+m = np.arange(9).reshape(3, 3)
+print(np.diag(m))               # [0 4 8]</code></pre></div></details></div>
+</section>
+
+<section id="l22">
+<h2><span class="badge">មេរៀន ២២</span>pandas (វិភាគទិន្នន័យ)</h2>
+<p>pandas គ្រប់គ្រងទិន្នន័យជាតារាង (<code class="i">DataFrame</code>) ដូច Excel។ ដំឡើង៖ <code class="i">pip install pandas matplotlib</code>។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">import pandas as pd
+
+df = pd.DataFrame({
+    &quot;name&quot;: [&quot;Dara&quot;, &quot;Sophea&quot;, &quot;Vanna&quot;, &quot;Sokha&quot;],
+    &quot;class&quot;: [&quot;A&quot;, &quot;B&quot;, &quot;A&quot;, &quot;B&quot;],
+    &quot;score&quot;: [85, 92, 78, 88],
+})
+
+print(df)
+print(df[&quot;score&quot;].mean())                     # 85.75
+print(df[df[&quot;score&quot;] &gt; 80])                   # តម្រង
+print(df.sort_values(&quot;score&quot;, ascending=False))
+print(df.groupby(&quot;class&quot;)[&quot;score&quot;].mean())    # មធ្យមភាគតាមថ្នាក់
+
+df[&quot;grade&quot;] = df[&quot;score&quot;].apply(lambda s: &quot;A&quot; if s &gt;= 90 else &quot;B&quot;)
+print(df.describe())
+
+df.to_csv(&quot;scores.csv&quot;, index=False, encoding=&quot;utf-8-sig&quot;)
+df2 = pd.read_csv(&quot;scores.csv&quot;)
+print(df2.shape)                              # (4, 4)
+
+# គូសក្រាហ្វ (matplotlib)
+import matplotlib.pyplot as plt
+df.plot(x=&quot;name&quot;, y=&quot;score&quot;, kind=&quot;bar&quot;)
+plt.title(&quot;Scores&quot;)
+plt.savefig(&quot;scores.png&quot;)                     # ឬ plt.show()</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>បើ CSV មានអក្សរខ្មែរ បើកក្នុង Excel ត្រូវរក្សាទុកដោយ <code class="i">encoding="utf-8-sig"</code>។</li><li><code class="i">df["x"]</code> ជា Series ហើយ <code class="i">df[["x", "y"]]</code> ជា DataFrame។</li><li>ពេលកែជួរដេក/ជួរឈរ សូមប្រើ <code class="i">df.loc[...]</code> ជៀសវាងព្រមាន <code class="i">SettingWithCopy</code>។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ២២</h4><ol><li>ទាញយកសិស្សដែលពិន្ទុ ≥ 85 ហើយរក្សាទុកក្នុង CSV ថ្មី។</li><li>រាប់ចំនួនសិស្សក្នុងថ្នាក់នីមួយៗ។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer22.py</span><pre><code class="py">import pandas as pd
+df = pd.DataFrame({&quot;name&quot;: [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;], &quot;class&quot;: [&quot;A&quot;, &quot;B&quot;, &quot;A&quot;], &quot;score&quot;: [90, 70, 85]})
+df[df[&quot;score&quot;] &gt;= 85].to_csv(&quot;top.csv&quot;, index=False)
+print(df[&quot;class&quot;].value_counts())</code></pre></div></details></div>
+</section>
+
+<section id="l23">
+<h2><span class="badge">មេរៀន ២៣</span>Web API៖ requests និង Flask</h2>
+<p><code class="i">requests</code> ហៅ API ខាងក្រៅ។ <b>Flask</b> បង្កើត API របស់យើងផ្ទាល់ (JSON)។ ដំឡើង៖ <code class="i">pip install flask requests</code>។</p>
+<div class="codebox"><span class="label">app.py</span><pre><code class="py"># app.py  (Flask API)
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+todos = []
+
+def next_todo_id():
+    return max((todo[&quot;id&quot;] for todo in todos), default=0) + 1
+
+@app.get(&quot;/todos&quot;)
+def list_todos():
+    return jsonify(todos)
+
+@app.post(&quot;/todos&quot;)
+def add_todo():
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({&quot;error&quot;: &quot;JSON object required&quot;}), 400
+
+    title = data.get(&quot;title&quot;)
+    if not isinstance(title, str) or not title.strip():
+        return jsonify({&quot;error&quot;: &quot;title required&quot;}), 400
+
+    todo = {&quot;id&quot;: next_todo_id(), &quot;title&quot;: title.strip()}
+    todos.append(todo)
+    return jsonify(todo), 201
+
+@app.get(&quot;/todos/&lt;int:tid&gt;&quot;)
+def get_todo(tid):
+    for t in todos:
+        if t[&quot;id&quot;] == tid:
+            return jsonify(t)
+    return jsonify({&quot;error&quot;: &quot;not found&quot;}), 404
+
+if __name__ == &quot;__main__&quot;:
+    app.run(debug=True)</code></pre></div>
+<div class="codebox"><span class="label">client.py</span><pre><code class="py"># client.py  (ហៅ API ពី Python)
+import requests
+
+base = &quot;http://127.0.0.1:5000&quot;
+r = requests.post(f&quot;{base}/todos&quot;, json={&quot;title&quot;: &quot;learn Flask&quot;})
+print(r.status_code, r.json())          # 201 {&#x27;id&#x27;: 1, &#x27;title&#x27;: &#x27;learn Flask&#x27;}
+print(requests.get(f&quot;{base}/todos&quot;).json())</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li><code class="i">debug=True</code> ប្រើតែពេលអភិវឌ្ឍ <b>ហាមប្រើ</b>ក្នុង production។</li><li>ត្រូវឆែក <code class="i">request.get_json()</code> មិនទទេ ហើយមាន key ចាំបាច់ (បើអត់ នឹង error)។</li><li>Status code៖ 200 OK, 201 Created, 400 Bad Request, 404 Not Found។</li><li>ប្រើ <code class="i">requests.get(url, timeout=10)</code> ជានិច្ច ការពារគាំង។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ២៣</h4><ol><li>បន្ថែម <code class="i">DELETE /todos/&lt;id&gt;</code>។</li><li>បន្ថែម <code>PUT /todos/&lt;id&gt;</code> ដើម្បីកែ title (បើ title ទទេ ត្រឡប់ 400)។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer23.py</span><pre><code class="py"># បន្ថែមក្នុង app.py
+@app.delete(&quot;/todos/&lt;int:tid&gt;&quot;)
+def delete_todo(tid):
+    for t in todos:
+        if t[&quot;id&quot;] == tid:
+            todos.remove(t)
+            return jsonify({&quot;deleted&quot;: tid})
+    return jsonify({&quot;error&quot;: &quot;not found&quot;}), 404
+
+@app.put(&quot;/todos/&lt;int:tid&gt;&quot;)
+def update_todo(tid):
+    data = request.get_json(silent=True)
+    title = data.get(&quot;title&quot;) if isinstance(data, dict) else None
+    if not isinstance(title, str) or not title.strip():
+        return jsonify({&quot;error&quot;: &quot;title required&quot;}), 400
+    for t in todos:
+        if t[&quot;id&quot;] == tid:
+            t[&quot;title&quot;] = title.strip()
+            return jsonify(t)
+    return jsonify({&quot;error&quot;: &quot;not found&quot;}), 404</code></pre></div></details></div>
+</section>
+
+<section id="l24">
+<h2><span class="badge">មេរៀន ២៤</span>Regular Expression (re)</h2>
+<p>Regex ជាលំនាំស្វែងរកអត្ថបទ។ ប្រើ <b>raw string</b> <code class="i">r"..."</code> ជានិច្ច។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">import re
+
+text = &quot;Call 012-345-678 or 098765432, email dara@example.com on 2026-11-11&quot;
+
+print(re.findall(r&quot;\d{3}-\d{3}-\d{3}|\d{9}&quot;, text))   # លេខទូរស័ព្ទ
+print(re.search(r&quot;[\w.]+@[\w.]+&quot;, text).group())      # dara@example.com
+
+m = re.search(r&quot;(\d{4})-(\d{2})-(\d{2})&quot;, text)
+print(m.groups())                                     # (&#x27;2026&#x27;, &#x27;11&#x27;, &#x27;11&#x27;)
+year, month, day = m.groups()
+
+print(re.sub(r&quot;\s+&quot;, &quot; &quot;, &quot;a    b   c&quot;))              # a b c
+print(bool(re.match(r&quot;^\d+$&quot;, &quot;12345&quot;)))              # True
+print(bool(re.fullmatch(r&quot;[A-Z]{2}\d{3}&quot;, &quot;AB123&quot;)))  # True</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li><code class="i">re.match</code> ពិនិត្យតែនៅដើម string, <code class="i">re.search</code> រកគ្រប់កន្លែង, <code class="i">re.fullmatch</code> ត្រូវទាំងអស់។</li><li><code class="i">.*</code> លោភ (greedy) ប្រើ <code class="i">.*?</code> សម្រាប់ចាប់តិចបំផុត។</li><li>ពិនិត្យអ៊ីមែល/URL ជាក់ស្តែងគួរប្រើ library ជាជា regex ស្មុគស្មាញ។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ២៤</h4><ol><li>ទាញយកលេខទាំងអស់ពីអត្ថបទមួយ។</li><li>ពិនិត្យថា string ជាលេខទូរស័ព្ទកម្ពុជា (ចាប់ផ្តើម 0 ហើយមាន 9–10 ខ្ទង់)។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer24.py</span><pre><code class="py">import re
+print(re.findall(r&quot;\d+&quot;, &quot;a1 b22 c333&quot;))              # [&#x27;1&#x27;, &#x27;22&#x27;, &#x27;333&#x27;]
+print(bool(re.fullmatch(r&quot;0\d{8,9}&quot;, &quot;012345678&quot;)))   # True</code></pre></div></details></div>
+</section>
+
+<section id="p1">
+<h2><span class="badge">គម្រោង ១</span>ហ្គេមទាយលេខ</h2>
+<p>កុំព្យូទ័រជ្រើសលេខ 1-100 ហើយអ្នកទាយរហូតត្រូវ។ ប្រើ <code class="i">random</code>, <code class="i">while</code>, <code class="i">try/except</code>។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">import random
+
+secret = random.randint(1, 100)
+tries = 0
+
+while True:
+    try:
+        guess = int(input(&quot;Guess (1-100): &quot;))
+    except ValueError:
+        print(&quot;Please enter a number&quot;)
+        continue
+    tries += 1
+    if guess &lt; secret:
+        print(&quot;Too low&quot;)
+    elif guess &gt; secret:
+        print(&quot;Too high&quot;)
+    else:
+        print(f&quot;Correct! {tries} tries&quot;)
+        break</code></pre></div>
+<div class="ex"><h4>🧩 បន្ថែមខ្លួនឯង</h4><ol><li>កំណត់ចំនួនដងអតិបរមា (ឧ. ៧ ដង)។</li><li>សួរលេងម្តងទៀតនៅចុង។</li><li>រក្សាទុកពិន្ទុល្អបំផុតក្នុង file។</li></ol></div>
+</section>
+
+<section id="p2">
+<h2><span class="badge">គម្រោង ២</span>បញ្ជីការងារ (To-Do) ជាមួយ JSON</h2>
+<p>បន្ថែម បង្ហាញ សម្គាល់រួច លុប ហើយរក្សាទុកក្នុង <code class="i">todo.json</code>។ ប្រើ function, list, dict, file និង exception។</p>
+<div class="codebox"><span class="label">Python</span><pre><code class="py">import json
+from pathlib import Path
+
+FILE = Path(&quot;todo.json&quot;)
+
+def load():
+    return json.loads(FILE.read_text(encoding=&quot;utf-8&quot;)) if FILE.exists() else []
+
+def save(items):
+    FILE.write_text(json.dumps(items, ensure_ascii=False, indent=2), encoding=&quot;utf-8&quot;)
+
+def show(items):
+    if not items:
+        print(&quot;(empty)&quot;)
+    for i, it in enumerate(items, 1):
+        mark = &quot;x&quot; if it[&quot;done&quot;] else &quot; &quot;
+        print(f&quot;{i}. [{mark}] {it[&#x27;title&#x27;]}&quot;)
+
+def main():
+    items = load()
+    while True:
+        print(&quot;\n1.Add  2.List  3.Done  4.Delete  0.Exit&quot;)
+        choice = input(&quot;&gt; &quot;).strip()
+        if choice == &quot;1&quot;:
+            title = input(&quot;Title: &quot;).strip()
+            if title:
+                items.append({&quot;title&quot;: title, &quot;done&quot;: False})
+            else:
+                print(&quot;Title cannot be empty&quot;)
+        elif choice == &quot;2&quot;:
+            show(items)
+        elif choice in (&quot;3&quot;, &quot;4&quot;):
+            show(items)
+            try:
+                i = int(input(&quot;Number: &quot;)) - 1
+                if not 0 &lt;= i &lt; len(items):
+                    raise IndexError
+                if choice == &quot;3&quot;:
+                    items[i][&quot;done&quot;] = True
+                else:
+                    items.pop(i)
+            except (ValueError, IndexError):
+                print(&quot;Invalid number&quot;)
+        elif choice == &quot;0&quot;:
+            save(items)
+            break
+        else:
+            print(&quot;Choose 0, 1, 2, 3, or 4&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    main()</code></pre></div>
+<div class="ex"><h4>🧩 បន្ថែមខ្លួនឯង</h4><ol><li>បន្ថែមកាលបរិច្ឆេទផុតកំណត់ (datetime)។</li><li>ស្វែងរកការងារតាមពាក្យ។</li><li>ប្តូរទៅជា class <code class="i">TodoList</code> (OOP)។</li></ol></div>
+</section>
+
+<section id="cheat">
+<h2>📋 Cheat Sheet៖ Python ប្រៀបធៀប C++</h2>
+<table><tr><th>ប្រធានបទ</th><th>Python</th><th>C++</th></tr><tr><td>Output</td><td><code class="i">print(x)</code></td><td><code class="i">cout &lt;&lt; x &lt;&lt; endl;</code></td></tr><tr><td>Input</td><td><code class="i">int(input())</code></td><td><code class="i">cin &gt;&gt; x;</code></td></tr><tr><td>អថេរ</td><td><code class="i">x = 5</code></td><td><code class="i">int x = 5;</code></td></tr><tr><td>Block</td><td>ចូលបន្ទាត់ + <code class="i">:</code></td><td><code class="i">{ }</code></td></tr><tr><td>Loop</td><td><code class="i">for i in range(n):</code></td><td><code class="i">for (int i=0;i&lt;n;i++)</code></td></tr><tr><td>Array</td><td><code class="i">list</code> <code class="i">[1,2,3]</code></td><td><code class="i">vector&lt;int&gt;</code></td></tr><tr><td>Map</td><td><code class="i">dict</code> <code class="i">{k: v}</code></td><td><code class="i">map&lt;K,V&gt;</code></td></tr><tr><td>Function</td><td><code class="i">def f(a, b):</code></td><td><code class="i">int f(int a, int b)</code></td></tr><tr><td>Class</td><td><code class="i">class A:</code> + <code class="i">self</code></td><td><code class="i">class A { };</code></td></tr><tr><td>Error</td><td><code class="i">try/except</code></td><td><code class="i">try/catch</code></td></tr><tr><td>Memory</td><td>ស្វ័យប្រវត្តិ (garbage collector)</td><td><code class="i">new/delete</code>, smart pointer</td></tr><tr><td>ដំណើរការ</td><td>Interpreter (<code class="i">python a.py</code>)</td><td>Compile (<code class="i">g++ a.cpp</code>)</td></tr></table>
+</section>
+
+<section class="hero" id="pro">
+  <h2>🏆 ផ្នែកទី ៣: App កម្រិតអាជីព (Professional Upgrade)</h2>
+  <p>យើងនឹងសាងសង់ <b>Student Management API</b> ដោយប្រើ <b>Flask + SQLite</b> តាមស្តង់ដារក្រុមហ៊ុនពិតប្រាកដ៖ App Factory, Blueprint, Config តាម Environment, Validation, Error Handling, Logging, Testing និង Docker។</p>
+  <p><span class="badge">✔ កូដទាំងអស់ត្រូវបានសាកល្បងរួច</span> Test ៦ ករណីដំណើរការជោគជ័យ។</p>
+</section>
+
+<section id="pro-structure">
+  <h2>📁 រចនាសម្ព័ន្ធ Project</h2>
+<div class="codebox"><span class="label">Folder Structure</span><pre><code class="txt">student_api/
+├── app/
+│   ├── __init__.py          # create_app() – App Factory
+│   ├── config.py            # Config តាម dev / test / prod
+│   ├── db.py                # ភ្ជាប់ SQLite
+│   ├── schema.sql           # រចនាសម្ព័ន្ធតារាង
+│   ├── errors.py            # AppError + Error handlers
+│   ├── validators.py        # ពិនិត្យទិន្នន័យចូល
+│   └── students/
+│       ├── __init__.py
+│       ├── routes.py        # HTTP layer (Blueprint)
+│       └── service.py       # Business logic + SQL
+├── tests/
+│   ├── __init__.py
+│   └── test_students.py
+├── run.py
+├── requirements.txt
+├── .env.example
+└── Dockerfile</code></pre></div>
+  <div class="note">💡 <b>Route → Service → Database</b>៖ Route មានតែការទទួល Request និងផ្ញើ Response។ Logic ទាំងអស់នៅក្នុង Service ដូច្នេះងាយសរសេរ Test និងប្រើឡើងវិញ។</div>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">mkdir student_api
+cd student_api
+python -m venv .venv
+.venv\Scripts\activate          # Windows (macOS/Linux: source .venv/bin/activate)
+pip install flask gunicorn
+pip freeze &gt; requirements.txt</code></pre></div>
+</section>
+
+<section id="pro-code">
+  <h2>🧱 កូដ App ពេញលេញ</h2>
+  <h3>1) Config & App Factory</h3>
+  <div class="codebox"><span class="label">app/config.py</span><pre><code class="py">import os
+
+
+class Config:
+    SECRET_KEY = os.getenv(&quot;SECRET_KEY&quot;, &quot;dev-only-change-me&quot;)
+    DATABASE = os.getenv(&quot;DATABASE&quot;, &quot;students.db&quot;)
+    JSON_SORT_KEYS = False
+    DEBUG = False
+
+
+class DevConfig(Config):
+    DEBUG = True
+
+
+class TestConfig(Config):
+    TESTING = True
+    DATABASE = &quot;&quot;  # test កំណត់ path ផ្ទាល់
+
+
+CONFIGS = {&quot;dev&quot;: DevConfig, &quot;test&quot;: TestConfig, &quot;prod&quot;: Config}</code></pre></div>
+  <div class="codebox"><span class="label">app/__init__.py</span><pre><code class="py">import logging
+import os
+
+from flask import Flask, jsonify
+
+from .config import CONFIGS
+from .db import close_db, init_db
+from .errors import register_error_handlers
+
+
+def create_app(env: str | None = None) -&gt; Flask:
+    &quot;&quot;&quot;App Factory: បង្កើត app តាម environment (dev / test / prod)&quot;&quot;&quot;
+    env = env or os.getenv(&quot;APP_ENV&quot;, &quot;dev&quot;)
+    app = Flask(__name__)
+    app.config.from_object(CONFIGS[env])
+
+    logging.basicConfig(
+        level=logging.DEBUG if app.debug else logging.INFO,
+        format=&quot;%(asctime)s %(levelname)s %(name)s: %(message)s&quot;,
+    )
+
+    app.teardown_appcontext(close_db)
+    register_error_handlers(app)
+
+    from .students.routes import bp as students_bp
+    app.register_blueprint(students_bp)
+
+    @app.get(&quot;/health&quot;)
+    def health():
+        return jsonify(status=&quot;ok&quot;)
+
+    if env != &quot;test&quot;:
+        with app.app_context():
+            init_db()
+
+    return app</code></pre></div>
+  <h3>2) Database</h3>
+  <div class="codebox"><span class="label">app/schema.sql</span><pre><code class="py">CREATE TABLE IF NOT EXISTS students (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    name        TEXT    NOT NULL,
+    email       TEXT    NOT NULL UNIQUE,
+    score       REAL    NOT NULL DEFAULT 0 CHECK (score BETWEEN 0 AND 100),
+    created_at  TEXT    NOT NULL DEFAULT CURRENT_TIMESTAMP
+);</code></pre></div>
+  <div class="codebox"><span class="label">app/db.py</span><pre><code class="py">import sqlite3
+from pathlib import Path
+
+from flask import current_app, g
+
+
+def get_db() -&gt; sqlite3.Connection:
+    &quot;&quot;&quot;បើក connection មួយក្នុងមួយ request ហើយប្រើវាឡើងវិញ&quot;&quot;&quot;
+    if &quot;db&quot; not in g:
+        g.db = sqlite3.connect(current_app.config[&quot;DATABASE&quot;])
+        g.db.row_factory = sqlite3.Row          # អាចប្រើ row[&quot;name&quot;]
+        g.db.execute(&quot;PRAGMA foreign_keys = ON&quot;)
+    return g.db
+
+
+def close_db(exc=None) -&gt; None:
+    db = g.pop(&quot;db&quot;, None)
+    if db is not None:
+        db.close()
+
+
+def init_db() -&gt; None:
+    schema = Path(__file__).with_name(&quot;schema.sql&quot;).read_text(encoding=&quot;utf-8&quot;)
+    get_db().executescript(schema)</code></pre></div>
+  <h3>3) Error Handling</h3>
+  <div class="codebox"><span class="label">app/errors.py</span><pre><code class="py">import logging
+
+from flask import Flask, jsonify
+from werkzeug.exceptions import HTTPException
+
+log = logging.getLogger(__name__)
+
+
+class AppError(Exception):
+    &quot;&quot;&quot;កំហុសដែលយើងរំពឹងទុក (ឧ. ទិន្នន័យមិនត្រឹមត្រូវ)&quot;&quot;&quot;
+
+    def __init__(self, message: str, status: int = 400, details: dict | None = None):
+        super().__init__(message)
+        self.message = message
+        self.status = status
+        self.details = details or {}
+
+
+def register_error_handlers(app: Flask) -&gt; None:
+    @app.errorhandler(AppError)
+    def handle_app_error(err: AppError):
+        body = {&quot;error&quot;: err.message}
+        if err.details:
+            body[&quot;details&quot;] = err.details
+        return jsonify(body), err.status
+
+    @app.errorhandler(HTTPException)
+    def handle_http_error(err: HTTPException):
+        return jsonify({&quot;error&quot;: err.description}), err.code
+
+    @app.errorhandler(Exception)
+    def handle_unexpected(err: Exception):
+        log.exception(&quot;Unexpected error&quot;)          # កត់ត្រា traceback ពេញ
+        return jsonify({&quot;error&quot;: &quot;Internal server error&quot;}), 500</code></pre></div>
+  <h3>4) Validation</h3>
+  <div class="codebox"><span class="label">app/validators.py</span><pre><code class="py">import re
+
+from .errors import AppError
+
+EMAIL_RE = re.compile(r&quot;^[\w.+-]+@[\w-]+(\.[\w-]+)+$&quot;)
+
+
+def validate_student(data: object, partial: bool = False) -&gt; dict:
+    &quot;&quot;&quot;ពិនិត្យ និងសម្អាតទិន្នន័យ; partial=True សម្រាប់ PATCH&quot;&quot;&quot;
+    if not isinstance(data, dict):
+        raise AppError(&quot;JSON object required&quot;)
+
+    errors: dict[str, str] = {}
+    clean: dict = {}
+
+    if &quot;name&quot; in data or not partial:
+        name = data.get(&quot;name&quot;)
+        if not isinstance(name, str) or not name.strip():
+            errors[&quot;name&quot;] = &quot;required, non-empty string&quot;
+        else:
+            clean[&quot;name&quot;] = name.strip()
+
+    if &quot;email&quot; in data or not partial:
+        email = data.get(&quot;email&quot;)
+        if not isinstance(email, str) or not EMAIL_RE.match(email.strip()):
+            errors[&quot;email&quot;] = &quot;valid email required&quot;
+        else:
+            clean[&quot;email&quot;] = email.strip().lower()
+
+    if &quot;score&quot; in data:
+        score = data[&quot;score&quot;]
+        if isinstance(score, bool) or not isinstance(score, (int, float)) or not 0 &lt;= score &lt;= 100:
+            errors[&quot;score&quot;] = &quot;number between 0 and 100&quot;
+        else:
+            clean[&quot;score&quot;] = float(score)
+
+    if errors:
+        raise AppError(&quot;Validation failed&quot;, 422, errors)
+    if partial and not clean:
+        raise AppError(&quot;No valid fields to update&quot;)
+    return clean</code></pre></div>
+  <h3>5) Service (Business Logic)</h3>
+  <div class="codebox"><span class="label">app/students/service.py</span><pre><code class="py">import sqlite3
+
+from ..db import get_db
+from ..errors import AppError
+
+FIELDS = &quot;id, name, email, score, created_at&quot;
+
+
+def list_students(search: str = &quot;&quot;, page: int = 1, limit: int = 10) -&gt; dict:
+    db = get_db()
+    like = f&quot;%{search}%&quot;
+    total = db.execute(
+        &quot;SELECT COUNT(*) FROM students WHERE name LIKE ?&quot;, (like,)
+    ).fetchone()[0]
+    rows = db.execute(
+        f&quot;SELECT {FIELDS} FROM students WHERE name LIKE ? &quot;
+        &quot;ORDER BY id LIMIT ? OFFSET ?&quot;,
+        (like, limit, (page - 1) * limit),
+    ).fetchall()
+    return {
+        &quot;data&quot;: [dict(r) for r in rows],
+        &quot;total&quot;: total,
+        &quot;page&quot;: page,
+        &quot;pages&quot;: (total + limit - 1) // limit,
+    }
+
+
+def get_student(student_id: int) -&gt; dict:
+    row = get_db().execute(
+        f&quot;SELECT {FIELDS} FROM students WHERE id = ?&quot;, (student_id,)
+    ).fetchone()
+    if row is None:
+        raise AppError(&quot;Student not found&quot;, 404)
+    return dict(row)
+
+
+def create_student(data: dict) -&gt; dict:
+    db = get_db()
+    try:
+        cur = db.execute(
+            &quot;INSERT INTO students (name, email, score) VALUES (?, ?, ?)&quot;,
+            (data[&quot;name&quot;], data[&quot;email&quot;], data.get(&quot;score&quot;, 0)),
+        )
+        db.commit()
+    except sqlite3.IntegrityError:
+        raise AppError(&quot;Email already exists&quot;, 409)
+    return get_student(cur.lastrowid)
+
+
+def update_student(student_id: int, data: dict) -&gt; dict:
+    get_student(student_id)  # 404 បើមិនមាន
+    # ឈ្មោះ column មកពី validator (មិនមែនពី user ផ្ទាល់) ដូច្នេះមានសុវត្ថិភាព
+    sets = &quot;, &quot;.join(f&quot;{col} = ?&quot; for col in data)
+    db = get_db()
+    try:
+        db.execute(
+            f&quot;UPDATE students SET {sets} WHERE id = ?&quot;, (*data.values(), student_id)
+        )
+        db.commit()
+    except sqlite3.IntegrityError:
+        raise AppError(&quot;Email already exists&quot;, 409)
+    return get_student(student_id)
+
+
+def delete_student(student_id: int) -&gt; None:
+    db = get_db()
+    cur = db.execute(&quot;DELETE FROM students WHERE id = ?&quot;, (student_id,))
+    db.commit()
+    if cur.rowcount == 0:
+        raise AppError(&quot;Student not found&quot;, 404)</code></pre></div>
+  <h3>6) Routes (Blueprint)</h3>
+  <div class="codebox"><span class="label">app/students/routes.py</span><pre><code class="py">from flask import Blueprint, jsonify, request
+
+from ..validators import validate_student
+from . import service
+
+bp = Blueprint(&quot;students&quot;, __name__, url_prefix=&quot;/api/v1/students&quot;)
+
+
+@bp.get(&quot;&quot;)
+def list_students():
+    page = max(request.args.get(&quot;page&quot;, 1, type=int), 1)
+    limit = min(max(request.args.get(&quot;limit&quot;, 10, type=int), 1), 100)
+    search = request.args.get(&quot;search&quot;, &quot;&quot;).strip()
+    return jsonify(service.list_students(search, page, limit))
+
+
+@bp.get(&quot;/&lt;int:student_id&gt;&quot;)
+def get_student(student_id: int):
+    return jsonify(service.get_student(student_id))
+
+
+@bp.post(&quot;&quot;)
+def create_student():
+    data = validate_student(request.get_json(silent=True))
+    return jsonify(service.create_student(data)), 201
+
+
+@bp.patch(&quot;/&lt;int:student_id&gt;&quot;)
+def update_student(student_id: int):
+    data = validate_student(request.get_json(silent=True), partial=True)
+    return jsonify(service.update_student(student_id, data))
+
+
+@bp.delete(&quot;/&lt;int:student_id&gt;&quot;)
+def delete_student(student_id: int):
+    service.delete_student(student_id)
+    return &quot;&quot;, 204</code></pre></div>
+  <h3>7) ចំណុចចាប់ផ្តើម</h3>
+  <div class="codebox"><span class="label">run.py</span><pre><code class="py">from app import create_app
+
+app = create_app()
+
+if __name__ == &quot;__main__&quot;:
+    app.run()</code></pre></div>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">flask --app run run --debug          # Development
+gunicorn -w 4 -b 0.0.0.0:8000 &quot;app:create_app(&#x27;prod&#x27;)&quot;   # Production (Linux/macOS)</code></pre></div>
+  <h3>សាកល្បង API</h3>
+<div class="codebox"><span class="label">Terminal (curl)</span><pre><code class="bash"># បង្កើតសិស្ស
+curl -X POST http://127.0.0.1:5000/api/v1/students -H &quot;Content-Type: application/json&quot; -d &#x27;{&quot;name&quot;: &quot;Dara&quot;, &quot;email&quot;: &quot;dara@mail.com&quot;, &quot;score&quot;: 88}&#x27;
+
+# បញ្ជីសិស្ស + ស្វែងរក + Pagination
+curl &quot;http://127.0.0.1:5000/api/v1/students?search=Da&amp;page=1&amp;limit=10&quot;
+
+# កែពិន្ទុ
+curl -X PATCH http://127.0.0.1:5000/api/v1/students/1 -H &quot;Content-Type: application/json&quot; -d &#x27;{&quot;score&quot;: 95}&#x27;</code></pre></div>
+  <table>
+    <tr><th>Method</th><th>URL</th><th>សកម្មភាព</th><th>Status</th></tr>
+    <tr><td>GET</td><td>/api/v1/students</td><td>បញ្ជី (search, page, limit)</td><td>200</td></tr>
+    <tr><td>GET</td><td>/api/v1/students/&lt;id&gt;</td><td>មួយ</td><td>200 / 404</td></tr>
+    <tr><td>POST</td><td>/api/v1/students</td><td>បង្កើត</td><td>201 / 409 / 422</td></tr>
+    <tr><td>PATCH</td><td>/api/v1/students/&lt;id&gt;</td><td>កែប្រែ</td><td>200 / 404 / 422</td></tr>
+    <tr><td>DELETE</td><td>/api/v1/students/&lt;id&gt;</td><td>លុប</td><td>204 / 404</td></tr>
+  </table>
+</section>
+
+<section id="pro-test">
+  <h2>🧪 Testing</h2>
+  <p>Test នីមួយៗប្រើ Database បណ្តោះអាសន្នថ្មី ដូច្នេះមិនប៉ះពាល់គ្នា។ ប្រើ <code class="i">unittest</code> ដែលមានស្រាប់ (ឬ <code class="i">pytest</code> ក៏រត់បាន)។</p>
+  <div class="codebox"><span class="label">tests/test_students.py</span><pre><code class="py">import os
+import tempfile
+import unittest
+
+from app import create_app
+from app.db import init_db
+
+
+class StudentApiTest(unittest.TestCase):
+    def setUp(self):
+        # Database បណ្តោះអាសន្នថ្មីសម្រាប់ test នីមួយៗ
+        fd, self.db_path = tempfile.mkstemp(suffix=&quot;.db&quot;)
+        os.close(fd)
+        self.app = create_app(&quot;test&quot;)
+        self.app.config[&quot;DATABASE&quot;] = self.db_path
+        with self.app.app_context():
+            init_db()
+        self.client = self.app.test_client()
+
+    def tearDown(self):
+        os.remove(self.db_path)
+
+    def create(self, **overrides):
+        body = {&quot;name&quot;: &quot;Dara&quot;, &quot;email&quot;: &quot;dara@mail.com&quot;, &quot;score&quot;: 88}
+        body.update(overrides)
+        return self.client.post(&quot;/api/v1/students&quot;, json=body)
+
+    def test_health(self):
+        self.assertEqual(self.client.get(&quot;/health&quot;).json, {&quot;status&quot;: &quot;ok&quot;})
+
+    def test_create_and_get(self):
+        res = self.create()
+        self.assertEqual(res.status_code, 201)
+        sid = res.json[&quot;id&quot;]
+        got = self.client.get(f&quot;/api/v1/students/{sid}&quot;)
+        self.assertEqual(got.json[&quot;email&quot;], &quot;dara@mail.com&quot;)
+
+    def test_validation_error(self):
+        res = self.create(email=&quot;not-an-email&quot;, score=150)
+        self.assertEqual(res.status_code, 422)
+        self.assertIn(&quot;email&quot;, res.json[&quot;details&quot;])
+        self.assertIn(&quot;score&quot;, res.json[&quot;details&quot;])
+
+    def test_duplicate_email(self):
+        self.create()
+        self.assertEqual(self.create().status_code, 409)
+
+    def test_update_and_delete(self):
+        sid = self.create().json[&quot;id&quot;]
+        res = self.client.patch(f&quot;/api/v1/students/{sid}&quot;, json={&quot;score&quot;: 95})
+        self.assertEqual(res.json[&quot;score&quot;], 95)
+        self.assertEqual(self.client.delete(f&quot;/api/v1/students/{sid}&quot;).status_code, 204)
+        self.assertEqual(self.client.get(f&quot;/api/v1/students/{sid}&quot;).status_code, 404)
+
+    def test_search_and_pagination(self):
+        for i in range(15):
+            self.create(name=f&quot;Student {i}&quot;, email=f&quot;s{i}@mail.com&quot;)
+        res = self.client.get(&quot;/api/v1/students?limit=5&amp;page=2&quot;)
+        self.assertEqual(res.json[&quot;total&quot;], 15)
+        self.assertEqual(len(res.json[&quot;data&quot;]), 5)
+        self.assertEqual(res.json[&quot;pages&quot;], 3)
+        res = self.client.get(&quot;/api/v1/students?search=Student 1&quot;)
+        self.assertEqual(res.json[&quot;total&quot;], 6)   # 1, 10..14
+
+
+if __name__ == &quot;__main__&quot;:
+    unittest.main()</code></pre></div>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">python -m unittest -v</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">test_create_and_get ... ok
+test_duplicate_email ... ok
+test_health ... ok
+test_search_and_pagination ... ok
+test_update_and_delete ... ok
+test_validation_error ... ok
+----------------------------------------------------------------------
+Ran 6 tests in 0.108s
+
+OK</code></pre></div>
+</section>
+
+<section id="pro-quality">
+  <h2>🛡️ Code Quality & Security Checklist</h2>
+  <table>
+    <tr><th>ផ្នែក</th><th>ឧបករណ៍ / វិធី</th></tr>
+    <tr><td>Format & Lint</td><td><code class="i">ruff check .</code> និង <code class="i">ruff format .</code></td></tr>
+    <tr><td>Type checking</td><td><code class="i">mypy app</code> (ប្រើជាមួយ Type Hints)</td></tr>
+    <tr><td>Testing</td><td><code class="i">unittest</code> / <code class="i">pytest</code> + coverage</td></tr>
+    <tr><td>SQL Injection</td><td>ប្រើ <code class="i">?</code> placeholder ជានិច្ច — មិនដែលដាក់ Input ក្នុង f-string SQL</td></tr>
+    <tr><td>Secrets</td><td>ដាក់ក្នុង Environment Variables / <code class="i">.env</code> (មិន Commit ទៅ Git)</td></tr>
+    <tr><td>Debug mode</td><td><code class="i">DEBUG = False</code> ក្នុង Production — ហាមប្រើ <code class="i">app.run(debug=True)</code></td></tr>
+    <tr><td>Validation</td><td>ពិនិត្យរាល់ Input ពី User (ប្រភេទ, ប្រវែង, ចន្លោះ)</td></tr>
+    <tr><td>Error</td><td>មិនបង្ហាញ Traceback ទៅ User — កត់ត្រាក្នុង Log ជំនួស</td></tr>
+    <tr><td>Dependencies</td><td><code class="i">pip install pip-audit</code> → <code class="i">pip-audit</code> រកភាពងាយរងគ្រោះ</td></tr>
+  </table>
+<div class="codebox"><span class="label">.env.example</span><pre><code class="txt">APP_ENV=prod
+SECRET_KEY=change-this-to-a-long-random-string
+DATABASE=/data/students.db</code></pre></div>
+<div class="codebox"><span class="label">.gitignore</span><pre><code class="txt">.venv/
+__pycache__/
+*.db
+.env</code></pre></div>
+</section>
+
+<section id="pro-deploy">
+  <h2>🐳 Docker & Deploy</h2>
+<div class="codebox"><span class="label">Dockerfile</span><pre><code class="txt">FROM python:3.13-slim
+WORKDIR /app
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY app ./app
+RUN useradd --create-home appuser &amp;&amp; mkdir /data &amp;&amp; chown appuser /data
+USER appuser
+
+ENV APP_ENV=prod DATABASE=/data/students.db
+EXPOSE 8000
+CMD [&quot;gunicorn&quot;, &quot;-w&quot;, &quot;4&quot;, &quot;-b&quot;, &quot;0.0.0.0:8000&quot;, &quot;app:create_app(&#x27;prod&#x27;)&quot;]</code></pre></div>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">docker build -t student-api .
+docker run -p 8000:8000 -e SECRET_KEY=my-secret -v student-data:/data student-api</code></pre></div>
+  <p><b>កន្លែង Deploy ពេញនិយម:</b> Render, Railway, Fly.io, PythonAnywhere, DigitalOcean, AWS ។</p>
+
+  <div class="ex"><h4>🏁 លំហាត់គម្រោងចុងក្រោយ</h4>
+    <ol>
+      <li>បន្ថែម Field <code class="i">class_name</code> ហើយ Endpoint <code class="i">GET /api/v1/students/stats</code> បង្ហាញពិន្ទុមធ្យមតាមថ្នាក់</li>
+      <li>បន្ថែមការតម្រៀប <code class="i">?sort=score&amp;order=desc</code> (ត្រូវប្រើ Whitelist ឈ្មោះ Column ការពារ SQL Injection)</li>
+      <li>សរសេរ Test បន្ថែមសម្រាប់ Endpoint ថ្មីទាំងពីរ</li>
+      <li>បន្ថែម API Key Authentication តាម Header <code class="i">X-API-Key</code></li>
+      <li>Export បញ្ជីសិស្សជា CSV ដោយប្រើ pandas (មេរៀនទី ២២)</li>
+      <li>Deploy ទៅ Render ឬ Railway</li>
+    </ol>
+    <details><summary>មើលចម្លើយ (ចំណុចទី ២)</summary>
+<div class="codebox"><span class="label">service.py (បន្ថែម)</span><pre><code class="py">ALLOWED_SORT = {&quot;id&quot;, &quot;name&quot;, &quot;score&quot;, &quot;created_at&quot;}
+
+
+def list_students(search=&quot;&quot;, page=1, limit=10, sort=&quot;id&quot;, order=&quot;asc&quot;):
+    if sort not in ALLOWED_SORT:            # Whitelist – មិនទុកចិត្ត Input
+        sort = &quot;id&quot;
+    order = &quot;DESC&quot; if order.lower() == &quot;desc&quot; else &quot;ASC&quot;
+    db = get_db()
+    rows = db.execute(
+        f&quot;SELECT {FIELDS} FROM students WHERE name LIKE ? &quot;
+        f&quot;ORDER BY {sort} {order} LIMIT ? OFFSET ?&quot;,
+        (f&quot;%{search}%&quot;, limit, (page - 1) * limit),
+    ).fetchall()
+    return [dict(r) for r in rows]</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="roadmap">
+  <h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+  <ol class="steps">
+    <li><b>មូលដ្ឋាន</b> – អថេរ, លក្ខខណ្ឌ, Loop, List, Dict, Function (មេរៀន ១–១១)</li>
+    <li><b>កម្រិតមធ្យម</b> – Module, File, Exception, OOP (មេរៀន ១២–១៧)</li>
+    <li><b>កម្រិតខ្ពស់</b> – Generator, Decorator, Type Hints, Testing (មេរៀន ១៨–១៩)</li>
+    <li><b>Database</b> – SQLite, PostgreSQL, SQLAlchemy ORM</li>
+    <li><b>ជ្រើសផ្លូវ៖ Web</b> – Flask → Django ឬ FastAPI</li>
+    <li><b>ជ្រើសផ្លូវ៖ Data/AI</b> – NumPy, pandas, Matplotlib → scikit-learn → PyTorch</li>
+    <li><b>ជ្រើសផ្លូវ៖ Automation</b> – openpyxl, Selenium/Playwright, Scheduling</li>
+    <li><b>Async</b> – <code class="i">asyncio</code>, <code class="i">httpx</code> សម្រាប់ការងារ I/O ច្រើន</li>
+    <li><b>DevOps</b> – Git, Docker, CI/CD (GitHub Actions), Cloud Deploy</li>
+  </ol>
+  <h3>គន្លឹះរៀនឱ្យពូកែ</h3>
+  <ul>
+    <li>វាយកូដដោយដៃ ហើយធ្វើលំហាត់រាល់មេរៀន — កុំគ្រាន់តែចម្លង។</li>
+    <li>អាន Traceback ពីបន្ទាត់ក្រោយបំផុត (ប្រភេទ Error) រួចមើលលេខបន្ទាត់។</li>
+    <li>សាកល្បងក្នុង Python REPL (<code class="i">python</code>) ឬ Jupyter Notebook ដើម្បីឃើញលទ្ធផលភ្លាមៗ។</li>
+    <li>ប្រើ <code class="i">print()</code> និង Debugger ក្នុង VS Code ដើម្បីតាមដានអថេរ។</li>
+    <li>ហាត់លើ LeetCode, HackerRank, Codewars ហើយធ្វើគម្រោងតូចៗដែលជួយការងារពិតរបស់អ្នក។</li>
+  </ul>
+  <p><b>ឯកសារយោងផ្លូវការ:</b> <a href="https://docs.python.org/3/" target="_blank">docs.python.org</a> · <a href="https://flask.palletsprojects.com" target="_blank">flask.palletsprojects.com</a> · <a href="https://peps.python.org/pep-0008/" target="_blank">PEP 8</a></p>
+</section>
+
+</main>
+</div>
+
+<script>
+// ===== Syntax highlighter (គ្មាន Library ខាងក្រៅ) =====
+const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const span = (cls, s) => `<span class="${cls}">${esc(s)}</span>`;
+
+const PY_KW = "False|None|True|and|as|assert|async|await|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|nonlocal|not|or|pass|raise|return|try|while|with|yield|match|case";
+const PY_BI = "print|input|len|range|int|float|str|bool|list|dict|set|tuple|type|sum|min|max|sorted|reversed|enumerate|zip|map|filter|open|isinstance|super|abs|round|next|iter|any|all|self|Exception|ValueError|TypeError|KeyError|IndexError|ZeroDivisionError|FileNotFoundError|NotImplementedError";
+const pyRe = new RegExp(
+  "(#.*$)" +                                                                                  // 1 comment
+  "|((?:[rRbBfFuU]{1,2})?(?:\"\"\"[\\s\\S]*?\"\"\"|'''[\\s\\S]*?'''|\"(?:\\\\.|[^\"\\\\\\n])*\"|'(?:\\\\.|[^'\\\\\\n])*'))" + // 2 string
+  "|(^[ \\t]*@[\\w.]+)" +                                                                     // 3 decorator
+  "|\\b(" + PY_KW + ")\\b" +                                                                  // 4 keyword
+  "|\\b(\\d[\\d_]*(?:\\.\\d+)?(?:e-?\\d+)?)\\b" +                                             // 5 number
+  "|\\b(" + PY_BI + ")\\b" +                                                                  // 6 builtin
+  "|([A-Za-z_]\\w*)(?=\\s*\\()",                                                              // 7 function
+  "gm"
+);
+const bashRe = /(#.*$)|("(?:\\.|[^"\\])*"|'[^']*')|^(\s*)(python3?|pip3?|source|pytest|sudo|brew|docker|gunicorn|flask|ruff|mypy|curl|mkdir|cd)\b|(\s-{1,2}[\w-]+)/gm;
+
+function highlight(text, re, map) {
+  let out = "", last = 0, m;
+  re.lastIndex = 0;
+  while ((m = re.exec(text))) {
+    if (m[0] === "") { re.lastIndex++; continue; }
+    out += esc(text.slice(last, m.index)) + map(m);
+    last = re.lastIndex;
+  }
+  return out + esc(text.slice(last));
+}
+
+document.querySelectorAll("pre code").forEach((el) => {
+  const src = el.textContent;
+  if (el.classList.contains("py")) {
+    el.innerHTML = highlight(src, pyRe, (m) => {
+      if (m[1]) return span("tok-com", m[0]);
+      if (m[2]) return span("tok-str", m[0]);
+      if (m[3]) return span("tok-dec", m[0]);
+      if (m[4]) return span("tok-kw", m[0]);
+      if (m[5]) return span("tok-num", m[0]);
+      if (m[6]) return span("tok-bi", m[0]);
+      if (m[7]) return span("tok-fn", m[0]);
+      return esc(m[0]);
+    });
+  } else if (el.classList.contains("bash")) {
+    el.innerHTML = highlight(src, bashRe, (m) => {
+      if (m[1]) return span("tok-com", m[0]);
+      if (m[2]) return span("tok-str", m[0]);
+      if (m[4]) return esc(m[3]) + span("tok-cmd", m[4]);
+      if (m[5]) return span("tok-bi", m[0]);
+      return esc(m[0]);
+    });
+  }
+});
+
+// ===== Copy buttons =====
+document.querySelectorAll(".codebox").forEach((box) => {
+  const btn = document.createElement("button");
+  btn.className = "btn copy";
+  btn.textContent = "ចម្លង";
+  btn.onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(box.querySelector("code").textContent);
+      btn.textContent = "✔ បានចម្លង";
+    } catch { btn.textContent = "បរាជ័យ"; }
+    setTimeout(() => (btn.textContent = "ចម្លង"), 1500);
+  };
+  box.appendChild(btn);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="python"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

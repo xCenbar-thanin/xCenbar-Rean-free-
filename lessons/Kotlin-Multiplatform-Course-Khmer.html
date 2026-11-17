@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន Kotlin Multiplatform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#7048e8; --accent2:#9775fa; --accent-soft:#f3f0ff;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#b197fc; --accent2:#d0bfff; --accent-soft:#1a1233;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#b197fc; --accent2:#d0bfff; --accent-soft:#1a1233;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#1a1033,#7048e8 45%,#e44857);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/kmp.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/kmp.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Kotlin Multiplatform៖ Code តែមួយ សម្រាប់ Android &amp; iOS</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Kotlin Multiplatform (KMP) ជាអ្វី?</a>
+<a href="#install">២. ដំឡើង &amp; បង្កើត Project</a>
+<a href="#elements">៣. ធាតុនីមួយៗរបស់ KMP</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Code រួម (commonMain)៖ Domain Model</a>
+<a href="#l2">មេរៀន ២: expect / actual៖ Code តាម Platform</a>
+<a href="#l3">មេរៀន ៣: Coroutines &amp; Flow ក្នុង Shared code</a>
+<a href="#l4">មេរៀន ៤: Networking ជាមួយ Ktor Client</a>
+<a href="#l5">មេរៀន ៥: រក្សាទិន្នន័យ៖ SQLDelight, Room KMP &amp; DataStore</a>
+<a href="#l6">មេរៀន ៦: Shared ViewModel &amp; StateFlow</a>
+<a href="#l7">មេរៀន ៧: ប្រើ Shared code ក្នុង Android (Compose) &amp; iOS (SwiftUI)</a>
+<a href="#l8">មេរៀន ៨: Compose Multiplatform៖ UI រួម</a>
+<a href="#l9">មេរៀន ៩: Dependency Injection (Koin) &amp; Architecture</a>
+<a href="#l10">មេរៀន ១០: Testing Shared Code (commonTest)</a>
+<a href="#l11">មេរៀន ១១: ចែកចាយទៅ iOS៖ Framework, SPM &amp; CI</a>
+<a href="#l12">មេរៀន ១២: ពេលណាគួរប្រើ KMP &amp; Migration ពី App មានស្រាប់</a>
+<a href="#cheat">📋 Cheat Sheet</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងអាជីព៖ Kafe KMP App (Android + iOS)</a>
+<a href="#pro-app">💻 KMP Lab Pro (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🧩 Kotlin Multiplatform (KMP) — ចែក Logic, រក្សា UI Native</h2>
+  <p>commonMain, <b>expect/actual</b>, Coroutines &amp; Flow, <b>Ktor</b>, SQLDelight, <b>Shared ViewModel</b>, SwiftUI interop, <b>Compose Multiplatform</b>, Koin, commonTest, XCFramework/SPM — Code Kotlin Compile និងរត់ពិតដោយ Kotlin 2.0.21។</p>
+  <p><span class="badge">📘 ១២ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">💻 Code មានពណ៌ + លទ្ធផល</span><span class="badge">🧩 KMP Lab Pro</span></p>
+</section>
+<section id="intro">
+<h2>១. Kotlin Multiplatform (KMP) ជាអ្វី?</h2>
+
+<p><b>Kotlin Multiplatform</b> (KMP) របស់ក្រុមហ៊ុន <b>JetBrains</b> អនុញ្ញាតឲ្យសរសេរ <b>Logic តែម្តង</b> (Business rules, API, Database, ViewModel) ជាភាសា Kotlin ហើយប្រើក្នុង <b>Android, iOS</b>, Desktop និង Web — ខណៈ UI អាចនៅជា <b>Native</b> (Jetpack Compose + SwiftUI) ឬចែករំលែកដោយ <b>Compose Multiplatform</b>។ ខុសពី Flutter/React Native៖ KMP Compile ទៅ <b>Native ពិត</b> (JVM bytecode លើ Android · Native binary/Framework លើ iOS)។ <button class="btn say" data-say="Kotlin Multiplatform">🔊 អានពាក្យ</button></p>
+<figure class="fig"><svg viewBox="0 0 940 300" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="300" fill="#fff"/><rect x="250" y="20" width="440" height="150" rx="16" fill="#f3f0ff" stroke="#7048e8" stroke-width="2.5"/><text x="470" y="46" text-anchor="middle" font-size="16" font-weight="800" fill="#5f3dc4">shared (Kotlin) — commonMain</text><rect x="270" y="60" width="125" height="56" rx="14" fill="#7048e8"/><text x="332.5" y="82.0" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">Domain</text><text x="332.5" y="104.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Cart · Money</text><rect x="410" y="60" width="125" height="56" rx="14" fill="#1c7ed6"/><text x="472.5" y="82.0" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">Data</text><text x="472.5" y="104.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Ktor · SQLDelight</text><rect x="550" y="60" width="125" height="56" rx="14" fill="#2f9e44"/><text x="612.5" y="82.0" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">ViewModel</text><text x="612.5" y="104.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">StateFlow</text><text x="470" y="150" text-anchor="middle" font-size="13" font-weight="400" fill="#5f3dc4">expect fun … → actual (Android / iOS)</text><rect x="40" y="200" width="250" height="80" rx="14" fill="#3ddc84"/><text x="165.0" y="234.0" text-anchor="middle" font-size="17" font-weight="700" fill="#111">🤖 androidApp</text><text x="165.0" y="256.0" text-anchor="middle" font-size="13" fill="#111" opacity=".92">Jetpack Compose UI</text><rect x="650" y="200" width="250" height="80" rx="14" fill="#f05138"/><text x="775.0" y="234.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🍎 iosApp</text><text x="775.0" y="256.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">SwiftUI (ហៅ shared.framework)</text><rect x="345" y="200" width="250" height="80" rx="14" fill="#334155"/><text x="470.0" y="234.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🧩 Compose Multiplatform</text><text x="470.0" y="256.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">UI រួម (ជម្រើស)</text><line x1="330" y1="172" x2="200" y2="196" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="610" y1="172" x2="760" y2="196" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="470" y1="172" x2="470" y2="196" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="470" y="296" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0f172a">ចែករំលែក Logic ៥០–៨០% (ឬ ៩០%+ ជាមួយ Compose Multiplatform) · UI Native នៅតែជម្រើស</text></svg><figcaption>🖼️ ស្ថាបត្យកម្ម KMP</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>ព្រឹត្តិការណ៍</th></tr><tr><td>2017</td><td>Kotlin 1.2 បញ្ចូល Multiplatform (Experimental) · Kotlin/Native</td></tr><tr><td>2020</td><td><b>KMM</b> (Kotlin Multiplatform Mobile) Alpha</td></tr><tr><td>2023 វិច្ឆិកា</td><td>KMP <b>Stable</b> (Kotlin 1.9.20)</td></tr><tr><td>2024 ឧសភា</td><td><b>Google</b> គាំទ្រ KMP ជាផ្លូវការសម្រាប់ចែករំលែក Business logic (Android Jetpack libraries: Room, DataStore, ViewModel …)</td></tr><tr><td>2025</td><td><b>Compose Multiplatform for iOS</b> Stable — UI រួមរវាង Android និង iOS</td></tr></table>
+
+<table><tr><th></th><th>KMP</th><th>Flutter</th><th>React Native</th><th>Native ២ ដង</th></tr><tr><td>ភាសា</td><td>Kotlin (+ Swift បើ UI Native)</td><td>Dart</td><td>JavaScript/TS</td><td>Kotlin + Swift</td></tr><tr><td>ចែករំលែក</td><td>Logic (+ UI ជាជម្រើស)</td><td>Logic + UI</td><td>Logic + UI</td><td>គ្មាន</td></tr><tr><td>UI</td><td>Native ពិត ឬ Compose MP</td><td>Flutter engine</td><td>Native components</td><td>Native</td></tr><tr><td>បញ្ចូលក្នុង App ចាស់</td><td>✅ ងាយ (Module មួយៗ)</td><td>ពិបាក</td><td>មធ្យម</td><td>—</td></tr><tr><td>សមស្រប</td><td>ក្រុមមាន Android dev · App ធំ/មានស្រាប់</td><td>Startup · UI ច្រើន</td><td>ក្រុម Web/JS</td><td>App ធំណាស់</td></tr></table>
+
+<div class="grid"><div class="card"><b>🎬 Netflix</b><br>Logic សម្រាប់ Studio apps</div><div class="card"><b>🍔 McDonald's</b><br>Payment &amp; Ordering logic</div><div class="card"><b>💵 Cash App · Philips · Forbes</b><br>ចែករំលែក Code ច្រើន</div><div class="card"><b>🏢 កម្ពុជា</b><br>ក្រុម Android ពង្រីកទៅ iOS ដោយមិនសរសេរ Logic ពីរដង</div></div>
+
+</section>
+<section id="install">
+<h2>២. ដំឡើង &amp; បង្កើត Project</h2>
+
+<ol class="steps"><li><b>Android Studio</b> (ថ្មីបំផុត) + Plugin <b>Kotlin Multiplatform</b> · សម្រាប់ iOS ត្រូវការ <b>Mac + Xcode</b>។</li>
+<li>បង្កើត Project តាម <b>kmp.jetbrains.com</b> (KMP wizard) → ជ្រើស Android + iOS (+ Compose Multiplatform បើចង់ UI រួម) → Download → Open ក្នុង Android Studio។</li>
+<li>Run <code class='i'>androidApp</code> លើ Emulator · Run <code class='i'>iosApp</code> លើ iOS Simulator (ពី Android Studio ឬ Xcode)។</li>
+<li>ពិនិត្យបរិស្ថាន៖ <code class='i'>brew install kdoctor && kdoctor</code> (macOS)។</li></ol>
+<script type="text/x-code" data-lang="txt" data-label="Project structure">
+KafeKMP/
+├── shared/
+│   ├── build.gradle.kts
+│   └── src/
+│       ├── commonMain/kotlin/   ← Code រួម (ប្រើគ្រប់ Platform) ★
+│       ├── commonTest/kotlin/   ← Test រួម
+│       ├── androidMain/kotlin/  ← actual សម្រាប់ Android
+│       └── iosMain/kotlin/      ← actual សម្រាប់ iOS
+├── androidApp/                  ← Jetpack Compose UI
+├── iosApp/                      ← Xcode project (SwiftUI) ហៅ shared.framework
+└── settings.gradle.kts
+</script>
+
+<script type="text/x-code" data-lang="kotlin" data-label="shared/build.gradle.kts">
+// shared/build.gradle.kts (ផ្នែកសំខាន់)
+plugins {
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.kotlinSerialization)
+}
+
+kotlin {
+    androidTarget()
+    listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach {
+        it.binaries.framework { baseName = "Shared"; isStatic = true }
+    }
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+        }
+        androidMain.dependencies { implementation(libs.ktor.client.okhttp) }
+        iosMain.dependencies { implementation(libs.ktor.client.darwin) }
+        commonTest.dependencies { implementation(kotlin("test")) }
+    }
+}
+</script>
+
+<div class="note">💡 Code Kotlin រួម (commonMain), <b>expect/actual</b>, Coroutines និង Flow ក្នុងវគ្គនេះ <b>Compile និងរត់ពិត</b> ដោយ <b>Kotlin compiler 2.0.21</b> (JVM target — ដូច androidMain)។ Build iOS ត្រូវការ Mac/Xcode ដូច្នេះ Code iOS/SwiftUI និង Ktor/SQLDelight ជាលទ្ធផលគំរូដែលពិនិត្យដោយដៃ។</div>
+
+</section>
+<section id="elements">
+<h2>៣. ធាតុនីមួយៗរបស់ KMP</h2>
+
+<table><tr><th>ធាតុ</th><th>ពន្យល់</th><th>មេរៀន</th></tr><tr><td>Target</td><td>Platform ដែល Compile ទៅ៖ androidTarget, iosArm64, iosSimulatorArm64, jvm, wasmJs</td><td>២</td></tr><tr><td>Source set</td><td>commonMain (រួម) · androidMain · iosMain · *Test</td><td>២ · ៣</td></tr><tr><td>expect / actual</td><td>ប្រកាសក្នុង common · សរសេរ Implementation តាម Platform</td><td>៤</td></tr><tr><td>Coroutines · Flow</td><td>Async រួម (suspend, StateFlow)</td><td>៥ · ៨</td></tr><tr><td>Ktor client</td><td>HTTP រួម (Engine៖ OkHttp / Darwin)</td><td>៦</td></tr><tr><td>SQLDelight · Room KMP · DataStore</td><td>Database/Settings រួម</td><td>៧</td></tr><tr><td>Shared ViewModel</td><td>State + Logic ប្រើទាំង Compose និង SwiftUI</td><td>៨ · ៩</td></tr><tr><td>Compose Multiplatform</td><td>UI រួម (Android, iOS, Desktop, Web)</td><td>១០</td></tr><tr><td>kotlin.test · Koin · XCFramework/SPM</td><td>Test · DI · ចែកចាយទៅក្រុម iOS</td><td>១១ · ១២</td></tr></table>
+
+</section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>Code រួម (commonMain)៖ Domain Model</h2>
+
+<script type="text/x-code" data-lang="kotlin" data-label="commonMain/kafe/shared/Domain.kt">
+package kafe.shared
+
+data class Money(val cents: Long) {
+    operator fun plus(o: Money) = Money(cents + o.cents)
+    operator fun times(n: Int) = Money(cents * n)
+    // commonMain គ្មាន String.format (JVM-only) → សរសេរខ្លួនឯង
+    fun format(currency: String = "USD"): String = when (currency) {
+        "KHR" -> group(cents / 100 * 4100) + " ៛"
+        else -> "$" + (cents / 100) + "." + (cents % 100).toString().padStart(2, '0')
+    }
+}
+
+private fun group(n: Long) = n.toString().reversed().chunked(3).joinToString(",").reversed()
+
+data class Product(val id: String, val name: String, val price: Money)
+data class Line(val product: Product, val qty: Int)
+
+sealed interface Coupon {
+    data object None : Coupon
+    data class Percent(val pct: Int) : Coupon
+    data class Fixed(val off: Money) : Coupon
+}
+
+class Cart {
+    private val lines = mutableListOf<Line>()
+    val items: List<Line> get() = lines.toList()
+
+    fun add(p: Product, qty: Int = 1) {
+        require(qty > 0) { "qty must be > 0" }
+        val i = lines.indexOfFirst { it.product.id == p.id }
+        if (i >= 0) lines[i] = lines[i].copy(qty = lines[i].qty + qty) else lines += Line(p, qty)
+    }
+
+    fun subtotal() = lines.fold(Money(0)) { acc, l -> acc + l.product.price * l.qty }
+
+    fun total(c: Coupon = Coupon.None): Money = when (c) {
+        Coupon.None -> subtotal()
+        is Coupon.Percent -> Money(subtotal().cents * (100 - c.pct) / 100)
+        is Coupon.Fixed -> Money(maxOf(0, subtotal().cents - c.off.cents))
+    }
+}
+</script>
+<script type="text/x-code" data-lang="kotlin" data-label="jvmMain/Main.kt">
+import kafe.shared.*
+
+fun main() {
+    val latte = Product("latte", "Iced Latte", Money(250))
+    val mocha = Product("mocha", "Mocha", Money(275))
+
+    val cart = Cart()
+    cart.add(latte, 2)
+    cart.add(mocha)
+    cart.add(latte)                                   // រួមចូល Line ដដែល
+
+    cart.items.forEach { println("${it.product.name.padEnd(11)} x${it.qty}  ${(it.product.price * it.qty).format()}") }
+    println("Subtotal      ${cart.subtotal().format()}")
+    println("KAFE10 (-10%) ${cart.total(Coupon.Percent(10)).format()}")
+    println("Fixed -$1     ${cart.total(Coupon.Fixed(Money(100))).format()}")
+    println("ជារៀល         ${cart.subtotal().format("KHR")}")
+    runCatching { cart.add(mocha, 0) }.onFailure { println("⛔ ${it.message}") }
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Kotlin 2.0.21 (JVM target)</span></div><pre>Iced Latte  x3  $7.50
+Mocha       x1  $2.75
+Subtotal      $10.25
+KAFE10 (-10%) $9.22
+Fixed -$1     $9.25
+ជារៀល         41,000 ៛
+⛔ qty must be &gt; 0</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>Code ក្នុង <code class='i'>commonMain</code> ប្រើតែ <b>Kotlin standard library</b> (គ្មាន java.*, android.*, UIKit) → Compile បានទាំង Android និង iOS។</li><li><code class='i'>data class Money(val cents: Long)</code> — រក្សាលុយជា <b>សេន (integer)</b> ជៀសកំហុស Floating point · <code class='i'>operator fun plus/times</code> ឲ្យសរសេរ <code class='i'>a + b</code>, <code class='i'>price * qty</code>។</li><li><code class='i'>sealed interface Coupon</code> + <code class='i'>when</code> — Compiler បង្ខំឲ្យដោះស្រាយគ្រប់ប្រភេទ Coupon។</li><li>commonMain គ្មាន API ពិសេសរបស់ JVM (ឧ. <code class='i'>String.format</code>) → <code class='i'>format()</code> សរសេរដោយ <code class='i'>padStart/chunked</code>។</li><li><code class='i'>require(qty &gt; 0)</code> — Validation រួម → Android និង iOS មានច្បាប់ដូចគ្នា ១០០% (គ្មាន Bug ខុសគ្នារវាង Platform)។</li><li>លទ្ធផលពិតខាងលើ Compile ដោយ Kotlin 2.0.21 — Code ដដែលនេះ Kotlin/Native Compile ទៅ iOS Framework។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>បន្ថែម Coupon <code class='i'>BuyXGetOne(productId)</code>៖ ទិញ ៣ កែវ បង់តែ ២។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="kotlin" data-label="answer.kt">
+data class BuyXGetOne(val productId: String, val x: Int = 2) : Coupon
+// ក្នុង total():
+is Coupon.BuyXGetOne -> {
+    val l = items.find { it.product.id == c.productId }
+    val free = (l?.qty ?: 0) / (c.x + 1)
+    Money(subtotal().cents - free * (l?.product?.price?.cents ?: 0))
+}
+</script>
+</details></div>
+
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>expect / actual៖ Code តាម Platform</h2>
+
+<script type="text/x-code" data-lang="kotlin" data-label="commonMain/kafe/shared/Platform.kt">
+package kafe.shared
+
+expect fun platformName(): String
+expect fun randomId(): String
+expect fun nowMillis(): Long
+
+class Greeting {
+    fun greet() = "សួស្តីពី ${platformName()} ☕"
+}
+
+fun newOrderId(): String = "ORD-" + randomId().take(8).uppercase()
+</script>
+<script type="text/x-code" data-lang="kotlin" data-label="jvmMain/kafe/shared/Platform.jvm.kt">
+package kafe.shared
+
+// androidMain ក៏សរសេរដូចនេះដែរ (JVM)
+actual fun platformName(): String = "JVM/Android · Java ${System.getProperty("java.version")}"
+actual fun randomId(): String = java.util.UUID.randomUUID().toString()
+actual fun nowMillis(): Long = System.currentTimeMillis()
+</script>
+<script type="text/x-code" data-lang="kotlin" data-label="jvmMain/kafe/shared/Main.kt">
+package kafe.shared
+
+fun main() {
+    println(Greeting().greet())
+    val id = newOrderId()
+    println("Order id: ${id.take(4)}… (length ${id.length})")
+    println("Time ok: ${nowMillis() > 1_700_000_000_000}")
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Kotlin 2.0.21 (JVM target)</span></div><pre>សួស្តីពី JVM/Android · Java 21.0.12.1 ☕
+Order id: ORD-… (length 12)
+Time ok: true</pre></div>
+
+<script type="text/x-code" data-lang="kotlin" data-label="Platform.ios.kt (iosMain)">
+// shared/src/iosMain/kotlin/kafe/shared/Platform.ios.kt
+package kafe.shared
+
+import platform.Foundation.NSDate
+import platform.Foundation.NSUUID
+import platform.Foundation.timeIntervalSince1970
+import platform.UIKit.UIDevice
+
+actual fun platformName(): String = UIDevice.currentDevice.systemName() + " " + UIDevice.currentDevice.systemVersion
+actual fun randomId(): String = NSUUID().UUIDString()
+actual fun nowMillis(): Long = (NSDate().timeIntervalSince1970 * 1000).toLong()
+</script>
+
+<figure class="phf"><div style="display:flex;gap:18px;justify-content:center;flex-wrap:wrap"><div class="ph"><div class="ph-notch"></div><div class="ph-bar" style="background:#3ddc84;color:#111">🤖 Android</div><div class="ph-body"><div class="ph-center" style="text-align:center">សួស្តីពី Android 15 ☕</div></div></div><div class="ph"><div class="ph-notch"></div><div class="ph-bar ios">🍎 iOS</div><div class="ph-body"><div class="ph-center" style="text-align:center">សួស្តីពី iOS 18.2 ☕</div></div></div></div><figcaption>📱 Code រួមតែមួយ · actual ខុសគ្នា</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>expect fun</code> ក្នុង commonMain = <b>សន្យា</b> "Platform នីមួយៗត្រូវមាន Function នេះ"។</li><li><code class='i'>actual fun</code> ក្នុង androidMain / iosMain = Implementation ពិត (Android៖ java.util.UUID · iOS៖ NSUUID ពី Foundation)។</li><li>Kotlin/Native អាចហៅ <b>iOS API ផ្ទាល់</b> (<code class='i'>platform.UIKit, platform.Foundation</code>) ពី Kotlin!</li><li>Compiler ពិនិត្យថា expect នីមួយៗមាន actual គ្រប់ Target → ភ្លេចមួយ = Build error (មិនមែន Crash ពេលរត់)។</li><li>ល្អជាងគេ៖ ប្រើ expect/actual តិចបំផុត — ប្រើ Library KMP ស្រាប់ (Ktor, kotlinx-datetime, uuid) បើមាន។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>សរសេរ <code class='i'>expect fun formatPrice(cents: Long): String</code> ដែលប្រើ Locale របស់ទូរស័ព្ទ។ Android ប្រើអ្វី?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="kotlin" data-label="answer.kt">
+// androidMain
+actual fun formatPrice(cents: Long): String =
+    java.text.NumberFormat.getCurrencyInstance(java.util.Locale.US).format(cents / 100.0)
+// iosMain: NSNumberFormatter().apply { numberStyle = NSNumberFormatterCurrencyStyle }
+</script>
+</details></div>
+
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Coroutines &amp; Flow ក្នុង Shared code</h2>
+
+<script type="text/x-code" data-lang="kotlin" data-label="commonMain/kafe/shared/OrderTracker.kt">
+package kafe.shared
+
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+
+enum class Status { PENDING, BREWING, READY }
+
+class OrderTracker {
+    // ក្លែង Server: Status ប្តូរតាមពេល
+    fun track(orderId: String): Flow<Status> = flow {
+        for (s in Status.entries) {
+            emit(s)
+            delay(100)
+        }
+    }
+
+    suspend fun fetchMenu(): List<String> {
+        delay(150)                                   // ក្លែង Network
+        return listOf("Iced Latte", "Mocha", "Green Tea")
+    }
+}
+</script>
+<script type="text/x-code" data-lang="kotlin" data-label="jvmMain/kafe/shared/Main.kt">
+package kafe.shared
+
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
+
+fun main() = runBlocking {
+    val t = OrderTracker()
+    val start = System.currentTimeMillis()
+
+    val a = async { t.fetchMenu() }                  // ស្របគ្នា
+    val b = async { t.fetchMenu() }
+    val menu = a.await(); val n = b.await().size
+    val ms = System.currentTimeMillis() - start
+    println("Menu: $menu + $n items · ស្របគ្នា (< 300ms)? ${ms < 280}")
+
+    t.track("ORD-1")
+        .map { "Order ORD-1 → $it" }
+        .onEach { println(it) }
+        .filter { it.endsWith("READY") }
+        .collect { println("🔔 Notify: កាហ្វេរួចរាល់!") }
+
+    val result = withTimeoutOrNull(120) { t.fetchMenu() }
+    println("Timeout 120ms → ${result ?: "null (យឺតពេក)"}")
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Kotlin 2.0.21 (JVM target)</span></div><pre>Menu: [Iced Latte, Mocha, Green Tea] + 3 items · ស្របគ្នា (&lt; 300ms)? true
+Order ORD-1 → PENDING
+Order ORD-1 → BREWING
+Order ORD-1 → READY
+🔔 Notify: កាហ្វេរួចរាល់!
+Timeout 120ms → null (យឺតពេក)</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>kotlinx.coroutines</code> ជា Library KMP — <code class='i'>suspend, delay, async, Flow</code> ដំណើរការដូចគ្នាលើ Android និង iOS។</li><li><code class='i'>flow { emit(...) }</code> — ស្ទ្រីមតម្លៃតាមពេល · <code class='i'>map/onEach/filter/collect</code> ដូច Collection operations។</li><li><code class='i'>async</code> ២ ស្របគ្នា → ~150ms ជំនួស 300ms (លទ្ធផលពិត)។</li><li><code class='i'>withTimeoutOrNull</code> — Network យឺត → null ជំនួសការរង់ចាំរហូត។</li><li>iOS៖ suspend function ក្លាយជា Swift <b>async</b> (Kotlin 2.x / SKIE) · Flow → AsyncSequence (មេរៀន ៩)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>បង្កើត Flow រាប់ថយក្រោយ 3, 2, 1 រៀងរាល់ 1 វិនាទី។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="kotlin" data-label="answer.kt">
+fun countdown(): Flow<Int> = flow {
+    for (i in 3 downTo 1) { emit(i); delay(1000) }
+}
+</script>
+</details></div>
+
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Networking ជាមួយ Ktor Client</h2>
+
+<script type="text/x-code" data-lang="kotlin" data-label="KafeApi.kt (commonMain)">
+// commonMain — API client រួម
+@Serializable
+data class ProductDto(val id: String, val name: String, val price: Double)
+
+class KafeApi(private val client: HttpClient = defaultClient()) {
+    suspend fun menu(): List<ProductDto> = client.get("https://api.kafe.kh/menu").body()
+
+    suspend fun placeOrder(items: List<Pair<String, Int>>): OrderDto =
+        client.post("https://api.kafe.kh/orders") {
+            contentType(ContentType.Application.Json)
+            setBody(OrderRequest(items.map { (id, qty) -> LineDto(id, qty) }))
+        }.body()
+}
+
+fun defaultClient() = HttpClient {                     // Engine ជ្រើសស្វ័យប្រវត្តិ: OkHttp (Android) · Darwin (iOS)
+    install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
+    install(HttpTimeout) { requestTimeoutMillis = 10_000 }
+    install(Logging) { level = LogLevel.INFO }
+}
+</script>
+
+<script type="text/x-code" data-lang="kotlin" data-label="commonMain/kafe/shared/Repository.kt">
+package kafe.shared
+
+// Repository ពឹងលើ interface → Test ដោយ Fake បាន (មិនបាច់ Internet)
+interface MenuSource { suspend fun load(): List<Product> }
+
+sealed interface Result<out T> {
+    data class Ok<T>(val value: T) : Result<T>
+    data class Err(val message: String) : Result<Nothing>
+}
+
+class MenuRepository(private val remote: MenuSource, private val cache: MutableList<Product> = mutableListOf()) {
+    suspend fun menu(forceRefresh: Boolean = false): Result<List<Product>> {
+        if (cache.isNotEmpty() && !forceRefresh) return Result.Ok(cache)
+        return try {
+            val fresh = remote.load()
+            cache.clear(); cache.addAll(fresh)
+            Result.Ok(fresh)
+        } catch (e: Exception) {
+            if (cache.isNotEmpty()) Result.Ok(cache)            // Offline: ប្រើ Cache
+            else Result.Err("មិនអាចភ្ជាប់ Server: ${e.message}")
+        }
+    }
+}
+</script>
+<script type="text/x-code" data-lang="kotlin" data-label="commonMain/kafe/shared/Domain.kt">
+package kafe.shared
+
+data class Money(val cents: Long) {
+    operator fun plus(o: Money) = Money(cents + o.cents)
+    operator fun times(n: Int) = Money(cents * n)
+    // commonMain គ្មាន String.format (JVM-only) → សរសេរខ្លួនឯង
+    fun format(currency: String = "USD"): String = when (currency) {
+        "KHR" -> group(cents / 100 * 4100) + " ៛"
+        else -> "$" + (cents / 100) + "." + (cents % 100).toString().padStart(2, '0')
+    }
+}
+
+private fun group(n: Long) = n.toString().reversed().chunked(3).joinToString(",").reversed()
+
+data class Product(val id: String, val name: String, val price: Money)
+data class Line(val product: Product, val qty: Int)
+
+sealed interface Coupon {
+    data object None : Coupon
+    data class Percent(val pct: Int) : Coupon
+    data class Fixed(val off: Money) : Coupon
+}
+
+class Cart {
+    private val lines = mutableListOf<Line>()
+    val items: List<Line> get() = lines.toList()
+
+    fun add(p: Product, qty: Int = 1) {
+        require(qty > 0) { "qty must be > 0" }
+        val i = lines.indexOfFirst { it.product.id == p.id }
+        if (i >= 0) lines[i] = lines[i].copy(qty = lines[i].qty + qty) else lines += Line(p, qty)
+    }
+
+    fun subtotal() = lines.fold(Money(0)) { acc, l -> acc + l.product.price * l.qty }
+
+    fun total(c: Coupon = Coupon.None): Money = when (c) {
+        Coupon.None -> subtotal()
+        is Coupon.Percent -> Money(subtotal().cents * (100 - c.pct) / 100)
+        is Coupon.Fixed -> Money(maxOf(0, subtotal().cents - c.off.cents))
+    }
+}
+</script>
+<script type="text/x-code" data-lang="kotlin" data-label="jvmMain/kafe/shared/Main.kt">
+package kafe.shared
+
+import kotlinx.coroutines.runBlocking
+
+class FakeSource(var fail: Boolean = false) : MenuSource {
+    var calls = 0
+    override suspend fun load(): List<Product> {
+        calls++
+        if (fail) throw IllegalStateException("timeout")
+        return listOf(Product("latte", "Iced Latte", Money(250)), Product("tea", "Green Tea", Money(150)))
+    }
+}
+
+fun main() = runBlocking {
+    val src = FakeSource()
+    val repo = MenuRepository(src)
+    println("1) ${repo.menu()}".take(70) + "…")
+    println("2) ពី Cache — calls=${src.calls.also { repo.menu() }} → ${src.calls}")
+    src.fail = true
+    println("3) Offline + refresh → ${(repo.menu(forceRefresh = true) as Result.Ok).value.size} items ពី Cache")
+    println("4) គ្មាន Cache + Offline → ${MenuRepository(FakeSource(fail = true)).menu()}")
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Kotlin 2.0.21 (JVM target)</span></div><pre>1) Ok(value=[Product(id=latte, name=Iced Latte, price=Money(cents=250)…
+2) ពី Cache — calls=1 → 1
+3) Offline + refresh → 2 items ពី Cache
+4) គ្មាន Cache + Offline → Err(message=មិនអាចភ្ជាប់ Server: timeout)</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Ktor client</b> (JetBrains) — HTTP KMP · Code ដូចគ្នា ប៉ុន្តែ <b>Engine</b> ខុសតាម Platform (OkHttp / Darwin(NSURLSession)) កំណត់ក្នុង Gradle (មេរៀនដំឡើង)។</li><li><code class='i'>ContentNegotiation + kotlinx.serialization</code> — JSON ↔ <code class='i'>@Serializable</code> data class ស្វ័យប្រវត្តិ។</li><li><b>Repository + interface</b>៖ UI មិនដឹងថាទិន្នន័យមកពី Network ឬ Cache · Test ដោយ <code class='i'>FakeSource</code> (លទ្ធផលពិតខាងលើ)។</li><li><code class='i'>sealed interface Result</code> — Ok/Err ច្បាស់ · UI បង្ហាញ Error ងាយ។</li><li>Offline-first៖ Network បរាជ័យ → ប្រើ Cache (មេរៀន ៥ រក្សាក្នុង Database)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>បន្ថែម Header <code class='i'>Authorization: Bearer token</code> គ្រប់ Request ក្នុង Ktor?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="kotlin" data-label="answer.kt">
+HttpClient {
+    defaultRequest { header(HttpHeaders.Authorization, "Bearer ${tokenStore.token()}") }
+    // ឬ install(Auth) { bearer { loadTokens { BearerTokens(access, refresh) } } }
+}
+</script>
+</details></div>
+
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>រក្សាទិន្នន័យ៖ SQLDelight, Room KMP &amp; DataStore</h2>
+
+<script type="text/x-code" data-lang="sql" data-label="Order.sq (SQLDelight)">
+-- shared/src/commonMain/sqldelight/kafe/db/Order.sq
+CREATE TABLE OrderEntity (
+  id TEXT NOT NULL PRIMARY KEY,
+  total_cents INTEGER NOT NULL,
+  status TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+);
+
+selectRecent:
+SELECT * FROM OrderEntity ORDER BY created_at DESC LIMIT :limit;
+
+insert:
+INSERT OR REPLACE INTO OrderEntity VALUES (?, ?, ?, ?);
+</script>
+
+<script type="text/x-code" data-lang="kotlin" data-label="OrderStore.kt">
+// commonMain — SQLDelight បង្កើត Kotlin API ពី .sq ស្វ័យប្រវត្តិ (type-safe)
+class OrderStore(driver: SqlDriver) {
+    private val q = KafeDb(driver).orderQueries
+    fun save(o: Order) = q.insert(o.id, o.total.cents, o.status.name, o.createdAt)
+    fun recent(): Flow<List<OrderEntity>> = q.selectRecent(20).asFlow().mapToList(Dispatchers.Default)
+}
+
+// expect/actual សម្រាប់ Driver
+expect class DriverFactory { fun create(): SqlDriver }
+// androidMain: AndroidSqliteDriver(KafeDb.Schema, context, "kafe.db")
+// iosMain:     NativeSqliteDriver(KafeDb.Schema, "kafe.db")
+
+// Settings តូចៗ: DataStore KMP (androidx.datastore) ឬ multiplatform-settings
+val darkMode: Flow<Boolean> = dataStore.data.map { it[booleanPreferencesKey("dark")] ?: false }
+</script>
+
+<table><tr><th>Library</th><th>ប្រភេទ</th><th>ចំណាំ</th></tr><tr><td>SQLDelight (Cash App)</td><td>SQL → Kotlin</td><td>សរសេរ SQL ពិត · Compile-time check</td></tr><tr><td>Room KMP (Google)</td><td>ORM (@Entity, @Dao)</td><td>ធ្លាប់ Room លើ Android → ងាយ</td></tr><tr><td>DataStore</td><td>Key-value / Proto</td><td>Settings, Token (Encrypt បន្ថែម)</td></tr><tr><td>multiplatform-settings</td><td>Key-value</td><td>SharedPreferences / NSUserDefaults</td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>SQLDelight</b>៖ សរសេរ SQL ក្នុង <code class='i'>.sq</code> → Gradle បង្កើត <code class='i'>orderQueries.insert(...)</code> មាន Type ត្រឹមត្រូវ (SQL ខុស = Build error)។</li><li><code class='i'>asFlow().mapToList()</code> — UI Update ស្វ័យប្រវត្តិពេលទិន្នន័យប្តូរ (ដូច Room/Firestore)។</li><li><b>Driver</b> តែប៉ុណ្ណោះដែលខុសតាម Platform (expect/actual) · Query/Logic រួមទាំងអស់។</li><li><b>Room KMP</b> ល្អបើក្រុមស្គាល់ Room ស្រាប់ · <b>DataStore</b> សម្រាប់ Setting (Dark mode, Language)។</li><li>Database Schema migration ត្រូវ Test (.sqm files ក្នុង SQLDelight)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>ហេតុអ្វីរក្សា <code class='i'>total_cents INTEGER</code> មិនមែន REAL?</p><details><summary>មើលចម្លើយ</summary><p>លុយជា Integer (សេន) ជៀសកំហុស Floating point (0.1+0.2) — ដូច Money class ក្នុងមេរៀន ១។</p></details></div>
+
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Shared ViewModel &amp; StateFlow</h2>
+
+<script type="text/x-code" data-lang="kotlin" data-label="commonMain/kafe/shared/Domain.kt">
+package kafe.shared
+
+data class Money(val cents: Long) {
+    operator fun plus(o: Money) = Money(cents + o.cents)
+    operator fun times(n: Int) = Money(cents * n)
+    // commonMain គ្មាន String.format (JVM-only) → សរសេរខ្លួនឯង
+    fun format(currency: String = "USD"): String = when (currency) {
+        "KHR" -> group(cents / 100 * 4100) + " ៛"
+        else -> "$" + (cents / 100) + "." + (cents % 100).toString().padStart(2, '0')
+    }
+}
+
+private fun group(n: Long) = n.toString().reversed().chunked(3).joinToString(",").reversed()
+
+data class Product(val id: String, val name: String, val price: Money)
+data class Line(val product: Product, val qty: Int)
+
+sealed interface Coupon {
+    data object None : Coupon
+    data class Percent(val pct: Int) : Coupon
+    data class Fixed(val off: Money) : Coupon
+}
+
+class Cart {
+    private val lines = mutableListOf<Line>()
+    val items: List<Line> get() = lines.toList()
+
+    fun add(p: Product, qty: Int = 1) {
+        require(qty > 0) { "qty must be > 0" }
+        val i = lines.indexOfFirst { it.product.id == p.id }
+        if (i >= 0) lines[i] = lines[i].copy(qty = lines[i].qty + qty) else lines += Line(p, qty)
+    }
+
+    fun subtotal() = lines.fold(Money(0)) { acc, l -> acc + l.product.price * l.qty }
+
+    fun total(c: Coupon = Coupon.None): Money = when (c) {
+        Coupon.None -> subtotal()
+        is Coupon.Percent -> Money(subtotal().cents * (100 - c.pct) / 100)
+        is Coupon.Fixed -> Money(maxOf(0, subtotal().cents - c.off.cents))
+    }
+}
+</script>
+<script type="text/x-code" data-lang="kotlin" data-label="commonMain/kafe/shared/CartViewModel.kt">
+package kafe.shared
+
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+data class CartUiState(
+    val lines: List<Line> = emptyList(),
+    val total: String = "$0.00",
+    val count: Int = 0,
+    val checkingOut: Boolean = false,
+    val message: String? = null,
+)
+
+// Android: extends androidx.lifecycle.ViewModel (KMP) · iOS: ប្រើដោយ SwiftUI
+class CartViewModel(private val scope: CoroutineScope) {
+    private val cart = Cart()
+    private val _state = MutableStateFlow(CartUiState())
+    val state: StateFlow<CartUiState> = _state.asStateFlow()
+
+    fun add(p: Product) { cart.add(p); refresh() }
+
+    fun checkout() = scope.launch {
+        _state.update { it.copy(checkingOut = true) }
+        delay(100)                                         // ក្លែង API
+        _state.update { it.copy(checkingOut = false, message = "✅ Order ${it.total} បានបញ្ជូន") }
+    }
+
+    private fun refresh() = _state.update {
+        it.copy(lines = cart.items, total = cart.subtotal().format(), count = cart.items.sumOf { l -> l.qty })
+    }
+}
+</script>
+<script type="text/x-code" data-lang="kotlin" data-label="jvmMain/kafe/shared/Main.kt">
+package kafe.shared
+
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
+
+fun main() = runBlocking {
+    val vm = CartViewModel(this)
+    val ui = launch {                                       // "UI" ស្តាប់ State
+        vm.state.collect { s -> println("UI ▸ count=${s.count} total=${s.total}" + (if (s.checkingOut) " ⏳" else "") + (s.message?.let { " · $it" } ?: "")) }
+    }
+    delay(20); vm.add(Product("latte", "Iced Latte", Money(250)))
+    delay(20); vm.add(Product("mocha", "Mocha", Money(275)))
+    delay(20); vm.checkout().join()
+    delay(20); ui.cancel()
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Kotlin 2.0.21 (JVM target)</span></div><pre>UI ▸ count=0 total=$0.00
+UI ▸ count=1 total=$2.50
+UI ▸ count=2 total=$5.25
+UI ▸ count=2 total=$5.25 ⏳
+UI ▸ count=2 total=$5.25 · ✅ Order $5.25 បានបញ្ជូន</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Shared ViewModel</b> — State + Logic ក្នុង commonMain → Android និង iOS បង្ហាញទិន្នន័យដូចគ្នា ដោយសរសេរតែម្តង។</li><li><code class='i'>MutableStateFlow</code> ឯកជន · បង្ហាញ <code class='i'>StateFlow</code> អានបានតែប៉ុណ្ណោះ · <code class='i'>update { it.copy(...) }</code> Immutable។</li><li><b>Unidirectional data flow</b>៖ UI ហៅ <code class='i'>add()/checkout()</code> → State ថ្មី → UI Render (លទ្ធផលពិត៖ count 1 → 2 → ⏳ → ✅)។</li><li>Android៖ <code class='i'>androidx.lifecycle.ViewModel</code> មាន KMP ហើយ (viewModelScope) · iOS៖ គ្រប់គ្រង Scope ក្នុង Wrapper (មេរៀន ៧)។</li><li>UI នៅ Native (Compose/SwiftUI) តែគ្មាន Logic → ងាយ Test (Test ViewModel ក្នុង commonTest)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>បន្ថែម <code class='i'>remove(productId)</code> ក្នុង ViewModel។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="kotlin" data-label="answer.kt">
+// Cart: fun remove(id: String) { lines.removeAll { it.product.id == id } }
+fun remove(id: String) { cart.remove(id); refresh() }
+</script>
+</details></div>
+
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>ប្រើ Shared code ក្នុង Android (Compose) &amp; iOS (SwiftUI)</h2>
+
+<script type="text/x-code" data-lang="kotlin" data-label="CartScreen.kt (androidApp)">
+// androidApp — Jetpack Compose
+@Composable
+fun CartScreen(vm: CartViewModel = koinViewModel()) {
+    val s by vm.state.collectAsStateWithLifecycle()
+    Column(Modifier.padding(16.dp)) {
+        s.lines.forEach { Text("${it.product.name} x${it.qty}") }
+        Text("សរុប ${s.total}", style = MaterialTheme.typography.headlineSmall)
+        Button(onClick = { vm.checkout() }, enabled = !s.checkingOut) {
+            Text(if (s.checkingOut) "កំពុងបញ្ជូន…" else "បញ្ជាទិញ")
+        }
+        s.message?.let { Text(it) }
+    }
+}
+</script>
+
+<script type="text/x-code" data-lang="swift" data-label="CartView.swift (iosApp)">
+// iosApp — SwiftUI ហៅ Kotlin (import Shared)
+import SwiftUI
+import Shared
+
+@MainActor
+final class CartModel: ObservableObject {
+    @Published var state = CartUiState(lines: [], total: "$0.00", count: 0, checkingOut: false, message: nil)
+    private let vm = CartViewModel(scope: IosScope.shared.main)       // Kotlin class
+
+    func observe() async {
+        for await s in vm.state {                                     // StateFlow → AsyncSequence (SKIE)
+            self.state = s
+        }
+    }
+    func add(_ p: Product) { vm.add(p: p) }
+    func checkout() { vm.checkout() }
+}
+
+struct CartView: View {
+    @StateObject private var model = CartModel()
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            ForEach(model.state.lines, id: \.product.id) { Text("\($0.product.name) x\($0.qty)") }
+            Text("សរុប \(model.state.total)").font(.title2.bold())
+            Button(model.state.checkingOut ? "កំពុងបញ្ជូន…" : "បញ្ជាទិញ") { model.checkout() }
+                .buttonStyle(.borderedProminent).disabled(model.state.checkingOut)
+        }
+        .padding()
+        .task { await model.observe() }
+    }
+}
+</script>
+
+<figure class="phf"><div style="display:flex;gap:18px;justify-content:center;flex-wrap:wrap"><div class="ph"><div class="ph-notch"></div><div class="ph-bar" style="background:#3ddc84;color:#111">🤖 Android</div><div class="ph-body"><div class="ph-tile">Iced Latte x1</div><div class="ph-tile">Mocha x1</div><div style="font-size:20px;font-weight:800;margin:8px 0">សរុប $5.25</div><span class="ph-btn" style="display:block;text-align:center;background:#6750a4">បញ្ជាទិញ</span></div></div><div class="ph"><div class="ph-notch"></div><div class="ph-bar ios">🍎 iOS</div><div class="ph-body"><div class="ph-tile">Iced Latte x1</div><div class="ph-tile">Mocha x1</div><div style="font-size:20px;font-weight:800;margin:8px 0">សរុប $5.25</div><span class="ph-btn" style="display:block;text-align:center;background:#0a84ff">បញ្ជាទិញ</span></div></div></div><figcaption>📱 UI Native ២ · ViewModel/Logic តែមួយ</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>Android៖ <code class='i'>collectAsStateWithLifecycle()</code> បំលែង StateFlow → Compose State ដូចធម្មតា។</li><li>iOS៖ <code class='i'>import Shared</code> (Framework ពី Gradle) → ប្រើ Kotlin class ដូច Swift class · <code class='i'>vm.add(p: p)</code>។</li><li><b>SKIE</b> (Touchlab) ឬ <b>KMP-NativeCoroutines</b>៖ Flow → <code class='i'>for await</code> · suspend → <code class='i'>async</code> · sealed class → Swift enum (ងាយប្រើជាង Objective-C header ដើម)។</li><li>Kotlin 2.x មាន <b>Swift export</b> (Experimental) ធ្វើឲ្យ API ស្អាតជាងនេះទៀត។</li><li>ក្រុម iOS នៅសរសេរ SwiftUI ផ្ទាល់ → UI មានអារម្មណ៍ iOS ពិតៗ ១០០%។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>Kotlin <code class='i'>List&lt;Line&gt;</code> ក្លាយជាអ្វីក្នុង Swift?</p><details><summary>មើលចម្លើយ</summary><p>ជា <code class='i'>[Line]</code> (Swift Array) · <code class='i'>Map</code> → Dictionary · <code class='i'>Int</code> → <code class='i'>Int32</code> · <code class='i'>Long</code> → <code class='i'>Int64</code> (ចំណាំពេលហៅ)។</p></details></div>
+
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Compose Multiplatform៖ UI រួម</h2>
+
+<script type="text/x-code" data-lang="kotlin" data-label="App.kt (Compose Multiplatform)">
+// composeApp/src/commonMain/kotlin/App.kt — UI តែមួយ សម្រាប់ Android + iOS (+ Desktop/Web)
+@Composable
+fun App(vm: CartViewModel = remember { CartViewModel(MainScope()) }) {
+    val s by vm.state.collectAsState()
+    MaterialTheme {
+        Scaffold(topBar = { TopAppBar(title = { Text("Kafe Angkor ☕") }) }) { pad ->
+            LazyColumn(Modifier.padding(pad).padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                items(MENU) { p ->
+                    ListItem(
+                        headlineContent = { Text(p.name) },
+                        supportingContent = { Text(p.price.format()) },
+                        trailingContent = { FilledTonalButton(onClick = { vm.add(p) }) { Text("+") } },
+                    )
+                }
+                item {
+                    Text("សរុប ${s.total} (${s.count})", style = MaterialTheme.typography.titleLarge)
+                    Image(painterResource(Res.drawable.latte), contentDescription = null)   // Resources រួម
+                }
+            }
+        }
+    }
+}
+
+// iosMain: fun MainViewController() = ComposeUIViewController { App() }
+// Swift:   ComposeView().ignoresSafeArea()  // UIViewControllerRepresentable
+</script>
+
+<figure class="phf"><div style="display:flex;gap:18px;justify-content:center;flex-wrap:wrap"><div class="ph"><div class="ph-notch"></div><div class="ph-bar" style="background:#3ddc84;color:#111">🤖 Android</div><div class="ph-body"><div class="ph-tile"><div style="flex:1">Iced Latte<div style="font-size:12px;color:#777">$2.50</div></div><span class="ph-chip">+</span></div><div class="ph-tile"><div style="flex:1">Mocha<div style="font-size:12px;color:#777">$2.75</div></div><span class="ph-chip">+</span></div><div style="font-weight:800;margin-top:8px">សរុប $5.25 (2)</div></div></div><div class="ph"><div class="ph-notch"></div><div class="ph-bar ios">🍎 iOS</div><div class="ph-body"><div class="ph-tile"><div style="flex:1">Iced Latte<div style="font-size:12px;color:#777">$2.50</div></div><span class="ph-chip">+</span></div><div class="ph-tile"><div style="flex:1">Mocha<div style="font-size:12px;color:#777">$2.75</div></div><span class="ph-chip">+</span></div><div style="font-weight:800;margin-top:8px">សរុប $5.25 (2)</div></div></div></div><figcaption>📱 Compose Multiplatform៖ UI ដូចគ្នាលើ Android និង iOS</figcaption></figure>
+
+<table><tr><th>ជម្រើស UI</th><th>ចែក Code</th><th>ពេលណា</th></tr><tr><td>Native UI (Compose + SwiftUI)</td><td>50–70%</td><td>ចង់បាន UX iOS ពិត · មានក្រុម iOS</td></tr><tr><td>Compose Multiplatform</td><td>80–95%</td><td>ក្រុមតូច · ចង់លឿន · ស្គាល់ Compose</td></tr><tr><td>លាយ (អេក្រង់ខ្លះ CMP ខ្លះ SwiftUI)</td><td>យឺតបត់បែន</td><td>បញ្ចូលបន្តិចម្តងៗ</td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Compose Multiplatform</b> (JetBrains) — Jetpack Compose ដូចគ្នា ដំណើរការលើ iOS (Render ដោយ Skia), Desktop, Web (Wasm)។</li><li>Android dev ដែលចេះ Compose (វគ្គ Kotlin) → ធ្វើ iOS UI បានភ្លាម។</li><li><code class='i'>Res.drawable.latte</code> — Resources រួម (រូប, String, Font ខ្មែរ) តាម <code class='i'>composeResources/</code>។</li><li>iOS៖ <code class='i'>ComposeUIViewController { App() }</code> បង្កប់ក្នុង SwiftUI — អាចលាយ SwiftUI និង Compose ក្នុង App តែមួយ។</li><li>ចំណាំ៖ Control ពិសេសរបស់ iOS (ឧ. Context menu, Navigation gestures) ត្រូវផ្ទៀងផ្ទាត់ UX ឲ្យធម្មជាតិ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>Startup ២ នាក់ ចេះតែ Kotlin ចង់ Launch Android + iOS ក្នុង ៣ ខែ។ ជ្រើស UI ណា?</p><details><summary>មើលចម្លើយ</summary><p><b>Compose Multiplatform</b> — ចែក UI + Logic ច្រើនបំផុត ប្រើជំនាញ Kotlin ដែលមានស្រាប់។ អេក្រង់ណាត្រូវការ iOS feel ពិសេស អាចសរសេរ SwiftUI ក្រោយ។</p></details></div>
+
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Dependency Injection (Koin) &amp; Architecture</h2>
+
+<script type="text/x-code" data-lang="kotlin" data-label="commonMain/kafe/shared/Di.kt">
+package kafe.shared
+
+// DI តូចមួយ (គំនិតដូច Koin) — បង្ហាញថា Dependency បង្កើតនៅកន្លែងតែមួយ
+class Container {
+    private val factories = mutableMapOf<String, () -> Any>()
+    private val singletons = mutableMapOf<String, Any>()
+    fun <T : Any> single(name: String, f: () -> T) { factories[name] = { singletons.getOrPut(name, f) } }
+    fun <T : Any> factory(name: String, f: () -> T) { factories[name] = f }
+    @Suppress("UNCHECKED_CAST") fun <T> get(name: String): T = (factories[name] ?: error("no $name"))() as T
+}
+
+class Logger(val tag: String) { fun log(m: String) = println("[$tag] $m") }
+class Api(private val log: Logger) { fun menu() = listOf("Latte", "Mocha").also { log.log("GET /menu → ${it.size}") } }
+class MenuViewModel(private val api: Api) { fun load() = api.menu() }
+</script>
+<script type="text/x-code" data-lang="kotlin" data-label="jvmMain/kafe/shared/Main.kt">
+package kafe.shared
+
+fun main() {
+    val c = Container()
+    c.single("logger") { Logger("kafe") }
+    c.single("api") { Api(c.get("logger")) }
+    c.factory("menuVm") { MenuViewModel(c.get("api")) }
+
+    val vm1: MenuViewModel = c.get("menuVm")
+    val vm2: MenuViewModel = c.get("menuVm")
+    println(vm1.load())
+    println("ViewModel ថ្មីរាល់ពេល: ${vm1 !== vm2} · Api តែមួយ (single): ${c.get<Api>("api") === c.get<Api>("api")}")
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Kotlin 2.0.21 (JVM target)</span></div><pre>[kafe] GET /menu → 2
+[Latte, Mocha]
+ViewModel ថ្មីរាល់ពេល: true · Api តែមួយ (single): true</pre></div>
+
+<script type="text/x-code" data-lang="kotlin" data-label="Koin.kt">
+// Koin (KMP) — commonMain
+val sharedModule = module {
+    single { defaultClient() }                 // HttpClient
+    single { KafeApi(get()) }
+    single { MenuRepository(get()) }
+    factory { CartViewModel(get()) }           // Android: viewModelOf(::CartViewModel)
+}
+expect val platformModule: Module              // androidMain: SqlDriver(Android) · iosMain: SqlDriver(Native)
+
+fun initKoin() = startKoin { modules(sharedModule, platformModule) }
+// Android: Application.onCreate { initKoin() } · iOS: KoinKt.doInitKoin() ក្នុង App init
+</script>
+
+<script type="text/x-code" data-lang="txt" data-label="Clean architecture ក្នុង shared">
+shared/commonMain/
+├── domain/      Money · Cart · Coupon (គ្មាន Dependency)
+├── data/        KafeApi (Ktor) · OrderStore (SQLDelight) · MenuRepository
+├── presentation/ CartViewModel · MenuViewModel (StateFlow)
+└── di/          sharedModule (Koin)
+Dependencies ហូរទិសតែមួយ: presentation → data → domain
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>DI</b> — Object មិនបង្កើត Dependency ខ្លួនឯង តែទទួលពីខាងក្រៅ → ប្តូរ (Fake ពេល Test, Driver តាម Platform) ងាយ។</li><li><code class='i'>single</code> = មួយសម្រាប់ App ទាំងមូល (HttpClient, Database) · <code class='i'>factory</code> = ថ្មីរាល់ពេល (ViewModel) — លទ្ធផលពិតខាងលើ។</li><li><b>Koin</b> ជា DI ពេញនិយមសម្រាប់ KMP (Kotlin សុទ្ធ គ្មាន Code generation) · Hilt ប្រើបានតែ Android។</li><li><code class='i'>expect val platformModule</code> — Dependency ខុសតាម Platform (SqlDriver, Settings)។</li><li>Layer ច្បាស់ (domain/data/presentation) → ក្រុម Android និង iOS ធ្វើការលើ Code ដូចគ្នាដោយមិនជាន់គ្នា។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>ពេល Test ViewModel ចង់ប្តូរ KafeApi ទៅ Fake។ ធ្វើយ៉ាងម៉េចជាមួយ Koin?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="kotlin" data-label="answer.kt">
+startKoin { modules(sharedModule, module { single<MenuSource> { FakeSource() } }) }
+// ឬផ្ញើ Fake ចូល Constructor ផ្ទាល់ក្នុង Unit test (សាមញ្ញជាង)
+</script>
+</details></div>
+
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>Testing Shared Code (commonTest)</h2>
+
+<script type="text/x-code" data-lang="kotlin" data-label="commonMain/kafe/shared/Domain.kt">
+package kafe.shared
+
+data class Money(val cents: Long) {
+    operator fun plus(o: Money) = Money(cents + o.cents)
+    operator fun times(n: Int) = Money(cents * n)
+    // commonMain គ្មាន String.format (JVM-only) → សរសេរខ្លួនឯង
+    fun format(currency: String = "USD"): String = when (currency) {
+        "KHR" -> group(cents / 100 * 4100) + " ៛"
+        else -> "$" + (cents / 100) + "." + (cents % 100).toString().padStart(2, '0')
+    }
+}
+
+private fun group(n: Long) = n.toString().reversed().chunked(3).joinToString(",").reversed()
+
+data class Product(val id: String, val name: String, val price: Money)
+data class Line(val product: Product, val qty: Int)
+
+sealed interface Coupon {
+    data object None : Coupon
+    data class Percent(val pct: Int) : Coupon
+    data class Fixed(val off: Money) : Coupon
+}
+
+class Cart {
+    private val lines = mutableListOf<Line>()
+    val items: List<Line> get() = lines.toList()
+
+    fun add(p: Product, qty: Int = 1) {
+        require(qty > 0) { "qty must be > 0" }
+        val i = lines.indexOfFirst { it.product.id == p.id }
+        if (i >= 0) lines[i] = lines[i].copy(qty = lines[i].qty + qty) else lines += Line(p, qty)
+    }
+
+    fun subtotal() = lines.fold(Money(0)) { acc, l -> acc + l.product.price * l.qty }
+
+    fun total(c: Coupon = Coupon.None): Money = when (c) {
+        Coupon.None -> subtotal()
+        is Coupon.Percent -> Money(subtotal().cents * (100 - c.pct) / 100)
+        is Coupon.Fixed -> Money(maxOf(0, subtotal().cents - c.off.cents))
+    }
+}
+</script>
+<script type="text/x-code" data-lang="kotlin" data-label="commonTest/kafe/shared/CartTest.kt">
+package kafe.shared
+
+// commonTest ពិតប្រើ kotlin.test (@Test, assertEquals) — រត់លើ JVM, iOS Simulator, …
+// នៅទីនេះយើងសរសេរ mini test runner ដើម្បីរត់ពិតដោយគ្មាន Gradle
+val results = mutableListOf<Pair<String, Boolean>>()
+fun test(name: String, block: () -> Unit) {
+    val ok = runCatching(block).onFailure { println("   ✖ $name: ${it.message}") }.isSuccess
+    results += name to ok
+    if (ok) println("   ✔ $name")
+}
+fun <T> assertEquals(expected: T, actual: T) = check(expected == actual) { "expected <$expected> but was <$actual>" }
+
+private val latte = Product("latte", "Iced Latte", Money(250))
+private val mocha = Product("mocha", "Mocha", Money(275))
+
+fun cartTests() {
+    test("subtotal Latte×2 + Mocha = $7.75") {
+        val c = Cart(); c.add(latte, 2); c.add(mocha)
+        assertEquals("$7.75", c.subtotal().format())
+    }
+    test("add ដដែលរួមចូល Line តែមួយ") {
+        val c = Cart(); c.add(latte); c.add(latte)
+        assertEquals(1, c.items.size); assertEquals(2, c.items[0].qty)
+    }
+    test("Percent 10% លើ $7.75 = $6.97 (សេនបង្គត់ចុះ)") {
+        val c = Cart(); c.add(latte, 2); c.add(mocha)
+        assertEquals("$6.97", c.total(Coupon.Percent(10)).format())
+    }
+    test("Fixed មិនធ្លាក់ក្រោម 0") {
+        val c = Cart(); c.add(latte)
+        assertEquals(Money(0), c.total(Coupon.Fixed(Money(1000))))
+    }
+    test("qty 0 → IllegalArgumentException") {
+        val e = runCatching { Cart().add(latte, 0) }.exceptionOrNull()
+        check(e is IllegalArgumentException) { "expected IllegalArgumentException" }
+    }
+}
+</script>
+<script type="text/x-code" data-lang="kotlin" data-label="jvmTest/kafe/shared/RunTests.kt">
+package kafe.shared
+
+fun main() {
+    println("CartTest (jvm)")
+    cartTests()
+    val failed = results.count { !it.second }
+    println("${results.size} tests · ${results.size - failed} passed · $failed failed")
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Kotlin 2.0.21 (JVM target)</span></div><pre>CartTest (jvm)
+   ✔ subtotal Latte×2 + Mocha = $7.75
+   ✔ add ដដែលរួមចូល Line តែមួយ
+   ✔ Percent 10% លើ $7.75 = $6.97 (សេនបង្គត់ចុះ)
+   ✔ Fixed មិនធ្លាក់ក្រោម 0
+   ✔ qty 0 → IllegalArgumentException
+5 tests · 5 passed · 0 failed</pre></div>
+
+<script type="text/x-code" data-lang="kotlin" data-label="CartTest.kt">
+// commonTest ពិតប្រាកដ (kotlin.test) — ./gradlew :shared:allTests
+class CartTest {
+    @Test fun subtotal() {
+        val c = Cart().apply { add(latte, 2); add(mocha) }
+        assertEquals("$7.75", c.subtotal().format())
+    }
+    @Test fun viewModelEmitsTotal() = runTest {           // kotlinx-coroutines-test
+        val vm = CartViewModel(backgroundScope)
+        vm.add(latte)
+        assertEquals("$2.50", vm.state.value.total)
+    }
+}
+</script>
+
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+./gradlew :shared:allTests            # jvmTest + iosSimulatorArm64Test + …
+./gradlew :shared:iosSimulatorArm64Test   # Test រួមរត់លើ iOS Simulator (Mac)
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>commonTest</b> — Test តែម្តង រត់លើគ្រប់ Target (JVM, iOS) → ប្រាកដថា Logic ដូចគ្នាពិតប្រាកដ។</li><li><code class='i'>kotlin.test</code>៖ <code class='i'>@Test, assertEquals, assertFailsWith</code> · <code class='i'>runTest</code> សម្រាប់ Coroutines/ViewModel។</li><li>Test ខាងលើ <b>រត់ពិត</b> (5 ✔) — រួមទាំងការពិនិត្យថាបញ្ចុះ 10% លើ 775 សេន = 697 សេន (Integer division បង្គត់ចុះ)។</li><li>Logic ភាគច្រើននៅ shared → Test ភាគច្រើនក៏នៅ commonTest (លឿន មិនត្រូវការ Emulator)។</li><li>CI៖ រត់ <code class='i'>allTests</code> លើ <code class='i'>macos-latest</code> ដើម្បីរួម iOS (មើលវគ្គ Mobile Testing &amp; CI/CD)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>សរសេរ Test ថា <code class='i'>Money(123456).format("KHR")</code> ត្រឹមត្រូវ។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="kotlin" data-label="answer.kt">
+@Test fun khr() = assertEquals("5,059,400 ៛", Money(123456).format("KHR"))   // 1234 × 4100
+</script>
+</details></div>
+
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>ចែកចាយទៅ iOS៖ Framework, SPM &amp; CI</h2>
+
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+# ① Build XCFramework (Static) សម្រាប់ក្រុម iOS
+./gradlew :shared:assembleSharedReleaseXCFramework
+# → shared/build/XCFrameworks/release/Shared.xcframework
+
+# ② ឬផ្សព្វផ្សាយជា Swift Package (KMMBridge / ផ្ទាល់)
+./gradlew kmmBridgePublish
+
+# ③ Xcode Build phase (Monorepo): Gradle Build framework ស្វ័យប្រវត្តិ
+./gradlew :shared:embedAndSignAppleFrameworkForXcode
+</script>
+
+<script type="text/x-code" data-lang="yaml" data-label="kmp.yml">
+# .github/workflows/kmp.yml
+jobs:
+  shared:
+    runs-on: macos-latest                 # ត្រូវ Mac សម្រាប់ iOS target
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 21, cache: gradle }
+      - run: ./gradlew :shared:allTests
+      - run: ./gradlew :androidApp:assembleDebug
+      - run: xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' build
+</script>
+
+<table><tr><th>វិធីភ្ជាប់ iOS</th><th>ល្អពេល</th></tr><tr><td>Monorepo + embedAndSign (Xcode build phase)</td><td>ក្រុមតូច · Android/iOS dev ក្នុង Repo តែមួយ</td></tr><tr><td>XCFramework / Swift Package (SPM)</td><td>ក្រុម iOS ដាច់ដោយឡែក · មិនចង់ដំឡើង Gradle</td></tr><tr><td>CocoaPods</td><td>Project iOS ចាស់ដែលប្រើ Pods រួចហើយ</td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>Kotlin/Native Compile <code class='i'>shared</code> ទៅជា <b>Framework</b> (.framework/.xcframework) ដែល Xcode ប្រើដូច Library ធម្មតា។</li><li><b>XCFramework</b> រួម Device (arm64) + Simulator (arm64/x64) ក្នុង Package តែមួយ។</li><li><b>SPM</b> — ក្រុម iOS គ្រាន់តែ Add package URL ដោយមិនបាច់ស្គាល់ Gradle។</li><li>CI ត្រូវ <b>macOS runner</b> សម្រាប់ iOS target · Cache Gradle + Kotlin/Native (~/.konan) ធ្វើឲ្យលឿន។</li><li>Version shared module តាម Semver (វគ្គ Testing &amp; CI/CD មេរៀន ៨)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>Build iOS framework យឺត (Kotlin/Native)។ វិធីធ្វើឲ្យលឿន?</p><details><summary>មើលចម្លើយ</summary><p>Debug build ពេល Develop · Build តែ Target ដែលត្រូវការ (iosSimulatorArm64) · Cache <code class='i'>~/.konan</code> និង Gradle · Gradle configuration cache · កុំ Clean រាល់ពេល។</p></details></div>
+
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>ពេលណាគួរប្រើ KMP &amp; Migration ពី App មានស្រាប់</h2>
+
+<table><tr><th>សំណួរ</th><th>ចម្លើយល្អសម្រាប់ KMP</th></tr><tr><td>ក្រុមមាន Android/Kotlin dev?</td><td>✅ ចំណុចខ្លាំងបំផុត — ប្រើជំនាញដែលមានស្រាប់</td></tr><tr><td>មាន App Native ២ ស្រាប់?</td><td>✅ បញ្ចូល KMP បន្តិចម្តងៗ (Module មួយ៖ Validation → API → ViewModel)</td></tr><tr><td>Logic ស្មុគស្មាញ (Payment, Pricing, Offline sync)?</td><td>✅ សរសេរ/Test តែម្តង — Bug មិនខុសគ្នារវាង Platform</td></tr><tr><td>ចង់បាន UI iOS Native ពិត?</td><td>✅ រក្សា SwiftUI · ចែកតែ Logic</td></tr><tr><td>ក្រុមជា Web/JS ទាំងអស់?</td><td>⚠️ React Native ប្រហែលសមជាង</td></tr><tr><td>Prototype UI លឿនបំផុត ក្រុមមិនស្គាល់ Kotlin?</td><td>⚠️ Flutter ប្រហែលលឿនជាង</td></tr></table>
+
+<ol class="steps"><li><b>ជំហាន ១</b>៖ បង្កើត Module <code class='i'>shared</code> ក្នុង App Android ស្រាប់ · ផ្លាស់ Model + Validation (commonMain)។</li>
+<li><b>ជំហាន ២</b>៖ ភ្ជាប់ iOS app ទៅ Shared.xcframework · ជំនួស Swift validation ដោយ Kotlin។</li>
+<li><b>ជំហាន ៣</b>៖ ផ្លាស់ Networking (Retrofit → Ktor) និង Repository។</li>
+<li><b>ជំហាន ៤</b>៖ Shared ViewModel · (ជម្រើស) អេក្រង់ថ្មីជា Compose Multiplatform។</li>
+<li>វាស់៖ ចំនួន Bug ខុសគ្នារវាង Platform ↓ · ពេល Release Feature ↓ · Coverage commonTest ↑។</li></ol>
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>KMP មិនមែន "ទាំងអស់ ឬគ្មាន" — បញ្ចូលតាម Module ជាមួយហានិភ័យតិច។</li><li>ចាប់ផ្តើមពី Code ដែល <b>មិនពឹង UI</b> និង <b>មានច្បាប់ច្រើន</b> (Pricing, Validation) → ផលប្រយោជន៍ច្បាស់ភ្លាម។</li><li>ឯកសារផ្លូវការ៖ <b>kotlinlang.org/docs/multiplatform</b> · Wizard៖ <b>kmp.jetbrains.com</b> · Library៖ klibs.io។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>ធនាគារមួយមាន App Android (Kotlin) និង iOS (Swift) ស្រាប់ ហើយការគណនាថ្លៃសេវាខុសគ្នារវាង ២ App។ ណែនាំអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>ផ្លាស់ Logic គណនាថ្លៃ + Test ទៅ KMP <code class='i'>shared</code> (commonMain + commonTest) ហើយប្រើក្នុង App ទាំងពីរ — UI នៅដដែល។</p></details></div>
+
+</section>
+<section id="cheat">
+<h2>📋 Cheat Sheet</h2>
+
+<table><tr><th>ការងារ</th><th>KMP</th></tr><tr><td>Code រួម</td><td>shared/src/commonMain/kotlin</td></tr><tr><td>Platform code</td><td>expect fun x() (common) · actual fun x() (androidMain/iosMain)</td></tr><tr><td>Async</td><td>suspend · Flow · StateFlow (kotlinx.coroutines)</td></tr><tr><td>HTTP</td><td>Ktor client + ContentNegotiation + kotlinx.serialization</td></tr><tr><td>Database</td><td>SQLDelight · Room KMP · DataStore</td></tr><tr><td>DI</td><td>Koin: single { } · factory { } · startKoin</td></tr><tr><td>UI</td><td>Compose + SwiftUI (Native) · ឬ Compose Multiplatform</td></tr><tr><td>Swift interop</td><td>SKIE / KMP-NativeCoroutines · Swift export</td></tr><tr><td>Test</td><td>commonTest + kotlin.test · ./gradlew allTests</td></tr><tr><td>iOS</td><td>assembleXCFramework · embedAndSignAppleFrameworkForXcode · SPM</td></tr></table>
+
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងអាជីព៖ Kafe KMP App (Android + iOS)</h2>
+
+<p>App Kafe ពេញលេញ ចែករំលែក Logic ដោយ KMP៖ <b>Domain (Money, Cart, Coupon) → Ktor API → SQLDelight Offline → Shared ViewModels → Android (Compose) + iOS (SwiftUI) ឬ Compose Multiplatform → commonTest → CI (macOS)</b>។</p>
+<script type="text/x-code" data-lang="txt" data-label="Project structure">
+KafeKMP/
+├── shared/src/
+│   ├── commonMain/kotlin/kafe/
+│   │   ├── domain/   Money.kt · Cart.kt · Coupon.kt           ← មេរៀន ១
+│   │   ├── platform/ Platform.kt (expect)                     ← ២
+│   │   ├── data/     KafeApi.kt (Ktor) · MenuRepository.kt    ← ៤
+│   │   │             OrderStore.kt + sqldelight/Order.sq      ← ៥
+│   │   ├── presentation/ CartViewModel.kt · MenuViewModel.kt  ← ៣ · ៦
+│   │   └── di/       Koin.kt                                  ← ៩
+│   ├── androidMain/ · iosMain/   (actual · Driver · Engine)
+│   └── commonTest/   CartTest.kt · CartViewModelTest.kt        ← ១០
+├── androidApp/  Compose UI                                     ← ៧
+├── iosApp/      SwiftUI + SKIE                                 ← ៧
+└── .github/workflows/kmp.yml (macos-latest · allTests)         ← ១១
+</script>
+
+<script type="text/x-code" data-lang="kotlin" data-label="MenuViewModel.kt">
+// presentation/MenuViewModel.kt — commonMain
+class MenuViewModel(private val repo: MenuRepository, private val scope: CoroutineScope) {
+    private val _state = MutableStateFlow<MenuUi>(MenuUi.Loading)
+    val state: StateFlow<MenuUi> = _state.asStateFlow()
+
+    init { refresh() }
+
+    fun refresh(force: Boolean = false) = scope.launch {
+        _state.value = MenuUi.Loading
+        _state.value = when (val r = repo.menu(force)) {
+            is Result.Ok -> MenuUi.Data(r.value)
+            is Result.Err -> MenuUi.Error(r.message)
+        }
+    }
+}
+
+sealed interface MenuUi {
+    data object Loading : MenuUi
+    data class Data(val items: List<Product>) : MenuUi
+    data class Error(val message: String) : MenuUi
+}
+</script>
+
+<table><tr><th>ផ្នែក</th><th>មេរៀន</th></tr><tr><td>Domain + Test</td><td>១ · ១០</td></tr><tr><td>expect/actual</td><td>២</td></tr><tr><td>Coroutines/Flow</td><td>៣</td></tr><tr><td>Ktor · SQLDelight</td><td>៤ · ៥</td></tr><tr><td>ViewModel · UI</td><td>៦ · ៧ · ៨</td></tr><tr><td>DI · Architecture</td><td>៩</td></tr><tr><td>iOS distribution · CI</td><td>១១</td></tr><tr><td>Migration plan</td><td>១២</td></tr></table>
+
+</section>
+<section id="pro-app">
+<h2>💻 KMP Lab Pro (App)</h2>
+
+<p><b>Share Planner</b>៖ ជ្រើស Feature, ចំនួនអេក្រង់, ក្រុម → ប្រៀបធៀប Native ×2 / KMP Logic / KMP + Compose MP (Shared vs Android vs iOS) + អនុសាសន៍។ <b>expect / actual Explorer</b>៖ ជ្រើស API (Platform name, UUID, Settings, SqlDriver, Haptics, Deeplink) → មើល Code commonMain + androidMain + iosMain ជាមួយគ្នា។</p>
+
+<div class="itk" id="km">
+<div class="itk-tabs"><button class="on" data-t="p">📐 Share Planner</button><button data-t="e">🔀 expect / actual Explorer</button></div>
+
+<div class="itk-p on" data-p="p">
+ <div class="itk-row" id="p_feat"></div>
+ <div class="itk-row">
+  <label>ចំនួនអេក្រង់ UI<input id="p_scr" type="range" min="3" max="40" value="12"> <b id="p_scrv"></b></label>
+  <label>ក្រុម<select id="p_team"><option value="android">Android/Kotlin dev ច្រើន</option><option value="both">មាន Android + iOS dev</option><option value="web">Web/JS dev</option><option value="new">ថ្មី/តូច</option></select></label>
+  <label>App ស្រាប់?<select id="p_exist"><option value="no">ទេ (ថ្មី)</option><option value="yes">មាន Native app ២ ស្រាប់</option></select></label>
+ </div>
+ <div id="p_chart"></div>
+ <div class="itk-out" id="p_out"></div>
+</div>
+
+<div class="itk-p" data-p="e">
+ <label>API<select id="e_api"></select></label>
+ <div class="fb-grid" style="grid-template-columns:1fr 1fr 1fr;margin-top:10px" id="e_panes"></div>
+ <div class="itk-out" id="e_note"></div>
+</div>
+</div>
+<script>
+(()=>{
+const $=id=>document.getElementById(id),R=$("km");
+R.querySelectorAll(":scope>.itk-tabs button").forEach(b=>b.onclick=()=>{R.querySelectorAll(":scope>.itk-tabs button").forEach(x=>x.classList.toggle("on",x===b));R.querySelectorAll(":scope>.itk-p").forEach(p=>p.classList.toggle("on",p.dataset.p===b.dataset.t))});
+const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+/* ---------- Share planner ---------- */
+// [key, label, lines per platform, shareable in KMP logic?, platform-specific %]
+const F=[["domain","🧮 Domain / Pricing",2500,1,0],["valid","✅ Validation",800,1,0],["net","🌐 Networking (API)",2000,1,.05],["db","🗄️ Database / Offline",1800,1,.1],["vm","🧠 ViewModel / State",2200,1,.05],["auth","🔐 Login / Token",900,1,.15],["pay","💳 Payment (KHQR)",1200,1,.1],["push","🔔 Push / Camera / Maps",1500,0,1]];
+const on={domain:1,valid:1,net:1,db:1,vm:1,auth:1,pay:1,push:1};
+$("p_feat").innerHTML=F.map(([k,l])=>`<label><span><input type="checkbox" data-f="${k}" checked> ${l}</span></label>`).join("");
+$("p_feat").querySelectorAll("input").forEach(c=>c.onchange=()=>{on[c.dataset.f]=c.checked?1:0;plan()});
+function plan(){
+ const scr=+$("p_scr").value;$("p_scrv").textContent=scr;const team=$("p_team").value,ex=$("p_exist").value;
+ let logic=0,plat=0;F.forEach(([k,,n,sh,p])=>{if(!on[k])return;if(sh){logic+=n*(1-p);plat+=n*p}else plat+=n});
+ const ui=scr*450;
+ const A={native:{n:"Native ×2 (Kotlin + Swift)",shared:0,a:logic+plat+ui,i:logic+plat+ui},
+  kmp:{n:"KMP Logic + UI Native",shared:logic,a:plat+ui,i:plat+ui*1.0},
+  cmp:{n:"KMP + Compose Multiplatform",shared:logic+ui*0.85,a:plat+ui*0.075,i:plat+ui*0.075}};
+ const W=640,max=Math.max(...Object.values(A).map(x=>x.shared+x.a+x.i));let g=`<svg viewBox="0 0 ${W} 200" style="width:100%;max-width:${W}px;font:12px sans-serif">`;
+ Object.values(A).forEach((x,i)=>{const y=20+i*58,s=x.shared/max*(W-230),a=x.a/max*(W-230),b=x.i/max*(W-230),tot=x.shared+x.a+x.i,pct=Math.round(100*x.shared/tot);
+  g+=`<text x="0" y="${y+12}" fill="currentColor" font-weight="700">${esc(x.n)}</text><rect x="0" y="${y+18}" width="${s}" height="22" fill="#7048e8"/><rect x="${s}" y="${y+18}" width="${a}" height="22" fill="#3ddc84"/><rect x="${s+a}" y="${y+18}" width="${b}" height="22" fill="#f05138"/><text x="${s+a+b+6}" y="${y+34}" fill="currentColor">${Math.round(tot/1000)}k lines · ${pct}% រួម</text>`});
+ g+=`<rect x="0" y="186" width="12" height="10" fill="#7048e8"/><text x="16" y="195" fill="currentColor">Shared (Kotlin)</text><rect x="130" y="186" width="12" height="10" fill="#3ddc84"/><text x="146" y="195" fill="currentColor">Android only</text><rect x="250" y="186" width="12" height="10" fill="#f05138"/><text x="266" y="195" fill="currentColor">iOS only</text></svg>`;
+ $("p_chart").innerHTML=g;
+ const save=Math.round(100*(1-(A.kmp.shared+A.kmp.a+A.kmp.i)/(A.native.a+A.native.i)));
+ let rec;
+ if(team==="web")rec="⚠️ ក្រុម Web/JS → React Native ប្រហែលលឿនជាង (ប្រើ JavaScript ដែលចេះស្រាប់)។";
+ else if(ex==="yes")rec="✅ <b>KMP Logic + UI Native</b>៖ បញ្ចូល Module shared បន្តិចម្តងៗ (Validation → API → ViewModel) មិនបាច់សរសេរ App ឡើងវិញ។";
+ else if(team==="new"||team==="android")rec="✅ <b>KMP + Compose Multiplatform</b>៖ ក្រុមតូច/ចេះ Kotlin → ចែក Code ច្រើនបំផុត Launch Android + iOS លឿន។";
+ else rec="✅ <b>KMP Logic + UI Native</b>៖ ក្រុម iOS រក្សា SwiftUI · Logic សរសេរ/Test តែម្តង។";
+ $("p_out").innerHTML=`${rec}<br>KMP Logic សន្សំ Code ≈ <b>${save}%</b> ធៀប Native ×2 · Feature ពិសេស Platform (Push/Camera/Maps) នៅតែជា androidMain/iosMain (expect/actual)។<br><span style="font-size:13px;color:var(--muted)">លេខជាការប៉ាន់ស្មានសម្រាប់រៀន (ប្រហែល 450 lines/អេក្រង់)។</span>`;}
+["p_scr","p_team","p_exist"].forEach(i=>$(i).oninput=plan);plan();
+/* ---------- expect/actual ---------- */
+const API={
+ "platformName()":["expect fun platformName(): String","actual fun platformName(): String =\n    \"Android ${android.os.Build.VERSION.RELEASE}\"","import platform.UIKit.UIDevice\n\nactual fun platformName(): String =\n    UIDevice.currentDevice.systemName() + \" \" +\n    UIDevice.currentDevice.systemVersion","Android: android.os.Build · iOS: UIKit.UIDevice"],
+ "randomUUID()":["expect fun randomUUID(): String","actual fun randomUUID(): String =\n    java.util.UUID.randomUUID().toString()","import platform.Foundation.NSUUID\n\nactual fun randomUUID(): String =\n    NSUUID().UUIDString()","Kotlin 2.0.20+ មាន kotlin.uuid.Uuid (Experimental) ក្នុង common — មិនបាច់ expect/actual"],
+ "Settings (key-value)":["expect class Settings() {\n    fun putString(key: String, value: String)\n    fun getString(key: String): String?\n}","actual class Settings actual constructor() {\n    private val prefs = appContext\n        .getSharedPreferences(\"kafe\", Context.MODE_PRIVATE)\n    actual fun putString(key: String, value: String) =\n        prefs.edit().putString(key, value).apply()\n    actual fun getString(key: String) = prefs.getString(key, null)\n}","import platform.Foundation.NSUserDefaults\n\nactual class Settings actual constructor() {\n    private val d = NSUserDefaults.standardUserDefaults\n    actual fun putString(key: String, value: String) =\n        d.setObject(value, forKey = key)\n    actual fun getString(key: String) = d.stringForKey(key)\n}","ឬប្រើ Library: multiplatform-settings / DataStore KMP"],
+ "SqlDriver (SQLDelight)":["expect class DriverFactory {\n    fun create(): SqlDriver\n}","actual class DriverFactory(private val ctx: Context) {\n    actual fun create(): SqlDriver =\n        AndroidSqliteDriver(KafeDb.Schema, ctx, \"kafe.db\")\n}","actual class DriverFactory {\n    actual fun create(): SqlDriver =\n        NativeSqliteDriver(KafeDb.Schema, \"kafe.db\")\n}","Query/Repository ទាំងអស់នៅ commonMain — តែ Driver ខុសគ្នា"],
+ "Haptic feedback":["expect fun vibrate(ms: Long = 30)","actual fun vibrate(ms: Long) {\n    val v = appContext.getSystemService(Vibrator::class.java)\n    v.vibrate(VibrationEffect.createOneShot(ms,\n        VibrationEffect.DEFAULT_AMPLITUDE))\n}","import platform.UIKit.UIImpactFeedbackGenerator\nimport platform.UIKit.UIImpactFeedbackStyle\n\nactual fun vibrate(ms: Long) {\n    UIImpactFeedbackGenerator(\n        UIImpactFeedbackStyle.UIImpactFeedbackStyleLight\n    ).impactOccurred()\n}","API ខុសគ្នាខ្លាំង (iOS គ្មានរយៈពេល ms) → expect/actual ល្អបំផុត"],
+ "Open bank app (Deeplink)":["expect fun openUrl(url: String): Boolean","actual fun openUrl(url: String): Boolean = runCatching {\n    appContext.startActivity(\n        Intent(Intent.ACTION_VIEW, Uri.parse(url))\n            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))\n}.isSuccess","import platform.Foundation.NSURL\nimport platform.UIKit.UIApplication\n\nactual fun openUrl(url: String): Boolean {\n    val u = NSURL.URLWithString(url) ?: return false\n    UIApplication.sharedApplication.openURL(u, emptyMap<Any?, Any>(), null)\n    return true\n}","ប្រើសម្រាប់ Payment៖ បើក App ធនាគារពី KHQR Deeplink (វគ្គ KHQR)"]};
+$("e_api").innerHTML=Object.keys(API).map(k=>`<option>${esc(k)}</option>`).join("");
+function ex(){const[c,a,i,n]=API[$("e_api").value];const pane=(t,col,code,file)=>`<div><div style="background:${col};color:#fff;border-radius:8px 8px 0 0;padding:5px 10px;font-weight:700;font-size:13px">${t}<div style="font-weight:400;font-size:11.5px;opacity:.9">${file}</div></div><pre class="itk-out" style="white-space:pre;overflow:auto;margin:0;border-radius:0 0 8px 8px;font:12px/1.55 'JetBrains Mono',monospace;color:var(--text)">${esc(code)}</pre></div>`;
+ $("e_panes").innerHTML=pane("commonMain · expect","#7048e8",c,"shared/src/commonMain/kotlin")+pane("androidMain · actual","#2b8a3e",a,"shared/src/androidMain/kotlin")+pane("iosMain · actual","#e8590c",i,"shared/src/iosMain/kotlin");
+ $("e_note").innerHTML="💡 "+esc(n)+"<br>Compiler ពិនិត្យថា expect នីមួយៗមាន actual គ្រប់ Target (ភ្លេច = Build error)។";}
+$("e_api").onchange=ex;ex();
+})();
+</script>
+
+<h3>🏆 Quiz Kotlin Multiplatform ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["Kotlin Multiplatform បង្កើតដោយក្រុមហ៊ុន?", ["Google", "JetBrains", "Apple", "Meta"], 1], ["KMP ក្លាយជា Stable ឆ្នាំ?", ["2017", "2020", "2023", "2025"], 2], ["Google គាំទ្រ KMP ជាផ្លូវការ (Business logic) ឆ្នាំ?", ["2019", "2022", "2024", "2026"], 2], ["Code រួមនៅ Source set ណា?", ["androidMain", "iosMain", "commonMain", "main"], 2], ["ប្រកាស Function ក្នុង common ហើយសរសេរតាម Platform ប្រើ?", ["open / override", "expect / actual", "interface / impl", "@Platform"], 1], ["ក្នុង iosMain អាចហៅ iOS API តាម?", ["platform.UIKit / platform.Foundation", "java.util", "android.os", "Swift only"], 0], ["String.format ប្រើបានក្នុង commonMain ទេ?", ["បាន", "មិនបាន (JVM-only)", "តែ iOS", "តែ Android"], 1], ["HTTP client KMP ពេញនិយម?", ["Retrofit", "Ktor", "Alamofire", "Axios"], 1], ["Ktor Engine លើ iOS?", ["OkHttp", "Darwin", "CIO only", "Volley"], 1], ["Database KMP ដែលសរសេរ SQL ក្នុង .sq?", ["Room (Android only)", "SQLDelight", "Realm Java", "Core Data"], 1], ["Async រួមក្នុង KMP ប្រើ?", ["RxJava", "kotlinx.coroutines + Flow", "Combine", "Promise"], 1], ["Shared ViewModel បង្ហាញ State ជា?", ["LiveData", "StateFlow", "@Published", "Redux"], 1], ["iOS ប្រើ Kotlin Flow ជា AsyncSequence ងាយ ដោយ?", ["SKIE / KMP-NativeCoroutines", "CocoaPods", "Fastlane", "Xcode Cloud"], 0], ["UI រួមលើ Android + iOS ដោយ Kotlin?", ["SwiftUI", "Compose Multiplatform", "UIKit", "XML layouts"], 1], ["DI ពេញនិយមសម្រាប់ KMP?", ["Hilt", "Koin", "Dagger only", "Spring"], 1], ["Test រួមនៅ?", ["commonTest", "androidTest", "XCTest only", "src/test"], 0], ["Build iOS target ត្រូវការ?", ["Windows", "Mac + Xcode", "Linux", "Docker"], 1], ["ក្រុម iOS ប្រើ Shared ដោយមិនស្គាល់ Gradle តាម?", ["XCFramework / Swift Package", "APK", "Jar", "npm"], 0], ["ចំណុចខ្លាំងបំផុតរបស់ KMP?", ["គ្មាន Kotlin", "UI Native + Logic រួម · បញ្ចូលក្នុង App ស្រាប់បន្តិចម្តងៗ", "តូចជាង 1MB", "គ្មាន Compile"], 1], ["លុយគួររក្សាក្នុង Shared model ជា?", ["Double", "Long សេន (integer)", "String", "Float"], 1]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+
+<ol class="steps"><li><b>Kotlin Multiplatform</b> (វគ្គនេះ) ✅</li><li>មូលដ្ឋាន៖ វគ្គ <b>Kotlin + Compose</b> (Android) · <b>Swift + SwiftUI</b> (iOS)</li>
+<li>Backend &amp; Payment៖ វគ្គ <b>Firebase &amp; Supabase</b> · <b>KHQR</b> · ឬ Ktor Server (Kotlin ទាំង Backend!)</li><li>Quality៖ វគ្គ <b>Mobile Testing &amp; CI/CD</b></li>
+<li>កម្រិតខ្ពស់៖ Compose Multiplatform Desktop/Web (Wasm) · Swift export · Kotlin/Native memory &amp; performance</li></ol>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="kmp"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

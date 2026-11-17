@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន PostgreSQL + Prisma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fb; --panel:#ffffff; --text:#172230; --muted:#5b6b61; --line:#dce4ee;
+  --accent:#336791; --accent2:#4f86b5; --accent-soft:#e9f0f7;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#8ab8e6; --accent2:#4f86b5; --accent-soft:#14212e;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#8ab8e6; --accent2:#4f86b5; --accent-soft:#14212e;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#22476a,#4f86b5);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .te{color:#ff8b8b}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+</style>
+<link rel="icon" href="../assets/icons/postgres.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/postgres.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>វគ្គសិក្សា PostgreSQL + Prisma ពីដើមដល់កម្រិតអាជីព</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. PostgreSQL និង Prisma ជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#install">២. របៀបដំឡើង (PostgreSQL + VS Code + Prisma)</a>
+<a href="#elements">៣. ធាតុនីមួយៗរបស់ PostgreSQL &amp; Prisma</a>
+<h4>ផ្នែកទី ២ – SQL</h4>
+<a href="#l1">មេរៀន ១: psql: ភ្ជាប់, មើល Database &amp; Tables</a>
+<a href="#l2">មេរៀន ២: Create Table, Data Types &amp; Constraints</a>
+<a href="#l3">មេរៀន ៣: CRUD: INSERT ... RETURNING, UPDATE, DELETE, UPSERT</a>
+<a href="#l4">មេរៀន ៤: SELECT: WHERE, ORDER BY, LIMIT, LIKE, NULL</a>
+<a href="#l5">មេរៀន ៥: JOIN: ភ្ជាប់តារាង</a>
+<a href="#l6">មេរៀន ៦: GROUP BY, Aggregates, HAVING, FILTER</a>
+<a href="#l7">មេរៀន ៧: Subqueries &amp; CTE (WITH)</a>
+<a href="#l8">មេរៀន ៨: Window Functions: Ranking, Running total, LAG</a>
+<a href="#l9">មេរៀន ៩: Transactions, ACID &amp; Locking</a>
+<a href="#l10">មេរៀន ១០: Indexes &amp; EXPLAIN ANALYZE</a>
+<a href="#l11">មេរៀន ១១: JSONB, Arrays, Full-text Search, Views</a>
+<a href="#l12">មេរៀន ១២: Security, Roles, Backup &amp; Migrations</a>
+<h4>ផ្នែកទី ៣ – Prisma ORM</h4>
+<a href="#l13">មេរៀន ១៣: Prisma ORM 7: Setup, Schema, Migrate, CRUD</a>
+<a href="#l14">មេរៀន ១៤: Prisma កម្រិតខ្ពស់: Transactions, Aggregates, Raw SQL, Production</a>
+<a href="#cheat">📋 Cheat Sheet</a>
+<h4>ផ្នែកទី ៤ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងអាជីព: Kafe on PostgreSQL</a>
+<a href="#pro-db">🧱 Migration + place_order() (រត់ពិត)</a>
+<a href="#pro-app">🔍 Prisma ↔ SQL Explorer</a>
+<a href="#pro-check">✅ Checklist &amp; គម្រោងចុងក្រោយ</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+
+</nav>
+<main>
+<section class="hero">
+  <h2>🐘 PostgreSQL + Prisma ពីដើមដល់ចប់</h2>
+  <p>រៀន <b>PostgreSQL</b> — Database ដែល Developer ពេញនិយមបំផុត៖ Tables, Constraints, CRUD, JOIN, GROUP BY, CTE, Window functions, Transactions, Indexes + EXPLAIN, JSONB, Full-text search, Security, Backup ហើយ <b>Prisma ORM</b> សម្រាប់ Node.js/TypeScript រហូតដល់ <b>Kafe Database កម្រិតអាជីព</b>។ SQL ភាគច្រើនមាន <b>លទ្ធផលពិត</b> ពី PostgreSQL។</p>
+  <p><span class="badge">📘 ១៤ មេរៀន</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">🐘 psql Output ពិត</span><span class="badge">🏆 Kafe on Postgres</span></p>
+</section>
+
+<!-- NAV: ផ្នែកទី ១ – មូលដ្ឋាន -->
+<section id="intro">
+  <h2>១. PostgreSQL និង Prisma ជាអ្វី? អ្នកណាបង្កើត?</h2>
+  <p><b>PostgreSQL</b> («Postgres») គឺជា <b>Relational Database</b> (ទិន្នន័យជាតារាងដែលភ្ជាប់គ្នា) ឥតគិតថ្លៃ Open-source ដែលល្បីខាង <b>ភាពត្រឹមត្រូវ (ACID)</b>, SQL ស្តង់ដារ, JSONB, Extensions (PostGIS, pgvector…)។ <b>Prisma</b> គឺជា <b>ORM</b> សម្រាប់ Node.js/TypeScript៖ អ្នកសរសេរ Schema ហើយ Prisma បង្កើត Migration និង Client ដែលមាន Type ពេញលេញ។</p>
+  <div class="grid">
+    <div class="card"><b>POSTGRES</b><br><b style="font-size:19px">Michael Stonebraker</b><br>UC Berkeley, 1986 (បន្តពី Ingres) · ទទួល Turing Award 2014</div>
+    <div class="card"><b>Postgres95 → PostgreSQL</b><br><b>Andrew Yu</b> & <b>Jolly Chen</b> បន្ថែម SQL (1994–95) · ឈ្មោះ PostgreSQL ពី <b>1996</b> · ថែទាំដោយសហគមន៍ PGDG</div>
+    <div class="card"><b>កំណែ</b><br>PostgreSQL <b>18</b> (ចេញ 2025) ជាកំណែធំចុងក្រោយ · 19 កំពុងអភិវឌ្ឍ · ឧទាហរណ៍ក្នុងវគ្គរត់លើ PostgreSQL 16</div>
+    <div class="card"><b>Prisma</b><br>ក្រុមហ៊ុន Prisma (Berlin) — <b>Johannes Schickling</b> & <b>Søren Bramer Schmidt</b> (ចាប់ផ្តើមពី Graphcool, 2016) · Prisma 7 ស្ថិរភាព · Prisma 8 = Release Candidate</div>
+  </div>
+  <h3>គេប្រើវាសម្រាប់ធ្វើអ្វី?</h3>
+  <div class="grid">
+    <div class="card">🛒 <b>App ទូទៅ</b><br>Users, Orders, Products, Payments — ទិន្នន័យដែលត្រូវតែត្រឹមត្រូវ</div>
+    <div class="card">🏦 <b>ហិរញ្ញវត្ថុ</b><br>Transactions (ACID) — ប្រាក់មិនបាត់ មិនស្ទួន</div>
+    <div class="card">📊 <b>Analytics</b><br>GROUP BY, Window functions, Views</div>
+    <div class="card">🗺️ <b>ផែនទី</b><br>PostGIS — ស្វែងរកហាងជិតខ្ញុំ</div>
+    <div class="card">🤖 <b>AI</b><br>pgvector — Vector search សម្រាប់ RAG</div>
+    <div class="card">☁️ <b>Cloud</b><br>Neon, Supabase, AWS RDS, Prisma Postgres, Vercel Marketplace</div>
+  </div>
+  <h3>SQL vs NoSQL</h3>
+  <table>
+    <tr><th></th><th>PostgreSQL (SQL)</th><th>MongoDB (NoSQL)</th></tr>
+    <tr><td>ទម្រង់</td><td>តារាង + Relationships + Schema</td><td>Documents (JSON) ផ្លាស់ប្តូរបាន</td></tr>
+    <tr><td>ភាពត្រឹមត្រូវ</td><td>ACID, Constraints, Foreign keys</td><td>ត្រូវគ្រប់គ្រងក្នុងកូដច្រើនជាង</td></tr>
+    <tr><td>ល្អសម្រាប់</td><td>App ភាគច្រើន, ទិន្នន័យមានទំនាក់ទំនង</td><td>Data គ្មានរចនាសម្ព័ន្ធច្បាស់, Logs</td></tr>
+  </table>
+  <p class="note">💡 PostgreSQL មាន <b>JSONB</b> ផងដែរ ដូច្នេះវាអាចធ្វើការងារ «NoSQL» បានច្រើន (មេរៀន ១១)។</p>
+</section>
+
+<section id="install">
+  <h2>២. របៀបដំឡើង (PostgreSQL + VS Code + Prisma)</h2>
+  <h3>វិធី ១: Docker (ងាយបំផុត គ្រប់ OS)</h3>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+docker run --name kafe-db -e POSTGRES_PASSWORD=secret -e POSTGRES_DB=kafe \
+  -p 5432:5432 -v kafe-pgdata:/var/lib/postgresql -d postgres:18
+docker exec -it kafe-db psql -U postgres -d kafe        # ចូល psql
+</script>
+  <h3>វិធី ២: ដំឡើងផ្ទាល់</h3>
+  <ul>
+    <li><b>Windows / macOS</b>៖ Installer ពី <a href="https://www.postgresql.org/download/" target="_blank">postgresql.org/download</a> (មាន pgAdmin) · macOS ក៏អាចប្រើ <b>Postgres.app</b> ឬ <code class="i">brew install postgresql@18</code></li>
+    <li><b>Ubuntu</b>៖ <code class="i">sudo apt install postgresql</code> (ឬ Repository PGDG សម្រាប់កំណែចុងក្រោយ) → <code class="i">sudo -u postgres psql</code></li>
+    <li><b>Cloud ឥតគិតថ្លៃ</b>៖ Neon, Supabase, Prisma Postgres — បានតែ <code class="i">DATABASE_URL</code></li>
+  </ul>
+  <h3>VS Code</h3>
+  <ol class="steps">
+    <li>Extension <b>PostgreSQL</b> (Microsoft) — ភ្ជាប់ Database, រត់ SQL, មើល Tables ក្នុង VS Code (ឬ <b>SQLTools</b> + PostgreSQL driver)</li>
+    <li>Extension <b>Prisma</b> (Prisma) — ពណ៌ + Autocomplete + Format សម្រាប់ <code class="i">schema.prisma</code></li>
+    <li>GUI ផ្សេង៖ <b>pgAdmin</b>, <b>DBeaver</b>, <b>TablePlus</b>, <b>Prisma Studio</b> (<code class="i">npx prisma studio</code>)</li>
+  </ol>
+  <h3>Connection string</h3>
+  <script type="text/x-code" data-lang="bash" data-label=".env">
+# postgresql://USER:PASSWORD@HOST:PORT/DATABASE?options
+DATABASE_URL="postgresql://postgres:secret@localhost:5432/kafe"
+# Cloud ជាធម្មតាត្រូវការ SSL: ...?sslmode=require
+</script>
+</section>
+
+<section id="elements">
+  <h2>៣. ធាតុនីមួយៗរបស់ PostgreSQL & Prisma</h2>
+  <table>
+    <tr><th>ធាតុ</th><th>ពន្យល់</th></tr>
+    <tr><td><b>Cluster / Server</b></td><td>Process PostgreSQL មួយ (Port 5432) មាន Database ច្រើន</td></tr>
+    <tr><td><b>Database → Schema → Table</b></td><td><code class="i">kafe</code> → <code class="i">public</code> → <code class="i">products</code></td></tr>
+    <tr><td><b>Row / Column</b></td><td>កំណត់ត្រាមួយ / Field មួយ (មាន Data type)</td></tr>
+    <tr><td><b>Primary Key</b></td><td>ID តែមួយគត់ (<code class="i">serial</code>, <code class="i">identity</code>, <code class="i">uuid</code>)</td></tr>
+    <tr><td><b>Foreign Key</b></td><td>ភ្ជាប់តារាង (orders.customer_id → customers.id)</td></tr>
+    <tr><td><b>Constraints</b></td><td>NOT NULL, UNIQUE, CHECK, DEFAULT — ការពារទិន្នន័យខុស</td></tr>
+    <tr><td><b>Index</b></td><td>រកលឿន (ដូចបញ្ជីមាតិកាសៀវភៅ)</td></tr>
+    <tr><td><b>Transaction</b></td><td>ក្រុម SQL ដែលជោគជ័យទាំងអស់ ឬបរាជ័យទាំងអស់ (ACID)</td></tr>
+    <tr><td><b>View / Function / Trigger</b></td><td>Query ដែលមានឈ្មោះ / Logic ក្នុង DB / រត់ដោយស្វ័យប្រវត្តិ</td></tr>
+    <tr><td><b>Role</b></td><td>User + សិទ្ធិ (GRANT)</td></tr>
+    <tr><td><b>Prisma Schema</b></td><td><code class="i">schema.prisma</code>៖ Models ↔ Tables</td></tr>
+    <tr><td><b>Prisma Migrate</b></td><td>បង្កើត SQL Migration ពី Schema ហើយអនុវត្ត</td></tr>
+    <tr><td><b>Prisma Client</b></td><td>Query ដែលមាន Type៖ <code class="i">prisma.product.findMany()</code></td></tr>
+  </table>
+  <h3>Kafe Database (ប្រើក្នុងមេរៀនទាំងអស់)</h3>
+  <script type="text/x-code" data-lang="txt" data-label="ERD">
+ customers                orders                    order_items                 products
+┌──────────────┐        ┌───────────────┐        ┌────────────────┐        ┌──────────────┐
+│ id  PK       │1──────*│ id  PK        │1──────*│ order_id  PK,FK│*──────1│ id  PK       │
+│ name         │        │ customer_id FK│        │ product_id PK,FK│        │ name UNIQUE  │
+│ phone UNIQUE │        │ status        │        │ qty            │        │ category     │
+│ city         │        │ created_at    │        │ unit_price     │        │ price, stock │
+└──────────────┘        └───────────────┘        └────────────────┘        └──────────────┘
+ 4 អតិថិជន                6 ការកុម្ម៉ង់ (paid/pending/cancelled)                 6 ផលិតផល
+</script>
+</section>
+
+<!-- NAV: ផ្នែកទី ២ – SQL -->
+<section id="l1">
+  <h2><span class="badge">មេរៀន ១</span>psql: ភ្ជាប់, មើល Database & Tables</h2>
+  <table>
+    <tr><th>psql command</th><th>ន័យ</th></tr>
+    <tr><td><code class="i">psql -U postgres -d kafe</code></td><td>ភ្ជាប់</td></tr>
+    <tr><td><code class="i">\l</code> · <code class="i">\c kafe</code></td><td>បញ្ជី Database · ប្តូរ Database</td></tr>
+    <tr><td><code class="i">\dt</code> · <code class="i">\d products</code></td><td>បញ្ជី Tables · រចនាសម្ព័ន្ធ Table</td></tr>
+    <tr><td><code class="i">\x</code></td><td>បង្ហាញជួរដេកបញ្ឈរ (Column ច្រើន)</td></tr>
+    <tr><td><code class="i">\i file.sql</code> · <code class="i">\q</code></td><td>រត់ File · ចេញ</td></tr>
+    <tr><td><code class="i">\?</code> · <code class="i">\h SELECT</code></td><td>ជំនួយ psql · ជំនួយ SQL</td></tr>
+  </table>
+  <script type="text/x-code" data-lang="sql" data-label="psql" data-psql>
+\dt
+\d products
+SELECT current_database(), current_user, version() LIKE 'PostgreSQL 16%' AS is_pg16;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">\dt</span>
+            List of relations
+ Schema |    Name     | Type  |  Owner   
+--------+-------------+-------+----------
+ public | customers   | table | postgres
+ public | order_items | table | postgres
+ public | orders      | table | postgres
+ public | products    | table | postgres
+(4 rows)
+
+<span class="tp">kafe=#</span> <span class="tc">\d products</span>
+                                Table &quot;public.products&quot;
+  Column  |     Type      | Collation | Nullable |               Default                
+----------+---------------+-----------+----------+--------------------------------------
+ id       | integer       |           | not null | nextval(&#x27;products_id_seq&#x27;::regclass)
+ name     | text          |           | not null | 
+ category | text          |           | not null | 
+ price    | numeric(10,2) |           | not null | 
+ stock    | integer       |           | not null | 0
+Indexes:
+    &quot;products_pkey&quot; PRIMARY KEY, btree (id)
+    &quot;products_name_key&quot; UNIQUE CONSTRAINT, btree (name)
+Check constraints:
+    &quot;products_category_check&quot; CHECK (category = ANY (ARRAY[&#x27;coffee&#x27;::text, &#x27;tea&#x27;::text, &#x27;bakery&#x27;::text]))
+    &quot;products_price_check&quot; CHECK (price &gt; 0::numeric)
+    &quot;products_stock_check&quot; CHECK (stock &gt;= 0)
+Referenced by:
+    TABLE &quot;order_items&quot; CONSTRAINT &quot;order_items_product_id_fkey&quot; FOREIGN KEY (product_id) REFERENCES products(id)
+
+<span class="tp">kafe=#</span> <span class="tc">SELECT current_database(), current_user, version() LIKE &#x27;PostgreSQL 16%&#x27; AS is_pg16;</span>
+ current_database | current_user | is_pg16 
+------------------+--------------+---------
+ demo             | postgres     | t
+(1 row)</pre></div>
+  <div class="ex"><h4>✍️ លំហាត់ ១</h4>
+    <p>បង្ហាញរចនាសម្ព័ន្ធតារាង <code class="i">order_items</code> ហើយរកមើលថា Primary Key របស់វាមាន Column អ្វីខ្លះ។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="sql" data-label="Answer" data-psql>
+\d order_items
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">\d order_items</span>
+                 Table &quot;public.order_items&quot;
+   Column   |     Type      | Collation | Nullable | Default 
+------------+---------------+-----------+----------+---------
+ order_id   | integer       |           | not null | 
+ product_id | integer       |           | not null | 
+ qty        | integer       |           | not null | 
+ unit_price | numeric(10,2) |           | not null | 
+Indexes:
+    &quot;order_items_pkey&quot; PRIMARY KEY, btree (order_id, product_id)
+Check constraints:
+    &quot;order_items_qty_check&quot; CHECK (qty &gt; 0)
+Foreign-key constraints:
+    &quot;order_items_order_id_fkey&quot; FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+    &quot;order_items_product_id_fkey&quot; FOREIGN KEY (product_id) REFERENCES products(id)</pre></div>
+      <p>Primary key ជា <b>Composite key</b> <code class="i">(order_id, product_id)</code> — ផលិតផលមួយមានតែម្តងក្នុង Order មួយ។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l2">
+  <h2><span class="badge">មេរៀន ២</span>Create Table, Data Types & Constraints</h2>
+  <table>
+    <tr><th>Type</th><th>ប្រើសម្រាប់</th></tr>
+    <tr><td><code class="i">integer</code> / <code class="i">bigint</code></td><td>ចំនួនគត់</td></tr>
+    <tr><td><code class="i">numeric(10,2)</code></td><td><b>ប្រាក់</b> (ត្រឹមត្រូវ — កុំប្រើ float/real សម្រាប់ប្រាក់)</td></tr>
+    <tr><td><code class="i">text</code> / <code class="i">varchar(n)</code></td><td>អក្សរ (Postgres៖ <code class="i">text</code> ល្អ ហើយលឿនដូចគ្នា)</td></tr>
+    <tr><td><code class="i">boolean</code></td><td>true/false</td></tr>
+    <tr><td><code class="i">timestamptz</code> / <code class="i">date</code></td><td>ពេលវេលា (ប្រើ timestamptz ជានិច្ច) / ថ្ងៃ</td></tr>
+    <tr><td><code class="i">uuid</code></td><td>ID ចៃដន្យ (<code class="i">gen_random_uuid()</code> · PG18 មាន <code class="i">uuidv7()</code>)</td></tr>
+    <tr><td><code class="i">jsonb</code> · <code class="i">text[]</code></td><td>JSON · Array</td></tr>
+    <tr><td><code class="i">integer GENERATED ALWAYS AS IDENTITY</code></td><td>ID ស្វ័យប្រវត្តិ (ស្តង់ដារ SQL ទំនើបជាង serial)</td></tr>
+  </table>
+  <script type="text/x-code" data-lang="sql" data-label="psql" data-psql>
+CREATE TABLE reviews (
+  id          integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  product_id  integer NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  customer_id integer REFERENCES customers(id) ON DELETE SET NULL,
+  rating      smallint NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  comment     text,
+  created_at  timestamptz NOT NULL DEFAULT now()
+);
+INSERT INTO reviews (product_id, customer_id, rating, comment) VALUES (1, 1, 5, 'ឆ្ងាញ់ណាស់!');
+-- Constraints ការពារទិន្នន័យខុស:
+INSERT INTO reviews (product_id, rating) VALUES (1, 9);
+INSERT INTO reviews (product_id, rating) VALUES (999, 4);
+INSERT INTO reviews (product_id) VALUES (1);
+SELECT id, product_id, rating, comment FROM reviews;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">CREATE TABLE reviews (</span>
+<span class="tp">kafe-#</span> <span class="tc">  id          integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,</span>
+<span class="tp">kafe-#</span> <span class="tc">  product_id  integer NOT NULL REFERENCES products(id) ON DELETE CASCADE,</span>
+<span class="tp">kafe-#</span> <span class="tc">  customer_id integer REFERENCES customers(id) ON DELETE SET NULL,</span>
+<span class="tp">kafe-#</span> <span class="tc">  rating      smallint NOT NULL CHECK (rating BETWEEN 1 AND 5),</span>
+<span class="tp">kafe-#</span> <span class="tc">  comment     text,</span>
+<span class="tp">kafe-#</span> <span class="tc">  created_at  timestamptz NOT NULL DEFAULT now()</span>
+<span class="tp">kafe-#</span> <span class="tc">);</span>
+CREATE TABLE
+<span class="tp">kafe=#</span> <span class="tc">INSERT INTO reviews (product_id, customer_id, rating, comment) VALUES (1, 1, 5, &#x27;ឆ្ងាញ់ណាស់!&#x27;);</span>
+INSERT 0 1
+<span class="tp">kafe=#</span> <span class="tc">INSERT INTO reviews (product_id, rating) VALUES (1, 9);</span>
+<span class="te">ERROR:  new row for relation &quot;reviews&quot; violates check constraint &quot;reviews_rating_check&quot;</span>
+<span class="te">DETAIL:  Failing row contains (2, 1, null, 9, null, 2026-11-13 13:53:34.861087+07).</span>
+<span class="tp">kafe=#</span> <span class="tc">INSERT INTO reviews (product_id, rating) VALUES (999, 4);</span>
+<span class="te">ERROR:  insert or update on table &quot;reviews&quot; violates foreign key constraint &quot;reviews_product_id_fkey&quot;</span>
+<span class="te">DETAIL:  Key (product_id)=(999) is not present in table &quot;products&quot;.</span>
+<span class="tp">kafe=#</span> <span class="tc">INSERT INTO reviews (product_id) VALUES (1);</span>
+<span class="te">ERROR:  null value in column &quot;rating&quot; of relation &quot;reviews&quot; violates not-null constraint</span>
+<span class="te">DETAIL:  Failing row contains (4, 1, null, null, null, 2026-11-13 13:53:34.862153+07).</span>
+<span class="tp">kafe=#</span> <span class="tc">SELECT id, product_id, rating, comment FROM reviews;</span>
+ id | product_id | rating | comment  
+----+------------+--------+----------
+  1 |          1 |      5 | ឆ្ងាញ់ណាស់!
+(1 row)</pre></div>
+  <div class="note">💡 ដាក់ច្បាប់ក្នុង Database (Constraints) — ទោះ App មាន Bug ឬមនុស្សកែដោយដៃ ក៏ទិន្នន័យនៅតែត្រឹមត្រូវ (Defense in depth)។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ២</h4>
+    <p>បង្កើតតារាង <code class="i">coupons</code>៖ code (UNIQUE, ធំ ៤–២០ តួ), percent (1–90), expires_at (timestamptz), active (boolean default true)។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="sql" data-label="Answer" data-psql>
+CREATE TABLE coupons (
+  code       text PRIMARY KEY CHECK (code ~ '^[A-Z0-9]{4,20}$'),
+  percent    integer NOT NULL CHECK (percent BETWEEN 1 AND 90),
+  expires_at timestamptz NOT NULL,
+  active     boolean NOT NULL DEFAULT true
+);
+INSERT INTO coupons VALUES ('KAFE10', 10, '2026-12-31 23:59+07');
+INSERT INTO coupons VALUES ('bad code', 10, now());
+SELECT * FROM coupons;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">CREATE TABLE coupons (</span>
+<span class="tp">kafe-#</span> <span class="tc">  code       text PRIMARY KEY CHECK (code ~ &#x27;^[A-Z0-9]{4,20}$&#x27;),</span>
+<span class="tp">kafe-#</span> <span class="tc">  percent    integer NOT NULL CHECK (percent BETWEEN 1 AND 90),</span>
+<span class="tp">kafe-#</span> <span class="tc">  expires_at timestamptz NOT NULL,</span>
+<span class="tp">kafe-#</span> <span class="tc">  active     boolean NOT NULL DEFAULT true</span>
+<span class="tp">kafe-#</span> <span class="tc">);</span>
+CREATE TABLE
+<span class="tp">kafe=#</span> <span class="tc">INSERT INTO coupons VALUES (&#x27;KAFE10&#x27;, 10, &#x27;2026-12-31 23:59+07&#x27;);</span>
+INSERT 0 1
+<span class="tp">kafe=#</span> <span class="tc">INSERT INTO coupons VALUES (&#x27;bad code&#x27;, 10, now());</span>
+<span class="te">ERROR:  new row for relation &quot;coupons&quot; violates check constraint &quot;coupons_code_check&quot;</span>
+<span class="te">DETAIL:  Failing row contains (bad code, 10, 2026-11-13 13:53:34.947784+07, t).</span>
+<span class="tp">kafe=#</span> <span class="tc">SELECT * FROM coupons;</span>
+  code  | percent |       expires_at       | active 
+--------+---------+------------------------+--------
+ KAFE10 |      10 | 2026-12-31 23:59:00+07 | t
+(1 row)</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l3">
+  <h2><span class="badge">មេរៀន ៣</span>CRUD: INSERT ... RETURNING, UPDATE, DELETE, UPSERT</h2>
+  <script type="text/x-code" data-lang="sql" data-label="psql" data-psql>
+INSERT INTO products (name, category, price, stock)
+VALUES ('Mocha', 'coffee', 3.00, 20)
+RETURNING id, name, price;
+UPDATE products SET price = price * 1.1, stock = stock + 5
+WHERE category = 'tea'
+RETURNING name, price, stock;
+DELETE FROM products WHERE name = 'Mocha' RETURNING id, name;
+-- UPSERT: បើមានរួច → Update, បើគ្មាន → Insert
+INSERT INTO products (name, category, price, stock) VALUES ('Latte', 'coffee', 2.75, 10)
+ON CONFLICT (name) DO UPDATE SET price = EXCLUDED.price, stock = products.stock + EXCLUDED.stock
+RETURNING name, price, stock;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">INSERT INTO products (name, category, price, stock)</span>
+<span class="tp">kafe-#</span> <span class="tc">VALUES (&#x27;Mocha&#x27;, &#x27;coffee&#x27;, 3.00, 20)</span>
+<span class="tp">kafe-#</span> <span class="tc">RETURNING id, name, price;</span>
+ id | name  | price 
+----+-------+-------
+  7 | Mocha |  3.00
+(1 row)
+
+INSERT 0 1
+<span class="tp">kafe=#</span> <span class="tc">UPDATE products SET price = price * 1.1, stock = stock + 5</span>
+<span class="tp">kafe-#</span> <span class="tc">WHERE category = &#x27;tea&#x27;</span>
+<span class="tp">kafe-#</span> <span class="tc">RETURNING name, price, stock;</span>
+   name    | price | stock 
+-----------+-------+-------
+ Green Tea |  2.42 |    30
+ Lemon Tea |  1.65 |     5
+(2 rows)
+
+UPDATE 2
+<span class="tp">kafe=#</span> <span class="tc">DELETE FROM products WHERE name = &#x27;Mocha&#x27; RETURNING id, name;</span>
+ id | name  
+----+-------
+  7 | Mocha
+(1 row)
+
+DELETE 1
+<span class="tp">kafe=#</span> <span class="tc">INSERT INTO products (name, category, price, stock) VALUES (&#x27;Latte&#x27;, &#x27;coffee&#x27;, 2.75, 10)</span>
+<span class="tp">kafe-#</span> <span class="tc">ON CONFLICT (name) DO UPDATE SET price = EXCLUDED.price, stock = products.stock + EXCLUDED.stock</span>
+<span class="tp">kafe-#</span> <span class="tc">RETURNING name, price, stock;</span>
+ name  | price | stock 
+-------+-------+-------
+ Latte |  2.75 |    50
+(1 row)
+
+INSERT 0 1</pre></div>
+  <div class="warn">⚠️ <code class="i">UPDATE</code>/<code class="i">DELETE</code> គ្មាន <code class="i">WHERE</code> = ប៉ះពាល់ <b>គ្រប់ជួរ</b>។ ទម្លាប់ល្អ៖ សាក <code class="i">SELECT ... WHERE</code> មុន ឬរត់ក្នុង <code class="i">BEGIN; … ROLLBACK;</code>។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៣</h4>
+    <p>បញ្ចុះតម្លៃ 10% លើផលិតផល bakery ដែលស្តុក &gt; 10 ហើយ Return ឈ្មោះ តម្លៃចាស់ និងតម្លៃថ្មី។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="sql" data-label="Answer" data-psql>
+UPDATE products p SET price = round(p.price * 0.9, 2)
+FROM products old
+WHERE old.id = p.id AND p.category = 'bakery' AND p.stock > 10
+RETURNING p.name, old.price AS old_price, p.price AS new_price;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">UPDATE products p SET price = round(p.price * 0.9, 2)</span>
+<span class="tp">kafe-#</span> <span class="tc">FROM products old</span>
+<span class="tp">kafe-#</span> <span class="tc">WHERE old.id = p.id AND p.category = &#x27;bakery&#x27; AND p.stock &gt; 10</span>
+<span class="tp">kafe-#</span> <span class="tc">RETURNING p.name, old.price AS old_price, p.price AS new_price;</span>
+   name    | old_price | new_price 
+-----------+-----------+-----------
+ Croissant |      1.50 |      1.35
+(1 row)
+
+UPDATE 1</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l4">
+  <h2><span class="badge">មេរៀន ៤</span>SELECT: WHERE, ORDER BY, LIMIT, LIKE, NULL</h2>
+  <script type="text/x-code" data-lang="sql" data-label="psql" data-psql>
+SELECT name, price FROM products
+WHERE category IN ('coffee', 'tea') AND price BETWEEN 1.5 AND 2.3
+ORDER BY price DESC, name;
+SELECT name FROM products WHERE name ILIKE '%tea%';          -- ILIKE: មិនខ្វល់អក្សរធំតូច
+SELECT name, coalesce(phone, 'គ្មានលេខ') AS phone FROM customers WHERE phone IS NULL;
+SELECT name, price FROM products ORDER BY id LIMIT 2 OFFSET 2;  -- ទំព័រទី 2 (2 ក្នុងមួយទំព័រ)
+SELECT name, stock, CASE WHEN stock = 0 THEN 'អស់' WHEN stock < 15 THEN 'ជិតអស់' ELSE 'មាន' END AS status
+FROM products ORDER BY stock;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">SELECT name, price FROM products</span>
+<span class="tp">kafe-#</span> <span class="tc">WHERE category IN (&#x27;coffee&#x27;, &#x27;tea&#x27;) AND price BETWEEN 1.5 AND 2.3</span>
+<span class="tp">kafe-#</span> <span class="tc">ORDER BY price DESC, name;</span>
+       name        | price 
+-------------------+-------
+ Green Tea         |  2.20
+ Americano         |  2.00
+ Iced Khmer Coffee |  1.80
+ Lemon Tea         |  1.50
+(4 rows)
+
+<span class="tp">kafe=#</span> <span class="tc">SELECT name FROM products WHERE name ILIKE &#x27;%tea%&#x27;;          -- ILIKE: មិនខ្វល់អក្សរធំតូច</span>
+   name    
+-----------
+ Green Tea
+ Lemon Tea
+(2 rows)
+
+<span class="tp">kafe=#</span> <span class="tc">SELECT name, coalesce(phone, &#x27;គ្មានលេខ&#x27;) AS phone FROM customers WHERE phone IS NULL;</span>
+  name   |  phone  
+---------+---------
+ ម៉ៅ ស្រីនិច | គ្មានលេខ
+(1 row)
+
+<span class="tp">kafe=#</span> <span class="tc">SELECT name, price FROM products ORDER BY id LIMIT 2 OFFSET 2;  -- ទំព័រទី 2 (2 ក្នុងមួយទំព័រ)</span>
+       name        | price 
+-------------------+-------
+ Iced Khmer Coffee |  1.80
+ Green Tea         |  2.20
+(2 rows)
+
+<span class="tp">kafe=#</span> <span class="tc">SELECT name, stock, CASE WHEN stock = 0 THEN &#x27;អស់&#x27; WHEN stock &lt; 15 THEN &#x27;ជិតអស់&#x27; ELSE &#x27;មាន&#x27; END AS status</span>
+<span class="tp">kafe-#</span> <span class="tc">FROM products ORDER BY stock;</span>
+       name        | stock | status 
+-------------------+-------+--------
+ Lemon Tea         |     0 | អស់
+ Croissant         |    12 | ជិតអស់
+ Green Tea         |    25 | មាន
+ Americano         |    35 | មាន
+ Latte             |    40 | មាន
+ Iced Khmer Coffee |    50 | មាន
+(6 rows)</pre></div>
+  <div class="note">💡 <code class="i">NULL</code> មិនស្មើអ្វីទាំងអស់ (សូម្បី NULL)៖ ប្រើ <code class="i">IS NULL</code> មិនមែន <code class="i">= NULL</code>។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៤</h4>
+    <p>រកអតិថិជនដែលនៅភ្នំពេញ ឬមិនមានលេខទូរស័ព្ទ តម្រៀបតាមឈ្មោះ។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="sql" data-label="Answer" data-psql>
+SELECT name, city, phone FROM customers
+WHERE city = 'ភ្នំពេញ' OR phone IS NULL
+ORDER BY name;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">SELECT name, city, phone FROM customers</span>
+<span class="tp">kafe-#</span> <span class="tc">WHERE city = &#x27;ភ្នំពេញ&#x27; OR phone IS NULL</span>
+<span class="tp">kafe-#</span> <span class="tc">ORDER BY name;</span>
+   name   |  city  |   phone   
+----------+--------+-----------
+ ម៉ៅ ស្រីនិច  | បាត់ដំបង | ∅
+ សុខ ដារា  | ភ្នំពេញ  | 012345678
+ ហេង វិចិត្រ | ភ្នំពេញ  | 011223344
+(3 rows)</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l5">
+  <h2><span class="badge">មេរៀន ៥</span>JOIN: ភ្ជាប់តារាង</h2>
+  <script type="text/x-code" data-lang="sql" data-label="psql" data-psql>
+-- ការកុម្ម៉ង់ + ឈ្មោះអតិថិជន
+SELECT o.id, c.name AS customer, o.status, to_char(o.created_at AT TIME ZONE 'Asia/Phnom_Penh', 'DD/MM HH24:MI') AS at
+FROM orders o
+JOIN customers c ON c.id = o.customer_id
+ORDER BY o.id;
+-- ព័ត៌មានលម្អិត Order #6 (៣ តារាង)
+SELECT p.name, oi.qty, oi.unit_price, oi.qty * oi.unit_price AS line_total
+FROM order_items oi
+JOIN products p ON p.id = oi.product_id
+WHERE oi.order_id = 6;
+-- LEFT JOIN: អតិថិជនទាំងអស់ សូម្បីមិនធ្លាប់កុម្ម៉ង់
+SELECT c.name, count(o.id) AS orders
+FROM customers c LEFT JOIN orders o ON o.customer_id = c.id
+GROUP BY c.id ORDER BY orders DESC;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">SELECT o.id, c.name AS customer, o.status, to_char(o.created_at AT TIME ZONE &#x27;Asia/Phnom_Penh&#x27;, &#x27;DD/MM HH24:MI&#x27;) AS at</span>
+<span class="tp">kafe-#</span> <span class="tc">FROM orders o</span>
+<span class="tp">kafe-#</span> <span class="tc">JOIN customers c ON c.id = o.customer_id</span>
+<span class="tp">kafe-#</span> <span class="tc">ORDER BY o.id;</span>
+ id | customer |  status   |     at      
+----+----------+-----------+-------------
+  1 | សុខ ដារា  | paid      | 10/11 07:30
+  2 | ចាន់ លីណា  | paid      | 10/11 09:15
+  3 | សុខ ដារា  | paid      | 11/11 07:45
+  4 | ហេង វិចិត្រ | pending   | 12/11 08:05
+  5 | ចាន់ លីណា  | cancelled | 12/11 10:20
+  6 | សុខ ដារា  | paid      | 13/11 07:40
+(6 rows)
+
+<span class="tp">kafe=#</span> <span class="tc">SELECT p.name, oi.qty, oi.unit_price, oi.qty * oi.unit_price AS line_total</span>
+<span class="tp">kafe-#</span> <span class="tc">FROM order_items oi</span>
+<span class="tp">kafe-#</span> <span class="tc">JOIN products p ON p.id = oi.product_id</span>
+<span class="tp">kafe-#</span> <span class="tc">WHERE oi.order_id = 6;</span>
+       name        | qty | unit_price | line_total 
+-------------------+-----+------------+------------
+ Latte             |   1 |       2.50 |       2.50
+ Iced Khmer Coffee |   1 |       1.80 |       1.80
+ Croissant         |   2 |       1.50 |       3.00
+(3 rows)
+
+<span class="tp">kafe=#</span> <span class="tc">SELECT c.name, count(o.id) AS orders</span>
+<span class="tp">kafe-#</span> <span class="tc">FROM customers c LEFT JOIN orders o ON o.customer_id = c.id</span>
+<span class="tp">kafe-#</span> <span class="tc">GROUP BY c.id ORDER BY orders DESC;</span>
+   name   | orders 
+----------+--------
+ សុខ ដារា  |      3
+ ចាន់ លីណា  |      2
+ ហេង វិចិត្រ |      1
+ ម៉ៅ ស្រីនិច  |      0
+(4 rows)</pre></div>
+  <table>
+    <tr><th>JOIN</th><th>លទ្ធផល</th></tr>
+    <tr><td><code class="i">JOIN</code> (INNER)</td><td>តែជួរដែលត្រូវគ្នាទាំងសងខាង</td></tr>
+    <tr><td><code class="i">LEFT JOIN</code></td><td>ខាងឆ្វេងទាំងអស់ + ខាងស្តាំដែលត្រូវ (មិនត្រូវ = NULL)</td></tr>
+    <tr><td><code class="i">FULL JOIN</code> · <code class="i">CROSS JOIN</code></td><td>ទាំងអស់សងខាង · គ្រប់គូ</td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ៥</h4>
+    <p>រកផលិតផលដែល <b>មិនដែលត្រូវបានកុម្ម៉ង់</b>។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="sql" data-label="Answer" data-psql>
+SELECT p.name
+FROM products p
+LEFT JOIN order_items oi ON oi.product_id = p.id
+WHERE oi.product_id IS NULL;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">SELECT p.name</span>
+<span class="tp">kafe-#</span> <span class="tc">FROM products p</span>
+<span class="tp">kafe-#</span> <span class="tc">LEFT JOIN order_items oi ON oi.product_id = p.id</span>
+<span class="tp">kafe-#</span> <span class="tc">WHERE oi.product_id IS NULL;</span>
+   name    
+-----------
+ Lemon Tea
+(1 row)</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l6">
+  <h2><span class="badge">មេរៀន ៦</span>GROUP BY, Aggregates, HAVING, FILTER</h2>
+  <script type="text/x-code" data-lang="sql" data-label="psql" data-psql>
+-- ចំណូលតាមផលិតផល (តែ Order ដែលបានបង់)
+SELECT p.name, sum(oi.qty) AS cups, sum(oi.qty * oi.unit_price) AS revenue
+FROM order_items oi
+JOIN orders o   ON o.id = oi.order_id AND o.status = 'paid'
+JOIN products p ON p.id = oi.product_id
+GROUP BY p.name
+ORDER BY revenue DESC;
+-- អតិថិជនដែលចំណាយ > $5 (HAVING = WHERE សម្រាប់ Group)
+SELECT c.name, sum(oi.qty * oi.unit_price) AS spent
+FROM customers c
+JOIN orders o ON o.customer_id = c.id AND o.status = 'paid'
+JOIN order_items oi ON oi.order_id = o.id
+GROUP BY c.name
+HAVING sum(oi.qty * oi.unit_price) > 5;
+-- FILTER: រាប់តាមស្ថានភាពក្នុងជួរតែមួយ
+SELECT count(*) AS total,
+       count(*) FILTER (WHERE status = 'paid')      AS paid,
+       count(*) FILTER (WHERE status = 'pending')   AS pending,
+       count(*) FILTER (WHERE status = 'cancelled') AS cancelled
+FROM orders;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">SELECT p.name, sum(oi.qty) AS cups, sum(oi.qty * oi.unit_price) AS revenue</span>
+<span class="tp">kafe-#</span> <span class="tc">FROM order_items oi</span>
+<span class="tp">kafe-#</span> <span class="tc">JOIN orders o   ON o.id = oi.order_id AND o.status = &#x27;paid&#x27;</span>
+<span class="tp">kafe-#</span> <span class="tc">JOIN products p ON p.id = oi.product_id</span>
+<span class="tp">kafe-#</span> <span class="tc">GROUP BY p.name</span>
+<span class="tp">kafe-#</span> <span class="tc">ORDER BY revenue DESC;</span>
+       name        | cups | revenue 
+-------------------+------+---------
+ Latte             |    4 |   10.00
+ Iced Khmer Coffee |    3 |    5.40
+ Croissant         |    3 |    4.50
+ Green Tea         |    1 |    2.20
+(4 rows)
+
+<span class="tp">kafe=#</span> <span class="tc">SELECT c.name, sum(oi.qty * oi.unit_price) AS spent</span>
+<span class="tp">kafe-#</span> <span class="tc">FROM customers c</span>
+<span class="tp">kafe-#</span> <span class="tc">JOIN orders o ON o.customer_id = c.id AND o.status = &#x27;paid&#x27;</span>
+<span class="tp">kafe-#</span> <span class="tc">JOIN order_items oi ON oi.order_id = o.id</span>
+<span class="tp">kafe-#</span> <span class="tc">GROUP BY c.name</span>
+<span class="tp">kafe-#</span> <span class="tc">HAVING sum(oi.qty * oi.unit_price) &gt; 5;</span>
+  name   | spent 
+---------+-------
+ ចាន់ លីណា |  5.80
+ សុខ ដារា | 16.30
+(2 rows)
+
+<span class="tp">kafe=#</span> <span class="tc">SELECT count(*) AS total,</span>
+<span class="tp">kafe-#</span> <span class="tc">       count(*) FILTER (WHERE status = &#x27;paid&#x27;)      AS paid,</span>
+<span class="tp">kafe-#</span> <span class="tc">       count(*) FILTER (WHERE status = &#x27;pending&#x27;)   AS pending,</span>
+<span class="tp">kafe-#</span> <span class="tc">       count(*) FILTER (WHERE status = &#x27;cancelled&#x27;) AS cancelled</span>
+<span class="tp">kafe-#</span> <span class="tc">FROM orders;</span>
+ total | paid | pending | cancelled 
+-------+------+---------+-----------
+     6 |    4 |       1 |         1
+(1 row)</pre></div>
+  <div class="ex"><h4>✍️ លំហាត់ ៦</h4>
+    <p>គណនាចំណូល (paid) តាមថ្ងៃ (ម៉ោងកម្ពុជា)។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="sql" data-label="Answer" data-psql>
+SELECT (o.created_at AT TIME ZONE 'Asia/Phnom_Penh')::date AS day,
+       count(DISTINCT o.id) AS orders,
+       sum(oi.qty * oi.unit_price) AS revenue
+FROM orders o JOIN order_items oi ON oi.order_id = o.id
+WHERE o.status = 'paid'
+GROUP BY day ORDER BY day;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">SELECT (o.created_at AT TIME ZONE &#x27;Asia/Phnom_Penh&#x27;)::date AS day,</span>
+<span class="tp">kafe-#</span> <span class="tc">       count(DISTINCT o.id) AS orders,</span>
+<span class="tp">kafe-#</span> <span class="tc">       sum(oi.qty * oi.unit_price) AS revenue</span>
+<span class="tp">kafe-#</span> <span class="tc">FROM orders o JOIN order_items oi ON oi.order_id = o.id</span>
+<span class="tp">kafe-#</span> <span class="tc">WHERE o.status = &#x27;paid&#x27;</span>
+<span class="tp">kafe-#</span> <span class="tc">GROUP BY day ORDER BY day;</span>
+    day     | orders | revenue 
+------------+--------+---------
+ 2026-11-10 |      2 |   12.30
+ 2026-11-11 |      1 |    2.50
+ 2026-11-13 |      1 |    7.30
+(3 rows)</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l7">
+  <h2><span class="badge">មេរៀន ៧</span>Subqueries & CTE (WITH)</h2>
+  <script type="text/x-code" data-lang="sql" data-label="psql" data-psql>
+-- ផលិតផលដែលថ្លៃជាងមធ្យម
+SELECT name, price FROM products
+WHERE price > (SELECT avg(price) FROM products)
+ORDER BY price DESC;
+-- CTE: បំបែក Query ស្មុគស្មាញជាជំហានដែលមានឈ្មោះ
+WITH order_totals AS (
+  SELECT o.id, o.customer_id, sum(oi.qty * oi.unit_price) AS total
+  FROM orders o JOIN order_items oi ON oi.order_id = o.id
+  WHERE o.status = 'paid'
+  GROUP BY o.id
+), per_customer AS (
+  SELECT customer_id, count(*) AS orders, sum(total) AS spent, round(avg(total), 2) AS aov
+  FROM order_totals GROUP BY customer_id
+)
+SELECT c.name, pc.orders, pc.spent, pc.aov
+FROM per_customer pc JOIN customers c ON c.id = pc.customer_id
+ORDER BY pc.spent DESC;
+-- EXISTS: អតិថិជនដែលធ្លាប់ទិញ Croissant
+SELECT name FROM customers c
+WHERE EXISTS (SELECT 1 FROM orders o JOIN order_items oi ON oi.order_id = o.id
+              WHERE o.customer_id = c.id AND oi.product_id = 6);
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">SELECT name, price FROM products</span>
+<span class="tp">kafe-#</span> <span class="tc">WHERE price &gt; (SELECT avg(price) FROM products)</span>
+<span class="tp">kafe-#</span> <span class="tc">ORDER BY price DESC;</span>
+   name    | price 
+-----------+-------
+ Latte     |  2.50
+ Green Tea |  2.20
+ Americano |  2.00
+(3 rows)
+
+<span class="tp">kafe=#</span> <span class="tc">WITH order_totals AS (</span>
+<span class="tp">kafe-#</span> <span class="tc">  SELECT o.id, o.customer_id, sum(oi.qty * oi.unit_price) AS total</span>
+<span class="tp">kafe-#</span> <span class="tc">  FROM orders o JOIN order_items oi ON oi.order_id = o.id</span>
+<span class="tp">kafe-#</span> <span class="tc">  WHERE o.status = &#x27;paid&#x27;</span>
+<span class="tp">kafe-#</span> <span class="tc">  GROUP BY o.id</span>
+<span class="tp">kafe-#</span> <span class="tc">), per_customer AS (</span>
+<span class="tp">kafe-#</span> <span class="tc">  SELECT customer_id, count(*) AS orders, sum(total) AS spent, round(avg(total), 2) AS aov</span>
+<span class="tp">kafe-#</span> <span class="tc">  FROM order_totals GROUP BY customer_id</span>
+<span class="tp">kafe-#</span> <span class="tc">)</span>
+<span class="tp">kafe-#</span> <span class="tc">SELECT c.name, pc.orders, pc.spent, pc.aov</span>
+<span class="tp">kafe-#</span> <span class="tc">FROM per_customer pc JOIN customers c ON c.id = pc.customer_id</span>
+<span class="tp">kafe-#</span> <span class="tc">ORDER BY pc.spent DESC;</span>
+  name   | orders | spent | aov  
+---------+--------+-------+------
+ សុខ ដារា |      3 | 16.30 | 5.43
+ ចាន់ លីណា |      1 |  5.80 | 5.80
+(2 rows)
+
+<span class="tp">kafe=#</span> <span class="tc">SELECT name FROM customers c</span>
+<span class="tp">kafe-#</span> <span class="tc">WHERE EXISTS (SELECT 1 FROM orders o JOIN order_items oi ON oi.order_id = o.id</span>
+<span class="tp">kafe-#</span> <span class="tc">              WHERE o.customer_id = c.id AND oi.product_id = 6);</span>
+   name   
+----------
+ សុខ ដារា
+ ហេង វិចិត្រ
+(2 rows)</pre></div>
+  <div class="ex"><h4>✍️ លំហាត់ ៧</h4>
+    <p>ប្រើ CTE រក Order ដែលមានតម្លៃសរុបខ្ពស់បំផុត (រួមទាំងឈ្មោះអតិថិជន)។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="sql" data-label="Answer" data-psql>
+WITH totals AS (
+  SELECT order_id, sum(qty * unit_price) AS total FROM order_items GROUP BY order_id
+)
+SELECT t.order_id, c.name, t.total
+FROM totals t JOIN orders o ON o.id = t.order_id JOIN customers c ON c.id = o.customer_id
+ORDER BY t.total DESC LIMIT 1;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">WITH totals AS (</span>
+<span class="tp">kafe-#</span> <span class="tc">  SELECT order_id, sum(qty * unit_price) AS total FROM order_items GROUP BY order_id</span>
+<span class="tp">kafe-#</span> <span class="tc">)</span>
+<span class="tp">kafe-#</span> <span class="tc">SELECT t.order_id, c.name, t.total</span>
+<span class="tp">kafe-#</span> <span class="tc">FROM totals t JOIN orders o ON o.id = t.order_id JOIN customers c ON c.id = o.customer_id</span>
+<span class="tp">kafe-#</span> <span class="tc">ORDER BY t.total DESC LIMIT 1;</span>
+ order_id |   name   | total 
+----------+----------+-------
+        4 | ហេង វិចិត្រ |  9.00
+(1 row)</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l8">
+  <h2><span class="badge">មេរៀន ៨</span>Window Functions: Ranking, Running total, LAG</h2>
+  <p>Window function គណនាលើ «ក្រុមជួរ» ដោយ <b>មិនបង្រួមជួរ</b> (ខុសពី GROUP BY)។</p>
+  <script type="text/x-code" data-lang="sql" data-label="psql" data-psql>
+-- ចំណាត់ថ្នាក់តម្លៃក្នុងប្រភេទនីមួយៗ
+SELECT category, name, price,
+       rank() OVER (PARTITION BY category ORDER BY price DESC) AS rank_in_cat
+FROM products ORDER BY category, rank_in_cat;
+-- ចំណូលប្រចាំថ្ងៃ + សរុបបង្គរ + ប្រៀបធៀបថ្ងៃមុន
+WITH daily AS (
+  SELECT (o.created_at AT TIME ZONE 'Asia/Phnom_Penh')::date AS day, sum(oi.qty * oi.unit_price) AS revenue
+  FROM orders o JOIN order_items oi ON oi.order_id = o.id
+  WHERE o.status = 'paid' GROUP BY 1
+)
+SELECT day, revenue,
+       sum(revenue) OVER (ORDER BY day) AS running_total,
+       revenue - lag(revenue) OVER (ORDER BY day) AS vs_prev_day
+FROM daily ORDER BY day;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">SELECT category, name, price,</span>
+<span class="tp">kafe-#</span> <span class="tc">       rank() OVER (PARTITION BY category ORDER BY price DESC) AS rank_in_cat</span>
+<span class="tp">kafe-#</span> <span class="tc">FROM products ORDER BY category, rank_in_cat;</span>
+ category |       name        | price | rank_in_cat 
+----------+-------------------+-------+-------------
+ bakery   | Croissant         |  1.50 |           1
+ coffee   | Latte             |  2.50 |           1
+ coffee   | Americano         |  2.00 |           2
+ coffee   | Iced Khmer Coffee |  1.80 |           3
+ tea      | Green Tea         |  2.20 |           1
+ tea      | Lemon Tea         |  1.50 |           2
+(6 rows)
+
+<span class="tp">kafe=#</span> <span class="tc">WITH daily AS (</span>
+<span class="tp">kafe-#</span> <span class="tc">  SELECT (o.created_at AT TIME ZONE &#x27;Asia/Phnom_Penh&#x27;)::date AS day, sum(oi.qty * oi.unit_price) AS revenue</span>
+<span class="tp">kafe-#</span> <span class="tc">  FROM orders o JOIN order_items oi ON oi.order_id = o.id</span>
+<span class="tp">kafe-#</span> <span class="tc">  WHERE o.status = &#x27;paid&#x27; GROUP BY 1</span>
+<span class="tp">kafe-#</span> <span class="tc">)</span>
+<span class="tp">kafe-#</span> <span class="tc">SELECT day, revenue,</span>
+<span class="tp">kafe-#</span> <span class="tc">       sum(revenue) OVER (ORDER BY day) AS running_total,</span>
+<span class="tp">kafe-#</span> <span class="tc">       revenue - lag(revenue) OVER (ORDER BY day) AS vs_prev_day</span>
+<span class="tp">kafe-#</span> <span class="tc">FROM daily ORDER BY day;</span>
+    day     | revenue | running_total | vs_prev_day 
+------------+---------+---------------+-------------
+ 2026-11-10 |   12.30 |         12.30 |           ∅
+ 2026-11-11 |    2.50 |         14.80 |       -9.80
+ 2026-11-13 |    7.30 |         22.10 |        4.80
+(3 rows)</pre></div>
+  <div class="ex"><h4>✍️ លំហាត់ ៨</h4>
+    <p>សម្រាប់អតិថិជននីមួយៗ បង្ហាញ Order របស់គេ ជាមួយលេខរៀង «Order ទី N» (ROW_NUMBER) តាមពេលវេលា។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="sql" data-label="Answer" data-psql>
+SELECT c.name, o.id AS order_id,
+       row_number() OVER (PARTITION BY c.id ORDER BY o.created_at) AS nth_order
+FROM orders o JOIN customers c ON c.id = o.customer_id
+ORDER BY c.name, nth_order;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">SELECT c.name, o.id AS order_id,</span>
+<span class="tp">kafe-#</span> <span class="tc">       row_number() OVER (PARTITION BY c.id ORDER BY o.created_at) AS nth_order</span>
+<span class="tp">kafe-#</span> <span class="tc">FROM orders o JOIN customers c ON c.id = o.customer_id</span>
+<span class="tp">kafe-#</span> <span class="tc">ORDER BY c.name, nth_order;</span>
+   name   | order_id | nth_order 
+----------+----------+-----------
+ ចាន់ លីណា  |        2 |         1
+ ចាន់ លីណា  |        5 |         2
+ សុខ ដារា  |        1 |         1
+ សុខ ដារា  |        3 |         2
+ សុខ ដារា  |        6 |         3
+ ហេង វិចិត្រ |        4 |         1
+(6 rows)</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l9">
+  <h2><span class="badge">មេរៀន ៩</span>Transactions, ACID & Locking</h2>
+  <p><b>ACID</b>៖ <b>A</b>tomicity (ទាំងអស់ ឬគ្មាន) · <b>C</b>onsistency (Constraints គោរព) · <b>I</b>solation (Transaction មិនរំខានគ្នា) · <b>D</b>urability (Commit ហើយមិនបាត់)។</p>
+  <script type="text/x-code" data-lang="sql" data-label="psql — Transaction បរាជ័យ → Rollback ទាំងមូល" data-psql>
+SELECT id, name, stock FROM products WHERE id IN (1, 5);
+BEGIN;
+INSERT INTO orders (customer_id, status, created_at) VALUES (4, 'paid', now());
+UPDATE products SET stock = stock - 1 WHERE id = 1;
+UPDATE products SET stock = stock - 1 WHERE id = 5;   -- Lemon Tea stock = 0 → CHECK (stock >= 0) បរាជ័យ
+COMMIT;                                               -- Transaction aborted → ROLLBACK
+SELECT id, name, stock FROM products WHERE id IN (1, 5);   -- Latte មិនត្រូវបានកាត់ស្តុក ✓
+SELECT count(*) AS orders_of_customer_4 FROM orders WHERE customer_id = 4;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">SELECT id, name, stock FROM products WHERE id IN (1, 5);</span>
+ id |   name    | stock 
+----+-----------+-------
+  1 | Latte     |    40
+  5 | Lemon Tea |     0
+(2 rows)
+
+<span class="tp">kafe=#</span> <span class="tc">BEGIN;</span>
+BEGIN
+<span class="tp">kafe=#</span> <span class="tc">INSERT INTO orders (customer_id, status, created_at) VALUES (4, &#x27;paid&#x27;, now());</span>
+INSERT 0 1
+<span class="tp">kafe=#</span> <span class="tc">UPDATE products SET stock = stock - 1 WHERE id = 1;</span>
+UPDATE 1
+<span class="tp">kafe=#</span> <span class="tc">UPDATE products SET stock = stock - 1 WHERE id = 5;   -- Lemon Tea stock = 0 → CHECK (stock &gt;= 0) បរាជ័យ</span>
+<span class="te">ERROR:  new row for relation &quot;products&quot; violates check constraint &quot;products_stock_check&quot;</span>
+<span class="te">DETAIL:  Failing row contains (5, Lemon Tea, tea, 1.50, -1).</span>
+<span class="tp">kafe=#</span> <span class="tc">COMMIT;                                               -- Transaction aborted → ROLLBACK</span>
+ROLLBACK
+<span class="tp">kafe=#</span> <span class="tc">SELECT id, name, stock FROM products WHERE id IN (1, 5);   -- Latte មិនត្រូវបានកាត់ស្តុក ✓</span>
+ id |   name    | stock 
+----+-----------+-------
+  1 | Latte     |    40
+  5 | Lemon Tea |     0
+(2 rows)
+
+<span class="tp">kafe=#</span> <span class="tc">SELECT count(*) AS orders_of_customer_4 FROM orders WHERE customer_id = 4;</span>
+ orders_of_customer_4 
+----------------------
+                    0
+(1 row)</pre></div>
+  <script type="text/x-code" data-lang="sql" data-label="Locking: ការពារការលក់លើសស្តុក ពេលមនុស្ស ២ នាក់ទិញព្រមគ្នា">
+BEGIN;
+SELECT stock FROM products WHERE id = 1 FOR UPDATE;   -- ចាក់សោជួរនេះ · Transaction ផ្សេងត្រូវរង់ចាំ
+-- ពិនិត្យ stock >= qty ក្នុង App/Function …
+UPDATE products SET stock = stock - 2 WHERE id = 1;
+COMMIT;                                                -- ដោះសោ
+-- ឬសាមញ្ញជាង (Atomic conditional update):
+UPDATE products SET stock = stock - 2 WHERE id = 1 AND stock >= 2 RETURNING stock;   -- 0 rows = មិនគ្រប់
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ៩</h4>
+    <p>ផ្ទេរស្តុក 5 ពី Latte ទៅ Mocha (ផលិតផលថ្មី) ក្នុង Transaction តែមួយ ហើយប្រើ SAVEPOINT ដើម្បីត្រឡប់តែផ្នែកមួយពេល Error។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="sql" data-label="Answer" data-psql>
+BEGIN;
+INSERT INTO products (name, category, price, stock) VALUES ('Mocha', 'coffee', 3.00, 0);
+SAVEPOINT before_move;
+UPDATE products SET stock = stock - 500 WHERE name = 'Latte';   -- ខុស (លើសស្តុក)
+ROLLBACK TO SAVEPOINT before_move;                               -- ត្រឡប់តែផ្នែកនេះ
+UPDATE products SET stock = stock - 5 WHERE name = 'Latte';
+UPDATE products SET stock = stock + 5 WHERE name = 'Mocha';
+COMMIT;
+SELECT name, stock FROM products WHERE name IN ('Latte', 'Mocha');
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">BEGIN;</span>
+BEGIN
+<span class="tp">kafe=#</span> <span class="tc">INSERT INTO products (name, category, price, stock) VALUES (&#x27;Mocha&#x27;, &#x27;coffee&#x27;, 3.00, 0);</span>
+INSERT 0 1
+<span class="tp">kafe=#</span> <span class="tc">SAVEPOINT before_move;</span>
+SAVEPOINT
+<span class="tp">kafe=#</span> <span class="tc">UPDATE products SET stock = stock - 500 WHERE name = &#x27;Latte&#x27;;   -- ខុស (លើសស្តុក)</span>
+<span class="te">ERROR:  new row for relation &quot;products&quot; violates check constraint &quot;products_stock_check&quot;</span>
+<span class="te">DETAIL:  Failing row contains (1, Latte, coffee, 2.50, -460).</span>
+<span class="tp">kafe=#</span> <span class="tc">ROLLBACK TO SAVEPOINT before_move;                               -- ត្រឡប់តែផ្នែកនេះ</span>
+ROLLBACK
+<span class="tp">kafe=#</span> <span class="tc">UPDATE products SET stock = stock - 5 WHERE name = &#x27;Latte&#x27;;</span>
+UPDATE 1
+<span class="tp">kafe=#</span> <span class="tc">UPDATE products SET stock = stock + 5 WHERE name = &#x27;Mocha&#x27;;</span>
+UPDATE 1
+<span class="tp">kafe=#</span> <span class="tc">COMMIT;</span>
+COMMIT
+<span class="tp">kafe=#</span> <span class="tc">SELECT name, stock FROM products WHERE name IN (&#x27;Latte&#x27;, &#x27;Mocha&#x27;);</span>
+ name  | stock 
+-------+-------
+ Latte |    35
+ Mocha |     5
+(2 rows)</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l10">
+  <h2><span class="badge">មេរៀន ១០</span>Indexes & EXPLAIN ANALYZE</h2>
+  <p>ខាងក្រោមបង្កើត Orders <b>200,000</b> ជួរ ដោយ <code class="i">generate_series</code> ហើយប្រៀបធៀបមុន/ក្រោយបង្កើត Index (លទ្ធផល និងល្បឿនពិត)។</p>
+  <script type="text/x-code" data-lang="sql" data-label="psql" data-psql>
+INSERT INTO orders (customer_id, status, created_at)
+SELECT 1 + (g % 4), (ARRAY['paid','pending','cancelled'])[1 + g % 3], '2025-01-01'::timestamptz + g * interval '3 minutes'
+FROM generate_series(1, 200000) g;
+ANALYZE orders;
+EXPLAIN (ANALYZE, COSTS OFF, TIMING OFF, SUMMARY OFF) SELECT count(*) FROM orders WHERE created_at >= '2026-02-01' AND created_at < '2026-02-02';
+CREATE INDEX orders_created_at_idx ON orders (created_at);
+EXPLAIN (ANALYZE, COSTS OFF, TIMING OFF, SUMMARY OFF) SELECT count(*) FROM orders WHERE created_at >= '2026-02-01' AND created_at < '2026-02-02';
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">INSERT INTO orders (customer_id, status, created_at)</span>
+<span class="tp">kafe-#</span> <span class="tc">SELECT 1 + (g % 4), (ARRAY[&#x27;paid&#x27;,&#x27;pending&#x27;,&#x27;cancelled&#x27;])[1 + g % 3], &#x27;2025-01-01&#x27;::timestamptz + g * interval &#x27;3 minutes&#x27;</span>
+<span class="tp">kafe-#</span> <span class="tc">FROM generate_series(1, 200000) g;</span>
+INSERT 0 200000
+<span class="tp">kafe=#</span> <span class="tc">ANALYZE orders;</span>
+ANALYZE
+<span class="tp">kafe=#</span> <span class="tc">EXPLAIN (ANALYZE, COSTS OFF, TIMING OFF, SUMMARY OFF) SELECT count(*) FROM orders WHERE created_at &gt;= &#x27;2026-02-01&#x27; AND created_at &lt; &#x27;2026-02-02&#x27;;</span>
+                                                                               QUERY PLAN                                                                               
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize Aggregate (actual rows=1 loops=1)
+   -&gt;  Gather (actual rows=2 loops=1)
+         Workers Planned: 1
+         Workers Launched: 1
+         -&gt;  Partial Aggregate (actual rows=1 loops=2)
+               -&gt;  Parallel Seq Scan on orders (actual rows=240 loops=2)
+                     Filter: ((created_at &gt;= &#x27;2026-02-01 00:00:00+07&#x27;::timestamp with time zone) AND (created_at &lt; &#x27;2026-02-02 00:00:00+07&#x27;::timestamp with time zone))
+                     Rows Removed by Filter: 99763
+(8 rows)
+
+<span class="tp">kafe=#</span> <span class="tc">CREATE INDEX orders_created_at_idx ON orders (created_at);</span>
+CREATE INDEX
+<span class="tp">kafe=#</span> <span class="tc">EXPLAIN (ANALYZE, COSTS OFF, TIMING OFF, SUMMARY OFF) SELECT count(*) FROM orders WHERE created_at &gt;= &#x27;2026-02-01&#x27; AND created_at &lt; &#x27;2026-02-02&#x27;;</span>
+                                                                           QUERY PLAN                                                                           
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate (actual rows=1 loops=1)
+   -&gt;  Index Only Scan using orders_created_at_idx on orders (actual rows=480 loops=1)
+         Index Cond: ((created_at &gt;= &#x27;2026-02-01 00:00:00+07&#x27;::timestamp with time zone) AND (created_at &lt; &#x27;2026-02-02 00:00:00+07&#x27;::timestamp with time zone))
+         Heap Fetches: 480
+(4 rows)</pre></div>
+  <table>
+    <tr><th>ដាក់ Index លើ</th><th>ហេតុផល</th></tr>
+    <tr><td>Foreign keys (<code class="i">orders.customer_id</code>)</td><td>Postgres <b>មិន</b>បង្កើតដោយស្វ័យប្រវត្តិ — JOIN/DELETE លឿន</td></tr>
+    <tr><td>Column ក្នុង WHERE/ORDER BY ញឹកញាប់</td><td><code class="i">created_at</code>, <code class="i">status</code>, <code class="i">email</code></td></tr>
+    <tr><td>Composite <code class="i">(status, created_at)</code></td><td>Query ដែលប្រើទាំងពីរ</td></tr>
+    <tr><td>Partial <code class="i">WHERE status = 'pending'</code></td><td>Index តូច សម្រាប់ផ្នែកដែលប្រើញឹក</td></tr>
+    <tr><td>GIN (jsonb, full-text) · <code class="i">lower(email)</code></td><td>ប្រភេទពិសេស / Expression</td></tr>
+  </table>
+  <div class="warn">⚠️ Index ធ្វើឱ្យ <b>អាន</b>លឿន ប៉ុន្តែ <b>សរសេរ</b>យឺតបន្តិច និងប្រើ Disk — បង្កើតតាមតម្រូវការពិត (ពិនិត្យ EXPLAIN) មិនមែនគ្រប់ Column។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ១០</h4>
+    <p>Query <code class="i">SELECT * FROM orders WHERE customer_id = 2 AND status = 'pending' ORDER BY created_at DESC LIMIT 20</code> យឺត។ ស្នើ Index មួយ។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="sql" data-label="Answer">
+CREATE INDEX orders_customer_status_created_idx ON orders (customer_id, status, created_at DESC);
+-- Column ស្មើ (=) មុន · Column តម្រៀបចុងក្រោយ → Index Scan ហើយ LIMIT 20 ឈប់ភ្លាម
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l11">
+  <h2><span class="badge">មេរៀន ១១</span>JSONB, Arrays, Full-text Search, Views</h2>
+  <script type="text/x-code" data-lang="sql" data-label="psql" data-psql>
+ALTER TABLE products ADD COLUMN attrs jsonb NOT NULL DEFAULT '{}', ADD COLUMN tags text[] NOT NULL DEFAULT '{}';
+UPDATE products SET attrs = '{"sizes": ["S","M","L"], "hot": true}', tags = '{popular,signature}' WHERE name = 'Latte';
+UPDATE products SET attrs = '{"sizes": ["M"], "hot": false}', tags = '{iced}' WHERE name = 'Iced Khmer Coffee';
+SELECT name, attrs->>'hot' AS hot, attrs->'sizes' AS sizes, tags FROM products WHERE attrs ? 'sizes';
+SELECT name FROM products WHERE attrs @> '{"hot": true}' OR 'iced' = ANY(tags);
+-- Full-text search
+SELECT name FROM products WHERE to_tsvector('simple', name) @@ to_tsquery('simple', 'tea | coffee');
+-- View: Query ដែលមានឈ្មោះ
+CREATE VIEW product_sales AS
+SELECT p.id, p.name, coalesce(sum(oi.qty), 0) AS sold
+FROM products p LEFT JOIN order_items oi ON oi.product_id = p.id GROUP BY p.id;
+SELECT * FROM product_sales ORDER BY sold DESC LIMIT 3;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">ALTER TABLE products ADD COLUMN attrs jsonb NOT NULL DEFAULT &#x27;{}&#x27;, ADD COLUMN tags text[] NOT NULL DEFAULT &#x27;{}&#x27;;</span>
+ALTER TABLE
+<span class="tp">kafe=#</span> <span class="tc">UPDATE products SET attrs = &#x27;{&quot;sizes&quot;: [&quot;S&quot;,&quot;M&quot;,&quot;L&quot;], &quot;hot&quot;: true}&#x27;, tags = &#x27;{popular,signature}&#x27; WHERE name = &#x27;Latte&#x27;;</span>
+UPDATE 1
+<span class="tp">kafe=#</span> <span class="tc">UPDATE products SET attrs = &#x27;{&quot;sizes&quot;: [&quot;M&quot;], &quot;hot&quot;: false}&#x27;, tags = &#x27;{iced}&#x27; WHERE name = &#x27;Iced Khmer Coffee&#x27;;</span>
+UPDATE 1
+<span class="tp">kafe=#</span> <span class="tc">SELECT name, attrs-&gt;&gt;&#x27;hot&#x27; AS hot, attrs-&gt;&#x27;sizes&#x27; AS sizes, tags FROM products WHERE attrs ? &#x27;sizes&#x27;;</span>
+       name        |  hot  |      sizes      |        tags         
+-------------------+-------+-----------------+---------------------
+ Latte             | true  | [&quot;S&quot;, &quot;M&quot;, &quot;L&quot;] | {popular,signature}
+ Iced Khmer Coffee | false | [&quot;M&quot;]           | {iced}
+(2 rows)
+
+<span class="tp">kafe=#</span> <span class="tc">SELECT name FROM products WHERE attrs @&gt; &#x27;{&quot;hot&quot;: true}&#x27; OR &#x27;iced&#x27; = ANY(tags);</span>
+       name        
+-------------------
+ Latte
+ Iced Khmer Coffee
+(2 rows)
+
+<span class="tp">kafe=#</span> <span class="tc">SELECT name FROM products WHERE to_tsvector(&#x27;simple&#x27;, name) @@ to_tsquery(&#x27;simple&#x27;, &#x27;tea | coffee&#x27;);</span>
+       name        
+-------------------
+ Green Tea
+ Lemon Tea
+ Iced Khmer Coffee
+(3 rows)
+
+<span class="tp">kafe=#</span> <span class="tc">CREATE VIEW product_sales AS</span>
+<span class="tp">kafe-#</span> <span class="tc">SELECT p.id, p.name, coalesce(sum(oi.qty), 0) AS sold</span>
+<span class="tp">kafe-#</span> <span class="tc">FROM products p LEFT JOIN order_items oi ON oi.product_id = p.id GROUP BY p.id;</span>
+CREATE VIEW
+<span class="tp">kafe=#</span> <span class="tc">SELECT * FROM product_sales ORDER BY sold DESC LIMIT 3;</span>
+ id |   name    | sold 
+----+-----------+------
+  6 | Croissant |    5
+  1 | Latte     |    5
+  2 | Americano |    3
+(3 rows)</pre></div>
+  <div class="ex"><h4>✍️ លំហាត់ ១១</h4>
+    <p>រកផលិតផលដែលមាន Size «L» ក្នុង <code class="i">attrs.sizes</code>។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="sql" data-label="Answer">
+SELECT name FROM products WHERE attrs->'sizes' ? 'L';
+-- ឬ: WHERE attrs @> '{"sizes": ["L"]}'   (ប្រើ GIN index បាន: CREATE INDEX ON products USING gin (attrs);)
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l12">
+  <h2><span class="badge">មេរៀន ១២</span>Security, Roles, Backup & Migrations</h2>
+  <script type="text/x-code" data-lang="sql" data-label="psql — Least privilege: App user មិនមែន superuser" data-psql>
+CREATE ROLE kafe_app LOGIN PASSWORD 'change-me';
+GRANT SELECT, INSERT, UPDATE ON products, orders, order_items, customers TO kafe_app;
+GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO kafe_app;
+SET ROLE kafe_app;
+SELECT count(*) FROM products;          -- ✅
+DELETE FROM customers WHERE id = 4;      -- ❌ គ្មានសិទ្ធិ DELETE
+DROP TABLE products;                     -- ❌ គ្មានសិទ្ធិ DROP
+RESET ROLE;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">CREATE ROLE kafe_app LOGIN PASSWORD &#x27;change-me&#x27;;</span>
+CREATE ROLE
+<span class="tp">kafe=#</span> <span class="tc">GRANT SELECT, INSERT, UPDATE ON products, orders, order_items, customers TO kafe_app;</span>
+GRANT
+<span class="tp">kafe=#</span> <span class="tc">GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO kafe_app;</span>
+GRANT
+<span class="tp">kafe=#</span> <span class="tc">SET ROLE kafe_app;</span>
+SET
+<span class="tp">kafe=#</span> <span class="tc">SELECT count(*) FROM products;          -- ✅</span>
+ count 
+-------
+     6
+(1 row)
+
+<span class="tp">kafe=#</span> <span class="tc">DELETE FROM customers WHERE id = 4;      -- ❌ គ្មានសិទ្ធិ DELETE</span>
+<span class="te">ERROR:  permission denied for table customers</span>
+<span class="tp">kafe=#</span> <span class="tc">DROP TABLE products;                     -- ❌ គ្មានសិទ្ធិ DROP</span>
+<span class="te">ERROR:  must be owner of table products</span>
+<span class="tp">kafe=#</span> <span class="tc">RESET ROLE;</span>
+RESET</pre></div>
+  <script type="text/x-code" data-lang="bash" data-label="Backup & Restore">
+pg_dump -Fc -d "$DATABASE_URL" -f kafe-$(date +%F).dump          # Backup (Custom format, បង្ហាប់)
+pg_restore --clean --if-exists -d "$RESTORE_URL" kafe-2026-11-13.dump   # Restore
+pg_dump --schema-only -d kafe > schema.sql                        # តែរចនាសម្ព័ន្ធ
+# Cloud (Neon/Supabase/RDS) មាន Point-in-time recovery — តែនៅតែសាក Restore ជាប្រចាំ!
+</script>
+  <ul>
+    <li><b>Migrations</b>៖ ការប្តូរ Schema ជា File SQL ដែលមានលំដាប់ (001_init.sql, 002_add_reviews.sql) ក្នុង Git — កុំកែ Production ដោយដៃ (Prisma Migrate ធ្វើដោយស្វ័យប្រវត្តិ)</li>
+    <li><b>SQL Injection</b>៖ ប្រើ Parameterized queries ជានិច្ច (Prisma/Driver ធ្វើឱ្យ)</li>
+    <li><b>Network</b>៖ Database មិនបើកទៅ Internet · SSL · Password វែងក្នុង Env</li>
+  </ul>
+  <div class="ex"><h4>✍️ លំហាត់ ១២</h4>
+    <p>បង្កើត Role <code class="i">kafe_report</code> សម្រាប់ Analyst ដែលអានបានតែប៉ុណ្ណោះ (គ្រប់ Table ក្នុង public)។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="sql" data-label="Answer" data-psql>
+CREATE ROLE kafe_report LOGIN PASSWORD 'change-me';
+GRANT USAGE ON SCHEMA public TO kafe_report;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO kafe_report;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO kafe_report;   -- Table ថ្មីៗក្នុងពេលអនាគត
+SET ROLE kafe_report;
+SELECT count(*) FROM orders;
+UPDATE products SET price = 0;
+RESET ROLE;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">CREATE ROLE kafe_report LOGIN PASSWORD &#x27;change-me&#x27;;</span>
+CREATE ROLE
+<span class="tp">kafe=#</span> <span class="tc">GRANT USAGE ON SCHEMA public TO kafe_report;</span>
+GRANT
+<span class="tp">kafe=#</span> <span class="tc">GRANT SELECT ON ALL TABLES IN SCHEMA public TO kafe_report;</span>
+GRANT
+<span class="tp">kafe=#</span> <span class="tc">ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO kafe_report;   -- Table ថ្មីៗក្នុងពេលអនាគត</span>
+ALTER DEFAULT PRIVILEGES
+<span class="tp">kafe=#</span> <span class="tc">SET ROLE kafe_report;</span>
+SET
+<span class="tp">kafe=#</span> <span class="tc">SELECT count(*) FROM orders;</span>
+ count 
+-------
+     6
+(1 row)
+
+<span class="tp">kafe=#</span> <span class="tc">UPDATE products SET price = 0;</span>
+<span class="te">ERROR:  permission denied for table products</span>
+<span class="tp">kafe=#</span> <span class="tc">RESET ROLE;</span>
+RESET</pre></div>
+    </details>
+  </div>
+</section>
+
+<!-- NAV: ផ្នែកទី ៣ – Prisma ORM -->
+<section id="l13">
+  <h2><span class="badge">មេរៀន ១៣</span>Prisma ORM 7: Setup, Schema, Migrate, CRUD</h2>
+  <div class="note">💡 <b>Prisma 7</b> ជាកំណែស្ថិរភាព (Prisma 8 ជា Release Candidate ដែលប្តូររបៀប Setup)។ ខាងក្រោមយើងកំណត់កំណែ <code class="i">@7</code> ឱ្យច្បាស់។ Prisma 7 ប្រើ <b>Driver adapter</b> (<code class="i">@prisma/adapter-pg</code>) និង File <code class="i">prisma.config.ts</code>។</div>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+npm install -D prisma@7 typescript tsx @types/node @types/pg
+npm install @prisma/client@7 @prisma/adapter-pg pg dotenv
+npx prisma init --datasource-provider postgresql --output ../generated/prisma
+# បង្កើត prisma/schema.prisma, prisma.config.ts, .env (DATABASE_URL)
+</script>
+  <script type="text/x-code" data-lang="prisma" data-label="prisma/schema.prisma">
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Category {
+  coffee
+  tea
+  bakery
+}
+
+enum OrderStatus {
+  pending
+  paid
+  cancelled
+}
+
+model Customer {
+  id        Int      @id @default(autoincrement())
+  name      String
+  phone     String?  @unique
+  city      String   @default("ភ្នំពេញ")
+  createdAt DateTime @default(now()) @map("created_at")
+  orders    Order[]
+
+  @@map("customers")
+}
+
+model Product {
+  id       Int         @id @default(autoincrement())
+  name     String      @unique
+  category Category
+  price    Decimal     @db.Decimal(10, 2)
+  stock    Int         @default(0)
+  items    OrderItem[]
+
+  @@map("products")
+}
+
+model Order {
+  id         Int         @id @default(autoincrement())
+  customer   Customer    @relation(fields: [customerId], references: [id])
+  customerId Int         @map("customer_id")
+  status     OrderStatus @default(pending)
+  createdAt  DateTime    @default(now()) @map("created_at")
+  items      OrderItem[]
+
+  @@index([customerId, status, createdAt(sort: Desc)])
+  @@map("orders")
+}
+
+model OrderItem {
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId   Int     @map("order_id")
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int     @map("product_id")
+  qty       Int
+  unitPrice Decimal @db.Decimal(10, 2) @map("unit_price")
+
+  @@id([orderId, productId])
+  @@map("order_items")
+}
+</script>
+  <script type="text/x-code" data-lang="ts" data-label="prisma.config.ts">
+import "dotenv/config";
+import { defineConfig } from "prisma/config";
+
+export default defineConfig({
+  schema: "prisma/schema.prisma",
+  migrations: { path: "prisma/migrations", seed: "tsx prisma/seed.ts" },
+  datasource: { url: process.env["DATABASE_URL"] },
+});
+</script>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+npx prisma migrate dev --name init    # បង្កើត prisma/migrations/…_init/migration.sql + អនុវត្ត
+npx prisma generate                   # បង្កើត Client (generated/prisma)
+npx prisma studio                     # GUI មើល/កែទិន្នន័យ
+</script>
+  <script type="text/x-code" data-lang="ts" data-label="src/db.ts + CRUD">
+import "dotenv/config";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "../generated/prisma/client";   // រត់ដោយ tsx
+
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
+export const prisma = new PrismaClient({ adapter });
+
+// CREATE
+const mocha = await prisma.product.create({ data: { name: "Mocha", category: "coffee", price: "3.00", stock: 20 } });
+
+// READ: where + orderBy + select (Type ចេញស្វ័យប្រវត្តិ: { name: string; price: Decimal }[])
+const coffees = await prisma.product.findMany({
+  where: { category: "coffee", stock: { gt: 0 } },
+  orderBy: { price: "desc" },
+  select: { name: true, price: true },
+});
+
+// Search (ILIKE) + Pagination
+const page = await prisma.product.findMany({
+  where: { name: { contains: "tea", mode: "insensitive" } },
+  skip: 0, take: 10,
+});
+
+// UPDATE (atomic increment) · DELETE
+await prisma.product.update({ where: { id: mocha.id }, data: { stock: { decrement: 2 } } });
+await prisma.product.delete({ where: { id: mocha.id } });
+
+// Relations: include
+const customer = await prisma.customer.findUnique({
+  where: { id: 1 },
+  include: { orders: { where: { status: "paid" }, include: { items: { include: { product: true } } } } },
+});
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១៣</h4>
+    <p>សរសេរ Prisma query៖ អតិថិជន ៣ នាក់ដំបូងតាមឈ្មោះ ដែលនៅសៀមរាប ជាមួយចំនួន Order របស់គេ (<code class="i">_count</code>)។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="ts" data-label="Answer">
+const rows = await prisma.customer.findMany({
+  where: { city: "សៀមរាប" },
+  orderBy: { name: "asc" },
+  take: 3,
+  select: { name: true, _count: { select: { orders: true } } },
+});
+// → [{ name: "ចាន់ លីណា", _count: { orders: 2 } }]
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l14">
+  <h2><span class="badge">មេរៀន ១៤</span>Prisma កម្រិតខ្ពស់: Transactions, Aggregates, Raw SQL, Production</h2>
+  <script type="text/x-code" data-lang="ts" data-label="Transactions + Aggregates + Raw">
+// Interactive transaction: បង្កើត Order + កាត់ស្តុក (ទាំងអស់ ឬគ្មាន)
+export async function placeOrder(customerId: number, items: { productId: number; qty: number }[]) {
+  return prisma.$transaction(async (tx) => {
+    const order = await tx.order.create({ data: { customerId, status: "paid" } });
+    for (const { productId, qty } of items) {
+      // Conditional update: កាត់តែពេលស្តុកគ្រប់ (Atomic — ការពារ Race condition)
+      const res = await tx.product.updateMany({ where: { id: productId, stock: { gte: qty } }, data: { stock: { decrement: qty } } });
+      if (res.count === 0) throw new Error(`ស្តុកមិនគ្រប់សម្រាប់ផលិតផល #${productId}`);   // → Rollback ទាំងមូល
+      const p = await tx.product.findUniqueOrThrow({ where: { id: productId }, select: { price: true } });
+      await tx.orderItem.create({ data: { orderId: order.id, productId, qty, unitPrice: p.price } });
+    }
+    return tx.order.findUniqueOrThrow({ where: { id: order.id }, include: { items: true } });
+  });
+}
+
+// GroupBy / Aggregate
+const byCategory = await prisma.product.groupBy({
+  by: ["category"], _count: { _all: true }, _avg: { price: true }, orderBy: { category: "asc" },
+});
+
+// Raw SQL (Parameterized ដោយ Tagged template — សុវត្ថិភាព)
+const from = new Date("2026-11-10");
+const daily = await prisma.$queryRaw<{ day: Date; revenue: string }[]>`
+  SELECT (o.created_at AT TIME ZONE 'Asia/Phnom_Penh')::date AS day, sum(oi.qty * oi.unit_price)::text AS revenue
+  FROM orders o JOIN order_items oi ON oi.order_id = o.id
+  WHERE o.status = 'paid' AND o.created_at >= ${from}
+  GROUP BY 1 ORDER BY 1`;
+</script>
+  <h3>N+1 Problem</h3>
+  <script type="text/x-code" data-lang="ts" data-label="❌ N+1 vs ✅ include">
+// ❌ 1 query + N queries (Order 100 = 101 queries)
+const orders = await prisma.order.findMany();
+for (const o of orders) o.customer = await prisma.customer.findUnique({ where: { id: o.customerId } });
+
+// ✅ Query តិច — Prisma ទាញ Relation ជាក្រុម
+const orders2 = await prisma.order.findMany({ include: { customer: { select: { name: true } } } });
+</script>
+  <h3>Production</h3>
+  <table>
+    <tr><th>ធ្វើ</th><th>ពាក្យបញ្ជា / ការណែនាំ</th></tr>
+    <tr><td>Development</td><td><code class="i">prisma migrate dev</code> (បង្កើត + អនុវត្ត Migration)</td></tr>
+    <tr><td>Production / CI</td><td><code class="i">prisma migrate deploy</code> (អនុវត្តតែ Migration ដែលមាន — កុំប្រើ migrate dev)</td></tr>
+    <tr><td>Seed</td><td><code class="i">prisma db seed</code></td></tr>
+    <tr><td>Decimal</td><td>ប្រាក់ជា <code class="i">Decimal</code> (មិនមែន Float) · បំប្លែងទៅ string/number ពេលផ្ញើ JSON</td></tr>
+    <tr><td>Connection</td><td>PrismaClient <b>តែមួយ</b> ក្នុង App (Singleton) · Serverless ប្រើ Pooler (Neon/Supabase pooling)</td></tr>
+    <tr><td>ជម្រើសផ្សេង</td><td><b>Drizzle ORM</b> (SQL-like, TypeScript), <b>Kysely</b> (Query builder), <b>pg</b> (Driver ផ្ទាល់)</td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ១៤</h4>
+    <p>សរសេរ Prisma query រកផលិតផល Top 3 តាមចំនួនលក់ (qty សរុប) ពី OrderItem។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="ts" data-label="Answer">
+const top = await prisma.orderItem.groupBy({
+  by: ["productId"],
+  _sum: { qty: true },
+  orderBy: { _sum: { qty: "desc" } },
+  take: 3,
+});
+const names = await prisma.product.findMany({ where: { id: { in: top.map(t => t.productId) } }, select: { id: true, name: true } });
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="cheat">
+  <h2>📋 Cheat Sheet</h2>
+  <table>
+    <tr><th>SQL</th><th>Prisma</th></tr>
+    <tr><td><code class="i">SELECT * FROM products WHERE id = 1</code></td><td><code class="i">prisma.product.findUnique({ where: { id: 1 } })</code></td></tr>
+    <tr><td><code class="i">WHERE category = 'tea' ORDER BY price DESC LIMIT 10</code></td><td><code class="i">findMany({ where: { category: "tea" }, orderBy: { price: "desc" }, take: 10 })</code></td></tr>
+    <tr><td><code class="i">ILIKE '%tea%'</code></td><td><code class="i">{ name: { contains: "tea", mode: "insensitive" } }</code></td></tr>
+    <tr><td><code class="i">INSERT … RETURNING *</code></td><td><code class="i">create({ data })</code></td></tr>
+    <tr><td><code class="i">UPDATE … SET stock = stock - 1</code></td><td><code class="i">update({ data: { stock: { decrement: 1 } } })</code></td></tr>
+    <tr><td><code class="i">JOIN</code></td><td><code class="i">include</code> / <code class="i">select</code> relation</td></tr>
+    <tr><td><code class="i">GROUP BY … count/avg</code></td><td><code class="i">groupBy</code> / <code class="i">aggregate</code> / <code class="i">_count</code></td></tr>
+    <tr><td><code class="i">BEGIN … COMMIT</code></td><td><code class="i">prisma.$transaction(async tx =&gt; …)</code></td></tr>
+  </table>
+</section>
+
+<!-- NAV: ផ្នែកទី ៤ – កម្រិតអាជីព -->
+<section class="hero" id="pro">
+  <h2>🏆 គម្រោងអាជីព: Kafe on PostgreSQL</h2>
+  <p>ផ្លាស់ Kafe ពី SQLite ទៅ <b>PostgreSQL</b> កម្រិត Production៖ Migration SQL, Constraints, Indexes, <b>Function <code class="i">place_order()</code></b> ដែលកាត់ស្តុកដោយ Lock ការពារ Race condition, Reports (Views + Window functions), Roles និង Prisma API ដែលហៅវា។ ផ្នែក SQL ខាងក្រោមត្រូវបានរត់ <b>ពិត</b>លើ PostgreSQL។</p>
+</section>
+
+<section id="pro-db">
+  <h2>🧱 Migration + place_order() (រត់ពិត)</h2>
+  <script type="text/x-code" data-lang="sql" data-label="migrations/002_place_order.sql" data-psql>
+CREATE INDEX IF NOT EXISTS orders_customer_idx ON orders (customer_id);
+CREATE INDEX IF NOT EXISTS order_items_product_idx ON order_items (product_id);
+
+-- items = [{"product_id": 1, "qty": 2}, ...]
+CREATE OR REPLACE FUNCTION place_order(p_customer integer, p_items jsonb)
+RETURNS TABLE (order_id integer, total numeric) LANGUAGE plpgsql AS $$
+DECLARE
+  v_order integer;
+  it jsonb;
+  v_price numeric;
+  v_stock integer;
+BEGIN
+  IF jsonb_array_length(p_items) = 0 THEN RAISE EXCEPTION 'Order ត្រូវមានយ៉ាងតិច ១ មុខ'; END IF;
+  INSERT INTO orders (customer_id, status, created_at) VALUES (p_customer, 'paid', now()) RETURNING id INTO v_order;
+  FOR it IN SELECT * FROM jsonb_array_elements(p_items) LOOP
+    SELECT price, stock INTO v_price, v_stock FROM products
+     WHERE id = (it->>'product_id')::int FOR UPDATE;           -- Lock ជួរ
+    IF NOT FOUND THEN RAISE EXCEPTION 'រកមិនឃើញផលិតផល #%', it->>'product_id'; END IF;
+    IF v_stock < (it->>'qty')::int THEN
+      RAISE EXCEPTION 'ស្តុកមិនគ្រប់: #% នៅសល់ %', it->>'product_id', v_stock;
+    END IF;
+    UPDATE products SET stock = stock - (it->>'qty')::int WHERE id = (it->>'product_id')::int;
+    INSERT INTO order_items VALUES (v_order, (it->>'product_id')::int, (it->>'qty')::int, v_price);
+  END LOOP;
+  RETURN QUERY SELECT v_order, sum(oi.qty * oi.unit_price) FROM order_items oi WHERE oi.order_id = v_order;
+END $$;
+
+SELECT * FROM place_order(2, '[{"product_id": 1, "qty": 2}, {"product_id": 6, "qty": 1}]');
+SELECT * FROM place_order(3, '[{"product_id": 1, "qty": 1}, {"product_id": 5, "qty": 1}]');   -- Lemon Tea អស់ → Rollback ទាំងមូល
+SELECT id, name, stock FROM products WHERE id IN (1, 5, 6);
+SELECT count(*) AS orders FROM orders;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">CREATE INDEX IF NOT EXISTS orders_customer_idx ON orders (customer_id);</span>
+CREATE INDEX
+<span class="tp">kafe=#</span> <span class="tc">CREATE INDEX IF NOT EXISTS order_items_product_idx ON order_items (product_id);</span>
+CREATE INDEX
+<span class="tp">kafe=#</span> <span class="tc">CREATE OR REPLACE FUNCTION place_order(p_customer integer, p_items jsonb)</span>
+<span class="tp">kafe-#</span> <span class="tc">RETURNS TABLE (order_id integer, total numeric) LANGUAGE plpgsql AS $$</span>
+<span class="tp">kafe-#</span> <span class="tc">DECLARE</span>
+<span class="tp">kafe-#</span> <span class="tc">  v_order integer;</span>
+<span class="tp">kafe-#</span> <span class="tc">  it jsonb;</span>
+<span class="tp">kafe-#</span> <span class="tc">  v_price numeric;</span>
+<span class="tp">kafe-#</span> <span class="tc">  v_stock integer;</span>
+<span class="tp">kafe-#</span> <span class="tc">BEGIN</span>
+<span class="tp">kafe-#</span> <span class="tc">  IF jsonb_array_length(p_items) = 0 THEN RAISE EXCEPTION &#x27;Order ត្រូវមានយ៉ាងតិច ១ មុខ&#x27;; END IF;</span>
+<span class="tp">kafe-#</span> <span class="tc">  INSERT INTO orders (customer_id, status, created_at) VALUES (p_customer, &#x27;paid&#x27;, now()) RETURNING id INTO v_order;</span>
+<span class="tp">kafe-#</span> <span class="tc">  FOR it IN SELECT * FROM jsonb_array_elements(p_items) LOOP</span>
+<span class="tp">kafe-#</span> <span class="tc">    SELECT price, stock INTO v_price, v_stock FROM products</span>
+<span class="tp">kafe-#</span> <span class="tc">     WHERE id = (it-&gt;&gt;&#x27;product_id&#x27;)::int FOR UPDATE;           -- Lock ជួរ</span>
+<span class="tp">kafe-#</span> <span class="tc">    IF NOT FOUND THEN RAISE EXCEPTION &#x27;រកមិនឃើញផលិតផល #%&#x27;, it-&gt;&gt;&#x27;product_id&#x27;; END IF;</span>
+<span class="tp">kafe-#</span> <span class="tc">    IF v_stock &lt; (it-&gt;&gt;&#x27;qty&#x27;)::int THEN</span>
+<span class="tp">kafe-#</span> <span class="tc">      RAISE EXCEPTION &#x27;ស្តុកមិនគ្រប់: #% នៅសល់ %&#x27;, it-&gt;&gt;&#x27;product_id&#x27;, v_stock;</span>
+<span class="tp">kafe-#</span> <span class="tc">    END IF;</span>
+<span class="tp">kafe-#</span> <span class="tc">    UPDATE products SET stock = stock - (it-&gt;&gt;&#x27;qty&#x27;)::int WHERE id = (it-&gt;&gt;&#x27;product_id&#x27;)::int;</span>
+<span class="tp">kafe-#</span> <span class="tc">    INSERT INTO order_items VALUES (v_order, (it-&gt;&gt;&#x27;product_id&#x27;)::int, (it-&gt;&gt;&#x27;qty&#x27;)::int, v_price);</span>
+<span class="tp">kafe-#</span> <span class="tc">  END LOOP;</span>
+<span class="tp">kafe-#</span> <span class="tc">  RETURN QUERY SELECT v_order, sum(oi.qty * oi.unit_price) FROM order_items oi WHERE oi.order_id = v_order;</span>
+<span class="tp">kafe-#</span> <span class="tc">END $$;</span>
+CREATE FUNCTION
+<span class="tp">kafe=#</span> <span class="tc">SELECT * FROM place_order(2, &#x27;[{&quot;product_id&quot;: 1, &quot;qty&quot;: 2}, {&quot;product_id&quot;: 6, &quot;qty&quot;: 1}]&#x27;);</span>
+ order_id | total 
+----------+-------
+        7 |  6.50
+(1 row)
+
+<span class="tp">kafe=#</span> <span class="tc">SELECT * FROM place_order(3, &#x27;[{&quot;product_id&quot;: 1, &quot;qty&quot;: 1}, {&quot;product_id&quot;: 5, &quot;qty&quot;: 1}]&#x27;);   -- Lemon Tea អស់ → Rollback ទាំងមូល</span>
+<span class="te">ERROR:  ស្តុកមិនគ្រប់: #5 នៅសល់ 0</span>
+CONTEXT:  PL/pgSQL function place_order(integer,jsonb) line 15 at RAISE
+<span class="tp">kafe=#</span> <span class="tc">SELECT id, name, stock FROM products WHERE id IN (1, 5, 6);</span>
+ id |   name    | stock 
+----+-----------+-------
+  1 | Latte     |    38
+  5 | Lemon Tea |     0
+  6 | Croissant |    11
+(3 rows)
+
+<span class="tp">kafe=#</span> <span class="tc">SELECT count(*) AS orders FROM orders;</span>
+ orders 
+--------
+      7
+(1 row)</pre></div>
+  <h3>Reports (រត់ពិត)</h3>
+  <script type="text/x-code" data-lang="sql" data-label="reports.sql" data-psql>
+CREATE VIEW daily_revenue AS
+SELECT (o.created_at AT TIME ZONE 'Asia/Phnom_Penh')::date AS day,
+       count(DISTINCT o.id) AS orders,
+       sum(oi.qty * oi.unit_price) AS revenue
+FROM orders o JOIN order_items oi ON oi.order_id = o.id
+WHERE o.status = 'paid' GROUP BY 1;
+
+SELECT day, orders, revenue, round(revenue / orders, 2) AS aov,
+       sum(revenue) OVER (ORDER BY day) AS running
+FROM daily_revenue ORDER BY day;
+
+-- Top product ក្នុងប្រភេទនីមួយៗ
+SELECT DISTINCT ON (p.category) p.category, p.name, sum(oi.qty) AS cups
+FROM order_items oi JOIN products p ON p.id = oi.product_id JOIN orders o ON o.id = oi.order_id AND o.status = 'paid'
+GROUP BY p.category, p.name
+ORDER BY p.category, cups DESC;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16 (psql)</span></div><pre><span class="tp">kafe=#</span> <span class="tc">CREATE VIEW daily_revenue AS</span>
+<span class="tp">kafe-#</span> <span class="tc">SELECT (o.created_at AT TIME ZONE &#x27;Asia/Phnom_Penh&#x27;)::date AS day,</span>
+<span class="tp">kafe-#</span> <span class="tc">       count(DISTINCT o.id) AS orders,</span>
+<span class="tp">kafe-#</span> <span class="tc">       sum(oi.qty * oi.unit_price) AS revenue</span>
+<span class="tp">kafe-#</span> <span class="tc">FROM orders o JOIN order_items oi ON oi.order_id = o.id</span>
+<span class="tp">kafe-#</span> <span class="tc">WHERE o.status = &#x27;paid&#x27; GROUP BY 1;</span>
+CREATE VIEW
+<span class="tp">kafe=#</span> <span class="tc">SELECT day, orders, revenue, round(revenue / orders, 2) AS aov,</span>
+<span class="tp">kafe-#</span> <span class="tc">       sum(revenue) OVER (ORDER BY day) AS running</span>
+<span class="tp">kafe-#</span> <span class="tc">FROM daily_revenue ORDER BY day;</span>
+    day     | orders | revenue | aov  | running 
+------------+--------+---------+------+---------
+ 2026-11-10 |      2 |   12.30 | 6.15 |   12.30
+ 2026-11-11 |      1 |    2.50 | 2.50 |   14.80
+ 2026-11-13 |      1 |    7.30 | 7.30 |   22.10
+(3 rows)
+
+<span class="tp">kafe=#</span> <span class="tc">SELECT DISTINCT ON (p.category) p.category, p.name, sum(oi.qty) AS cups</span>
+<span class="tp">kafe-#</span> <span class="tc">FROM order_items oi JOIN products p ON p.id = oi.product_id JOIN orders o ON o.id = oi.order_id AND o.status = &#x27;paid&#x27;</span>
+<span class="tp">kafe-#</span> <span class="tc">GROUP BY p.category, p.name</span>
+<span class="tp">kafe-#</span> <span class="tc">ORDER BY p.category, cups DESC;</span>
+ category |   name    | cups 
+----------+-----------+------
+ bakery   | Croissant |    3
+ coffee   | Latte     |    4
+ tea      | Green Tea |    1
+(3 rows)</pre></div>
+  <h3>Express + Prisma ហៅ place_order()</h3>
+  <script type="text/x-code" data-lang="ts" data-label="src/routes/orders.ts">
+import { Router } from "express";
+import { z } from "zod";
+import { prisma } from "../db.ts";
+
+const orderBody = z.object({
+  customerId: z.number().int().positive(),
+  items: z.array(z.object({ productId: z.number().int().positive(), qty: z.number().int().min(1).max(20) })).min(1),
+});
+
+export const orders = Router();
+
+orders.post("/", async (req, res) => {
+  const body = orderBody.safeParse(req.body);
+  if (!body.success) { res.status(422).json({ error: { message: "ទិន្នន័យមិនត្រឹមត្រូវ" } }); return; }
+  const items = JSON.stringify(body.data.items.map(i => ({ product_id: i.productId, qty: i.qty })));
+  try {
+    const [row] = await prisma.$queryRaw<{ order_id: number; total: string }[]>`
+      SELECT order_id, total::text FROM place_order(${body.data.customerId}, ${items}::jsonb)`;
+    res.status(201).json({ orderId: row!.order_id, total: Number(row!.total) });
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : "";
+    if (/ស្តុកមិនគ្រប់|រកមិនឃើញ/.test(msg)) { res.status(409).json({ error: { message: msg.split("\n").at(-1) ?? msg } }); return; }
+    throw e;    // → Error handler (500)
+  }
+});
+</script>
+  <p class="note">💡 ជម្រើស៖ Logic នៅក្នុង <b>Database function</b> (មួយ Round-trip, Lock ត្រឹមត្រូវ, App ផ្សេងៗប្រើដូចគ្នា) ឬនៅក្នុង <b>Prisma <code class="i">$transaction</code></b> (មេរៀន ១៤ — ងាយ Test ក្នុង TypeScript)។ ទាំងពីរត្រឹមត្រូវ — ជ្រើសឱ្យស្របគ្នាក្នុងក្រុម។</p>
+</section>
+
+<section id="pro-app">
+  <h2>🔍 Prisma ↔ SQL Explorer</h2>
+  <p>ជ្រើស Query → មើលកូដ Prisma, SQL ដែលស្មើគ្នា និង <b>លទ្ធផលពិត</b> (រត់លើ PostgreSQL ពេលបង្កើតឯកសារនេះ)។</p>
+  <script type="text/x-code" data-lang="html" data-label="Kafe SQL Playground" data-demo>
+<style>
+  * { box-sizing:border-box; }
+  body { margin:0; background:#f6f8fb; color:#172230; font-family:"Kantumruy Pro",system-ui,sans-serif; }
+  .wrap { display:grid; grid-template-columns:240px minmax(0,1fr); gap:12px; padding:12px; }
+  @media (max-width:640px) { .wrap { grid-template-columns:1fr; } }
+  .list { display:grid; gap:6px; align-content:start; }
+  .list button { text-align:left; border:1px solid #dce4ee; background:#fff; border-radius:8px; padding:8px 10px; font:inherit; font-size:13.5px; cursor:pointer; min-height:40px; }
+  .list button[aria-pressed="true"] { background:#336791; color:#fff; border-color:#336791; }
+  .panes { display:grid; gap:10px; min-width:0; }
+  .two { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:10px; }
+  .box { background:#fff; border:1px solid #dce4ee; border-radius:10px; overflow:hidden; min-width:0; }
+  .box h4 { margin:0; padding:6px 10px; font-size:12.5px; background:#e9f0f7; color:#22476a; }
+  pre { margin:0; padding:10px; background:#0f1720; color:#e6edf3; font:12.5px/1.55 "JetBrains Mono",monospace; white-space:pre-wrap; overflow-x:auto; }
+  .k { color:#ff7b72; } .s { color:#a5d6ff; } .n { color:#79c0ff; } .f { color:#d2a8ff; }
+  table { border-collapse:collapse; width:100%; font-size:13.5px; }
+  th, td { padding:6px 10px; border-bottom:1px solid #eef2f6; text-align:left; white-space:nowrap; }
+  th { background:#f3f6fa; font-weight:600; }
+  td.num { text-align:right; font-variant-numeric:tabular-nums; }
+  .meta { font-size:12.5px; color:#5b6b7c; padding:6px 10px; }
+  .scroll { overflow-x:auto; }
+</style>
+
+<div class="wrap">
+  <div class="list" id="list" role="group" aria-label="Queries"></div>
+  <div class="panes">
+    <div class="two">
+      <div class="box"><h4>Prisma Client (TypeScript)</h4><pre id="prisma"></pre></div>
+      <div class="box"><h4>SQL ដែលស្មើគ្នា</h4><pre id="sql"></pre></div>
+    </div>
+    <div class="box"><h4>▶ លទ្ធផលពិតពី PostgreSQL</h4><div class="scroll"><table id="result"></table></div><div class="meta" id="meta"></div></div>
+  </div>
+</div>
+
+<script>
+  const DATA = [{"title": "ផលិតផល coffee តម្រៀបតាមតម្លៃ", "prisma": "await prisma.product.findMany({\n  where: { category: \"coffee\" },\n  orderBy: { price: \"desc\" },\n  select: { name: true, price: true, stock: true },\n})", "sql": "SELECT name, price, stock FROM products\nWHERE category = 'coffee'\nORDER BY price DESC;", "cols": ["name", "price", "stock"], "rows": [["Latte", "2.50", "40"], ["Americano", "2.00", "35"], ["Iced Khmer Coffee", "1.80", "50"]]}, {"title": "ស្វែងរក «tea» (មិនខ្វល់អក្សរធំតូច)", "prisma": "await prisma.product.findMany({\n  where: { name: { contains: \"tea\", mode: \"insensitive\" } },\n})", "sql": "SELECT * FROM products WHERE name ILIKE '%tea%';", "cols": ["id", "name", "category", "price", "stock"], "rows": [["4", "Green Tea", "tea", "2.20", "25"], ["5", "Lemon Tea", "tea", "1.50", "0"]]}, {"title": "Pagination: ទំព័រ 2 (2 ក្នុងមួយទំព័រ)", "prisma": "await prisma.product.findMany({\n  orderBy: { id: \"asc\" },\n  skip: 2,\n  take: 2,\n})", "sql": "SELECT id, name FROM products ORDER BY id LIMIT 2 OFFSET 2;", "cols": ["id", "name"], "rows": [["3", "Iced Khmer Coffee"], ["4", "Green Tea"]]}, {"title": "អតិថិជន + ចំនួន Order (_count)", "prisma": "await prisma.customer.findMany({\n  select: { name: true, _count: { select: { orders: true } } },\n  orderBy: { orders: { _count: \"desc\" } },\n})", "sql": "SELECT c.name, count(o.id) AS orders\nFROM customers c LEFT JOIN orders o ON o.customer_id = c.id\nGROUP BY c.id ORDER BY orders DESC, c.name;", "cols": ["name", "orders"], "rows": [["សុខ ដារា", "3"], ["ចាន់ លីណា", "2"], ["ហេង វិចិត្រ", "1"], ["ម៉ៅ ស្រីនិច", "0"]]}, {"title": "Order #6 ជាមួយផលិតផល (include)", "prisma": "await prisma.order.findUnique({\n  where: { id: 6 },\n  include: { customer: true, items: { include: { product: true } } },\n})", "sql": "SELECT o.id, c.name AS customer, p.name AS product, oi.qty, oi.unit_price\nFROM orders o\nJOIN customers c ON c.id = o.customer_id\nJOIN order_items oi ON oi.order_id = o.id\nJOIN products p ON p.id = oi.product_id\nWHERE o.id = 6;", "cols": ["id", "customer", "product", "qty", "unit_price"], "rows": [["6", "សុខ ដារា", "Latte", "1", "2.50"], ["6", "សុខ ដារា", "Iced Khmer Coffee", "1", "1.80"], ["6", "សុខ ដារា", "Croissant", "2", "1.50"]]}, {"title": "groupBy category: ចំនួន + តម្លៃមធ្យម", "prisma": "await prisma.product.groupBy({\n  by: [\"category\"],\n  _count: { _all: true },\n  _avg: { price: true },\n  orderBy: { category: \"asc\" },\n})", "sql": "SELECT category, count(*) AS count, round(avg(price), 2) AS avg_price\nFROM products GROUP BY category ORDER BY category;", "cols": ["category", "count", "avg_price"], "rows": [["bakery", "1", "1.50"], ["coffee", "3", "2.10"], ["tea", "2", "1.85"]]}, {"title": "Update: កាត់ស្តុកបើគ្រប់ (Atomic)", "prisma": "await prisma.product.updateMany({\n  where: { id: 1, stock: { gte: 2 } },\n  data: { stock: { decrement: 2 } },\n})   // → { count: 1 }", "sql": "UPDATE products SET stock = stock - 2\nWHERE id = 1 AND stock >= 2\nRETURNING id, name, stock;", "cols": ["id", "name", "stock"], "rows": [["1", "Latte", "38"]]}, {"title": "$queryRaw: ចំណូលប្រចាំថ្ងៃ", "prisma": "await prisma.$queryRaw`\n  SELECT day, orders, revenue FROM daily_revenue ORDER BY day`", "sql": "SELECT (o.created_at AT TIME ZONE 'Asia/Phnom_Penh')::date AS day,\n       count(DISTINCT o.id) AS orders, sum(oi.qty * oi.unit_price) AS revenue\nFROM orders o JOIN order_items oi ON oi.order_id = o.id\nWHERE o.status = 'paid' GROUP BY 1 ORDER BY 1;", "cols": ["day", "orders", "revenue"], "rows": [["2026-11-10", "2", "12.30"], ["2026-11-11", "1", "2.50"], ["2026-11-13", "1", "7.30"]]}];
+  const esc = s => s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  const hlTs = s => esc(s)
+    .replace(/(&quot;|"[^"\n]*"|`[^`]*`)/g, m => `<span class="s">${m}</span>`)
+    .replace(/\b(await|true|false)\b/g, '<span class="k">$1</span>')
+    .replace(/\b(\d+)\b/g, '<span class="n">$1</span>')
+    .replace(/\.(\$?\w+)\(/g, '.<span class="f">$1</span>(');
+  const hlSql = s => esc(s)
+    .replace(/('[^'\n]*')/g, '<span class="s">$1</span>')
+    .replace(/\b(SELECT|FROM|WHERE|AND|ORDER BY|GROUP BY|LIMIT|OFFSET|JOIN|LEFT JOIN|ON|AS|DESC|ASC|ILIKE|UPDATE|SET|RETURNING|DISTINCT|AT TIME ZONE)\b/g, '<span class="k">$1</span>')
+    .replace(/\b(count|sum|avg|round)\(/g, '<span class="f">$1</span>(');
+  function show(i) {
+    const q = DATA[i];
+    document.querySelectorAll("#list button").forEach((b, j) => b.setAttribute("aria-pressed", j === i));
+    document.getElementById("prisma").innerHTML = hlTs(q.prisma);
+    document.getElementById("sql").innerHTML = hlSql(q.sql);
+    const isNum = v => /^-?\d+(\.\d+)?$/.test(v);
+    document.getElementById("result").innerHTML =
+      "<tr>" + q.cols.map(c => `<th>${esc(c)}</th>`).join("") + "</tr>" +
+      q.rows.map(r => "<tr>" + r.map(v => `<td class="${isNum(v) ? "num" : ""}">${v === "" ? "∅" : esc(v)}</td>`).join("") + "</tr>").join("");
+    document.getElementById("meta").textContent = `(${q.rows.length} row${q.rows.length === 1 ? "" : "s"}) · PostgreSQL 16 · Kafe sample DB`;
+  }
+  const list = document.getElementById("list");
+  DATA.forEach((q, i) => { const b = document.createElement("button"); b.textContent = `${i + 1}. ${q.title}`; b.onclick = () => show(i); list.appendChild(b); });
+  show(0);
+<\/script>
+</script>
+</section>
+
+<section id="pro-check">
+  <h2>✅ Checklist & គម្រោងចុងក្រោយ</h2>
+  <table>
+    <tr><th>ពិនិត្យ</th><th>✔</th></tr>
+    <tr><td>ប្រាក់ = <code class="i">numeric</code>/Decimal · ពេល = <code class="i">timestamptz</code></td><td>☐</td></tr>
+    <tr><td>Constraints (NOT NULL, CHECK, UNIQUE, FK) គ្រប់តារាង</td><td>☐</td></tr>
+    <tr><td>Index លើ Foreign keys + Query សំខាន់ (ពិនិត្យ EXPLAIN)</td><td>☐</td></tr>
+    <tr><td>ការកាត់ស្តុក/ប្រាក់ ក្នុង Transaction + Lock/Conditional update</td><td>☐</td></tr>
+    <tr><td>App role មិនមែន superuser · Report role អានតែប៉ុណ្ណោះ</td><td>☐</td></tr>
+    <tr><td>Migrations ក្នុង Git · <code class="i">migrate deploy</code> ក្នុង CI/CD</td><td>☐</td></tr>
+    <tr><td>Backup ប្រចាំថ្ងៃ + សាក Restore</td><td>☐</td></tr>
+  </table>
+  <div class="ex"><h4>🏁 លំហាត់គម្រោងចុងក្រោយ</h4>
+    <ol>
+      <li>ដំឡើង PostgreSQL (Docker) ហើយរត់ seed + migrations ខាងលើ</li>
+      <li>Prisma 7៖ <code class="i">prisma db pull</code> ពី Database ដែលមាន ឬសរសេរ Schema ហើយ <code class="i">migrate dev</code></li>
+      <li>ប្តូរ Kafe API (TypeScript) ពី node:sqlite ទៅ Prisma — Products CRUD + Orders</li>
+      <li>Endpoint <code class="i">GET /api/reports/daily</code> ពី View <code class="i">daily_revenue</code></li>
+      <li>Test Race condition៖ ផ្ញើ Order ២០ ព្រមគ្នាលើផលិតផលស្តុក ៥ → ត្រូវតែជោគជ័យ ៥ ប៉ុណ្ណោះ</li>
+      <li>Deploy ជាមួយ Neon (វគ្គ Vercel) ឬ Postgres លើ VPS (វគ្គ Linux)</li>
+    </ol>
+  </div>
+</section>
+
+<section id="roadmap">
+  <h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+  <ol class="steps">
+    <li><b>PostgreSQL + Prisma</b> — មេរៀន ១–១៤ ✅</li>
+    <li><b>Database design</b> — Normalization (1NF–3NF), Soft delete, Audit logs</li>
+    <li><b>Performance</b> — pg_stat_statements, Connection pooling (PgBouncer), Partitioning</li>
+    <li><b>Redis</b> — Cache + Rate limit</li>
+    <li><b>pgvector</b> — AI Search / RAG</li>
+    <li><b>Testing</b> — Integration tests ជាមួយ Database ពិត (Testcontainers)</li>
+  </ol>
+  <p><b>ប្រភពរៀនបន្ថែម:</b> <a href="https://www.postgresql.org/docs/current/tutorial.html" target="_blank">PostgreSQL Tutorial</a> · <a href="https://www.prisma.io/docs/orm/v7" target="_blank">Prisma ORM 7 Docs</a> · <a href="https://use-the-index-luke.com" target="_blank">Use The Index, Luke</a> · <a href="https://pgexercises.com" target="_blank">PG Exercises</a></p>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^']|'')*'", 's'], ['\\$\\$[\\s\\S]*?\\$\\$', 's'],
+        ['\\b(?:SELECT|FROM|WHERE|AND|OR|NOT|IN|IS|NULL|AS|ON|JOIN|LEFT|RIGHT|INNER|FULL|OUTER|CROSS|GROUP|BY|ORDER|HAVING|LIMIT|OFFSET|INSERT|INTO|VALUES|UPDATE|SET|DELETE|RETURNING|CREATE|TABLE|INDEX|UNIQUE|PRIMARY|KEY|FOREIGN|REFERENCES|CASCADE|CHECK|DEFAULT|CONSTRAINT|ALTER|ADD|DROP|COLUMN|IF|EXISTS|BEGIN|COMMIT|ROLLBACK|SAVEPOINT|TRANSACTION|WITH|RECURSIVE|CASE|WHEN|THEN|ELSE|END|DISTINCT|UNION|ALL|EXCEPT|INTERSECT|OVER|PARTITION|ROWS|BETWEEN|LIKE|ILIKE|ASC|DESC|NULLS|FIRST|LAST|EXPLAIN|ANALYZE|VIEW|MATERIALIZED|FUNCTION|RETURNS|LANGUAGE|TRIGGER|FOR|EACH|ROW|EXECUTE|GRANT|REVOKE|ROLE|USER|TO|CONFLICT|DO|NOTHING|USING|FILTER|TRUE|FALSE|LATERAL|ANY|SOME|EXCLUDED|GENERATED|ALWAYS|IDENTITY|TYPE|ENUM|SCHEMA|EXTENSION|COPY|FORMAT|OF|CURRENT_DATE|NOW)\\b', 'kw'],
+        ['\\b(?:serial|bigserial|integer|int|bigint|smallint|numeric|decimal|real|text|varchar|char|boolean|bool|date|timestamptz|timestamp|interval|uuid|jsonb|json|bytea|tsvector)\\b', 'hook'],
+        ['\\b[a-z_][a-z0-9_]*(?=\\()', 'f'], ['\\\\[a-z]+\\+?', 'attr'], NUM, ['::|<>|!=|>=|<=|->>|->|\\|\\||[=<>*+/-]', 'op']],
+  prisma: [['//[^\\n]*', 'c'], STR, ['\\b(?:model|enum|generator|datasource|type|view)\\b', 'kw'],
+        ['@@?[a-zA-Z.]+', 'hook'], ['\\b(?:String|Int|BigInt|Float|Decimal|Boolean|DateTime|Json|Bytes)\\b', 'attr'], ['\\b[a-z_][A-Za-z0-9_]*(?=\\()', 'f'], NUM],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http') ? 'm' : lang === 'sql' ? 'i' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', sql: 'SQL', prisma: 'Prisma Schema', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="postgres"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

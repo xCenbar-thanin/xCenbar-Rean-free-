@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន Fundamentals of IT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#3b5bdb; --accent2:#12b886; --accent-soft:#e8edff;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#91a7ff; --accent2:#38d9a9; --accent-soft:#1a2142;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#91a7ff; --accent2:#38d9a9; --accent-soft:#1a2142;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#364fc7,#1098ad 60%,#0ca678);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/itf.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/itf.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>វគ្គសិក្សា Fundamentals of IT ពីដើមដល់កម្រិតអាជីព</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. IT ជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#install">២. ត្រៀមឧបករណ៍ (Setup)</a>
+<a href="#elements">៣. ធាតុនីមួយៗរបស់ IT</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: កុំព្យូទ័រធ្វើការយ៉ាងម៉េច? (Input → Process → Output)</a>
+<a href="#l2">មេរៀន ២: ប្រព័ន្ធលេខ៖ Binary, Decimal, Hexadecimal</a>
+<a href="#l3">មេរៀន ៣: ឯកតាទិន្នន័យ &amp; ការអ៊ិនកូដអក្សរ (ASCII · Unicode · UTF-8)</a>
+<a href="#l4">មេរៀន ៤: Hardware ខាងក្នុង៖ CPU, RAM, Storage, Motherboard</a>
+<a href="#l5">មេរៀន ៥: ឧបករណ៍ Input/Output &amp; Ports</a>
+<a href="#l6">មេរៀន ៦: Software៖ ប្រភេទ, Firmware &amp; អាជ្ញាប័ណ្ណ</a>
+<a href="#l7">មេរៀន ៧: Operating System &amp; File System</a>
+<a href="#l8">មេរៀន ៨: គ្រប់គ្រង File &amp; Backup (ច្បាប់ 3-2-1)</a>
+<a href="#l9">មេរៀន ៩: Networking៖ LAN, IP, DNS, DHCP</a>
+<a href="#l10">មេរៀន ១០: Internet &amp; Web៖ Client-Server, HTTP, URL</a>
+<a href="#l11">មេរៀន ១១: Cloud Computing &amp; Virtualization</a>
+<a href="#l12">មេរៀន ១២: Database &amp; SQL មូលដ្ឋាន</a>
+<a href="#l13">មេរៀន ១៣: Algorithm &amp; Programming មូលដ្ឋាន</a>
+<a href="#l14">មេរៀន ១៤: Cybersecurity មូលដ្ឋាន</a>
+<a href="#l15">មេរៀន ១៥: ការដោះស្រាយបញ្ហា (Troubleshooting)</a>
+<a href="#l16">មេរៀន ១៦: អាជីព IT, ក្រមសីលធម៌ &amp; ឯកជនភាព</a>
+<a href="#cheat">📋 Cheat Sheet</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងអាជីព៖ IT Support Ticket</a>
+<a href="#pro-app">💻 IT Toolkit Pro (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🖥️ Fundamentals of IT — មូលដ្ឋានគ្រឹះបច្ចេកវិទ្យាព័ត៌មាន</h2>
+  <p>រៀនពី <b>កុំព្យូទ័រធ្វើការយ៉ាងម៉េច</b>, ប្រព័ន្ធលេខ Binary, Hardware, Software, Operating System, <b>Network &amp; Internet</b>, Cloud, Database/SQL, Programming, <b>Cybersecurity</b> និង Troubleshooting — មានរូបភាពពន្យល់ Code មានពណ៌ និងលទ្ធផលពិត។ សាកសមសម្រាប់អ្នកចាប់ផ្តើម និងត្រៀមប្រឡង <b>CompTIA ITF+</b>។</p>
+  <p><span class="badge">📘 ១៦ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់ ១៤</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">💻 Code + លទ្ធផលពិត</span><span class="badge">🧰 IT Toolkit Pro</span></p>
+</section>
+<section id="intro">
+<h2>១. IT ជាអ្វី? អ្នកណាបង្កើត?</h2>
+
+<p><b>Information Technology (IT)</b> — <b>បច្ចេកវិទ្យាព័ត៌មាន</b> គឺជាការប្រើ <b>កុំព្យូទ័រ កម្មវិធី បណ្តាញ និងទិន្នន័យ</b> ដើម្បី <b>បង្កើត រក្សាទុក ដំណើរការ បញ្ជូន និងការពារព័ត៌មាន</b>។ <b>Fundamentals of IT</b> គឺជាមូលដ្ឋានគ្រឹះដែលអ្នកធ្វើការជាមួយកុំព្យូទ័រគ្រប់រូបត្រូវដឹង មុនពេលរៀនជំនាញជ្រៅ (Programming, Network, Cybersecurity, Cloud…)។ <button class="btn say" data-say="Information Technology">🔊 អានពាក្យ</button></p>
+<h3>👤 អ្នកណាបង្កើត IT?</h3>
+<p>IT មិនមែនបង្កើតដោយមនុស្សម្នាក់ទេ — វាជាលទ្ធផលនៃការច្នៃប្រឌិតជាច្រើនជំនាន់។ ពាក្យ <b>“Information Technology”</b> ត្រូវបានប្រើជាលើកដំបូងក្នុងអត្ថបទ <i>Harvard Business Review</i> ឆ្នាំ <b>1958</b> ដោយ <b>Harold J. Leavitt</b> និង <b>Thomas L. Whisler</b>។</p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="90" cy="115" r="11" fill="#7c3aed"/><text x="90" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#7c3aed">1837</text><text x="90" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Babbage · Engine</text><circle cx="195" cy="115" r="11" fill="#db2777"/><text x="195" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#db2777">1843</text><text x="195" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Ada Lovelace · Algorithm</text><circle cx="300" cy="115" r="11" fill="#2563eb"/><text x="300" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#2563eb">1936</text><text x="300" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Turing Machine</text><circle cx="405" cy="115" r="11" fill="#0891b2"/><text x="405" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#0891b2">1945</text><text x="405" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">ENIAC · von Neumann</text><circle cx="510" cy="115" r="11" fill="#059669"/><text x="510" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#059669">1947</text><text x="510" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Transistor (Bell Labs)</text><circle cx="615" cy="115" r="11" fill="#65a30d"/><text x="615" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#65a30d">1958</text><text x="615" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">IC · ពាក្យ “IT”</text><circle cx="720" cy="115" r="11" fill="#ca8a04"/><text x="720" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#ca8a04">1971</text><text x="720" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Intel 4004 CPU</text><circle cx="825" cy="115" r="11" fill="#ea580c"/><text x="825" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#ea580c">1974</text><text x="825" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">TCP/IP · Cerf & Kahn</text><circle cx="920" cy="115" r="11" fill="#dc2626"/><text x="920" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#dc2626">1991</text><text x="920" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">World Wide Web</text></svg><figcaption>🖼️ ប្រវត្តិ IT សង្ខេប៖ ពីម៉ាស៊ីនគណនា ដល់ World Wide Web</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត</th><th>ស្នាដៃ</th></tr><tr><td>1837</td><td><b>Charles Babbage</b> 🇬🇧</td><td>រចនា Analytical Engine — គំនិតកុំព្យូទ័រដំបូង (មាន Memory + Processor)</td></tr><tr><td>1843</td><td><b>Ada Lovelace</b> 🇬🇧</td><td>សរសេរ Algorithm ដំបូង — ចាត់ទុកជាអ្នកសរសេរកម្មវិធីដំបូងគេ</td></tr><tr><td>1936</td><td><b>Alan Turing</b> 🇬🇧</td><td>Turing Machine — មូលដ្ឋានទ្រឹស្តីនៃការគណនា</td></tr><tr><td>1945</td><td><b>J. Presper Eckert &amp; John Mauchly</b> 🇺🇸</td><td>ENIAC — កុំព្យូទ័រអេឡិចត្រូនិកទូទៅដំបូងៗ</td></tr><tr><td>1945</td><td><b>John von Neumann</b></td><td>Von Neumann Architecture — CPU + Memory រក្សាទុកកម្មវិធី (ប្រើរហូតដល់សព្វថ្ងៃ)</td></tr><tr><td>1947</td><td><b>Bardeen, Brattain &amp; Shockley</b> (Bell Labs)</td><td>Transistor — ជំនួសអំពូល Vacuum tube</td></tr><tr><td>1958–59</td><td><b>Jack Kilby &amp; Robert Noyce</b></td><td>Integrated Circuit (IC/Chip)</td></tr><tr><td>1971</td><td><b>Intel</b> (Federico Faggin, Ted Hoff, Masatoshi Shima)</td><td>Intel 4004 — Microprocessor ដំបូង</td></tr><tr><td>1974</td><td><b>Vint Cerf &amp; Bob Kahn</b></td><td>TCP/IP — ភាសាទំនាក់ទំនងរបស់ Internet</td></tr><tr><td>1989–91</td><td><b>Tim Berners-Lee</b> (CERN)</td><td>World Wide Web — HTTP, HTML, URL</td></tr></table>
+
+<h3>🎯 គេប្រើ IT សម្រាប់ធ្វើអ្វី?</h3>
+<div class="grid"><div class="card"><b>🏦 ធនាគារ &amp; ហិរញ្ញវត្ថុ</b><br>Mobile Banking, KHQR, ATM, ការផ្ទេរប្រាក់</div><div class="card"><b>🏫 អប់រំ</b><br>រៀន Online, LMS, គ្រប់គ្រងពិន្ទុសិស្ស</div><div class="card"><b>🏥 សុខាភិបាល</b><br>កំណត់ត្រាអ្នកជំងឺ, ម៉ាស៊ីនវេជ្ជសាស្ត្រ</div><div class="card"><b>🏛️ រដ្ឋាភិបាល</b><br>សេវា Online, អត្តសញ្ញាណប័ណ្ណ, ពន្ធ</div><div class="card"><b>🛒 អាជីវកម្ម</b><br>POS, ស្តុកទំនិញ, E-commerce, Marketing</div><div class="card"><b>📱 ទំនាក់ទំនង</b><br>Telegram, Email, Video call</div><div class="card"><b>🏭 ឧស្សាហកម្ម</b><br>Automation, IoT, Robot</div><div class="card"><b>🎬 កម្សាន្ត</b><br>Streaming, Game, Social media</div></div>
+
+<div class="note">💡 ឧទាហរណ៍ងាយ៖ ពេលអ្នកស្កេន KHQR ដើម្បីបង់ប្រាក់ — <b>Hardware</b> (ទូរស័ព្ទ/កាមេរ៉ា), <b>Software</b> (App ធនាគារ), <b>Network</b> (4G/Wi-Fi), <b>Data</b> (សមតុល្យគណនី) និង <b>Security</b> (PIN/Face ID) ធ្វើការជាមួយគ្នាក្នុងរយៈពេលតិចជាង ១ វិនាទី!</div>
+
+</section>
+<section id="install">
+<h2>២. ត្រៀមឧបករណ៍ (Setup)</h2>
+
+<p>វគ្គនេះមានទាំងទ្រឹស្តី និងការអនុវត្ត Code។ អ្នកត្រូវការ៖</p>
+<ol class="steps">
+<li><b>កុំព្យូទ័រ</b> Windows 10/11, macOS ឬ Linux (RAM ≥ 4 GB)។</li>
+<li><b>Terminal</b>៖ Windows ប្រើ <b>PowerShell</b> (ចុច <kbd>Win</kbd> → វាយ PowerShell) · macOS/Linux ប្រើ <b>Terminal</b>។</li>
+<li><b>Python 3</b>៖ ទាញយកពី <code class="i">python.org</code> → ពេលដំឡើងលើ Windows ធីក ☑ <b>Add Python to PATH</b>។</li>
+<li><b>VS Code</b>៖ ទាញយកពី <code class="i">code.visualstudio.com</code> → ដំឡើង Extension “Python”។</li>
+<li>ពិនិត្យថាដំឡើងបានជោគជ័យ៖</li>
+</ol>
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+python --version        # Windows (ឬ python3 លើ macOS/Linux)
+code --version          # VS Code
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>ឧទាហរណ៍លទ្ធផល</span></div><pre>Python 3.12.4
+1.95.0</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>បើក Terminal → វាយពាក្យបញ្ជា → ចុច <kbd>Enter</kbd>។</li><li><code class='i'>--version</code> សួរកម្មវិធីថាជាជំនាន់ណា — បើបង្ហាញលេខ មានន័យថាដំឡើងរួច។</li><li>សញ្ញា <code class='i'>#</code> គឺជា <b>Comment</b> — កុំព្យូទ័រមិនអានវាទេ សរសេរសម្រាប់មនុស្សអាន។</li></ol></div>
+
+<div class="warn">⚠️ បើបង្ហាញ <code class='i'>'python' is not recognized</code> → មិនទាន់ធីក <b>Add to PATH</b>។ ដំឡើងម្តងទៀត ហើយធីកវា។</div>
+
+</section>
+<section id="elements">
+<h2>៣. ធាតុនីមួយៗរបស់ IT</h2>
+
+<p>ប្រព័ន្ធព័ត៌មាន (Information System) មាន <b>ធាតុ ៦</b> ដែលធ្វើការជាមួយគ្នា។ ខ្វះធាតុណាមួយ ប្រព័ន្ធមិនដំណើរការទេ។</p>
+<figure class="fig"><svg viewBox="0 0 900 330" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="900" height="330" fill="#fff"/><circle cx="450" cy="165" r="78" fill="#1e3a8a"/><text x="450" y="160" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">ប្រព័ន្ធព័ត៌មាន</text><text x="450" y="184" text-anchor="middle" font-size="13" font-weight="400" fill="#c7d2fe">Information System</text><line x1="450" y1="165" x2="120" y2="52" stroke="#cbd5e1" stroke-width="3"/><line x1="450" y1="165" x2="410" y2="40" stroke="#cbd5e1" stroke-width="3"/><line x1="450" y1="165" x2="700" y2="52" stroke="#cbd5e1" stroke-width="3"/><line x1="450" y1="165" x2="120" y2="282" stroke="#cbd5e1" stroke-width="3"/><line x1="450" y1="165" x2="410" y2="294" stroke="#cbd5e1" stroke-width="3"/><line x1="450" y1="165" x2="700" y2="282" stroke="#cbd5e1" stroke-width="3"/><rect x="40" y="20" width="160" height="64" rx="14" fill="#2563eb"/><text x="120.0" y="46.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🖥️ Hardware</text><text x="120.0" y="68.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ឧបករណ៍រូបវន្ត</text><rect x="330" y="8" width="160" height="64" rx="14" fill="#7c3aed"/><text x="410.0" y="34.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">💿 Software</text><text x="410.0" y="56.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">កម្មវិធី</text><rect x="620" y="20" width="160" height="64" rx="14" fill="#0891b2"/><text x="700.0" y="46.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🗄️ Data</text><text x="700.0" y="68.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ទិន្នន័យ</text><rect x="40" y="250" width="160" height="64" rx="14" fill="#059669"/><text x="120.0" y="276.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🌐 Network</text><text x="120.0" y="298.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">បណ្តាញ</text><rect x="330" y="262" width="160" height="64" rx="14" fill="#ea580c"/><text x="410.0" y="288.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">👥 People</text><text x="410.0" y="310.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">មនុស្ស/អ្នកប្រើ</text><rect x="620" y="250" width="160" height="64" rx="14" fill="#db2777"/><text x="700.0" y="276.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">📋 Process</text><text x="700.0" y="298.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">នីតិវិធី</text></svg><figcaption>🖼️ ធាតុ ៦ នៃប្រព័ន្ធព័ត៌មាន</figcaption></figure>
+
+<table><tr><th>ធាតុ</th><th>ន័យ</th><th>ឧទាហរណ៍</th><th>មេរៀន</th></tr><tr><td>🖥️ <b>Hardware</b></td><td>ឧបករណ៍រូបវន្តដែលប៉ះបាន</td><td>CPU, RAM, SSD, Monitor, Router</td><td>៤ · ៥</td></tr><tr><td>💿 <b>Software</b></td><td>សំណុំការណែនាំ (Code) ប្រាប់ Hardware ឲ្យធ្វើការ</td><td>Windows, Chrome, Excel</td><td>៦ · ៧</td></tr><tr><td>🗄️ <b>Data</b></td><td>ការពិតឆៅ (លេខ អក្សរ រូប) → ដំណើរការហើយក្លាយជា <b>ព័ត៌មាន</b></td><td>ពិន្ទុ ឈ្មោះ រូបថត</td><td>២ · ៣ · ១២</td></tr><tr><td>🌐 <b>Network</b></td><td>ភ្ជាប់ឧបករណ៍ឲ្យចែករំលែកទិន្នន័យ</td><td>Wi-Fi, LAN, Internet</td><td>៩ · ១០ · ១១</td></tr><tr><td>👥 <b>People</b></td><td>អ្នកប្រើ អ្នកបច្ចេកទេស អ្នកគ្រប់គ្រង</td><td>សិស្ស, IT Support, Developer</td><td>១៦</td></tr><tr><td>📋 <b>Process</b></td><td>នីតិវិធី/វិធានការងារ</td><td>ការ Backup, ការដោះស្រាយបញ្ហា, Policy</td><td>៨ · ១៤ · ១៥</td></tr></table>
+
+<h3>Data ទល់នឹង Information</h3>
+<div class="grid"><div class="card"><b>Data (ទិន្នន័យ)</b><br><code class='i'>85, 92, 47</code> — លេខឆៅ គ្មានន័យច្បាស់</div><div class="card"><b>Information (ព័ត៌មាន)</b><br>“មធ្យមភាគពិន្ទុថ្នាក់ = 74.7 · សិស្សម្នាក់ធ្លាក់” — មានន័យ យកទៅសម្រេចចិត្តបាន</div><div class="card"><b>Knowledge (ចំណេះដឹង)</b><br>“សិស្សដែលធ្លាក់ត្រូវការរៀនបំពេញ” — បទពិសោធន៍ + ព័ត៌មាន</div></div>
+
+</section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>កុំព្យូទ័រធ្វើការយ៉ាងម៉េច? (Input → Process → Output)</h2>
+
+<p>កុំព្យូទ័រគ្រប់ប្រភេទ (PC, ទូរស័ព្ទ, ATM, ម៉ាស៊ីនបោះឆ្នោត) ធ្វើការតាមគំរូ <b>IPO + Storage</b>៖ ទទួល <b>Input</b> → <b>Process</b> ដោយ CPU → បញ្ចេញ <b>Output</b> → <b>រក្សាទុក</b> សម្រាប់ពេលក្រោយ។</p>
+<figure class="fig"><svg viewBox="0 0 980 260" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="980" height="260" fill="#fff"/><rect x="20" y="70" width="200" height="100" rx="14" fill="#2563eb"/><text x="120.0" y="114.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">INPUT</text><text x="120.0" y="136.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">⌨️ វាយ · 🖱️ ចុច · 📷 ស្កេន</text><rect x="390" y="70" width="200" height="100" rx="14" fill="#7c3aed"/><text x="490.0" y="114.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">PROCESS</text><text x="490.0" y="136.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">🧠 CPU គណនា</text><rect x="760" y="70" width="200" height="100" rx="14" fill="#059669"/><text x="860.0" y="114.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">OUTPUT</text><text x="860.0" y="136.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">🖥️ អេក្រង់ · 🖨️ បោះពុម្ព</text><rect x="390" y="200" width="200" height="52" rx="14" fill="#ea580c"/><text x="490.0" y="232.0" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">STORAGE 💾</text><line x1="222" y1="120" x2="386" y2="120" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="304.0" y="112.0" text-anchor="middle" font-size="13" fill="#334155">ទិន្នន័យចូល</text><line x1="592" y1="120" x2="756" y2="120" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="674.0" y="112.0" text-anchor="middle" font-size="13" fill="#334155">ព័ត៌មានចេញ</text><line x1="470" y1="172" x2="470" y2="196" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="510" y1="198" x2="510" y2="174" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="490" y="40" text-anchor="middle" font-size="15" font-weight="600" fill="#0f172a">ឧ. គណនាពិន្ទុសិស្ស៖ វាយពិន្ទុ → CPU រកមធ្យមភាគ → បង្ហាញលទ្ធផល + រក្សាទុក</text></svg><figcaption>🖼️ គំរូ Input → Process → Output + Storage</figcaption></figure>
+
+<h3>ប្រភេទកុំព្យូទ័រ</h3>
+<table><tr><th>ប្រភេទ</th><th>ប្រើសម្រាប់</th><th>ឧទាហរណ៍</th></tr><tr><td>Desktop / Laptop</td><td>ការងារការិយាល័យ រៀន សរសេរកម្មវិធី</td><td>Windows PC, MacBook</td></tr><tr><td>Mobile / Tablet</td><td>ទំនាក់ទំនង ធនាគារ កម្សាន្ត</td><td>iPhone, Android</td></tr><tr><td>Server</td><td>ផ្តល់សេវាដល់ឧបករណ៍ច្រើន (24/7)</td><td>Web server, Database server</td></tr><tr><td>Embedded / IoT</td><td>កុំព្យូទ័រតូចក្នុងឧបករណ៍</td><td>Smart TV, ម៉ាស៊ីនបោកខោអាវ, កាមេរ៉ា CCTV</td></tr><tr><td>Supercomputer</td><td>គណនាធំៗ (អាកាសធាតុ AI)</td><td>Frontier, El Capitan</td></tr></table>
+
+<h3>💻 IPO ក្នុង Code</h3>
+<script type="text/x-code" data-lang="py" data-label="ipo.py">
+# INPUT: ពិន្ទុសិស្ស (ក្នុងកម្មវិធីពិត វាមកពី keyboard ឬ file)
+scores = [85, 92, 47, 70]
+
+# PROCESS: CPU គណនា
+total = sum(scores)
+average = total / len(scores)
+
+# OUTPUT: បង្ហាញលទ្ធផល
+print("ចំនួនសិស្ស:", len(scores))
+print("ពិន្ទុសរុប:", total)
+print("មធ្យមភាគ:", round(average, 2))
+
+# STORAGE: រក្សាទុកក្នុង file
+with open("report.txt", "w", encoding="utf-8") as f:
+    f.write(f"average={average:.2f}\n")
+print("✅ បានរក្សាទុកក្នុង report.txt")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>ចំនួនសិស្ស: 4
+ពិន្ទុសរុប: 294
+មធ្យមភាគ: 73.5
+✅ បានរក្សាទុកក្នុង report.txt</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>scores = [...]</code> — បង្កើត <b>List</b> (បញ្ជី) ផ្ទុកពិន្ទុ = <b>Input</b>។</li><li><code class='i'>sum()</code> បូកសរុប · <code class='i'>len()</code> រាប់ចំនួន → CPU ធ្វើ <b>Process</b>។</li><li><code class='i'>print()</code> បង្ហាញលើអេក្រង់ = <b>Output</b>។</li><li><code class='i'>open(..., 'w')</code> បើក File សម្រាប់សរសេរ → ទិន្នន័យទៅ <b>Storage</b> (SSD)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>ចាត់ថ្នាក់ខាងក្រោមជា Input / Process / Output / Storage៖ ① Microphone ② Printer ③ CPU គណនាពន្ធ ④ Flash drive ⑤ Touchscreen ⑥ Speaker។</p><details><summary>មើលចម្លើយ</summary><p>① Input · ② Output · ③ Process · ④ Storage · ⑤ <b>ទាំង Input និង Output</b> (ប៉ះ = Input, បង្ហាញ = Output) · ⑥ Output</p></details></div>
+
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>ប្រព័ន្ធលេខ៖ Binary, Decimal, Hexadecimal</h2>
+
+<p>កុំព្យូទ័រស្គាល់តែ <b>ចរន្តអគ្គិសនី មាន (1) ឬ គ្មាន (0)</b>។ ដូច្នេះវាប្រើ <b>Binary (គោល ២)</b>។ មនុស្សប្រើ <b>Decimal (គោល ១០)</b>។ អ្នក IT ក៏ប្រើ <b>Hexadecimal (គោល ១៦)</b> ព្រោះខ្លី និងបំលែងទៅ Binary ងាយ (1 hex = 4 bits)។</p>
+<figure class="fig"><svg viewBox="0 0 900 205" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="900" height="200" fill="#fff"/><text x="450" y="30" text-anchor="middle" font-size="18" font-weight="700" fill="#0f172a">លេខ 13 ក្នុង Binary = 1101</text><rect x="70" y="55" width="80" height="70" rx="10" fill="#e2e8f0"/><text x="110" y="102" text-anchor="middle" font-size="30" font-weight="700" fill="#64748b">0</text><text x="110" y="150" text-anchor="middle" font-size="16" font-weight="600" fill="#334155">128</text><text x="110" y="172" text-anchor="middle" font-size="12" font-weight="400" fill="#94a3b8">2^7</text><rect x="168" y="55" width="80" height="70" rx="10" fill="#e2e8f0"/><text x="208" y="102" text-anchor="middle" font-size="30" font-weight="700" fill="#64748b">0</text><text x="208" y="150" text-anchor="middle" font-size="16" font-weight="600" fill="#334155">64</text><text x="208" y="172" text-anchor="middle" font-size="12" font-weight="400" fill="#94a3b8">2^6</text><rect x="266" y="55" width="80" height="70" rx="10" fill="#e2e8f0"/><text x="306" y="102" text-anchor="middle" font-size="30" font-weight="700" fill="#64748b">0</text><text x="306" y="150" text-anchor="middle" font-size="16" font-weight="600" fill="#334155">32</text><text x="306" y="172" text-anchor="middle" font-size="12" font-weight="400" fill="#94a3b8">2^5</text><rect x="364" y="55" width="80" height="70" rx="10" fill="#e2e8f0"/><text x="404" y="102" text-anchor="middle" font-size="30" font-weight="700" fill="#64748b">0</text><text x="404" y="150" text-anchor="middle" font-size="16" font-weight="600" fill="#334155">16</text><text x="404" y="172" text-anchor="middle" font-size="12" font-weight="400" fill="#94a3b8">2^4</text><rect x="462" y="55" width="80" height="70" rx="10" fill="#2563eb"/><text x="502" y="102" text-anchor="middle" font-size="30" font-weight="700" fill="#fff">1</text><text x="502" y="150" text-anchor="middle" font-size="16" font-weight="600" fill="#334155">8</text><text x="502" y="172" text-anchor="middle" font-size="12" font-weight="400" fill="#94a3b8">2^3</text><rect x="560" y="55" width="80" height="70" rx="10" fill="#2563eb"/><text x="600" y="102" text-anchor="middle" font-size="30" font-weight="700" fill="#fff">1</text><text x="600" y="150" text-anchor="middle" font-size="16" font-weight="600" fill="#334155">4</text><text x="600" y="172" text-anchor="middle" font-size="12" font-weight="400" fill="#94a3b8">2^2</text><rect x="658" y="55" width="80" height="70" rx="10" fill="#e2e8f0"/><text x="698" y="102" text-anchor="middle" font-size="30" font-weight="700" fill="#64748b">0</text><text x="698" y="150" text-anchor="middle" font-size="16" font-weight="600" fill="#334155">2</text><text x="698" y="172" text-anchor="middle" font-size="12" font-weight="400" fill="#94a3b8">2^1</text><rect x="756" y="55" width="80" height="70" rx="10" fill="#2563eb"/><text x="796" y="102" text-anchor="middle" font-size="30" font-weight="700" fill="#fff">1</text><text x="796" y="150" text-anchor="middle" font-size="16" font-weight="600" fill="#334155">1</text><text x="796" y="172" text-anchor="middle" font-size="12" font-weight="400" fill="#94a3b8">2^0</text><text x="450" y="196" text-anchor="middle" font-size="15" font-weight="700" fill="#7c3aed">8 + 4 + 1 = 13   ·   1 Byte = 8 Bits (0–255)</text></svg><figcaption>🖼️ តម្លៃទីតាំងនៃ Bit នីមួយៗក្នុង 1 Byte</figcaption></figure>
+
+<table><tr><th>Decimal</th><th>Binary</th><th>Hex</th><th>ប្រើនៅណា</th></tr><tr><td>0</td><td>0000</td><td>0</td><td></td></tr><tr><td>9</td><td>1001</td><td>9</td><td></td></tr><tr><td>10</td><td>1010</td><td>A</td><td></td></tr><tr><td>15</td><td>1111</td><td>F</td><td></td></tr><tr><td>255</td><td>1111 1111</td><td>FF</td><td>ពណ៌ <code class='i'>#FF0000</code> · IP <code class='i'>255.255.255.0</code></td></tr></table>
+
+<h3>វិធីបំលែង Decimal → Binary (ចែកនឹង ២)</h3>
+<p>13 ÷ 2 = 6 សល់ <b>1</b> · 6 ÷ 2 = 3 សល់ <b>0</b> · 3 ÷ 2 = 1 សល់ <b>1</b> · 1 ÷ 2 = 0 សល់ <b>1</b> → អានសល់ពីក្រោមឡើងលើ = <b>1101</b></p>
+<script type="text/x-code" data-lang="py" data-label="numbers.py">
+n = 13
+print("Binary:", bin(n))          # 0b = prefix binary
+print("Hex   :", hex(255))        # 0x = prefix hex
+print("Octal :", oct(8))
+
+# បំលែងត្រឡប់មក Decimal
+print(int("1101", 2))             # binary → 13
+print(int("FF", 16))              # hex → 255
+
+# ធ្វើដោយដៃ (algorithm ចែកនឹង 2)
+def to_binary(x):
+    bits = ""
+    while x > 0:
+        bits = str(x % 2) + bits   # % = សំណល់
+        x = x // 2                 # // = ចែកយកគត់
+    return bits or "0"
+
+for v in [5, 13, 42, 255]:
+    print(f"{v:>3} → {to_binary(v):>8} | 8-bit: {v:08b} | hex: {v:02X}")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>Binary: 0b1101
+Hex   : 0xff
+Octal : 0o10
+13
+255
+  5 →      101 | 8-bit: 00000101 | hex: 05
+ 13 →     1101 | 8-bit: 00001101 | hex: 0D
+ 42 →   101010 | 8-bit: 00101010 | hex: 2A
+255 → 11111111 | 8-bit: 11111111 | hex: FF</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>bin()</code>, <code class='i'>hex()</code>, <code class='i'>oct()</code> — Function ស្រាប់របស់ Python។</li><li><code class='i'>int('1101', 2)</code> — អាន String ជាលេខគោល ២។</li><li>ក្នុង <code class='i'>to_binary</code>៖ <code class='i'>x % 2</code> យកសំណល់ (0/1) ដាក់ខាងមុខ · <code class='i'>x // 2</code> ចែកបន្ត រហូតដល់ 0។</li><li><code class='i'>{v:08b}</code> — f-string format៖ binary ៨ ខ្ទង់ ដាក់ 0 ពីមុខ · <code class='i'>:02X</code> hex អក្សរធំ ២ ខ្ទង់។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>បំលែង ① 25 → Binary ② <code class='i'>101010</code> → Decimal ③ ពណ៌ <code class='i'>#1E90FF</code> មានតម្លៃ Red, Green, Blue ប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>① 25 = 16+8+1 = <b>11001</b> ② 32+8+2 = <b>42</b> ③ 1E = <b>30</b>, 90 = <b>144</b>, FF = <b>255</b> → rgb(30,144,255)</p><script type="text/x-code" data-lang="py" data-label="check.py">
+print(bin(25), int("101010", 2), int("1E",16), int("90",16), int("FF",16))
+</script>
+</details></div>
+
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>ឯកតាទិន្នន័យ &amp; ការអ៊ិនកូដអក្សរ (ASCII · Unicode · UTF-8)</h2>
+
+<table><tr><th>ឯកតា</th><th>ទំហំ</th><th>ឧទាហរណ៍</th></tr><tr><td>Bit (b)</td><td>0 ឬ 1</td><td>ល្បឿន Internet ប្រើ bit: 100 Mbps</td></tr><tr><td>Byte (B)</td><td>8 bits</td><td>អក្សរ A មួយ</td></tr><tr><td>Kilobyte (KB)</td><td>1,000 B (KiB = 1,024 B)</td><td>ឯកសារ Text តូច</td></tr><tr><td>Megabyte (MB)</td><td>1,000 KB</td><td>រូបថត ៣–៥ MB · បទចម្រៀង MP3</td></tr><tr><td>Gigabyte (GB)</td><td>1,000 MB</td><td>ភាពយន្ត HD ≈ 2–4 GB · RAM 16 GB</td></tr><tr><td>Terabyte (TB)</td><td>1,000 GB</td><td>SSD/HDD 1 TB</td></tr><tr><td>Petabyte (PB)</td><td>1,000 TB</td><td>Data center</td></tr></table>
+
+<div class="warn">⚠️ <b>MB ≠ Mb!</b> 100 Mbps (megabit) ÷ 8 = <b>12.5 MB/s</b> (megabyte)។ ហើយ SSD 512 GB បង្ហាញក្នុង Windows ត្រឹម ≈ 476 GB ព្រោះ Windows គិតជា GiB (1,024³)។</div>
+
+<h3>ការអ៊ិនកូដអក្សរ</h3>
+<p>កុំព្យូទ័ររក្សាអក្សរជាលេខ។ <b>ASCII</b> (1963) មានតែ 128 តួ (អក្សរអង់គ្លេស)។ <b>Unicode</b> ផ្តល់លេខ (Code point) ឲ្យអក្សរគ្រប់ភាសា — រួមទាំង <b>អក្សរខ្មែរ U+1780–U+17FF</b>។ <b>UTF-8</b> គឺជាវិធីរក្សាលេខទាំងនោះជា Bytes ហើយជាស្តង់ដារលើ Web។</p>
+<figure class="fig"><svg viewBox="0 0 900 220" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="900" height="220" fill="#fff"/><rect x="20" y="50" width="150" height="110" rx="14" fill="#2563eb"/><text x="95.0" y="99.0" text-anchor="middle" font-size="40" font-weight="700" fill="#fff">A</text><text x="95.0" y="121.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">U+0041</text><rect x="200" y="50" width="150" height="110" rx="14" fill="#7c3aed"/><text x="275.0" y="99.0" text-anchor="middle" font-size="40" font-weight="700" fill="#fff">ក</text><text x="275.0" y="121.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">U+1780</text><rect x="380" y="50" width="150" height="110" rx="14" fill="#db2777"/><text x="455.0" y="99.0" text-anchor="middle" font-size="40" font-weight="700" fill="#fff">中</text><text x="455.0" y="121.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">U+4E2D</text><rect x="560" y="50" width="150" height="110" rx="14" fill="#ea580c"/><text x="635.0" y="99.0" text-anchor="middle" font-size="40" font-weight="700" fill="#fff">😀</text><text x="635.0" y="121.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">U+1F600</text><text x="95" y="190" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">1 Byte</text><text x="275" y="190" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">3 Bytes</text><text x="455" y="190" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">3 Bytes</text><text x="635" y="190" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">4 Bytes</text><text x="805" y="95" text-anchor="middle" font-size="22" font-weight="800" fill="#059669">UTF-8</text><text x="805" y="120" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">ប្រើលើ Web</text><text x="805" y="140" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">≈98% នៃគេហទំព័រ</text><text x="450" y="30" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">Character → Code point (Unicode) → Bytes (UTF-8)</text></svg><figcaption>🖼️ អក្សរនីមួយៗប្រើ Byte ខុសគ្នាក្នុង UTF-8</figcaption></figure>
+
+<script type="text/x-code" data-lang="py" data-label="units.py">
+for ch in ["A", "ក", "中", "😀"]:
+    b = ch.encode("utf-8")
+    print(f"{ch}  code point U+{ord(ch):04X}  bytes={len(b)}  {b.hex(' ')}")
+
+word = "សួស្តី"
+print("ចំនួនតួ:", len(word), "| ទំហំ UTF-8:", len(word.encode("utf-8")), "bytes")
+
+# គណនាពេលទាញយក
+size_gb = 2            # ភាពយន្ត 2 GB
+speed_mbps = 50        # Internet 50 Mbps
+seconds = size_gb * 1000 * 8 / speed_mbps
+print(f"ទាញយក {size_gb} GB ក្នុង {speed_mbps} Mbps ≈ {seconds/60:.1f} នាទី")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>A  code point U+0041  bytes=1  41
+ក  code point U+1780  bytes=3  e1 9e 80
+中  code point U+4E2D  bytes=3  e4 b8 ad
+😀  code point U+1F600  bytes=4  f0 9f 98 80
+ចំនួនតួ: 6 | ទំហំ UTF-8: 18 bytes
+ទាញយក 2 GB ក្នុង 50 Mbps ≈ 5.3 នាទី</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>ch.encode('utf-8')</code> បំលែងអក្សរ → Bytes · <code class='i'>len(b)</code> រាប់ Bytes។</li><li><code class='i'>ord(ch)</code> ផ្តល់ Code point ជាលេខ · <code class='i'>:04X</code> បង្ហាញជា hex ៤ ខ្ទង់។</li><li>ពាក្យ “សួស្តី” មាន ៦ តួ (រួមទាំងជើង និងស្រៈ) × 3 bytes = 18 bytes។</li><li>ពេលទាញយក៖ GB × 1000 → MB × 8 → Mb ÷ ល្បឿន (Mbps) = វិនាទី។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>រូបថត 4 MB ចំនួន 250 សន្លឹក ត្រូវការទំហំប៉ុន្មាន GB? បើ Upload ក្នុងល្បឿន 20 Mbps ត្រូវចំណាយពេលប៉ុន្មាននាទី?</p><details><summary>មើលចម្លើយ</summary><p>4 × 250 = 1,000 MB = <b>1 GB</b> · 1,000 MB × 8 = 8,000 Mb ÷ 20 = 400 វិនាទី ≈ <b>6.7 នាទី</b></p></details></div>
+
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Hardware ខាងក្នុង៖ CPU, RAM, Storage, Motherboard</h2>
+
+<figure class="fig"><svg viewBox="0 0 960 330" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="960" height="330" fill="#fff"/><rect x="300" y="20" width="360" height="190" rx="18" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/><text x="480" y="46" text-anchor="middle" font-size="16" font-weight="700" fill="#5b21b6">CPU (Central Processing Unit)</text><rect x="325" y="62" width="150" height="70" rx="14" fill="#7c3aed"/><text x="400.0" y="91.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Control Unit</text><text x="400.0" y="113.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">បញ្ជា</text><rect x="485" y="62" width="150" height="70" rx="14" fill="#a21caf"/><text x="560.0" y="91.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">ALU</text><text x="560.0" y="113.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">គណនា + ប្រៀបធៀប</text><rect x="325" y="142" width="310" height="52" rx="14" fill="#6d28d9"/><text x="480.0" y="174.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Registers · Cache (L1/L2/L3)</text><rect x="20" y="80" width="200" height="80" rx="14" fill="#2563eb"/><text x="120.0" y="114.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Input</text><text x="120.0" y="136.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Keyboard · Mouse</text><rect x="740" y="80" width="200" height="80" rx="14" fill="#059669"/><text x="840.0" y="114.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Output</text><text x="840.0" y="136.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Monitor · Printer</text><rect x="300" y="250" width="170" height="66" rx="14" fill="#ea580c"/><text x="385.0" y="277.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">RAM</text><text x="385.0" y="299.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">អង្គចងចាំបណ្តោះអាសន្ន</text><rect x="490" y="250" width="170" height="66" rx="14" fill="#0891b2"/><text x="575.0" y="277.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Storage</text><text x="575.0" y="299.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">SSD/HDD (អចិន្ត្រៃយ៍)</text><line x1="222" y1="120" x2="296" y2="120" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="664" y1="120" x2="736" y2="120" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="385" y1="246" x2="385" y2="214" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)" marker-start="url(#ar)"/><line x1="575" y1="246" x2="575" y2="214" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)" marker-start="url(#ar)"/><text x="150" y="290" text-anchor="middle" font-size="14" font-weight="600" fill="#475569">Bus = ផ្លូវបញ្ជូនទិន្នន័យ</text></svg><figcaption>🖼️ Von Neumann Architecture — របៀបដែល CPU, RAM និង Storage ធ្វើការជាមួយគ្នា</figcaption></figure>
+
+<table><tr><th>គ្រឿង</th><th>តួនាទី</th><th>លក្ខណៈសំខាន់</th><th>ប្រៀបធៀប</th></tr><tr><td>🧠 <b>CPU</b></td><td>ប្រតិបត្តិការណែនាំ (Fetch → Decode → Execute)</td><td>Cores, Threads, GHz, Cache</td><td>ខួរក្បាល</td></tr><tr><td>⚡ <b>RAM</b></td><td>ផ្ទុកកម្មវិធីដែលកំពុងដំណើរការ (បាត់ពេលបិទភ្លើង)</td><td>8/16/32 GB, DDR4/DDR5</td><td>តុធ្វើការ</td></tr><tr><td>💾 <b>Storage</b></td><td>រក្សាទុកអចិន្ត្រៃយ៍</td><td>HDD (យឺត ថោក) · SATA SSD · NVMe SSD (លឿនបំផុត)</td><td>ទូដាក់ឯកសារ</td></tr><tr><td>🧩 <b>Motherboard</b></td><td>ភ្ជាប់គ្រប់គ្រឿង</td><td>Socket, Chipset, RAM slots, M.2</td><td>ឆ្អឹងខ្នង</td></tr><tr><td>🎮 <b>GPU</b></td><td>គណនារូបភាព + AI</td><td>VRAM, CUDA cores</td><td>វិចិត្រករ</td></tr><tr><td>🔌 <b>PSU</b></td><td>ផ្គត់ផ្គង់ភ្លើង</td><td>Watt (550W, 750W), 80+ Bronze/Gold</td><td>បេះដូង</td></tr><tr><td>❄️ <b>Cooling</b></td><td>បញ្ចុះកម្តៅ</td><td>Fan, Heatsink, Liquid</td><td>ម៉ាស៊ីនត្រជាក់</td></tr></table>
+
+<div class="note">💡 <b>ហេតុអ្វី RAM សំខាន់?</b> បើបើក Chrome 30 tabs + Zoom ហើយ RAM ពេញ, Windows ប្រើ SSD ជំនួស (Page file) ដែលយឺតជាង RAM រាប់សិបដង → កុំព្យូទ័រគាំង។</div>
+
+<h3>💻 ពិនិត្យ Hardware របស់អ្នក</h3>
+<script type="text/x-code" data-lang="ps" data-label="PowerShell (Windows)">
+# Windows PowerShell
+Get-CimInstance Win32_Processor | Select-Object Name, NumberOfCores
+Get-CimInstance Win32_PhysicalMemory | Measure-Object Capacity -Sum
+Get-PhysicalDisk | Select-Object FriendlyName, MediaType, Size
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>ឧទាហរណ៍លទ្ធផល (Windows)</span></div><pre>Name                                     NumberOfCores
+----                                     -------------
+13th Gen Intel(R) Core(TM) i5-13420H                 8
+Sum      : 17179869184        ← 16 GB
+FriendlyName         MediaType  Size
+NVMe SSD 512GB       SSD        512110190592</pre></div>
+
+<script type="text/x-code" data-lang="bash" data-label="Terminal (Linux/macOS)">
+nproc                      # ចំនួន CPU threads
+free -h | head -2          # RAM
+df -h / | tail -1          # Disk
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · bash លើ Linux</span></div><pre><span class="tp">dara@pc:~$</span> <span class="tc">nproc                      # ចំនួន CPU threads</span>
+2
+<span class="tp">dara@pc:~$</span> <span class="tc">free -h | head -2          # RAM</span>
+               total        used        free      shared  buff/cache   available
+Mem:           7.8Gi       655Mi       6.9Gi        16Mi       502Mi       7.2Gi
+<span class="tp">dara@pc:~$</span> <span class="tc">df -h / | tail -1          # Disk</span>
+/dev/vda        252G   14G   29G  33% /</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>Get-CimInstance</code> សួរព័ត៌មានប្រព័ន្ធពី Windows (WMI) · <code class='i'>Select-Object</code> ជ្រើសតែ Column ដែលចង់មើល។</li><li>សញ្ញា <code class='i'>|</code> (pipe) បញ្ជូនលទ្ធផលពីពាក្យបញ្ជាមុន ទៅពាក្យបញ្ជាបន្ទាប់។</li><li>Linux៖ <code class='i'>nproc</code> = CPU · <code class='i'>free -h</code> = RAM (h = human readable) · <code class='i'>df -h</code> = Disk។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>សិស្សម្នាក់មានថវិកាតិច ចង់ឲ្យ Laptop ចាស់ (HDD 500 GB, RAM 4 GB) លឿនជាងមុន។ គួរ Upgrade អ្វីមុន? ហេតុអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>① <b>ប្តូរ HDD → SSD</b> (ប្រសិទ្ធភាពខ្ពស់បំផុតតាមតម្លៃ៖ Boot ពី ~1 នាទី → ~15 វិនាទី) ② <b>បន្ថែម RAM ទៅ 8 GB</b>។ CPU ភាគច្រើនប្តូរមិនបានលើ Laptop។</p></details></div>
+
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>ឧបករណ៍ Input/Output &amp; Ports</h2>
+
+<figure class="fig"><svg viewBox="0 0 960 195" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="960" height="200" fill="#fff"/><rect x="54" y="40" width="72" height="30" rx="4" fill="#2563eb"/><rect x="64" y="47" width="52" height="9" fill="#fff"/><text x="90" y="112" text-anchor="middle" font-size="17" font-weight="700" fill="#0f172a">USB-A</text><text x="90" y="136" text-anchor="middle" font-size="13" font-weight="400" fill="#475569">Flash · Keyboard</text><rect x="211" y="42" width="72" height="26" rx="13" fill="#7c3aed"/><rect x="225" y="51" width="44" height="8" rx="4" fill="#fff"/><text x="247" y="112" text-anchor="middle" font-size="17" font-weight="700" fill="#0f172a">USB-C</text><text x="247" y="136" text-anchor="middle" font-size="13" font-weight="400" fill="#475569">សាក · ទិន្នន័យ · Video</text><path d="M364 40h80v18l-10 12h-60l-10-12z" fill="#ea580c"/><text x="404" y="112" text-anchor="middle" font-size="17" font-weight="700" fill="#0f172a">HDMI</text><text x="404" y="136" text-anchor="middle" font-size="13" font-weight="400" fill="#475569">TV · Monitor</text><path d="M523 40h76v30h-64l-12-12z" fill="#db2777"/><text x="561" y="112" text-anchor="middle" font-size="17" font-weight="700" fill="#0f172a">DisplayPort</text><text x="561" y="136" text-anchor="middle" font-size="13" font-weight="400" fill="#475569">Monitor 144Hz+</text><rect x="688" y="34" width="60" height="44" rx="4" fill="#059669"/><rect x="706" y="70" width="24" height="10" fill="#fff"/><text x="718" y="112" text-anchor="middle" font-size="17" font-weight="700" fill="#0f172a">RJ45</text><text x="718" y="136" text-anchor="middle" font-size="13" font-weight="400" fill="#475569">Ethernet LAN</text><circle cx="875" cy="56" r="20" fill="#475569"/><circle cx="875" cy="56" r="7" fill="#fff"/><text x="875" y="112" text-anchor="middle" font-size="17" font-weight="700" fill="#0f172a">3.5mm</text><text x="875" y="136" text-anchor="middle" font-size="13" font-weight="400" fill="#475569">កាស · Mic</text><text x="480" y="182" text-anchor="middle" font-size="14" font-weight="600" fill="#7c3aed">Port = រន្ធភ្ជាប់ឧបករណ៍ · USB-C អាចមាន Thunderbolt/USB4 (40 Gbps)</text></svg><figcaption>🖼️ Port ទូទៅលើកុំព្យូទ័រ</figcaption></figure>
+
+<table><tr><th>Input</th><th>Output</th><th>ទាំងពីរ (I/O)</th></tr><tr><td>Keyboard, Mouse, Microphone, Scanner, Webcam, ម៉ាស៊ីនស្កេនម្រាមដៃ</td><td>Monitor, Printer, Speaker, Projector</td><td>Touchscreen, Headset, External SSD, Network card</td></tr></table>
+
+<table><tr><th>Port / Wireless</th><th>ល្បឿន</th><th>ប្រើសម្រាប់</th></tr><tr><td>USB 2.0 / 3.2 / USB4</td><td>480 Mbps / 5–20 Gbps / 40 Gbps</td><td>ឧបករណ៍ស្ទើរតែគ្រប់ប្រភេទ</td></tr><tr><td>HDMI 2.1</td><td>48 Gbps</td><td>TV, Monitor, Projector</td></tr><tr><td>Ethernet RJ45 (Cat6)</td><td>1–10 Gbps</td><td>Internet ខ្សែ (ស្ថិរភាព)</td></tr><tr><td>Wi-Fi 6 / 7</td><td>រហូតដល់ 9.6 / 46 Gbps (ទ្រឹស្តី)</td><td>Internet ឥតខ្សែ</td></tr><tr><td>Bluetooth 5</td><td>≈ 2 Mbps</td><td>កាស Mouse Keyboard</td></tr><tr><td>NFC</td><td>ចម្ងាយ ≤ 4 cm</td><td>បង់ប្រាក់ Tap</td></tr></table>
+
+<h3>💻 មើលឧបករណ៍ដែលភ្ជាប់</h3>
+<script type="text/x-code" data-lang="ps" data-label="PowerShell">
+Get-PnpDevice -Class USB -PresentOnly | Select-Object FriendlyName, Status
+</script>
+
+<script type="text/x-code" data-lang="bash" data-label="Linux">
+lsusb        # Linux: បញ្ជីឧបករណ៍ USB
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>ឧទាហរណ៍លទ្ធផល</span></div><pre>FriendlyName                     Status
+------------                     ------
+USB Receiver (Logitech)          OK
+USB Mass Storage Device          OK</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>Get-PnpDevice</code> = Plug and Play devices · <code class='i'>-Class USB</code> ត្រងតែ USB · <code class='i'>-PresentOnly</code> តែឧបករណ៍ដែលកំពុងភ្ជាប់។</li><li>Status <b>OK</b> = Driver ដំណើរការ · <b>Error</b> = ត្រូវដំឡើង/ធ្វើបច្ចុប្បន្នភាព Driver។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>គ្រូចង់ភ្ជាប់ Laptop (មានតែ USB-C) ទៅ Projector (មានតែ HDMI)។ ត្រូវការអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>Adapter/Hub <b>USB-C → HDMI</b> ហើយ USB-C នោះត្រូវគាំទ្រ <b>DisplayPort Alt Mode</b> (មើលសញ្ញា DP ឬ ⚡ Thunderbolt ក្បែរ Port)។</p></details></div>
+
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Software៖ ប្រភេទ, Firmware &amp; អាជ្ញាប័ណ្ណ</h2>
+
+<figure class="fig"><svg viewBox="0 0 760 330" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="760" height="330" fill="#fff"/><rect x="130" y="20" width="500" height="56" rx="14" fill="#db2777"/><text x="380.0" y="54.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">👤 អ្នកប្រើ (User)</text><rect x="130" y="86" width="500" height="56" rx="14" fill="#7c3aed"/><text x="380.0" y="108.0" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">📱 Applications</text><text x="380.0" y="130.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Chrome · Word · Telegram</text><rect x="130" y="152" width="500" height="56" rx="14" fill="#2563eb"/><text x="380.0" y="174.0" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">🧩 Operating System (Kernel + Drivers)</text><text x="380.0" y="196.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Windows · macOS · Linux · Android</text><rect x="130" y="218" width="500" height="46" rx="14" fill="#0891b2"/><text x="380.0" y="247.0" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">⚙️ Firmware (BIOS/UEFI)</text><rect x="130" y="274" width="500" height="46" rx="14" fill="#059669"/><text x="380.0" y="303.0" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">🖥️ Hardware (CPU · RAM · SSD)</text></svg><figcaption>🖼️ ស្រទាប់ Software ពី Hardware ដល់អ្នកប្រើ</figcaption></figure>
+
+<table><tr><th>ប្រភេទ</th><th>ន័យ</th><th>ឧទាហរណ៍</th></tr><tr><td><b>System Software</b></td><td>គ្រប់គ្រង Hardware</td><td>Windows, Linux, Drivers</td></tr><tr><td><b>Application Software</b></td><td>ជួយអ្នកប្រើធ្វើការងារ</td><td>Word, Chrome, Photoshop, Telegram</td></tr><tr><td><b>Firmware</b></td><td>Software ក្នុង Chip របស់ Hardware</td><td>BIOS/UEFI, Router firmware</td></tr><tr><td><b>Utility</b></td><td>ថែទាំប្រព័ន្ធ</td><td>Antivirus, Backup, Disk cleanup</td></tr><tr><td><b>Programming tools</b></td><td>បង្កើត Software</td><td>VS Code, Python, Git</td></tr></table>
+
+<h3>អាជ្ញាប័ណ្ណ (License)</h3>
+<table><tr><th>ប្រភេទ</th><th>តម្លៃ</th><th>Source code</th><th>ឧទាហរណ៍</th></tr><tr><td>Proprietary</td><td>បង់ថ្លៃ</td><td>បិទ</td><td>Windows, Adobe Photoshop</td></tr><tr><td>Subscription (SaaS)</td><td>បង់ប្រចាំខែ/ឆ្នាំ</td><td>បិទ</td><td>Microsoft 365, Canva Pro</td></tr><tr><td>Freeware</td><td>ឥតគិតថ្លៃ</td><td>បិទ</td><td>Zoom (Free), Telegram</td></tr><tr><td>Open Source</td><td>ឥតគិតថ្លៃ (ភាគច្រើន)</td><td>បើក — កែបាន</td><td>Linux, LibreOffice, Python, VS Code (Code-OSS)</td></tr><tr><td>Trial / Shareware</td><td>សាកល្បងមួយរយៈ</td><td>បិទ</td><td>WinRAR, ជំនាន់ Trial</td></tr></table>
+
+<div class="warn">⚠️ ការប្រើ Software លួច (Crack) មានហានិភ័យ <b>Malware</b> និងខុសច្បាប់កម្មសិទ្ធិបញ្ញា។ ជ្រើសជម្រើស Open Source ឬ Free ជំនួស។</div>
+
+<h3>💻 ពិនិត្យ Software ដែលដំឡើង</h3>
+<script type="text/x-code" data-lang="ps" data-label="PowerShell">
+winget list | Select-Object -First 5      # Windows Package Manager
+winget install Python.Python.3.12         # ដំឡើង Python តាម Command
+winget upgrade --all                      # Update កម្មវិធីទាំងអស់
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>winget</code> គឺជា Package Manager របស់ Windows — ដំឡើង/Update កម្មវិធីតាម Command ដោយមិនចាំបាច់ចូល Website។</li><li>macOS ប្រើ <code class='i'>brew install</code> · Ubuntu ប្រើ <code class='i'>sudo apt install</code>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>ចាត់ថ្នាក់៖ ① Google Chrome ② Driver កាតក្រាហ្វិក ③ UEFI ④ Windows Defender ⑤ Android</p><details><summary>មើលចម្លើយ</summary><p>① Application ② System (Driver) ③ Firmware ④ Utility (Security) ⑤ System (OS)</p></details></div>
+
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Operating System &amp; File System</h2>
+
+<table><tr><th>OS</th><th>ក្រុមហ៊ុន/អ្នកបង្កើត</th><th>ឆ្នាំ</th><th>ប្រើភាគច្រើន</th></tr><tr><td>Windows</td><td>Microsoft (Bill Gates &amp; Paul Allen)</td><td>1985</td><td>PC ការិយាល័យ Game</td></tr><tr><td>macOS</td><td>Apple</td><td>2001 (Mac OS X)</td><td>Design វីដេអូ Developer</td></tr><tr><td>Linux</td><td>Linus Torvalds</td><td>1991</td><td>Server, Cloud, Android</td></tr><tr><td>Android</td><td>Google (Andy Rubin)</td><td>2008</td><td>ទូរស័ព្ទ ~70% ពិភពលោក</td></tr><tr><td>iOS</td><td>Apple</td><td>2007</td><td>iPhone, iPad</td></tr></table>
+
+<h3>តួនាទី OS</h3>
+<div class="grid"><div class="card"><b>🧠 គ្រប់គ្រង Process</b><br>បែងចែក CPU ឲ្យកម្មវិធីនីមួយៗ</div><div class="card"><b>⚡ គ្រប់គ្រង Memory</b><br>ផ្តល់ RAM ឲ្យកម្មវិធី</div><div class="card"><b>📁 File System</b><br>រៀបចំ File/Folder លើ Disk</div><div class="card"><b>🔌 Drivers</b><br>និយាយជាមួយ Hardware</div><div class="card"><b>👤 Users &amp; Security</b><br>Account, Password, Permission</div><div class="card"><b>🖼️ Interface</b><br>GUI (ចុច) ឬ CLI (វាយ)</div></div>
+
+<table><tr><th>File System</th><th>OS</th><th>ចំណាំ</th></tr><tr><td>NTFS</td><td>Windows</td><td>Permission, File > 4 GB</td></tr><tr><td>APFS</td><td>macOS/iOS</td><td>លឿនលើ SSD</td></tr><tr><td>ext4</td><td>Linux</td><td>ស្តង់ដារ Linux</td></tr><tr><td>FAT32</td><td>គ្រប់ OS</td><td>File ធំបំផុត 4 GB</td></tr><tr><td>exFAT</td><td>គ្រប់ OS</td><td>ល្អសម្រាប់ Flash drive</td></tr></table>
+
+<h3>💻 Path &amp; ពាក្យបញ្ជា File</h3>
+<p>Windows៖ <code class="i">C:\Users\Dara\Documents\cv.docx</code> · macOS/Linux៖ <code class="i">/home/dara/Documents/cv.docx</code></p>
+<script type="text/x-code" data-lang="bash" data-label="Terminal (Linux/macOS)">
+pwd                          # ខ្ញុំនៅ Folder ណា?
+mkdir -p school/2026/math    # បង្កើត Folder (ច្រើនជាន់)
+echo "Hello IT" > school/note.txt
+cp school/note.txt school/2026/
+mv school/note.txt school/readme.txt
+ls -R school
+cat school/readme.txt
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · bash លើ Linux</span></div><pre><span class="tp">dara@pc:~$</span> <span class="tc">pwd                          # ខ្ញុំនៅ Folder ណា?</span>
+/home/dara
+<span class="tp">dara@pc:~$</span> <span class="tc">mkdir -p school/2026/math    # បង្កើត Folder (ច្រើនជាន់)</span>
+<span class="tp">dara@pc:~$</span> <span class="tc">echo &quot;Hello IT&quot; &gt; school/note.txt</span>
+<span class="tp">dara@pc:~$</span> <span class="tc">cp school/note.txt school/2026/</span>
+<span class="tp">dara@pc:~$</span> <span class="tc">mv school/note.txt school/readme.txt</span>
+<span class="tp">dara@pc:~$</span> <span class="tc">ls -R school</span>
+school:
+2026
+readme.txt
+
+school/2026:
+math
+note.txt
+
+school/2026/math:
+<span class="tp">dara@pc:~$</span> <span class="tc">cat school/readme.txt</span>
+Hello IT</pre></div>
+
+<table><tr><th>ការងារ</th><th>Windows (PowerShell/cmd)</th><th>Linux/macOS</th></tr><tr><td>Folder បច្ចុប្បន្ន</td><td><code class='i'>pwd</code> / <code class='i'>cd</code></td><td><code class='i'>pwd</code></td></tr><tr><td>មើល File</td><td><code class='i'>dir</code> / <code class='i'>ls</code></td><td><code class='i'>ls -l</code></td></tr><tr><td>ចូល Folder</td><td><code class='i'>cd Documents</code></td><td><code class='i'>cd Documents</code></td></tr><tr><td>បង្កើត Folder</td><td><code class='i'>mkdir test</code></td><td><code class='i'>mkdir test</code></td></tr><tr><td>ចម្លង</td><td><code class='i'>copy a.txt b.txt</code></td><td><code class='i'>cp a.txt b.txt</code></td></tr><tr><td>លុប</td><td><code class='i'>del a.txt</code></td><td><code class='i'>rm a.txt</code></td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>mkdir -p</code> បង្កើត Folder មេ+កូនក្នុងពេលតែមួយ។</li><li><code class='i'>echo "..." > file</code> សរសេរអក្សរចូល File (<code class='i'>&gt;</code> = សរសេរជាន់ · <code class='i'>&gt;&gt;</code> = បន្ថែម)។</li><li><code class='i'>cp</code> = copy · <code class='i'>mv</code> = move/ប្តូរឈ្មោះ · <code class='i'>ls -R</code> = បង្ហាញ Folder រងទាំងអស់។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>សរសេរពាក្យបញ្ជាដើម្បី៖ បង្កើត Folder <code class='i'>project/img</code> → បង្កើត File <code class='i'>project/index.html</code> → បង្ហាញ File ទាំងអស់ក្នុង project។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="bash" data-label="Answer">
+mkdir -p project/img
+touch project/index.html      # Windows PowerShell: New-Item project/index.html
+ls project
+</script>
+</details></div>
+
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>គ្រប់គ្រង File &amp; Backup (ច្បាប់ 3-2-1)</h2>
+
+<p>ឧបករណ៍អាចខូច ត្រូវគេលួច ឬត្រូវ Ransomware អ៊ិនគ្រីប។ <b>Backup</b> គឺជាការការពារទិន្នន័យដ៏សំខាន់បំផុត។</p>
+<div class="grid"><div class="card"><b>3️⃣ ច្បាប់ចម្លង ៣</b><br>ទិន្នន័យដើម + Backup ២</div><div class="card"><b>2️⃣ ឧបករណ៍ ២ ប្រភេទ</b><br>ឧ. SSD ក្នុងម៉ាស៊ីន + External drive</div><div class="card"><b>1️⃣ នៅក្រៅ ១</b><br>Cloud (Google Drive/OneDrive) ឬទុកនៅផ្ទះផ្សេង</div></div>
+
+<table><tr><th>ប្រភេទ Backup</th><th>ចម្លងអ្វី</th><th>ល្បឿន/ទំហំ</th></tr><tr><td>Full</td><td>ទាំងអស់</td><td>យឺត · ធំ</td></tr><tr><td>Incremental</td><td>តែអ្វីដែលប្តូរ ចាប់ពី Backup ចុងក្រោយ</td><td>លឿនបំផុត</td></tr><tr><td>Differential</td><td>អ្វីដែលប្តូរ ចាប់ពី Full ចុងក្រោយ</td><td>មធ្យម</td></tr></table>
+
+<h3>💻 Script Backup ស្វ័យប្រវត្តិ</h3>
+<script type="text/x-code" data-lang="bash" data-label="backup.sh">
+mkdir -p Documents backups && echo "ពិន្ទុ" > Documents/scores.txt && echo "CV" > Documents/cv.txt
+STAMP=$(date +%Y-%m-%d); echo "Backup date: $STAMP"
+tar -czf "backups/docs-$STAMP.tar.gz" Documents
+ls -lh backups | tail -1
+tar -tzf backups/*.tar.gz
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · bash លើ Linux</span></div><pre><span class="tp">dara@pc:~$</span> <span class="tc">mkdir -p Documents backups &amp;&amp; echo &quot;ពិន្ទុ&quot; &gt; Documents/scores.txt &amp;&amp; echo &quot;CV&quot; &gt; Documents/cv.txt</span>
+<span class="tp">dara@pc:~$</span> <span class="tc">STAMP=$(date +%Y-%m-%d); echo &quot;Backup date: $STAMP&quot;</span>
+Backup date: 2026-11-14
+<span class="tp">dara@pc:~$</span> <span class="tc">tar -czf &quot;backups/docs-$STAMP.tar.gz&quot; Documents</span>
+<span class="tp">dara@pc:~$</span> <span class="tc">ls -lh backups | tail -1</span>
+-rw-r--r-- 1 dara dara 209 Nov 14 14:02 docs-2026-11-14.tar.gz
+<span class="tp">dara@pc:~$</span> <span class="tc">tar -tzf backups/*.tar.gz</span>
+Documents/
+Documents/scores.txt
+Documents/cv.txt</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>$(date +%Y-%m-%d)</code> — យកកាលបរិច្ឆេទថ្ងៃនេះ ដាក់ក្នុង Variable <code class='i'>STAMP</code>។</li><li><code class='i'>tar -czf</code>៖ <b>c</b>=create · <b>z</b>=compress gzip · <b>f</b>=file → បង្កើត File <code class='i'>.tar.gz</code> តែមួយ។</li><li><code class='i'>tar -tzf</code>៖ <b>t</b>=list — ផ្ទៀងផ្ទាត់ថា Backup មាន File គ្រប់។ <b>Backup ដែលមិនបានសាកស្តារ = មិនទាន់ប្រាកដ!</b></li><li>Windows៖ ប្រើ <code class='i'>Compress-Archive -Path Documents -DestinationPath backup.zip</code> ឬ File History។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>ការិយាល័យមួយ Backup រាល់ថ្ងៃ ទៅ External drive ដែលដោតជាប់នឹង PC រហូត។ ហេតុអ្វីមិនសុវត្ថិភាព? កែយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>Ransomware អាចអ៊ិនគ្រីបទាំង PC និង Drive ដែលដោតជាប់។ ដោះស្រាយ៖ ដក Drive ចេញក្រោយ Backup (Offline) + បន្ថែម Backup Cloud ដែលមាន Version history = ច្បាប់ 3-2-1។</p></details></div>
+
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Networking៖ LAN, IP, DNS, DHCP</h2>
+
+<figure class="fig"><svg viewBox="0 0 980 330" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="980" height="330" fill="#fff"/><ellipse cx="100" cy="90" rx="80" ry="48" fill="#e0f2fe"/><text x="100" y="86" text-anchor="middle" font-size="17" font-weight="700" fill="#0369a1">☁️ Internet</text><text x="100" y="108" text-anchor="middle" font-size="13" font-weight="400" fill="#0369a1">(WAN)</text><rect x="230" y="60" width="150" height="62" rx="14" fill="#ea580c"/><text x="305.0" y="85.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Modem/ONT</text><text x="305.0" y="107.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ពី ISP</text><rect x="430" y="60" width="150" height="62" rx="14" fill="#7c3aed"/><text x="505.0" y="85.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Router</text><text x="505.0" y="107.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">NAT · DHCP · Firewall</text><rect x="630" y="60" width="150" height="62" rx="14" fill="#2563eb"/><text x="705.0" y="85.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Switch</text><text x="705.0" y="107.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ភ្ជាប់ LAN</text><rect x="830" y="30" width="130" height="52" rx="14" fill="#059669"/><text x="895.0" y="50.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">💻 PC</text><text x="895.0" y="72.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">192.168.1.10</text><rect x="830" y="100" width="130" height="52" rx="14" fill="#059669"/><text x="895.0" y="120.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🖨️ Printer</text><text x="895.0" y="142.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">192.168.1.20</text><rect x="430" y="200" width="150" height="62" rx="14" fill="#db2777"/><text x="505.0" y="225.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">📶 Wi-Fi AP</text><text x="505.0" y="247.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">802.11ax (Wi-Fi 6)</text><rect x="630" y="200" width="130" height="52" rx="14" fill="#0891b2"/><text x="695.0" y="220.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">📱 Phone</text><text x="695.0" y="242.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">192.168.1.31</text><rect x="790" y="230" width="130" height="52" rx="14" fill="#0891b2"/><text x="855.0" y="250.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">💻 Laptop</text><text x="855.0" y="272.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">192.168.1.32</text><line x1="182" y1="90" x2="226" y2="90" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="382" y1="90" x2="426" y2="90" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="582" y1="90" x2="626" y2="90" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="782" y1="80" x2="826" y2="58" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="782" y1="100" x2="826" y2="124" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="505" y1="124" x2="505" y2="196" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="505.0" y="152.0" text-anchor="middle" font-size="13" fill="#334155">Wi-Fi</text><line x1="582" y1="228" x2="626" y2="226" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)" stroke-dasharray="6 5"/><line x1="582" y1="240" x2="786" y2="256" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)" stroke-dasharray="6 5"/><text x="250" y="300" text-anchor="middle" font-size="14" font-weight="600" fill="#334155">LAN = បណ្តាញក្នុងផ្ទះ/ការិយាល័យ · WAN = បណ្តាញធំ (Internet)</text></svg><figcaption>🖼️ បណ្តាញក្នុងផ្ទះ/ការិយាល័យ ភ្ជាប់ទៅ Internet</figcaption></figure>
+
+<table><tr><th>ឧបករណ៍/ពាក្យ</th><th>តួនាទី</th></tr><tr><td><b>Router</b></td><td>ភ្ជាប់ LAN ↔ Internet · ចែក IP (DHCP) · NAT · Firewall</td></tr><tr><td><b>Switch</b></td><td>ភ្ជាប់ឧបករណ៍ច្រើនក្នុង LAN ដោយខ្សែ</td></tr><tr><td><b>Access Point</b></td><td>ផ្តល់ Wi-Fi</td></tr><tr><td><b>IP Address</b></td><td>អាសយដ្ឋានឧបករណ៍ — IPv4 <code class='i'>192.168.1.10</code> · IPv6 <code class='i'>2001:db8::1</code></td></tr><tr><td><b>Subnet mask</b></td><td><code class='i'>255.255.255.0</code> (/24) = បណ្តាញមួយមាន 254 ឧបករណ៍</td></tr><tr><td><b>Gateway</b></td><td>IP របស់ Router — ច្រកចេញទៅ Internet</td></tr><tr><td><b>DNS</b></td><td>បកប្រែឈ្មោះ <code class='i'>google.com</code> → IP (ដូចសៀវភៅទូរស័ព្ទ)</td></tr><tr><td><b>DHCP</b></td><td>ផ្តល់ IP ស្វ័យប្រវត្តិ ពេលភ្ជាប់ Wi-Fi</td></tr><tr><td><b>MAC Address</b></td><td>លេខសម្គាល់ Hardware នៃ Network card</td></tr></table>
+
+<h3>💻 ពាក្យបញ្ជា Network</h3>
+<script type="text/x-code" data-lang="ps" data-label="Command Prompt / PowerShell">
+ipconfig            # មើល IP, Gateway, DNS (Windows)
+ping google.com     # សាកមើលថាទៅដល់ឬអត់ + ល្បឿន (ms)
+nslookup google.com # សួរ DNS
+tracert google.com  # មើលផ្លូវដែល packet ធ្វើដំណើរ
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>ឧទាហរណ៍លទ្ធផល</span></div><pre>IPv4 Address. . . . . . . . . . . : 192.168.1.10
+Subnet Mask . . . . . . . . . . . : 255.255.255.0
+Default Gateway . . . . . . . . . : 192.168.1.1
+
+Reply from 142.250.199.78: bytes=32 time=28ms TTL=117</pre></div>
+
+<h3>💻 គណនា Subnet ដោយ Python</h3>
+<script type="text/x-code" data-lang="py" data-label="subnet.py">
+import ipaddress
+
+net = ipaddress.ip_network("192.168.1.0/24")
+print("Network  :", net.network_address)
+print("Mask     :", net.netmask)
+print("Broadcast:", net.broadcast_address)
+print("Hosts    :", net.num_addresses - 2)
+
+ip = ipaddress.ip_address("192.168.1.10")
+print(ip, "នៅក្នុង", net, "?", ip in net)
+print("Private IP?", ip.is_private)
+print("8.8.8.8 Private?", ipaddress.ip_address("8.8.8.8").is_private)
+
+# បំបែកជា subnet តូចៗ /26
+for sub in net.subnets(new_prefix=26):
+    hosts = list(sub.hosts())
+    print(sub, "→", hosts[0], "-", hosts[-1])
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>Network  : 192.168.1.0
+Mask     : 255.255.255.0
+Broadcast: 192.168.1.255
+Hosts    : 254
+192.168.1.10 នៅក្នុង 192.168.1.0/24 ? True
+Private IP? True
+8.8.8.8 Private? False
+192.168.1.0/26 → 192.168.1.1 - 192.168.1.62
+192.168.1.64/26 → 192.168.1.65 - 192.168.1.126
+192.168.1.128/26 → 192.168.1.129 - 192.168.1.190
+192.168.1.192/26 → 192.168.1.193 - 192.168.1.254</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>import ipaddress</code> — Module ស្រាប់សម្រាប់ IP។</li><li><code class='i'>/24</code> = 24 bits ដំបូងជា Network → 8 bits សល់ = 256 address − 2 (Network + Broadcast) = <b>254 hosts</b>។</li><li><code class='i'>is_private</code> — IP ក្នុងផ្ទះ (10.x, 172.16–31.x, 192.168.x) មិនអាចចូលពី Internet ផ្ទាល់។</li><li><code class='i'>subnets(new_prefix=26)</code> បំបែក /24 ជា ៤ បណ្តាញ (64 address ម្នាក់)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>Laptop បង្ហាញ IP <code class='i'>169.254.23.5</code> ហើយចូល Internet មិនបាន។ មានន័យអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>169.254.x.x (APIPA)</b> = មិនបានទទួល IP ពី <b>DHCP</b> → ពិនិត្យ Router, Restart Wi-Fi, ឬវាយ <code class='i'>ipconfig /release</code> + <code class='i'>ipconfig /renew</code>។</p></details></div>
+
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>Internet &amp; Web៖ Client-Server, HTTP, URL</h2>
+
+<figure class="fig"><svg viewBox="0 0 960 260" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="960" height="260" fill="#fff"/><rect x="20" y="70" width="210" height="110" rx="14" fill="#2563eb"/><text x="125.0" y="119.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🧑‍💻 Client</text><text x="125.0" y="141.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Browser (Chrome)</text><rect x="730" y="70" width="210" height="110" rx="14" fill="#059669"/><text x="835.0" y="119.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🗄️ Server</text><text x="835.0" y="141.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Web Server + DB</text><rect x="380" y="10" width="200" height="50" rx="14" fill="#7c3aed"/><text x="480.0" y="29.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">DNS</text><text x="480.0" y="51.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ឈ្មោះ → IP</text><line x1="234" y1="100" x2="726" y2="100" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="480.0" y="92.0" text-anchor="middle" font-size="13" fill="#334155">① HTTPS Request: GET /index.html</text><line x1="726" y1="160" x2="234" y2="160" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="480.0" y="152.0" text-anchor="middle" font-size="13" fill="#334155">② Response: 200 OK + HTML/CSS/JS</text><line x1="230" y1="72" x2="376" y2="40" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5 4"/><text x="480" y="220" text-anchor="middle" font-size="15" font-weight="600" fill="#0f172a">🔒 HTTPS = HTTP + TLS (អ៊ិនគ្រីប) · Port 443 · HTTP Port 80</text></svg><figcaption>🖼️ ពេលអ្នកបើកគេហទំព័រ៖ Client ផ្ញើ Request → Server ឆ្លើយ Response</figcaption></figure>
+
+<h3>បំបែក URL</h3>
+<p><code class="i">https://www.example.com:443/courses/it?level=1#lesson10</code></p>
+<table><tr><th>ផ្នែក</th><th>តម្លៃ</th><th>ន័យ</th></tr><tr><td>Scheme</td><td>https</td><td>Protocol (មាន 🔒 TLS)</td></tr><tr><td>Host</td><td>www.example.com</td><td>ឈ្មោះ Domain → DNS → IP</td></tr><tr><td>Port</td><td>443</td><td>ច្រក (HTTPS=443, HTTP=80)</td></tr><tr><td>Path</td><td>/courses/it</td><td>ទីតាំង Resource</td></tr><tr><td>Query</td><td>level=1</td><td>ព័ត៌មានបន្ថែម</td></tr><tr><td>Fragment</td><td>lesson10</td><td>ផ្នែកក្នុងទំព័រ</td></tr></table>
+
+<script type="text/x-code" data-lang="py" data-label="url.py">
+from urllib.parse import urlparse, parse_qs
+
+url = "https://www.example.com:443/courses/it?level=1&lang=km#lesson10"
+u = urlparse(url)
+print("scheme :", u.scheme)
+print("host   :", u.hostname)
+print("port   :", u.port)
+print("path   :", u.path)
+print("query  :", parse_qs(u.query))
+print("anchor :", u.fragment)
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>scheme : https
+host   : www.example.com
+port   : 443
+path   : /courses/it
+query  : {&#x27;level&#x27;: [&#x27;1&#x27;], &#x27;lang&#x27;: [&#x27;km&#x27;]}
+anchor : lesson10</pre></div>
+
+<table><tr><th>HTTP Status</th><th>ន័យ</th></tr><tr><td>200 OK</td><td>ជោគជ័យ</td></tr><tr><td>301 / 302</td><td>ផ្លាស់ទីទៅ URL ផ្សេង</td></tr><tr><td>404 Not Found</td><td>រកទំព័រមិនឃើញ</td></tr><tr><td>403 Forbidden</td><td>គ្មានសិទ្ធិ</td></tr><tr><td>500 Internal Server Error</td><td>Server មានបញ្ហា</td></tr></table>
+
+<h3>💻 Web page ដំបូង (HTML + CSS + JS)</h3>
+<p>Browser ទទួល HTML (រចនាសម្ព័ន្ធ) + CSS (ស្អាត) + JavaScript (សកម្មភាព)។ មើលលទ្ធផលពិតខាងក្រោម៖</p>
+<script type="text/x-code" data-lang="html" data-label="index.html · ▶ សាកចុច" data-demo>
+<h1 style="color:#2563eb">សួស្តី IT! 👋</h1>
+<p>ឈ្មោះ៖ <input id="n" placeholder="វាយឈ្មោះ"></p>
+<button onclick="hi()">ចុចខ្ញុំ</button>
+<p id="out"></p>
+<script>
+  function hi() {
+    const name = document.getElementById("n").value || "សិស្ស";
+    document.getElementById("out").textContent = "ស្វាគមន៍ " + name + " មកកាន់ IT! 🎉";
+  }
+<\/script>
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>&lt;h1&gt;</code> ចំណងជើង · <code class='i'>&lt;input&gt;</code> ប្រអប់វាយ · <code class='i'>&lt;button onclick&gt;</code> ប៊ូតុងហៅ Function។</li><li><code class='i'>document.getElementById('n').value</code> — JavaScript អានអក្សរដែលអ្នកវាយ។</li><li><code class='i'>textContent = ...</code> — សរសេរលទ្ធផលចូលក្នុង <code class='i'>&lt;p id='out'&gt;</code>។</li><li>រៀនបន្ថែមក្នុងវគ្គ <b>HTML</b>, <b>CSS</b> និង <b>JavaScript</b> ក្នុង xCenBar។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>ហេតុអ្វីមិនគួរវាយលេខកាតធនាគារ ឬ Password លើគេហទំព័រ <code class='i'>http://</code> (គ្មាន s)?</p><details><summary>មើលចម្លើយ</summary><p>HTTP បញ្ជូនទិន្នន័យជា <b>អក្សរធម្មតា</b> — អ្នកលើ Wi-Fi តែមួយអាចលួចមើលបាន។ HTTPS អ៊ិនគ្រីបដោយ <b>TLS</b>។ ត្រូវពិនិត្យ 🔒 និង Domain ឲ្យត្រឹមត្រូវផង (Phishing ក៏អាចមាន HTTPS)។</p></details></div>
+
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>Cloud Computing &amp; Virtualization</h2>
+
+<p><b>Cloud</b> = ប្រើ Server, Storage, Software របស់ក្រុមហ៊ុនផ្សេងតាម Internet ហើយបង់តាមការប្រើ (ដូចបង់ថ្លៃភ្លើង)។ អ្នកផ្តល់ធំៗ៖ <b>AWS</b> (Amazon), <b>Microsoft Azure</b>, <b>Google Cloud</b>។</p>
+<figure class="fig"><svg viewBox="0 0 960 330" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="960" height="330" fill="#fff"/><text x="110" y="30" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">On-Premise</text><text x="355" y="30" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">IaaS</text><text x="600" y="30" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">PaaS</text><text x="845" y="30" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">SaaS</text><rect x="25" y="45" width="170" height="38" rx="8" fill="#2563eb"/><text x="110" y="70" text-anchor="middle" font-size="13.5" font-weight="600" fill="#fff">Applications</text><rect x="25" y="89" width="170" height="38" rx="8" fill="#2563eb"/><text x="110" y="114" text-anchor="middle" font-size="13.5" font-weight="600" fill="#fff">Data</text><rect x="25" y="133" width="170" height="38" rx="8" fill="#2563eb"/><text x="110" y="158" text-anchor="middle" font-size="13.5" font-weight="600" fill="#fff">Runtime</text><rect x="25" y="177" width="170" height="38" rx="8" fill="#2563eb"/><text x="110" y="202" text-anchor="middle" font-size="13.5" font-weight="600" fill="#fff">OS</text><rect x="25" y="221" width="170" height="38" rx="8" fill="#2563eb"/><text x="110" y="246" text-anchor="middle" font-size="13.5" font-weight="600" fill="#fff">Virtualization</text><rect x="25" y="265" width="170" height="38" rx="8" fill="#2563eb"/><text x="110" y="290" text-anchor="middle" font-size="13.5" font-weight="600" fill="#fff">Servers</text><rect x="25" y="309" width="170" height="38" rx="8" fill="#2563eb"/><text x="110" y="334" text-anchor="middle" font-size="13.5" font-weight="600" fill="#fff">Storage · Network</text><rect x="270" y="45" width="170" height="38" rx="8" fill="#2563eb"/><text x="355" y="70" text-anchor="middle" font-size="13.5" font-weight="600" fill="#fff">Applications</text><rect x="270" y="89" width="170" height="38" rx="8" fill="#2563eb"/><text x="355" y="114" text-anchor="middle" font-size="13.5" font-weight="600" fill="#fff">Data</text><rect x="270" y="133" width="170" height="38" rx="8" fill="#2563eb"/><text x="355" y="158" text-anchor="middle" font-size="13.5" font-weight="600" fill="#fff">Runtime</text><rect x="270" y="177" width="170" height="38" rx="8" fill="#2563eb"/><text x="355" y="202" text-anchor="middle" font-size="13.5" font-weight="600" fill="#fff">OS</text><rect x="270" y="221" width="170" height="38" rx="8" fill="#cbd5e1"/><text x="355" y="246" text-anchor="middle" font-size="13.5" font-weight="600" fill="#475569">Virtualization</text><rect x="270" y="265" width="170" height="38" rx="8" fill="#cbd5e1"/><text x="355" y="290" text-anchor="middle" font-size="13.5" font-weight="600" fill="#475569">Servers</text><rect x="270" y="309" width="170" height="38" rx="8" fill="#cbd5e1"/><text x="355" y="334" text-anchor="middle" font-size="13.5" font-weight="600" fill="#475569">Storage · Network</text><rect x="515" y="45" width="170" height="38" rx="8" fill="#2563eb"/><text x="600" y="70" text-anchor="middle" font-size="13.5" font-weight="600" fill="#fff">Applications</text><rect x="515" y="89" width="170" height="38" rx="8" fill="#2563eb"/><text x="600" y="114" text-anchor="middle" font-size="13.5" font-weight="600" fill="#fff">Data</text><rect x="515" y="133" width="170" height="38" rx="8" fill="#cbd5e1"/><text x="600" y="158" text-anchor="middle" font-size="13.5" font-weight="600" fill="#475569">Runtime</text><rect x="515" y="177" width="170" height="38" rx="8" fill="#cbd5e1"/><text x="600" y="202" text-anchor="middle" font-size="13.5" font-weight="600" fill="#475569">OS</text><rect x="515" y="221" width="170" height="38" rx="8" fill="#cbd5e1"/><text x="600" y="246" text-anchor="middle" font-size="13.5" font-weight="600" fill="#475569">Virtualization</text><rect x="515" y="265" width="170" height="38" rx="8" fill="#cbd5e1"/><text x="600" y="290" text-anchor="middle" font-size="13.5" font-weight="600" fill="#475569">Servers</text><rect x="515" y="309" width="170" height="38" rx="8" fill="#cbd5e1"/><text x="600" y="334" text-anchor="middle" font-size="13.5" font-weight="600" fill="#475569">Storage · Network</text><rect x="760" y="45" width="170" height="38" rx="8" fill="#cbd5e1"/><text x="845" y="70" text-anchor="middle" font-size="13.5" font-weight="600" fill="#475569">Applications</text><rect x="760" y="89" width="170" height="38" rx="8" fill="#cbd5e1"/><text x="845" y="114" text-anchor="middle" font-size="13.5" font-weight="600" fill="#475569">Data</text><rect x="760" y="133" width="170" height="38" rx="8" fill="#cbd5e1"/><text x="845" y="158" text-anchor="middle" font-size="13.5" font-weight="600" fill="#475569">Runtime</text><rect x="760" y="177" width="170" height="38" rx="8" fill="#cbd5e1"/><text x="845" y="202" text-anchor="middle" font-size="13.5" font-weight="600" fill="#475569">OS</text><rect x="760" y="221" width="170" height="38" rx="8" fill="#cbd5e1"/><text x="845" y="246" text-anchor="middle" font-size="13.5" font-weight="600" fill="#475569">Virtualization</text><rect x="760" y="265" width="170" height="38" rx="8" fill="#cbd5e1"/><text x="845" y="290" text-anchor="middle" font-size="13.5" font-weight="600" fill="#475569">Servers</text><rect x="760" y="309" width="170" height="38" rx="8" fill="#cbd5e1"/><text x="845" y="334" text-anchor="middle" font-size="13.5" font-weight="600" fill="#475569">Storage · Network</text><rect x="230" y="300" width="18" height="14" fill="#2563eb"/><text x="254" y="312" text-anchor="start" font-size="13" font-weight="400" fill="#334155">អ្នកគ្រប់គ្រងខ្លួនឯង</text><rect x="420" y="300" width="18" height="14" fill="#cbd5e1"/><text x="444" y="312" text-anchor="start" font-size="13" font-weight="400" fill="#334155">Provider (AWS/Azure/Google) គ្រប់គ្រង</text></svg><figcaption>🖼️ On-Premise · IaaS · PaaS · SaaS — អ្នកណាគ្រប់គ្រងអ្វី</figcaption></figure>
+
+<table><tr><th>Model</th><th>ន័យ</th><th>ឧទាហរណ៍</th></tr><tr><td><b>IaaS</b></td><td>ជួល Server និម្មិត (VM)</td><td>AWS EC2, Azure VM, DigitalOcean</td></tr><tr><td><b>PaaS</b></td><td>ដាក់ Code — Platform គ្រប់គ្រងសល់</td><td>Vercel, Heroku, Google App Engine</td></tr><tr><td><b>SaaS</b></td><td>ប្រើកម្មវិធីសម្រេចតាម Browser</td><td>Gmail, Microsoft 365, Canva, Zoom</td></tr></table>
+
+<table><tr><th></th><th>Virtual Machine (VM)</th><th>Container</th></tr><tr><td>ផ្ទុក</td><td>OS ពេញលេញ</td><td>តែ App + Library</td></tr><tr><td>ទំហំ</td><td>GB</td><td>MB</td></tr><tr><td>ចាប់ផ្តើម</td><td>នាទី</td><td>វិនាទី</td></tr><tr><td>ឧបករណ៍</td><td>VirtualBox, VMware, Hyper-V</td><td>Docker, Kubernetes</td></tr></table>
+
+<script type="text/x-code" data-lang="py" data-label="cloud_cost.py">
+# ប្រៀបធៀបថ្លៃ៖ ទិញ Server ផ្ទាល់ ទល់នឹង ជួល Cloud (ឧទាហរណ៍តម្លៃសន្មត)
+server_price = 2500        # USD ទិញម្តង
+power_per_month = 30       # ថ្លៃភ្លើង/ថែទាំ
+cloud_per_month = 80       # VM តូចមួយ
+
+for months in [6, 12, 24, 36]:
+    own = server_price + power_per_month * months
+    cloud = cloud_per_month * months
+    better = "Cloud ☁️" if cloud < own else "Own 🖥️"
+    print(f"{months:>2} ខែ: Own=${own:,}  Cloud=${cloud:,}  → {better}")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre> 6 ខែ: Own=$2,680  Cloud=$480  → Cloud ☁️
+12 ខែ: Own=$2,860  Cloud=$960  → Cloud ☁️
+24 ខែ: Own=$3,220  Cloud=$1,920  → Cloud ☁️
+36 ខែ: Own=$3,580  Cloud=$2,880  → Cloud ☁️</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>for months in [...]</code> — Loop សាកតម្លៃនីមួយៗ។</li><li><code class='i'>a if condition else b</code> — ជ្រើសលទ្ធផលតាមលក្ខខណ្ឌ (ternary)។</li><li><code class='i'>{own:,}</code> — បង្ហាញលេខមានសញ្ញាក្បៀស 2,680។ (តម្លៃជាឧទាហរណ៍ — តម្លៃពិតប្រែប្រួល)</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>ចាត់ថ្នាក់ IaaS/PaaS/SaaS៖ ① Google Docs ② ជួល VM លើ AWS ដើម្បីដំឡើង Database ③ Deploy គេហទំព័រ Next.js លើ Vercel</p><details><summary>មើលចម្លើយ</summary><p>① SaaS ② IaaS ③ PaaS</p></details></div>
+
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>Database &amp; SQL មូលដ្ឋាន</h2>
+
+<p><b>Database</b> គឺជាកន្លែងរក្សាទិន្នន័យជារបៀប ដើម្បីស្វែងរក/កែប្រែលឿន។ <b>Relational Database</b> រក្សាជា <b>Table</b> (Rows × Columns) ហើយប្រើភាសា <b>SQL</b> (បង្កើតដោយ IBM — Donald Chamberlin &amp; Raymond Boyce, 1974)។</p>
+<figure class="fig"><svg viewBox="0 0 960 260" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="960" height="260" fill="#fff"/><text x="220" y="28" text-anchor="middle" font-size="17" font-weight="700" fill="#2563eb">students</text><text x="700" y="28" text-anchor="middle" font-size="17" font-weight="700" fill="#059669">scores</text><rect x="40" y="40" width="120" height="34" fill="#2563eb"/><text x="100" y="63" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">🔑 id</text><rect x="160" y="40" width="120" height="34" fill="#2563eb"/><text x="220" y="63" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">name</text><rect x="280" y="40" width="120" height="34" fill="#2563eb"/><text x="340" y="63" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">class</text><rect x="40" y="74" width="120" height="34" fill="#fff" stroke="#cbd5e1"/><text x="100" y="97" text-anchor="middle" font-size="14" font-weight="400" fill="#0f172a">1</text><rect x="160" y="74" width="120" height="34" fill="#fff" stroke="#cbd5e1"/><text x="220" y="97" text-anchor="middle" font-size="14" font-weight="400" fill="#0f172a">Dara</text><rect x="280" y="74" width="120" height="34" fill="#fff" stroke="#cbd5e1"/><text x="340" y="97" text-anchor="middle" font-size="14" font-weight="400" fill="#0f172a">12A</text><rect x="40" y="108" width="120" height="34" fill="#fff" stroke="#cbd5e1"/><text x="100" y="131" text-anchor="middle" font-size="14" font-weight="400" fill="#0f172a">2</text><rect x="160" y="108" width="120" height="34" fill="#fff" stroke="#cbd5e1"/><text x="220" y="131" text-anchor="middle" font-size="14" font-weight="400" fill="#0f172a">Sokha</text><rect x="280" y="108" width="120" height="34" fill="#fff" stroke="#cbd5e1"/><text x="340" y="131" text-anchor="middle" font-size="14" font-weight="400" fill="#0f172a">12B</text><rect x="40" y="142" width="120" height="34" fill="#fff" stroke="#cbd5e1"/><text x="100" y="165" text-anchor="middle" font-size="14" font-weight="400" fill="#0f172a">3</text><rect x="160" y="142" width="120" height="34" fill="#fff" stroke="#cbd5e1"/><text x="220" y="165" text-anchor="middle" font-size="14" font-weight="400" fill="#0f172a">Vanna</text><rect x="280" y="142" width="120" height="34" fill="#fff" stroke="#cbd5e1"/><text x="340" y="165" text-anchor="middle" font-size="14" font-weight="400" fill="#0f172a">12A</text><rect x="520" y="40" width="120" height="34" fill="#059669"/><text x="580" y="63" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">🔑 id</text><rect x="640" y="40" width="120" height="34" fill="#059669"/><text x="700" y="63" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">🔗 student_id</text><rect x="760" y="40" width="120" height="34" fill="#059669"/><text x="820" y="63" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">score</text><rect x="520" y="74" width="120" height="34" fill="#fff" stroke="#cbd5e1"/><text x="580" y="97" text-anchor="middle" font-size="14" font-weight="400" fill="#0f172a">1</text><rect x="640" y="74" width="120" height="34" fill="#fff" stroke="#cbd5e1"/><text x="700" y="97" text-anchor="middle" font-size="14" font-weight="400" fill="#0f172a">1</text><rect x="760" y="74" width="120" height="34" fill="#fff" stroke="#cbd5e1"/><text x="820" y="97" text-anchor="middle" font-size="14" font-weight="400" fill="#0f172a">95</text><rect x="520" y="108" width="120" height="34" fill="#fff" stroke="#cbd5e1"/><text x="580" y="131" text-anchor="middle" font-size="14" font-weight="400" fill="#0f172a">2</text><rect x="640" y="108" width="120" height="34" fill="#fff" stroke="#cbd5e1"/><text x="700" y="131" text-anchor="middle" font-size="14" font-weight="400" fill="#0f172a">2</text><rect x="760" y="108" width="120" height="34" fill="#fff" stroke="#cbd5e1"/><text x="820" y="131" text-anchor="middle" font-size="14" font-weight="400" fill="#0f172a">88</text><rect x="520" y="142" width="120" height="34" fill="#fff" stroke="#cbd5e1"/><text x="580" y="165" text-anchor="middle" font-size="14" font-weight="400" fill="#0f172a">3</text><rect x="640" y="142" width="120" height="34" fill="#fff" stroke="#cbd5e1"/><text x="700" y="165" text-anchor="middle" font-size="14" font-weight="400" fill="#0f172a">1</text><rect x="760" y="142" width="120" height="34" fill="#fff" stroke="#cbd5e1"/><text x="820" y="165" text-anchor="middle" font-size="14" font-weight="400" fill="#0f172a">79</text><path d="M400 92 C470 92 560 70 640 74" fill="none" stroke="#ea580c" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#ar)"/><text x="480" y="230" text-anchor="middle" font-size="15" font-weight="600" fill="#334155">Primary Key 🔑 = លេខសម្គាល់មិនស្ទួន · Foreign Key 🔗 = ភ្ជាប់ទៅ Table ផ្សេង</text></svg><figcaption>🖼️ Table ពីរ ភ្ជាប់គ្នាដោយ Primary Key និង Foreign Key</figcaption></figure>
+
+<script type="text/x-code" data-lang="sql" data-label="school.sql">
+CREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, class TEXT);
+CREATE TABLE scores (id INTEGER PRIMARY KEY, student_id INTEGER REFERENCES students(id), score INTEGER);
+
+INSERT INTO students (name, class) VALUES ('Dara','12A'), ('Sokha','12B'), ('Vanna','12A');
+INSERT INTO scores (student_id, score) VALUES (1,95), (2,88), (1,79), (3,45);
+
+-- ① សិស្សថ្នាក់ 12A
+SELECT name FROM students WHERE class = '12A';
+
+-- ② មធ្យមភាគរបស់សិស្សម្នាក់ៗ (JOIN Table ពីរ)
+SELECT s.name, ROUND(AVG(sc.score), 1) AS avg_score
+FROM students s JOIN scores sc ON sc.student_id = s.id
+GROUP BY s.name ORDER BY avg_score DESC;
+</script>
+
+<script type="text/x-code" data-lang="py" data-label="run_sql.py">
+import sqlite3
+db = sqlite3.connect(":memory:")          # Database ក្នុង RAM
+db.executescript(open("school.sql", encoding="utf-8").read().split("-- ①")[0])
+print("① សិស្ស 12A:", [r[0] for r in db.execute("SELECT name FROM students WHERE class='12A'")])
+print("② មធ្យមភាគ:")
+for name, avg in db.execute("""SELECT s.name, ROUND(AVG(sc.score),1) AS avg_score
+                               FROM students s JOIN scores sc ON sc.student_id = s.id
+                               GROUP BY s.name ORDER BY avg_score DESC"""):
+    print(f"   {name:<6} {avg}")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>① សិស្ស 12A: [&#x27;Dara&#x27;, &#x27;Vanna&#x27;]
+② មធ្យមភាគ:
+   Sokha  88.0
+   Dara   87.0
+   Vanna  45.0</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>CREATE TABLE</code> បង្កើត Table · <code class='i'>PRIMARY KEY</code> = លេខមិនស្ទួន · <code class='i'>REFERENCES</code> = Foreign Key។</li><li><code class='i'>INSERT INTO ... VALUES</code> បញ្ចូលទិន្នន័យ។</li><li><code class='i'>SELECT ... WHERE</code> ទាញទិន្នន័យតាមលក្ខខណ្ឌ។</li><li><code class='i'>JOIN ... ON</code> ភ្ជាប់ Table · <code class='i'>GROUP BY</code> + <code class='i'>AVG()</code> គណនាតាមក្រុម · <code class='i'>ORDER BY ... DESC</code> តម្រៀបធំទៅតូច។</li><li>Python <code class='i'>sqlite3</code> — Database តូចក្នុង File/RAM មិនបាច់ដំឡើង Server។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>សរសេរ SQL រកសិស្សដែលមានពិន្ទុណាមួយតិចជាង 50។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="sql" data-label="Answer">
+SELECT s.name, sc.score
+FROM students s JOIN scores sc ON sc.student_id = s.id
+WHERE sc.score < 50;     -- លទ្ធផល: Vanna 45
+</script>
+</details></div>
+
+</section>
+<section id="l13">
+<h2><span class="badge">មេរៀន ១៣</span>Algorithm &amp; Programming មូលដ្ឋាន</h2>
+
+<p><b>Algorithm</b> = ជំហានច្បាស់លាស់ដើម្បីដោះស្រាយបញ្ហា (ដូចរូបមន្តធ្វើម្ហូប)។ មុនសរសេរ Code គេគូរ <b>Flowchart</b> ឬសរសេរ <b>Pseudocode</b>។</p>
+<div class="grid" style="align-items:start">
+<div><figure class="fig"><svg viewBox="0 0 560 552" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="560" height="552" fill="#fff"/><rect x="200" y="10" width="160" height="46" rx="23" fill="#059669"/><text x="280" y="39" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">ចាប់ផ្តើម</text><path d="M190 90h200l-20 46h-200z" fill="#2563eb"/><text x="280" y="119" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">បញ្ចូល score</text><path d="M280 160l110 55-110 55-110-55z" fill="#ea580c"/><text x="280" y="220" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">score ≥ 50 ?</text><rect x="20" y="300" width="170" height="50" rx="8" fill="#7c3aed"/><text x="105" y="330" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">បង្ហាញ “ជាប់ ✅”</text><rect x="370" y="300" width="170" height="50" rx="8" fill="#db2777"/><text x="455" y="330" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">បង្ហាញ “ធ្លាក់ ❌”</text><rect x="200" y="470" width="160" height="46" rx="23" fill="#475569"/><text x="280" y="499" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">បញ្ចប់</text><line x1="280" y1="58" x2="280" y2="86" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="280" y1="138" x2="280" y2="156" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><path d="M170 215H105v80" fill="none" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="135" y="205" text-anchor="middle" font-size="13" font-weight="700" fill="#059669">Yes</text><path d="M390 215h65v80" fill="none" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="425" y="205" text-anchor="middle" font-size="13" font-weight="700" fill="#dc2626">No</text><path d="M105 352v80h170v34" fill="none" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><path d="M455 352v80H285" fill="none" stroke="#475569" stroke-width="2.5"/><text x="280" y="540" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">▭ ដំណើរការ · ▱ Input/Output · ◇ លក្ខខណ្ឌ</text></svg><figcaption>🖼️ Flowchart ពិនិត្យជាប់/ធ្លាក់</figcaption></figure>
+</div>
+<div><script type="text/x-code" data-lang="txt" data-label="Pseudocode">
+ចាប់ផ្តើម
+  បញ្ចូល score
+  បើ score >= 50
+      បង្ហាញ "ជាប់"
+  បើមិនដូច្នោះ
+      បង្ហាញ "ធ្លាក់"
+បញ្ចប់
+</script>
+
+<table><tr><th>គំនិត</th><th>ន័យ</th></tr><tr><td>Variable</td><td>ប្រអប់ផ្ទុកតម្លៃ</td></tr><tr><td>Data type</td><td>int, float, str, bool, list</td></tr><tr><td>Condition</td><td>if / elif / else</td></tr><tr><td>Loop</td><td>for, while — ធ្វើម្តងទៀត</td></tr><tr><td>Function</td><td>ក្រុម Code មានឈ្មោះ ហៅប្រើបានច្រើនដង</td></tr></table>
+</div></div>
+<script type="text/x-code" data-lang="py" data-label="grades.py">
+def grade(score):                 # Function
+    if score >= 90:   return "A"
+    elif score >= 80: return "B"
+    elif score >= 65: return "C"
+    elif score >= 50: return "D"
+    else:             return "F"
+
+students = {"Dara": 95, "Sokha": 82, "Vanna": 45, "Lina": 67}   # dict
+
+passed = 0
+for name, score in students.items():                 # Loop
+    g = grade(score)
+    status = "ជាប់ ✅" if g != "F" else "ធ្លាក់ ❌"
+    if g != "F":
+        passed += 1
+    print(f"{name:<6} {score:>3}  {g}  {status}")
+
+best = max(students, key=students.get)
+print(f"ជាប់ {passed}/{len(students)} · ពិន្ទុខ្ពស់បំផុត: {best}")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>Dara    95  A  ជាប់ ✅
+Sokha   82  B  ជាប់ ✅
+Vanna   45  F  ធ្លាក់ ❌
+Lina    67  C  ជាប់ ✅
+ជាប់ 3/4 · ពិន្ទុខ្ពស់បំផុត: Dara</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>def grade(score):</code> បង្កើត Function មួយ — ទទួល score ហើយ <code class='i'>return</code> និទ្ទេស។</li><li><code class='i'>if / elif / else</code> ពិនិត្យលក្ខខណ្ឌពីលើចុះក្រោម — ត្រូវមួយណា ធ្វើមួយនោះ។</li><li><code class='i'>students = {...}</code> — <b>dict</b> ផ្ទុក Key (ឈ្មោះ) → Value (ពិន្ទុ)។</li><li><code class='i'>for name, score in students.items()</code> — Loop គ្រប់សិស្ស · <code class='i'>passed += 1</code> រាប់អ្នកជាប់។</li><li><code class='i'>max(students, key=students.get)</code> — រក Key ដែលមាន Value ធំបំផុត។</li><li>ការចូលបន្ទាត់ (Indentation ៤ ដកឃ្លា) សំខាន់ណាស់ក្នុង Python — វាបង្ហាញថា Code ណាស្ថិតក្នុង if/for។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៣</h4><p>សរសេរ Function <code class='i'>is_even(n)</code> ដែលត្រឡប់ True បើ n ជាលេខគូ ហើយបង្ហាញលេខគូពី 1 ដល់ 10។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="py" data-label="answer.py">
+def is_even(n):
+    return n % 2 == 0
+
+print([n for n in range(1, 11) if is_even(n)])
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>[2, 4, 6, 8, 10]</pre></div>
+</details></div>
+
+</section>
+<section id="l14">
+<h2><span class="badge">មេរៀន ១៤</span>Cybersecurity មូលដ្ឋាន</h2>
+
+<figure class="fig"><svg viewBox="0 0 700 330" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="700" height="330" fill="#fff"/><path d="M350 30L620 300H80z" fill="#eef2ff" stroke="#4f46e5" stroke-width="3"/><rect x="250" y="20" width="200" height="64" rx="14" fill="#4f46e5"/><text x="350.0" y="46.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🔒 Confidentiality</text><text x="350.0" y="68.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">មានតែអ្នកមានសិទ្ធិមើល</text><rect x="40" y="250" width="220" height="64" rx="14" fill="#059669"/><text x="150.0" y="276.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">✅ Integrity</text><text x="150.0" y="298.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ទិន្នន័យមិនត្រូវកែលួច</text><rect x="440" y="250" width="220" height="64" rx="14" fill="#ea580c"/><text x="550.0" y="276.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">⏱️ Availability</text><text x="550.0" y="298.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ប្រើបានពេលត្រូវការ</text><text x="350" y="190" text-anchor="middle" font-size="24" font-weight="800" fill="#312e81">CIA Triad</text><text x="350" y="216" text-anchor="middle" font-size="14" font-weight="400" fill="#4338ca">គោលការណ៍សុវត្ថិភាព ៣</text></svg><figcaption>🖼️ CIA Triad — គោលការណ៍សុវត្ថិភាពព័ត៌មាន</figcaption></figure>
+
+<table><tr><th>គំរាមកំហែង</th><th>ន័យ</th><th>ការការពារ</th></tr><tr><td>🎣 Phishing</td><td>សារ/Website ក្លែងបន្លំ លួច Password/OTP</td><td>ពិនិត្យ Link, កុំផ្តល់ OTP ដល់អ្នកណា</td></tr><tr><td>🦠 Malware</td><td>Virus, Trojan, Spyware</td><td>Antivirus, កុំដំឡើង Software Crack</td></tr><tr><td>🔐 Ransomware</td><td>អ៊ិនគ្រីប File ហើយទាមទារលុយ</td><td>Backup 3-2-1, Update OS</td></tr><tr><td>🎭 Social Engineering</td><td>បោកបញ្ឆោតមនុស្ស (ក្លែងជាធនាគារ/IT)</td><td>ផ្ទៀងផ្ទាត់តាមលេខផ្លូវការ</td></tr><tr><td>🔑 Weak password</td><td>Password ងាយទាយ ឬប្រើដដែល</td><td>Password manager + MFA</td></tr><tr><td>📶 Public Wi-Fi</td><td>អាចត្រូវលួចមើល</td><td>HTTPS, VPN</td></tr></table>
+
+<div class="note">💡 <b>MFA (Multi-Factor Authentication)</b> = អ្វីដែលអ្នកដឹង (Password) + អ្វីដែលអ្នកមាន (ទូរស័ព្ទ/OTP/Key) + អ្វីដែលអ្នកជា (ម្រាមដៃ/មុខ)។ បើក MFA លើ Gmail, Facebook, Telegram (Two-Step Verification) ឥឡូវនេះ!</div>
+
+<h3>💻 Hash Password &amp; ពិនិត្យកម្លាំង Password</h3>
+<script type="text/x-code" data-lang="py" data-label="security.py">
+import hashlib, re, secrets, string
+
+def strength(pw):
+    score = 0
+    score += len(pw) >= 12
+    score += bool(re.search(r"[a-z]", pw)) + bool(re.search(r"[A-Z]", pw))
+    score += bool(re.search(r"\d", pw)) + bool(re.search(r"[^A-Za-z0-9]", pw))
+    return ["ខ្សោយណាស់", "ខ្សោយ", "មធ្យម", "ល្អ", "ខ្លាំង", "ខ្លាំងណាស់"][score]
+
+for pw in ["123456", "dara2006", "Dara@Phnom-Penh2026"]:
+    print(f"{pw:<22} → {strength(pw)}")
+
+# Hash: Server រក្សា hash មិនមែន password ផ្ទាល់
+h = hashlib.sha256("Dara@Phnom-Penh2026".encode()).hexdigest()
+print("SHA-256:", h[:32] + "...")
+print("ប្តូរ 1 តួ :", hashlib.sha256("dara@Phnom-Penh2026".encode()).hexdigest()[:32] + "...")
+
+# បង្កើត password ចៃដន្យខ្លាំង
+alphabet = string.ascii_letters + string.digits + "!@#$%"
+new_pw = "".join(secrets.choice(alphabet) for _ in range(16))
+print("Password ថ្មី:", new_pw, "→", strength(new_pw))
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>123456                 → ខ្សោយ
+dara2006               → មធ្យម
+Dara@Phnom-Penh2026    → ខ្លាំងណាស់
+SHA-256: 0f65e41efdd1a5c6696ca3fbe5820f21...
+ប្តូរ 1 តួ : 80bddceeb82f3086aabd6af4b163c733...
+Password ថ្មី: SwAigLQSqAe#%LDk → ខ្លាំង</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>re.search(r'[A-Z]', pw)</code> — Regular expression រកអក្សរធំ · <code class='i'>bool()</code> → True=1 / False=0 ដើម្បីបូកពិន្ទុ។</li><li><code class='i'>hashlib.sha256(...).hexdigest()</code> — Hash ជាមុខងារមួយទិស៖ ពី Password → Hash បាន តែពី Hash → Password មិនបាន។</li><li>ប្តូរតែ 1 តួ Hash ខុសគ្នាទាំងស្រុង (Avalanche effect) → ផ្ទៀងផ្ទាត់ Integrity របស់ File បាន។</li><li><code class='i'>secrets.choice</code> — ចៃដន្យសុវត្ថិភាពសម្រាប់ Password (កុំប្រើ <code class='i'>random</code>)។</li><li>ក្នុងប្រព័ន្ធពិត Password ត្រូវ Hash ជាមួយ <b>Salt</b> ដោយ bcrypt/Argon2 មិនមែន SHA-256 ទទេ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៤</h4><p>អ្នកទទួល SMS៖ “គណនី ABA របស់អ្នកត្រូវបានបង្កក ចុច bit.ly/xxx ដើម្បីដោះ” ត្រូវធ្វើអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>❌ កុំចុច Link · ❌ កុំផ្តល់ OTP/PIN · ✅ ទូរស័ព្ទទៅលេខផ្លូវការរបស់ធនាគារ ឬបើក App ផ្ទាល់ · ✅ Report/Block លេខនោះ។ នេះជា <b>Phishing (Smishing)</b>។</p></details></div>
+
+</section>
+<section id="l15">
+<h2><span class="badge">មេរៀន ១៥</span>ការដោះស្រាយបញ្ហា (Troubleshooting)</h2>
+
+<figure class="fig"><svg viewBox="0 0 980 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="980" height="170" fill="#fff"/><path d="M12 40h118l18 40-18 40h-118l18-40z" fill="#2563eb"/><text x="80" y="74" text-anchor="middle" font-size="22" font-weight="800" fill="#fff">1</text><text x="80" y="100" text-anchor="middle" font-size="12.5" font-weight="600" fill="#fff">កំណត់បញ្ហា</text><path d="M151 40h118l18 40-18 40h-118l18-40z" fill="#7c3aed"/><text x="219" y="74" text-anchor="middle" font-size="22" font-weight="800" fill="#fff">2</text><text x="219" y="100" text-anchor="middle" font-size="12.5" font-weight="600" fill="#fff">សន្មត់មូលហេតុ</text><path d="M290 40h118l18 40-18 40h-118l18-40z" fill="#a21caf"/><text x="358" y="74" text-anchor="middle" font-size="22" font-weight="800" fill="#fff">3</text><text x="358" y="100" text-anchor="middle" font-size="12.5" font-weight="600" fill="#fff">សាកល្បងសន្មត់</text><path d="M429 40h118l18 40-18 40h-118l18-40z" fill="#db2777"/><text x="497" y="74" text-anchor="middle" font-size="22" font-weight="800" fill="#fff">4</text><text x="497" y="100" text-anchor="middle" font-size="12.5" font-weight="600" fill="#fff">ធ្វើផែនការជួសជុល</text><path d="M568 40h118l18 40-18 40h-118l18-40z" fill="#ea580c"/><text x="636" y="74" text-anchor="middle" font-size="22" font-weight="800" fill="#fff">5</text><text x="636" y="100" text-anchor="middle" font-size="12.5" font-weight="600" fill="#fff">អនុវត្ត/បញ្ជូនបន្ត</text><path d="M707 40h118l18 40-18 40h-118l18-40z" fill="#ca8a04"/><text x="775" y="74" text-anchor="middle" font-size="22" font-weight="800" fill="#fff">6</text><text x="775" y="100" text-anchor="middle" font-size="12.5" font-weight="600" fill="#fff">ផ្ទៀងផ្ទាត់ + ការពារ</text><path d="M846 40h118l18 40-18 40h-118l18-40z" fill="#059669"/><text x="914" y="74" text-anchor="middle" font-size="22" font-weight="800" fill="#fff">7</text><text x="914" y="100" text-anchor="middle" font-size="12.5" font-weight="600" fill="#fff">កត់ត្រា (Document)</text><text x="490" y="155" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">វិធីសាស្ត្រដោះស្រាយបញ្ហា ៧ ជំហាន (CompTIA)</text></svg><figcaption>🖼️ វិធីសាស្ត្រដោះស្រាយបញ្ហា ៧ ជំហាន</figcaption></figure>
+
+<table><tr><th>បញ្ហា</th><th>មូលហេតុអាចមាន</th><th>ដំណោះស្រាយ</th></tr><tr><td>កុំព្យូទ័រមិនបើក</td><td>ខ្សែភ្លើង, PSU, ថ្ម</td><td>ពិនិត្យខ្សែ/Adapter, សាកថ្ម, សាក Outlet ផ្សេង</td></tr><tr><td>យឺតខ្លាំង</td><td>RAM ពេញ, HDD, Malware, Startup apps ច្រើន</td><td>Task Manager (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd>), បិទ Startup, Scan, ប្តូរ SSD</td></tr><tr><td>គ្មាន Internet</td><td>Wi-Fi, Router, DNS, IP 169.254.x.x</td><td>Restart Router, <code class='i'>ping 8.8.8.8</code>, <code class='i'>ipconfig /renew</code></td></tr><tr><td>Printer មិនបោះពុម្ព</td><td>Driver, Queue គាំង, ក្រដាស/ទឹកថ្នាំ</td><td>Restart Print Spooler, ដំឡើង Driver</td></tr><tr><td>កម្តៅខ្លាំង/Fan ឮ</td><td>ធូលី, Thermal paste</td><td>សម្អាតធូលី, ដាក់លើផ្ទៃរាបស្មើ</td></tr><tr><td>អេក្រង់ខៀវ (BSOD)</td><td>Driver, RAM ខូច, Update</td><td>កត់ Stop code, Update/Rollback Driver, Memory Diagnostic</td></tr></table>
+
+<div class="note">💡 ច្បាប់មាស៖ <b>“សួរ → ធ្វើតេស្តតូចបំផុតមុន → ប្តូរម្តងមួយ → កត់ត្រា”</b>។ ជាច្រើនដង បញ្ហាដោះស្រាយដោយ <b>Restart</b> ឬ <b>ដោតខ្សែឲ្យជាប់</b>។</div>
+
+<h3>💻 Script ពិនិត្យ Network ស្វ័យប្រវត្តិ</h3>
+<script type="text/x-code" data-lang="py" data-label="netcheck.py">
+import socket
+
+def check_dns(host):
+    try:
+        return socket.gethostbyname(host)
+    except OSError:
+        return None
+
+def check_port(host, port, timeout=2):
+    try:
+        with socket.create_connection((host, port), timeout=timeout):
+            return True
+    except OSError:
+        return False
+
+steps = [
+    ("1. Localhost (Network stack)", lambda: check_dns("localhost") is not None),
+    ("2. DNS ដំណើរការ?", lambda: check_dns("example.com") is not None),
+    ("3. ភ្ជាប់ HTTPS 443?", lambda: check_port("example.com", 443)),
+]
+for name, test in steps:
+    ok = test()
+    print(f"{name:<32} {'✅ OK' if ok else '❌ បរាជ័យ'}")
+    if not ok:
+        print("   → ឈប់ត្រង់នេះ ហើយពិនិត្យជំហាននេះមុន")
+        break
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3 (ម៉ាស៊ីនគ្មាន Internet)</span></div><pre>1. Localhost (Network stack)     ✅ OK
+2. DNS ដំណើរការ?                 ❌ បរាជ័យ
+   → ឈប់ត្រង់នេះ ហើយពិនិត្យជំហាននេះមុន</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>socket.gethostbyname()</code> — សួរ DNS ឲ្យបកឈ្មោះជា IP។</li><li><code class='i'>socket.create_connection((host, port))</code> — សាកភ្ជាប់ Port 443 (HTTPS)។</li><li><code class='i'>try / except OSError</code> — ចាប់ Error ដើម្បីកុំឲ្យកម្មវិធីគាំង។</li><li>List <code class='i'>steps</code> ពិនិត្យពីស្រទាប់ក្រោមឡើងលើ (Bottom-up) ហើយឈប់នៅជំហានដែលបរាជ័យដំបូង — ដូចអ្នក IT ពិត!</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៥</h4><p>បុគ្គលិកប្រាប់ថា “Internet ដាច់”។ តែគាត់បើក Telegram បាន ប៉ុន្តែបើក Website មិនបាន។ សន្មត់មូលហេតុអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>Internet មិនដាច់ទេ — ប្រហែលជាបញ្ហា <b>DNS</b> ឬ <b>Browser/Proxy</b>។ សាក <code class='i'>nslookup google.com</code>, ប្តូរ DNS ទៅ 1.1.1.1 ឬ 8.8.8.8, សម្អាត Cache Browser។</p></details></div>
+
+</section>
+<section id="l16">
+<h2><span class="badge">មេរៀន ១៦</span>អាជីព IT, ក្រមសីលធម៌ &amp; ឯកជនភាព</h2>
+
+<table><tr><th>អាជីព</th><th>ធ្វើអ្វី</th><th>ជំនាញ/វគ្គក្នុង xCenBar</th></tr><tr><td>🛠️ IT Support / Helpdesk</td><td>ជួយអ្នកប្រើ ដោះស្រាយ PC/Printer/Network</td><td>IT Fundamentals, Windows, Linux</td></tr><tr><td>🌐 Network Administrator</td><td>គ្រប់គ្រង Router, Switch, Wi-Fi</td><td>Networking, Linux</td></tr><tr><td>🛡️ Cybersecurity Analyst</td><td>ការពារ តាមដាន Attack</td><td>Web Security, Linux, Networking</td></tr><tr><td>☁️ Cloud / DevOps Engineer</td><td>Deploy ថែទាំ Server</td><td>Linux, Docker, Git, Vercel</td></tr><tr><td>💻 Software Developer</td><td>សរសេរ App/Web</td><td>Python, JavaScript, React, C#</td></tr><tr><td>📊 Data Analyst</td><td>វិភាគទិន្នន័យ</td><td>Excel, SQL, Python</td></tr><tr><td>🎨 UX/UI Designer</td><td>រចនាចំណុចប្រទាក់</td><td>UX/UI, Figma</td></tr></table>
+
+<h3>ផ្លូវវិញ្ញាបនបត្រ (Certification)</h3>
+<p><b>CompTIA ITF+</b> (IT Fundamentals) → <b>A+</b> (Support) → <b>Network+</b> → <b>Security+</b> → Cloud (AWS / Azure Fundamentals)</p>
+<h3>⚖️ ក្រមសីលធម៌ &amp; ឯកជនភាព</h3>
+<div class="grid"><div class="card"><b>🔒 ឯកជនភាព</b><br>កុំមើល/ចែករំលែកទិន្នន័យអ្នកដទៃ ទោះអ្នកមានសិទ្ធិចូល</div><div class="card"><b>©️ កម្មសិទ្ធិបញ្ញា</b><br>គោរព License · កុំប្រើ Software/រូប/តន្ត្រីលួច</div><div class="card"><b>🧾 ទំនួលខុសត្រូវ</b><br>កត់ត្រាការផ្លាស់ប្តូរ · ប្រាប់ពេលធ្វើខុស</div><div class="card"><b>🤝 ជួយដោយអត់ធ្មត់</b><br>ពន្យល់ងាយៗ មិនមើលងាយអ្នកមិនចេះ</div><div class="card"><b>🌱 IT បៃតង</b><br>រីសាយក្លិ៍ E-waste · បិទម៉ាស៊ីនពេលមិនប្រើ</div><div class="card"><b>🤖 AI ប្រកបដោយទំនួលខុសត្រូវ</b><br>កុំបញ្ចូលទិន្នន័យសម្ងាត់ក្នុង AI សាធារណៈ · ពិនិត្យចម្លើយ AI</div></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៦</h4><p>អ្នកជា IT Support ហើយកំពុងជួសជុល Laptop របស់នាយក ឃើញ File “ប្រាក់ខែបុគ្គលិក.xlsx” លើ Desktop។ គួរធ្វើអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>កុំបើក កុំចម្លង កុំនិយាយប្រាប់អ្នកដទៃ — ធ្វើតែការងារជួសជុល។ ប្រសិនបើចាំបាច់ត្រូវ Backup ត្រូវសុំការអនុញ្ញាតជាមុន។ នេះគឺជា <b>Confidentiality</b> និងក្រមសីលធម៌វិជ្ជាជីវៈ។</p></details></div>
+
+</section>
+<section id="cheat">
+<h2>📋 Cheat Sheet</h2>
+
+<table><tr><th>ប្រធានបទ</th><th>ចាំខ្លីៗ</th></tr><tr><td>IPO</td><td>Input → Process → Output + Storage</td></tr><tr><td>Binary</td><td>128 64 32 16 8 4 2 1 · 1 Byte = 8 bits = 0–255</td></tr><tr><td>Units</td><td>KB → MB → GB → TB (×1000) · Mbps ÷ 8 = MB/s</td></tr><tr><td>Hardware</td><td>CPU=ខួរ · RAM=តុ · SSD=ទូ · GPU=រូបភាព · PSU=ភ្លើង</td></tr><tr><td>OS</td><td>Windows · macOS · Linux · Android · iOS · NTFS/APFS/ext4/exFAT</td></tr><tr><td>Network</td><td>IP · Mask /24 · Gateway · DNS · DHCP · 169.254 = គ្មាន DHCP</td></tr><tr><td>Ports</td><td>HTTP 80 · HTTPS 443 · SSH 22 · DNS 53 · RDP 3389</td></tr><tr><td>Cloud</td><td>IaaS (VM) · PaaS (Code) · SaaS (App)</td></tr><tr><td>SQL</td><td>SELECT · FROM · WHERE · JOIN · GROUP BY · ORDER BY</td></tr><tr><td>Security</td><td>CIA · MFA · Backup 3-2-1 · Update · កុំចុច Link ចម្លែក</td></tr><tr><td>Troubleshoot</td><td>កំណត់ → សន្មត់ → សាក → ផែនការ → អនុវត្ត → ផ្ទៀងផ្ទាត់ → កត់ត្រា</td></tr></table>
+
+<table><tr><th>Shortcut</th><th>Windows</th><th>macOS</th></tr><tr><td>Copy / Paste</td><td><kbd>Ctrl</kbd>+<kbd>C</kbd> / <kbd>V</kbd></td><td><kbd>Cmd</kbd>+<kbd>C</kbd> / <kbd>V</kbd></td></tr><tr><td>Task Manager</td><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd></td><td><kbd>Cmd</kbd>+<kbd>Option</kbd>+<kbd>Esc</kbd></td></tr><tr><td>Screenshot</td><td><kbd>Win</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd></td><td><kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>4</kbd></td></tr><tr><td>Lock</td><td><kbd>Win</kbd>+<kbd>L</kbd></td><td><kbd>Ctrl</kbd>+<kbd>Cmd</kbd>+<kbd>Q</kbd></td></tr><tr><td>File Explorer</td><td><kbd>Win</kbd>+<kbd>E</kbd></td><td><kbd>Cmd</kbd>+<kbd>Space</kbd> → Finder</td></tr></table>
+
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងអាជីព៖ IT Support Ticket</h2>
+
+<p>អ្នកជា <b>IT Support</b> នៅក្រុមហ៊ុនមួយក្នុងភ្នំពេញ។ ថ្ងៃនេះមាន Ticket ៣៖ អនុវត្តចំណេះដឹងពីមេរៀនទាំងអស់ ដើម្បីដោះស្រាយ។</p>
+<table><tr><th>Ticket</th><th>បញ្ហា</th><th>ដំណោះស្រាយ (ចុចមើល)</th></tr><tr><td>#101 🐢</td><td>Laptop គណនេយ្យករយឺតខ្លាំង (HDD, RAM 4 GB, Chrome 40 tabs)</td><td><details><summary>មើល</summary>Task Manager → RAM 98% → បិទ Startup apps → Upgrade SSD + RAM 8–16 GB → Scan Malware → កត់ត្រា Ticket</details></td></tr><tr><td>#102 🌐</td><td>ការិយាល័យទាំងមូលបើក Website មិនបាន ប៉ុន្តែ Telegram ដំណើរការ</td><td><details><summary>មើល</summary>ping 8.8.8.8 ✅ → nslookup ❌ → DNS Router ខូច → ប្តូរ DNS ទៅ 1.1.1.1/8.8.8.8 → ផ្ទៀងផ្ទាត់ → កត់ត្រា</details></td></tr><tr><td>#103 🔐</td><td>បុគ្គលិកចុច Link ក្នុង Email “ប្រាក់រង្វាន់” ហើយវាយ Password</td><td><details><summary>មើល</summary>ផ្តាច់ Network → ប្តូរ Password ភ្លាម + បើក MFA → Scan → ពិនិត្យ Login ចម្លែក → រាយការណ៍ + បណ្តុះបណ្តាល Phishing</details></td></tr></table>
+
+</section>
+<section id="pro-app">
+<h2>💻 IT Toolkit Pro (App)</h2>
+
+<p>ឧបករណ៍ ៦ ក្នុងមួយ ដែលអ្នក IT ប្រើជារៀងរាល់ថ្ងៃ៖ បំលែងលេខ · គណនាទំហំ/ល្បឿន · Subnet calculator · PC Builder · ពិនិត្យ Password + SHA-256 · Quiz ២០ សំណួរ។</p>
+
+<div class="itk" id="itk">
+  <div class="itk-tabs" role="tablist">
+    <button class="on" data-t="num">🔢 Number</button><button data-t="size">💾 Size &amp; Speed</button>
+    <button data-t="ip">🌐 Subnet</button><button data-t="pc">🖥️ PC Builder</button>
+    <button data-t="pw">🔐 Password</button><button data-t="quiz">🏆 Quiz</button>
+  </div>
+  <div class="itk-p on" id="t-num">
+    <label>វាយលេខ <select id="nBase"><option value="10">Decimal</option><option value="2">Binary</option><option value="16">Hex</option></select></label>
+    <input id="nIn" value="202" inputmode="text">
+    <div class="itk-out" id="nOut"></div><div class="itk-bits" id="nBits"></div>
+  </div>
+  <div class="itk-p" id="t-size">
+    <div class="itk-row"><label>ទំហំ File <input id="sV" type="number" value="2" min="0" step="0.1"></label>
+      <select id="sU"><option>KB</option><option>MB</option><option selected>GB</option><option>TB</option></select>
+      <label>ល្បឿន (Mbps) <input id="sS" type="number" value="50" min="1"></label></div>
+    <div class="itk-out" id="sOut"></div>
+  </div>
+  <div class="itk-p" id="t-ip">
+    <div class="itk-row"><label>IP <input id="ipA" value="192.168.1.10"></label><label>/ Prefix <input id="ipP" type="number" value="24" min="0" max="32"></label></div>
+    <div class="itk-out" id="ipOut"></div>
+  </div>
+  <div class="itk-p" id="t-pc">
+    <div class="itk-row"><label>គោលបំណង <select id="pcUse"><option value="office">ការិយាល័យ/រៀន</option><option value="code">សរសេរកម្មវិធី</option><option value="video">កាត់វីដេអូ/Design</option><option value="game">Game</option></select></label></div>
+    <div class="itk-row"><label>CPU <select id="pcCpu"><option value="2">i3 / Ryzen 3 (4 cores)</option><option value="3" selected>i5 / Ryzen 5 (6–10 cores)</option><option value="4">i7 / Ryzen 7 (8–16 cores)</option></select></label>
+      <label>RAM <select id="pcRam"><option value="4">4 GB</option><option value="8">8 GB</option><option value="16" selected>16 GB</option><option value="32">32 GB</option></select></label>
+      <label>Storage <select id="pcSto"><option value="hdd">HDD 1TB</option><option value="ssd" selected>SATA SSD 512GB</option><option value="nvme">NVMe SSD 1TB</option></select></label>
+      <label>GPU <select id="pcGpu"><option value="0" selected>Integrated</option><option value="1">RTX 4060</option><option value="2">RTX 4070+</option></select></label></div>
+    <div class="itk-out" id="pcOut"></div>
+  </div>
+  <div class="itk-p" id="t-pw">
+    <label>វាយ Password សាកល្បង (មិនបញ្ជូនទៅណាទេ) <input id="pwIn" type="text" value="Dara@Phnom-Penh2026" autocomplete="off"></label>
+    <div class="itk-meter"><i id="pwBar"></i></div><div class="itk-out" id="pwOut"></div>
+    <button class="btn" id="pwGen">🎲 បង្កើត Password ខ្លាំង</button>
+  </div>
+  <div class="itk-p" id="t-quiz"><div id="qz"></div></div>
+</div>
+<script>
+(() => {
+  const $ = id => document.getElementById(id), kh = n => String(n).replace(/\d/g, d => "០១២៣៤៥៦៧៨៩"[d]);
+  document.querySelectorAll(".itk-tabs button").forEach(b => b.onclick = () => {
+    document.querySelectorAll(".itk-tabs button,.itk-p").forEach(x => x.classList.remove("on"));
+    b.classList.add("on"); $("t-" + b.dataset.t).classList.add("on");
+  });
+  // number converter
+  function num() {
+    const v = parseInt($("nIn").value.trim().replace(/^0[bx]/i, ""), +$("nBase").value);
+    if (isNaN(v) || v < 0) { $("nOut").innerHTML = "❌ លេខមិនត្រឹមត្រូវ"; $("nBits").innerHTML = ""; return; }
+    $("nOut").innerHTML = `<b>Decimal</b> ${v}<br><b>Binary</b> ${v.toString(2)}<br><b>Hex</b> ${v.toString(16).toUpperCase()}<br><b>Octal</b> ${v.toString(8)}<br><b>Bits ត្រូវការ</b> ${Math.max(1, v.toString(2).length)} · <b>Bytes</b> ${Math.ceil(Math.max(1, v.toString(2).length) / 8)}`;
+    const b = v.toString(2).padStart(Math.ceil(v.toString(2).length / 8) * 8, "0").slice(-16);
+    $("nBits").innerHTML = [...b].map((c, i) => `<span class="${c === "1" ? "on" : ""}"><b>${c}</b><small>${2 ** (b.length - 1 - i)}</small></span>`).join("");
+  }
+  ["nIn", "nBase"].forEach(i => $(i).addEventListener("input", num)); num();
+  // size & speed
+  function size() {
+    const mul = { KB: 1e-3, MB: 1, GB: 1e3, TB: 1e6 }[$("sU").value], mb = +$("sV").value * mul, sp = +$("sS").value || 1;
+    const sec = mb * 8 / sp, t = sec < 60 ? sec.toFixed(1) + " វិនាទី" : sec < 3600 ? (sec / 60).toFixed(1) + " នាទី" : (sec / 3600).toFixed(2) + " ម៉ោង";
+    $("sOut").innerHTML = `<b>${(mb * 1e6).toLocaleString()}</b> Bytes · <b>${(mb * 8).toLocaleString()}</b> Megabits<br>ល្បឿនជាក់ស្តែង ≈ <b>${(sp / 8).toFixed(2)} MB/s</b><br>⏱️ ពេលទាញយក ≈ <b>${t}</b><br>💽 Windows បង្ហាញ ≈ <b>${(mb * 1e6 / 2 ** 30).toFixed(2)} GiB</b>`;
+  }
+  ["sV", "sU", "sS"].forEach(i => $(i).addEventListener("input", size)); size();
+  // subnet
+  function ip() {
+    const p = $("ipA").value.trim().split(".").map(Number), pre = +$("ipP").value;
+    if (p.length !== 4 || p.some(x => !(x >= 0 && x <= 255) || isNaN(x)) || !(pre >= 0 && pre <= 32)) { $("ipOut").innerHTML = "❌ IP ឬ Prefix មិនត្រឹមត្រូវ"; return; }
+    const n = ((p[0] << 24) | (p[1] << 16) | (p[2] << 8) | p[3]) >>> 0, mask = pre ? (0xFFFFFFFF << (32 - pre)) >>> 0 : 0;
+    const net = (n & mask) >>> 0, bc = (net | (~mask >>> 0)) >>> 0, s = x => [x >>> 24, x >>> 16 & 255, x >>> 8 & 255, x & 255].join(".");
+    const hosts = pre >= 31 ? (pre === 32 ? 1 : 2) : 2 ** (32 - pre) - 2;
+    const priv = p[0] === 10 || (p[0] === 172 && p[1] >= 16 && p[1] <= 31) || (p[0] === 192 && p[1] === 168);
+    const apipa = p[0] === 169 && p[1] === 254;
+    $("ipOut").innerHTML = `<b>Network</b> ${s(net)}/${pre}<br><b>Mask</b> ${s(mask)}<br><b>Broadcast</b> ${s(bc)}<br><b>Host ដំបូង–ចុងក្រោយ</b> ${pre < 31 ? s(net + 1) + " – " + s(bc - 1) : "-"}<br><b>ចំនួន Host</b> ${hosts.toLocaleString()}<br><b>ប្រភេទ</b> ${apipa ? "⚠️ APIPA — មិនបាន IP ពី DHCP" : priv ? "🏠 Private (ក្នុង LAN)" : "🌍 Public"}`;
+  }
+  ["ipA", "ipP"].forEach(i => $(i).addEventListener("input", ip)); ip();
+  // pc builder
+  function pc() {
+    const use = $("pcUse").value, cpu = +$("pcCpu").value, ram = +$("pcRam").value, sto = $("pcSto").value, gpu = +$("pcGpu").value;
+    const need = { office: [2, 8, 0], code: [3, 16, 0], video: [4, 32, 1], game: [3, 16, 1] }[use];
+    const tips = []; let score = 100;
+    if (cpu < need[0]) { score -= 25; tips.push("🧠 CPU ខ្សោយពេកសម្រាប់ការងារនេះ"); }
+    if (ram < need[1]) { score -= 25; tips.push(`⚡ RAM គួរមាន ≥ ${need[1]} GB`); }
+    if (sto === "hdd") { score -= 20; tips.push("💾 ប្តូរ HDD → SSD (លឿនជាងរាប់ដង)"); }
+    if (gpu < need[2]) { score -= 25; tips.push("🎮 ត្រូវការកាតក្រាហ្វិកដាច់ដោយឡែក"); }
+    if (use === "office" && (gpu > 0 || cpu > 3)) tips.push("💸 លើសតម្រូវការ — អាចសន្សំលុយបាន");
+    const price = [0, 0, 120, 200, 330][cpu] + { 4: 15, 8: 25, 16: 45, 32: 90 }[ram] + { hdd: 40, ssd: 45, nvme: 70 }[sto] + [0, 300, 600][gpu] + 260;
+    const watt = 150 + [0, 0, 65, 95, 125][cpu] + [0, 115, 220][gpu];
+    $("pcOut").innerHTML = `<b>ពិន្ទុសមស្រប</b> <span class="itk-score" style="--v:${Math.max(score, 5)}%">${Math.max(score, 0)}/100</span><br>💵 តម្លៃប្រហែល <b>$${price}</b> · 🔌 PSU ណែនាំ ≥ <b>${Math.ceil(watt * 1.5 / 50) * 50}W</b><br>${tips.length ? tips.join("<br>") : "✅ ការជ្រើសរើសល្អឥតខ្ចោះសម្រាប់គោលបំណងនេះ!"}<br><small>(តម្លៃជាការប៉ាន់ស្មានសម្រាប់រៀន)</small>`;
+  }
+  ["pcUse", "pcCpu", "pcRam", "pcSto", "pcGpu"].forEach(i => $(i).addEventListener("input", pc)); pc();
+  // password
+  async function pw() {
+    const v = $("pwIn").value; let sc = 0;
+    sc += v.length >= 12; sc += /[a-z]/.test(v); sc += /[A-Z]/.test(v); sc += /\d/.test(v); sc += /[^A-Za-z0-9]/.test(v);
+    if (/^(123456|password|qwerty|111111)/i.test(v)) sc = 0;
+    const L = ["ខ្សោយណាស់", "ខ្សោយ", "មធ្យម", "ល្អ", "ខ្លាំង", "ខ្លាំងណាស់"], C = ["#dc2626", "#ea580c", "#ca8a04", "#65a30d", "#16a34a", "#059669"];
+    $("pwBar").style.cssText = `width:${(sc / 5) * 100}%;background:${C[sc]}`;
+    const pool = (/[a-z]/.test(v) ? 26 : 0) + (/[A-Z]/.test(v) ? 26 : 0) + (/\d/.test(v) ? 10 : 0) + (/[^A-Za-z0-9]/.test(v) ? 32 : 0);
+    const guesses = Math.pow(pool || 1, v.length), secs = guesses / 1e10;
+    const t = secs < 1 ? "តិចជាង 1 វិនាទី" : secs < 3600 ? Math.round(secs / 60) + " នាទី" : secs < 3.15e7 ? Math.round(secs / 86400) + " ថ្ងៃ" : secs < 3.15e9 ? Math.round(secs / 3.15e7) + " ឆ្នាំ" : "រាប់សតវត្សរ៍+";
+    let hash = "(Browser នេះមិនគាំទ្រ)";
+    try { const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(v)); hash = [...new Uint8Array(d)].map(b => b.toString(16).padStart(2, "0")).join(""); } catch (e) {}
+    $("pwOut").innerHTML = `<b style="color:${C[sc]}">${L[sc]}</b> · ប្រវែង ${v.length} តួ<br>⏱️ ពេលទាយ (10 ពាន់លានដង/វិនាទី) ≈ <b>${t}</b><br><b>SHA-256</b> <code class="i" style="word-break:break-all">${hash}</code>`;
+  }
+  $("pwIn").addEventListener("input", pw); pw();
+  $("pwGen").onclick = () => { const a = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*", r = new Uint32Array(16); crypto.getRandomValues(r); $("pwIn").value = [...r].map(x => a[x % a.length]).join(""); pw(); };
+  // quiz
+  const Q = [["គំរូដែលកុំព្យូទ័រធ្វើការគឺ?", ["Input → Process → Output", "Output → Input → Process", "Process → Output → Input", "Storage → Output"], 0], ["1 Byte ស្មើនឹងប៉ុន្មាន bits?", ["4", "8", "16", "1024"], 1], ["លេខ Binary 1010 ស្មើ Decimal?", ["8", "10", "12", "5"], 1], ["Hex FF ស្មើ Decimal?", ["15", "100", "255", "256"], 2], ["គ្រឿងណាបាត់ទិន្នន័យពេលបិទភ្លើង?", ["SSD", "HDD", "RAM", "Flash drive"], 2], ["Internet 80 Mbps ទាញយកបានប្រហែល?", ["80 MB/s", "10 MB/s", "640 MB/s", "8 MB/s"], 1], ["អក្សរខ្មែរ “ក” ក្នុង UTF-8 ប្រើប៉ុន្មាន Bytes?", ["1", "2", "3", "4"], 2], ["BIOS/UEFI ជាប្រភេទ Software អ្វី?", ["Application", "Firmware", "SaaS", "Utility"], 1], ["Linux ត្រូវបានបង្កើតដោយ?", ["Bill Gates", "Steve Jobs", "Linus Torvalds", "Tim Berners-Lee"], 2], ["File System ណាកំណត់ File ធំបំផុត 4 GB?", ["NTFS", "exFAT", "FAT32", "APFS"], 2], ["DNS ធ្វើអ្វី?", ["ផ្តល់ IP ស្វ័យប្រវត្តិ", "បកឈ្មោះ Domain → IP", "អ៊ិនគ្រីបទិន្នន័យ", "ភ្ជាប់ Wi-Fi"], 1], ["IP 169.254.x.x មានន័យថា?", ["Internet លឿន", "IP សាធារណៈ", "មិនបានទទួល IP ពី DHCP", "IPv6"], 2], ["HTTPS ប្រើ Port លេខ?", ["80", "22", "443", "53"], 2], ["Gmail ជាប្រភេទ Cloud អ្វី?", ["IaaS", "PaaS", "SaaS", "On-premise"], 2], ["ក្នុង SQL ពាក្យណាប្រើទាញទិន្នន័យ?", ["GET", "SELECT", "PULL", "SHOW"], 1], ["Primary Key គឺ?", ["លេខសម្ងាត់", "លេខសម្គាល់មិនស្ទួន", "Column ចុងក្រោយ", "Password DB"], 1], ["CIA Triad រួមមាន?", ["Code, Internet, AI", "Confidentiality, Integrity, Availability", "CPU, IP, App", "Cloud, IaaS, API"], 1], ["ច្បាប់ Backup ដែលល្អគឺ?", ["1-1-1", "3-2-1", "2-2-2", "Backup ម្តង/ឆ្នាំ"], 1], ["ជំហានដំបូងនៃ Troubleshooting?", ["ប្តូរ Hardware", "កំណត់បញ្ហា", "កត់ត្រា", "Format ម៉ាស៊ីន"], 1], ["អ្នកណាបង្កើត World Wide Web?", ["Vint Cerf", "Alan Turing", "Tim Berners-Lee", "Ada Lovelace"], 2]]; let qi = 0, ok = 0, picked = false; const order = Q.map((_, i) => i).sort(() => Math.random() - .5);
+  function quiz() {
+    if (qi >= Q.length) { const pct = Math.round(ok / Q.length * 100);
+      $("qz").innerHTML = `<div class="itk-done"><div class="big">${pct >= 80 ? "🏆" : pct >= 50 ? "👍" : "📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><p>${pct >= 80 ? "អស្ចារ្យ! អ្នកត្រៀមខ្លួនរួចសម្រាប់ CompTIA ITF+" : pct >= 50 ? "ល្អ! ពិនិត្យមេរៀនដែលខុសម្តងទៀត" : "សូមរៀនមេរៀនឡើងវិញ ហើយសាកម្តងទៀត"}</p><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;
+      $("qAgain").onclick = () => { qi = 0; ok = 0; quiz(); }; return; }
+    const [q, opts, a] = Q[order[qi]]; picked = false;
+    $("qz").innerHTML = `<div class="itk-qh">សំណួរ ${kh(qi + 1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi / Q.length * 100}%"></i></div><h3>${q}</h3>` + opts.map((o, i) => `<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("") + `<div id="qNext"></div>`;
+    $("qz").querySelectorAll(".itk-opt").forEach(b => b.onclick = () => {
+      if (picked) return; picked = true; const i = +b.dataset.i;
+      if (i === a) ok++;
+      $("qz").querySelectorAll(".itk-opt").forEach(x => x.classList.add(+x.dataset.i === a ? "good" : +x.dataset.i === i ? "bad" : "dim"));
+      $("qNext").innerHTML = `<button class="btn" id="qN">${qi + 1 < Q.length ? "បន្ទាប់ →" : "មើលលទ្ធផល 🏁"}</button>`;
+      $("qN").onclick = () => { qi++; quiz(); };
+    });
+  }
+  quiz();
+})();
+</script>
+
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+
+<ol class="steps">
+<li><b>IT Fundamentals</b> (វគ្គនេះ) ✅</li>
+<li><b>Linux &amp; Command Line</b> + <b>Git &amp; GitHub</b> — ជំនាញ Terminal</li>
+<li>ជ្រើសផ្លូវ៖ 🌐 <b>Web</b> (HTML → CSS → JavaScript → React) · 💻 <b>Programming</b> (Python, C#) · 🗄️ <b>Data</b> (Excel, SQL) · 🛡️ <b>Security</b></li>
+<li>គម្រោងផ្ទាល់ខ្លួន ៣ + Portfolio លើ GitHub</li>
+<li>វិញ្ញាបនបត្រ៖ CompTIA ITF+ → A+ → Network+ / Security+</li>
+</ol>
+<div class="note">💡 វគ្គទាំងអស់ខាងលើមានក្នុង <b>xCenBar Rean Free</b> — ចុច “ត្រឡប់” ហើយជ្រើសវគ្គបន្ទាប់។</div>
+
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="itf"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

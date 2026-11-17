@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="km">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Typing Game</title>
+<meta name="description" content="ហ្គេមហាត់វាយអក្សរ ខ្មែរ និង English — ហាត់ម្រាមដៃ · តេស្តល្បឿន WPM · ហ្គេមពាក្យធ្លាក់">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#0f172a;--mut:#64748b;--line:#e2e8f0;--pri:#7c3aed;--pri2:#22d3ee;--ok:#2f9e44;--bad:#e03131;--soft:#f1edff;--key:#f8fafc;--keyb:#cbd5e1}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0f1f;--card:#131a30;--ink:#e2e8f0;--mut:#94a3b8;--line:#25304f;--pri:#a78bfa;--pri2:#22d3ee;--ok:#51cf66;--bad:#ff6b6b;--soft:#1d2142;--key:#1a2240;--keyb:#33406a}}
+:root[data-theme="dark"]{--bg:#0b0f1f;--card:#131a30;--ink:#e2e8f0;--mut:#94a3b8;--line:#25304f;--pri:#a78bfa;--pri2:#22d3ee;--ok:#51cf66;--bad:#ff6b6b;--soft:#1d2142;--key:#1a2240;--keyb:#33406a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Kantumruy Pro",Inter,system-ui,sans-serif;line-height:1.6}
+.wrap{max-width:900px;margin:0 auto;padding:16px 16px 90px}
+.hero{position:relative;background:linear-gradient(135deg,#4c1d95,#7c3aed 50%,#06b6d4);color:#fff;border-radius:20px;padding:20px 18px;margin-bottom:14px;overflow:hidden}
+.hero h1{margin:0 0 4px;font-size:1.5rem;padding-right:48px}.hero p{margin:0;opacity:.92}
+.toggle{position:absolute;right:12px;top:12px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.15);color:#fff;border-radius:12px;width:40px;height:40px;font-size:18px;cursor:pointer}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.tabs button,.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 14px;font:inherit;font-weight:700;cursor:pointer}
+.tabs button.on,.chip.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:10px 0}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{border:0;border-radius:12px;padding:10px 16px;font:inherit;font-weight:700;cursor:pointer;background:var(--pri);color:#fff}
+.btn.ghost{background:var(--soft);color:var(--ink)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:8px 0}
+.stat{background:var(--soft);border-radius:12px;padding:8px;text-align:center}.stat b{display:block;font-size:1.4rem;font-family:Inter,sans-serif}.stat span{font-size:.8rem;color:var(--mut)}
+.text{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:1.35rem;line-height:2;letter-spacing:.3px;padding:12px;border-radius:12px;background:var(--soft);min-height:120px;word-break:break-word;cursor:text;user-select:none}
+.text.km{font-family:"Kantumruy Pro",sans-serif;font-size:1.5rem;letter-spacing:0}
+.text span.c{color:var(--ok)}.text span.x{color:#fff;background:var(--bad);border-radius:3px}.text span.cur{border-left:3px solid var(--pri);animation:blink 1s steps(1) infinite;margin-left:-3px}
+.text span.todo{color:var(--mut)}
+@keyframes blink{50%{border-color:transparent}}
+.hin{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;left:-9999px}
+input.vis{width:100%;font:inherit;font-size:1.2rem;padding:12px;border-radius:12px;border:2px solid var(--pri);background:var(--card);color:var(--ink)}
+/* keyboard */
+.kb{display:grid;gap:5px;margin-top:10px;user-select:none}
+.kr{display:flex;gap:5px;justify-content:center}
+.k{min-width:0;flex:1 1 0;max-width:52px;height:44px;border-radius:8px;background:var(--key);border:1px solid var(--keyb);display:flex;align-items:center;justify-content:center;font-family:Inter,sans-serif;font-weight:700;font-size:.95rem;position:relative;border-bottom-width:3px}
+.k.w15{max-width:78px;flex:1.5}.k.w2{max-width:100px;flex:2}.k.sp{max-width:320px;flex:7}
+.k.next{outline:3px solid var(--pri);transform:translateY(-2px);box-shadow:0 0 16px color-mix(in srgb,var(--pri) 60%,transparent)}
+.k.hit{background:color-mix(in srgb,var(--ok) 35%,var(--key))}.k.miss{background:color-mix(in srgb,var(--bad) 40%,var(--key))}
+.k[data-f="0"]{border-bottom-color:#e64980}.k[data-f="1"]{border-bottom-color:#f59f00}.k[data-f="2"]{border-bottom-color:#40c057}.k[data-f="3"]{border-bottom-color:#228be6}
+.k[data-f="4"]{border-bottom-color:#228be6}.k[data-f="5"]{border-bottom-color:#40c057}.k[data-f="6"]{border-bottom-color:#f59f00}.k[data-f="7"]{border-bottom-color:#e64980}.k[data-f="8"]{border-bottom-color:#868e96}
+.finger{font-size:.95rem;color:var(--mut);margin-top:6px;text-align:center;min-height:1.6em}
+.legend{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;font-size:.8rem;color:var(--mut);margin-top:6px}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:3px}
+/* falling game */
+.arena{position:relative;height:420px;border-radius:16px;overflow:hidden;background:radial-gradient(80% 60% at 50% 0%,#3b1d8f,transparent 70%),linear-gradient(180deg,#0b0624,#140a3a 70%,#24104f);border:1px solid var(--line)}
+.arena::after{content:"";position:absolute;left:0;right:0;bottom:0;height:60px;background:linear-gradient(transparent,rgba(255,43,214,.25));border-top:2px solid rgba(255,43,214,.7)}
+.word{position:absolute;top:0;padding:3px 10px;border-radius:10px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff;font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-weight:700;font-size:1.1rem;white-space:nowrap;transition:background .2s}
+.word.km{font-family:"Kantumruy Pro",sans-serif}
+.word.tgt{background:rgba(124,58,237,.65);border-color:#a78bfa}.word .d{color:#22d3ee}
+.word.bonus{border-color:#ffd43b;box-shadow:0 0 12px #ffd43b88}
+.boom{position:absolute;color:#ffd43b;font-weight:800;pointer-events:none;animation:boom .7s ease-out forwards;font-family:Inter,sans-serif}
+@keyframes boom{to{transform:translateY(-40px) scale(1.4);opacity:0}}
+.hud{position:absolute;top:8px;left:10px;right:10px;display:flex;justify-content:space-between;color:#fff;font-weight:800;font-family:Inter,"Kantumruy Pro",sans-serif;z-index:2;text-shadow:0 2px 6px #000}
+.overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(8,4,24,.78);color:#fff;text-align:center;padding:16px;z-index:3}
+.overlay h2{margin:0;font-size:1.6rem}
+.small{font-size:.88rem;color:var(--mut)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}td,th{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left}
+.hidden{display:none!important}
+@media (max-width:600px){.k{height:38px;font-size:.8rem}.text{font-size:1.15rem}.text.km{font-size:1.3rem}.arena{height:360px}.stats{grid-template-columns:repeat(2,1fr)}}
+</style>
+<link rel="icon" href="../assets/icons/typing.svg" type="image/svg+xml">
+</head>
+<body>
+<div class="wrap">
+ <div class="hero">
+  <button class="toggle" id="theme" title="ប្តូរពណ៌">🌓</button>
+  <h1>⌨️ ហ្គេមវាយអក្សរ (Typing Game)</h1>
+  <p>ហាត់វាយ <b>ខ្មែរ</b> និង <b>English</b> — ហាត់ម្រាមដៃ · តេស្តល្បឿន WPM/CPM · ហ្គេមពាក្យធ្លាក់ 🎮</p>
+ </div>
+ <div class="tabs" id="tabs"><button data-t="game" class="on">🎮 ពាក្យធ្លាក់</button><button data-t="test">⏱️ តេស្តល្បឿន</button><button data-t="learn">🖐️ ហាត់ម្រាមដៃ</button><button data-t="stats">🏆 កំណត់ត្រា</button></div>
+
+ <!-- ================= FALLING WORDS ================= -->
+ <section data-p="game">
+  <div class="card">
+   <div class="row"><b>ភាសា៖</b><button class="chip on" data-gl="en">English</button><button class="chip" data-gl="km">ខ្មែរ</button><button class="chip" data-gl="code">💻 Code</button>
+   <span style="flex:1"></span><b>កម្រិត៖</b><button class="chip on" data-gd="1">ងាយ</button><button class="chip" data-gd="2">មធ្យម</button><button class="chip" data-gd="3">ពិបាក</button></div>
+  </div>
+  <div class="arena" id="arena">
+   <div class="hud"><span id="hScore">⭐ 0</span><span id="hLv">Lv 1</span><span id="hLives">❤️❤️❤️</span></div>
+   <div class="overlay" id="ov"><h2>🎮 ពាក្យធ្លាក់</h2><p>វាយពាក្យឲ្យត្រូវ មុនពេលវាធ្លាក់ដល់ដី!<br>ពាក្យ <span style="color:#ffd43b">មាស</span> = ពិន្ទុ ×3 · វាយត្រូវជាប់ៗ = Combo</p><button class="btn" id="gStart">▶ ចាប់ផ្តើម</button><p class="small" style="color:#cbd5e1">កុំព្យូទ័រ៖ វាយដោយផ្ទាល់ · ទូរស័ព្ទ៖ វាយក្នុងប្រអប់ខាងក្រោម</p></div>
+  </div>
+  <input class="vis" id="gIn" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="វាយពាក្យនៅទីនេះ…" style="margin-top:8px">
+  <div class="row" style="margin-top:6px"><button class="btn ghost" id="gPause">⏸ ផ្អាក</button><button class="btn ghost" id="snd">🔊 សំឡេង</button><span class="small" id="gBest"></span></div>
+ </section>
+
+ <!-- ================= SPEED TEST ================= -->
+ <section data-p="test" class="hidden">
+  <div class="card">
+   <div class="row"><b>ភាសា៖</b><button class="chip on" data-tl="en">English</button><button class="chip" data-tl="km">ខ្មែរ</button>
+   <span style="flex:1"></span><b>ពេល៖</b><button class="chip" data-tt="30">30s</button><button class="chip on" data-tt="60">60s</button><button class="chip" data-tt="120">2 នាទី</button></div>
+  </div>
+  <div class="stats"><div class="stat"><b id="tW">0</b><span>WPM</span></div><div class="stat"><b id="tC">0</b><span>CPM (តួ/នាទី)</span></div><div class="stat"><b id="tA">100%</b><span>ត្រឹមត្រូវ</span></div><div class="stat"><b id="tT">60</b><span>វិនាទី</span></div></div>
+  <div class="text" id="tx" tabindex="0"></div>
+  <textarea class="hin" id="tIn" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+  <div class="row" style="margin-top:8px"><button class="btn" id="tNew">🔄 អត្ថបទថ្មី</button><span class="small">ចុចលើអត្ថបទ ហើយចាប់ផ្តើមវាយ — ម៉ោងរត់ពេលអ្នកវាយតួទីមួយ</span></div>
+  <div class="card hidden" id="tRes"></div>
+  <p class="small">💡 ភាសាខ្មែរ៖ ប្រើក្តារចុចខ្មែរ (Khmer NiDA ក្នុង Windows/Mac ឬ Gboard ខ្មែរលើទូរស័ព្ទ)។ សម្រាប់ខ្មែរ <b>CPM</b> សំខាន់ជាង WPM។</p>
+ </section>
+
+ <!-- ================= FINGER LESSONS ================= -->
+ <section data-p="learn" class="hidden">
+  <div class="card"><div class="row" id="lessons"></div></div>
+  <div class="stats"><div class="stat"><b id="lW">0</b><span>WPM</span></div><div class="stat"><b id="lA">100%</b><span>ត្រឹមត្រូវ</span></div><div class="stat"><b id="lP">0%</b><span>វឌ្ឍនភាព</span></div><div class="stat"><b id="lS">☆☆☆</b><span>ផ្កាយ</span></div></div>
+  <div class="text" id="lx" tabindex="0"></div>
+  <textarea class="hin" id="lIn" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+  <div class="finger" id="fing"></div>
+  <div class="kb" id="kb"></div>
+  <div class="legend"><span><i style="background:#e64980"></i>កូនដៃ</span><span><i style="background:#f59f00"></i>នាងដៃ</span><span><i style="background:#40c057"></i>ម្រាមកណ្តាល</span><span><i style="background:#228be6"></i>ម្រាមចង្អុល</span><span><i style="background:#868e96"></i>មេដៃ</span></div>
+  <p class="small">🖐️ ដាក់ម្រាមដៃលើ <b>A S D F</b> (ដៃឆ្វេង) និង <b>J K L ;</b> (ដៃស្តាំ) — គ្រាប់ <b>F</b> និង <b>J</b> មានស្នាមប៉ោងតូច។ កុំមើលក្តារចុច មើលតែអេក្រង់!</p>
+ </section>
+
+ <!-- ================= STATS ================= -->
+ <section data-p="stats" class="hidden"><div class="card" id="hist"></div><button class="btn ghost" id="clr">🗑 លុបកំណត់ត្រា</button></section>
+</div>
+
+<script>
+(() => {
+const $ = id => document.getElementById(id), $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const N = s => s.normalize("NFC");
+const ST = { get() { try { return JSON.parse(localStorage.getItem("xc_typing") || "{}"); } catch (e) { return {}; } }, set(o) { try { localStorage.setItem("xc_typing", JSON.stringify(o)); } catch (e) { } } };
+$("theme").onclick = () => { const r = document.documentElement, d = r.dataset.theme ? r.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches; r.dataset.theme = d ? "light" : "dark"; };
+let tab = "game";
+$$("#tabs button").forEach(b => b.onclick = () => { $$("#tabs button").forEach(x => x.classList.toggle("on", x === b)); tab = b.dataset.t; $$("section[data-p]").forEach(s => s.classList.toggle("hidden", s.dataset.p !== tab)); if (tab !== "game") pauseGame(true); if (tab === "stats") showHist(); if (tab === "test") focusT(); if (tab === "learn") focusL(); });
+
+/* ---------------- sound ---------------- */
+let AC = null, sound = true;
+function beep(f = 660, d = .07, type = "square", v = .05) { if (!sound) return; try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); const o = AC.createOscillator(), g = AC.createGain(); o.type = type; o.frequency.value = f; g.gain.value = v; o.connect(g); g.connect(AC.destination); o.start(); g.gain.exponentialRampToValueAtTime(.0001, AC.currentTime + d); o.stop(AC.currentTime + d); } catch (e) { } }
+$("snd").onclick = () => { sound = !sound; $("snd").textContent = sound ? "🔊 សំឡេង" : "🔇 បិទសំឡេង"; };
+
+/* ---------------- word banks ---------------- */
+const W = {
+ en: { 1: "cat dog sun sky red cup map hat pen run sit big box fun yes egg bus car day key fish milk book tree rain star moon home blue cake ball ship bird frog rice", 2: "school apple water friend happy orange garden planet window pencil family market rocket summer river mother father coffee banana people number travel dragon temple", 3: "keyboard computer elephant beautiful adventure knowledge important chocolate wonderful education yesterday butterfly classroom challenge mountain community scientist celebrate" },
+ km: { 1: "ទឹក បាយ ផ្ទះ ឆ្មា ឆ្កែ ត្រី មាន់ គោ ដៃ ជើង ភ្នែក មេឃ ព្រះ ផ្កា ស្លឹក ថ្ម ដី ភ្លើង ខ្យល់ ពណ៌ ក្រហម ខៀវ ស ខ្មៅ ម្តាយ ឪពុក មិត្ត គ្រូ", 2: "សាលា សៀវភៅ ការងារ អរគុណ សួស្តី ទន្លេ ភ្នំពេញ សៀមរាប ផ្លែឈើ ក្រដាស ប៊ិច ទូរស័ព្ទ ឡាន កង់ ផ្សារ ពេលព្រឹក រីករាយ សប្បាយ ស្រលាញ់ រៀនសូត្រ", 3: "កុំព្យូទ័រ បច្ចេកវិទ្យា ប្រទេសកម្ពុជា អង្គរវត្ត វិទ្យាល័យ សាកលវិទ្យាល័យ ភាសាអង់គ្លេស គណិតវិទ្យា វប្បធម៌ ប្រវត្តិសាស្ត្រ សេដ្ឋកិច្ច អក្សរសាស្ត្រ" },
+ code: { 1: "if for int var let def css html git npm sql api app web url get set new".split(" "), 2: "print return class import while false true const array string object python script".split(" "), 3: ["function", "console.log()", "useState()", "display:flex;", "querySelector", "addEventListener", "<div></div>", 'git commit -m "fix"', "SELECT * FROM users;", "print(\"Hello\")", "x += 1"] }
+};
+const TX = {
+ en: ["Practice a little every day and your fingers will learn the keyboard faster than you think.", "Keep your eyes on the screen, your fingers on the home row, and type slowly before you type fast.", "The best way to learn something new is to start today, make mistakes, and try again tomorrow.", "Angkor Wat is one of the largest religious monuments in the world and a symbol of Cambodia.", "Good typing is not about speed alone. Accuracy comes first, and speed will follow with practice.", "Learning to code opens many doors, from building websites to creating games and useful apps."],
+ km: ["ការរៀនរាល់ថ្ងៃ ទោះតិចក៏ដោយ ធ្វើឲ្យយើងកាន់តែពូកែជាងមុន។", "ប្រទេសកម្ពុជា មានប្រាសាទអង្គរវត្ត ដែលជានិមិត្តរូបនៃជាតិខ្មែរ។", "វាយអក្សរឲ្យត្រូវជាមុនសិន បន្ទាប់មកល្បឿននឹងមកដោយខ្លួនឯង។", "សៀវភៅ គឺជាមិត្តល្អ ដែលផ្តល់ចំណេះដឹងដល់យើងគ្រប់ពេល។", "បច្ចេកវិទ្យា ជួយឲ្យសិស្សរៀនបានគ្រប់ទីកន្លែង និងគ្រប់ពេលវេលា។", "ទឹកទន្លេមេគង្គ ហូរកាត់ប្រទេសកម្ពុជា ពីខាងជើងទៅខាងត្បូង។"]
+};
+
+/* ================= FALLING WORDS ================= */
+let G = null, gl = "en", gd = 1, raf = 0;
+$$("[data-gl]").forEach(b => b.onclick = () => { $$("[data-gl]").forEach(x => x.classList.toggle("on", x === b)); gl = b.dataset.gl; if (G) endGame(); resetOv(); });
+$$("[data-gd]").forEach(b => b.onclick = () => { $$("[data-gd]").forEach(x => x.classList.toggle("on", x === b)); gd = +b.dataset.gd; if (G) endGame(); resetOv(); });
+function bestKey() { return `${gl}-${gd}`; }
+function showBest() { const s = ST.get(), b = (s.best || {})[bestKey()]; $("gBest").textContent = b ? `🏆 ពិន្ទុខ្ពស់បំផុត (${gl === "km" ? "ខ្មែរ" : gl === "code" ? "Code" : "English"}, ${["", "ងាយ", "មធ្យម", "ពិបាក"][gd]}): ${b}` : ""; }
+function resetOv() { $("ov").classList.remove("hidden"); $("ov").innerHTML = `<h2>🎮 ពាក្យធ្លាក់</h2><p>វាយពាក្យឲ្យត្រូវ មុនពេលវាធ្លាក់ដល់ដី!<br>ពាក្យ <span style="color:#ffd43b">មាស</span> = ពិន្ទុ ×3 · វាយត្រូវជាប់ៗ = Combo</p><button class="btn" id="gStart">▶ ចាប់ផ្តើម</button>`; $("gStart").onclick = startGame; showBest(); }
+function pool() { const w = W[gl], lv = [1, 2, 3].filter(n => n <= gd); return lv.flatMap(n => Array.isArray(w[n]) ? w[n] : w[n].split(/\s+/)); }
+function startGame() {
+  $("ov").classList.add("hidden"); const A = $("arena").getBoundingClientRect();
+  G = { words: [], score: 0, lives: 3, lv: 1, hit: 0, miss: 0, combo: 0, best: 0, typed: 0, t0: performance.now(), last: performance.now(), spawnT: 0, paused: false, W: A.width, H: A.height, pool: pool() };
+  $$(".word,.boom").forEach(e => e.remove()); $("gIn").value = ""; $("gIn").focus(); hud(); cancelAnimationFrame(raf); raf = requestAnimationFrame(loop); beep(523, .1); setTimeout(() => beep(784, .12), 110);
+}
+function hud() { $("hScore").textContent = `⭐ ${G.score}` + (G.combo > 2 ? ` 🔥x${G.combo}` : ""); $("hLv").textContent = `Lv ${G.lv}`; $("hLives").textContent = "❤️".repeat(G.lives) + "🖤".repeat(Math.max(0, 3 - G.lives)); }
+function spawn() {
+  const txt = G.pool[Math.floor(Math.random() * G.pool.length)], el = document.createElement("div"); el.className = "word" + (gl === "km" ? " km" : "");
+  const bonus = Math.random() < .08; if (bonus) el.classList.add("bonus"); el.textContent = txt; $("arena").appendChild(el);
+  const w = el.offsetWidth, x = 10 + Math.random() * Math.max(10, G.W - w - 20);
+  const sp = (22 + G.lv * 6 + (gd - 1) * 8) * (0.85 + Math.random() * .3);
+  G.words.push({ txt, el, x, y: 34, sp, bonus }); el.style.left = x + "px"; el.style.transform = "translateY(34px)";
+}
+function loop(t) {
+  if (!G || G.paused) return; const dt = Math.min(.05, (t - G.last) / 1000); G.last = t; G.spawnT -= dt;
+  const gap = Math.max(.75, 2.4 - G.lv * .16 - (gd - 1) * .25);
+  if (G.spawnT <= 0) { spawn(); G.spawnT = gap; }
+  const floor = G.H - 60;
+  for (const w of [...G.words]) { w.y += w.sp * dt; w.el.style.transform = `translateY(${w.y}px)`; if (w.y + w.el.offsetHeight > floor) { lose(w); } }
+  raf = requestAnimationFrame(loop);
+}
+function lose(w) { w.el.remove(); G.words.splice(G.words.indexOf(w), 1); G.lives--; G.combo = 0; G.miss++; beep(160, .25, "sawtooth", .07); $("arena").animate([{ transform: "translateX(-6px)" }, { transform: "translateX(6px)" }, { transform: "none" }], { duration: 220 }); hud(); if (G.lives <= 0) endGame(); }
+function mark() {
+  const v = N($("gIn").value.trim()); let tgt = null;
+  for (const w of G.words) { const ok = v && N(w.txt).startsWith(v); w.el.classList.toggle("tgt", !!ok); if (ok && (!tgt || w.y > tgt.y)) tgt = w; w.el.innerHTML = ok ? `<span class="d">${esc(w.txt.slice(0, $("gIn").value.trim().length))}</span>${esc(w.txt.slice($("gIn").value.trim().length))}` : esc(w.txt); }
+  return tgt;
+}
+function tryHit(force) {
+  if (!G || G.paused) return; const v = N($("gIn").value.trim()); if (!v) return;
+  const w = G.words.filter(w => N(w.txt) === v).sort((a, b) => b.y - a.y)[0];
+  if (w) {
+    G.combo++; G.best = Math.max(G.best, G.combo); G.hit++; G.typed += w.txt.length;
+    const pts = (w.txt.length * 10 + G.lv * 5) * (w.bonus ? 3 : 1) * (1 + Math.min(G.combo, 10) * .1) | 0; G.score += pts;
+    const b = document.createElement("div"); b.className = "boom"; b.textContent = "+" + pts; b.style.left = w.x + "px"; b.style.top = w.y + "px"; $("arena").appendChild(b); setTimeout(() => b.remove(), 700);
+    w.el.remove(); G.words.splice(G.words.indexOf(w), 1); $("gIn").value = ""; beep(880 + Math.min(G.combo, 8) * 60, .06);
+    if (G.hit % 10 === 0) { G.lv++; beep(660, .1, "triangle"); setTimeout(() => beep(990, .15, "triangle"), 100); if (G.lives < 3 && G.lv % 3 === 0) G.lives++; }
+    hud(); mark();
+  } else if (force) { G.combo = 0; $("gIn").value = ""; mark(); beep(220, .08, "square", .04); $("gIn").animate([{ borderColor: "#e03131" }, { borderColor: "" }], { duration: 300 }); hud(); }
+}
+$("gIn").addEventListener("input", () => { if (!G) return; mark(); const v = N($("gIn").value.trim()); if (v && !G.words.some(w => N(w.txt) !== v && N(w.txt).startsWith(v))) tryHit(false); });
+$("gIn").addEventListener("keydown", e => { if (e.key === "Enter" || (e.key === " " && gl !== "code")) { e.preventDefault(); tryHit(true); if (!G || !G.words.some(w => N(w.txt).startsWith(N($("gIn").value.trim())))) { } } });
+function endGame() {
+  if (!G) return; cancelAnimationFrame(raf); const g = G; G = null;
+  const mins = (performance.now() - g.t0) / 60000, wpm = Math.round(g.typed / 5 / Math.max(mins, .1)), s = ST.get(); s.best = s.best || {}; const k = bestKey(), rec = !s.best[k] || g.score > s.best[k]; if (rec) s.best[k] = g.score;
+  s.hist = s.hist || []; s.hist.unshift({ d: new Date().toISOString().slice(0, 16).replace("T", " "), m: "🎮 ពាក្យធ្លាក់", l: gl, v: `${g.score} ពិន្ទុ · Lv ${g.lv} · ${g.hit} ពាក្យ` }); s.hist = s.hist.slice(0, 30); ST.set(s);
+  $("ov").classList.remove("hidden");
+  $("ov").innerHTML = `<h2>${rec ? "🏆 កំណត់ត្រាថ្មី!" : "💥 Game Over"}</h2><p style="font-size:1.1rem">⭐ <b>${g.score}</b> ពិន្ទុ · Lv <b>${g.lv}</b><br>✅ ${g.hit} ពាក្យ · 🔥 Combo ខ្ពស់បំផុត ${g.best} · ⌨️ ≈ ${wpm} WPM</p><p>${g.score > 2000 ? "អស្ចារ្យណាស់! 🌟" : g.score > 600 ? "ល្អណាស់! បន្តហាត់ 💪" : "ចាប់ផ្តើមល្អ! ហាត់ម្រាមដៃក្នុងផ្ទាំង 🖐️"}</p><button class="btn" id="gStart">🔄 លេងម្តងទៀត</button>`;
+  $("gStart").onclick = startGame; $$(".word").forEach(e => e.remove()); showBest(); beep(330, .2, "triangle"); setTimeout(() => beep(220, .3, "triangle"), 180);
+}
+function pauseGame(force) { if (!G) return; if (G.paused && !force) { G.paused = false; G.last = performance.now(); $("ov").classList.add("hidden"); $("gPause").textContent = "⏸ ផ្អាក"; $("gIn").focus(); raf = requestAnimationFrame(loop); return; } if (G.paused) return; G.paused = true; cancelAnimationFrame(raf); $("gPause").textContent = "▶ បន្ត"; $("ov").classList.remove("hidden"); $("ov").innerHTML = `<h2>⏸ ផ្អាក</h2><button class="btn" id="gRes">▶ បន្ត</button>`; $("gRes").onclick = () => pauseGame(); }
+$("gPause").onclick = () => pauseGame();
+$("arena").onclick = () => { if (G && !G.paused) $("gIn").focus(); };
+document.addEventListener("visibilitychange", () => { if (document.hidden) pauseGame(true); });
+addEventListener("keydown", e => { if (tab === "game" && G && !G.paused && document.activeElement !== $("gIn") && e.key.length === 1) { $("gIn").focus(); } if (e.key === "Escape" && G) pauseGame(); });
+resetOv();
+
+/* ================= SPEED TEST ================= */
+let T = null, tl = "en", tt = 60, tTimer = 0;
+$$("[data-tl]").forEach(b => b.onclick = () => { $$("[data-tl]").forEach(x => x.classList.toggle("on", x === b)); tl = b.dataset.tl; newT(); });
+$$("[data-tt]").forEach(b => b.onclick = () => { $$("[data-tt]").forEach(x => x.classList.toggle("on", x === b)); tt = +b.dataset.tt; newT(); });
+function textFor(lang, n = 6) { const a = TX[lang].slice().sort(() => Math.random() - .5); return a.slice(0, n).join(" "); }
+function newT() { clearInterval(tTimer); prevLen = 0; T = { text: N(textFor(tl)), t0: 0, done: false, errs: 0, keys: 0 }; $("tIn").value = ""; $("tx").classList.toggle("km", tl === "km"); $("tRes").classList.add("hidden"); $("tT").textContent = tt; $("tW").textContent = 0; $("tC").textContent = 0; $("tA").textContent = "100%"; renderT(); focusT(); }
+function renderT() {
+  const v = N($("tIn").value), t = T.text; let h = "";
+  const k = Math.min(t.length, v.length + 120);
+  for (let i = 0; i < k; i++) { const c = t[i], cls = i < v.length ? (v[i] === c ? "c" : "x") : (i === v.length ? "todo cur" : "todo"); h += `<span class="${cls}">${esc(c === " " && cls === "x" ? "·" : c)}</span>`; }
+  if (v.length >= t.length) h += `<span class="cur"></span>`;
+  $("tx").innerHTML = h || `<span class="cur"></span>`;
+}
+function statsT(final) {
+  const v = N($("tIn").value), t = T.text, el = T.t0 ? (performance.now() - T.t0) / 1000 : 0; let ok = 0; for (let i = 0; i < v.length; i++) if (v[i] === t[i]) ok++;
+  const mins = Math.max(el, 1) / 60, wpm = Math.round(ok / 5 / mins), cpm = Math.round(ok / mins), acc = T.keys ? Math.max(0, Math.round((1 - T.errs / T.keys) * 100)) : 100;
+  $("tW").textContent = wpm; $("tC").textContent = cpm; $("tA").textContent = acc + "%"; $("tT").textContent = Math.max(0, Math.ceil(tt - el));
+  return { wpm, cpm, acc, el };
+}
+function finishT() {
+  if (!T || T.done) return; T.done = true; clearInterval(tTimer); const r = statsT(true);
+  const lvl = tl === "km" ? (r.cpm >= 200 ? "🚀 លឿនខ្លាំង" : r.cpm >= 120 ? "⚡ ល្អ" : r.cpm >= 60 ? "👍 មធ្យម" : "🌱 ចាប់ផ្តើម") : (r.wpm >= 60 ? "🚀 លឿនខ្លាំង" : r.wpm >= 40 ? "⚡ ល្អ (លើសមធ្យម)" : r.wpm >= 25 ? "👍 មធ្យម" : "🌱 ចាប់ផ្តើម");
+  const s = ST.get(); s.hist = s.hist || []; s.hist.unshift({ d: new Date().toISOString().slice(0, 16).replace("T", " "), m: "⏱️ តេស្តល្បឿន", l: tl, v: `${r.wpm} WPM · ${r.cpm} CPM · ${r.acc}%` }); s.hist = s.hist.slice(0, 30);
+  const bk = "test-" + tl; s.best = s.best || {}; const rec = !s.best[bk] || r.cpm > s.best[bk]; if (rec) s.best[bk] = r.cpm; ST.set(s);
+  $("tRes").classList.remove("hidden");
+  $("tRes").innerHTML = `<h3 style="margin:0">${rec ? "🏆 កំណត់ត្រាថ្មី! " : ""}លទ្ធផល៖ ${lvl}</h3><p><b>${r.wpm}</b> WPM · <b>${r.cpm}</b> CPM · ត្រឹមត្រូវ <b>${r.acc}%</b> · ${Math.round(r.el)} វិនាទី</p><p class="small">WPM = (តួអក្សរត្រូវ ÷ 5) ÷ នាទី · មនុស្សទូទៅវាយ English ប្រហែល 35–45 WPM។ ${r.acc < 92 ? "⚠️ ផ្តោតលើភាពត្រឹមត្រូវ (≥ 95%) មុនល្បឿន។" : "✅ ភាពត្រឹមត្រូវល្អ — ឥឡូវបង្កើនល្បឿនបន្តិចម្តងៗ។"}</p><button class="btn" id="tAgain">🔄 សាកម្តងទៀត</button>`;
+  $("tAgain").onclick = newT; beep(784, .15, "triangle");
+}
+function focusT() { setTimeout(() => $("tIn").focus({ preventScroll: true }), 30); }
+$("tx").onclick = focusT; $("tNew").onclick = newT;
+let prevLen = 0;
+$("tIn").addEventListener("input", () => {
+  if (!T || T.done) { $("tIn").value = ""; return; }
+  const v = N($("tIn").value);
+  if (!T.t0 && v.length) { T.t0 = performance.now(); tTimer = setInterval(() => { const r = statsT(); if (r.el >= tt) finishT(); }, 250); }
+  if (v.length > prevLen) { for (let i = prevLen; i < v.length; i++) { T.keys++; if (v[i] !== T.text[i]) T.errs++; } }
+  prevLen = v.length; renderT(); statsT();
+  if (v.length >= T.text.length) finishT();
+});
+$("tIn").addEventListener("keydown", e => { if (e.key === "Tab") { e.preventDefault(); newT(); } });
+
+/* ================= FINGER LESSONS ================= */
+const ROWS = [["`1234567890-=", "q", 0], ["qwertyuiop[]", "", 0], ["asdfghjkl;'", "", 0], ["zxcvbnm,./", "", 0]];
+const FING = { "`": 0, 1: 0, q: 0, a: 0, z: 0, 2: 1, w: 1, s: 1, x: 1, 3: 2, e: 2, d: 2, c: 2, 4: 3, 5: 3, r: 3, t: 3, f: 3, g: 3, v: 3, b: 3, 6: 4, 7: 4, y: 4, u: 4, h: 4, j: 4, n: 4, m: 4, 8: 5, i: 5, k: 5, ",": 5, 9: 6, o: 6, l: 6, ".": 6, 0: 7, p: 7, ";": 7, "/": 7, "-": 7, "=": 7, "[": 7, "]": 7, "'": 7, " ": 8 };
+const FN = ["កូនដៃឆ្វេង", "នាងដៃឆ្វេង", "ម្រាមកណ្តាលឆ្វេង", "ម្រាមចង្អុលឆ្វេង", "ម្រាមចង្អុលស្តាំ", "ម្រាមកណ្តាលស្តាំ", "នាងដៃស្តាំ", "កូនដៃស្តាំ", "មេដៃ"];
+function buildKb() {
+  const r = ["`1234567890-=", "qwertyuiop[]", "asdfghjkl;'", "zxcvbnm,./"], pre = ["", "Tab", "Caps", "Shift"];
+  $("kb").innerHTML = r.map((row, i) => `<div class="kr">${pre[i] ? `<div class="k w15">${pre[i]}</div>` : ""}${[...row].map(c => `<div class="k" data-k="${esc(c)}" data-f="${FING[c] ?? 8}">${esc(c.toUpperCase())}${c === "f" || c === "j" ? "<small style='position:absolute;bottom:3px;font-size:.6rem'>▁</small>" : ""}</div>`).join("")}${i === 3 ? '<div class="k w2">Shift</div>' : i === 2 ? '<div class="k w15">Enter</div>' : ""}</div>`).join("") + `<div class="kr"><div class="k sp" data-k=" " data-f="8">Space</div></div>`;
+}
+const LESS = [
+ ["🏠 ជួរកណ្តាល ១", "asdf jkl;", "fff jjj fjf jfj ddd kkk dkd sss lll sls aaa ;;; a;a fdsa jkl; asdf ;lkj"],
+ ["🏠 ជួរកណ្តាល ២", "asdfghjkl;", null, "ask sad lad fall dash glass flash half hall jag gas lash salad"],
+ ["⬆️ ជួរលើ", "qwertyuiop", null, "quit write type equip power pretty route your tree poet quiet weep"],
+ ["⬇️ ជួរក្រោម", "zxcvbnm,./", null, "zoom van mix cab bomb next zinc move numb calm buzz vex"],
+ ["🔤 ពាក្យទូទៅ", null, null, "the and you that was for are with his they this have from one had word but not what all were when your can said there use each which"],
+ ["🔢 លេខ", "1234567890", null, "10 25 30 47 58 69 100 2026 3.14 12345 67890 1990 855"],
+ ["💻 Code", null, null, "print(x) for i in range(10): if a == b: return x; let y = [1, 2]; def f(): pass"],
+];
+let L = null, li = 0, lTimer = 0;
+$("lessons").innerHTML = LESS.map((l, i) => `<button class="chip ${i ? "" : "on"}" data-li="${i}">${l[0]}</button>`).join("");
+$$("[data-li]").forEach(b => b.onclick = () => { $$("[data-li]").forEach(x => x.classList.toggle("on", x === b)); li = +b.dataset.li; newL(); });
+function genL(i) { const l = LESS[i]; if (l[2]) return l[2]; const w = l[3].split(" "); let out = []; for (let k = 0; k < 14; k++) out.push(w[Math.floor(Math.random() * w.length)]); return out.join(" "); }
+function newL() { L = { text: genL(li), t0: 0, errs: 0, keys: 0, done: false }; $("lIn").value = ""; lPrev = 0; renderL(); $("lW").textContent = 0; $("lA").textContent = "100%"; $("lP").textContent = "0%"; $("lS").textContent = "☆☆☆"; focusL(); }
+function renderL() {
+  const v = $("lIn").value, t = L.text; let h = "";
+  for (let i = 0; i < t.length; i++) { const c = t[i], cls = i < v.length ? (v[i] === c ? "c" : "x") : (i === v.length ? "todo cur" : "todo"); h += `<span class="${cls}">${esc(c === " " && cls === "x" ? "·" : c)}</span>`; }
+  $("lx").innerHTML = h; const nx = t[v.length];
+  $$("#kb .k").forEach(k => k.classList.remove("next")); if (nx !== undefined) { const key = $("kb").querySelector(`[data-k="${CSS.escape(nx.toLowerCase())}"]`); if (key) key.classList.add("next"); $("fing").innerHTML = `គ្រាប់បន្ទាប់៖ <b>${nx === " " ? "Space" : esc(nx)}</b> → ប្រើ <b>${FN[FING[nx.toLowerCase()] ?? 8]}</b>${/[A-Z(){}:"<>?!@#$%^&*_+]/.test(nx) ? " + Shift" : ""}`; } else $("fing").textContent = "";
+}
+let lPrev = 0;
+function focusL() { setTimeout(() => $("lIn").focus({ preventScroll: true }), 30); }
+$("lx").onclick = focusL;
+$("lIn").addEventListener("input", () => {
+  if (!L || L.done) return; const v = $("lIn").value; if (!L.t0 && v.length) L.t0 = performance.now();
+  if (v.length > lPrev) for (let i = lPrev; i < v.length; i++) { L.keys++; const ok = v[i] === L.text[i]; if (!ok) L.errs++; const key = $("kb").querySelector(`[data-k="${CSS.escape((L.text[i] || "").toLowerCase())}"]`); if (key) { key.classList.add(ok ? "hit" : "miss"); setTimeout(() => key.classList.remove("hit", "miss"), 180); } if (!ok) beep(200, .05, "square", .03); }
+  lPrev = v.length; renderL();
+  let okc = 0; for (let i = 0; i < v.length; i++) if (v[i] === L.text[i]) okc++;
+  const mins = Math.max((performance.now() - L.t0) / 1000, 1) / 60, wpm = Math.round(okc / 5 / mins), acc = L.keys ? Math.max(0, Math.round((1 - L.errs / L.keys) * 100)) : 100;
+  $("lW").textContent = wpm; $("lA").textContent = acc + "%"; $("lP").textContent = Math.min(100, Math.round(v.length / L.text.length * 100)) + "%";
+  if (v.length >= L.text.length) {
+    L.done = true; const stars = acc >= 97 && wpm >= 25 ? 3 : acc >= 92 ? 2 : 1; $("lS").textContent = "★".repeat(stars) + "☆".repeat(3 - stars);
+    const s = ST.get(); s.hist = s.hist || []; s.hist.unshift({ d: new Date().toISOString().slice(0, 16).replace("T", " "), m: "🖐️ " + LESS[li][0], l: "en", v: `${wpm} WPM · ${acc}% · ${"★".repeat(stars)}` }); s.hist = s.hist.slice(0, 30); ST.set(s);
+    $("fing").innerHTML = `🎉 ចប់មេរៀន! ${"★".repeat(stars)} — <a href="#" id="lNext">មេរៀនបន្ទាប់ →</a> · <a href="#" id="lRe">ធ្វើម្តងទៀត</a>`; beep(784, .12, "triangle"); setTimeout(() => beep(1046, .15, "triangle"), 120);
+    $("lNext").onclick = e => { e.preventDefault(); const b = $$("[data-li]")[Math.min(LESS.length - 1, li + 1)]; b.click(); }; $("lRe").onclick = e => { e.preventDefault(); newL(); };
+  }
+});
+
+/* ================= STATS ================= */
+function showHist() {
+  const s = ST.get(), b = s.best || {}, h = s.hist || [];
+  const names = { "en-1": "🎮 English ងាយ", "en-2": "🎮 English មធ្យម", "en-3": "🎮 English ពិបាក", "km-1": "🎮 ខ្មែរ ងាយ", "km-2": "🎮 ខ្មែរ មធ្យម", "km-3": "🎮 ខ្មែរ ពិបាក", "code-1": "🎮 Code ងាយ", "code-2": "🎮 Code មធ្យម", "code-3": "🎮 Code ពិបាក", "test-en": "⏱️ English (CPM)", "test-km": "⏱️ ខ្មែរ (CPM)" };
+  $("hist").innerHTML = `<b>🏆 កំណត់ត្រាល្អបំផុត</b>${Object.keys(b).length ? `<table>${Object.entries(b).map(([k, v]) => `<tr><td>${names[k] || k}</td><td><b>${v}</b></td></tr>`).join("")}</table>` : '<p class="small">មិនទាន់មាន — ចាប់ផ្តើមលេង!</p>'}
+   <br><b>🕑 ប្រវត្តិ (៣០ ចុងក្រោយ)</b>${h.length ? `<table><tr><th>ពេល</th><th>ប្រភេទ</th><th>លទ្ធផល</th></tr>${h.map(r => `<tr><td class="small">${esc(r.d)}</td><td>${esc(r.m)} ${r.l === "km" ? "ខ្មែរ" : r.l === "code" ? "Code" : "EN"}</td><td>${esc(r.v)}</td></tr>`).join("")}</table>` : '<p class="small">ទទេ</p>'}<p class="small">កំណត់ត្រារក្សាទុកក្នុងឧបករណ៍នេះតែប៉ុណ្ណោះ។</p>`;
+}
+$("clr").onclick = () => { ST.set({}); showHist(); showBest(); };
+buildKb(); newT(); newL(); showBest();
+$$("#tabs button")[0].click();
+})();
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="typing"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

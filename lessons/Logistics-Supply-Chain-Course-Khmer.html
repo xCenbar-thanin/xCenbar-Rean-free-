@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Logistics &amp; Supply Chain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#0b7285; --accent2:#22b8cf; --accent-soft:#e3fafc;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#66d9e8; --accent2:#99e9f2; --accent-soft:#0b2226;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#66d9e8; --accent2:#99e9f2; --accent-soft:#0b2226;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#061a20,#0b7285 55%,#e8590c);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/lg.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/lg.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Logistics &amp; Supply Chain</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Logistics &amp; Supply Chain — ជាអ្វី? មកពីណា?</a>
+<a href="#setup">២. ត្រៀមខ្លួន</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Supply chain ទាំងមូល</a>
+<a href="#l2">មេរៀន ២: ការព្យាករណ៍តម្រូវការ (Demand forecasting)</a>
+<a href="#l3">មេរៀន ៣: ការគ្រប់គ្រងស្តុក — EOQ · Safety stock · ROP</a>
+<a href="#l4">មេរៀន ៤: ABC analysis &amp; KPI ស្តុក</a>
+<a href="#l5">មេរៀន ៥: ឃ្លាំង (Warehouse)</a>
+<a href="#l6">មេរៀន ៦: ដឹកជញ្ជូន — Mode &amp; ថ្លៃ</a>
+<a href="#l7">មេរៀន ៧: Incoterms 2020</a>
+<a href="#l8">មេរៀន ៨: គយ &amp; ឯកសារនាំចេញ/នាំចូល</a>
+<a href="#l9">មេរៀន ៩: ទិញ (Procurement) &amp; អ្នកផ្គត់ផ្គង់</a>
+<a href="#l10">មេរៀន ១០: Last-mile delivery &amp; Cold chain</a>
+<a href="#l11">មេរៀន ១១: បច្ចេកវិទ្យា &amp; Logistics កម្ពុជា</a>
+<a href="#l12">មេរៀន ១២: ហានិភ័យ · និរន្តរភាព · អាជីព</a>
+<a href="#cheat">📋 សង្ខេប (Cheat sheet)</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងចុងវគ្គ</a>
+<a href="#pro-app">💻 Business Lab (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🚚 Logistics &amp; Supply Chain — ពីឃ្លាំងដល់កំពង់ផែ</h2>
+  <p>SCOR, <b>Forecasting</b>, <b>EOQ · Safety stock · Reorder point</b>, ABC, ឃ្លាំង, ដឹកជញ្ជូន &amp; Container, <b>Incoterms 2020</b>, <b>គយ &amp; Landed cost</b>, Procurement, Last mile &amp; Cold chain, Logistics កម្ពុជា — ឧទាហរណ៍គណនា (គ្មាន Code)។</p>
+  <p><span class="badge">📘 ១២ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">📊 ឧទាហរណ៍គណនា (គ្មាន Code)</span><span class="badge">💼 Business Lab</span></p>
+</section>
+<section id="intro">
+<h2>១. Logistics &amp; Supply Chain — ជាអ្វី? មកពីណា?</h2>
+
+<div class="note">💡 ព័ត៌មានច្បាប់ ពន្ធ និងនីតិវិធីនៅកម្ពុជា អាចផ្លាស់ប្តូរ — ពិនិត្យជាមួយក្រសួងពាណិជ្ជកម្ម អគ្គនាយកដ្ឋានពន្ធដារ (GDT) អគ្គនាយកដ្ឋានគយ និងរដ្ឋាករ (GDCE) ឬអ្នកប្រឹក្សាជំនាញ មុនសម្រេចចិត្ត។</div>
+
+<p><b>Supply chain</b> = ខ្សែសង្វាក់ពីវត្ថុធាតុដើម → ផលិត → ឃ្លាំង → ដឹកជញ្ជូន → អតិថិជន។ <b>Logistics</b> = ការគ្រប់គ្រងលំហូរទំនិញ ព័ត៌មាន និងលុយ ឲ្យ <b>ត្រូវពេល ត្រូវកន្លែង ត្រូវចំនួន ថ្លៃទាប</b>។ វគ្គនេះមានបរិបទកម្ពុជា (កំពង់ផែ ផ្លូវល្បឿនលឿន គយ Incoterms) និងឧទាហរណ៍គណនា EOQ, Safety stock, Landed cost — បង្ហាញតែលទ្ធផល (គ្មាន Code)។</p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#868e96"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#868e96">1913</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Ford assembly line</text><circle cx="200" cy="115" r="11" fill="#1c7ed6"/><text x="200" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#1c7ed6">1956</text><text x="200" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Container (McLean)</text><circle cx="320" cy="115" r="11" fill="#7048e8"/><text x="320" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#7048e8">1960s</text><text x="320" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Toyota JIT</text><circle cx="440" cy="115" r="11" fill="#0ca678"/><text x="440" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#0ca678">1974</text><text x="440" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Barcode (UPC)</text><circle cx="560" cy="115" r="11" fill="#e8590c"/><text x="560" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#e8590c">1982</text><text x="560" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">«Supply chain management»</text><circle cx="680" cy="115" r="11" fill="#e03131"/><text x="680" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#e03131">1996</text><text x="680" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">SCOR model</text><circle cx="800" cy="115" r="11" fill="#d6336c"/><text x="800" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#d6336c">2020</text><text x="800" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Incoterms 2020 · COVID</text><circle cx="920" cy="115" r="11" fill="#495057"/><text x="920" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#495057">2022</text><text x="920" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Expressway PP–SHV</text></svg><figcaption>🖼️ ប្រវត្តិ Logistics</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>1956</td><td><b>Malcom McLean</b></td><td>នាវាដឹក Container ដំបូង (Ideal X) — បន្ថយថ្លៃដឹកជញ្ជូនពិភពលោកខ្លាំង</td></tr><tr><td>1950s–1970s</td><td><b>Taiichi Ohno</b> (Toyota)</td><td>Just-in-time · Kanban · Lean</td></tr><tr><td>1974</td><td>UPC barcode ស្កេនដំបូង</td><td>តាមដានស្តុកស្វ័យប្រវត្តិ</td></tr><tr><td>1982</td><td><b>Keith Oliver</b> (Booz Allen)</td><td>ប្រើពាក្យ «Supply chain management»</td></tr><tr><td>1936 → 2020</td><td><b>ICC</b> (International Chamber of Commerce)</td><td>Incoterms — Incoterms 2020 មាន ១១ លក្ខខណ្ឌ</td></tr><tr><td>2022</td><td>កម្ពុជា — ផ្លូវល្បឿនលឿនភ្នំពេញ–ក្រុងព្រះសីហនុ</td><td>កាត់ពេលដឹកជញ្ជូនទៅកំពង់ផែសមុទ្រ</td></tr></table>
+
+<h3>ប្រើសម្រាប់អ្វី?</h3>
+<div class="grid"><div class="card"><b>🏭 រោងចក្រ</b><br>កាត់ដេរ · គ្រឿងបន្លាស់ · ស្រូវអង្ករ</div><div class="card"><b>🛒 Retail/e-Commerce</b><br>ឃ្លាំង · Delivery</div><div class="card"><b>🚢 នាំចេញ/នាំចូល</b><br>Freight forwarder · ភ្នាក់ងារគយ</div><div class="card"><b>💼 អាជីព</b><br>Logistics coordinator · Buyer · Warehouse manager · Supply chain analyst</div></div>
+
+</section>
+<section id="setup">
+<h2>២. ត្រៀមខ្លួន</h2>
+<ol class='steps'><li>សៀវភៅកត់ត្រា ឬ Google Docs/Sheets សម្រាប់លំហាត់ និងគម្រោង។</li><li>ជ្រើស <b>អាជីវកម្មគំរូ</b> ១ ដើម្បីអនុវត្តតាមមេរៀន (ឧ. ហាងកាហ្វេ ហាងលក់ Online ឬអាជីវកម្មគ្រួសារ)។</li><li>ឧទាហរណ៍គណនាក្នុងវគ្គ បង្ហាញតែ <b>លទ្ធផល</b> — មិនចាំបាច់ចេះ Code។</li><li>ហាត់ជាមួយ <b>Business Lab</b> ចុងវគ្គ។</li></ol></section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>Supply chain ទាំងមូល</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="125.0" height="96" rx="14" fill="#868e96"/><text x="82.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">អ្នកផ្គត់ផ្គង់</text><text x="82.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">វត្ថុធាតុដើម</text><line x1="147.0" y1="82" x2="173.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="175.0" y="34" width="125.0" height="96" rx="14" fill="#1c7ed6"/><text x="237.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">ផលិត</text><text x="237.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">រោងចក្រ</text><line x1="302.0" y1="82" x2="328.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="330.0" y="34" width="125.0" height="96" rx="14" fill="#7048e8"/><text x="392.5" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">ឃ្លាំង/DC</text><line x1="457.0" y1="82" x2="483.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="485.0" y="34" width="125.0" height="96" rx="14" fill="#e8590c"/><text x="547.5" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">ដឹកជញ្ជូន</text><line x1="612.0" y1="82" x2="638.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="640.0" y="34" width="125.0" height="96" rx="14" fill="#0ca678"/><text x="702.5" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">អ្នកលក់រាយ</text><line x1="767.0" y1="82" x2="793.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="795.0" y="34" width="125.0" height="96" rx="14" fill="#2f9e44"/><text x="857.5" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">អតិថិជន</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">លំហូរទំនិញ → · លំហូរព័ត៌មាន &amp; លុយ ←</text></svg><figcaption>🖼️ Supply chain ទាំងមូល</figcaption></figure>
+<table><tr><th>SCOR (ASCM)</th><th>ន័យ</th></tr><tr><td>Plan</td><td>ព្យាករណ៍ · ផែនការ</td></tr><tr><td>Source</td><td>ទិញ</td></tr><tr><td>Make</td><td>ផលិត</td></tr><tr><td>Deliver</td><td>ដឹក</td></tr><tr><td>Return</td><td>ទទួលត្រឡប់</td></tr><tr><td>Enable</td><td>ប្រព័ន្ធ · មនុស្ស · ច្បាប់</td></tr></table>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>ស្រូវពីកសិករ → រោងម៉ាស៊ីន → នាំចេញអង្ករ។ «រោងម៉ាស៊ីន» ជាផ្នែក SCOR មួយណា?</p><details><summary>មើលចម្លើយ</summary><p><b>Make</b>។</p></details></div>
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>ការព្យាករណ៍តម្រូវការ (Demand forecasting)</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Moving average (3 ខែ) → ខែក្រោយ ≈ 1,110
+Exponential smoothing (α=0.3) → ≈ 1,071
+MAPE នៃ MA3 = 5.3%</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ការព្យាករណ៍ <b>តែងតែខុស</b> — វាស់កំហុស (MAPE) ហើយកែជាប្រចាំ។</li><li>គិតរដូវកាល៖ ចូលឆ្នាំខ្មែរ ភ្ជុំបិណ្ឌ ចុងឆ្នាំ។</li><li>S&amp;OP៖ លក់ + ផលិត + ហិរញ្ញវត្ថុ ប្រជុំរួមគ្នាប្រចាំខែ។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>ហេតុអ្វី Moving average យឺតតាមនិន្នាការឡើង?</p><details><summary>មើលចម្លើយ</summary><p>វាជា <b>មធ្យមភាគអតីតកាល</b> — តែងទាបជាងពេលការលក់កំពុងឡើង (Lag)។</p></details></div>
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>ការគ្រប់គ្រងស្តុក — EOQ · Safety stock · ROP</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>EOQ = 800 ឯកតា · បញ្ជាទិញ 15.0 ដង/ឆ្នាំ
+Safety stock (95%) = 35 · Reorder point = 265 ឯកតា
+ថ្លៃសរុប (Order + Holding) = $1,200/ឆ្នាំ</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>EOQ = √(2DS/H) — តុល្យភាពថ្លៃបញ្ជាទិញ និងថ្លៃរក្សាទុក។</li><li>Safety stock ការពារតម្រូវការ/Lead time ប្រែប្រួល។</li><li>សាក <b>📦 EOQ &amp; Stock</b> ក្នុង Business Lab។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>Lead time ពីអ្នកផ្គត់ផ្គង់ឡើងពី ៧ ទៅ ១៤ ថ្ងៃ។ Reorder point ប្រែយ៉ាងណា?</p><details><summary>មើលចម្លើយ</summary><p><b>កើនឡើង</b> — ទាំងតម្រូវការក្នុង Lead time និង Safety stock (×√2)។</p></details></div>
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>ABC analysis &amp; KPI ស្តុក</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>កាហ្វេគ្រាប់ $18,000 · cum 44.3% → A
+ទឹកដោះគោ   $ 9,000 · cum 66.5% → A
+កែវ/គម្រប  $ 4,200 · cum 76.8% → B
+នំ         $ 3,000 · cum 84.2% → B
+ស្ករ       $ 2,500 · cum 90.4% → C
+ស៊ីរ៉ូ     $ 1,800 · cum 94.8% → C
+តែ         $ 1,200 · cum 97.8% → C
+ទឹកកក      $   900 · cum 100.0% → C
+Inventory turnover = COGS 120,000 ÷ ស្តុកមធ្យម 10,000 = 12 ដង/ឆ្នាំ · Days of inventory ≈ 30 ថ្ងៃ</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li><b>A</b> = ធាតុតិច តម្លៃច្រើន → ត្រួតពិនិត្យជិតស្និទ្ធ · <b>C</b> = ច្រើន តម្លៃតិច។</li><li>Cycle counting · FIFO/FEFO (អាហារ ថ្នាំ)។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>ធាតុ A គួររាប់ស្តុកញឹកញាប់ជាង ឬតិចជាង C?</p><details><summary>មើលចម្លើយ</summary><p><b>ញឹកញាប់ជាង</b> — តម្លៃធំ ហានិភ័យខ្ពស់។</p></details></div>
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>ឃ្លាំង (Warehouse)</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="125.0" height="96" rx="14" fill="#1c7ed6"/><text x="82.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Receiving</text><text x="82.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ទទួល ពិនិត្យ</text><line x1="147.0" y1="82" x2="173.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="175.0" y="34" width="125.0" height="96" rx="14" fill="#7048e8"/><text x="237.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Put-away</text><text x="237.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ដាក់ទីតាំង</text><line x1="302.0" y1="82" x2="328.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="330.0" y="34" width="125.0" height="96" rx="14" fill="#0ca678"/><text x="392.5" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Storage</text><line x1="457.0" y1="82" x2="483.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="485.0" y="34" width="125.0" height="96" rx="14" fill="#e8590c"/><text x="547.5" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Picking</text><line x1="612.0" y1="82" x2="638.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="640.0" y="34" width="125.0" height="96" rx="14" fill="#d6336c"/><text x="702.5" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Packing</text><line x1="767.0" y1="82" x2="793.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="795.0" y="34" width="125.0" height="96" rx="14" fill="#2f9e44"/><text x="857.5" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Shipping</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">ដំណើរការឃ្លាំង</text></svg><figcaption>🖼️ ឃ្លាំង (Warehouse)</figcaption></figure>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ទីតាំងមានលេខកូដ (Bin location) · Barcode/QR · WMS។</li><li>ធាតុលក់លឿន ដាក់ជិតច្រកចេញ (Slotting)។</li><li>សុវត្ថិភាព៖ Forklift · ផ្ទុកលើស · ភ្លើង · PPE។</li><li>KPI៖ Order accuracy · Pick rate · Dock-to-stock time។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>ហេតុអ្វីដាក់ទំនិញលក់លឿនជិតច្រកចេញ?</p><details><summary>មើលចម្លើយ</summary><p>កាត់ <b>ចម្ងាយដើរ Picking</b> — លឿន និងថោក។</p></details></div>
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>ដឹកជញ្ជូន — Mode &amp; ថ្លៃ</h2>
+<table><tr><th>Mode</th><th>ល្បឿន</th><th>ថ្លៃ</th><th>ប្រើ</th></tr><tr><td>ផ្លូវគោក (Truck)</td><td>មធ្យម</td><td>មធ្យម</td><td>Door-to-door · ក្នុងស្រុក/ប្រទេសជិតខាង</td></tr><tr><td>សមុទ្រ</td><td>យឺត</td><td>ថោក (ទំនិញធំ)</td><td>Container នាំចេញ/ចូល — កំពង់ផែក្រុងព្រះសីហនុ</td></tr><tr><td>ផ្លូវទឹកទន្លេ</td><td>យឺត</td><td>ថោក</td><td>កំពង់ផែភ្នំពេញ (តាមមេគង្គ)</td></tr><tr><td>ផ្លូវដែក</td><td>មធ្យម</td><td>ថោក</td><td>ទំនិញធ្ងន់</td></tr><tr><td>អាកាស</td><td>លឿនបំផុត</td><td>ថ្លៃបំផុត</td><td>ទំនិញតម្លៃខ្ពស់ បន្ទាន់</td></tr></table>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>ទំហំសរុប = 54 CBM
+20ft container: ផ្ទុកបានប្រហែល 28 CBM → ត្រូវការ 2 គ្រឿង
+40ft container: ផ្ទុកបានប្រហែល 58 CBM → ត្រូវការ 1 គ្រឿង
+LCL (Less than container load) សមស្របពេលតិចជាង ~15 CBM</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>ទំនិញ 54 CBM — FCL 40ft ១ ឬ 20ft ២?</p><details><summary>មើលចម្លើយ</summary><p>ជាទូទៅ <b>40ft ១ គ្រឿង</b> (~58 CBM) ថោកជាង 20ft ២ — ប្រៀបធៀបតម្លៃពី Forwarder។</p></details></div>
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Incoterms 2020</h2>
+<table><tr><th>Term</th><th>អ្នកលក់ទទួលខុសត្រូវដល់</th><th>ប្រើ</th></tr><tr><td>EXW</td><td>ទីតាំងអ្នកលក់ (តិចបំផុត)</td><td>គ្រប់ Mode</td></tr><tr><td>FCA</td><td>ប្រគល់ឲ្យអ្នកដឹកដែលអ្នកទិញជ្រើស</td><td>គ្រប់ Mode</td></tr><tr><td>FOB</td><td>លើនាវា នៅកំពង់ផែនាំចេញ</td><td>សមុទ្រ/ទន្លេ</td></tr><tr><td>CIF</td><td>+ បង់ថ្លៃដឹក និងធានារ៉ាប់រងដល់កំពង់ផែគោលដៅ (ហានិភ័យផ្ទេរពេលដាក់លើនាវា)</td><td>សមុទ្រ/ទន្លេ</td></tr><tr><td>DAP</td><td>ដល់គោលដៅ (មិនបង់ពន្ធនាំចូល)</td><td>គ្រប់ Mode</td></tr><tr><td>DDP</td><td>ដល់គោលដៅ + បង់ពន្ធ (ច្រើនបំផុត)</td><td>គ្រប់ Mode</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Incoterms 2020 មាន <b>១១</b> លក្ខខណ្ឌ (ICC)។</li><li>បញ្ជាក់ទីកន្លែង + កំណែ៖ «FOB Sihanoukville, Incoterms® 2020»។</li><li>Incoterms មិនកំណត់កម្មសិទ្ធិ ឬវិធីបង់ប្រាក់ទេ។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>ក្រោម CIF ហានិភ័យផ្ទេរទៅអ្នកទិញពេលណា?</p><details><summary>មើលចម្លើយ</summary><p>ពេលទំនិញ <b>ដាក់លើនាវានៅកំពង់ផែនាំចេញ</b> — ទោះអ្នកលក់បង់ថ្លៃដឹកក៏ដោយ។</p></details></div>
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>គយ &amp; ឯកសារនាំចេញ/នាំចូល</h2>
+<table><tr><th>ឯកសារ</th><th>ប្រើ</th></tr><tr><td>Commercial invoice</td><td>តម្លៃទំនិញ</td></tr><tr><td>Packing list</td><td>ចំនួន ទម្ងន់ ទំហំ</td></tr><tr><td>Bill of lading (B/L)</td><td>ប័ណ្ណដឹកជញ្ជូនសមុទ្រ — ទទួលទំនិញ</td></tr><tr><td>Certificate of origin</td><td>ប្រភពដើម — អត្ថប្រយោជន៍ពន្ធ (FTA/GSP)</td></tr><tr><td>Customs declaration</td><td>ប្រកាសគយ (ប្រព័ន្ធ ASYCUDA)</td></tr></table>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>CIF $11,256.00 · ពន្ធគយ $1,688.40 · VAT $1,294.44 · ផ្សេងៗ $450
+Landed cost $14,688.84 → $7.34/ឯកតា (FOB $5.00)</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>អត្រាពន្ធកំណត់តាម <b>HS code</b> — ចាត់ថ្នាក់ខុស = ពិន័យ។</li><li>តម្លៃគយ (Customs value) ជាទូទៅផ្អែកលើ CIF។</li><li>សាក <b>🚢 Landed cost</b> ក្នុង Business Lab។</li></ol></div>
+<div class="note">💡 អត្រាពន្ធក្នុងឧទាហរណ៍ជាការសន្មត — អត្រាពិតអាស្រ័យលើ HS code និងកិច្ចព្រមព្រៀងពាណិជ្ជកម្ម (ឧ. ASEAN, RCEP)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>ហេតុអ្វី Certificate of origin សំខាន់?</p><details><summary>មើលចម្លើយ</summary><p>អាចទទួល <b>អត្រាពន្ធអនុគ្រោះ</b> ក្រោម FTA (ឧ. ASEAN/RCEP) — ថ្លៃទាប។</p></details></div>
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>ទិញ (Procurement) &amp; អ្នកផ្គត់ផ្គង់</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>C (ថៃ)           ពិន្ទុ 8.10
+A (ក្នុងស្រុក)   ពិន្ទុ 8.05
+B (វៀតណាម)       ពិន្ទុ 7.55
+Total cost of ownership = តម្លៃ + ដឹក + ពន្ធ + ស្តុក + គុណភាពខូច + ពេលវេលា</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>RFQ → ប្រៀបធៀប → ចរចា → PO → ទទួល → បង់ (P2P)។</li><li>កុំពឹងអ្នកផ្គត់ផ្គង់តែមួយ (Single source risk)។</li><li>គ្មានសំណូក · កិច្ចសន្យាច្បាស់ (គុណភាព ពេល ការពិន័យ)។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>អ្នកផ្គត់ផ្គង់ B ថោកបំផុត តែយឺតជាញឹកញាប់។ គួរជ្រើស?</p><details><summary>មើលចម្លើយ</summary><p>មើល <b>Total cost</b> — ការយឺតធ្វើឲ្យខ្វះស្តុក/ត្រូវការ Safety stock ច្រើន ដែលអាចថ្លៃជាង។</p></details></div>
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>Last-mile delivery &amp; Cold chain</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>ឃ្លាំង → ផ្សារ → សាលា → ហាង → ពេទ្យ → ផ្ទះ A · ចម្ងាយ 20 km</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Last mile = ជំហានចុងក្រោយដល់អតិថិជន — ថ្លៃបំផុតក្នុងមួយឯកតា។</li><li>រៀបចំផ្លូវ (Route) · ក្រុមតាមតំបន់ · ពេលដឹក · COD/KHQR។</li><li><b>Cold chain</b> (ទឹកដោះគោ សាច់ វ៉ាក់សាំង)៖ តាមដានសីតុណ្ហភាព ២–៨°C រាល់ជំហាន។</li><li>Reverse logistics៖ ត្រឡប់ទំនិញ ជួសជុល កែច្នៃ។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>ហេតុអ្វី Last mile ថ្លៃ?</p><details><summary>មើលចម្លើយ</summary><p>ដឹកតិចៗ ទៅទីតាំងច្រើន · ចរាចរណ៍ · អតិថិជនមិននៅផ្ទះ · COD។</p></details></div>
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>បច្ចេកវិទ្យា &amp; Logistics កម្ពុជា</h2>
+<table><tr><th>បច្ចេកវិទ្យា</th><th>ប្រើ</th></tr><tr><td>ERP</td><td>ទិញ ស្តុក លក់ គណនេយ្យ ក្នុងប្រព័ន្ធតែមួយ</td></tr><tr><td>WMS / TMS</td><td>គ្រប់គ្រងឃ្លាំង / ការដឹកជញ្ជូន</td></tr><tr><td>Barcode · RFID · GPS</td><td>តាមដាន</td></tr><tr><td>Dashboard</td><td>OTIF · Fill rate · Cost/order</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ហេដ្ឋារចនាសម្ព័ន្ធសំខាន់៖ <b>កំពង់ផែស្វយ័តក្រុងព្រះសីហនុ</b> (កំពង់ផែសមុទ្រជម្រៅ) · <b>កំពង់ផែស្វយ័តភ្នំពេញ</b> · ផ្លូវល្បឿនលឿនភ្នំពេញ–ក្រុងព្រះសីហនុ (2022) · ច្រកព្រំដែនជាមួយថៃ និងវៀតណាម។</li><li>គម្រោងព្រែកជីក <b>ហ្វូណនតេជោ</b> (ចាប់ផ្តើមសាងសង់ 2024) — ពិនិត្យព័ត៌មានវឌ្ឍនភាពចុងក្រោយ។</li><li>វិស័យនាំចេញធំ៖ កាត់ដេរ ស្បែកជើង កាបូប អង្ករ គ្រឿងបន្លាស់ កង់។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>KPI «OTIF» មានន័យថាអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>On-time in-full</b> — % ការបញ្ជាទិញដែលដឹកទាន់ពេល និងគ្រប់ចំនួន។</p></details></div>
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>ហានិភ័យ · និរន្តរភាព · អាជីព</h2>
+<table><tr><th>ហានិភ័យ</th><th>ការការពារ</th></tr><tr><td>អ្នកផ្គត់ផ្គង់តែមួយ</td><td>Dual sourcing</td></tr><tr><td>ទឹកជំនន់/អាកាសធាតុ</td><td>ផ្លូវជំនួស · Safety stock</td></tr><tr><td>ថ្លៃដឹកឡើង (ដូច COVID 2021)</td><td>កិច្ចសន្យារយៈពេលវែង · LCL/FCL ល្អ</td></tr><tr><td>Bullwhip effect</td><td>ចែករំលែកទិន្នន័យលក់ពិត</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>និរន្តរភាព៖ ផ្ទុកពេញ (Load factor) · ផ្លូវខ្លី · វេចខ្ចប់កែច្នៃបាន · ការងារសមរម្យក្នុងខ្សែសង្វាក់។</li><li>អាជីព៖ Logistics coordinator · Customs broker · Buyer · Planner · Warehouse supervisor · Supply chain analyst។</li><li>វិញ្ញាបនបត្រ៖ ASCM (CPIM, CSCP) · CILT · FIATA diploma។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>Bullwhip effect ជាអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>ការប្រែប្រួលតម្រូវការតិចៗនៅហាង ក្លាយជាការប្រែប្រួល <b>ធំៗ</b> នៅខ្សែខាងលើ ព្រោះម្នាក់ៗបញ្ជាទិញបន្ថែមការពារខ្លួន។</p></details></div>
+</section>
+<section id="cheat">
+<h2>📋 សង្ខេប (Cheat sheet)</h2>
+<table><tr><th>ពាក្យ / រូបមន្ត</th><th>ន័យ</th></tr><tr><td>SCOR</td><td>Plan · Source · Make · Deliver · Return · Enable</td></tr><tr><td>EOQ</td><td>√(2DS/H)</td></tr><tr><td>Safety stock</td><td>z × σ × √L</td></tr><tr><td>ROP</td><td>d × L + SS</td></tr><tr><td>ABC</td><td>A ៧០% តម្លៃ</td></tr><tr><td>Incoterms 2020</td><td>១១ · EXW→DDP</td></tr><tr><td>Landed cost</td><td>CIF + ពន្ធ + VAT + ផ្សេងៗ</td></tr><tr><td>OTIF</td><td>On-time in-full</td></tr></table>
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងចុងវគ្គ</h2>
+<ol class='steps'><li>ជ្រើសផលិតផលនាំចូល/នាំចេញ ១ (ឧ. គ្រាប់កាហ្វេ ឬអង្ករ)។</li><li>គូរ Supply chain map + ហានិភ័យ ៥។</li><li>Forecast ១២ ខែ + EOQ + Safety stock + ROP។</li><li>Incoterm សមស្រប + Landed cost/ឯកតា។</li><li>KPI Dashboard (OTIF, Turnover, Cost/order) + Report។</li></ol></section>
+<section id="pro-app">
+<h2>💻 Business Lab (App)</h2>
+
+<p><b>🧭 SWOT + TOWS</b> · <b>💰 Break-even</b> (ក្រាហ្វ + Margin of safety) · <b>📣 Funnel &amp; ROAS</b> (CPC, CAC, ROAS, CLV) · <b>📦 EOQ &amp; Stock</b> (Safety stock, Reorder point) · <b>🚢 Landed cost</b> (FOB → CIF → ពន្ធ → ថ្លៃដើម/ឯកតា) — ដំណើរការក្នុង Browser។</p>
+
+<div class="itk" id="bz">
+<div class="itk-tabs"><button class="on" data-t="sw">🧭 SWOT</button><button data-t="be">💰 Break-even</button><button data-t="fn">📣 Funnel &amp; ROAS</button><button data-t="eq">📦 EOQ &amp; Stock</button><button data-t="lc">🚢 Landed cost</button></div>
+
+<div class="itk-p on" data-p="sw">
+ <p class="vl-tip">វាយ ១ ចំណុចក្នុង ១ ជួរ — App នឹងបង្កើតតារាង SWOT និងយុទ្ធសាស្ត្រ TOWS។ (ឧទាហរណ៍៖ ហាងកាហ្វេនៅសៀមរាប)</p>
+ <div class="itk-row"><label>💪 Strengths<textarea id="sw_s" rows="3" style="width:100%">កាហ្វេគ្រាប់ខ្មែរ (មណ្ឌលគិរី) គុណភាពល្អ
+បុគ្គលិកនិយាយអង់គ្លេសបាន</textarea></label></div>
+ <div class="itk-row"><label>⚠️ Weaknesses<textarea id="sw_w" rows="3" style="width:100%">ទីតាំងឆ្ងាយផ្លូវធំ
+គ្មានប្រព័ន្ធ Online order</textarea></label></div>
+ <div class="itk-row"><label>🌱 Opportunities<textarea id="sw_o" rows="3" style="width:100%">ភ្ញៀវទេសចរកើនឡើង
+អ្នកប្រើ TikTok/Facebook ច្រើន</textarea></label></div>
+ <div class="itk-row"><label>🌩️ Threats<textarea id="sw_t" rows="3" style="width:100%">ហាងខ្សែសង្វាក់ធំៗ
+តម្លៃគ្រាប់កាហ្វេឡើង</textarea></label></div>
+ <div class="itk-out" id="sw_out"></div>
+</div>
+
+<div class="itk-p" data-p="be">
+ <div class="itk-row"><label>តម្លៃលក់/ឯកតា ($)<input id="be_p" type="number" value="2.5" step="0.1" style="width:80px"></label><label>ថ្លៃអថេរ/ឯកតា ($)<input id="be_v" type="number" value="1.1" step="0.1" style="width:80px"></label></div>
+ <div class="itk-row"><label>ថ្លៃថេរ/ខែ ($)<input id="be_f" type="number" value="1800" style="width:90px"></label><label>គោលដៅចំណេញ ($)<input id="be_t" type="number" value="1000" style="width:90px"></label><label>លក់/ខែ (ប៉ាន់)<input id="be_q" type="number" value="2200" style="width:90px"></label></div>
+ <div class="itk-out" id="be_out"></div>
+</div>
+
+<div class="itk-p" data-p="fn">
+ <div class="itk-row"><label>ថវិកាផ្សាយ ($)<input id="fn_b" type="number" value="500" style="width:90px"></label><label>CPM ($ / 1000 views)<input id="fn_cpm" type="number" value="2" step="0.1" style="width:80px"></label></div>
+ <div class="itk-row"><label>CTR (%)<input id="fn_ctr" type="number" value="1.5" step="0.1" style="width:70px"></label><label>Conversion rate (%)<input id="fn_cvr" type="number" value="3" step="0.1" style="width:70px"></label><label>តម្លៃលក់មធ្យម ($)<input id="fn_aov" type="number" value="25" style="width:70px"></label></div>
+ <div class="itk-row"><label>Gross margin (%)<input id="fn_m" type="number" value="40" style="width:70px"></label><label>ទិញឡើងវិញ/ឆ្នាំ (ដង)<input id="fn_r" type="number" value="3" step="0.5" style="width:70px"></label></div>
+ <div class="itk-out" id="fn_out"></div>
+</div>
+
+<div class="itk-p" data-p="eq">
+ <div class="itk-row"><label>តម្រូវការ/ឆ្នាំ (ឯកតា)<input id="eq_d" type="number" value="12000" style="width:90px"></label><label>ថ្លៃបញ្ជាទិញ/ដង ($)<input id="eq_s" type="number" value="40" style="width:80px"></label><label>ថ្លៃរក្សាទុក/ឯកតា/ឆ្នាំ ($)<input id="eq_h" type="number" value="1.5" step="0.1" style="width:80px"></label></div>
+ <div class="itk-row"><label>Lead time (ថ្ងៃ)<input id="eq_l" type="number" value="7" style="width:70px"></label><label>SD តម្រូវការ/ថ្ងៃ<input id="eq_sd" type="number" value="8" style="width:70px"></label><label>Service level<select id="eq_z"><option value="1.28">90%</option><option value="1.65" selected>95%</option><option value="2.33">99%</option></select></label></div>
+ <div class="itk-out" id="eq_out"></div>
+</div>
+
+<div class="itk-p" data-p="lc">
+ <p class="vl-tip">គណនា <b>Landed cost</b> ទំនិញនាំចូល (ឧទាហរណ៍)។ អត្រាពន្ធពិតប្រាកដ អាស្រ័យលើ HS code — ពិនិត្យជាមួយអគ្គនាយកដ្ឋានគយ និងរដ្ឋាករ ឬភ្នាក់ងារគយ។</p>
+ <div class="itk-row"><label>តម្លៃ FOB ($)<input id="lc_fob" type="number" value="10000" style="width:90px"></label><label>ថ្លៃដឹកសមុទ្រ ($)<input id="lc_fr" type="number" value="1200" style="width:80px"></label><label>ធានារ៉ាប់រង (%)<input id="lc_in" type="number" value="0.5" step="0.1" style="width:70px"></label></div>
+ <div class="itk-row"><label>ពន្ធគយ (%)<input id="lc_du" type="number" value="15" style="width:70px"></label><label>VAT (%)<input id="lc_vat" type="number" value="10" style="width:70px"></label><label>ថ្លៃផែ/ភ្នាក់ងារ/ដឹកក្នុងស្រុក ($)<input id="lc_lo" type="number" value="450" style="width:80px"></label><label>ចំនួនឯកតា<input id="lc_n" type="number" value="2000" style="width:80px"></label></div>
+ <div class="itk-out" id="lc_out"></div>
+</div>
+</div>
+<script>
+(() => {
+const $ = id => document.getElementById(id), root = $("bz"), v = id => +$(id).value || 0;
+root.querySelectorAll(".itk-tabs button").forEach(b => b.onclick = () => { root.querySelectorAll(".itk-tabs button").forEach(x => x.classList.toggle("on", x === b)); root.querySelectorAll(".itk-p").forEach(p => p.classList.toggle("on", p.dataset.p === b.dataset.t)); });
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const f = (x, d = 0) => Number.isFinite(x) ? x.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d }) : "—";
+const card = (t, val, c = "#1c7ed6") => `<div style="flex:1;min-width:120px;background:#fff;border:1px solid #dee2e6;border-radius:12px;padding:10px;color:#0f172a"><div style="font-size:12px;color:#64748b">${t}</div><div style="font-size:19px;font-weight:800;color:${c}">${val}</div></div>`;
+const row = h => `<div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0">${h}</div>`;
+/* SWOT */
+function sw() { const L = id => $(id).value.split(/\n/).map(s => s.trim()).filter(Boolean);
+  const S = L("sw_s"), W = L("sw_w"), O = L("sw_o"), T = L("sw_t"), box = (t, a, bg) => `<div style="background:${bg};border-radius:10px;padding:8px;color:#0f172a"><b>${t}</b><ul style="margin:4px 0 0 18px;padding:0">${a.map(x => `<li>${esc(x)}</li>`).join("") || "<li>—</li>"}</ul></div>`;
+  const pair = (a, b, verb) => a.length && b.length ? `${verb} «${esc(a[0])}» + «${esc(b[0])}»` : "—";
+  $("sw_out").innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${box("💪 Strengths", S, "#ebfbee")}${box("⚠️ Weaknesses", W, "#fff4e6")}${box("🌱 Opportunities", O, "#e7f5ff")}${box("🌩️ Threats", T, "#fff5f5")}</div>
+  <p><b>TOWS — យុទ្ធសាស្ត្រ</b></p><ul><li><b>SO</b> (ប្រើកម្លាំង ចាប់ឱកាស)៖ ${pair(S, O, "ប្រើ")}</li><li><b>WO</b> (កែចំណុចខ្សោយ តាមឱកាស)៖ ${pair(W, O, "ដោះស្រាយ")}</li><li><b>ST</b> (ប្រើកម្លាំង ការពារការគំរាម)៖ ${pair(S, T, "ប្រើ")}</li><li><b>WT</b> (កាត់បន្ថយហានិភ័យ)៖ ${pair(W, T, "កាត់បន្ថយ")}</li></ul>`; }
+["sw_s", "sw_w", "sw_o", "sw_t"].forEach(id => $(id).oninput = sw);
+/* Break-even */
+function be() { const p = v("be_p"), vc = v("be_v"), F = v("be_f"), T = v("be_t"), q = v("be_q"), cm = p - vc;
+  if (cm <= 0) { $("be_out").innerHTML = "⚠️ តម្លៃលក់ត្រូវធំជាងថ្លៃអថេរ"; return; }
+  const bq = F / cm, tq = (F + T) / cm, prof = q * cm - F, mos = (q - bq) / q * 100, W = 400, H = 210, qmax = Math.max(q, bq) * 1.5, ymax = qmax * p;
+  const X = x => 40 + x / qmax * (W - 60), Y = y => 15 + (1 - y / ymax) * (H - 45);
+  $("be_out").innerHTML = row(card("Contribution margin", "$" + f(cm, 2) + " (" + f(cm / p * 100, 1) + "%)") + card("Break-even", f(Math.ceil(bq)) + " ឯកតា", "#e8590c") + card("គោលដៅចំណេញ", f(Math.ceil(tq)) + " ឯកតា", "#7048e8") + card("ចំណេញ ពេលលក់ " + f(q), (prof >= 0 ? "$" : "−$") + f(Math.abs(prof)), prof >= 0 ? "#2f9e44" : "#e03131"))
+  + `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;background:#fff;border-radius:10px"><line x1="40" y1="${H - 30}" x2="${W - 20}" y2="${H - 30}" stroke="#94a3b8"/><line x1="${X(0)}" y1="${Y(0)}" x2="${X(qmax)}" y2="${Y(qmax * p)}" stroke="#2f9e44" stroke-width="3"/><line x1="${X(0)}" y1="${Y(F)}" x2="${X(qmax)}" y2="${Y(F + qmax * vc)}" stroke="#e03131" stroke-width="3"/><line x1="${X(0)}" y1="${Y(F)}" x2="${X(qmax)}" y2="${Y(F)}" stroke="#adb5bd" stroke-dasharray="5 4"/><circle cx="${X(bq)}" cy="${Y(bq * p)}" r="6" fill="#e8590c"/><text x="${X(bq) + 8}" y="${Y(bq * p) + 16}" font-size="12">BEP</text><text x="${W - 22}" y="${Y(qmax * p) + 14}" font-size="12" text-anchor="end" fill="#2f9e44">ចំណូល</text><text x="${W - 22}" y="${Y(F + qmax * vc) - 6}" font-size="12" text-anchor="end" fill="#e03131">ថ្លៃសរុប</text></svg>
+  <br>Margin of safety៖ <b>${f(mos, 1)}%</b> ${mos < 10 ? "⚠️ ជិត Break-even ពេក" : "✅"}`; }
+["be_p", "be_v", "be_f", "be_t", "be_q"].forEach(id => $(id).oninput = be);
+/* Funnel */
+function fn() { const B = v("fn_b"), imp = B / Math.max(v("fn_cpm"), .01) * 1000, clk = imp * v("fn_ctr") / 100, ord = clk * v("fn_cvr") / 100, rev = ord * v("fn_aov"), m = v("fn_m") / 100;
+  const cpc = B / clk, cac = B / ord, roas = rev / B, gp = rev * m - B, clv = v("fn_aov") * m * v("fn_r"), beRoas = 1 / m;
+  const st = [["👀 Impressions", imp], ["🖱️ Clicks", clk], ["🛒 Orders", ord]], mx = imp;
+  $("fn_out").innerHTML = st.map(([t, x], i) => `<div style="margin:4px auto;width:${Math.max(28, 100 - i * 30)}%;background:${["#1c7ed6", "#7048e8", "#2f9e44"][i]};color:#fff;border-radius:8px;padding:6px 10px;text-align:center">${t}: <b>${f(x)}</b></div>`).join("")
+  + row(card("CPC", "$" + f(cpc, 2)) + card("CAC", "$" + f(cac, 2), "#e8590c") + card("ROAS", f(roas, 2) + "×", roas >= beRoas ? "#2f9e44" : "#e03131") + card("ចំណេញក្រោយផ្សាយ", (gp >= 0 ? "$" : "−$") + f(Math.abs(gp)), gp >= 0 ? "#2f9e44" : "#e03131"))
+  + `ROAS ដើម្បីរួចខ្លួន (Break-even ROAS) = 1 ÷ margin = <b>${f(beRoas, 2)}×</b> · CLV (១ ឆ្នាំ, Gross profit) ≈ <b>$${f(clv, 2)}</b> → CLV ÷ CAC = <b>${f(clv / cac, 2)}</b> ${clv / cac >= 3 ? "✅ ល្អ (≥ 3)" : clv / cac >= 1 ? "🟡 រួចខ្លួនក្នុងរយៈពេលវែង" : "🔴 ខាត — ថ្លៃទាញអតិថិជនខ្ពស់ពេក"}`; }
+["fn_b", "fn_cpm", "fn_ctr", "fn_cvr", "fn_aov", "fn_m", "fn_r"].forEach(id => $(id).oninput = fn);
+/* EOQ */
+function eq() { const D = v("eq_d"), S = v("eq_s"), H = v("eq_h"), L = v("eq_l"), sd = v("eq_sd"), z = +$("eq_z").value;
+  const Q = Math.sqrt(2 * D * S / H), d = D / 365, ss = z * sd * Math.sqrt(L), rop = d * L + ss, n = D / Q, tc = n * S + Q / 2 * H;
+  const W = 400, H2 = 160, cyc = 365 / n, days = Math.min(365, cyc * 3.2), X = t => 30 + t / days * (W - 45), Y = q => 12 + (1 - q / (Q + ss) ) * (H2 - 35);
+  let pts = []; for (let t = 0; t <= days; t += days / 200) { const ph = t % cyc; pts.push(X(t) + "," + Y(ss + Q - Q * ph / cyc)); }
+  $("eq_out").innerHTML = row(card("EOQ", f(Q) + " ឯកតា") + card("បញ្ជាទិញ/ឆ្នាំ", f(n, 1) + " ដង", "#7048e8") + card("Safety stock", f(ss) + " ឯកតា", "#e8590c") + card("Reorder point", f(rop) + " ឯកតា", "#e03131"))
+  + `<svg viewBox="0 0 ${W} ${H2}" style="width:100%;max-width:${W}px;background:#fff;border-radius:10px"><polyline points="${pts.join(" ")}" fill="none" stroke="#1c7ed6" stroke-width="2.5"/><line x1="30" y1="${Y(rop)}" x2="${W - 15}" y2="${Y(rop)}" stroke="#e03131" stroke-dasharray="5 4"/><text x="${W - 15}" y="${Y(rop) - 4}" font-size="11" text-anchor="end" fill="#e03131">Reorder point</text><line x1="30" y1="${Y(ss)}" x2="${W - 15}" y2="${Y(ss)}" stroke="#e8590c" stroke-dasharray="2 3"/><text x="${W - 15}" y="${Y(ss) + 12}" font-size="11" text-anchor="end" fill="#e8590c">Safety stock</text></svg>
+  <br>ថ្លៃបញ្ជាទិញ + រក្សាទុក/ឆ្នាំ ≈ <b>$${f(tc)}</b> · តម្រូវការមធ្យម ${f(d, 1)}/ថ្ងៃ · ពេលស្តុកនៅ <b>${f(rop)}</b> → បញ្ជាទិញ <b>${f(Q)}</b>`; }
+["eq_d", "eq_s", "eq_h", "eq_l", "eq_sd"].forEach(id => $(id).oninput = eq); $("eq_z").onchange = eq;
+/* Landed cost */
+function lc() { const fob = v("lc_fob"), fr = v("lc_fr"), ins = (fob + fr) * v("lc_in") / 100, cif = fob + fr + ins, duty = cif * v("lc_du") / 100, vat = (cif + duty) * v("lc_vat") / 100, lo = v("lc_lo"), n = Math.max(1, v("lc_n"));
+  const tot = cif + duty + vat + lo, parts = [["FOB", fob, "#1c7ed6"], ["Freight", fr, "#7048e8"], ["Insurance", ins, "#0ca678"], ["ពន្ធគយ", duty, "#e8590c"], ["VAT", vat, "#e03131"], ["ផែ/ភ្នាក់ងារ/ដឹក", lo, "#868e96"]];
+  $("lc_out").innerHTML = `<div style="display:flex;height:26px;border-radius:8px;overflow:hidden">${parts.map(p => `<span title="${p[0]}" style="width:${p[1] / tot * 100}%;background:${p[2]}"></span>`).join("")}</div>
+  <div style="overflow-x:auto"><table><tr><th>ធាតុ</th><th>$</th><th>%</th></tr>${parts.map(p => `<tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${p[2]}"></span> ${p[0]}</td><td>${f(p[1], 2)}</td><td>${f(p[1] / tot * 100, 1)}%</td></tr>`).join("")}<tr><th>CIF (FOB+Freight+Insurance)</th><th>${f(cif, 2)}</th><th></th></tr><tr><th>Landed cost សរុប</th><th>${f(tot, 2)}</th><th>100%</th></tr></table></div>
+  ថ្លៃដើម/ឯកតា = <b>$${f(tot / n, 2)}</b> (FOB/ឯកតា $${f(fob / n, 2)} → ឡើង ${f((tot / fob - 1) * 100, 1)}%) · ⚠️ VAT ក្រុមហ៊ុនចុះបញ្ជី VAT អាចយកមកកាត់កង (Input VAT) — ពិនិត្យជាមួយគណនេយ្យករ។`; }
+["lc_fob", "lc_fr", "lc_in", "lc_du", "lc_vat", "lc_lo", "lc_n"].forEach(id => $(id).oninput = lc);
+sw(); be(); fn(); eq(); lc();
+})();
+</script>
+
+<h3>🏆 Quiz ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["Container ដំបូង?", ["Malcom McLean 1956", "Ford 1913", "Ohno 1990", "ICC 2020"], 0], ["JIT មកពី?", ["Toyota", "Ford", "Amazon", "IBM"], 0], ["SCOR «Make»?", ["ផលិត", "ទិញ", "ដឹក", "ត្រឡប់"], 0], ["MA យឺតពេលការលក់ឡើង?", ["Lag", "Bias ល្អ", "លឿន", "ត្រឹមត្រូវ"], 0], ["EOQ =", ["√(2DS/H)", "D×S", "D/H", "S−H"], 0], ["Lead time ↑ ROP?", ["កើន", "ថយ", "ដដែល", "0"], 0], ["ABC ធាតុ A?", ["តម្លៃច្រើន", "ច្រើនមុខ តម្លៃតិច", "ចាស់", "ថោក"], 0], ["FEFO សម្រាប់?", ["អាហារ/ថ្នាំ", "ដែក", "ឈើ", "ក្រដាស"], 0], ["ទំនិញលក់លឿន?", ["ជិតច្រកចេញ", "ឆ្ងាយបំផុត", "លើពិដាន", "គ្មាន"], 0], ["ថោកបំផុតសម្រាប់ Container?", ["សមុទ្រ", "អាកាស", "ម៉ូតូ", "Drone"], 0], ["40ft ≈ CBM?", ["58", "28", "100", "10"], 0], ["Incoterms 2020 មាន?", ["11", "13", "6", "20"], 0], ["អ្នកលក់ទទួលខុសត្រូវតិចបំផុត?", ["EXW", "DDP", "CIF", "DAP"], 0], ["CIF ហានិភ័យផ្ទេរ?", ["ពេលដាក់លើនាវា", "ពេលដល់ឃ្លាំង", "ពេលបង់", "ពេលចុះកិច្ចសន្យា"], 0], ["អត្រាពន្ធកំណត់តាម?", ["HS code", "ពណ៌", "ទម្ងន់តែប៉ុណ្ណោះ", "ថ្ងៃ"], 0], ["B/L?", ["Bill of lading", "Bank loan", "Buy list", "Balance"], 0], ["Single source risk?", ["ពឹងអ្នកផ្គត់ផ្គង់តែមួយ", "ថោក", "ល្អ", "លឿន"], 0], ["Cold chain?", ["គ្រប់គ្រងសីតុណ្ហភាព", "ដឹកយប់", "ដឹកទឹកកក", "ឃ្លាំងងងឹត"], 0], ["OTIF?", ["On-time in-full", "Order to invoice", "Only truck", "Out of stock"], 0], ["Bullwhip?", ["ការប្រែប្រួលពង្រីកខាងលើ", "ការដឹកលឿន", "ធ្នឹម", "Barcode"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+<ol class='steps'><li><b>Logistics &amp; Supply Chain</b> (វគ្គនេះ) ✅</li><li>Business Management · Excel វិភាគទិន្នន័យ · Power BI</li><li>Business English · ភាសាចិន (ពាណិជ្ជកម្មជាមួយចិន)</li><li>វិញ្ញាបនបត្រ ASCM CPIM/CSCP</li></ol></section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="lg"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន Mobile Testing & CI/CD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#2b8a3e; --accent2:#40c057; --accent-soft:#ebfbee;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#69db7c; --accent2:#8ce99a; --accent-soft:#0d2414;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#69db7c; --accent2:#8ce99a; --accent-soft:#0d2414;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#0b1f14,#2b8a3e 50%,#1c7ed6);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/mobiletest.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/mobiletest.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Mobile Testing &amp; CI/CD៖ Test, Build, Sign &amp; Release ស្វ័យប្រវត្តិ</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. ហេតុអ្វីត្រូវ Test &amp; CI/CD?</a>
+<a href="#install">២. ឧបករណ៍</a>
+<a href="#elements">៣. ធាតុនីមួយៗ</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Unit Test ដំបូង</a>
+<a href="#l2">មេរៀន ២: Test ដែលបរាជ័យ &amp; Debug</a>
+<a href="#l3">មេរៀន ៣: Mock, Stub &amp; Fake (Test ដោយមិនហៅ API ពិត)</a>
+<a href="#l4">មេរៀន ៤: TDD៖ Red → Green → Refactor</a>
+<a href="#l5">មេរៀន ៥: UI / Widget Test</a>
+<a href="#l6">មេរៀន ៦: E2E Test ជាមួយ Maestro</a>
+<a href="#l7">មេរៀន ៧: Coverage, Lint &amp; Quality Gate</a>
+<a href="#l8">មេរៀន ៨: Versioning &amp; Environments (Flavors)</a>
+<a href="#l9">មេរៀន ៩: Code Signing៖ Android Keystore &amp; iOS Certificate</a>
+<a href="#l10">មេរៀន ១០: CI ជាមួយ GitHub Actions</a>
+<a href="#l11">មេរៀន ១១: CD៖ fastlane, EAS &amp; Beta Testing</a>
+<a href="#l12">មេរៀន ១២: Release, Staged Rollout &amp; Monitoring</a>
+<a href="#cheat">📋 Cheat Sheet</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងអាជីព៖ Kafe App Release Pipeline</a>
+<a href="#pro-app">💻 Release Lab Pro (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🧪 Mobile Testing &amp; CI/CD — Release App ដោយទំនុកចិត្ត</h2>
+  <p>Unit test, Mock, <b>TDD</b>, Widget/UI test, <b>E2E (Maestro)</b>, Coverage &amp; Lint, Versioning &amp; Flavors, <b>Code signing</b>, <b>GitHub Actions</b>, <b>fastlane/EAS</b>, TestFlight/Play testing, Staged rollout &amp; Crashlytics — Test, keytool និង Script រត់ពិត។</p>
+  <p><span class="badge">📘 ១២ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">💻 Code មានពណ៌ + លទ្ធផល</span><span class="badge">🧪 Release Lab Pro</span></p>
+</section>
+<section id="intro">
+<h2>១. ហេតុអ្វីត្រូវ Test &amp; CI/CD?</h2>
+
+<p>App ដែលមានអ្នកប្រើពិត ត្រូវ <b>ដំណើរការត្រឹមត្រូវរាល់ពេល Update</b>។ <b>Testing</b> = Code ដែលពិនិត្យ Code ស្វ័យប្រវត្តិ · <b>CI/CD</b> = Robot ដែល Test, Build, Sign និងបញ្ជូន App ទៅ Store ស្វ័យប្រវត្តិរាល់ពេលអ្នក Push Code។ ក្រុមហ៊ុនធំៗ (Google, Meta, Grab) Release App រៀងរាល់សប្តាហ៍ដោយមិនខ្លាចបាក់ ព្រោះមាន Test + CI/CD។ <button class="btn say" data-say="Testing and CI CD">🔊 អានពាក្យ</button></p>
+<figure class="fig"><svg viewBox="0 0 940 270" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="270" fill="#fff"/><polygon points="470,15 560,85 380,85" fill="#e03131"/><text x="470" y="70" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">E2E</text><polygon points="380,90 560,90 650,160 290,160" fill="#f08c00"/><text x="470" y="132" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">Integration / UI (Widget)</text><polygon points="290,165 650,165 740,240 200,240" fill="#2f9e44"/><text x="470" y="210" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">Unit tests</text><text x="770" y="55" text-anchor="start" font-size="13.5" font-weight="400" fill="#c92a2a">តិច · យឺត · ថ្លៃ · ជិតអ្នកប្រើពិត</text><text x="770" y="130" text-anchor="start" font-size="13.5" font-weight="400" fill="#e67700">មធ្យម</text><text x="770" y="205" text-anchor="start" font-size="13.5" font-weight="400" fill="#2b8a3e">ច្រើន · លឿន (ms) · ថោក</text><text x="150" y="55" text-anchor="end" font-size="13" font-weight="400" fill="#334155">ឧ. Maestro / Detox / XCUITest</text><text x="190" y="130" text-anchor="end" font-size="13" font-weight="400" fill="#334155">ឧ. Widget test / RNTL / Compose test</text><text x="180" y="205" text-anchor="end" font-size="13" font-weight="400" fill="#334155">ឧ. Cart.total(), validators</text><text x="470" y="262" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Test Pyramid — សរសេរ Unit test ច្រើនបំផុត, E2E តែផ្លូវសំខាន់ៗ</text></svg><figcaption>🖼️ Test Pyramid</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th></tr><tr><td>1994–1997</td><td><b>Kent Beck</b> បង្កើត SUnit → <b>JUnit</b> (ជាមួយ Erich Gamma) — គំរូ Unit test ទាំងអស់</td></tr><tr><td>2002</td><td>Kent Beck សរសេរសៀវភៅ <b>Test-Driven Development</b></td></tr><tr><td>2006</td><td><b>Martin Fowler</b> ពន្យល់ <b>Continuous Integration</b> · 2009 Mike Cohn ពេញនិយម "Test Pyramid"</td></tr><tr><td>2014</td><td><b>Felix Krause</b> បង្កើត <b>fastlane</b> (Automation Build/Release Mobile)</td></tr><tr><td>2019</td><td><b>GitHub Actions</b> CI/CD ក្នុង GitHub</td></tr><tr><td>2022→</td><td><b>Maestro</b> (mobile.dev) — E2E test សរសេរជា YAML ងាយៗ</td></tr></table>
+
+<div class="grid"><div class="card"><b>🐛 ចាប់ Bug មុនអ្នកប្រើ</b><br>Fix ពេល Code = ថោក ១០០ ដងជាងក្រោយ Release</div><div class="card"><b>🚀 Release លឿន</b><br>Build/Sign/Upload ស្វ័យប្រវត្តិ</div><div class="card"><b>🤝 ធ្វើការជាក្រុម</b><br>PR មិន Merge បើ Test បាក់</div><div class="card"><b>😌 មិនខ្លាចកែ Code</b><br>Refactor ដោយទំនុកចិត្ត</div></div>
+
+</section>
+<section id="install">
+<h2>២. ឧបករណ៍</h2>
+
+<table><tr><th>ការងារ</th><th>Flutter</th><th>React Native</th><th>Android (Kotlin)</th><th>iOS (Swift)</th></tr><tr><td>Unit</td><td>flutter_test</td><td>Jest</td><td>JUnit</td><td>XCTest / Swift Testing</td></tr><tr><td>UI</td><td>Widget test</td><td>RN Testing Library</td><td>Compose UI test</td><td>XCUITest</td></tr><tr><td>E2E</td><td>integration_test · Maestro · Patrol</td><td>Detox · Maestro</td><td>Espresso · Maestro</td><td>XCUITest · Maestro</td></tr><tr><td>Lint</td><td>dart analyze</td><td>ESLint · tsc</td><td>ktlint · detekt</td><td>SwiftLint</td></tr><tr><td>Build/Release</td><td>fastlane · Codemagic</td><td>EAS Build/Submit</td><td>Gradle · fastlane</td><td>Xcode Cloud · fastlane</td></tr><tr><td>CI</td><td>GitHub Actions · GitLab CI · Bitrise · Codemagic</td><td></td><td></td><td></td></tr></table>
+
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+flutter test --coverage                # Flutter
+npx jest --coverage                    # React Native
+./gradlew testDebugUnitTest lint       # Android
+xcodebuild test -scheme Kafe -destination 'platform=iOS Simulator,name=iPhone 16'   # iOS
+curl -fsSL "https://get.maestro.mobile.dev" | bash   # Maestro E2E
+gem install fastlane                   # fastlane (Ruby)
+</script>
+
+<div class="note">💡 Logic Test (Unit, Mock, TDD, Coverage, Version bump, Keystore, YAML validation) ក្នុងវគ្គនេះ <b>រត់ពិត</b> ដោយ <b>Node.js 22 test runner</b>, <b>keytool</b> (JDK) និង Python។ Flutter/Xcode/Emulator មិនមាននៅទីនេះ ដូច្នេះ UI/E2E test និង Build ជាលទ្ធផលគំរូដែលពិនិត្យដោយដៃ។ គោលការណ៍ដូចគ្នាគ្រប់ Framework។</div>
+
+</section>
+<section id="elements">
+<h2>៣. ធាតុនីមួយៗ</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 200" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="200" fill="#fff"/><rect x="8" y="55" width="120" height="76" rx="14" fill="#334155"/><text x="68.0" y="87.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">git push</text><text x="68.0" y="109.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">PR / main</text><rect x="141" y="55" width="120" height="76" rx="14" fill="#7048e8"/><text x="201.0" y="87.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Lint</text><text x="201.0" y="109.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">analyze</text><rect x="274" y="55" width="120" height="76" rx="14" fill="#2f9e44"/><text x="334.0" y="87.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Test</text><text x="334.0" y="109.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">unit + UI</text><rect x="407" y="55" width="120" height="76" rx="14" fill="#1c7ed6"/><text x="467.0" y="87.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Build</text><text x="467.0" y="109.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">AAB / IPA</text><rect x="540" y="55" width="120" height="76" rx="14" fill="#e8590c"/><text x="600.0" y="87.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Sign</text><text x="600.0" y="109.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">keystore / cert</text><rect x="673" y="55" width="120" height="76" rx="14" fill="#0c8599"/><text x="733.0" y="87.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Distribute</text><text x="733.0" y="109.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Testers</text><rect x="806" y="55" width="120" height="76" rx="14" fill="#c92a2a"/><text x="866.0" y="87.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Release</text><text x="866.0" y="109.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Store</text><line x1="130" y1="93" x2="139" y2="93" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="263" y1="93" x2="272" y2="93" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="396" y1="93" x2="405" y2="93" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="529" y1="93" x2="538" y2="93" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="662" y1="93" x2="671" y2="93" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="795" y1="93" x2="804" y2="93" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="330" y="30" text-anchor="middle" font-size="14" font-weight="800" fill="#2f9e44">CI (Continuous Integration)</text><text x="780" y="30" text-anchor="middle" font-size="14" font-weight="800" fill="#c92a2a">CD (Continuous Delivery)</text><line x1="540" y1="20" x2="540" y2="150" stroke="#adb5bd" stroke-dasharray="5 4"/><text x="470" y="180" text-anchor="middle" font-size="14" font-weight="400" fill="#334155">ជំហានណាមួយបរាជ័យ → ឈប់ · ប្រាប់អ្នក Code ភ្លាម</text></svg><figcaption>🖼️ CI/CD Pipeline សម្រាប់ Mobile App</figcaption></figure>
+
+<table><tr><th>ពាក្យ</th><th>អត្ថន័យ</th><th>មេរៀន</th></tr><tr><td>Unit test</td><td>Test Function/Class មួយ ដាច់ដោយឡែក</td><td>១ · ២</td></tr><tr><td>Mock / Stub / Fake</td><td>ជំនួស API/DB ពិតពេល Test</td><td>៣</td></tr><tr><td>TDD</td><td>សរសេរ Test មុន Code</td><td>៤</td></tr><tr><td>Widget/UI test</td><td>Test អេក្រង់ (ចុច, វាយ, មើល)</td><td>៥</td></tr><tr><td>E2E</td><td>Test App ពេញលេញដូចអ្នកប្រើពិត</td><td>៦</td></tr><tr><td>Coverage · Lint</td><td>ភាគរយ Code ដែល Test បានរត់ · ពិនិត្យ Code ស្វ័យប្រវត្តិ</td><td>៧</td></tr><tr><td>Version · Flavor</td><td>1.2.3 (+45) · dev/staging/prod</td><td>៨</td></tr><tr><td>Signing</td><td>Keystore (Android) · Certificate (iOS)</td><td>៩</td></tr><tr><td>CI · CD</td><td>Test/Build ស្វ័យប្រវត្តិ · ផ្ញើទៅ Tester/Store</td><td>១០ · ១១</td></tr><tr><td>Staged rollout · Crash monitoring</td><td>Release បន្តិចម្តងៗ · Crashlytics/Sentry</td><td>១២</td></tr></table>
+
+</section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>Unit Test ដំបូង</h2>
+
+<script type="text/x-code" data-lang="js" data-label="src/cart.mjs">
+export const MENU = { latte: 2.5, mocha: 2.75, tea: 1.5 };
+
+export function lineTotal(id, qty) {
+  if (!(id in MENU)) throw new Error(`unknown item: ${id}`);
+  if (!Number.isInteger(qty) || qty < 1) throw new RangeError("qty must be >= 1");
+  return MENU[id] * qty;
+}
+
+export function cartTotal(lines, coupon = null) {
+  const sub = lines.reduce((s, l) => s + lineTotal(l.id, l.qty), 0);
+  const off = coupon === "KAFE10" ? 0.1 : 0;
+  return Math.round(sub * (1 - off) * 100) / 100;
+}
+
+export function isValidPhone(p) {
+  return /^0\d{8,9}$/.test(p.replace(/[\s-]/g, ""));
+}
+</script>
+<script type="text/x-code" data-lang="js" data-label="test/cart.test.mjs">
+import { test, describe } from "node:test";
+import assert from "node:assert/strict";
+import { lineTotal, cartTotal, isValidPhone } from "../src/cart.mjs";
+
+describe("cartTotal", () => {
+  test("Latte ×2 + Mocha ×1 = 7.75", () => {
+    assert.equal(cartTotal([{ id: "latte", qty: 2 }, { id: "mocha", qty: 1 }]), 7.75);
+  });
+  test("coupon KAFE10 បញ្ចុះ 10%", () => {
+    assert.equal(cartTotal([{ id: "latte", qty: 4 }], "KAFE10"), 9);
+  });
+  test("កន្ត្រកទទេ = 0", () => assert.equal(cartTotal([]), 0));
+});
+
+describe("lineTotal", () => {
+  test("qty 0 → RangeError", () => assert.throws(() => lineTotal("tea", 0), RangeError));
+  test("ទំនិញមិនស្គាល់ → Error", () => assert.throws(() => lineTotal("pizza", 1), /unknown item/));
+});
+
+describe("isValidPhone", () => {
+  for (const p of ["012345678", "097 123 4567", "088-888-888"]) test(`✅ ${p}`, () => assert.ok(isValidPhone(p)));
+  for (const p of ["12345678", "0123", "abc"]) test(`⛔ ${p}`, () => assert.ok(!isValidPhone(p)));
+});
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Node.js 22</span></div><pre><span class="tp">dara@pc:~/kafe$</span> <span class="tc">node --test --test-reporter=spec</span>
+▶ cartTotal
+  ✔ Latte ×2 + Mocha ×1 = 7.75 (0.434765ms)
+  ✔ coupon KAFE10 បញ្ចុះ 10% (1.014417ms)
+  ✔ កន្ត្រកទទេ = 0 (0.168738ms)
+✔ cartTotal (2.204711ms)
+▶ lineTotal
+  ✔ qty 0 → RangeError (0.302451ms)
+  ✔ ទំនិញមិនស្គាល់ → Error (0.094126ms)
+✔ lineTotal (0.571927ms)
+▶ isValidPhone
+  ✔ ✅ 012345678 (0.23261ms)
+  ✔ ✅ 097 123 4567 (0.188519ms)
+  ✔ ✅ 088-888-888 (0.104674ms)
+  ✔ ⛔ 12345678 (0.101858ms)
+  ✔ ⛔ 0123 (0.123347ms)
+  ✔ ⛔ abc (0.043625ms)
+✔ isValidPhone (1.0247ms)
+ℹ tests 11
+ℹ suites 3
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 56.188685</pre></div>
+
+<script type="text/x-code" data-lang="dart" data-label="cart_test.dart">
+// Flutter: test/cart_test.dart — flutter test
+import 'package:flutter_test/flutter_test.dart';
+import 'package:kafe/cart.dart';
+
+void main() {
+  group('cartTotal', () {
+    test('Latte ×2 + Mocha ×1 = 7.75', () {
+      expect(cartTotal([Line('latte', 2), Line('mocha', 1)]), 7.75);
+    });
+    test('qty 0 throws', () => expect(() => lineTotal('tea', 0), throwsRangeError));
+  });
+}
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Unit test</b> = Function តូចមួយ + Input → ពិនិត្យ Output (<code class='i'>assert.equal(actual, expected)</code>)។</li><li><code class='i'>describe</code>/<code class='i'>group</code> — ក្រុម Test · <code class='i'>test</code> — ករណីមួយ ឈ្មោះប្រាប់ពីអ្វីដែលរំពឹង។</li><li>Test <b>ករណីល្អ + ករណីខុស + ករណីគែម</b> (ទទេ, 0, អក្សរខុស) — Bug ច្រើនតែនៅគែម។</li><li><code class='i'>assert.throws</code> / <code class='i'>throwsRangeError</code> — ពិនិត្យថា Code បដិសេធទិន្នន័យខុស។</li><li>លទ្ធផលពិត៖ 11 tests ✔ ក្នុងរយៈពេលតែប៉ុន្មាន ms — រត់រាល់ពេល Save បាន។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>សរសេរ Test ថា coupon ខុស ("ABC") មិនបញ្ចុះតម្លៃ។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="js" data-label="answer.mjs">
+test("coupon ខុស មិនបញ្ចុះ", () => assert.equal(cartTotal([{ id: "tea", qty: 2 }], "ABC"), 3));
+</script>
+</details></div>
+
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>Test ដែលបរាជ័យ &amp; Debug</h2>
+
+<p>ឧបមាថាមិត្តរួមក្រុមកែ Function បញ្ចុះតម្លៃ ហើយធ្វើខុស។ Test ចាប់បានភ្លាម (លទ្ធផលពិត)៖</p>
+<script type="text/x-code" data-lang="js" data-label="src/discount.mjs">
+// ❌ Bug: ប្រើ "%" ជាលេខ 10 ជំនួស 0.1 ហើយមិនបង្គត់
+export function applyDiscount(price, percent) {
+  return price - price * percent;
+}
+</script>
+<script type="text/x-code" data-lang="js" data-label="test/discount.test.mjs">
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { applyDiscount } from "../src/discount.mjs";
+
+test("10% នៃ $5.00 = $4.50", () => {
+  assert.equal(applyDiscount(5, 10), 4.5);
+});
+test("0% មិនប្តូរតម្លៃ", () => {
+  assert.equal(applyDiscount(2.75, 0), 2.75);
+});
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Node.js 22</span></div><pre><span class="tp">dara@pc:~/kafe$</span> <span class="tc">node --test --test-reporter=spec 2&gt;&amp;1 | head -30</span>
+✖ 10% នៃ $5.00 = $4.50 (1.104219ms)
+✔ 0% មិនប្តូរតម្លៃ (0.114997ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 1
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 48.257664
+✖ failing tests:
+test at test/discount.test.mjs:5:1
+✖ 10% នៃ $5.00 = $4.50 (1.104219ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  -45 !== 4.5
+    generatedMessage: true,
+    code: &#x27;ERR_ASSERTION&#x27;,
+    actual: -45,
+    expected: 4.5,
+    operator: &#x27;strictEqual&#x27;,
+    diff: &#x27;simple&#x27;</pre></div>
+
+<script type="text/x-code" data-lang="js" data-label="src/discount.mjs">
+// ✅ Fix: percent → ratio + បង្គត់ 2 ខ្ទង់
+export function applyDiscount(price, percent) {
+  if (percent < 0 || percent > 100) throw new RangeError("percent 0..100");
+  return Math.round(price * (1 - percent / 100) * 100) / 100;
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Node.js 22</span></div><pre><span class="tp">dara@pc:~/kafe$</span> <span class="tc">node --test --test-reporter=spec</span>
+✔ 10% នៃ $5.00 = $4.50 (0.533685ms)
+✔ 0% មិនប្តូរតម្លៃ (0.117048ms)
+✔ 15% នៃ $2.75 = $2.34 (បង្គត់) (0.060757ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 47.065597</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>Test បរាជ័យបង្ហាញ <b>expected vs actual</b> (<code class='i'>4.5</code> vs <code class='i'>-45</code>) → ដឹងភ្លាមថាខុសត្រង់ណា។</li><li>Fix Code → រត់ Test ម្តងទៀត → ✔ ទាំងអស់ · បន្ថែម Test ថ្មីសម្រាប់ Bug នោះ (<b>Regression test</b>) កុំឲ្យកើតម្តងទៀត។</li><li>Exit code ≠ 0 ពេល Test បាក់ → CI ឈប់ ហើយ PR មិនអាច Merge (មេរៀន ១០)។</li><li>Debug៖ <code class='i'>node --test --test-name-pattern="10%"</code> រត់តែ Test មួយ · Breakpoint ក្នុង VS Code។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>ហេតុអ្វី 2.75 × 0.85 មិនស្មើ 2.3375 ពិតប្រាកដក្នុង JavaScript ហើយ Test គួរធ្វើយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>Floating point មានកំហុសតូចៗ — បង្គត់ក្នុង Code (Math.round) ឬប្រើ <code class='i'>assert.ok(Math.abs(a - b) &lt; 0.001)</code> · លុយគួររក្សាជា <b>សេន (integer)</b>។</p></details></div>
+
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Mock, Stub &amp; Fake (Test ដោយមិនហៅ API ពិត)</h2>
+
+<script type="text/x-code" data-lang="js" data-label="src/menu-service.mjs">
+// Service ទាញ Menu ពី API — ទទួល http client តាម Parameter (Dependency injection)
+export class MenuService {
+  constructor(http, cache = new Map()) { this.http = http; this.cache = cache; }
+
+  async getMenu() {
+    if (this.cache.has("menu")) return this.cache.get("menu");
+    try {
+      const res = await this.http.get("/menu");
+      if (res.status !== 200) throw new Error(`HTTP ${res.status}`);
+      this.cache.set("menu", res.data);
+      return res.data;
+    } catch (e) {
+      return { error: "មិនអាចភ្ជាប់ Server សូមព្យាយាមម្តងទៀត", cause: e.message };
+    }
+  }
+}
+</script>
+<script type="text/x-code" data-lang="js" data-label="test/menu-service.test.mjs">
+import { test, mock } from "node:test";
+import assert from "node:assert/strict";
+import { MenuService } from "../src/menu-service.mjs";
+
+test("ទាញ Menu ហើយ Cache (ហៅ API តែម្តង)", async () => {
+  const http = { get: mock.fn(async () => ({ status: 200, data: [{ id: "latte", price: 2.5 }] })) };   // Mock
+  const svc = new MenuService(http);
+  await svc.getMenu();
+  const menu = await svc.getMenu();
+  assert.equal(menu[0].id, "latte");
+  assert.equal(http.get.mock.callCount(), 1);
+  assert.deepEqual(http.get.mock.calls[0].arguments, ["/menu"]);
+});
+
+test("Server 500 → សារ Error ងាយយល់", async () => {
+  const http = { get: async () => ({ status: 500 }) };                                              // Stub
+  const r = await new MenuService(http).getMenu();
+  assert.match(r.error, /មិនអាចភ្ជាប់/);
+  assert.equal(r.cause, "HTTP 500");
+});
+
+test("Network ដាច់ (throw) → មិន Crash", async () => {
+  const http = { get: async () => { throw new Error("ECONNRESET"); } };
+  const r = await new MenuService(http).getMenu();
+  assert.equal(r.cause, "ECONNRESET");
+});
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Node.js 22</span></div><pre><span class="tp">dara@pc:~/kafe$</span> <span class="tc">node --test --test-reporter=spec</span>
+✔ ទាញ Menu ហើយ Cache (ហៅ API តែម្តង) (1.046697ms)
+✔ Server 500 → សារ Error ងាយយល់ (0.192735ms)
+✔ Network ដាច់ (throw) → មិន Crash (0.162372ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 49.476581</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Dependency injection</b>៖ ផ្ញើ <code class='i'>http</code> ចូល Constructor → ពេល Test ផ្ញើ Object ក្លែងជំនួស API ពិត។</li><li><b>Mock</b> (<code class='i'>mock.fn</code>) — កត់ត្រាការហៅ → ពិនិត្យ <code class='i'>callCount()</code>, Arguments។</li><li><b>Stub</b> — ត្រឡប់ចម្លើយកំណត់ (ឧ. 500) ដើម្បី Test ករណីពិបាកបង្កើតពិត។ <b>Fake</b> — កំណែសាមញ្ញដែលដំណើរការ (ឧ. Database ក្នុង Memory, Mock Bakong server ក្នុងវគ្គ KHQR)។</li><li>Test លឿន មិនពឹង Internet/Server → រត់ក្នុង CI បានរាល់ពេល។</li><li>Flutter៖ <code class='i'>mocktail</code> · RN៖ <code class='i'>jest.fn()</code>, MSW · Android៖ MockK · iOS៖ Protocol + Fake class។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>Test ថា ពេល Cache មានទិន្នន័យរួច Service មិនហៅ API ទាល់តែសោះ។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="js" data-label="answer.mjs">
+const http = { get: mock.fn() };
+const svc = new MenuService(http, new Map([["menu", []]]));
+await svc.getMenu();
+assert.equal(http.get.mock.callCount(), 0);
+</script>
+</details></div>
+
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>TDD៖ Red → Green → Refactor</h2>
+
+<p>Feature ថ្មី៖ <b>ពិន្ទុ Loyalty</b> — រាល់ $1 = 10 ពិន្ទុ · Member Gold ×2 · អតិបរមា 500 ពិន្ទុ/Order។ សរសេរ <b>Test មុន</b>៖</p>
+<script type="text/x-code" data-lang="js" data-label="test/points.test.mjs">
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { earnPoints } from "../src/points.mjs";
+
+test("$5.25 → 52 ពិន្ទុ (បង្គត់ចុះ)", () => assert.equal(earnPoints(5.25), 52));
+test("Gold ×2", () => assert.equal(earnPoints(5.25, "gold"), 105));
+test("អតិបរមា 500", () => assert.equal(earnPoints(100, "gold"), 500));
+test("ចំនួនអវិជ្ជមាន → 0", () => assert.equal(earnPoints(-3), 0));
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>🔴 RED — Test បរាជ័យ (Feature មិនទាន់មាន)</span></div><pre><span class="tp">dara@pc:~/kafe$</span> <span class="tc">node --test --test-reporter=dot; echo &quot;exit code: $?&quot;</span>
+XXX.
+Failed tests:
+✖ $5.25 → 52 ពិន្ទុ (បង្គត់ចុះ) (1.005775ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  0 !== 52
+    generatedMessage: true,
+    code: &#x27;ERR_ASSERTION&#x27;,
+    actual: 0,
+    expected: 52,
+    operator: &#x27;strictEqual&#x27;,
+    diff: &#x27;simple&#x27;
+  }
+✖ Gold ×2 (0.190673ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  0 !== 105
+    generatedMessage: true,
+    code: &#x27;ERR_ASSERTION&#x27;,
+    actual: 0,
+    expected: 105,
+    operator: &#x27;strictEqual&#x27;,
+    diff: &#x27;simple&#x27;
+  }
+✖ អតិបរមា 500 (0.179414ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  0 !== 500
+    generatedMessage: true,
+    code: &#x27;ERR_ASSERTION&#x27;,
+    actual: 0,
+    expected: 500,
+    operator: &#x27;strictEqual&#x27;,
+    diff: &#x27;simple&#x27;
+  }
+exit code: 1</pre></div>
+
+<script type="text/x-code" data-lang="js" data-label="src/points.mjs">
+const MULTIPLIER = { member: 1, gold: 2 };
+const MAX_PER_ORDER = 500;
+
+export function earnPoints(total, tier = "member") {
+  if (!(total > 0)) return 0;
+  const points = Math.floor(total * 10 * (MULTIPLIER[tier] ?? 1));   // គុណមុន ទើបបង្គត់ចុះ
+  return Math.min(points, MAX_PER_ORDER);
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>🟢 GREEN → ♻️ REFACTOR — Test ទាំងអស់ត្រូវ</span></div><pre><span class="tp">dara@pc:~/kafe$</span> <span class="tc">node --test --test-reporter=spec</span>
+✔ $5.25 → 52 ពិន្ទុ (បង្គត់ចុះ) (0.499579ms)
+✔ Gold ×2 (0.085268ms)
+✔ អតិបរមា 500 (0.070321ms)
+✔ ចំនួនអវិជ្ជមាន → 0 (0.076527ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 51.593647</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>🔴 <b>Red</b>៖ សរសេរ Test ដែលពិពណ៌នា Feature → វាបរាជ័យ (ព្រោះ Code មិនទាន់មាន) — បញ្ជាក់ថា Test ពិតជាពិនិត្យមែន។</li><li>🟢 <b>Green</b>៖ សរសេរ Code តិចបំផុតឲ្យ Test ត្រូវ។</li><li>♻️ <b>Refactor</b>៖ ធ្វើ Code ឲ្យស្អាត (Constant <code class='i'>MULTIPLIER, MAX_PER_ORDER</code>) — Test ការពារកុំឲ្យបាក់។</li><li>Test ក្លាយជា <b>ឯកសារ</b> ពន្យល់ច្បាប់ Business (Product owner អានយល់)។</li><li>រឿងពិតពេលសរសេរមេរៀននេះ៖ កំណែដំបូងបង្គត់មុនគុណ (<code class='i'>floor(52.5)×2 = 104</code>) → Test Gold ×2 ចាប់បានភ្លាម → កែជា <b>គុណមុនទើបបង្គត់</b> (105)។</li><li><code class='i'>exit code: 1</code> ពេល Red · <code class='i'>0</code> ពេល Green — CI ប្រើលេខនេះសម្រេច។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>ច្បាប់ថ្មី៖ Member "platinum" ×3។ ធ្វើតាម TDD យ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>① បន្ថែម Test <code class='i'>earnPoints(5.25, "platinum") === 156</code> (🔴) ② បន្ថែម <code class='i'>platinum: 3</code> ក្នុង MULTIPLIER (🟢) ③ រត់ Test ទាំងអស់ម្តងទៀត។</p></details></div>
+
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>UI / Widget Test</h2>
+
+<script type="text/x-code" data-lang="dart" data-label="qty_picker_test.dart">
+// test/qty_picker_test.dart — flutter test
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:kafe/widgets/qty_picker.dart';
+
+void main() {
+  testWidgets('ចុច + បង្កើន qty និងតម្លៃ', (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: Scaffold(body: QtyPicker(price: 2.5))));
+
+    expect(find.text('1'), findsOneWidget);
+    expect(find.text('សរុប \$2.50'), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pump();                                   // Rebuild
+
+    expect(find.text('2'), findsOneWidget);
+    expect(find.text('សរុប \$5.00'), findsOneWidget);
+  });
+
+  testWidgets('ប៊ូតុង − ត្រូវបិទពេល qty = 1', (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: Scaffold(body: QtyPicker(price: 2.5))));
+    final minus = tester.widget<IconButton>(find.widgetWithIcon(IconButton, Icons.remove));
+    expect(minus.onPressed, isNull);
+  });
+}
+</script>
+
+<script type="text/x-code" data-lang="js" data-label="QtyPicker.test.tsx">
+// React Native — __tests__/QtyPicker.test.tsx (Jest + @testing-library/react-native)
+import { render, fireEvent, screen } from "@testing-library/react-native";
+import { QtyPicker } from "../components/QtyPicker";
+
+test("ចុច ＋ បង្កើន qty", () => {
+  render(<QtyPicker price={2.5} />);
+  fireEvent.press(screen.getByRole("button", { name: "increase" }));
+  expect(screen.getByText("2")).toBeOnTheScreen();
+  expect(screen.getByText("សរុប $5.00")).toBeOnTheScreen();
+});
+</script>
+
+<script type="text/x-code" data-lang="kotlin" data-label="QtyPickerTest.kt">
+// Android Compose — app/src/androidTest/.../QtyPickerTest.kt
+@get:Rule val rule = createComposeRule()
+
+@Test fun plusIncreasesQty() {
+    rule.setContent { QtyPicker(price = 2.5) }
+    rule.onNodeWithContentDescription("increase").performClick()
+    rule.onNodeWithText("2").assertIsDisplayed()
+    rule.onNodeWithContentDescription("decrease").assertIsEnabled()
+}
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>ឧទាហរណ៍លទ្ធផល · flutter test</span></div><pre>00:02 +2: All tests passed!</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Widget/UI test</b> បង្ហាញ Widget ក្នុង Test environment (គ្មានទូរស័ព្ទ) → ចុច/វាយ → ពិនិត្យអ្វីដែលឃើញ។</li><li><code class='i'>find.text / byIcon / byKey</code> រក Widget · <code class='i'>tester.tap</code> ចុច · <code class='i'>pump()</code> ឲ្យ UI Rebuild។</li><li>React Native៖ <code class='i'>getByRole/getByText</code> + <code class='i'>fireEvent.press</code> · Compose៖ <code class='i'>onNodeWithText().performClick()</code>។</li><li>រក Element តាម <b>អត្ថន័យ</b> (role, label, contentDescription) → Test មាំ ហើយ App ល្អសម្រាប់ Accessibility ផង។</li><li><b>Golden/Screenshot test</b>៖ ប្រៀបធៀបរូបភាព UI ជាមួយរូបដើម (<code class='i'>matchesGoldenFile</code>) ចាប់ Bug រចនា។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>ហេតុអ្វីមិនរក Widget តាមពណ៌ ឬទីតាំង (x, y)?</p><details><summary>មើលចម្លើយ</summary><p>ពណ៌/ទីតាំងប្តូរញឹកញាប់ (Redesign, ទំហំអេក្រង់) → Test បាក់ទោះ Logic ត្រូវ។ រកតាម Text/Role/Key មាំជាង។</p></details></div>
+
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>E2E Test ជាមួយ Maestro</h2>
+
+<script type="text/x-code" data-lang="yaml" data-label="order_latte.yaml">
+# .maestro/order_latte.yaml — maestro test .maestro/
+appId: com.kafe.angkor
+---
+- launchApp:
+    clearState: true
+- tapOn: "ចូលគណនី"
+- inputText: "dara@kafe.kh"
+- tapOn: "Password"
+- inputText: ${PASSWORD}
+- tapOn: "Login"
+- assertVisible: "Menu"
+- tapOn: "Iced Latte"
+- tapOn:
+    id: "qty_plus"
+- tapOn: "បន្ថែម $5.00"
+- tapOn:
+    id: "cart_button"
+- assertVisible: "សរុប $5.00"
+- tapOn: "បញ្ជាទិញ"
+- assertVisible:
+    text: "Order #.*"
+    timeout: 10000
+- takeScreenshot: order_done
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>ឧទាហរណ៍លទ្ធផល · maestro test</span></div><pre>Running on Pixel_8_API_35
+ ║  &gt; Flow order_latte
+ ║    ✅  Launch app &quot;com.kafe.angkor&quot; with clear state
+ ║    ✅  Tap on &quot;ចូលគណនី&quot;
+ ║    ✅  Input text dara@kafe.kh
+ ║    ...
+ ║    ✅  Assert that &quot;សរុប $5.00&quot; is visible
+ ║    ✅  Tap on &quot;បញ្ជាទិញ&quot;
+ ║    ✅  Assert that &quot;Order #.*&quot; is visible
+ ║    ✅  Take screenshot order_done
+ ║  Flow passed (23.4s)</pre></div>
+
+<script type="text/x-code" data-lang="bash" data-label="check_flows.py">
+import yaml, glob, sys
+ALLOWED = {"launchApp", "tapOn", "inputText", "assertVisible", "assertNotVisible", "scroll", "swipe", "back", "takeScreenshot", "waitForAnimationToEnd", "runFlow"}
+ok = True
+for path in sorted(glob.glob(".maestro/*.yaml")):
+    header, steps = list(yaml.safe_load_all(open(path)))
+    for i, step in enumerate(steps, 1):
+        cmd = step if isinstance(step, str) else next(iter(step))
+        if cmd not in ALLOWED:
+            ok = False; print(f"⛔ {path} step {i}: unknown command '{cmd}'")
+    print(f"{'✅' if ok else '⛔'} {path}: appId={header['appId']} · {len(steps)} steps")
+sys.exit(0 if ok else 1)
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Lint YAML flows (Python)</span></div><pre><span class="tp">dara@pc:~/kafe$</span> <span class="tc">python3 check_flows.py; echo &quot;exit code: $?&quot;</span>
+✅ .maestro/order_latte.yaml: appId=com.kafe.angkor · 8 steps
+⛔ .maestro/typo.yaml step 2: unknown command &#x27;tapOnn&#x27;
+⛔ .maestro/typo.yaml: appId=com.kafe.angkor · 2 steps
+exit code: 1</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>E2E</b> (End-to-End) — បើក App ពិតលើ Emulator/ទូរស័ព្ទ ហើយធ្វើដូចអ្នកប្រើ៖ Login → ជ្រើស → បញ្ជាទិញ។</li><li><b>Maestro</b> សរសេរជា YAML (<code class='i'>tapOn, inputText, assertVisible</code>) — រង់ចាំ UI ស្វ័យប្រវត្តិ (មិនសូវ Flaky)។ ដំណើរការជាមួយ Flutter, RN, Native។</li><li><code class='i'>${PASSWORD}</code> — យកពី Environment/Secret (កុំសរសេរ Password ក្នុង File)។</li><li>Script Python ខាងលើ <b>រត់ពិត</b>៖ ពិនិត្យ Flow YAML មុនរត់ (ចាប់ Typo <code class='i'>tapOnn</code>) — ល្អសម្រាប់ CI។</li><li>E2E យឺត (វិនាទី–នាទី) → Test តែផ្លូវសំខាន់ (Login, Checkout, Payment)។ ផ្សេងទៀតប្រើ Unit/Widget។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>Test E2E ពេលខ្លះត្រូវ ពេលខ្លះបាក់ (Flaky) ទោះមិនកែ Code។ មូលហេតុ/ដំណោះស្រាយ?</p><details><summary>មើលចម្លើយ</summary><p>Network យឺត, Animation, ទិន្នន័យ Server ប្តូរ។ ប្រើ Mock server/ទិន្នន័យ Test ថេរ, <code class='i'>clearState</code>, រង់ចាំតាម UI (មិនមែន sleep), និង Retry តិចតួចក្នុង CI។</p></details></div>
+
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Coverage, Lint &amp; Quality Gate</h2>
+
+<script type="text/x-code" data-lang="js" data-label="test/cart.test.mjs">
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { cartTotal, lineTotal } from "../src/cart.mjs";
+test("total", () => assert.equal(cartTotal([{ id: "latte", qty: 2 }]), 5));
+test("coupon", () => assert.equal(cartTotal([{ id: "tea", qty: 2 }], "KAFE10"), 2.7));
+test("bad qty", () => assert.throws(() => lineTotal("tea", 0)));
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Node.js 22</span></div><pre><span class="tp">dara@pc:~/kafe$</span> <span class="tc">node --test --experimental-test-coverage --test-reporter=spec 2&gt;&amp;1 | grep -E &#x27;tests|pass|fail|cart.mjs|file|all files&#x27;</span>
+ℹ tests 3
+ℹ pass 3
+ℹ fail 0
+ℹ file           | line % | branch % | funcs % | uncovered lines
+ℹ  cart.mjs      |  88.24 |    88.89 |   75.00 | 16-17
+ℹ all files      |  91.30 |    92.86 |   87.50 |</pre></div>
+
+<script type="text/x-code" data-lang="bash" data-label="Quality commands">
+# Quality gate ក្នុង CI — បរាជ័យបើ Coverage < 80%
+node --test --experimental-test-coverage --test-coverage-lines=80
+flutter test --coverage && lcov --summary coverage/lcov.info
+dart analyze --fatal-infos          # Flutter lint
+npx eslint . && npx tsc --noEmit    # React Native
+./gradlew detekt ktlintCheck lint   # Android
+swiftlint --strict                  # iOS
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Coverage</b> = ភាគរយ Line/Branch/Function ដែល Test បានរត់ · លទ្ធផលពិតខាងលើបង្ហាញថា <code class='i'>isValidPhone</code> មិនទាន់ត្រូវបាន Test (Uncovered lines)។</li><li>Coverage ខ្ពស់ ≠ គ្មាន Bug — តែ Coverage ទាប = មាន Code ដែលគ្មាននរណាពិនិត្យ · គោលដៅទូទៅ ៧០–៨០% សម្រាប់ Logic។</li><li><b>Lint/Static analysis</b> — រក Bug មុនរត់ (Variable មិនប្រើ, null, Style)។</li><li><b>Quality gate</b> — CI បដិសេធ PR បើ Lint error ឬ Coverage ធ្លាក់ក្រោមកម្រិត។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>បន្ថែម Test ឲ្យ <code class='i'>isValidPhone</code> ត្រូវបាន Cover។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="js" data-label="answer.mjs">
+import { isValidPhone } from "../src/cart.mjs";
+test("phone", () => { assert.ok(isValidPhone("012345678")); assert.ok(!isValidPhone("123")); });
+</script>
+</details></div>
+
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Versioning &amp; Environments (Flavors)</h2>
+
+<script type="text/x-code" data-lang="js" data-label="bump.mjs">
+// node bump.mjs <patch|minor|major> — ប្តូរ version នៅគ្រប់ File ក្នុងពេលតែមួយ
+import { readFileSync, writeFileSync } from "node:fs";
+const kind = process.argv[2] ?? "patch";
+const pkg = JSON.parse(readFileSync("app.json", "utf8"));
+let [maj, min, pat] = pkg.expo.version.split(".").map(Number);
+if (kind === "major") [maj, min, pat] = [maj + 1, 0, 0];
+else if (kind === "minor") [min, pat] = [min + 1, 0];
+else pat++;
+const version = `${maj}.${min}.${pat}`;
+const build = pkg.expo.android.versionCode + 1;           // ត្រូវកើនជានិច្ច
+pkg.expo.version = version;
+pkg.expo.android.versionCode = build;
+pkg.expo.ios.buildNumber = String(build);
+writeFileSync("app.json", JSON.stringify(pkg, null, 2));
+
+let pub = readFileSync("pubspec.yaml", "utf8").replace(/^version: .*$/m, `version: ${version}+${build}`);
+writeFileSync("pubspec.yaml", pub);
+console.log(`✅ ${kind}: ${version} (build ${build})`);
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Node.js 22</span></div><pre><span class="tp">dara@pc:~/kafe$</span> <span class="tc">node bump.mjs patch</span>
+✅ patch: 1.4.3 (build 42)
+<span class="tp">dara@pc:~/kafe$</span> <span class="tc">node bump.mjs minor</span>
+✅ minor: 1.5.0 (build 43)
+<span class="tp">dara@pc:~/kafe$</span> <span class="tc">grep version pubspec.yaml</span>
+version: 1.5.0+43
+<span class="tp">dara@pc:~/kafe$</span> <span class="tc">node -e &quot;const a=require(&#x27;./app.json&#x27;).expo;console.log(a.version, a.android.versionCode, a.ios.buildNumber)&quot;</span>
+1.5.0 43 43</pre></div>
+
+<table><tr><th></th><th>dev</th><th>staging</th><th>prod</th></tr><tr><td>API</td><td>localhost / 10.0.2.2</td><td>staging-api.kafe.kh</td><td>api.kafe.kh</td></tr><tr><td>App id</td><td>com.kafe.angkor.dev</td><td>com.kafe.angkor.stg</td><td>com.kafe.angkor</td></tr><tr><td>ឈ្មោះ/Icon</td><td>Kafe DEV 🟡</td><td>Kafe STG 🟣</td><td>Kafe</td></tr><tr><td>Payment</td><td>Mock</td><td>Sandbox</td><td>Production</td></tr><tr><td>Logging</td><td>ច្រើន</td><td>មធ្យម</td><td>Crash only</td></tr></table>
+
+<script type="text/x-code" data-lang="bash" data-label="Flavors">
+flutter run --flavor dev --dart-define=API_URL=http://10.0.2.2:3000
+flutter build appbundle --flavor prod --dart-define-from-file=env/prod.json
+./gradlew assembleStagingRelease                 # Android productFlavors
+APP_ENV=staging eas build --profile staging      # Expo (eas.json profiles)
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Semantic versioning</b> <code class='i'>MAJOR.MINOR.PATCH</code>៖ PATCH = Fix bug · MINOR = Feature ថ្មី · MAJOR = ប្តូរធំ។</li><li><b>Build number</b> (versionCode / CFBundleVersion) ត្រូវ <b>កើនជានិច្ច</b> រាល់ Upload ទៅ Store — Script ខាងលើធ្វើស្វ័យប្រវត្តិ (លទ្ធផលពិត 1.4.2+41 → 1.5.0+43)។</li><li>Version ត្រូវដូចគ្នាគ្រប់ File (app.json, pubspec, Gradle, Info.plist) → ប្រើ Script/CI កុំកែដោយដៃ។</li><li><b>Flavors/Environments</b> — App ៣ ប្រភេទដំឡើងជាមួយគ្នាបាន (App id ខុសគ្នា) · កុំឲ្យ Tester ប៉ះ Database ពិត។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>Fix Bug ក្នុង 2.3.1 ហើយបន្ថែម Feature ថ្មីផង — Version បន្ទាប់?</p><details><summary>មើលចម្លើយ</summary><p><b>2.4.0</b> (មាន Feature ថ្មី → MINOR · PATCH ត្រឡប់ 0)។</p></details></div>
+
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Code Signing៖ Android Keystore &amp; iOS Certificate</h2>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · keytool (JDK 21)</span></div><pre><span class="tp">dara@pc:~/kafe$</span> <span class="tc">keytool -genkeypair -v -keystore upload-keystore.jks -alias upload -keyalg RSA -keysize 2048 -validity 10000 -storepass &#x27;KafeDemo#2026&#x27; -keypass &#x27;KafeDemo#2026&#x27; -dname &#x27;CN=Kafe Angkor, O=Kafe, L=Phnom Penh, C=KH&#x27; 2&gt;&amp;1 | tail -2</span>
+	for: CN=Kafe Angkor, O=Kafe, L=Phnom Penh, C=KH
+[Storing upload-keystore.jks]
+<span class="tp">dara@pc:~/kafe$</span> <span class="tc">keytool -list -v -keystore upload-keystore.jks -storepass &#x27;KafeDemo#2026&#x27; | grep -E &#x27;Alias|Owner|Valid|SHA256:|Signature algorithm&#x27;</span>
+Alias name: upload
+Owner: CN=Kafe Angkor, O=Kafe, L=Phnom Penh, C=KH
+Valid from: Sat Nov 14 19:20:46 ICT 2026 until: Wed Apr 01 19:20:46 ICT 2054
+	 SHA256: A5:9C:8D:D9:46:41:28:92:91:CB:C6:9B:A1:18:9F:BB:38:85:74:30:09:9E:17:01:0D:33:9E:C0:F5:9E:00:C6
+Signature algorithm name: SHA384withRSA
+<span class="tp">dara@pc:~/kafe$</span> <span class="tc">base64 -w0 upload-keystore.jks | head -c 60; echo &#x27;…  ← ដាក់ក្នុង GitHub Secret&#x27;</span>
+MIIKZAIBAzCCCg4GCSqGSIb3DQEHAaCCCf8Eggn7MIIJ9zCCBa4GCSqGSIb3…  ← ដាក់ក្នុង GitHub Secret</pre></div>
+
+<script type="text/x-code" data-lang="kotlin" data-label="build.gradle.kts">
+// android/app/build.gradle.kts — អាន Password ពី Environment (CI) មិនមែនសរសេរក្នុង File
+android {
+    signingConfigs {
+        create("release") {
+            storeFile = file(System.getenv("KEYSTORE_PATH") ?: "upload-keystore.jks")
+            storePassword = System.getenv("KEYSTORE_PASSWORD")
+            keyAlias = "upload"
+            keyPassword = System.getenv("KEY_PASSWORD")
+        }
+    }
+    buildTypes { release { signingConfig = signingConfigs.getByName("release"); isMinifyEnabled = true } }
+}
+</script>
+
+<table><tr><th></th><th>Android</th><th>iOS</th></tr><tr><td>អ្វី</td><td>Keystore (.jks) + Upload key</td><td>Certificate (.p12) + Provisioning profile</td></tr><tr><td>Store ចុះហត្ថលេខាចុងក្រោយ</td><td>Play App Signing (Google រក្សា App signing key)</td><td>Apple</td></tr><tr><td>បាត់ Key</td><td>ស្នើ Reset upload key តាម Play Console</td><td>បង្កើត Certificate ថ្មី</td></tr><tr><td>Automation</td><td>Gradle + Secrets</td><td>fastlane match / Xcode automatic signing / App Store Connect API key</td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Signing</b> បញ្ជាក់ថា Update មកពីអ្នកពិត — Store បដិសេធ Update ដែលចុះហត្ថលេខាដោយ Key ផ្សេង។</li><li><code class='i'>keytool -genkeypair</code> — បង្កើត Keystore RSA 2048 សុពលភាព 10000 ថ្ងៃ (លទ្ធផលពិតខាងលើ · SHA256 fingerprint ប្រើភ្ជាប់ Firebase/Google sign-in)។</li><li><b>កុំ Commit</b> .jks / Password ទៅ Git · ក្នុង CI រក្សា Keystore ជា <b>Base64 Secret</b> ហើយ Decode ពេល Build។</li><li>បើកដំណើរការ <b>Play App Signing</b> → បើបាត់ Upload key នៅតែអាច Reset បាន។</li><li>iOS៖ ប្រើ <b>fastlane match</b> រក្សា Certificate ក្នុង Git repo ឯកជនដែល Encrypt → ក្រុមទាំងមូលប្រើ Certificate ដូចគ្នា។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>អ្នកថ្មីក្នុងក្រុម Commit <code class='i'>key.properties</code> ដែលមាន Password ទៅ GitHub។ ធ្វើអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>① ចាត់ទុកថាលេចធ្លាយ → Reset/Rotate Key (Play Console upload key reset) ② លុបចេញពី History (git filter-repo) ③ បន្ថែមក្នុង <code class='i'>.gitignore</code> ④ ប្រើ Secrets ក្នុង CI។</p></details></div>
+
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>CI ជាមួយ GitHub Actions</h2>
+
+<script type="text/x-code" data-lang="yaml" data-label=".github/workflows/mobile.yml">
+name: Mobile CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+    tags: ["v*"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: dart analyze --fatal-infos
+      - run: flutter test --coverage
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/lcov.info
+
+  android:
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Decode keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/upload-keystore.jks
+      - run: flutter build appbundle --release --build-number=${{ github.run_number }}
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-release.aab
+          path: build/app/outputs/bundle/release/app-release.aab
+
+  ios:
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter build ipa --release --export-options-plist=ios/ExportOptions.plist
+</script>
+
+<script type="text/x-code" data-lang="bash" data-label="lint_workflow.py">
+import yaml, re
+wf = yaml.safe_load(open(".github/workflows/mobile.yml"))
+triggers = wf.get(True) or wf.get("on")        # YAML 1.1: key `on` ត្រូវអានជា True
+print("Triggers:", list(triggers))
+for name, job in wf["jobs"].items():
+    needs = job.get("needs", "-")
+    secrets = sorted(set(re.findall(r"secrets\.(\w+)", str(job))))
+    print(f"• {name:8s} runs-on={job['runs-on']:14s} needs={needs!s:5s} steps={len(job['steps'])} secrets={secrets}")
+problems = [f"{n}: macOS ត្រូវការសម្រាប់ iOS" for n, j in wf["jobs"].items() if "ipa" in str(j) and "macos" not in j["runs-on"]]
+print("✅ Workflow ត្រឹមត្រូវ" if not problems else problems)
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · វិភាគ Workflow ដោយ Python (PyYAML)</span></div><pre><span class="tp">dara@pc:~/kafe$</span> <span class="tc">python3 lint_workflow.py</span>
+Triggers: [&#x27;pull_request&#x27;, &#x27;push&#x27;]
+• test     runs-on=ubuntu-latest  needs=-     steps=6 secrets=[]
+• android  runs-on=ubuntu-latest  needs=test  steps=5 secrets=[&#x27;KEYSTORE_BASE64&#x27;, &#x27;KEYSTORE_PASSWORD&#x27;, &#x27;KEY_PASSWORD&#x27;]
+• ios      runs-on=macos-latest   needs=test  steps=3 secrets=[]
+✅ Workflow ត្រឹមត្រូវ</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>on:</code> — ពេលណារត់៖ គ្រប់ <b>Pull Request</b>, Push ទៅ main, និង <b>Tag v*</b> (Release)។</li><li><b>Job test</b> រត់មុន · <code class='i'>needs: test</code> — Build តែពេល Test ត្រូវ · <code class='i'>if: startsWith(github.ref, 'refs/tags/v')</code> — Build Release តែពេលមាន Tag។</li><li><b>Secrets</b> (<code class='i'>${{ secrets.KEYSTORE_BASE64 }}</code>) — កំណត់ក្នុង GitHub → Settings → Secrets · មិនបង្ហាញក្នុង Log។</li><li><code class='i'>--build-number=${{ github.run_number }}</code> — Build number កើនស្វ័យប្រវត្តិ។</li><li>iOS ត្រូវការ <code class='i'>macos-latest</code> (Xcode) · <code class='i'>cache: true</code> ធ្វើឲ្យលឿន · <code class='i'>upload-artifact</code> រក្សា .aab ទាញយកបាន។</li><li>Script Python ខាងលើ <b>រត់ពិត</b> វិភាគ Workflow (Jobs, Dependencies, Secrets)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>Branch protection៖ ចង់កុំឲ្យ Merge PR បើ Job test បាក់។ កំណត់នៅណា?</p><details><summary>មើលចម្លើយ</summary><p>GitHub → Settings → Branches → Branch protection rule (main) → ✅ Require status checks to pass → ជ្រើស <b>test</b>។</p></details></div>
+
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>CD៖ fastlane, EAS &amp; Beta Testing</h2>
+
+<script type="text/x-code" data-lang="txt" data-label="Fastfile (Ruby)">
+# fastlane/Fastfile
+default_platform(:android)
+
+platform :android do
+  desc "Build + upload ទៅ Play Internal testing"
+  lane :beta do
+    gradle(task: "clean bundle", build_type: "Release")
+    upload_to_play_store(track: "internal", aab: "app/build/outputs/bundle/release/app-release.aab",
+                         json_key_data: ENV["PLAY_SERVICE_ACCOUNT_JSON"])
+    slack(message: "🤖 Android beta #{lane_context[SharedValues::VERSION_NAME]} រួចរាល់")
+  end
+
+  lane :release do
+    upload_to_play_store(track: "internal", track_promote_to: "production", rollout: "0.1")   # 10%
+  end
+end
+
+platform :ios do
+  lane :beta do
+    setup_ci
+    match(type: "appstore", readonly: true)                  # Certificate ពី Git repo (encrypted)
+    increment_build_number(build_number: ENV["GITHUB_RUN_NUMBER"])
+    build_app(scheme: "Runner", export_method: "app-store")
+    upload_to_testflight(api_key_path: "fastlane/asc_api_key.json", skip_waiting_for_build_processing: true)
+  end
+end
+</script>
+
+<script type="text/x-code" data-lang="bash" data-label="CD commands">
+bundle exec fastlane android beta     # ឬក្នុង CI: run: bundle exec fastlane ios beta
+eas build --platform all --profile production --auto-submit   # Expo: Build + Submit ក្នុងមួយ Command
+firebase appdistribution:distribute app-release.apk --app $FIREBASE_APP_ID --groups qa-team
+</script>
+
+<table><tr><th>ផ្លូវផ្ញើឲ្យ Tester</th><th>Android</th><th>iOS</th></tr><tr><td>Store beta</td><td>Play Console: Internal → Closed → Open testing</td><td>TestFlight (Internal ≤100 · External ≤10,000)</td></tr><tr><td>ក្រៅ Store</td><td>Firebase App Distribution</td><td>Firebase App Distribution (UDID)</td></tr><tr><td>Expo</td><td>EAS Build + Internal distribution / EAS Update</td><td>ដូចគ្នា</td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>fastlane</b> — Script Ruby ធ្វើ Build, Sign, Screenshot, Upload ស្វ័យប្រវត្តិ · <b>Lane</b> = សកម្មភាពមួយ (beta, release)។</li><li><code class='i'>track: "internal"</code> → Tester ក្នុងក្រុមទទួលបាន Update ក្នុងពីរបីនាទី · <code class='i'>rollout: "0.1"</code> = 10% អ្នកប្រើ។</li><li>iOS៖ <code class='i'>match</code> + <b>App Store Connect API key</b> (មិនបាច់ Login Apple ID/2FA ក្នុង CI)។</li><li><b>EAS</b> (Expo) — Build iOS លើ Cloud ដោយមិនបាច់ Mac · <code class='i'>--auto-submit</code> ទៅ Store។</li><li>ផ្ញើសារ Slack/Telegram ពេល Build រួច → ក្រុមដឹងភ្លាម។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>ហេតុអ្វីប្រើ API key ជំនួស Apple ID + Password ក្នុង CI?</p><details><summary>មើលចម្លើយ</summary><p>Apple ID តម្រូវ 2FA (CI វាយលេខកូដមិនបាន) ហើយ Password មានសិទ្ធិច្រើនពេក។ API key កំណត់សិទ្ធិតិច លុប/Rotate ងាយ។</p></details></div>
+
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>Release, Staged Rollout &amp; Monitoring</h2>
+
+<script type="text/x-code" data-lang="js" data-label="rollout.mjs">
+// សម្រេចចិត្ត Staged rollout ស្វ័យប្រវត្តិ តាម Crash-free rate
+const STAGES = [1, 5, 20, 50, 100];
+const MIN_CRASH_FREE = 99.5;     // %
+
+function decide(stage, sessions, crashes, baseline = 99.8) {
+  const crashFree = 100 * (1 - crashes / sessions);
+  if (sessions < 500) return { action: "⏳ រង់ចាំទិន្នន័យ", crashFree };
+  if (crashFree < MIN_CRASH_FREE || crashFree < baseline - 0.3)
+    return { action: "🛑 HALT rollout + Hotfix", crashFree };
+  const next = STAGES[STAGES.indexOf(stage) + 1];
+  return { action: next ? `✅ បន្តទៅ ${next}%` : "🎉 100% — Release ពេញ", crashFree };
+}
+
+const days = [
+  { day: 1, stage: 1,  sessions: 320,   crashes: 0 },
+  { day: 2, stage: 1,  sessions: 1800,  crashes: 2 },
+  { day: 3, stage: 5,  sessions: 9200,  crashes: 11 },
+  { day: 4, stage: 20, sessions: 41000, crashes: 290 },
+];
+for (const d of days) {
+  const r = decide(d.stage, d.sessions, d.crashes);
+  console.log(`ថ្ងៃ ${d.day} · ${String(d.stage).padStart(3)}% · crash-free ${r.crashFree.toFixed(2)}% → ${r.action}`);
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Node.js 22</span></div><pre><span class="tp">dara@pc:~/kafe$</span> <span class="tc">node rollout.mjs</span>
+ថ្ងៃ 1 ·   1% · crash-free 100.00% → ⏳ រង់ចាំទិន្នន័យ
+ថ្ងៃ 2 ·   1% · crash-free 99.89% → ✅ បន្តទៅ 5%
+ថ្ងៃ 3 ·   5% · crash-free 99.88% → ✅ បន្តទៅ 20%
+ថ្ងៃ 4 ·  20% · crash-free 99.29% → 🛑 HALT rollout + Hotfix</pre></div>
+
+<table><tr><th>✅ Release checklist</th><th></th></tr>
+<tr><td>Code</td><td>CI ✔ · Coverage ✔ · E2E ផ្លូវសំខាន់ ✔ · Version/Build កើន</td></tr>
+<tr><td>Store</td><td>Release notes (ខ្មែរ/អង់គ្លេស) · Screenshots · Privacy/Data safety · លុបគណនីក្នុង App</td></tr>
+<tr><td>Rollout</td><td>1% → 5% → 20% → 50% → 100% · តាមដាន Crash-free ≥ 99.5%</td></tr>
+<tr><td>Monitoring</td><td>Firebase Crashlytics / Sentry · Performance · Analytics events</td></tr>
+<tr><td>Rollback</td><td>Halt rollout · Feature flag បិទ Feature (Remote Config) · Hotfix 1.4.3 · Expo/CodePush OTA (JS)</td></tr></table>
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Staged rollout</b> — Release ឲ្យអ្នកប្រើបន្តិចម្តងៗ → បើមាន Bug ប៉ះពាល់តែ 1–5%។</li><li><b>Crash-free sessions</b> = % Session ដែលមិន Crash · ថ្ងៃទី ៤ ក្នុងលទ្ធផលពិត ធ្លាក់ 99.29% → <b>HALT</b>។</li><li><b>Feature flag</b> (Firebase Remote Config) — បិទ Feature មានបញ្ហាពីចម្ងាយ ដោយមិនបាច់ Release ថ្មី។</li><li><b>Crashlytics/Sentry</b> — ផ្ញើ Stack trace + ឧបករណ៍ + Version → Fix លឿន · Upload dSYM/mapping file ពេល Build។</li><li>App Store/Play មិនអាច "ត្រឡប់ Version ចាស់" បានទេ → ត្រូវ Hotfix ឬ Feature flag។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>Crash កើនតែលើ Android 9 ក្នុង Version ថ្មី។ ធ្វើអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>① Halt rollout ② មើល Crashlytics (Filter OS/Device) ③ បិទ Feature តាម Remote Config បើទាក់ទង ④ សរសេរ Test បង្កើត Bug ឡើងវិញ → Fix → Hotfix → Rollout ម្តងទៀតពី 1%។</p></details></div>
+
+</section>
+<section id="cheat">
+<h2>📋 Cheat Sheet</h2>
+
+<table><tr><th>ការងារ</th><th>Command</th></tr><tr><td>Unit test</td><td>node --test · flutter test · npx jest · ./gradlew test · xcodebuild test</td></tr><tr><td>Coverage</td><td>--experimental-test-coverage · flutter test --coverage · jest --coverage</td></tr><tr><td>E2E</td><td>maestro test .maestro/ · detox test</td></tr><tr><td>Lint</td><td>dart analyze · eslint · detekt · swiftlint</td></tr><tr><td>Keystore</td><td>keytool -genkeypair -keystore upload.jks -alias upload -keyalg RSA -validity 10000</td></tr><tr><td>Build</td><td>flutter build appbundle / ipa · eas build · ./gradlew bundleRelease</td></tr><tr><td>Release</td><td>fastlane beta · upload_to_play_store(track: internal) · upload_to_testflight</td></tr></table>
+
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងអាជីព៖ Kafe App Release Pipeline</h2>
+
+<p>រៀបចំ Pipeline ពេញលេញសម្រាប់ App Kafe (Flutter ឬ React Native)៖ <b>PR → Lint + Unit + Widget + Coverage ≥ 80% → Merge → Tag v1.5.0 → Build + Sign → Firebase App Distribution (QA) → Play Internal / TestFlight → Staged rollout 1→100% + Crashlytics</b>។</p>
+<script type="text/x-code" data-lang="txt" data-label="Project structure">
+kafe-app/
+├── lib/ (ឬ src/)
+├── test/                      ← Unit + Widget (មេរៀន ១–៥)
+├── integration_test/ · .maestro/   ← E2E (៦)
+├── env/dev.json · staging.json · prod.json   ← Flavors (៨)
+├── android/app/build.gradle.kts    ← signingConfigs ពី ENV (៩)
+├── fastlane/Fastfile · Appfile · Matchfile   ← CD (១១)
+├── scripts/bump.mjs                ← Version (៨)
+├── .github/workflows/
+│   ├── ci.yml                      ← PR: lint/test/coverage (១០)
+│   └── release.yml                 ← tag v*: build/sign/distribute (១០–១១)
+└── CHANGELOG.md · RELEASE_CHECKLIST.md   ← (១២)
+</script>
+
+<script type="text/x-code" data-lang="yaml" data-label="release.yml">
+# .github/workflows/release.yml (ផ្នែកសំខាន់)
+on:
+  push:
+    tags: ["v*"]
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    environment: production                      # ត្រូវ Approve ដោយ Lead មុនរត់
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { channel: stable, cache: true }
+      - run: flutter test
+      - run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/upload-keystore.jks
+      - run: flutter build appbundle --flavor prod --dart-define-from-file=env/prod.json --build-number=${{ github.run_number }}
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      - uses: ruby/setup-ruby@v1
+        with: { ruby-version: "3.3", bundler-cache: true }
+      - run: bundle exec fastlane android beta
+        env:
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+</script>
+
+<table><tr><th>ជំហាន</th><th>មេរៀន</th></tr><tr><td>Unit · Mock · TDD</td><td>១–៤</td></tr><tr><td>UI · E2E</td><td>៥ · ៦</td></tr><tr><td>Coverage · Lint</td><td>៧</td></tr><tr><td>Version · Flavor</td><td>៨</td></tr><tr><td>Signing</td><td>៩</td></tr><tr><td>CI · CD</td><td>១០ · ១១</td></tr><tr><td>Rollout · Monitoring</td><td>១២</td></tr></table>
+
+</section>
+<section id="pro-app">
+<h2>💻 Release Lab Pro (App)</h2>
+
+<p><b>CI Pipeline Builder</b>៖ ជ្រើស Platform, Trigger, ជំហាន → ទទួល GitHub Actions YAML + ពេលវេលាប៉ាន់ស្មាន → ▶ Run ក្លែង (E2E អាច Flaky!)។ <b>Version Bumper</b>៖ patch/minor/major → មើល pubspec, app.json, Gradle, Info.plist, Git tag។ <b>Rollout Simulator</b>៖ កំណត់ Crash rate → ដើរម្តងមួយថ្ងៃ 1→5→20→50→100% → HALT ស្វ័យប្រវត្តិពេល Crash-free ធ្លាក់។</p>
+
+<div class="itk" id="rl">
+<div class="itk-tabs"><button class="on" data-t="p">⚙️ CI Pipeline Builder</button><button data-t="v">🔢 Version Bumper</button><button data-t="r">📈 Rollout Simulator</button></div>
+
+<div class="itk-p on" data-p="p">
+ <div class="itk-row">
+  <label>Platform<select id="p_pf"><option value="flutter">Flutter</option><option value="rn">React Native (Expo)</option><option value="android">Android (Kotlin)</option><option value="ios">iOS (Swift)</option></select></label>
+  <label>Trigger<select id="p_tr"><option value="pr">PR + push main</option><option value="tag">Tag v* (Release)</option></select></label>
+  <label>Distribute<select id="p_ds"><option value="fad">Firebase App Distribution</option><option value="play">Play Internal testing</option><option value="tf">TestFlight</option><option value="none">(គ្មាន)</option></select></label>
+  <label>Coverage ≥<input id="p_cov" type="number" value="80" min="0" max="100" style="width:70px"></label>
+ </div>
+ <div class="itk-row" id="p_steps"></div>
+ <div id="p_vis" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0"></div>
+ <div><button class="btn" id="p_run">▶ Run pipeline (ក្លែង)</button> <span id="p_sum" style="margin-left:8px"></span></div>
+ <div class="fb-grid" style="grid-template-columns:1.4fr 1fr;margin-top:10px">
+  <pre id="p_yml" class="itk-out" style="white-space:pre;overflow:auto;max-height:420px;font:12.5px/1.55 'JetBrains Mono',monospace;color:var(--text);margin:0"></pre>
+  <div class="itk-out" id="p_log" style="margin:0;max-height:420px;overflow:auto;font:12.5px/1.7 'JetBrains Mono',monospace"></div>
+ </div>
+</div>
+
+<div class="itk-p" data-p="v">
+ <div class="itk-row">
+  <label>Version<input id="v_v" value="1.4.2" size="8"></label>
+  <label>Build<input id="v_b" type="number" value="41" style="width:80px"></label>
+  <button class="btn" data-k="patch">🩹 patch (Fix bug)</button> <button class="btn" data-k="minor">✨ minor (Feature)</button> <button class="btn" data-k="major">💥 major (ប្តូរធំ)</button>
+ </div>
+ <div class="itk-out" id="v_msg"></div>
+ <div class="fb-grid" style="grid-template-columns:1fr 1fr" id="v_files"></div>
+</div>
+
+<div class="itk-p" data-p="r">
+ <div class="itk-row">
+  <label>អ្នកប្រើសកម្ម/ថ្ងៃ<input id="r_u" type="number" value="50000" step="1000" style="width:100px"></label>
+  <label>Crash rate Version ថ្មី (%)<input id="r_c" type="range" min="0" max="1.5" step="0.05" value="0.15"> <b id="r_cv"></b></label>
+  <label>កម្រិតបញ្ឈប់ crash-free ≥<input id="r_t" type="number" value="99.5" step="0.1" style="width:80px"></label>
+  <button class="btn" id="r_next">➡️ ថ្ងៃបន្ទាប់</button> <button class="btn" id="r_reset">↺</button>
+ </div>
+ <div id="r_chart"></div>
+ <div class="itk-out" id="r_log" style="font:12.5px/1.7 'JetBrains Mono',monospace"></div>
+</div>
+</div>
+<script>
+(()=>{
+const $=id=>document.getElementById(id),R=$("rl");
+R.querySelectorAll(":scope>.itk-tabs button").forEach(b=>b.onclick=()=>{R.querySelectorAll(":scope>.itk-tabs button").forEach(x=>x.classList.toggle("on",x===b));R.querySelectorAll(":scope>.itk-p").forEach(p=>p.classList.toggle("on",p.dataset.p===b.dataset.t))});
+const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+/* ---------- Pipeline ---------- */
+const STEPS=[["lint","🧹 Lint",1,.03],["unit","🧪 Unit test",2,.05],["cov","📊 Coverage",0.5,.04],["widget","🖼️ UI/Widget test",3,.05],["e2e","🤖 E2E (Maestro)",8,.15],["build","🏗️ Build",6,.03],["sign","✍️ Sign",0.5,.02],["dist","🚀 Distribute",1.5,.03]];
+const on={lint:1,unit:1,cov:1,widget:1,e2e:0,build:1,sign:1,dist:1};
+$("p_steps").innerHTML=STEPS.map(([k,n])=>`<label><span><input type="checkbox" data-s="${k}" ${on[k]?"checked":""}> ${n}</span></label>`).join("");
+$("p_steps").querySelectorAll("input").forEach(c=>c.onchange=()=>{on[c.dataset.s]=c.checked?1:0;pipe()});
+const CMD={flutter:{setup:"      - uses: subosito/flutter-action@v2\n        with: { channel: stable, cache: true }\n      - run: flutter pub get",lint:"dart analyze --fatal-infos",unit:"flutter test --coverage",cov:"lcov --summary coverage/lcov.info | grep -E 'lines.*: ([8-9][0-9]|100)'",widget:"flutter test test/widgets",e2e:"maestro test .maestro/",build:"flutter build appbundle --release --build-number=${{ github.run_number }}",ipa:"flutter build ipa --release"},
+ rn:{setup:"      - uses: actions/setup-node@v4\n        with: { node-version: 22, cache: npm }\n      - run: npm ci",lint:"npx eslint . && npx tsc --noEmit",unit:"npx jest --coverage",cov:"npx jest --coverage --coverageThreshold='{\"global\":{\"lines\":COV}}'",widget:"npx jest __tests__/components",e2e:"maestro test .maestro/",build:"eas build --platform all --profile production --non-interactive",ipa:""},
+ android:{setup:"      - uses: actions/setup-java@v4\n        with: { distribution: temurin, java-version: 21, cache: gradle }",lint:"./gradlew detekt lint",unit:"./gradlew testReleaseUnitTest",cov:"./gradlew koverVerify",widget:"./gradlew connectedAndroidTest",e2e:"maestro test .maestro/",build:"./gradlew bundleRelease",ipa:""},
+ ios:{setup:"      - uses: maxim-lobanov/setup-xcode@v1\n        with: { xcode-version: latest-stable }",lint:"swiftlint --strict",unit:"xcodebuild test -scheme Kafe -destination 'platform=iOS Simulator,name=iPhone 16'",cov:"xcrun xccov view --report *.xcresult",widget:"xcodebuild test -scheme KafeUITests -destination 'platform=iOS Simulator,name=iPhone 16'",e2e:"maestro test .maestro/",build:"fastlane ios build",ipa:""}};
+function pipe(){
+ const pf=$("p_pf").value,tr=$("p_tr").value,ds=$("p_ds").value,cov=$("p_cov").value,c=CMD[pf];
+ const act=STEPS.filter(([k])=>on[k]&&!(k==="dist"&&ds==="none"));
+ $("p_vis").innerHTML=act.map(([k,n],i)=>`<span id="ps_${k}" style="padding:6px 10px;border-radius:8px;border:1px solid var(--line);font-size:13.5px">${n}</span>${i<act.length-1?"<span>→</span>":""}`).join("");
+ const runner=pf==="ios"?"macos-latest":"ubuntu-latest";
+ const trig=tr==="pr"?"on:\n  pull_request:\n  push:\n    branches: [main]":"on:\n  push:\n    tags: [\"v*\"]";
+ let y=`name: ${pf} CI\n${trig}\n\njobs:\n  ci:\n    runs-on: ${runner}\n    steps:\n      - uses: actions/checkout@v4\n${c.setup}\n`;
+ const add=(n,cmd,env)=>{y+=`      - name: ${n}\n        run: ${cmd}\n${env?`        env:\n${env}\n`:""}`};
+ if(on.lint)add("Lint",c.lint);if(on.unit)add("Unit tests",c.unit);if(on.cov)add(`Coverage >= ${cov}%`,c.cov.replace("COV",cov).replace("([8-9][0-9]|100)",cov>=80?"([8-9][0-9]|100)":"([0-9]+)"));
+ if(on.widget)add("UI tests",c.widget);if(on.e2e)add("E2E",c.e2e);
+ if(on.sign&&pf!=="rn")y+=`      - name: Decode signing secrets\n        run: echo "\${{ secrets.${pf==="ios"?"P12_BASE64":"KEYSTORE_BASE64"} }}" | base64 -d > ${pf==="ios"?"cert.p12":"android/app/upload-keystore.jks"}\n`;
+ if(on.build)add("Build",pf==="ios"&&c.ipa?c.ipa:c.build,on.sign&&pf!=="ios"&&pf!=="rn"?"          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}":pf==="rn"?"          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}":"");
+ if(on.dist&&ds!=="none"){const D={fad:"firebase appdistribution:distribute build/app.aab --app ${{ secrets.FIREBASE_APP_ID }} --groups qa",play:"bundle exec fastlane android beta   # track: internal",tf:"bundle exec fastlane ios beta   # upload_to_testflight"};add("Distribute",D[ds]);}
+ $("p_yml").textContent=y;
+ const mins=act.reduce((s,x)=>s+x[2],0)*(pf==="ios"?1.6:1);
+ $("p_sum").innerHTML=`⏱️ ប្រហែល <b>${mins.toFixed(1)}</b> នាទី${pf==="ios"?" (macOS runner យឺត/ថ្លៃជាង)":""}`;return act;}
+["p_pf","p_tr","p_ds","p_cov"].forEach(i=>$(i).oninput=pipe);pipe();
+let running=false;
+$("p_run").onclick=()=>{if(running)return;running=true;const act=pipe();$("p_log").innerHTML="";let i=0;
+ const step=()=>{if(i>=act.length){$("p_log").innerHTML+=`<div style="color:#2f9e44;font-weight:700">✅ Pipeline ជោគជ័យ — ${$("p_ds").value==="none"?"Artifact រួចរាល់":"Tester ទទួលបាន Build ថ្មី 📲"}</div>`;running=false;return}
+  const[k,n,m,f]=act[i],el=$("ps_"+k);el.style.background="var(--accent-soft)";el.textContent=n+" ⏳";
+  setTimeout(()=>{const fail=Math.random()<f;el.style.background=fail?"#ffe3e3":"#d3f9d8";el.style.color="#111";el.textContent=n+(fail?" ✖":" ✔");
+   $("p_log").innerHTML+=`<div>${fail?"✖":"✔"} ${esc(n)} (${(m*(0.8+Math.random()*.4)).toFixed(1)} min)${fail?` — <b style="color:#e03131">${k==="e2e"?"Flaky: element 'Order #' not visible (timeout)":k==="unit"?"1 test failed: cartTotal coupon":k==="lint"?"unused import":"exit code 1"}</b>`:""}</div>`;
+   if(fail){$("p_log").innerHTML+=`<div style="color:#e03131;font-weight:700">⛔ Pipeline ឈប់ — ជំហានបន្ទាប់មិនរត់ · PR មិនអាច Merge</div>`;running=false;return}
+   i++;step();},350+m*120);};step();};
+/* ---------- Version ---------- */
+function files(v,b){const box=(n,lang,t)=>`<div><b style="font-size:13px">${n}</b><pre class="itk-out" style="white-space:pre;font:12.5px/1.5 'JetBrains Mono',monospace;color:var(--text);margin:4px 0 0">${esc(t)}</pre></div>`;
+ $("v_files").innerHTML=box("pubspec.yaml (Flutter)","yaml",`version: ${v}+${b}`)+box("app.json (Expo)","json",`"version": "${v}",\n"android": { "versionCode": ${b} },\n"ios": { "buildNumber": "${b}" }`)+box("build.gradle.kts (Android)","kotlin",`versionCode = ${b}\nversionName = "${v}"`)+box("Info.plist (iOS)","xml",`CFBundleShortVersionString = ${v}\nCFBundleVersion = ${b}`)+box("Git","bash",`git commit -am "release: v${v} (${b})"\ngit tag v${v} && git push --tags   # → CI Release`)+box("CHANGELOG.md","md",`## ${v} — ${new Date().toISOString().slice(0,10)}\n- …`);}
+R.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>{let[a,c,d]=($("v_v").value.match(/^\d+\.\d+\.\d+$/)?$("v_v").value:"1.0.0").split(".").map(Number);const old=`${a}.${c}.${d}`;const k=b.dataset.k;
+ if(k==="major")[a,c,d]=[a+1,0,0];else if(k==="minor")[c,d]=[c+1,0];else d++;const v=`${a}.${c}.${d}`,bn=(+$("v_b").value||0)+1;$("v_v").value=v;$("v_b").value=bn;
+ $("v_msg").innerHTML=`${old} → <b>${v}</b> · build ${bn-1} → <b>${bn}</b> · ${k==="major"?"💥 MAJOR: ប្តូរធំ/មិនត្រូវគ្នាជាមួយចាស់ (ឧ. Redesign, API ថ្មី)":k==="minor"?"✨ MINOR: Feature ថ្មី (PATCH ត្រឡប់ 0)":"🩹 PATCH: Fix bug តែប៉ុណ្ណោះ"}`;files(v,bn);});
+files("1.4.2",41);$("v_msg").textContent="ចុចប៊ូតុងដើម្បីដំឡើង Version — Build number កើនជានិច្ច";
+/* ---------- Rollout ---------- */
+const ST=[1,5,20,50,100];let days=[],si=0,halted=false;
+function rdraw(){const W=640,H=230,p=40,lo=98.5,hi=100,X=i=>p+i*(W-p-20)/Math.max(6,days.length),Y=v=>H-28-(Math.max(lo,v)-lo)/(hi-lo)*(H-50),t=+$("r_t").value;
+ let g=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;background:var(--panel);border-radius:10px;font:11px sans-serif">`;
+ for(let v=98.5;v<=100;v+=0.5)g+=`<text x="${p-6}" y="${Y(v)+4}" text-anchor="end" fill="currentColor">${v.toFixed(1)}%</text><line x1="${p}" x2="${W-10}" y1="${Y(v)}" y2="${Y(v)}" stroke="currentColor" opacity=".08"/>`;
+ g+=`<line x1="${p}" x2="${W-10}" y1="${Y(t)}" y2="${Y(t)}" stroke="#e03131" stroke-dasharray="5 4"/><text x="${W-12}" y="${Y(t)-4}" text-anchor="end" fill="#e03131">halt &lt; ${t}%</text>`;
+ if(days.length)g+=`<polyline fill="none" stroke="#1c7ed6" stroke-width="2.5" points="${days.map((d,i)=>X(i+.5)+","+Y(d.cf)).join(" ")}"/>`+days.map((d,i)=>`<circle cx="${X(i+.5)}" cy="${Y(d.cf)}" r="5" fill="${d.cf<t?"#e03131":"#2f9e44"}"/><text x="${X(i+.5)}" y="${H-10}" text-anchor="middle" fill="currentColor">D${i+1} ${d.stage}%</text>`).join("");
+ $("r_chart").innerHTML=g+"</svg>";}
+function rlog(){$("r_log").innerHTML=days.map((d,i)=>`ថ្ងៃ ${i+1} · ${String(d.stage).padStart(3)}% · ${d.sessions.toLocaleString("en")} sessions · ${d.crashes} crashes · crash-free ${d.cf.toFixed(2)}% → ${d.act}`).join("<br>")||"ចុច \"ថ្ងៃបន្ទាប់\" ដើម្បីចាប់ផ្តើម Rollout 1%";}
+$("r_c").oninput=()=>{$("r_cv").textContent=(+$("r_c").value).toFixed(2)+"%"};$("r_c").oninput();
+$("r_next").onclick=()=>{if(halted||si>=ST.length)return;const stage=ST[si],sessions=Math.round(+$("r_u").value*stage/100*(2.6+Math.random()*.8)),rate=+$("r_c").value/100*(0.8+Math.random()*.4);
+ const crashes=Math.round(sessions*rate),cf=100*(1-crashes/sessions),t=+$("r_t").value;let act;
+ if(sessions<500)act="⏳ រង់ចាំទិន្នន័យបន្ថែម";else if(cf<t){act="🛑 HALT · Hotfix / បិទ Feature flag";halted=true}else{si++;act=si<ST.length?`✅ បន្តទៅ ${ST[si]}%`:"🎉 100% Release ពេញ"}
+ days.push({stage,sessions,crashes,cf,act});rdraw();rlog();};
+$("r_reset").onclick=()=>{days=[];si=0;halted=false;rdraw();rlog()};rdraw();rlog();
+})();
+</script>
+
+<h3>🏆 Quiz Testing &amp; CI/CD ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["អ្នកបង្កើត JUnit (ជាមួយ Erich Gamma)?", ["Kent Beck", "Martin Fowler", "Linus Torvalds", "Felix Krause"], 0], ["fastlane បង្កើតដោយ?", ["Kent Beck", "Felix Krause", "Taylor Otwell", "Mike Cohn"], 1], ["Test Pyramid៖ Test ណាគួរមានច្រើនបំផុត?", ["E2E", "Unit", "Manual", "UI"], 1], ["E2E test គឺ?", ["Test Function មួយ", "Test App ពេញលេញដូចអ្នកប្រើពិត", "Lint", "Build"], 1], ["TDD ចាប់ផ្តើមដោយ?", ["សរសេរ Code", "សរសេរ Test ដែលបរាជ័យ (Red)", "Deploy", "Refactor"], 1], ["Mock ប្រើដើម្បី?", ["លឿន UI", "ជំនួស API/DB ពិតពេល Test", "Sign App", "Encrypt"], 1], ["Flutter widget test ឲ្យ UI Rebuild ក្រោយចុច ប្រើ?", ["tester.pump()", "setState()", "sleep()", "build()"], 0], ["Maestro សរសេរ Flow ជា?", ["Java", "YAML", "SQL", "Excel"], 1], ["Coverage 90% មានន័យថា?", ["គ្មាន Bug", "Code 90% ត្រូវបាន Test រត់", "Test 90% ត្រូវ", "App លឿន 90%"], 1], ["Version 2.3.1 → Feature ថ្មី → ?", ["2.3.2", "2.4.0", "3.0.0", "2.3.1.1"], 1], ["versionCode (Android) ត្រូវ?", ["ដូចគ្នាជានិច្ច", "កើនរាល់ Upload", "ជា String", "Random"], 1], ["Flavor dev/staging/prod ជួយ?", ["App ធំ", "បំបែក API/Data Test ពី Production", "លឿន", "Sign"], 1], ["បង្កើត Android keystore ប្រើ?", ["keytool", "xcodebuild", "npm", "maestro"], 0], ["Keystore/Password គួរទុកក្នុង CI ជា?", ["Commit ក្នុង Git", "Secrets (Base64)", "README", "Slack"], 1], ["Build iOS ក្នុង GitHub Actions ត្រូវ runner?", ["ubuntu-latest", "windows-latest", "macos-latest", "android"], 2], ["needs: test ក្នុង Workflow មានន័យថា?", ["រត់ព្រមគ្នា", "រង់ចាំ Job test ជោគជ័យសិន", "រំលង test", "Cache"], 1], ["ផ្ញើ Beta ទៅ Tester iOS តាម Store ប្រើ?", ["TestFlight", "Play Console", "Expo Go", "APK"], 0], ["fastlane match ប្រើសម្រាប់?", ["Test", "គ្រប់គ្រង Certificate iOS ជាក្រុម", "Lint", "Analytics"], 1], ["Staged rollout 5% មានន័យថា?", ["App ធំ 5%", "Update ទៅតែ 5% អ្នកប្រើ", "Discount", "Coverage"], 1], ["បិទ Feature មានបញ្ហាពីចម្ងាយ ដោយមិន Release ថ្មី ប្រើ?", ["Feature flag / Remote Config", "keytool", "Lint", "Maestro"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+
+<ol class="steps"><li><b>Mobile Testing &amp; CI/CD</b> (វគ្គនេះ) ✅</li><li>អនុវត្តលើ App របស់អ្នក៖ វគ្គ <b>Flutter · React Native · Kotlin · Swift</b></li>
+<li>Testing ទូទៅ៖ វគ្គ <b>Software Testing</b> · DevOps៖ វគ្គ <b>Docker &amp; CI/CD</b></li><li>Backend Test៖ Mock server ក្នុងវគ្គ <b>KHQR</b>, <b>Firebase Emulator</b></li>
+<li>កម្រិតខ្ពស់៖ Contract testing, Performance (Macrobenchmark), Accessibility testing</li></ol>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="mobiletest"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

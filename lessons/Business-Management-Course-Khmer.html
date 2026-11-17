@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#1864ab; --accent2:#339af0; --accent-soft:#e7f5ff;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#74c0fc; --accent2:#a5d8ff; --accent-soft:#0b1f33;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#74c0fc; --accent2:#a5d8ff; --accent-soft:#0b1f33;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#081a2e,#1864ab 55%,#f59f00);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/bm.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/bm.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>គ្រប់គ្រងអាជីវកម្ម (Business Management)</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Business Management — អ្នកណាបង្កើត? ប្រើធ្វើអ្វី?</a>
+<a href="#setup">២. ត្រៀមខ្លួន</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: អាជីវកម្ម &amp; មុខងារគ្រប់គ្រង</a>
+<a href="#l2">មេរៀន ២: Business Model Canvas</a>
+<a href="#l3">មេរៀន ៣: វិភាគបរិស្ថាន — SWOT · PESTEL · Porter</a>
+<a href="#l4">មេរៀន ៤: យុទ្ធសាស្ត្រ · Vision · OKR/KPI</a>
+<a href="#l5">មេរៀន ៥: អង្គការ &amp; ការរចនារចនាសម្ព័ន្ធ</a>
+<a href="#l6">មេរៀន ៦: ភាពជាអ្នកដឹកនាំ &amp; ការលើកទឹកចិត្ត</a>
+<a href="#l7">មេរៀន ៧: ធនធានមនុស្ស (HR)</a>
+<a href="#l8">មេរៀន ៨: ប្រតិបត្តិការ &amp; គុណភាព</a>
+<a href="#l9">មេរៀន ៩: ហិរញ្ញវត្ថុសម្រាប់ Manager</a>
+<a href="#l10">មេរៀន ១០: ការគ្រប់គ្រងគម្រោង &amp; ការសម្រេចចិត្ត</a>
+<a href="#l11">មេរៀន ១១: ចាប់ផ្តើមអាជីវកម្មនៅកម្ពុជា</a>
+<a href="#l12">មេរៀន ១២: ក្រមសីលធម៌ · CSR · អាជីព</a>
+<a href="#cheat">📋 សង្ខេប (Cheat sheet)</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងចុងវគ្គ</a>
+<a href="#pro-app">💻 Business Lab (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>💼 គ្រប់គ្រងអាជីវកម្ម — ពីគំនិតដល់ប្រតិបត្តិការ</h2>
+  <p>POLC, <b>Business Model Canvas</b>, <b>SWOT/PESTEL/Porter</b>, យុទ្ធសាស្ត្រ &amp; <b>OKR/KPI</b>, រចនាសម្ព័ន្ធ, ភាពជាអ្នកដឹកនាំ, HR, Lean &amp; គុណភាព, <b>Break-even &amp; Cash flow</b>, គ្រប់គ្រងគម្រោង, <b>ចាប់ផ្តើមអាជីវកម្មនៅកម្ពុជា</b> — ឧទាហរណ៍គណនា (គ្មាន Code)។</p>
+  <p><span class="badge">📘 ១២ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">📊 ឧទាហរណ៍គណនា (គ្មាន Code)</span><span class="badge">💼 Business Lab</span></p>
+</section>
+<section id="intro">
+<h2>១. Business Management — អ្នកណាបង្កើត? ប្រើធ្វើអ្វី?</h2>
+
+<div class="note">💡 ព័ត៌មានច្បាប់ ពន្ធ និងនីតិវិធីនៅកម្ពុជា អាចផ្លាស់ប្តូរ — ពិនិត្យជាមួយក្រសួងពាណិជ្ជកម្ម អគ្គនាយកដ្ឋានពន្ធដារ (GDT) អគ្គនាយកដ្ឋានគយ និងរដ្ឋាករ (GDCE) ឬអ្នកប្រឹក្សាជំនាញ មុនសម្រេចចិត្ត។</div>
+
+<p><b>ការគ្រប់គ្រងអាជីវកម្ម (Business management)</b> = ការរៀបចំផែនការ ការរៀបចំ ការដឹកនាំ និងការត្រួតពិនិត្យ <b>មនុស្ស លុយ និងធនធាន</b> ដើម្បីសម្រេចគោលដៅ។ វគ្គនេះនាំអ្នកពីគំនិតអាជីវកម្ម → Business model → យុទ្ធសាស្ត្រ → ប្រតិបត្តិការ → មនុស្ស → ហិរញ្ញវត្ថុ → ការចាប់ផ្តើមអាជីវកម្មនៅកម្ពុជា។</p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#868e96"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#868e96">1776</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Adam Smith</text><circle cx="200" cy="115" r="11" fill="#1c7ed6"/><text x="200" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#1c7ed6">1911</text><text x="200" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Taylor</text><circle cx="320" cy="115" r="11" fill="#7048e8"/><text x="320" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#7048e8">1916</text><text x="320" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Fayol</text><circle cx="440" cy="115" r="11" fill="#0ca678"/><text x="440" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#0ca678">1943</text><text x="440" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Maslow</text><circle cx="560" cy="115" r="11" fill="#e8590c"/><text x="560" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#e8590c">1954</text><text x="560" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Drucker</text><circle cx="680" cy="115" r="11" fill="#e03131"/><text x="680" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#e03131">1979</text><text x="680" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Porter 5 Forces</text><circle cx="800" cy="115" r="11" fill="#d6336c"/><text x="800" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#d6336c">2010</text><text x="800" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Business Model Canvas</text><circle cx="920" cy="115" r="11" fill="#495057"/><text x="920" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#495057">2011</text><text x="920" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Lean Startup</text></svg><figcaption>🖼️ ប្រវត្តិទ្រឹស្តីគ្រប់គ្រង</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>1776</td><td><b>Adam Smith</b> — <i>The Wealth of Nations</i></td><td>ការបែងចែកការងារ (Division of labour)</td></tr><tr><td>1911</td><td><b>Frederick W. Taylor</b></td><td>Scientific management — វាស់ និងកែលម្អការងារ</td></tr><tr><td>1916</td><td><b>Henri Fayol</b></td><td>មុខងារគ្រប់គ្រង៖ ផែនការ រៀបចំ បញ្ជា សម្របសម្រួល ត្រួតពិនិត្យ</td></tr><tr><td>1943</td><td><b>Abraham Maslow</b></td><td>ឋានានុក្រមតម្រូវការ — ការលើកទឹកចិត្តបុគ្គលិក</td></tr><tr><td>1954</td><td><b>Peter Drucker</b> — <i>The Practice of Management</i></td><td>Management by objectives</td></tr><tr><td>1979–1985</td><td><b>Michael Porter</b></td><td>Five Forces · Competitive advantage · Value chain</td></tr><tr><td>2010–2011</td><td><b>Alexander Osterwalder</b> · <b>Eric Ries</b></td><td>Business Model Canvas · Lean Startup</td></tr></table>
+
+<h3>ប្រើសម្រាប់អ្វី?</h3>
+<div class="grid"><div class="card"><b>🏪 SME/ហាង</b><br>គ្រប់គ្រងលុយ ស្តុក បុគ្គលិក</div><div class="card"><b>🏢 ក្រុមហ៊ុន</b><br>Manager · Team leader</div><div class="card"><b>🚀 Startup</b><br>ពីគំនិតទៅអាជីវកម្ម</div><div class="card"><b>🏛️ NGO/រដ្ឋ</b><br>គ្រប់គ្រងគម្រោង</div></div>
+
+</section>
+<section id="setup">
+<h2>២. ត្រៀមខ្លួន</h2>
+<ol class='steps'><li>សៀវភៅកត់ត្រា ឬ Google Docs/Sheets សម្រាប់លំហាត់ និងគម្រោង។</li><li>ជ្រើស <b>អាជីវកម្មគំរូ</b> ១ ដើម្បីអនុវត្តតាមមេរៀន (ឧ. ហាងកាហ្វេ ហាងលក់ Online ឬអាជីវកម្មគ្រួសារ)។</li><li>ឧទាហរណ៍គណនាក្នុងវគ្គ បង្ហាញតែ <b>លទ្ធផល</b> — មិនចាំបាច់ចេះ Code។</li><li>ហាត់ជាមួយ <b>Business Lab</b> ចុងវគ្គ។</li></ol></section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>អាជីវកម្ម &amp; មុខងារគ្រប់គ្រង</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="202.5" height="96" rx="14" fill="#1c7ed6"/><text x="121.25" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Planning</text><text x="121.25" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">កំណត់គោលដៅ</text><line x1="224.5" y1="82" x2="250.5" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="252.5" y="34" width="202.5" height="96" rx="14" fill="#7048e8"/><text x="353.75" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Organizing</text><text x="353.75" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">រៀបចំធនធាន</text><line x1="457.0" y1="82" x2="483.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="485.0" y="34" width="202.5" height="96" rx="14" fill="#e8590c"/><text x="586.25" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Leading</text><text x="586.25" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ដឹកនាំ លើកទឹកចិត្ត</text><line x1="689.5" y1="82" x2="715.5" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="717.5" y="34" width="202.5" height="96" rx="14" fill="#2f9e44"/><text x="818.75" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Controlling</text><text x="818.75" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">វាស់ កែតម្រូវ</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">មុខងារគ្រប់គ្រង ៤ (POLC — ផ្អែកលើ Fayol)</text></svg><figcaption>🖼️ អាជីវកម្ម &amp; មុខងារគ្រប់គ្រង</figcaption></figure>
+<table><tr><th>ទម្រង់អាជីវកម្ម (ទូទៅ)</th><th>លក្ខណៈ</th></tr><tr><td>សហគ្រាសឯកបុគ្គល</td><td>ម្ចាស់ម្នាក់ · ងាយបង្កើត · ទទួលខុសត្រូវគ្មានដែនកំណត់</td></tr><tr><td>ក្រុមហ៊ុនឯកជនទទួលខុសត្រូវមានកម្រិត (Private limited company)</td><td>ម្ចាស់ភាគហ៊ុន ១–៣០ (ទូទៅ) · ទទួលខុសត្រូវត្រឹមដើមទុន</td></tr><tr><td>ក្រុមហ៊ុនមហាជន</td><td>លក់ភាគហ៊ុនជាសាធារណៈបាន</td></tr><tr><td>ការិយាល័យតំណាង/សាខា</td><td>ក្រុមហ៊ុនបរទេស</td></tr></table>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>ម្ចាស់ហាងកំណត់ «ឆ្នាំក្រោយ បើកសាខាទី ២» — ជាមុខងារគ្រប់គ្រងមួយណា?</p><details><summary>មើលចម្លើយ</summary><p><b>Planning</b>។</p></details></div>
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>Business Model Canvas</h2>
+<figure class="fig"><svg viewBox="0 0 940 200" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="200" fill="#fff"/><rect x="20.0" y="20" width="180.0" height="34" fill="#1c7ed6" stroke="#dee2e6"/><text x="110.0" y="42" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Key partners</text><rect x="200.0" y="20" width="180.0" height="34" fill="#1c7ed6" stroke="#dee2e6"/><text x="290.0" y="42" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Key activities</text><rect x="380.0" y="20" width="180.0" height="34" fill="#1c7ed6" stroke="#dee2e6"/><text x="470.0" y="42" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Value proposition</text><rect x="560.0" y="20" width="180.0" height="34" fill="#1c7ed6" stroke="#dee2e6"/><text x="650.0" y="42" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Customer relations</text><rect x="740.0" y="20" width="180.0" height="34" fill="#1c7ed6" stroke="#dee2e6"/><text x="830.0" y="42" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Customer segments</text><rect x="20.0" y="54" width="180.0" height="34" fill="#f8fafc" stroke="#dee2e6"/><text x="110.0" y="76" text-anchor="middle" font-size="13" font-weight="400" fill="#0f172a">កសិករកាហ្វេ</text><rect x="200.0" y="54" width="180.0" height="34" fill="#f8fafc" stroke="#dee2e6"/><text x="290.0" y="76" text-anchor="middle" font-size="13" font-weight="400" fill="#0f172a">ដុត · ឆុង</text><rect x="380.0" y="54" width="180.0" height="34" fill="#f8fafc" stroke="#dee2e6"/><text x="470.0" y="76" text-anchor="middle" font-size="13" font-weight="400" fill="#0f172a">កាហ្វេខ្មែរស្រស់</text><rect x="560.0" y="54" width="180.0" height="34" fill="#f8fafc" stroke="#dee2e6"/><text x="650.0" y="76" text-anchor="middle" font-size="13" font-weight="400" fill="#0f172a">Loyalty card</text><rect x="740.0" y="54" width="180.0" height="34" fill="#f8fafc" stroke="#dee2e6"/><text x="830.0" y="76" text-anchor="middle" font-size="13" font-weight="400" fill="#0f172a">សិស្ស · ភ្ញៀវទេសចរ</text><rect x="20.0" y="88" width="180.0" height="34" fill="#fff" stroke="#dee2e6"/><text x="110.0" y="110" text-anchor="middle" font-size="13" font-weight="400" fill="#0f172a">ទឹកដោះគោ</text><rect x="200.0" y="88" width="180.0" height="34" fill="#fff" stroke="#dee2e6"/><text x="290.0" y="110" text-anchor="middle" font-size="13" font-weight="400" fill="#0f172a">Resources: Barista</text><rect x="380.0" y="88" width="180.0" height="34" fill="#fff" stroke="#dee2e6"/><text x="470.0" y="110" text-anchor="middle" font-size="13" font-weight="400" fill="#0f172a">តម្លៃសមរម្យ</text><rect x="560.0" y="88" width="180.0" height="34" fill="#fff" stroke="#dee2e6"/><text x="650.0" y="110" text-anchor="middle" font-size="13" font-weight="400" fill="#0f172a">Channels: TikTok</text><rect x="740.0" y="88" width="180.0" height="34" fill="#fff" stroke="#dee2e6"/><text x="830.0" y="110" text-anchor="middle" font-size="13" font-weight="400" fill="#0f172a"></text><rect x="20.0" y="122" width="180.0" height="34" fill="#f8fafc" stroke="#dee2e6"/><text x="110.0" y="144" text-anchor="middle" font-size="13" font-weight="400" fill="#0f172a">Cost: ជួល · ប្រាក់ខែ</text><rect x="200.0" y="122" width="180.0" height="34" fill="#f8fafc" stroke="#dee2e6"/><text x="290.0" y="144" text-anchor="middle" font-size="13" font-weight="400" fill="#0f172a"></text><rect x="380.0" y="122" width="180.0" height="34" fill="#f8fafc" stroke="#dee2e6"/><text x="470.0" y="144" text-anchor="middle" font-size="13" font-weight="400" fill="#0f172a"></text><rect x="560.0" y="122" width="180.0" height="34" fill="#f8fafc" stroke="#dee2e6"/><text x="650.0" y="144" text-anchor="middle" font-size="13" font-weight="400" fill="#0f172a">Revenue: លក់កែវ</text><rect x="740.0" y="122" width="180.0" height="34" fill="#f8fafc" stroke="#dee2e6"/><text x="830.0" y="144" text-anchor="middle" font-size="13" font-weight="400" fill="#0f172a"></text><text x="470.0" y="192" text-anchor="middle" font-size="13.5" font-weight="700" fill="#0f172a">Business Model Canvas (Osterwalder) — ឧទាហរណ៍ហាងកាហ្វេ</text></svg><figcaption>🖼️ Business Model Canvas</figcaption></figure>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ចាប់ពី <b>Customer segments</b> និង <b>Value proposition</b> — អ្នកណា? ដោះស្រាយបញ្ហាអ្វី?</li><li>សរសេរដោយសម្មតិកម្ម ហើយ <b>សាកល្បង</b> ជាមួយអតិថិជនពិត (Lean Startup)។</li><li><b>MVP</b> = ផលិតផលតូចបំផុតដើម្បីរៀនពីអតិថិជន។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>ហេតុអ្វីគួរចាប់ផ្តើមពី Customer segments?</p><details><summary>មើលចម្លើយ</summary><p>គ្មានអតិថិជន = គ្មានអាជីវកម្ម — ត្រូវដឹងថា <b>អ្នកណាត្រូវការ</b> មុនរចនាផលិតផល។</p></details></div>
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>វិភាគបរិស្ថាន — SWOT · PESTEL · Porter</h2>
+<table><tr><th>ឧបករណ៍</th><th>មើលអ្វី</th></tr><tr><td>SWOT</td><td>ខាងក្នុង (S, W) + ខាងក្រៅ (O, T)</td></tr><tr><td>PESTEL</td><td>នយោបាយ សេដ្ឋកិច្ច សង្គម បច្ចេកវិទ្យា បរិស្ថាន ច្បាប់</td></tr><tr><td>Porter Five Forces</td><td>គូប្រកួត · អ្នកចូលថ្មី · ទំនិញជំនួស · អំណាចអ្នកផ្គត់ផ្គង់ · អំណាចអ្នកទិញ</td></tr></table>
+<div class="note">💡 សាក <b>🧭 SWOT</b> ក្នុង Business Lab — វាយចំណុច ហើយទទួលបានយុទ្ធសាស្ត្រ TOWS។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>តម្លៃគ្រាប់កាហ្វេពិភពលោកឡើង — ជាផ្នែកណានៃ SWOT?</p><details><summary>មើលចម្លើយ</summary><p><b>Threat</b> (កត្តាខាងក្រៅ អវិជ្ជមាន)។</p></details></div>
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>យុទ្ធសាស្ត្រ · Vision · OKR/KPI</h2>
+<table><tr><th></th><th>ឧទាហរណ៍</th></tr><tr><td>Vision</td><td>ហាងកាហ្វេខ្មែរដែលគេចូលចិត្តបំផុតនៅសៀមរាប</td></tr><tr><td>Mission</td><td>បម្រើកាហ្វេខ្មែរស្រស់ គាំទ្រកសិករក្នុងស្រុក</td></tr><tr><td>Objective (O)</td><td>បង្កើនអតិថិជនស្មោះត្រង់</td></tr><tr><td>Key results (KR)</td><td>សមាជិក Loyalty 500 នាក់ · ត្រឡប់មកវិញ ≥ 40% · Rating ≥ 4.6</td></tr><tr><td>KPI</td><td>ការលក់/ថ្ងៃ · ចំណេញដុល · ពេលរង់ចាំ</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>យុទ្ធសាស្ត្រប្រកួតប្រជែង (Porter)៖ <b>Cost leadership</b> · <b>Differentiation</b> · <b>Focus</b>។</li><li>OKR (Andy Grove → John Doerr) — គោលដៅច្បាស់ + លទ្ធផលវាស់បាន។</li><li>គោលដៅ <b>SMART</b>៖ ជាក់លាក់ វាស់បាន សម្រេចបាន ពាក់ព័ន្ធ មានពេលកំណត់។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>«ចង់លក់ឲ្យបានច្រើន» ជាគោលដៅ SMART ទេ? កែយ៉ាងណា?</p><details><summary>មើលចម្លើយ</summary><p><b>ទេ</b> — «បង្កើនការលក់ ២០% ពី $8,000 ទៅ $9,600/ខែ ត្រឹមខែមិថុនា»។</p></details></div>
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>អង្គការ &amp; ការរចនារចនាសម្ព័ន្ធ</h2>
+<table><tr><th>រចនាសម្ព័ន្ធ</th><th>សមស្រប</th></tr><tr><td>Functional</td><td>តាមផ្នែក (លក់ គណនេយ្យ…) — SME</td></tr><tr><td>Divisional</td><td>តាមផលិតផល/តំបន់</td></tr><tr><td>Matrix</td><td>គម្រោង + ផ្នែក</td></tr><tr><td>Flat</td><td>Startup តូច · សម្រេចចិត្តលឿន</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Span of control — Manager ១ គ្រប់គ្រងប៉ុន្មាននាក់។</li><li>Job description ច្បាស់ · RACI (Responsible, Accountable, Consulted, Informed)។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>ក្រុមហ៊ុនមានសាខា ៥ ខេត្ត ហើយផលិតផលខុសគ្នាតាមតំបន់។ រចនាសម្ព័ន្ធណា?</p><details><summary>មើលចម្លើយ</summary><p><b>Divisional</b> (តាមតំបន់)។</p></details></div>
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>ភាពជាអ្នកដឹកនាំ &amp; ការលើកទឹកចិត្ត</h2>
+<table><tr><th>ទ្រឹស្តី</th><th>គំនិតសំខាន់</th></tr><tr><td>Maslow (1943)</td><td>តម្រូវការរាងកាយ → សុវត្ថិភាព → សង្គម → ការគោរព → សម្រេចខ្លួន</td></tr><tr><td>Herzberg (1959)</td><td>Hygiene (ប្រាក់ខែ លក្ខខណ្ឌ) vs Motivators (ការទទួលស្គាល់ ការរីកចម្រើន)</td></tr><tr><td>Situational leadership</td><td>បត់បែនរបៀបដឹកនាំតាមសមត្ថភាពបុគ្គលិក</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ផ្តល់ <b>Feedback</b> ឆាប់ៗ ជាក់លាក់ (SBI៖ Situation–Behaviour–Impact)។</li><li>ការប្រជុំ 1:1 · ទទួលស្គាល់ការងារល្អ · ផ្លូវរីកចម្រើន។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>បុគ្គលិកទទួលប្រាក់ខែល្អ តែនៅតែគ្មានចំណង់ធ្វើការ។ Herzberg ពន្យល់យ៉ាងណា?</p><details><summary>មើលចម្លើយ</summary><p>ប្រាក់ខែ = <b>Hygiene</b> (ការពារការមិនពេញចិត្ត) — ត្រូវ <b>Motivators</b> (ទទួលស្គាល់ ទំនួលខុសត្រូវ ការរីកចម្រើន)។</p></details></div>
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>ធនធានមនុស្ស (HR)</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="156.0" height="96" rx="14" fill="#1c7ed6"/><text x="98.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">ជ្រើសរើស</text><text x="98.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">JD · សម្ភាសន៍</text><line x1="178.0" y1="82" x2="204.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="206.0" y="34" width="156.0" height="96" rx="14" fill="#7048e8"/><text x="284.0" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Onboarding</text><line x1="364.0" y1="82" x2="390.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="392.0" y="34" width="156.0" height="96" rx="14" fill="#0ca678"/><text x="470.0" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">បណ្តុះបណ្តាល</text><line x1="550.0" y1="82" x2="576.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="578.0" y="34" width="156.0" height="96" rx="14" fill="#e8590c"/><text x="656.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">វាយតម្លៃ</text><text x="656.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">KPI · 1:1</text><line x1="736.0" y1="82" x2="762.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="764.0" y="34" width="156.0" height="96" rx="14" fill="#2f9e44"/><text x="842.0" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">រក្សា/ឡើងតំណែង</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">វដ្តបុគ្គលិក</text></svg><figcaption>🖼️ ធនធានមនុស្ស (HR)</figcaption></figure>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Turnover = 33% · ថ្លៃជំនួសប៉ាន់ ≈ $1,800/ឆ្នាំ</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ធ្វើតាម <b>ច្បាប់ស្តីពីការងារ</b> (កិច្ចសន្យា ម៉ោងធ្វើការ ថ្ងៃឈប់ ប្រាក់ឈ្នួលអប្បបរមាវិស័យកាត់ដេរ ការចុះ NSSF)។</li><li>Turnover ខ្ពស់ = ថ្លៃ — ពិនិត្យមូលហេតុតាម Exit interview។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>ហេតុអ្វី Turnover ខ្ពស់ ថ្លៃសម្រាប់ហាង?</p><details><summary>មើលចម្លើយ</summary><p>ថ្លៃជ្រើសរើស បណ្តុះបណ្តាល ពេលវេលា គុណភាពសេវាធ្លាក់ និងបាត់ចំណេះ។</p></details></div>
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>ប្រតិបត្តិការ &amp; គុណភាព</h2>
+<table><tr><th>វិធីសាស្ត្រ</th><th>គំនិត</th></tr><tr><td>Lean (Toyota)</td><td>កាត់ខ្ជះខ្ជាយ ៧ ប្រភេទ (រង់ចាំ ស្តុកលើស ដឹកជញ្ជូន…)</td></tr><tr><td>5S</td><td>Sort · Set · Shine · Standardize · Sustain</td></tr><tr><td>Kaizen</td><td>កែលម្អតិចៗ ជាប្រចាំ</td></tr><tr><td>PDCA (Deming)</td><td>Plan · Do · Check · Act</td></tr><tr><td>SOP</td><td>នីតិវិធីស្តង់ដារ — គុណភាពដូចគ្នា</td></tr></table>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>សមត្ថភាព = 40 កែវ/ម៉ោង · Utilization = 100%
+⚠️ ជិតពេញ — ការរង់ចាំនឹងកើនខ្លាំង</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>ម៉ោងកំពូលមានការបញ្ជាទិញ 40/ម៉ោង តែ Barista ២ នាក់ធ្វើបាន 40/ម៉ោង។ បញ្ហា?</p><details><summary>មើលចម្លើយ</summary><p>Utilization <b>100%</b> — ជួររង់ចាំវែងខ្លាំង → បន្ថែមកម្លាំងម៉ោងកំពូល ឬកាត់ពេលធ្វើ (SOP)។</p></details></div>
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>ហិរញ្ញវត្ថុសម្រាប់ Manager</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Revenue $5,500 · Contribution $3,080 · Fixed $1,800 · Profit $1,280
+Break-even = 1,286 កែវ/ខែ · Margin of safety = 42%
+ខែ 1: Cash balance $1,400
+ខែ 2: Cash balance $700
+ខែ 3: Cash balance $400</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li><b>ចំណេញ ≠ សាច់ប្រាក់</b> — អាជីវកម្មចំណេញក៏អាចដួលដោយគ្មានសាច់ប្រាក់។</li><li>តាមដាន៖ Income statement · Balance sheet · <b>Cash flow</b>។</li><li>សាក <b>💰 Break-even</b> ក្នុង Business Lab · វគ្គ <b>គណនេយ្យ</b> សម្រាប់លម្អិត។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>ហាងចំណេញរៀងរាល់ខែ តែខែទី ២ គ្មានលុយបង់ថ្លៃជួល។ ហេតុអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Cash flow</b> អវិជ្ជមាន (ចំណាយធំក្នុងខែ ២ / លក់ជំពាក់) — ត្រូវគ្រោង Cash flow។</p></details></div>
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>ការគ្រប់គ្រងគម្រោង &amp; ការសម្រេចចិត្ត</h2>
+<table><tr><th>ឧបករណ៍</th><th>ប្រើ</th></tr><tr><td>Gantt chart</td><td>កាលវិភាគការងារ</td></tr><tr><td>Critical path</td><td>ការងារដែលពន្យារមិនបាន</td></tr><tr><td>Kanban</td><td>To do · Doing · Done</td></tr><tr><td>Decision matrix</td><td>ដាក់ពិន្ទុជម្រើសតាមលក្ខណៈវិនិច្ឆ័យ</td></tr><tr><td>Risk register</td><td>ហានិភ័យ · ប្រូបាប · ផលប៉ះពាល់ · ការការពារ</td></tr></table>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>ទីតាំង B (សាកលវិទ្យាល័យ)     ពិន្ទុ 7.75
+ទីតាំង C (Riverside)         ពិន្ទុ 7.30
+ទីតាំង A (ផ្សារ)             ពិន្ទុ 6.85</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>ហេតុអ្វីប្រើ Decision matrix ជាជាងអារម្មណ៍?</p><details><summary>មើលចម្លើយ</summary><p>សម្រេចចិត្តមាន <b>លក្ខណៈវិនិច្ឆ័យ និងទម្ងន់ច្បាស់</b> — ពន្យល់ដល់ក្រុមបាន ហើយកាត់ Bias។</p></details></div>
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>ចាប់ផ្តើមអាជីវកម្មនៅកម្ពុជា</h2>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ផែនការអាជីវកម្ម (Business plan) + ការស្រាវជ្រាវទីផ្សារ + ផែនការហិរញ្ញវត្ថុ។</li><li>ចុះបញ្ជីក្រុមហ៊ុន/អាជីវកម្ម (ក្រសួងពាណិជ្ជកម្ម — មានប្រព័ន្ធចុះបញ្ជីតាមអនឡាញ)។</li><li>ចុះបញ្ជីពន្ធ (GDT) · អាជ្ញាប័ណ្ណពាក់ព័ន្ធ (ឧ. អាហារ សុខាភិបាល) · ចុះ NSSF សម្រាប់បុគ្គលិក។</li><li>បើកគណនីធនាគារអាជីវកម្ម · KHQR សម្រាប់ទទួលប្រាក់។</li><li>ប្រភពដើមទុន៖ សន្សំ · គ្រួសារ · ធនាគារ/MFI · វិនិយោគិន · កម្មវិធីគាំទ្រ SME/Startup។</li></ol></div>
+<div class="warn">⚠️ កុំខ្ចី (ជាពិសេសដាក់ប្លង់ដី) ដោយគ្មានផែនការ Cash flow ច្បាស់ — ពិនិត្យអត្រាការប្រាក់ពិត និងលក្ខខណ្ឌមុនចុះហត្ថលេខា។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>មុនខ្ចីលុយបើកហាង គួររៀបចំឯកសារអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Business plan</b> + ការព្យាករណ៍ <b>Cash flow</b> ១២ ខែ + Break-even — បង្ហាញថាអាចសងបាន។</p></details></div>
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>ក្រមសីលធម៌ · CSR · អាជីព</h2>
+<table><tr><th>ប្រធានបទ</th><th>ឧទាហរណ៍</th></tr><tr><td>ក្រមសីលធម៌</td><td>មិនស៊ីសំណូក · ស្មោះត្រង់ជាមួយអតិថិជន</td></tr><tr><td>CSR/ESG</td><td>គាំទ្រកសិករ · កាត់ប្លាស្ទិក · សុវត្ថិភាពការងារ</td></tr><tr><td>អាជីព</td><td>Business analyst · Operations manager · HR · Project manager · សហគ្រិន</td></tr><tr><td>ជំនាញ</td><td>Communication · Excel/Data · Leadership · Negotiation · ភាសាអង់គ្លេស</td></tr></table>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>អតិថិជនរកឃើញថាហាងប្រើគ្រាប់កាហ្វេនាំចូល ប៉ុន្តែផ្សព្វផ្សាយថា «១០០% ខ្មែរ»។ ផលវិបាក?</p><details><summary>មើលចម្លើយ</summary><p>បាត់ <b>ទំនុកចិត្ត</b> (Reputation) និងអាចប៉ះច្បាប់ការពារអ្នកប្រើប្រាស់ — ត្រូវស្មោះត្រង់។</p></details></div>
+</section>
+<section id="cheat">
+<h2>📋 សង្ខេប (Cheat sheet)</h2>
+<table><tr><th>ពាក្យ / រូបមន្ត</th><th>ន័យ</th></tr><tr><td>POLC</td><td>Planning · Organizing · Leading · Controlling</td></tr><tr><td>SWOT/TOWS</td><td>ខាងក្នុង + ខាងក្រៅ → យុទ្ធសាស្ត្រ</td></tr><tr><td>SMART</td><td>ជាក់លាក់ · វាស់បាន · សម្រេចបាន · ពាក់ព័ន្ធ · ពេលកំណត់</td></tr><tr><td>OKR</td><td>Objective + Key results</td></tr><tr><td>Break-even</td><td>Fixed ÷ (Price − Variable)</td></tr><tr><td>PDCA</td><td>Plan · Do · Check · Act</td></tr><tr><td>Cash ≠ Profit</td><td>គ្រោង Cash flow</td></tr></table>
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងចុងវគ្គ</h2>
+<ol class='steps'><li>ជ្រើសគំនិតអាជីវកម្ម ១ · សម្ភាសអតិថិជនគោលដៅ ១០ នាក់។</li><li>Business Model Canvas + SWOT/TOWS។</li><li>Vision · OKR ១ ត្រីមាស · KPI ៥។</li><li>ផែនការហិរញ្ញវត្ថុ៖ ចំណាយចាប់ផ្តើម · Break-even · Cash flow ១២ ខែ។</li><li>Pitch ៥ នាទី (១០ Slides)។</li></ol></section>
+<section id="pro-app">
+<h2>💻 Business Lab (App)</h2>
+
+<p><b>🧭 SWOT + TOWS</b> · <b>💰 Break-even</b> (ក្រាហ្វ + Margin of safety) · <b>📣 Funnel &amp; ROAS</b> (CPC, CAC, ROAS, CLV) · <b>📦 EOQ &amp; Stock</b> (Safety stock, Reorder point) · <b>🚢 Landed cost</b> (FOB → CIF → ពន្ធ → ថ្លៃដើម/ឯកតា) — ដំណើរការក្នុង Browser។</p>
+
+<div class="itk" id="bz">
+<div class="itk-tabs"><button class="on" data-t="sw">🧭 SWOT</button><button data-t="be">💰 Break-even</button><button data-t="fn">📣 Funnel &amp; ROAS</button><button data-t="eq">📦 EOQ &amp; Stock</button><button data-t="lc">🚢 Landed cost</button></div>
+
+<div class="itk-p on" data-p="sw">
+ <p class="vl-tip">វាយ ១ ចំណុចក្នុង ១ ជួរ — App នឹងបង្កើតតារាង SWOT និងយុទ្ធសាស្ត្រ TOWS។ (ឧទាហរណ៍៖ ហាងកាហ្វេនៅសៀមរាប)</p>
+ <div class="itk-row"><label>💪 Strengths<textarea id="sw_s" rows="3" style="width:100%">កាហ្វេគ្រាប់ខ្មែរ (មណ្ឌលគិរី) គុណភាពល្អ
+បុគ្គលិកនិយាយអង់គ្លេសបាន</textarea></label></div>
+ <div class="itk-row"><label>⚠️ Weaknesses<textarea id="sw_w" rows="3" style="width:100%">ទីតាំងឆ្ងាយផ្លូវធំ
+គ្មានប្រព័ន្ធ Online order</textarea></label></div>
+ <div class="itk-row"><label>🌱 Opportunities<textarea id="sw_o" rows="3" style="width:100%">ភ្ញៀវទេសចរកើនឡើង
+អ្នកប្រើ TikTok/Facebook ច្រើន</textarea></label></div>
+ <div class="itk-row"><label>🌩️ Threats<textarea id="sw_t" rows="3" style="width:100%">ហាងខ្សែសង្វាក់ធំៗ
+តម្លៃគ្រាប់កាហ្វេឡើង</textarea></label></div>
+ <div class="itk-out" id="sw_out"></div>
+</div>
+
+<div class="itk-p" data-p="be">
+ <div class="itk-row"><label>តម្លៃលក់/ឯកតា ($)<input id="be_p" type="number" value="2.5" step="0.1" style="width:80px"></label><label>ថ្លៃអថេរ/ឯកតា ($)<input id="be_v" type="number" value="1.1" step="0.1" style="width:80px"></label></div>
+ <div class="itk-row"><label>ថ្លៃថេរ/ខែ ($)<input id="be_f" type="number" value="1800" style="width:90px"></label><label>គោលដៅចំណេញ ($)<input id="be_t" type="number" value="1000" style="width:90px"></label><label>លក់/ខែ (ប៉ាន់)<input id="be_q" type="number" value="2200" style="width:90px"></label></div>
+ <div class="itk-out" id="be_out"></div>
+</div>
+
+<div class="itk-p" data-p="fn">
+ <div class="itk-row"><label>ថវិកាផ្សាយ ($)<input id="fn_b" type="number" value="500" style="width:90px"></label><label>CPM ($ / 1000 views)<input id="fn_cpm" type="number" value="2" step="0.1" style="width:80px"></label></div>
+ <div class="itk-row"><label>CTR (%)<input id="fn_ctr" type="number" value="1.5" step="0.1" style="width:70px"></label><label>Conversion rate (%)<input id="fn_cvr" type="number" value="3" step="0.1" style="width:70px"></label><label>តម្លៃលក់មធ្យម ($)<input id="fn_aov" type="number" value="25" style="width:70px"></label></div>
+ <div class="itk-row"><label>Gross margin (%)<input id="fn_m" type="number" value="40" style="width:70px"></label><label>ទិញឡើងវិញ/ឆ្នាំ (ដង)<input id="fn_r" type="number" value="3" step="0.5" style="width:70px"></label></div>
+ <div class="itk-out" id="fn_out"></div>
+</div>
+
+<div class="itk-p" data-p="eq">
+ <div class="itk-row"><label>តម្រូវការ/ឆ្នាំ (ឯកតា)<input id="eq_d" type="number" value="12000" style="width:90px"></label><label>ថ្លៃបញ្ជាទិញ/ដង ($)<input id="eq_s" type="number" value="40" style="width:80px"></label><label>ថ្លៃរក្សាទុក/ឯកតា/ឆ្នាំ ($)<input id="eq_h" type="number" value="1.5" step="0.1" style="width:80px"></label></div>
+ <div class="itk-row"><label>Lead time (ថ្ងៃ)<input id="eq_l" type="number" value="7" style="width:70px"></label><label>SD តម្រូវការ/ថ្ងៃ<input id="eq_sd" type="number" value="8" style="width:70px"></label><label>Service level<select id="eq_z"><option value="1.28">90%</option><option value="1.65" selected>95%</option><option value="2.33">99%</option></select></label></div>
+ <div class="itk-out" id="eq_out"></div>
+</div>
+
+<div class="itk-p" data-p="lc">
+ <p class="vl-tip">គណនា <b>Landed cost</b> ទំនិញនាំចូល (ឧទាហរណ៍)។ អត្រាពន្ធពិតប្រាកដ អាស្រ័យលើ HS code — ពិនិត្យជាមួយអគ្គនាយកដ្ឋានគយ និងរដ្ឋាករ ឬភ្នាក់ងារគយ។</p>
+ <div class="itk-row"><label>តម្លៃ FOB ($)<input id="lc_fob" type="number" value="10000" style="width:90px"></label><label>ថ្លៃដឹកសមុទ្រ ($)<input id="lc_fr" type="number" value="1200" style="width:80px"></label><label>ធានារ៉ាប់រង (%)<input id="lc_in" type="number" value="0.5" step="0.1" style="width:70px"></label></div>
+ <div class="itk-row"><label>ពន្ធគយ (%)<input id="lc_du" type="number" value="15" style="width:70px"></label><label>VAT (%)<input id="lc_vat" type="number" value="10" style="width:70px"></label><label>ថ្លៃផែ/ភ្នាក់ងារ/ដឹកក្នុងស្រុក ($)<input id="lc_lo" type="number" value="450" style="width:80px"></label><label>ចំនួនឯកតា<input id="lc_n" type="number" value="2000" style="width:80px"></label></div>
+ <div class="itk-out" id="lc_out"></div>
+</div>
+</div>
+<script>
+(() => {
+const $ = id => document.getElementById(id), root = $("bz"), v = id => +$(id).value || 0;
+root.querySelectorAll(".itk-tabs button").forEach(b => b.onclick = () => { root.querySelectorAll(".itk-tabs button").forEach(x => x.classList.toggle("on", x === b)); root.querySelectorAll(".itk-p").forEach(p => p.classList.toggle("on", p.dataset.p === b.dataset.t)); });
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const f = (x, d = 0) => Number.isFinite(x) ? x.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d }) : "—";
+const card = (t, val, c = "#1c7ed6") => `<div style="flex:1;min-width:120px;background:#fff;border:1px solid #dee2e6;border-radius:12px;padding:10px;color:#0f172a"><div style="font-size:12px;color:#64748b">${t}</div><div style="font-size:19px;font-weight:800;color:${c}">${val}</div></div>`;
+const row = h => `<div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0">${h}</div>`;
+/* SWOT */
+function sw() { const L = id => $(id).value.split(/\n/).map(s => s.trim()).filter(Boolean);
+  const S = L("sw_s"), W = L("sw_w"), O = L("sw_o"), T = L("sw_t"), box = (t, a, bg) => `<div style="background:${bg};border-radius:10px;padding:8px;color:#0f172a"><b>${t}</b><ul style="margin:4px 0 0 18px;padding:0">${a.map(x => `<li>${esc(x)}</li>`).join("") || "<li>—</li>"}</ul></div>`;
+  const pair = (a, b, verb) => a.length && b.length ? `${verb} «${esc(a[0])}» + «${esc(b[0])}»` : "—";
+  $("sw_out").innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${box("💪 Strengths", S, "#ebfbee")}${box("⚠️ Weaknesses", W, "#fff4e6")}${box("🌱 Opportunities", O, "#e7f5ff")}${box("🌩️ Threats", T, "#fff5f5")}</div>
+  <p><b>TOWS — យុទ្ធសាស្ត្រ</b></p><ul><li><b>SO</b> (ប្រើកម្លាំង ចាប់ឱកាស)៖ ${pair(S, O, "ប្រើ")}</li><li><b>WO</b> (កែចំណុចខ្សោយ តាមឱកាស)៖ ${pair(W, O, "ដោះស្រាយ")}</li><li><b>ST</b> (ប្រើកម្លាំង ការពារការគំរាម)៖ ${pair(S, T, "ប្រើ")}</li><li><b>WT</b> (កាត់បន្ថយហានិភ័យ)៖ ${pair(W, T, "កាត់បន្ថយ")}</li></ul>`; }
+["sw_s", "sw_w", "sw_o", "sw_t"].forEach(id => $(id).oninput = sw);
+/* Break-even */
+function be() { const p = v("be_p"), vc = v("be_v"), F = v("be_f"), T = v("be_t"), q = v("be_q"), cm = p - vc;
+  if (cm <= 0) { $("be_out").innerHTML = "⚠️ តម្លៃលក់ត្រូវធំជាងថ្លៃអថេរ"; return; }
+  const bq = F / cm, tq = (F + T) / cm, prof = q * cm - F, mos = (q - bq) / q * 100, W = 400, H = 210, qmax = Math.max(q, bq) * 1.5, ymax = qmax * p;
+  const X = x => 40 + x / qmax * (W - 60), Y = y => 15 + (1 - y / ymax) * (H - 45);
+  $("be_out").innerHTML = row(card("Contribution margin", "$" + f(cm, 2) + " (" + f(cm / p * 100, 1) + "%)") + card("Break-even", f(Math.ceil(bq)) + " ឯកតា", "#e8590c") + card("គោលដៅចំណេញ", f(Math.ceil(tq)) + " ឯកតា", "#7048e8") + card("ចំណេញ ពេលលក់ " + f(q), (prof >= 0 ? "$" : "−$") + f(Math.abs(prof)), prof >= 0 ? "#2f9e44" : "#e03131"))
+  + `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;background:#fff;border-radius:10px"><line x1="40" y1="${H - 30}" x2="${W - 20}" y2="${H - 30}" stroke="#94a3b8"/><line x1="${X(0)}" y1="${Y(0)}" x2="${X(qmax)}" y2="${Y(qmax * p)}" stroke="#2f9e44" stroke-width="3"/><line x1="${X(0)}" y1="${Y(F)}" x2="${X(qmax)}" y2="${Y(F + qmax * vc)}" stroke="#e03131" stroke-width="3"/><line x1="${X(0)}" y1="${Y(F)}" x2="${X(qmax)}" y2="${Y(F)}" stroke="#adb5bd" stroke-dasharray="5 4"/><circle cx="${X(bq)}" cy="${Y(bq * p)}" r="6" fill="#e8590c"/><text x="${X(bq) + 8}" y="${Y(bq * p) + 16}" font-size="12">BEP</text><text x="${W - 22}" y="${Y(qmax * p) + 14}" font-size="12" text-anchor="end" fill="#2f9e44">ចំណូល</text><text x="${W - 22}" y="${Y(F + qmax * vc) - 6}" font-size="12" text-anchor="end" fill="#e03131">ថ្លៃសរុប</text></svg>
+  <br>Margin of safety៖ <b>${f(mos, 1)}%</b> ${mos < 10 ? "⚠️ ជិត Break-even ពេក" : "✅"}`; }
+["be_p", "be_v", "be_f", "be_t", "be_q"].forEach(id => $(id).oninput = be);
+/* Funnel */
+function fn() { const B = v("fn_b"), imp = B / Math.max(v("fn_cpm"), .01) * 1000, clk = imp * v("fn_ctr") / 100, ord = clk * v("fn_cvr") / 100, rev = ord * v("fn_aov"), m = v("fn_m") / 100;
+  const cpc = B / clk, cac = B / ord, roas = rev / B, gp = rev * m - B, clv = v("fn_aov") * m * v("fn_r"), beRoas = 1 / m;
+  const st = [["👀 Impressions", imp], ["🖱️ Clicks", clk], ["🛒 Orders", ord]], mx = imp;
+  $("fn_out").innerHTML = st.map(([t, x], i) => `<div style="margin:4px auto;width:${Math.max(28, 100 - i * 30)}%;background:${["#1c7ed6", "#7048e8", "#2f9e44"][i]};color:#fff;border-radius:8px;padding:6px 10px;text-align:center">${t}: <b>${f(x)}</b></div>`).join("")
+  + row(card("CPC", "$" + f(cpc, 2)) + card("CAC", "$" + f(cac, 2), "#e8590c") + card("ROAS", f(roas, 2) + "×", roas >= beRoas ? "#2f9e44" : "#e03131") + card("ចំណេញក្រោយផ្សាយ", (gp >= 0 ? "$" : "−$") + f(Math.abs(gp)), gp >= 0 ? "#2f9e44" : "#e03131"))
+  + `ROAS ដើម្បីរួចខ្លួន (Break-even ROAS) = 1 ÷ margin = <b>${f(beRoas, 2)}×</b> · CLV (១ ឆ្នាំ, Gross profit) ≈ <b>$${f(clv, 2)}</b> → CLV ÷ CAC = <b>${f(clv / cac, 2)}</b> ${clv / cac >= 3 ? "✅ ល្អ (≥ 3)" : clv / cac >= 1 ? "🟡 រួចខ្លួនក្នុងរយៈពេលវែង" : "🔴 ខាត — ថ្លៃទាញអតិថិជនខ្ពស់ពេក"}`; }
+["fn_b", "fn_cpm", "fn_ctr", "fn_cvr", "fn_aov", "fn_m", "fn_r"].forEach(id => $(id).oninput = fn);
+/* EOQ */
+function eq() { const D = v("eq_d"), S = v("eq_s"), H = v("eq_h"), L = v("eq_l"), sd = v("eq_sd"), z = +$("eq_z").value;
+  const Q = Math.sqrt(2 * D * S / H), d = D / 365, ss = z * sd * Math.sqrt(L), rop = d * L + ss, n = D / Q, tc = n * S + Q / 2 * H;
+  const W = 400, H2 = 160, cyc = 365 / n, days = Math.min(365, cyc * 3.2), X = t => 30 + t / days * (W - 45), Y = q => 12 + (1 - q / (Q + ss) ) * (H2 - 35);
+  let pts = []; for (let t = 0; t <= days; t += days / 200) { const ph = t % cyc; pts.push(X(t) + "," + Y(ss + Q - Q * ph / cyc)); }
+  $("eq_out").innerHTML = row(card("EOQ", f(Q) + " ឯកតា") + card("បញ្ជាទិញ/ឆ្នាំ", f(n, 1) + " ដង", "#7048e8") + card("Safety stock", f(ss) + " ឯកតា", "#e8590c") + card("Reorder point", f(rop) + " ឯកតា", "#e03131"))
+  + `<svg viewBox="0 0 ${W} ${H2}" style="width:100%;max-width:${W}px;background:#fff;border-radius:10px"><polyline points="${pts.join(" ")}" fill="none" stroke="#1c7ed6" stroke-width="2.5"/><line x1="30" y1="${Y(rop)}" x2="${W - 15}" y2="${Y(rop)}" stroke="#e03131" stroke-dasharray="5 4"/><text x="${W - 15}" y="${Y(rop) - 4}" font-size="11" text-anchor="end" fill="#e03131">Reorder point</text><line x1="30" y1="${Y(ss)}" x2="${W - 15}" y2="${Y(ss)}" stroke="#e8590c" stroke-dasharray="2 3"/><text x="${W - 15}" y="${Y(ss) + 12}" font-size="11" text-anchor="end" fill="#e8590c">Safety stock</text></svg>
+  <br>ថ្លៃបញ្ជាទិញ + រក្សាទុក/ឆ្នាំ ≈ <b>$${f(tc)}</b> · តម្រូវការមធ្យម ${f(d, 1)}/ថ្ងៃ · ពេលស្តុកនៅ <b>${f(rop)}</b> → បញ្ជាទិញ <b>${f(Q)}</b>`; }
+["eq_d", "eq_s", "eq_h", "eq_l", "eq_sd"].forEach(id => $(id).oninput = eq); $("eq_z").onchange = eq;
+/* Landed cost */
+function lc() { const fob = v("lc_fob"), fr = v("lc_fr"), ins = (fob + fr) * v("lc_in") / 100, cif = fob + fr + ins, duty = cif * v("lc_du") / 100, vat = (cif + duty) * v("lc_vat") / 100, lo = v("lc_lo"), n = Math.max(1, v("lc_n"));
+  const tot = cif + duty + vat + lo, parts = [["FOB", fob, "#1c7ed6"], ["Freight", fr, "#7048e8"], ["Insurance", ins, "#0ca678"], ["ពន្ធគយ", duty, "#e8590c"], ["VAT", vat, "#e03131"], ["ផែ/ភ្នាក់ងារ/ដឹក", lo, "#868e96"]];
+  $("lc_out").innerHTML = `<div style="display:flex;height:26px;border-radius:8px;overflow:hidden">${parts.map(p => `<span title="${p[0]}" style="width:${p[1] / tot * 100}%;background:${p[2]}"></span>`).join("")}</div>
+  <div style="overflow-x:auto"><table><tr><th>ធាតុ</th><th>$</th><th>%</th></tr>${parts.map(p => `<tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${p[2]}"></span> ${p[0]}</td><td>${f(p[1], 2)}</td><td>${f(p[1] / tot * 100, 1)}%</td></tr>`).join("")}<tr><th>CIF (FOB+Freight+Insurance)</th><th>${f(cif, 2)}</th><th></th></tr><tr><th>Landed cost សរុប</th><th>${f(tot, 2)}</th><th>100%</th></tr></table></div>
+  ថ្លៃដើម/ឯកតា = <b>$${f(tot / n, 2)}</b> (FOB/ឯកតា $${f(fob / n, 2)} → ឡើង ${f((tot / fob - 1) * 100, 1)}%) · ⚠️ VAT ក្រុមហ៊ុនចុះបញ្ជី VAT អាចយកមកកាត់កង (Input VAT) — ពិនិត្យជាមួយគណនេយ្យករ។`; }
+["lc_fob", "lc_fr", "lc_in", "lc_du", "lc_vat", "lc_lo", "lc_n"].forEach(id => $(id).oninput = lc);
+sw(); be(); fn(); eq(); lc();
+})();
+</script>
+
+<h3>🏆 Quiz ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["Wealth of Nations ឆ្នាំ?", ["1776", "1911", "1954", "2010"], 0], ["Scientific management?", ["Taylor", "Maslow", "Porter", "Ries"], 0], ["មុខងារគ្រប់គ្រង Fayol?", ["Henri Fayol", "Adam Smith", "Drucker", "Deming"], 0], ["P ក្នុង POLC?", ["Planning", "Price", "People", "Profit"], 0], ["Business Model Canvas?", ["Osterwalder", "Porter", "Taylor", "Kotler"], 0], ["MVP?", ["ផលិតផលតូចបំផុតដើម្បីរៀន", "Most valuable player", "ផលិតផលល្អបំផុត", "តម្លៃខ្ពស់"], 0], ["តម្លៃគ្រាប់ឡើង?", ["Threat", "Strength", "Weakness", "Opportunity"], 0], ["Five Forces?", ["Porter", "Fayol", "Maslow", "Herzberg"], 0], ["Differentiation ជា?", ["យុទ្ធសាស្ត្រប្រកួតប្រជែង", "HR", "ពន្ធ", "Logistics"], 0], ["SMART: M =", ["Measurable", "Money", "Market", "Manager"], 0], ["KR ក្នុង OKR?", ["Key results", "Khmer riel", "Keep running", "Key risk"], 0], ["សាខា ៥ ខេត្ត?", ["Divisional", "Flat", "Functional តែប៉ុណ្ណោះ", "None"], 0], ["ប្រាក់ខែ (Herzberg)?", ["Hygiene", "Motivator", "Vision", "KPI"], 0], ["Maslow ខ្ពស់បំផុត?", ["Self-actualization", "Safety", "Food", "Social"], 0], ["PDCA ដោយ?", ["Deming", "Drucker", "Smith", "Ries"], 0], ["5S S ទីមួយ?", ["Sort", "Sell", "Save", "Smile"], 0], ["Utilization 100%?", ["ជួររង់ចាំវែង", "ល្អឥតខ្ចោះ", "គ្មានអតិថិជន", "ចំណេញច្រើន"], 0], ["ចំណេញ តែគ្មានលុយ?", ["Cash flow", "SWOT", "OKR", "5S"], 0], ["Break-even 1800/(2.5−1.1)?", ["≈1286", "720", "1800", "2500"], 0], ["Critical path?", ["ការងារពន្យារមិនបាន", "ផ្លូវហាង", "Logo", "ពន្ធ"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+<ol class='steps'><li><b>Business Management</b> (វគ្គនេះ) ✅</li><li>Digital Marketing · Logistics &amp; Supply Chain</li><li>គណនេយ្យ (៤ ឆ្នាំ) · Excel វិភាគទិន្នន័យ · Power BI</li><li>ភាសាអង់គ្លេស (Business English) · Project management (PMP/CAPM)</li></ol></section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="bm"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

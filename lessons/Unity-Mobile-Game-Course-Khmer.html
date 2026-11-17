@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន Unity Mobile Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#3b2a1a; --accent2:#e8590c; --accent-soft:#fff4e6;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#ffa94d; --accent2:#ffc078; --accent-soft:#2b1a0b;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#ffa94d; --accent2:#ffc078; --accent-soft:#2b1a0b;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#0b0b0f,#3b2a1a 45%,#e8590c);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/unity.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/unity.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Game ទូរស័ព្ទជាមួយ Unity &amp; C#</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Unity &amp; Game ទូរស័ព្ទ</a>
+<a href="#install">២. ដំឡើង Unity Hub &amp; Project</a>
+<a href="#elements">៣. ធាតុនីមួយៗរបស់ Unity</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: GameObject, Component &amp; Script ដំបូង</a>
+<a href="#l2">មេរៀន ២: Game Loop &amp; Time.deltaTime</a>
+<a href="#l3">មេរៀន ៣: Vector &amp; ចលនា (Movement)</a>
+<a href="#l4">មេរៀន ៤: Physics 2D៖ Rigidbody, Gravity &amp; Jump</a>
+<a href="#l5">មេរៀន ៥: Collision &amp; Trigger៖ ប្រមូលកាក់ និងឧបសគ្គ</a>
+<a href="#l6">មេរៀន ៦: Touch Input៖ Tap, Swipe &amp; Joystick</a>
+<a href="#l7">មេរៀន ៧: Prefab, Spawning &amp; Object Pooling</a>
+<a href="#l8">មេរៀន ៨: UI, Score, Game Over &amp; Scenes</a>
+<a href="#l9">មេរៀន ៩: Animation, Audio, Particles &amp; Game Feel</a>
+<a href="#l10">មេរៀន ១០: ScriptableObject, Level Data &amp; Save</a>
+<a href="#l11">មេរៀន ១១: Mobile Performance &amp; ទំហំអេក្រង់</a>
+<a href="#l12">មេរៀន ១២: Build &amp; Publish៖ Android, iOS, Ads &amp; IAP</a>
+<a href="#cheat">📋 Cheat Sheet</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងអាជីព៖ Kafe Runner (Endless runner 2D)</a>
+<a href="#pro-app">💻 Unity Lab Pro (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🎮 Unity — បង្កើត Game ទូរស័ព្ទ Android &amp; iOS</h2>
+  <p>GameObject &amp; Component, <b>C# MonoBehaviour</b>, Game loop &amp; deltaTime, Vector, <b>Physics 2D</b>, Collision/Trigger, <b>Touch &amp; Swipe</b>, Prefab &amp; Object pooling, UI &amp; Scenes, Animation/Audio/Particles, ScriptableObject, Performance និង Publish — មាន Demo លេងបានគ្រប់មេរៀន និងហ្គេម Kafe Runner ពេញលេញ។</p>
+  <p><span class="badge">📘 ១២ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">💻 Code មានពណ៌ + លទ្ធផល</span><span class="badge">🎮 Unity Lab Pro</span></p>
+</section>
+<section id="intro">
+<h2>១. Unity &amp; Game ទូរស័ព្ទ</h2>
+
+<p><b>Unity</b> គឺជា <b>Game engine</b> ពេញនិយមបំផុតសម្រាប់ហ្គេមទូរស័ព្ទ ដែលអ្នកសរសេរ Logic ជាភាសា <b>C#</b> ហើយ Export ទៅ <b>Android, iOS</b>, PC, Console និង Web ពី Project តែមួយ។ Unity មាន Editor ដែលអូស-ទម្លាក់ (Drag &amp; drop) Physics, Animation, Audio, UI ស្រាប់ — អ្នកផ្តោតលើការលេង (Gameplay)។ <button class="btn say" data-say="Unity game engine">🔊 អានពាក្យ</button></p>
+<figure class="fig"><svg viewBox="0 0 940 280" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="280" fill="#fff"/><rect x="20" y="100" width="170" height="80" rx="14" fill="#222"/><text x="105.0" y="134.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🎬 Scene</text><text x="105.0" y="156.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Level1.unity</text><rect x="250" y="100" width="190" height="80" rx="14" fill="#495057"/><text x="345.0" y="134.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🧱 GameObject</text><text x="345.0" y="156.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Player</text><line x1="192" y1="140" x2="246" y2="140" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="219.0" y="132.0" text-anchor="middle" font-size="13" fill="#334155">មាន</text><rect x="510" y="12" width="270" height="44" rx="14" fill="#1c7ed6"/><text x="645.0" y="28.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Transform</text><text x="645.0" y="50.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">position · rotation · scale</text><rect x="510" y="64" width="270" height="44" rx="14" fill="#e8590c"/><text x="645.0" y="80.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">SpriteRenderer</text><text x="645.0" y="102.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">រូបភាព</text><rect x="510" y="116" width="270" height="44" rx="14" fill="#2f9e44"/><text x="645.0" y="132.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Rigidbody2D</text><text x="645.0" y="154.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Physics · gravity</text><rect x="510" y="168" width="270" height="44" rx="14" fill="#f08c00"/><text x="645.0" y="184.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">BoxCollider2D</text><text x="645.0" y="206.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ប៉ះ / Trigger</text><rect x="510" y="220" width="270" height="44" rx="14" fill="#7048e8"/><text x="645.0" y="236.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">PlayerController.cs</text><text x="645.0" y="258.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Script C# របស់អ្នក</text><line x1="442" y1="140" x2="506" y2="34" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="442" y1="140" x2="506" y2="86" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="442" y1="140" x2="506" y2="138" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="442" y1="140" x2="506" y2="190" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="442" y1="140" x2="506" y2="242" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="810" y="100" width="120" height="80" rx="14" fill="#c92a2a"/><text x="870.0" y="134.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">📦 Prefab</text><text x="870.0" y="156.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">គំរូ Copy</text><text x="470" y="272" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Unity = GameObject + Components (Composition) · Script ក៏ជា Component មួយ</text></svg><figcaption>🖼️ Scene → GameObject → Components</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>ព្រឹត្តិការណ៍</th></tr><tr><td>2004</td><td><b>David Helgason, Joachim Ante, Nicholas Francis</b> បង្កើតក្រុមហ៊ុន (Copenhagen, ដាណឺម៉ាក)</td></tr><tr><td>2005</td><td><b>Unity 1.0</b> បង្ហាញនៅ Apple WWDC (Mac តែប៉ុណ្ណោះ)</td></tr><tr><td>2008–2010</td><td>គាំទ្រ iPhone បន្ទាប់មក Android → ផ្ទុះហ្គេមទូរស័ព្ទ</td></tr><tr><td>2017→</td><td>C# ជាភាសាតែមួយ (លុប UnityScript/Boo)</td></tr><tr><td>2024</td><td><b>Unity 6</b> (LTS) — Render ល្អ, Build Profiles, Multiplayer ថ្មី</td></tr></table>
+
+<div class="grid"><div class="card"><b>🎮 ហ្គេមល្បី</b><br>Pokémon GO · Genshin Impact · Among Us · Monument Valley</div><div class="card"><b>📱 Mobile</b><br>ហ្គេមទូរស័ព្ទជាច្រើនបំផុតប្រើ Unity</div><div class="card"><b>🥽 AR/VR</b><br>AR Foundation · Meta Quest · Vision Pro</div><div class="card"><b>🏗️ ក្រៅពីហ្គេម</b><br>Simulation, ស្ថាបត្យកម្ម, ការបណ្តុះបណ្តាល</div></div>
+
+<table><tr><th>Engine</th><th>ភាសា</th><th>ចំណាំ</th></tr><tr><td><b>Unity</b></td><td>C#</td><td>Mobile 2D/3D ពេញនិយមបំផុត · Asset Store ធំ</td></tr><tr><td>Unreal</td><td>C++ / Blueprint</td><td>Graphics 3D ខ្លាំង · ធ្ងន់សម្រាប់ទូរស័ព្ទ</td></tr><tr><td>Godot</td><td>GDScript / C#</td><td>Open source ឥតគិតថ្លៃ · ស្រាល</td></tr><tr><td>Flutter Flame / Phaser</td><td>Dart / JS</td><td>ហ្គេម 2D សាមញ្ញ</td></tr></table>
+
+</section>
+<section id="install">
+<h2>២. ដំឡើង Unity Hub &amp; Project</h2>
+
+<ol class="steps"><li>ទាញយក <b>Unity Hub</b> (unity.com/download) → Login (Unity Personal ឥតគិតថ្លៃសម្រាប់ចំណូលក្រោមកម្រិតកំណត់ — ពិនិត្យលក្ខខណ្ឌចុងក្រោយ)។</li>
+<li>Installs → <b>Unity 6 (LTS)</b> + Modules៖ <b>Android Build Support</b> (OpenJDK, SDK &amp; NDK) និង <b>iOS Build Support</b> (Mac)។</li>
+<li>New project → Template <b>Universal 2D</b> (ឬ 3D Mobile) → ឈ្មោះ <code class='i'>KafeRunner</code>។</li>
+<li>Editor៖ <b>Visual Studio</b> / <b>JetBrains Rider</b> / VS Code + Unity extension។</li>
+<li>សាកលើទូរស័ព្ទ៖ <b>Unity Remote</b> ឬ Build &amp; Run ទៅទូរស័ព្ទ Android (USB debugging)។</li></ol>
+<script type="text/x-code" data-lang="txt" data-label="Editor windows">
+Unity Editor
+├── Hierarchy   ← GameObject ក្នុង Scene (Player, Camera, Ground…)
+├── Scene view  ← កែ/រៀបចំ Level
+├── Game view   ← មើលដូចអ្នកលេង (ជ្រើស Resolution ទូរស័ព្ទ)
+├── Inspector   ← Components + តម្លៃ (speed, jumpForce…)
+├── Project     ← Assets/ (Scripts, Sprites, Prefabs, Scenes, Audio)
+└── Console     ← Debug.Log, Error
+</script>
+
+<div class="note">💡 Unity មិនអាចរត់ក្នុង Browser នេះបានទេ ដូច្នេះ Code C# ជា Unity 6 API ដែលពិនិត្យដោយដៃ។ ប៉ុន្តែគំនិតនីមួយៗ (Game loop, deltaTime, Physics, Collision, Touch, Pooling, Juice) មាន <b>Demo ដែលលេងបានពិត</b> ក្នុង Browser ដោយ JavaScript ដែលធ្វើតាមរបៀប Unity — និងហ្គេម <b>Kafe Runner</b> ពេញលេញក្នុង App អាជីព។</div>
+
+</section>
+<section id="elements">
+<h2>៣. ធាតុនីមួយៗរបស់ Unity</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 190" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="190" fill="#fff"/><rect x="10" y="40" width="120" height="70" rx="14" fill="#495057"/><text x="70.0" y="69.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Awake()</text><text x="70.0" y="91.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ម្តង · ដំបូងបំផុត</text><rect x="143" y="40" width="120" height="70" rx="14" fill="#1c7ed6"/><text x="203.0" y="69.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Start()</text><text x="203.0" y="91.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ម្តង · មុន Frame ១</text><rect x="276" y="40" width="120" height="70" rx="14" fill="#2f9e44"/><text x="336.0" y="69.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">FixedUpdate()</text><text x="336.0" y="91.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Physics · 50/វិ</text><rect x="409" y="40" width="120" height="70" rx="14" fill="#e8590c"/><text x="469.0" y="69.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Update()</text><text x="469.0" y="91.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">រាល់ Frame · Input</text><rect x="542" y="40" width="120" height="70" rx="14" fill="#f08c00"/><text x="602.0" y="69.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">LateUpdate()</text><text x="602.0" y="91.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Camera follow</text><rect x="675" y="40" width="120" height="70" rx="14" fill="#7048e8"/><text x="735.0" y="69.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">OnTrigger…</text><text x="735.0" y="91.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Event ប៉ះ</text><rect x="808" y="40" width="120" height="70" rx="14" fill="#c92a2a"/><text x="868.0" y="69.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">OnDestroy()</text><text x="868.0" y="91.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ចុងក្រោយ</text><line x1="132" y1="75" x2="141" y2="75" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="265" y1="75" x2="274" y2="75" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="398" y1="75" x2="407" y2="75" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="531" y1="75" x2="540" y2="75" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="664" y1="75" x2="673" y2="75" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="797" y1="75" x2="806" y2="75" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><path d="M600 112 Q470 160 340 112" fill="none" stroke="#475569" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ar)"/><text x="470" y="178" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">Game loop៖ FixedUpdate/Update/LateUpdate រត់ម្តងហើយម្តងទៀត (60 FPS = 60 ដង/វិនាទី)</text></svg><figcaption>🖼️ MonoBehaviour lifecycle</figcaption></figure>
+
+<table><tr><th>ធាតុ</th><th>ពន្យល់</th><th>មេរៀន</th></tr><tr><td>Scene · GameObject · Component</td><td>Level · វត្ថុ · មុខងារភ្ជាប់វត្ថុ</td><td>១</td></tr><tr><td>MonoBehaviour</td><td>Class C# ដែលជា Component (Start/Update)</td><td>២</td></tr><tr><td>Transform · Vector2/3</td><td>ទីតាំង · ទិស · ល្បឿន</td><td>៣</td></tr><tr><td>Rigidbody2D · Collider2D</td><td>Physics · ការប៉ះ</td><td>៤ · ៥</td></tr><tr><td>Input System</td><td>Touch, Swipe, Keyboard</td><td>៦</td></tr><tr><td>Prefab · Instantiate · Pool</td><td>បង្កើតវត្ថុច្រើន</td><td>៧</td></tr><tr><td>Canvas · TextMeshPro · SceneManager</td><td>UI, ពិន្ទុ, ប្តូរ Scene</td><td>៨</td></tr><tr><td>Animator · AudioSource · Particle System</td><td>ចលនា សំឡេង ផលប៉ះពាល់</td><td>៩</td></tr><tr><td>ScriptableObject · PlayerPrefs/JSON</td><td>ទិន្នន័យ Level · Save</td><td>១០</td></tr><tr><td>Profiler · Safe area · Build Profiles</td><td>ល្បឿន · អេក្រង់ · Publish</td><td>១១ · ១២</td></tr></table>
+
+</section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>GameObject, Component &amp; Script ដំបូង</h2>
+
+<script type="text/x-code" data-lang="cs" data-label="Spinner.cs">
+using UnityEngine;
+
+// Script = Component ដែលភ្ជាប់ទៅ GameObject (អូសទម្លាក់ក្នុង Inspector)
+public class Spinner : MonoBehaviour
+{
+    [SerializeField] private float degreesPerSecond = 180f;   // បង្ហាញក្នុង Inspector កែបាន
+    [SerializeField] private Color tint = Color.yellow;
+
+    private SpriteRenderer sr;
+
+    void Awake()
+    {
+        sr = GetComponent<SpriteRenderer>();                  // យក Component ផ្សេងលើ GameObject ដដែល
+    }
+
+    void Start()
+    {
+        sr.color = tint;
+        Debug.Log($"{name} ចាប់ផ្តើមនៅ {transform.position}");
+    }
+
+    void Update()
+    {
+        transform.Rotate(0f, 0f, degreesPerSecond * Time.deltaTime);
+    }
+}
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>ឧទាហរណ៍លទ្ធផល (Unity Console)</span></div><pre>Coffee ចាប់ផ្តើមនៅ (0.00, 1.50, 0.00)</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>class Spinner : MonoBehaviour</code> — Script Unity ទាំងអស់ Inherit ពី MonoBehaviour · ឈ្មោះ File ត្រូវដូចឈ្មោះ Class។</li><li><code class='i'>[SerializeField] private</code> — Field ឯកជន តែបង្ហាញក្នុង <b>Inspector</b> (Designer កែតម្លៃបានដោយមិនកែ Code)។</li><li><code class='i'>GetComponent&lt;T&gt;()</code> — យក Component ផ្សេង (Cache ក្នុង Awake កុំហៅរាល់ Frame)។</li><li><code class='i'>transform</code> — Component ដែល GameObject គ្រប់មាន (position, rotation, scale)។</li><li><code class='i'>Debug.Log</code> — បង្ហាញក្នុង Console (ដូច print)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>ធ្វើឲ្យ Coffee លោតឡើងចុះ (Bobbing) ដោយប្រើ <code class='i'>Mathf.Sin</code>។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="cs" data-label="answer.cs">
+Vector3 start;
+void Start() => start = transform.position;
+void Update() => transform.position = start + Vector3.up * Mathf.Sin(Time.time * 3f) * 0.2f;
+</script>
+</details></div>
+
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>Game Loop &amp; Time.deltaTime</h2>
+
+<script type="text/x-code" data-lang="html" data-label="game_loop.html · ▶ ចុចសាក (ក្លែង Unity ក្នុង Browser)" data-demo>
+<style>body{margin:0;font-family:sans-serif;background:#1e1e2e;color:#eee;user-select:none}canvas{display:block;background:#2b2d42;border-radius:10px;touch-action:none;max-width:100%}.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;margin:6px 0}button{border:0;border-radius:8px;padding:6px 10px;background:#4dabf7;color:#111;font-weight:700}</style>
+<canvas id="c" width="320" height="150"></canvas>
+<div class="bar"><label>FPS ក្លែង <input id="fps" type="range" min="10" max="60" value="60"> <b id="fv">60</b></label>
+<span>🟦 ប្រើ deltaTime · 🟥 គ្មាន deltaTime</span></div>
+<script>
+const c = document.getElementById("c"), g = c.getContext("2d");
+let a = 0, b = 0, last = performance.now(), acc = 0;
+const SPEED = 80;                                   // px ក្នុងមួយ "វិនាទី"
+function frame(now) {
+  const fps = +document.getElementById("fps").value; document.getElementById("fv").textContent = fps;
+  acc += now - last; last = now;
+  if (acc >= 1000 / fps) {                          // ក្លែងទូរស័ព្ទ FPS ទាប
+    const dt = acc / 1000; acc = 0;
+    a = (a + SPEED * dt) % 320;                     // ✅ transform.position += speed * Time.deltaTime
+    b = (b + SPEED / 60) % 320;                     // ❌ += speed/60 រាល់ Frame
+    g.clearRect(0, 0, 320, 150);
+    g.fillStyle = "#4dabf7"; g.fillRect(a, 30, 30, 30);
+    g.fillStyle = "#ff6b6b"; g.fillRect(b, 90, 30, 30);
+    g.fillStyle = "#ccc"; g.fillText("dt = " + dt.toFixed(3) + "s", 8, 14);
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+<\/script>
+</script>
+
+<script type="text/x-code" data-lang="cs" data-label="Mover.cs">
+public class Mover : MonoBehaviour
+{
+    [SerializeField] float speed = 5f;   // Unit ក្នុងមួយវិនាទី
+
+    void Update()                        // រាល់ Frame (30/60/120 ដង/វិនាទី អាស្រ័យទូរស័ព្ទ)
+    {
+        // ✅ ល្បឿនដូចគ្នាលើទូរស័ព្ទខ្សោយ និងខ្លាំង
+        transform.position += Vector3.right * speed * Time.deltaTime;
+    }
+
+    void FixedUpdate()                   // ចន្លោះថេរ (0.02s) — សម្រាប់ Physics/Rigidbody
+    {
+    }
+}
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Game loop</b>៖ Engine ហៅ <code class='i'>Update()</code> រាល់ Frame — 60 FPS = 60 ដង/វិនាទី។</li><li><code class='i'>Time.deltaTime</code> = ពេលវេលា (វិនាទី) ចាប់ពី Frame មុន · គុណល្បឿននឹង deltaTime → ល្បឿន <b>ក្នុងមួយវិនាទី</b> មិនមែនក្នុងមួយ Frame។</li><li>Demo៖ បន្ថយ FPS ទៅ 15 → ប្រអប់ក្រហម (គ្មាន deltaTime) យឺត ៤ ដង តែប្រអប់ខៀវនៅល្បឿនដដែល ✅។</li><li><code class='i'>FixedUpdate()</code> — ចន្លោះថេរ សម្រាប់ Physics (Rigidbody) · <code class='i'>Update()</code> សម្រាប់ Input និងចលនាមិនមែន Physics។</li><li><code class='i'>Awake</code> → <code class='i'>Start</code> → (FixedUpdate/Update/LateUpdate)… → <code class='i'>OnDestroy</code> (រូបភាពខាងលើ)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>ទូរស័ព្ទមួយរត់ 30 FPS មួយទៀត 120 FPS។ Code <code class='i'>x += 0.1f</code> ក្នុង Update ធ្វើឲ្យខុសគ្នាប៉ុន្មានដង?</p><details><summary>មើលចម្លើយ</summary><p><b>៤ ដង</b> (120 / 30) — ទូរស័ព្ទខ្លាំងរត់លឿនជាង។ ត្រូវ <code class='i'>x += speed * Time.deltaTime</code>។</p></details></div>
+
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Vector &amp; ចលនា (Movement)</h2>
+
+<script type="text/x-code" data-lang="html" data-label="movement.html · ▶ ចុចសាក (ក្លែង Unity ក្នុង Browser)" data-demo>
+<style>body{margin:0;font-family:sans-serif;background:#1e1e2e;color:#eee;user-select:none}canvas{display:block;background:#2b2d42;border-radius:10px;touch-action:none;max-width:100%}.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;margin:6px 0}button{border:0;border-radius:8px;padding:6px 10px;background:#4dabf7;color:#111;font-weight:700}</style>
+<canvas id="c" width="320" height="200"></canvas>
+<div class="bar">⌨️ Arrow/WASD ឬ 👆 អូសលើ Canvas · <label><input type="checkbox" id="n" checked> normalized</label> <span id="info"></span></div>
+<script>
+const c = document.getElementById("c"), g = c.getContext("2d"), keys = {};
+let p = { x: 160, y: 100 }, touch = null, last = performance.now();
+onkeydown = (e) => keys[e.key.toLowerCase()] = true; onkeyup = (e) => keys[e.key.toLowerCase()] = false;
+c.onpointerdown = (e) => touch = { x0: e.offsetX, y0: e.offsetY, x: e.offsetX, y: e.offsetY };
+c.onpointermove = (e) => { if (touch) { touch.x = e.offsetX; touch.y = e.offsetY; } };
+c.onpointerup = () => touch = null;
+function loop(now) {
+  const dt = (now - last) / 1000; last = now;
+  let dx = (keys.arrowright || keys.d ? 1 : 0) - (keys.arrowleft || keys.a ? 1 : 0);
+  let dy = (keys.arrowdown || keys.s ? 1 : 0) - (keys.arrowup || keys.w ? 1 : 0);
+  if (touch) { dx = touch.x - touch.x0; dy = touch.y - touch.y0; }     // Virtual joystick
+  let len = Math.hypot(dx, dy);
+  if (document.getElementById("n").checked && len > 1) { dx /= len; dy /= len; len = 1; }
+  else if (touch && len > 0) { dx /= 40; dy /= 40; }
+  p.x = Math.max(12, Math.min(308, p.x + dx * 120 * dt));
+  p.y = Math.max(12, Math.min(188, p.y + dy * 120 * dt));
+  g.clearRect(0, 0, 320, 200);
+  if (touch) { g.strokeStyle = "#888"; g.beginPath(); g.arc(touch.x0, touch.y0, 30, 0, 7); g.stroke(); }
+  g.font = "22px sans-serif"; g.fillText("☕", p.x - 11, p.y + 8);
+  document.getElementById("info").textContent = "speed × " + Math.hypot(dx, dy).toFixed(2);
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+<\/script>
+</script>
+
+<script type="text/x-code" data-lang="cs" data-label="TopDownMover.cs">
+using UnityEngine;
+
+public class TopDownMover : MonoBehaviour
+{
+    [SerializeField] float speed = 4f;
+    [SerializeField] Vector2 minBounds = new(-2.5f, -4.5f), maxBounds = new(2.5f, 4.5f);
+
+    public Vector2 Input { get; set; }        // ពី Joystick/Keyboard (មេរៀន ៦)
+
+    void Update()
+    {
+        Vector2 dir = Vector2.ClampMagnitude(Input, 1f);   // ✅ ទិសទ្រេតមិនលឿនជាង (√2 = 1.41×)
+        Vector2 next = (Vector2)transform.position + dir * speed * Time.deltaTime;
+        next.x = Mathf.Clamp(next.x, minBounds.x, maxBounds.x);
+        next.y = Mathf.Clamp(next.y, minBounds.y, maxBounds.y);
+        transform.position = next;
+
+        if (dir.sqrMagnitude > 0.01f)                       // បង្វិលទៅទិសដើរ
+        {
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
+        }
+    }
+}
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Vector2(x, y)</b> = ទិស + ទំហំ · <code class='i'>Vector2.right/up</code> = (1,0)/(0,1)។</li><li>ចុច → និង ↑ ព្រមគ្នា = (1,1) មានប្រវែង √2 ≈ <b>1.41</b> → ដើរទ្រេតលឿនជាង · <b>Normalize/ClampMagnitude</b> ធ្វើឲ្យប្រវែង ≤ 1 (បិទ/បើក normalized ក្នុង Demo ហើយមើល speed ×)។</li><li><code class='i'>Mathf.Clamp</code> — កុំឲ្យចេញក្រៅអេក្រង់ · <code class='i'>Mathf.Atan2</code> — រកមុំពីទិស (គណិតពីវគ្គ Math for IT)។</li><li>Virtual joystick៖ ចម្ងាយពីចំណុចចុច → ទិស (Demo៖ អូសលើ Canvas)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>ធ្វើឲ្យ Enemy ដើរទៅរក Player។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="cs" data-label="answer.cs">
+Vector2 dir = (player.position - transform.position).normalized;
+transform.position += (Vector3)(dir * speed * Time.deltaTime);
+// ឬ: Vector2.MoveTowards(transform.position, player.position, speed * Time.deltaTime)
+</script>
+</details></div>
+
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Physics 2D៖ Rigidbody, Gravity &amp; Jump</h2>
+
+<script type="text/x-code" data-lang="html" data-label="jump_physics.html · ▶ ចុចសាក (ក្លែង Unity ក្នុង Browser)" data-demo>
+<style>body{margin:0;font-family:sans-serif;background:#1e1e2e;color:#eee;user-select:none}canvas{display:block;background:#2b2d42;border-radius:10px;touch-action:none;max-width:100%}.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;margin:6px 0}button{border:0;border-radius:8px;padding:6px 10px;background:#4dabf7;color:#111;font-weight:700}</style>
+<canvas id="c" width="320" height="200"></canvas>
+<div class="bar"><button id="j">⬆️ Jump (ឬ Space/Tap)</button>
+<label>gravity <input id="gv" type="range" min="200" max="1600" value="900"></label>
+<label>jumpForce <input id="jf" type="range" min="150" max="600" value="380"></label></div>
+<script>
+const c = document.getElementById("c"), g = c.getContext("2d"), GROUND = 170;
+let y = GROUND, vy = 0, grounded = true, last = performance.now(), acc = 0;
+const STEP = 1 / 50;                                  // FixedUpdate 0.02s
+function jump() { if (grounded) { vy = -document.getElementById("jf").value; grounded = false; } }
+document.getElementById("j").onclick = jump; c.onpointerdown = jump; onkeydown = (e) => e.code === "Space" && jump();
+function fixedUpdate() {
+  vy += document.getElementById("gv").value * STEP;   // v += g·dt
+  y += vy * STEP;                                     // y += v·dt
+  if (y >= GROUND) { y = GROUND; vy = 0; grounded = true; }
+}
+function loop(now) {
+  acc += Math.min(0.25, (now - last) / 1000); last = now;
+  while (acc >= STEP) { fixedUpdate(); acc -= STEP; }  // ដូច Unity: FixedUpdate ច្រើនដងបើ Frame យឺត
+  g.clearRect(0, 0, 320, 200);
+  g.fillStyle = "#6c757d"; g.fillRect(0, GROUND + 15, 320, 15);
+  g.font = "28px sans-serif"; g.fillText("🧋", 140, y + 12);
+  g.fillStyle = "#ccc"; g.font = "12px sans-serif"; g.fillText("velocity.y = " + (-vy).toFixed(0) + (grounded ? "  (grounded)" : ""), 8, 16);
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+<\/script>
+</script>
+
+<script type="text/x-code" data-lang="cs" data-label="PlayerJump.cs">
+using UnityEngine;
+
+[RequireComponent(typeof(Rigidbody2D))]
+public class PlayerJump : MonoBehaviour
+{
+    [SerializeField] float jumpForce = 12f;
+    [SerializeField] LayerMask groundLayer;
+    [SerializeField] Transform groundCheck;          // Empty object នៅជើង Player
+
+    Rigidbody2D rb;
+    bool jumpQueued;
+
+    void Awake() => rb = GetComponent<Rigidbody2D>();
+
+    public void Jump() => jumpQueued = true;          // ហៅពី Input (Update) — កុំប៉ះ Physics នៅទីនេះ
+
+    void FixedUpdate()
+    {
+        bool grounded = Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundLayer);
+        if (jumpQueued && grounded)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);     // Unity 6 (ចាស់: rb.velocity)
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        }
+        jumpQueued = false;
+    }
+}
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Rigidbody2D</b> — Unity គណនា Gravity, ល្បឿន, ការប៉ះ ឲ្យស្វ័យប្រវត្តិ (Inspector៖ Gravity Scale, Mass, Freeze Rotation)។</li><li>Physics = <code class='i'>v += g·dt</code> ហើយ <code class='i'>y += v·dt</code> រៀងរាល់ <b>FixedUpdate</b> (0.02s) — Demo ធ្វើតាមដូចគ្នា។</li><li><code class='i'>AddForce(..., ForceMode2D.Impulse)</code> — រុញភ្លាមៗ (លោត) · Reset velocity.y មុន ដើម្បីលោតស្មើគ្នា។</li><li><b>Ground check</b>៖ <code class='i'>Physics2D.OverlapCircle</code> លើ Layer "Ground" → កុំឲ្យលោតលើអាកាស។</li><li>Input អានក្នុង Update · ប្រើ Physics ក្នុង FixedUpdate (Queue <code class='i'>jumpQueued</code>)។ សាកប្តូរ gravity/jumpForce ក្នុង Demo!</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>ចង់បាន "Variable jump"៖ ចុចយូរ លោតខ្ពស់ · លែងលឿន លោតទាប។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="cs" data-label="answer.cs">
+if (!jumpHeld && rb.linearVelocity.y > 0)
+    rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f);   // កាត់ល្បឿនឡើងពេលលែង
+</script>
+</details></div>
+
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>Collision &amp; Trigger៖ ប្រមូលកាក់ និងឧបសគ្គ</h2>
+
+<script type="text/x-code" data-lang="html" data-label="collisions.html · ▶ ចុចសាក (ក្លែង Unity ក្នុង Browser)" data-demo>
+<style>body{margin:0;font-family:sans-serif;background:#1e1e2e;color:#eee;user-select:none}canvas{display:block;background:#2b2d42;border-radius:10px;touch-action:none;max-width:100%}.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;margin:6px 0}button{border:0;border-radius:8px;padding:6px 10px;background:#4dabf7;color:#111;font-weight:700}</style>
+<canvas id="c" width="320" height="200"></canvas>
+<div class="bar">👆 អូស ☕ ប្រមូល 🫘 · ជៀស 🧱 · <b id="s">Score 0</b></div>
+<script>
+const c = document.getElementById("c"), g = c.getContext("2d");
+let p = { x: 40, y: 100, r: 14 }, score = 0, hit = 0, items = [];
+for (let i = 0; i < 6; i++) items.push({ x: 80 + Math.random() * 220, y: 20 + Math.random() * 160, r: 10, tag: i < 4 ? "Coin" : "Wall" });
+c.onpointermove = (e) => { if (e.buttons || e.pointerType === "touch") { p.x = e.offsetX; p.y = e.offsetY; } };
+function overlaps(a, b) { return Math.hypot(a.x - b.x, a.y - b.y) < a.r + b.r; }   // CircleCollider2D
+(function loop() {
+  for (const it of items) {
+    if (!it.dead && overlaps(p, it)) {
+      if (it.tag === "Coin") { it.dead = true; score += 10; }          // OnTriggerEnter2D → Destroy
+      else { hit = 12; p.x -= 20; }                                     // OnCollisionEnter2D → រុញថយ
+    }
+  }
+  g.clearRect(0, 0, 320, 200);
+  g.font = "20px sans-serif";
+  for (const it of items) if (!it.dead) g.fillText(it.tag === "Coin" ? "🫘" : "🧱", it.x - 10, it.y + 7);
+  g.globalAlpha = hit-- > 0 ? 0.4 : 1; g.fillText("☕", p.x - 10, p.y + 7); g.globalAlpha = 1;
+  document.getElementById("s").textContent = "Score " + score + (items.every((i) => i.dead || i.tag !== "Coin") ? " 🎉" : "");
+  requestAnimationFrame(loop);
+})();
+<\/script>
+</script>
+
+<script type="text/x-code" data-lang="cs" data-label="PlayerCollector.cs">
+using UnityEngine;
+
+public class PlayerCollector : MonoBehaviour
+{
+    [SerializeField] AudioClip coinSfx;
+    public int Score { get; private set; }
+
+    // Collider ធីក "Is Trigger" → ឆ្លងកាត់បាន (កាក់, ចំណុចឆែក)
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Coin"))
+        {
+            Score += 10;
+            AudioSource.PlayClipAtPoint(coinSfx, other.transform.position);
+            Destroy(other.gameObject);                   // ឬ ត្រឡប់ទៅ Pool (មេរៀន ៧)
+        }
+    }
+
+    // Collider ធម្មតា → ប៉ះហើយទប់ (ជញ្ជាំង, ឧបសគ្គ)
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            GameManager.Instance.GameOver();
+        }
+    }
+}
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Collider2D</b> (Box/Circle/Polygon) — រាងសម្រាប់ប៉ះ · ត្រូវមាន <b>Rigidbody2D</b> យ៉ាងតិចម្ខាង ទើប Event កើត។</li><li><b>Is Trigger ✅</b> → <code class='i'>OnTriggerEnter2D</code> (ឆ្លងកាត់ — កាក់) · គ្មាន Trigger → <code class='i'>OnCollisionEnter2D</code> (ទប់ — ជញ្ជាំង)។</li><li><code class='i'>CompareTag("Coin")</code> — សម្គាល់ប្រភេទវត្ថុ (លឿនជាង <code class='i'>tag ==</code>) · <b>Layers</b> + Collision matrix កំណត់អ្វីប៉ះអ្វី។</li><li>Demo ប្រើ Circle collider៖ ប៉ះពេល <code class='i'>ចម្ងាយ &lt; r1 + r2</code> — Unity គណនាដូចគ្នា (ប៉ុន្តែលឿន និងរាងច្រើនប្រភេទ)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>Player ធ្លាក់ក្រោមអេក្រង់ ចង់ Game over។ ប្រើអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>ដាក់ GameObject "KillZone" មាន BoxCollider2D (Is Trigger) ទទឹងពេញនៅខាងក្រោម → ក្នុង <code class='i'>OnTriggerEnter2D</code> ពិនិត្យ <code class='i'>other.CompareTag("Player")</code> → GameOver។</p></details></div>
+
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Touch Input៖ Tap, Swipe &amp; Joystick</h2>
+
+<script type="text/x-code" data-lang="html" data-label="touch_gestures.html · ▶ ចុចសាក (ក្លែង Unity ក្នុង Browser)" data-demo>
+<style>body{margin:0;font-family:sans-serif;background:#1e1e2e;color:#eee;user-select:none}canvas{display:block;background:#2b2d42;border-radius:10px;touch-action:none;max-width:100%}.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;margin:6px 0}button{border:0;border-radius:8px;padding:6px 10px;background:#4dabf7;color:#111;font-weight:700}</style>
+<canvas id="c" width="320" height="180"></canvas>
+<div class="bar" id="out">👆 Tap ឬ Swipe លើ Canvas (Mouse ក៏បាន)</div>
+<script>
+const c = document.getElementById("c"), g = c.getContext("2d"), out = document.getElementById("out");
+let start = null, trail = [];
+c.onpointerdown = (e) => { start = { x: e.offsetX, y: e.offsetY, t: performance.now() }; trail = [start]; };
+c.onpointermove = (e) => { if (start) trail.push({ x: e.offsetX, y: e.offsetY }); };
+c.onpointerup = (e) => {
+  if (!start) return;
+  const dx = e.offsetX - start.x, dy = e.offsetY - start.y, dist = Math.hypot(dx, dy), ms = performance.now() - start.t;
+  let gesture;
+  if (dist < 15 && ms < 250) gesture = "TAP 👆 → Jump";
+  else if (dist >= 40 && ms < 500) {
+    gesture = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? "SWIPE → ប្តូរផ្លូវស្តាំ" : "SWIPE ← ប្តូរផ្លូវឆ្វេង") : (dy < 0 ? "SWIPE ↑ Jump" : "SWIPE ↓ Slide");
+  } else gesture = "DRAG / HOLD (" + ms.toFixed(0) + "ms)";
+  out.textContent = gesture + " · distance " + dist.toFixed(0) + "px · " + ms.toFixed(0) + "ms";
+  start = null;
+};
+(function draw() {
+  g.clearRect(0, 0, 320, 180); g.strokeStyle = "#4dabf7"; g.lineWidth = 4; g.beginPath();
+  trail.forEach((p, i) => (i ? g.lineTo(p.x, p.y) : g.moveTo(p.x, p.y))); g.stroke();
+  requestAnimationFrame(draw);
+})();
+<\/script>
+</script>
+
+<script type="text/x-code" data-lang="cs" data-label="SwipeInput.cs">
+using UnityEngine;
+using UnityEngine.InputSystem.EnhancedTouch;
+using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
+
+public class SwipeInput : MonoBehaviour
+{
+    [SerializeField] float minSwipePixels = 80f, maxTapSeconds = 0.25f;
+    [SerializeField] RunnerController runner;
+
+    void OnEnable() => EnhancedTouchSupport.Enable();
+    void OnDisable() => EnhancedTouchSupport.Disable();
+
+    void Update()
+    {
+        foreach (var t in Touch.activeTouches)
+        {
+            if (t.phase != UnityEngine.InputSystem.TouchPhase.Ended) continue;
+            Vector2 delta = t.screenPosition - t.startScreenPosition;
+            float dpiScale = Screen.dpi > 0 ? Screen.dpi / 160f : 1f;     // ទូរស័ព្ទ DPI ខុសគ្នា
+
+            if (delta.magnitude < minSwipePixels * dpiScale)
+            {
+                if (t.time - t.startTime < maxTapSeconds) runner.Jump();   // Tap
+            }
+            else if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
+                runner.ChangeLane(delta.x > 0 ? 1 : -1);                   // Swipe ← →
+            else if (delta.y < 0)
+                runner.Slide();                                            // Swipe ↓
+            else
+                runner.Jump();                                             // Swipe ↑
+        }
+    }
+}
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Input System</b> (Package ថ្មី) — Touch, Keyboard, Gamepad · <code class='i'>EnhancedTouch</code> មាន startScreenPosition, phase, time។</li><li><b>Tap</b> = ចម្ងាយតូច + ពេលខ្លី · <b>Swipe</b> = ចម្ងាយ ≥ កម្រិត · ទិស = ធៀប |dx| និង |dy| (Demo ធ្វើដូចគ្នា)។</li><li>គុណកម្រិតនឹង <code class='i'>Screen.dpi</code> — ទូរស័ព្ទអេក្រង់ក្រាស់ (High DPI) មាន Pixel ច្រើនជាង។</li><li>Input តែ <b>អាន</b> ហើយហៅ Method លើ Controller (Jump/ChangeLane) → ងាយប្តូរ Input (Keyboard សម្រាប់ Test ក្នុង Editor)។</li><li>Joystick៖ ប្រើ <b>On-Screen Stick</b> component ឬ Package Joystick ពី Asset Store។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>ហេតុអ្វីមិនអាន Touch ក្នុង FixedUpdate?</p><details><summary>មើលចម្លើយ</summary><p>FixedUpdate អាចរត់ ០ ឬច្រើនដងក្នុងមួយ Frame → អាចរំលង ឬអាន Touch ស្ទួន។ អានក្នុង Update ហើយ Queue សកម្មភាព Physics (មេរៀន ៤)។</p></details></div>
+
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Prefab, Spawning &amp; Object Pooling</h2>
+
+<script type="text/x-code" data-lang="html" data-label="pooling.html · ▶ ចុចសាក (ក្លែង Unity ក្នុង Browser)" data-demo>
+<style>body{margin:0;font-family:sans-serif;background:#1e1e2e;color:#eee;user-select:none}canvas{display:block;background:#2b2d42;border-radius:10px;touch-action:none;max-width:100%}.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;margin:6px 0}button{border:0;border-radius:8px;padding:6px 10px;background:#4dabf7;color:#111;font-weight:700}</style>
+<canvas id="c" width="320" height="160"></canvas>
+<div class="bar"><label><input type="checkbox" id="pool" checked> ប្រើ Pool</label> <span id="st"></span></div>
+<script>
+const c = document.getElementById("c"), g = c.getContext("2d");
+let active = [], pool = [], created = 0, destroyed = 0, t = 0;
+function get() { const usePool = document.getElementById("pool").checked;
+  let o = usePool && pool.pop(); if (!o) { o = {}; created++; }               // Instantiate (ថ្លៃ)
+  Object.assign(o, { x: 330, y: 20 + Math.random() * 120, v: 90 + Math.random() * 90 }); active.push(o); }
+function release(o) { active.splice(active.indexOf(o), 1);
+  if (document.getElementById("pool").checked) pool.push(o); else destroyed++; } // Pool vs Destroy (GC)
+let last = performance.now();
+(function loop(now = performance.now()) {
+  const dt = (now - last) / 1000; last = now; t += dt;
+  if (t > 0.15) { t = 0; get(); }
+  for (const o of [...active]) { o.x -= o.v * dt; if (o.x < -20) release(o); }
+  g.clearRect(0, 0, 320, 160); g.font = "18px sans-serif";
+  active.forEach((o) => g.fillText("🫘", o.x, o.y));
+  document.getElementById("st").textContent = `active ${active.length} · in pool ${pool.length} · created ${created} · destroyed ${destroyed}`;
+  requestAnimationFrame(loop);
+})();
+<\/script>
+</script>
+
+<script type="text/x-code" data-lang="cs" data-label="BeanSpawner.cs">
+using UnityEngine;
+using UnityEngine.Pool;
+
+public class BeanSpawner : MonoBehaviour
+{
+    [SerializeField] Bean beanPrefab;                // Prefab (អូសពី Project)
+    [SerializeField] float interval = 0.6f;
+    ObjectPool<Bean> pool;
+    float timer;
+
+    void Awake()
+    {
+        pool = new ObjectPool<Bean>(
+            createFunc: () => { var b = Instantiate(beanPrefab); b.Pool = pool; return b; },
+            actionOnGet: b => b.gameObject.SetActive(true),
+            actionOnRelease: b => b.gameObject.SetActive(false),
+            actionOnDestroy: b => Destroy(b.gameObject),
+            defaultCapacity: 20, maxSize: 100);
+    }
+
+    void Update()
+    {
+        timer += Time.deltaTime;
+        if (timer < interval) return;
+        timer = 0f;
+        Bean b = pool.Get();
+        b.transform.position = new Vector3(4f, Random.Range(-1f, 2.5f), 0f);
+    }
+}
+
+public class Bean : MonoBehaviour
+{
+    public IObjectPool<Bean> Pool { get; set; }
+    void Update()
+    {
+        transform.position += Vector3.left * 3f * Time.deltaTime;
+        if (transform.position.x < -4f) Pool.Release(this);      // ជំនួស Destroy(gameObject)
+    }
+}
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Prefab</b> = គំរូ GameObject (រូប + Collider + Script) រក្សាក្នុង Project · <code class='i'>Instantiate(prefab)</code> បង្កើត Copy។</li><li><code class='i'>Instantiate/Destroy</code> ញឹកញាប់ → Garbage Collector រត់ → ហ្គេម <b>ទាក់ (Stutter)</b> លើទូរស័ព្ទ។</li><li><b>Object pooling</b>៖ លាក់ (SetActive false) ហើយប្រើឡើងវិញ · Unity មាន <code class='i'>UnityEngine.Pool.ObjectPool&lt;T&gt;</code> ស្រាប់។</li><li>Demo៖ បើក Pool → <b>created</b> ឈប់កើននៅប្រហែល 12–15 · បិទ Pool → created/destroyed កើនរហូត (ការងារ GC ច្រើន)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>ហេតុអ្វីកំណត់ <code class='i'>maxSize</code> ឲ្យ Pool?</p><details><summary>មើលចម្លើយ</summary><p>កុំឲ្យ Pool រក្សា Object រាប់ពាន់ក្នុង Memory ពេលមានការកើនមួយភ្លែត · លើស maxSize → Destroy វិញ។</p></details></div>
+
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>UI, Score, Game Over &amp; Scenes</h2>
+
+<script type="text/x-code" data-lang="cs" data-label="GameManager.cs">
+using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class GameManager : MonoBehaviour
+{
+    public static GameManager Instance { get; private set; }       // Singleton
+
+    [SerializeField] TMP_Text scoreText, bestText;
+    [SerializeField] GameObject gameOverPanel;
+
+    int score;
+    const string BestKey = "best_score";
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        Instance = this;
+        Application.targetFrameRate = 60;                               // Mobile: កំណត់ FPS
+    }
+
+    void Start()
+    {
+        bestText.text = $"Best {PlayerPrefs.GetInt(BestKey, 0)}";
+        gameOverPanel.SetActive(false);
+    }
+
+    public void AddScore(int value)
+    {
+        score += value;
+        scoreText.text = score.ToString("N0");
+    }
+
+    public void GameOver()
+    {
+        Time.timeScale = 0f;                                             // ផ្អាកហ្គេម
+        if (score > PlayerPrefs.GetInt(BestKey, 0))
+        {
+            PlayerPrefs.SetInt(BestKey, score);
+            PlayerPrefs.Save();
+        }
+        gameOverPanel.SetActive(true);
+    }
+
+    public void Restart()                                                // ភ្ជាប់ទៅ Button OnClick()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+}
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar" style="background:#222">Kafe Runner</div><div class="ph-body"><div style="display:flex;justify-content:space-between;font-weight:800"><span>☕ 1,250</span><span style="color:#888">Best 2,040</span></div><div class="ph-center"><div style="text-align:center;background:rgba(0,0,0,.75);color:#fff;border-radius:16px;padding:18px"><div style="font-size:22px;font-weight:800">GAME OVER</div><div>Score 1,250</div><span class="ph-btn" style="display:inline-block;margin-top:10px;background:#f08c00">🔄 លេងម្តងទៀត</span></div></div></div></div><figcaption>📱 UI៖ Score + Game over panel</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Canvas</b> + <b>TextMeshPro</b> (<code class='i'>TMP_Text</code>) — UI អក្សរច្បាស់គ្រប់ទំហំ (Font ខ្មែរ៖ បង្កើត TMP Font Asset ពី Khmer OS/Kantumruy Pro)។</li><li><b>Singleton</b> <code class='i'>GameManager.Instance</code> — Script ផ្សេងហៅ <code class='i'>AddScore()</code> ងាយ (ប្រើដោយប្រុងប្រយ័ត្ន)។</li><li><code class='i'>PlayerPrefs</code> — រក្សាទិន្នន័យតូច (High score, Setting) លើទូរស័ព្ទ។</li><li><code class='i'>Time.timeScale = 0</code> — ផ្អាក (Update នៅរត់ តែ deltaTime = 0) · ត្រឡប់ 1 ពេល Restart។</li><li><code class='i'>SceneManager.LoadScene</code> — ប្តូរ/Reload Scene (Menu → Game → Result) · Scene ត្រូវបញ្ចូលក្នុង Build Profiles។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>Button "Pause" ចង់ផ្អាក/បន្ត។ សរសេរ Method។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="cs" data-label="answer.cs">
+bool paused;
+public void TogglePause()
+{
+    paused = !paused;
+    Time.timeScale = paused ? 0f : 1f;
+    pausePanel.SetActive(paused);
+}
+</script>
+</details></div>
+
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Animation, Audio, Particles &amp; Game Feel</h2>
+
+<script type="text/x-code" data-lang="html" data-label="game_feel.html · ▶ ចុចសាក (ក្លែង Unity ក្នុង Browser)" data-demo>
+<style>body{margin:0;font-family:sans-serif;background:#1e1e2e;color:#eee;user-select:none}canvas{display:block;background:#2b2d42;border-radius:10px;touch-action:none;max-width:100%}.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;margin:6px 0}button{border:0;border-radius:8px;padding:6px 10px;background:#4dabf7;color:#111;font-weight:700}</style>
+<canvas id="c" width="320" height="170"></canvas>
+<div class="bar"><button id="b">💥 Hit!</button> <label><input type="checkbox" id="shake" checked> Screen shake</label> <label><input type="checkbox" id="part" checked> Particles</label> <label><input type="checkbox" id="sq" checked> Squash</label></div>
+<script>
+const c = document.getElementById("c"), g = c.getContext("2d");
+let shake = 0, parts = [], squash = 0, last = performance.now();
+document.getElementById("b").onclick = c.onpointerdown = () => {
+  if (document.getElementById("shake").checked) shake = 0.25;
+  if (document.getElementById("part").checked) for (let i = 0; i < 24; i++) parts.push({ x: 160, y: 95, vx: (Math.random() - .5) * 260, vy: -Math.random() * 260, life: .7 });
+  if (document.getElementById("sq").checked) squash = 1;
+  try { const a = new AudioContext(), o = a.createOscillator(), gg = a.createGain(); o.frequency.value = 520; gg.gain.value = .08; o.connect(gg).connect(a.destination); o.start(); o.frequency.exponentialRampToValueAtTime(90, a.currentTime + .15); o.stop(a.currentTime + .16); } catch (e) {}
+};
+(function loop(now = performance.now()) {
+  const dt = (now - last) / 1000; last = now;
+  shake = Math.max(0, shake - dt); squash = Math.max(0, squash - dt * 4);
+  const ox = shake ? (Math.random() - .5) * 12 * shake / .25 : 0, oy = shake ? (Math.random() - .5) * 12 * shake / .25 : 0;
+  g.setTransform(1, 0, 0, 1, ox, oy); g.clearRect(-20, -20, 360, 210);
+  const s = 1 + Math.sin(squash * Math.PI) * .35;
+  g.save(); g.translate(160, 110); g.scale(s, 1 / s); g.font = "40px sans-serif"; g.fillText("🧋", -20, 0); g.restore();
+  for (const p of parts) { p.vy += 600 * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt; g.globalAlpha = Math.max(0, p.life / .7); g.fillStyle = "#ffd43b"; g.fillRect(p.x, p.y, 4, 4); }
+  g.globalAlpha = 1; parts = parts.filter((p) => p.life > 0);
+  requestAnimationFrame(loop);
+})();
+<\/script>
+</script>
+
+<script type="text/x-code" data-lang="cs" data-label="HitFeedback.cs">
+using System.Collections;
+using UnityEngine;
+
+public class HitFeedback : MonoBehaviour
+{
+    [SerializeField] Animator animator;          // Animator Controller: Idle → Run → Jump → Hit
+    [SerializeField] ParticleSystem hitParticles;
+    [SerializeField] AudioSource sfx;
+    [SerializeField] AudioClip hitClip;
+    [SerializeField] Transform cam;
+
+    public void OnHit()
+    {
+        animator.SetTrigger("Hit");                       // ប្តូរ Animation
+        hitParticles.Play();
+        sfx.pitch = Random.Range(0.9f, 1.1f);             // កុំឲ្យសំឡេងដដែលៗ
+        sfx.PlayOneShot(hitClip);
+        StartCoroutine(Shake(0.2f, 0.15f));
+        Handheld.Vibrate();                                // Haptic (Mobile)
+    }
+
+    IEnumerator Shake(float duration, float strength)     // Coroutine: រត់ច្រើន Frame
+    {
+        Vector3 origin = cam.localPosition;
+        for (float t = 0; t < duration; t += Time.unscaledDeltaTime)
+        {
+            cam.localPosition = origin + (Vector3)Random.insideUnitCircle * strength * (1 - t / duration);
+            yield return null;                            // រង់ចាំ Frame បន្ទាប់
+        }
+        cam.localPosition = origin;
+    }
+}
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Game feel / Juice</b>៖ Screen shake, Particles, Squash &amp; stretch, សំឡេង, Vibration — ធ្វើឲ្យហ្គេម "ស្រួលលេង" ទោះ Logic ដដែល (សាក បិទ/បើក ក្នុង Demo)។</li><li><b>Animator</b> — State machine Animation · <code class='i'>SetTrigger/SetBool/SetFloat</code> ពី Script។</li><li><b>Coroutine</b> <code class='i'>IEnumerator + yield return null</code> — Code រត់ឆ្លងច្រើន Frame (Shake, Countdown) · <code class='i'>yield return new WaitForSeconds(1f)</code>។</li><li><code class='i'>PlayOneShot</code> + ប្តូរ pitch តិចៗ → សំឡេងមិនធុញ · <code class='i'>unscaledDeltaTime</code> ដំណើរការទោះ timeScale = 0។</li><li>Particle System — ធូលី, ផ្កាភ្លើង, កាហ្វេខ្ចាយ · កំណត់ Max particles តិចសម្រាប់ទូរស័ព្ទ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>សរសេរ Coroutine រាប់ថយក្រោយ 3-2-1-GO មុនចាប់ផ្តើម។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="cs" data-label="answer.cs">
+IEnumerator Countdown()
+{
+    for (int i = 3; i > 0; i--) { label.text = i.ToString(); yield return new WaitForSeconds(1f); }
+    label.text = "GO!";
+    StartGame();
+}
+</script>
+</details></div>
+
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>ScriptableObject, Level Data &amp; Save</h2>
+
+<script type="text/x-code" data-lang="cs" data-label="LevelData.cs">
+using UnityEngine;
+
+// Create → Kafe → Level (Asset ក្នុង Project — Designer កែបានដោយមិនកែ Code)
+[CreateAssetMenu(menuName = "Kafe/Level", fileName = "Level_01")]
+public class LevelData : ScriptableObject
+{
+    public string levelName = "ភ្នំពេញ";
+    [Range(1f, 20f)] public float runSpeed = 6f;
+    [Range(0.2f, 3f)] public float spawnInterval = 1f;
+    public int targetBeans = 50;
+    public Sprite background;
+    public AudioClip music;
+}
+
+public class LevelRunner : MonoBehaviour
+{
+    [SerializeField] LevelData[] levels;            // Level_01 ភ្នំពេញ · Level_02 សៀមរាប · Level_03 កំពត
+    int current;
+
+    void Start() => Load(PlayerPrefs.GetInt("level", 0));
+
+    void Load(int i)
+    {
+        current = Mathf.Clamp(i, 0, levels.Length - 1);
+        var L = levels[current];
+        FindAnyObjectByType<BeanSpawner>().SetInterval(L.spawnInterval);
+        Debug.Log($"Level {current + 1}: {L.levelName} speed={L.runSpeed}");
+    }
+}
+
+// Save ទិន្នន័យច្រើនជា JSON
+[System.Serializable]
+public class SaveData { public int coins; public int level; public string[] skins; }
+
+public static class SaveSystem
+{
+    static string Path => System.IO.Path.Combine(Application.persistentDataPath, "save.json");
+    public static void Save(SaveData d) => System.IO.File.WriteAllText(Path, JsonUtility.ToJson(d));
+    public static SaveData Load() =>
+        System.IO.File.Exists(Path) ? JsonUtility.FromJson<SaveData>(System.IO.File.ReadAllText(Path)) : new SaveData();
+}
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>ឧទាហរណ៍លទ្ធផល (Unity Console)</span></div><pre>Level 2: សៀមរាប speed=7.5</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>ScriptableObject</b> — Asset ផ្ទុកទិន្នន័យ (Level, Item, Enemy stats) · Designer កែក្នុង Inspector · ប្រើឡើងវិញច្រើន Scene។</li><li><code class='i'>[CreateAssetMenu]</code> — បន្ថែមក្នុង Menu Create · <code class='i'>[Range]</code> — Slider ក្នុង Inspector។</li><li><b>Data-driven design</b>៖ Level ថ្មី = Asset ថ្មី (មិនបាច់កែ Code)។</li><li>Save ធំ៖ <code class='i'>JsonUtility</code> + <code class='i'>Application.persistentDataPath</code> (Folder ត្រឹមត្រូវលើ Android/iOS) · តូច៖ PlayerPrefs។</li><li>ទិន្នន័យសំខាន់ (កាក់ទិញដោយលុយ) ត្រូវផ្ទៀងផ្ទាត់លើ Server (Cloud Save) — Save ក្នុងទូរស័ព្ទអាចត្រូវគេកែ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>បង្កើត ScriptableObject <code class='i'>SkinData</code> (ឈ្មោះ, តម្លៃ, Sprite)។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="cs" data-label="answer.cs">
+[CreateAssetMenu(menuName = "Kafe/Skin")]
+public class SkinData : ScriptableObject
+{
+    public string displayName;
+    public int price;
+    public Sprite sprite;
+}
+</script>
+</details></div>
+
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>Mobile Performance &amp; ទំហំអេក្រង់</h2>
+
+<script type="text/x-code" data-lang="cs" data-label="SafeArea.cs">
+using UnityEngine;
+
+// ភ្ជាប់ទៅ RectTransform (UI root) — កុំឲ្យ UI ជាន់ Notch / Home indicator
+[RequireComponent(typeof(RectTransform))]
+public class SafeArea : MonoBehaviour
+{
+    Rect last;
+    void Update()
+    {
+        Rect sa = Screen.safeArea;
+        if (sa == last) return;
+        last = sa;
+        var rt = (RectTransform)transform;
+        Vector2 min = sa.position, max = sa.position + sa.size;
+        min.x /= Screen.width; min.y /= Screen.height;
+        max.x /= Screen.width; max.y /= Screen.height;
+        rt.anchorMin = min; rt.anchorMax = max;
+    }
+}
+</script>
+
+<table><tr><th>បញ្ហា</th><th>ដំណោះស្រាយ</th></tr><tr><td>FPS ធ្លាក់ / ទាក់</td><td>Object pooling · កុំ <code class='i'>GetComponent/Find</code> ក្នុង Update · Profiler (Window → Analysis → Profiler) លើទូរស័ព្ទពិត</td></tr><tr><td>ក្តៅ / អស់ថ្មលឿន</td><td><code class='i'>Application.targetFrameRate = 60</code> (ឬ 30 សម្រាប់ Puzzle) · កាត់ Post-processing · Particles តិច</td></tr><tr><td>Draw calls ច្រើន</td><td>Sprite Atlas · Static batching · Material រួម</td></tr><tr><td>App ធំ</td><td>Texture compression (ASTC) · Addressables · Strip unused · Audio Vorbis</td></tr><tr><td>UI ខុសលើអេក្រង់ផ្សេង</td><td>Canvas Scaler (Scale With Screen Size, 1080×1920, Match 0.5) · Anchors · Safe area</td></tr><tr><td>GC spikes</td><td>កុំបង្កើត string/List ថ្មីរាល់ Frame · Cache · Incremental GC</td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Profile លើទូរស័ព្ទពិត</b> (Development Build + Autoconnect Profiler) — Editor លើ PC លឿនជាងទូរស័ព្ទច្រើន។</li><li><b>Canvas Scaler</b> — UI ពង្រីក/បង្រួមតាមអេក្រង់ · <b>Anchors</b> — ជាប់ជ្រុង/កណ្តាល។</li><li><code class='i'>Screen.safeArea</code> — តំបន់គ្មាន Notch/Dynamic Island/Home bar → Script ខាងលើកែ Anchor ស្វ័យប្រវត្តិ។</li><li>សាកលើទូរស័ព្ទ Android តម្លៃទាប (2–3GB RAM) ដែលអ្នកលេងនៅកម្ពុជាប្រើច្រើន មិនមែនតែ iPhone ថ្មី។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>Update() មាន <code class='i'>GameObject.Find("Player")</code> រាល់ Frame។ កែយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="cs" data-label="answer.cs">
+[SerializeField] Transform player;   // អូសក្នុង Inspector
+// ឬ Cache ម្តងក្នុង Awake: player = GameObject.FindWithTag("Player").transform;
+</script>
+</details></div>
+
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>Build &amp; Publish៖ Android, iOS, Ads &amp; IAP</h2>
+
+<script type="text/x-code" data-lang="txt" data-label="Build settings">
+File → Build Profiles (Unity 6)
+├── Android
+│   ├── Player Settings: Company/Product name · Package name com.kafe.runner · Icon · Splash
+│   ├── Version 1.0.0 · Bundle Version Code 1
+│   ├── Scripting Backend: IL2CPP · Target Architectures: ARMv7 + ARM64 (Google Play តម្រូវ 64-bit)
+│   ├── Target API Level: តាមតម្រូវការ Google Play ចុងក្រោយ
+│   ├── Publishing Settings: Custom Keystore (upload-keystore.jks)
+│   └── ✅ Build App Bundle (Google Play) → KafeRunner.aab
+└── iOS (Mac)
+    ├── Bundle Identifier · Signing Team · Camera/Usage descriptions
+    └── Build → Xcode project → Archive → TestFlight → App Store
+</script>
+
+<script type="text/x-code" data-lang="cs" data-label="Monetization.cs">
+// Unity IAP (In-App Purchase, IStoreController) — ទិញកាក់ (សង្ខេប)
+public void BuyCoins500() => storeController.InitiatePurchase("coins_500");
+
+// Rewarded ad (LevelPlay / AdMob) — មើលពាណិជ្ជកម្ម ទទួលជីវិតបន្ថែម
+public void OnRewardedAdCompleted()
+{
+    lives++;
+    Firebase.Analytics.FirebaseAnalytics.LogEvent("rewarded_continue", "level", currentLevel);
+}
+</script>
+
+<table><tr><th>✅ Checklist Publish ហ្គេម</th><th></th></tr>
+<tr><td>Play/App Store</td><td>Icon 512/1024 · Screenshots · Trailer 30s · Description ខ្មែរ/អង់គ្លេស · Content rating · Data safety · Privacy policy</td></tr>
+<tr><td>Monetization</td><td>Ads (មិនរំខានពេក) · IAP (Consumable/Non-consumable) · ផ្ទៀងផ្ទាត់ Receipt លើ Server</td></tr>
+<tr><td>Test</td><td>ទូរស័ព្ទខ្សោយ · Internal testing/TestFlight · Crash reporting (Unity Cloud Diagnostics/Crashlytics)</td></tr>
+<tr><td>Live ops</td><td>Analytics (Retention D1/D7) · Event · Update Level ថ្មី (Remote Config / Addressables)</td></tr></table>
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>IL2CPP</b> — បំលែង C# → C++ → Native (លឿន + តម្រូវ ARM64 សម្រាប់ Google Play)។</li><li><b>AAB</b> + Keystore (ដូចវគ្គ Mobile Testing &amp; CI/CD មេរៀន ៩) · Bundle Version Code កើនរាល់ Upload។</li><li>iOS៖ Unity បង្កើត <b>Xcode project</b> → Archive/Upload ដូច App ធម្មតា (វគ្គ Swift មេរៀន ១២)។</li><li><b>Monetization</b>៖ Ads (Rewarded ល្អបំផុតសម្រាប់អ្នកលេង) · IAP — តែងតែផ្ទៀងផ្ទាត់ការទិញ មុនផ្តល់របស់។</li><li>CI៖ <b>GameCI</b> (GitHub Actions) Build Unity ស្វ័យប្រវត្តិ · Unity Build Automation។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>Google Play បដិសេធ Build ព្រោះ "does not support 64-bit"។ កែយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>Player Settings → Other → Scripting Backend = <b>IL2CPP</b> · Target Architectures ធីក <b>ARM64</b> → Build AAB ម្តងទៀត។</p></details></div>
+
+</section>
+<section id="cheat">
+<h2>📋 Cheat Sheet</h2>
+
+<table><tr><th>ការងារ</th><th>C# / Unity</th></tr><tr><td>ចលនា</td><td>transform.position += dir * speed * Time.deltaTime</td></tr><tr><td>Physics</td><td>rb.linearVelocity · rb.AddForce(v, ForceMode2D.Impulse) · FixedUpdate</td></tr><tr><td>ប៉ះ</td><td>OnTriggerEnter2D(Collider2D o) · OnCollisionEnter2D(Collision2D c) · CompareTag</td></tr><tr><td>Input</td><td>EnhancedTouch · Touch.activeTouches · startScreenPosition</td></tr><tr><td>បង្កើត/លុប</td><td>Instantiate(prefab) · Destroy(go) · ObjectPool&lt;T&gt;</td></tr><tr><td>UI/Scene</td><td>TMP_Text.text · SceneManager.LoadScene · Time.timeScale</td></tr><tr><td>Save</td><td>PlayerPrefs · JsonUtility + persistentDataPath</td></tr><tr><td>Coroutine</td><td>StartCoroutine(F()) · yield return new WaitForSeconds(1f)</td></tr><tr><td>Data</td><td>ScriptableObject + [CreateAssetMenu]</td></tr></table>
+
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងអាជីព៖ Kafe Runner (Endless runner 2D)</h2>
+
+<p>ហ្គេមទូរស័ព្ទពេញលេញ៖ <b>Menu → រត់ ប្រមូលគ្រាប់កាហ្វេ ជៀសឧបសគ្គ → Level ភ្នំពេញ/សៀមរាប/កំពត (ScriptableObject) → High score → Skin shop (IAP) → Rewarded ad continue → Publish Play Store / App Store</b>។</p>
+<script type="text/x-code" data-lang="txt" data-label="Project structure">
+Assets/
+├── Scenes/            Menu.unity · Game.unity
+├── Scripts/
+│   ├── Player/        PlayerController.cs · SwipeInput.cs            ← មេរៀន ២–៦
+│   ├── World/         BeanSpawner.cs · ObstacleSpawner.cs · Parallax.cs ← ៧
+│   ├── Core/          GameManager.cs · SaveSystem.cs · SafeArea.cs   ← ៨ · ១០ · ១១
+│   └── FX/            HitFeedback.cs                                ← ៩
+├── Data/Levels/       Level_PhnomPenh.asset · Level_SiemReap.asset ← ១០
+├── Prefabs/           Player · Bean · Obstacle_Brick · Obstacle_Tower
+├── Art/               Sprites (Sprite Atlas) · Fonts (Kantumruy Pro TMP)
+├── Audio/             Music · SFX
+└── Settings/          Build Profiles (Android AAB IL2CPP ARM64 · iOS)  ← ១២
+</script>
+
+<script type="text/x-code" data-lang="cs" data-label="Parallax.cs">
+// Parallax.cs — ផ្ទៃខាងក្រោយរំកិលល្បឿនខុសគ្នា (ជម្រៅ)
+public class Parallax : MonoBehaviour
+{
+    [SerializeField] float factor = 0.3f;     // ឆ្ងាយ = តូច
+    [SerializeField] float width = 20f;       // ទទឹង Sprite (units)
+    void Update()
+    {
+        transform.position += Vector3.left * GameManager.Instance.RunSpeed * factor * Time.deltaTime;
+        if (transform.position.x <= -width) transform.position += Vector3.right * width * 2f;   // វិលជុំ
+    }
+}
+</script>
+
+<table><tr><th>ផ្នែក</th><th>មេរៀន</th></tr><tr><td>Script · Lifecycle · deltaTime</td><td>១ · ២</td></tr><tr><td>ចលនា · Physics · Jump</td><td>៣ · ៤</td></tr><tr><td>ប៉ះ · Touch</td><td>៥ · ៦</td></tr><tr><td>Spawn + Pool</td><td>៧</td></tr><tr><td>UI · Score · Scene</td><td>៨</td></tr><tr><td>Juice</td><td>៩</td></tr><tr><td>Level data · Save</td><td>១០</td></tr><tr><td>Performance · Publish</td><td>១១ · ១២</td></tr></table>
+
+</section>
+<section id="pro-app">
+<h2>💻 Unity Lab Pro (App)</h2>
+
+<p><b>Kafe Runner + Inspector</b>៖ ហ្គេមលេងបានពិត (Tap/Space លោត ប្រមូល 🫘 ជៀស 🧱) — កែ gravity, jumpForce, runSpeed, spawnInterval, doubleJump ពេលកំពុងលេង ដូចកែក្នុង Inspector របស់ Unity · មើល Colliders (Gizmos), FPS, Object pool និង Script C# ដែលប្តូរតាមតម្លៃ។ <b>Level Designer</b>៖ កែ ScriptableObject → មើលខ្សែកោងការលំបាក និង Asset YAML។</p>
+
+<div class="itk" id="un">
+<div class="itk-tabs"><button class="on" data-t="g">🎮 Kafe Runner + Inspector</button><button data-t="l">🗺️ Level Designer (ScriptableObject)</button></div>
+
+<div class="itk-p on" data-p="g">
+ <div class="fb-grid" style="grid-template-columns:1fr 290px">
+  <div>
+   <canvas id="g_c" width="480" height="270" style="width:100%;max-width:560px;background:linear-gradient(#ffe8cc,#fff4e6);border-radius:12px;touch-action:none;display:block"></canvas>
+   <div style="margin-top:6px;font-size:13.5px">👆 Tap / Space = Jump · <b id="g_stat"></b></div>
+  </div>
+  <div class="itk-out" style="margin:0">
+   <b>🔍 Inspector · PlayerController</b>
+   <div id="g_insp"></div>
+   <div style="margin-top:8px;font:12px/1.6 'JetBrains Mono',monospace" id="g_dbg"></div>
+  </div>
+ </div>
+ <pre id="g_cs" class="itk-out" style="white-space:pre;overflow:auto;font:12.5px/1.55 'JetBrains Mono',monospace;color:var(--text)"></pre>
+</div>
+
+<div class="itk-p" data-p="l">
+ <div class="itk-row" id="l_ctl"></div>
+ <div id="l_chart"></div>
+ <div class="fb-grid" style="grid-template-columns:1fr 1fr">
+  <pre id="l_asset" class="itk-out" style="white-space:pre;font:12.5px/1.55 'JetBrains Mono',monospace;color:var(--text);margin:0"></pre>
+  <div class="itk-out" id="l_out" style="margin:0"></div>
+ </div>
+</div>
+</div>
+<script>
+(()=>{
+const $=id=>document.getElementById(id),R=$("un");
+R.querySelectorAll(":scope>.itk-tabs button").forEach(b=>b.onclick=()=>{R.querySelectorAll(":scope>.itk-tabs button").forEach(x=>x.classList.toggle("on",x===b));R.querySelectorAll(":scope>.itk-p").forEach(p=>p.classList.toggle("on",p.dataset.p===b.dataset.t))});
+/* ---------- Game ---------- */
+const P={gravity:[30,10,60,1],jumpForce:[11,6,18,.5],runSpeed:[6,3,14,.5],spawnInterval:[1.3,.5,3,.1]};
+const V=Object.fromEntries(Object.entries(P).map(([k,v])=>[k,v[0]]));let dbl=false,showCol=false;
+$("g_insp").innerHTML=Object.entries(P).map(([k,[v,a,b,s]])=>`<label style="display:flex;flex-direction:row;justify-content:space-between;align-items:center;gap:6px;font-size:13px;margin:4px 0">${k}<input type="range" data-k="${k}" min="${a}" max="${b}" step="${s}" value="${v}" style="min-width:0;width:110px"><b style="width:34px;text-align:right" id="v_${k}">${v}</b></label>`).join("")+`<label style="display:flex;flex-direction:row;align-items:center;font-size:13px;margin:4px 0"><input type="checkbox" id="g_dbl"> doubleJump</label><label style="display:flex;flex-direction:row;align-items:center;font-size:13px;margin:4px 0"><input type="checkbox" id="g_col"> Show colliders (Gizmos)</label>`;
+$("g_insp").querySelectorAll("input[type=range]").forEach(r=>r.oninput=()=>{V[r.dataset.k]=+r.value;$("v_"+r.dataset.k).textContent=r.value;csv()});
+$("g_dbl").onchange=e=>{dbl=e.target.checked;csv()};$("g_col").onchange=e=>showCol=e.target.checked;
+function csv(){$("g_cs").textContent=`using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    [SerializeField] float gravity = ${V.gravity}f;          // Rigidbody2D.gravityScale × 9.81
+    [SerializeField] float jumpForce = ${V.jumpForce}f;
+    [SerializeField] float runSpeed = ${V.runSpeed}f;         // World scroll speed (units/s)
+    [SerializeField] bool doubleJump = ${dbl};
+
+    Rigidbody2D rb; int jumpsLeft;
+
+    void Awake() => rb = GetComponent<Rigidbody2D>();
+
+    public void Jump()                                   // ហៅពី Tap / Space
+    {
+        if (jumpsLeft <= 0) return;
+        rb.linearVelocity = new Vector2(0, jumpForce);
+        jumpsLeft--;
+    }
+
+    void OnCollisionEnter2D(Collision2D c)
+    {
+        if (c.gameObject.CompareTag("Ground")) jumpsLeft = doubleJump ? 2 : 1;
+        if (c.gameObject.CompareTag("Obstacle")) GameManager.Instance.GameOver();
+    }
+
+    void OnTriggerEnter2D(Collider2D o)
+    {
+        if (!o.CompareTag("Bean")) return;
+        GameManager.Instance.AddScore(10);
+        o.GetComponent<PooledObject>().Release();        // Object pool
+    }
+}
+// Spawner: interval = ${V.spawnInterval}s`;}
+csv();
+const c=$("g_c"),g=c.getContext("2d"),W=480,H=270,U=24,GY=H-40;   // 1 unit = 24px
+let st,pool=[],created=0;
+function reset(){st={y:0,vy:0,jumps:1,obs:[],beans:[],t:0,spawn:0,score:0,dist:0,over:false,started:false,shake:0,parts:[]};}
+reset();
+function getObj(kind){let o=pool.pop();if(!o){o={};created++;}o.kind=kind;return o;}
+function jump(){if(st.over){if(st.shake>0)return;reset();st.started=true;return}st.started=true;if(st.jumps>0){st.vy=V.jumpForce;st.jumps--;}}
+c.onpointerdown=e=>{e.preventDefault();jump()};
+document.addEventListener("keydown",e=>{if(e.code==="Space"&&R.querySelector('[data-p="g"]').classList.contains("on")&&c.getBoundingClientRect().top<innerHeight&&c.getBoundingClientRect().bottom>0){e.preventDefault();jump();}});
+let last=performance.now(),acc=0,fpsT=0,frames=0,fps=60;const DT=0.02;
+function fixed(){
+ if(!st.started||st.over)return;
+ st.vy-=V.gravity*DT;st.y+=st.vy*DT;
+ if(st.y<=0){st.y=0;st.vy=0;st.jumps=dbl?2:1;}
+ const sp=V.runSpeed;st.dist+=sp*DT;st.spawn+=DT;
+ if(st.spawn>=V.spawnInterval){st.spawn=0;
+  if(Math.random()<.6){const o=getObj("obs");o.x=W/U+1;o.h=Math.random()<.3?1.6:1;st.obs.push(o);}
+  const b=getObj("bean");b.x=W/U+1+Math.random()*2;b.y=1.2+Math.random()*3;st.beans.push(b);}
+ for(const o of st.obs)o.x-=sp*DT;for(const b of st.beans)b.x-=sp*DT;
+ const px=3,pw=.8,ph=.9;
+ for(const o of st.obs){if(px+pw>o.x&&px<o.x+.8&&st.y<o.h){st.over=true;st.shake=.3;for(let i=0;i<20;i++)st.parts.push({x:px*U,y:GY-st.y*U-10,vx:(Math.random()-.5)*200,vy:-Math.random()*200,l:.6});}}
+ st.beans=st.beans.filter(b=>{const hit=Math.abs((px+.4)-(b.x+.3))<.7&&Math.abs((st.y+.45)-b.y)<.7;if(hit){st.score+=10;pool.push(b);}else if(b.x<-1){pool.push(b);return false}return!hit});
+ st.obs=st.obs.filter(o=>{if(o.x<-1){pool.push(o);return false}return true});
+}
+function draw(dt){
+ st.shake=Math.max(0,st.shake-dt);const sx=st.shake?(Math.random()-.5)*10:0;
+ g.setTransform(1,0,0,1,sx,0);g.clearRect(-10,0,W+20,H);
+ g.fillStyle="#c08552";g.fillRect(-10,GY,W+20,H-GY);g.fillStyle="#8b5e34";for(let x=-(st.dist*U)%40;x<W;x+=40)g.fillRect(x,GY+8,20,4);
+ g.font="26px sans-serif";g.textBaseline="bottom";
+ for(const o of st.obs){g.fillText(o.h>1?"🗼":"🧱",o.x*U,GY-(o.h>1?6:0));if(showCol){g.strokeStyle="#e03131";g.strokeRect(o.x*U,GY-o.h*U,.8*U,o.h*U);}}
+ g.font="18px sans-serif";for(const b of st.beans){g.fillText("🫘",b.x*U,GY-b.y*U+12);if(showCol){g.strokeStyle="#2f9e44";g.beginPath();g.arc((b.x+.3)*U,GY-b.y*U,.35*U,0,7);g.stroke();}}
+ g.font="30px sans-serif";g.fillText("☕",3*U-4,GY-st.y*U+4);if(showCol){g.strokeStyle="#1c7ed6";g.strokeRect(3*U,GY-(st.y+.9)*U,.8*U,.9*U);}
+ for(const p of st.parts){p.vy+=500*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.l-=dt;g.fillStyle="#6f4e37";g.globalAlpha=Math.max(0,p.l/.6);g.fillRect(p.x,p.y,4,4);}g.globalAlpha=1;st.parts=st.parts.filter(p=>p.l>0);
+ g.setTransform(1,0,0,1,0,0);g.fillStyle="#3b2a1a";g.font="bold 16px sans-serif";g.textBaseline="top";
+ g.fillText(`🫘 ${st.score}   ${Math.floor(st.dist)}m`,10,8);
+ if(!st.started){g.font="bold 18px sans-serif";g.fillText("👆 Tap / Space ដើម្បីចាប់ផ្តើម",W/2-130,H/2-20);}
+ if(st.over){g.fillStyle="rgba(0,0,0,.6)";g.fillRect(0,0,W,H);g.fillStyle="#fff";g.font="bold 26px sans-serif";g.fillText("GAME OVER",W/2-80,H/2-40);g.font="16px sans-serif";g.fillText(`Score ${st.score + Math.floor(st.dist)} · Tap ដើម្បីលេងម្តងទៀត`,W/2-120,H/2);}
+}
+function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;acc+=dt;while(acc>=DT){fixed();acc-=DT;}draw(dt);
+ frames++;fpsT+=dt;if(fpsT>=.5){fps=Math.round(frames/fpsT);frames=0;fpsT=0;}
+ $("g_stat").textContent=`FPS ${fps} · active ${st.obs.length+st.beans.length} · pool ${pool.length} · created ${created}`;
+ $("g_dbg").innerHTML=`velocity.y = ${st.vy.toFixed(1)}<br>position.y = ${st.y.toFixed(2)}<br>jumpsLeft = ${st.jumps}<br>FixedUpdate Δ = ${DT}s`;
+ requestAnimationFrame(loop);}
+requestAnimationFrame(loop);
+/* ---------- Level designer ---------- */
+const LV={levelName:["text","Siem Reap"],runSpeed:["range",7.5,3,14,.5],speedIncrease:["range",.05,0,.5,.05],spawnInterval:["range",1.1,.4,3,.1],minInterval:["range",.6,.3,2,.1],targetBeans:["range",60,10,200,10]};
+const L=Object.fromEntries(Object.entries(LV).map(([k,v])=>[k,v[1]]));
+$("l_ctl").innerHTML=Object.entries(LV).map(([k,v])=>v[0]==="text"?`<label>${k}<input data-l="${k}" value="${v[1]}" size="12"></label>`:`<label>${k} <b id="lv_${k}">${v[1]}</b><input type="range" data-l="${k}" min="${v[2]}" max="${v[3]}" step="${v[4]}" value="${v[1]}"></label>`).join("");
+$("l_ctl").querySelectorAll("input").forEach(i=>i.oninput=()=>{L[i.dataset.l]=i.type==="range"?+i.value:i.value;if($("lv_"+i.dataset.l))$("lv_"+i.dataset.l).textContent=i.value;lvl()});
+function lvl(){
+ const pts=[];for(let t=0;t<=120;t+=5){const sp=L.runSpeed+L.speedIncrease*t,iv=Math.max(L.minInterval,L.spawnInterval-0.004*t*L.runSpeed);pts.push([t,sp,1/iv*sp]);}
+ const Wd=560,Hd=170,mx=Math.max(...pts.map(p=>p[2])),ms=Math.max(...pts.map(p=>p[1]));
+ const X=t=>36+t/120*(Wd-50),Y=(v,m)=>Hd-24-v/m*(Hd-40);
+ let s=`<svg viewBox="0 0 ${Wd} ${Hd}" style="width:100%;max-width:${Wd}px;font:11px sans-serif;background:var(--panel);border-radius:10px">`;
+ for(let t=0;t<=120;t+=30)s+=`<text x="${X(t)}" y="${Hd-8}" text-anchor="middle" fill="currentColor">${t}s</text>`;
+ s+=`<polyline fill="none" stroke="#1c7ed6" stroke-width="2.5" points="${pts.map(p=>X(p[0])+","+Y(p[1],ms)).join(" ")}"/><polyline fill="none" stroke="#e8590c" stroke-width="2.5" points="${pts.map(p=>X(p[0])+","+Y(p[2],mx)).join(" ")}"/>`;
+ s+=`<text x="40" y="14" fill="#1c7ed6">━ runSpeed (max ${ms.toFixed(1)})</text><text x="220" y="14" fill="#e8590c">━ ការលំបាក (objects/s × speed)</text></svg>`;
+ $("l_chart").innerHTML=s;
+ $("l_asset").textContent=`# Assets/Levels/Level_${L.levelName.replace(/\W/g,"")}.asset (YAML ដែល Unity រក្សា)
+MonoBehaviour:
+  m_Name: Level_${L.levelName.replace(/\W/g,"")}
+  m_Script: {fileID: 11500000, guid: …LevelData}
+  levelName: ${L.levelName}
+  runSpeed: ${L.runSpeed}
+  speedIncrease: ${L.speedIncrease}
+  spawnInterval: ${L.spawnInterval}
+  minInterval: ${L.minInterval}
+  targetBeans: ${L.targetBeans}`;
+ const end=pts[pts.length-1],diff=end[2];
+ const verdict=diff>40?"🔥 ពិបាកខ្លាំង — អ្នកលេងថ្មីអាចបោះបង់ (Retention ធ្លាក់)":diff>22?"⚖️ ល្អ — កើនបន្តិចម្តងៗ (Flow)":"😴 ងាយពេក — បង្កើន speedIncrease ឬបន្ថយ spawnInterval";
+ const beansPerMin=Math.round(60/((L.spawnInterval+L.minInterval)/2));
+ $("l_out").innerHTML=`<b>${verdict}</b><br>ល្បឿននៅ 120s៖ ${end[1].toFixed(1)} units/s<br>កាក់ ≈ ${beansPerMin}/នាទី → ត្រូវការ ≈ <b>${(L.targetBeans/beansPerMin).toFixed(1)}</b> នាទី ដើម្បីដល់ targetBeans ${L.targetBeans}<br><span style="font-size:13px;color:var(--muted)">Designer ប្តូរតម្លៃក្នុង Inspector របស់ ScriptableObject ដោយមិនកែ Code (មេរៀន ១០)</span>`;}
+lvl();
+})();
+</script>
+
+<h3>🏆 Quiz Unity &amp; Game Dev ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["Unity 1.0 បង្ហាញជាសាធារណៈឆ្នាំ?", ["2000", "2005", "2012", "2019"], 1], ["Script Unity សរសេរជាភាសា?", ["Java", "C#", "Python", "Lua"], 1], ["Script ក្នុង Unity Inherit ពី?", ["GameObject", "MonoBehaviour", "Component only", "Scene"], 1], ["[SerializeField] private ធ្វើអ្វី?", ["លុប Field", "បង្ហាញ Field ក្នុង Inspector", "Public ទាំងអស់", "Save"], 1], ["Method រត់រាល់ Frame?", ["Start", "Awake", "Update", "OnDestroy"], 2], ["Physics/Rigidbody គួរនៅក្នុង?", ["Update", "FixedUpdate", "Start", "LateUpdate"], 1], ["ហេតុអ្វីគុណល្បឿននឹង Time.deltaTime?", ["ស្អាត", "ល្បឿនដូចគ្នាគ្រប់ FPS", "Physics", "Memory"], 1], ["ដើរទ្រេតលឿនជាងព្រោះ (1,1) មានប្រវែង?", ["1", "√2 ≈ 1.41", "2", "0.5"], 1], ["លោត (Jump) ភ្លាមៗ ប្រើ ForceMode2D?", ["Force", "Impulse", "Acceleration", "Velocity"], 1], ["Collider ធីក Is Trigger ហៅ Event?", ["OnCollisionEnter2D", "OnTriggerEnter2D", "OnMouseDown", "Update"], 1], ["ប្រៀបធៀប Tag ល្អ ប្រើ?", ["tag == \"Coin\"", "CompareTag(\"Coin\")", "name", "GetType"], 1], ["Input System អាន Touch ពេល Swipe ប្រើ?", ["EnhancedTouch", "OnGUI", "Physics2D", "Animator"], 0], ["Instantiate/Destroy ញឹកញាប់ធ្វើឲ្យ?", ["លឿន", "GC ទាក់ (Stutter)", "ស្អាត", "គ្មានអ្វី"], 1], ["Unity មាន Class Pool ស្រាប់?", ["UnityEngine.Pool.ObjectPool<T>", "System.Pool", "PoolManager", "គ្មាន"], 0], ["ផ្អាកហ្គេមទាំងមូល ប្រើ?", ["Time.timeScale = 0", "Destroy(this)", "Application.Quit", "enabled = false"], 0], ["រក្សា High score តូចៗ ប្រើ?", ["PlayerPrefs", "ScriptableObject", "Prefab", "Animator"], 0], ["Code រត់ឆ្លងច្រើន Frame (Shake) ប្រើ?", ["Coroutine (IEnumerator)", "Update only", "Thread", "Event"], 0], ["ទិន្នន័យ Level ដែល Designer កែបាន ប្រើ?", ["ScriptableObject", "PlayerPrefs", "Static class", "Tag"], 0], ["UI កុំឲ្យជាន់ Notch ប្រើ?", ["Screen.safeArea", "Camera.main", "Time.deltaTime", "Physics2D"], 0], ["Google Play តម្រូវ 64-bit ដូច្នេះ Unity ត្រូវ?", ["Mono + ARMv7", "IL2CPP + ARM64", "WebGL", "x86"], 1]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+
+<ol class="steps"><li><b>Unity Mobile 2D</b> (វគ្គនេះ) ✅</li><li>C# ឲ្យស៊ីជម្រៅ៖ វគ្គ <b>C#</b> (OOP, LINQ, async)</li>
+<li>3D៖ Cinemachine, NavMesh AI, Shader Graph, URP · AR Foundation</li><li>Multiplayer (Netcode for GameObjects) · Backend៖ វគ្គ <b>Firebase &amp; Supabase</b> (Leaderboard, Cloud save)</li>
+<li>រចនាហ្គេម៖ Game design document, Level design, Playtest · Publish ហ្គេមតូច ១ → Portfolio · ចូលរួម Game Jam (itch.io)</li></ol>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="unity"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

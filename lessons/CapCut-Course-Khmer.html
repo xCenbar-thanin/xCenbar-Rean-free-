@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន CapCut</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#111111; --accent2:#00c4cc; --accent-soft:#e6fcfd;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#66e3e8; --accent2:#99f0f3; --accent-soft:#0a1f20;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#66e3e8; --accent2:#99f0f3; --accent-soft:#0a1f20;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#000,#1f1f1f 45%,#00c4cc);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/capcut.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/capcut.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>CapCut៖ កាត់តវីដេអូ ពីដំបូងដល់អាជីព</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. CapCut ជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#setup">២. ដំឡើង &amp; ត្រៀមខ្លួន</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: ស្គាល់ផ្ទាំងការងារ (Interface)</a>
+<a href="#l2">មេរៀន ២: Project ថ្មី · Aspect ratio · Import</a>
+<a href="#l3">មេរៀន ៣: កាត់៖ Split · Trim · Delete · Speed · Freeze</a>
+<a href="#l4">មេរៀន ៤: សំឡេង៖ Music · Voiceover · Beat sync</a>
+<a href="#l5">មេរៀន ៥: Text · Auto captions · ពុម្ពអក្សរខ្មែរ · Text-to-speech</a>
+<a href="#l6">មេរៀន ៦: Transitions · Effects · Filters</a>
+<a href="#l7">មេរៀន ៧: Overlay · Mask · Chroma key · Remove background</a>
+<a href="#l8">មេរៀន ៨: Keyframe animation</a>
+<a href="#l9">មេរៀន ៩: កែពណ៌ (Color grading)</a>
+<a href="#l10">មេរៀន ១០: Templates · Stickers · ឧបករណ៍ AI · ក្រមសីលធម៌</a>
+<a href="#l11">មេរៀន ១១: និទានរឿង (Storytelling) &amp; វីដេអូខ្លី</a>
+<a href="#l12">មេរៀន ១២: Export &amp; Publish</a>
+<a href="#cheat">📋 Cheat Sheet</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោង៖ វីដេអូ ៦០ វិនាទី សម្រាប់អាជីវកម្មក្នុងស្រុក</a>
+<a href="#pro-app">💻 CapCut Lab (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>✂️ CapCut — កាត់តវីដេអូ TikTok · Reels · YouTube</h2>
+  <p>ផ្ទាំងការងារ, <b>Ratio 9:16</b>, Split/Trim/Speed curve, <b>Music · Voiceover · Beat sync</b>, <b>Subtitle ខ្មែរ</b> &amp; Auto captions, Transition &amp; Effects, <b>Overlay · Mask · Chroma key</b>, <b>Keyframe</b>, Color grading, Template &amp; AI, <b>Storytelling (Hook)</b> និង Export — Mobile &amp; PC + App កាត់តវីដេអូសាកលើ Browser។</p>
+  <p><span class="badge">📘 ១២ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">💻 Code មានពណ៌ + លទ្ធផល</span><span class="badge">🎬 CapCut Lab</span></p>
+</section>
+<section id="intro">
+<h2>១. CapCut ជាអ្វី? អ្នកណាបង្កើត?</h2>
+
+<p><b>CapCut</b> ជាកម្មវិធី <b>កាត់ត និងកែវីដេអូ</b> ឥតគិតថ្លៃ (មាន Pro បង់ប្រាក់) ដែលប្រើបានលើ <b>ទូរស័ព្ទ (Android/iOS), កុំព្យូទ័រ (Windows/Mac) និង Web</b>។ វាពេញនិយមបំផុតសម្រាប់ធ្វើ <b>TikTok, Facebook Reels, YouTube Shorts</b> ព្រោះប្រើងាយ មាន Template, Auto captions និងឧបករណ៍ AI ច្រើន។ <button class="btn say" data-say="CapCut video editor">🔊 អានពាក្យ</button></p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#868e96"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#868e96">1924</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Moviola · កាត់ខ្សែភាពយន្ត</text><circle cx="200" cy="115" r="11" fill="#1c7ed6"/><text x="200" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#1c7ed6">1989</text><text x="200" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Avid · Non-linear</text><circle cx="320" cy="115" r="11" fill="#7048e8"/><text x="320" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#7048e8">1991</text><text x="320" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Adobe Premiere</text><circle cx="440" cy="115" r="11" fill="#495057"/><text x="440" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#495057">1999</text><text x="440" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Final Cut · iMovie</text><circle cx="560" cy="115" r="11" fill="#e03131"/><text x="560" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#e03131">2016</text><text x="560" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Douyin / TikTok</text><circle cx="680" cy="115" r="11" fill="#0ca678"/><text x="680" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#0ca678">2019</text><text x="680" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">剪映 JianYing</text><circle cx="800" cy="115" r="11" fill="#212529"/><text x="800" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#212529">2020</text><text x="800" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">CapCut ពិភពលោក</text><circle cx="920" cy="115" r="11" fill="#f59f00"/><text x="920" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#f59f00">2025</text><text x="920" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">AI · 1B+ downloads</text></svg><figcaption>🖼️ ប្រវត្តិការកាត់តវីដេអូ — ពីខ្សែភាពយន្ត ដល់ CapCut</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>1924</td><td><b>Moviola</b> (Iwan Serrurier)</td><td>ម៉ាស៊ីនកាត់ខ្សែភាពយន្ត — អ្នកកាត់ត «កាត់» ខ្សែពិតៗ</td></tr><tr><td>1989</td><td><b>Avid Media Composer</b></td><td>Non-linear editing (NLE) — កាត់តលើកុំព្យូទ័រ មិនបាច់កាត់ខ្សែ</td></tr><tr><td>1991 · 1999</td><td><b>Adobe Premiere</b> · <b>Final Cut Pro</b>, <b>iMovie</b></td><td>NLE ចូលដល់កុំព្យូទ័រផ្ទាល់ខ្លួន</td></tr><tr><td>2016–2017</td><td><b>ByteDance</b> បង្កើត Douyin / TikTok</td><td>យុគសម័យវីដេអូខ្លី បញ្ឈរ 9:16</td></tr><tr><td>ឧសភា 2019</td><td><b>剪映 JianYing</b> (ByteDance, ប្រទេសចិន)</td><td>កំណែដើមរបស់ CapCut (iPhone &amp; Android)</td></tr><tr><td>2020</td><td>ViaMaker → ប្តូរឈ្មោះជា <b>CapCut</b></td><td>ចេញទូទាំងពិភពលោក</td></tr><tr><td>2021</td><td>CapCut សម្រាប់ <b>Windows/Mac</b> និង Web</td><td>កាត់តលើកុំព្យូទ័រ</td></tr><tr><td>2022–2025</td><td>200 លានអ្នកប្រើសកម្ម (2022) · <b>1 ពាន់លាន+</b> ដោនឡូតលើ Google Play (មករា 2025)</td><td>ឧបករណ៍ AI៖ Auto captions, Remove background, Script-to-video…</td></tr></table>
+
+<div class="grid"><div class="card"><b>👤 អ្នកបង្កើត</b><br><b>ByteDance</b> (ក្រុមហ៊ុនម្ចាស់ TikTok) — ក្រុមដែលបង្កើត JianYing</div><div class="card"><b>🎯 ប្រើធ្វើអ្វី</b><br>TikTok/Reels/Shorts · Vlog · វីដេអូលក់អនឡាញ · មេរៀនអនឡាញ · Slideshow រូបថត</div><div class="card"><b>💼 អាជីព</b><br>Content creator · Video editor Freelance · Social media marketing · ធ្វើវីដេអូឲ្យហាង/អាជីវកម្ម</div><div class="card"><b>📱 ទំហំ</b><br>Mobile ងាយ និងលឿន · PC សម្រាប់ Project វែង និងច្បាស់ជាង</div></div>
+
+<div class="note">💡 ឈ្មោះប៊ូតុង និងទីតាំង Menu អាចខុសគ្នាបន្តិចតាមកំណែ (Version) និងឧបករណ៍ — វគ្គនេះផ្តោតលើ <b>គោលការណ៍</b> ដែលប្រើបានគ្រប់កំណែ ហើយក៏ប្រើបានជាមួយ Premiere/DaVinci ដែរ។</div>
+
+</section>
+<section id="setup">
+<h2>២. ដំឡើង &amp; ត្រៀមខ្លួន</h2>
+
+<ol class="steps"><li><b>ទូរស័ព្ទ</b>៖ ដោនឡូតពី Play Store / App Store (ពិនិត្យឈ្មោះអ្នកបង្កើត <b>Bytedance</b> — កុំដោនឡូត «CapCut Pro Mod APK» ពីគេហទំព័រក្រៅ ព្រោះអាចមាន Malware)។</li>
+<li><b>កុំព្យូទ័រ</b>៖ capcut.com → Download for Windows/Mac · ឬប្រើ Web editor លើ Browser។</li><li>ចុះឈ្មោះ (Account) ដើម្បីរក្សាទុក Project លើ Cloud និងប្រើ Template។</li>
+<li>រៀបចំ Folder៖ <code class='i'>Project/ 01_Video · 02_Audio · 03_Image · 04_Export</code> — ងាយរក File។</li><li>កាសស្តាប់ (Headphone) — សំឡេងល្អ = វីដេអូល្អពាក់កណ្តាល។</li></ol>
+<div class="warn">⚠️ ប្រើតែ <b>តន្ត្រី និងវីដេអូ ដែលអ្នកមានសិទ្ធិ</b> (Music ក្នុង CapCut ឬ TikTok Commercial library, ឬបទដែលអ្នកថតខ្លួនឯង) — ការប្រើបទមានកម្មសិទ្ធិ អាចធ្វើឲ្យវីដេអូត្រូវបិទសំឡេង ឬដកចេញ។</div>
+
+</section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>ស្គាល់ផ្ទាំងការងារ (Interface)</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 420" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="420" fill="#111"/><rect x="0" y="0" width="940" height="34" fill="#1e1e1e"/><text x="16" y="22" text-anchor="start" font-size="13" font-weight="700" fill="#fff">CapCut (PC)</text><text x="924" y="22" text-anchor="end" font-size="13" font-weight="700" fill="#00e5ff">Export ⤓</text><rect x="8" y="42" width="250" height="220" rx="6" fill="#1e1e1e"/><text x="133" y="64" text-anchor="middle" font-size="12" font-weight="400" fill="#ddd">① Media · Audio · Text · Stickers</text><text x="133" y="82" text-anchor="middle" font-size="12" font-weight="400" fill="#ddd">Effects · Transitions · Filters</text><rect x="20" y="100" width="70" height="60" rx="6" fill="#2b8a3e" opacity=".8"/><rect x="98" y="100" width="70" height="60" rx="6" fill="#1c7ed6" opacity=".8"/><rect x="176" y="100" width="70" height="60" rx="6" fill="#e8590c" opacity=".8"/><rect x="20" y="172" width="70" height="60" rx="6" fill="#7048e8" opacity=".8"/><rect x="98" y="172" width="70" height="60" rx="6" fill="#c92a2a" opacity=".8"/><rect x="176" y="172" width="70" height="60" rx="6" fill="#0b7285" opacity=".8"/><rect x="266" y="42" width="408" height="220" rx="6" fill="#000"/><rect x="402" y="52" width="136" height="200" rx="4" fill="#364fc7"/><text x="470" y="160" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">② Player</text><text x="470" y="180" text-anchor="middle" font-size="12" font-weight="400" fill="#dbe4ff">(Preview 9:16)</text><rect x="682" y="42" width="250" height="220" rx="6" fill="#1e1e1e"/><text x="807" y="64" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">③ Details / Properties</text><rect x="694" y="80" width="226" height="34" rx="6" fill="#2a2a2a"/><text x="704" y="102" text-anchor="start" font-size="12" font-weight="400" fill="#ccc">Basic: Scale · Position · Rotate</text><rect x="694" y="122" width="226" height="34" rx="6" fill="#2a2a2a"/><text x="704" y="144" text-anchor="start" font-size="12" font-weight="400" fill="#ccc">Speed · Animation</text><rect x="694" y="164" width="226" height="34" rx="6" fill="#2a2a2a"/><text x="704" y="186" text-anchor="start" font-size="12" font-weight="400" fill="#ccc">Adjust: Color · HSL · Curves</text><rect x="694" y="206" width="226" height="34" rx="6" fill="#2a2a2a"/><text x="704" y="228" text-anchor="start" font-size="12" font-weight="400" fill="#ccc">Audio: Volume · Fade · Voice</text><rect x="8" y="270" width="924" height="142" rx="6" fill="#1a1a1a"/><text x="20" y="290" text-anchor="start" font-size="13" font-weight="700" fill="#fff">④ Timeline</text><line x1="300" y1="296" x2="300" y2="408" stroke="#fff" stroke-width="2"/><rect x="120" y="300" width="220" height="22" rx="4" fill="#7048e8"/><text x="128" y="315" text-anchor="start" font-size="12" font-weight="700" fill="#fff">T  Text</text><rect x="380" y="328" width="180" height="22" rx="4" fill="#e8590c"/><text x="388" y="343" text-anchor="start" font-size="12" font-weight="700" fill="#fff">Overlay (PIP)</text><rect x="40" y="356" width="700" height="22" rx="4" fill="#1c7ed6"/><text x="48" y="371" text-anchor="start" font-size="12" font-weight="700" fill="#fff">Main track · Video</text><rect x="40" y="384" width="820" height="22" rx="4" fill="#2b8a3e"/><text x="48" y="399" text-anchor="start" font-size="12" font-weight="700" fill="#fff">♪ Audio / Music</text></svg><figcaption>🖼️ ផ្ទាំង CapCut PC៖ ① Media/Library ② Player ③ Properties ④ Timeline</figcaption></figure>
+
+<table><tr><th>ផ្នែក</th><th>តួនាទី</th><th>Mobile</th></tr><tr><td>① Media</td><td>នាំចូលវីដេអូ រូបភាព សំឡេង · Text, Effects, Transitions</td><td>ប៊ូតុង + Import / Toolbar ខាងក្រោម</td></tr><tr><td>② Player</td><td>មើលលទ្ធផល (Preview)</td><td>ខាងលើអេក្រង់</td></tr><tr><td>③ Properties</td><td>កែ Clip ដែលបានជ្រើស (ទំហំ ល្បឿន ពណ៌ សំឡេង)</td><td>Toolbar ខាងក្រោមពេលចុច Clip</td></tr><tr><td>④ Timeline</td><td>លំដាប់ Clip តាមពេលវេលា · Track ច្រើនជាន់</td><td>អូសម្រាមដៃ · Pinch zoom</td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Playhead</b> (បន្ទាត់ស) = ទីតាំងពេលបច្ចុប្បន្ន — ការកាត់ (Split) កើតនៅទីនេះ។</li><li><b>Main track</b> = វីដេអូមេ · Track លើ = Overlay, Text, Sticker · Track ក្រោម = Audio។</li><li>Shortcut PC សំខាន់៖ <kbd>Space</kbd> Play/Pause · <kbd>Ctrl/Cmd+B</kbd> Split · <kbd>Delete</kbd> លុប · <kbd>Ctrl/Cmd+Z</kbd> Undo · <kbd>Ctrl/Cmd +/−</kbd> Zoom Timeline។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>Text នៅលើ Track ខាងលើ ហើយវីដេអូនៅ Main track។ តើ Text នឹងបង្ហាញនៅលើ ឬក្រោមវីដេអូ?</p><details><summary>មើលចម្លើយ</summary><p><b>នៅលើ</b> — Track ខ្ពស់ជាង បង្ហាញពីលើ Track ទាបជាង (ដូច Layer ក្នុង Photoshop)។</p></details></div>
+
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>Project ថ្មី · Aspect ratio · Import</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 250" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="250" fill="#fff"/><rect x="76.0" y="20" width="108" height="192" rx="8" fill="#e03131" opacity=".85"/><text x="130" y="122.0" text-anchor="middle" font-size="22" font-weight="800" fill="#fff">9:16</text><text x="130" y="236" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">TikTok · Reels · Shorts</text><rect x="264.0" y="104" width="192" height="108" rx="8" fill="#1c7ed6" opacity=".85"/><text x="360" y="164.0" text-anchor="middle" font-size="22" font-weight="800" fill="#fff">16:9</text><text x="360" y="236" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">YouTube · Facebook ផ្តេក</text><rect x="515.0" y="62" width="150" height="150" rx="8" fill="#2b8a3e" opacity=".85"/><text x="590" y="143.0" text-anchor="middle" font-size="22" font-weight="800" fill="#fff">1:1</text><text x="590" y="236" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">Post ការ៉េ</text><rect x="755.0" y="50" width="130" height="162" rx="8" fill="#7048e8" opacity=".85"/><text x="820" y="137.0" text-anchor="middle" font-size="22" font-weight="800" fill="#fff">4:5</text><text x="820" y="236" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">Instagram/FB Feed</text></svg><figcaption>🖼️ Aspect ratio ជ្រើសតាមវេទិកាដែលអ្នកនឹង Post</figcaption></figure>
+
+<ol class="steps"><li>New project → Import វីដេអូ/រូបភាព (ជ្រើសតាមលំដាប់ដែលចង់បាន)។</li><li><b>Ratio</b> (Mobile: Format/Ratio · PC: Player → Ratio) → <b>9:16</b> សម្រាប់ TikTok។</li>
+<li>វីដេអូផ្តេកក្នុង Project បញ្ឈរ៖ ពង្រីក (Scale) ឲ្យពេញ ឬដាក់ <b>Background → Blur</b>។</li><li>ពិនិត្យ <b>Resolution</b> និង <b>FPS</b> របស់វីដេអូដើម (ថតដោយ 1080p 30fps ឬ 60fps)។</li></ol>
+<table><tr><th>វេទិកា</th><th>Ratio</th><th>Resolution ណែនាំ</th></tr><tr><td>TikTok · Reels · Shorts</td><td>9:16</td><td>1080×1920</td></tr><tr><td>YouTube</td><td>16:9</td><td>1920×1080 (ឬ 4K 3840×2160)</td></tr><tr><td>Facebook/Instagram Feed</td><td>4:5 ឬ 1:1</td><td>1080×1350 · 1080×1080</td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>ជ្រើស Ratio <b>មុន</b> ចាប់ផ្តើមកាត់ — ប្តូរពេលក្រោយ ត្រូវរៀបចំ Text/Sticker ឡើងវិញ។</li><li><b>Safe zone</b>៖ TikTok មានប៊ូតុង Like/Comment ខាងស្តាំ និង Caption ខាងក្រោម — កុំដាក់ Text សំខាន់នៅទីនោះ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>អ្នកថតវីដេអូផ្តេក (16:9) តែចង់ Post លើ TikTok។ មានជម្រើសអ្វីខ្លះ?</p><details><summary>មើលចម្លើយ</summary><p>① Project 9:16 + Scale ពង្រីកកាត់ផ្នែកសងខាង ② 9:16 + Background Blur ③ ប្រើ <b>Auto reframe</b> (AI តាមដានមនុស្ស) បើមានក្នុងកំណែរបស់អ្នក។</p></details></div>
+
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>កាត់៖ Split · Trim · Delete · Speed · Freeze</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 250" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="250" fill="#fff"/><text x="30" y="48" text-anchor="start" font-size="13.5" font-weight="700" fill="#0f172a">Original</text><rect x="220" y="26" width="699.2" height="34" rx="6" fill="#1c7ed6"/><text x="230" y="48" text-anchor="start" font-size="13" font-weight="700" fill="#fff">Clip A (20s)</text><text x="30" y="104" text-anchor="start" font-size="13.5" font-weight="700" fill="#0f172a">Split ✂ នៅ 8s</text><rect x="220" y="82" width="276.0" height="34" rx="6" fill="#1c7ed6"/><text x="230" y="104" text-anchor="start" font-size="13" font-weight="700" fill="#fff">A1 (8s)</text><rect x="524" y="82" width="419.52000000000004" height="34" rx="6" fill="#4dabf7"/><text x="534" y="104" text-anchor="start" font-size="13" font-weight="700" fill="#fff">A2 (12s)</text><text x="30" y="160" text-anchor="start" font-size="13.5" font-weight="700" fill="#0f172a">Delete A1 + Trim ចុង</text><rect x="220" y="138" width="349.6" height="34" rx="6" fill="#4dabf7"/><text x="230" y="160" text-anchor="start" font-size="13" font-weight="700" fill="#fff">A2 កាត់សល់ 10s</text><text x="30" y="216" text-anchor="start" font-size="13.5" font-weight="700" fill="#0f172a">Speed 2×</text><rect x="220" y="194" width="174.8" height="34" rx="6" fill="#e8590c"/><text x="230" y="216" text-anchor="start" font-size="13" font-weight="700" fill="#fff">A2 2× (5s)</text></svg><figcaption>🖼️ Split → Delete → Trim → Speed</figcaption></figure>
+
+<table><tr><th>ឧបករណ៍</th><th>ធ្វើអ្វី</th><th>ពេលណាប្រើ</th></tr><tr><td><b>Split</b></td><td>កាត់ Clip ជាពីរនៅ Playhead</td><td>លុបផ្នែកមិនចង់បាន</td></tr><tr><td><b>Trim</b></td><td>អូសគែម Clip ឲ្យខ្លី</td><td>កាត់ដើម/ចុង</td></tr><tr><td><b>Speed → Normal</b></td><td>0.1× – 100× ថេរ</td><td>Slow motion / Time-lapse</td></tr><tr><td><b>Speed → Curve</b></td><td>ល្បឿនប្រែប្រួល (Montage, Hero, Bullet…)</td><td>Velocity edit ពេញនិយមលើ TikTok</td></tr><tr><td><b>Freeze</b></td><td>បង្កក Frame ជារូបភាព</td><td>បញ្ឈប់ពេលសំខាន់ + Text</td></tr><tr><td><b>Reverse</b></td><td>ចាក់ថយក្រោយ</td><td>Effect រីករាយ</td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>ច្បាប់ <b>«កាត់ឲ្យខ្លី»</b>៖ លុបភាពស្ងាត់ «អឹម… អា…» និងចន្លោះទទេ — វីដេអូខ្លីទាញអ្នកមើលបានល្អ។</li><li>Slow motion ល្អ ត្រូវថត <b>60fps</b> ឡើង (30fps យឺត 0.5× នឹងរអាក់)។</li><li>Speed 2× → រយៈពេលពាក់កណ្តាល · Speed 0.5× → ទ្វេដង។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>Clip វែង 24 វិនាទី ដាក់ Speed 3×។ សល់ប៉ុន្មានវិនាទី?</p><details><summary>មើលចម្លើយ</summary><p>24 ÷ 3 = <b>8 វិនាទី</b>។</p></details></div>
+
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>សំឡេង៖ Music · Voiceover · Beat sync</h2>
+
+<table><tr><th>មុខងារ</th><th>ជំហាន</th><th>គន្លឹះ</th></tr><tr><td><b>Music</b></td><td>Audio → Sounds/Music → + </td><td>Volume Music ~10–25% ពេលមានការនិយាយ</td></tr><tr><td><b>Voiceover</b></td><td>Audio → Record/Voiceover</td><td>ថតក្នុងបន្ទប់ស្ងាត់ · ទូរស័ព្ទជិតមាត់ ~20cm</td></tr><tr><td><b>Fade in/out</b></td><td>ជ្រើស Audio → Fade</td><td>0.5–2s ដើម្បីកុំឲ្យដាច់ភ្លាមៗ</td></tr><tr><td><b>Noise reduction</b></td><td>Audio → Reduce noise</td><td>កាត់សំឡេងកង្ហារ ឡាន</td></tr><tr><td><b>Beat / Beats</b></td><td>Audio → Beat (Auto/Manual)</td><td>ចំណុចលឿង = ចង្វាក់ → កាត់ Clip ត្រូវ Beat</td></tr><tr><td><b>Extract audio</b></td><td>Import → Extract audio</td><td>យកសំឡេងពីវីដេអូផ្សេង</td></tr><tr><td><b>Voice changer / Effects</b></td><td>Audio → Voice effects</td><td>ប្រើតិចតួច</td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>ស្តាប់ដោយកាសជានិច្ច — សំឡេងខ្សោយ ឬឮខ្លាំងខុសគ្នា ធ្វើឲ្យអ្នកមើលរំកិលចេញ។</li><li><b>Beat sync</b>៖ ដាក់ Beat marks → កាត់ Clip នីមួយៗនៅលើសញ្ញា Beat → Transition ធ្វើពេល Beat ខ្លាំង (Drop)។</li><li>BPM 120 = Beat រៀងរាល់ 0.5s — Clip 2 Beat = 1s (សាកក្នុង App → 🎵 Beat Tap)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>បទមាន 100 BPM។ អ្នកចង់ប្តូររូប រៀងរាល់ ២ Beat។ រូបនីមួយៗវែងប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>1 Beat = 60 ÷ 100 = 0.6s → 2 Beat = <b>1.2 វិនាទី</b>។</p></details></div>
+
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>Text · Auto captions · ពុម្ពអក្សរខ្មែរ · Text-to-speech</h2>
+
+<table><tr><th>មុខងារ</th><th>ប្រើ</th></tr><tr><td><b>Add text</b></td><td>ចំណងជើង Hook · ឈ្មោះ · ចំណុចសំខាន់</td></tr><tr><td><b>Auto captions</b></td><td>AI បម្លែងការនិយាយទៅជា Subtitle (ពិនិត្យបញ្ជីភាសាដែលកំណែរបស់អ្នកគាំទ្រ) → <b>ពិនិត្យ និងកែកំហុសអក្ខរាវិរុទ្ធ</b></td></tr><tr><td><b>Text template / Animation</b></td><td>In · Out · Loop (Typewriter, Pop, Fade…)</td></tr><tr><td><b>Text-to-speech</b></td><td>អក្សរ → សំឡេង AI (ជ្រើសភាសា/សំឡេង)</td></tr><tr><td><b>Import .srt</b> (PC)</td><td>នាំចូល Subtitle ដែលវាយរួច</td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>អក្សរខ្មែរ</b>៖ បើ Auto captions មិនគាំទ្រខ្មែរ ឬខុសច្រើន → វាយដោយដៃ (Keyboard ខ្មែរ) ឬរៀបចំ .srt។ ជ្រើសពុម្ពអក្សរដែលបង្ហាញជើងអក្សរត្រឹមត្រូវ (ឧ. Kantumruy Pro, Battambang, Noto Sans Khmer) — ពិនិត្យថាជើងមិនបាក់។</li><li>Subtitle អានងាយ៖ ពណ៌ស + <b>Stroke ខ្មៅ</b> ឬ Background · ១–២ ជួរ · ≤ ៤២ តួ/ជួរ (ឡាតាំង) · នៅក្នុង Safe zone។</li><li>អ្នកមើលច្រើនមើលដោយ <b>បិទសំឡេង</b> (ជាពិសេសនៅទីសាធារណៈ) — Subtitle ជួយឲ្យពួកគេយល់ និងមើលដល់ចប់។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>Auto captions សរសេរ «ចាប់ផ្តើម» ជា «ចាប់ផ្ដើម» ខុស Font ហើយជើងអក្សរបាក់។ ដោះស្រាយយ៉ាងណា?</p><details><summary>មើលចម្លើយ</summary><p>កែ Text ដោយដៃ ហើយប្តូរ <b>ពុម្ពអក្សរខ្មែរ</b> ដែលគាំទ្រ Unicode ត្រឹមត្រូវ (ឧ. Kantumruy Pro/Noto Sans Khmer) · ពិនិត្យ Preview មុន Export។</p></details></div>
+
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Transitions · Effects · Filters</h2>
+
+<div class="grid"><div class="card"><b>🔀 Transition</b><br>រវាង Clip ពីរ (Dissolve, Slide, Zoom, Glitch…) · ចុចប៊ូតុងតូចរវាង Clip</div><div class="card"><b>✨ Video effects</b><br>Shake, Flash, Blur, Retro… ដាក់លើ Track ផ្សេង កំណត់រយៈពេល</div><div class="card"><b>🧍 Body effects</b><br>Effect តាមដានខ្លួនមនុស្ស (AI)</div><div class="card"><b>🎨 Filter</b><br>ប្តូរពណ៌ទាំងមូល · ចុះ Intensity 40–70% ធម្មជាតិជាង</div></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>ច្បាប់ <b>«តិច ប៉ុន្តែមានន័យ»</b>៖ Transition ដូចគ្នា ១–២ ប្រភេទក្នុងវីដេអូមួយ គ្រប់គ្រាន់ — ច្រើនពេក មើលទៅមិនអាជីព។</li><li>Hard cut (គ្មាន Transition) ត្រូវបានប្រើច្រើនបំផុតក្នុងភាពយន្ត — ដាក់ Transition តែពេលប្តូរទីកន្លែង/ពេលវេលា ឬនៅលើ Beat។</li><li>Transition ស៊ីពេល ~0.3–0.8s ពី Clip ទាំងពីរ — Clip ត្រូវមានសាច់គ្រប់។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>វីដេអូ Vlog មាន Transition ១២ ប្រភេទផ្សេងៗគ្នា។ មិត្តថា «មើលវិលមុខ»។ កែយ៉ាងណា?</p><details><summary>មើលចម្លើយ</summary><p>ប្រើ Hard cut ភាគច្រើន + Transition ១ ប្រភេទ (ឧ. Dissolve ឬ Zoom) ពេលប្តូរទីកន្លែង ហើយដាក់ត្រូវ Beat។</p></details></div>
+
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Overlay · Mask · Chroma key · Remove background</h2>
+
+<table><tr><th>ឧបករណ៍</th><th>ធ្វើអ្វី</th><th>ឧទាហរណ៍</th></tr><tr><td><b>Overlay (PIP)</b></td><td>វីដេអូ/រូបលើវីដេអូ</td><td>Reaction video · Logo · មុខអ្នកនិយាយនៅជ្រុង</td></tr><tr><td><b>Mask</b></td><td>បង្ហាញតែផ្នែក (Linear, Mirror, Circle, Rectangle, Heart…)</td><td>Split screen · Clone ខ្លួនឯង ២ នាក់</td></tr><tr><td><b>Blend mode</b></td><td>Screen, Multiply, Overlay…</td><td>Light leak · Effect ភ្លើង</td></tr><tr><td><b>Chroma key</b></td><td>លុបពណ៌ (Green screen)</td><td>ដាក់ផ្ទៃក្រោយថ្មី</td></tr><tr><td><b>Remove background (Auto cutout)</b></td><td>AI កាត់មនុស្សចេញពីផ្ទៃក្រោយ</td><td>មិនបាច់ Green screen</td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Clone effect</b>៖ ថតពីរដងដោយទូរស័ព្ទ <b>នៅនឹងមួយកន្លែង</b> (Tripod) → Overlay Clip ទី ២ → Mask Linear ពាក់កណ្តាល → Feather បន្តិច។</li><li>Chroma key៖ ពន្លឺស្មើលើផ្ទៃបៃតង · ស្លៀកពាក់កុំពណ៌បៃតង · កែ Intensity/Shadow។</li><li>Overlay ត្រូវតែនៅ Track លើ Main track។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>ចង់ធ្វើវីដេអូ «ខ្ញុំនិយាយជាមួយខ្លួនឯង»។ ត្រូវការអ្វីខ្លះ?</p><details><summary>មើលចម្លើយ</summary><p>ជើងកាមេរ៉ា (កាមេរ៉ាមិនរំកិល) · ថតពីរដង (ឆ្វេង/ស្តាំ) · Overlay + <b>Mask Linear</b> + Feather · ពន្លឺដូចគ្នាទាំងពីរដង។</p></details></div>
+
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Keyframe animation</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 260" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="260" fill="#fff"/><line x1="60" y1="210" x2="900" y2="210" stroke="#94a3b8" stroke-width="2"/><text x="60" y="236" text-anchor="middle" font-size="12" font-weight="400" fill="#64748b">0s</text><text x="900" y="236" text-anchor="middle" font-size="12" font-weight="400" fill="#64748b">3s</text><polyline points="60,190 900,50" fill="none" stroke="#adb5bd" stroke-width="2" stroke-dasharray="6 5"/><path d="M60 190 C 420 190, 540 50, 900 50" fill="none" stroke="#7048e8" stroke-width="3.5"/><rect x="52" y="182" width="16" height="16" transform="rotate(45 60 190)" fill="#f59f00"/><rect x="892" y="42" width="16" height="16" transform="rotate(45 900 50)" fill="#f59f00"/><text x="80" y="180" text-anchor="start" font-size="13" font-weight="700" fill="#0f172a">◆ Keyframe 1: Scale 100%</text><text x="880" y="40" text-anchor="end" font-size="13" font-weight="700" fill="#0f172a">◆ Keyframe 2: Scale 130%</text><text x="470" y="150" text-anchor="middle" font-size="13" font-weight="700" fill="#7048e8">Ease in-out (រលូន)</text><text x="560" y="105" text-anchor="middle" font-size="12" font-weight="400" fill="#868e96">Linear (ស្មើ)</text><text x="470" y="255" text-anchor="middle" font-size="13.5" font-weight="700" fill="#0f172a">Zoom-in យឺតៗ (Ken Burns) = Keyframe ២ + Curve</text></svg><figcaption>🖼️ Keyframe ២ ចំណុច + Curve = ចលនារលូន</figcaption></figure>
+
+<ol class="steps"><li>ដាក់ Playhead នៅ 0s → ចុច <b>◆ Keyframe</b> (Scale 100%)។</li><li>រំកិល Playhead ទៅ 3s → ប្តូរ Scale 130% → Keyframe បង្កើតដោយស្វ័យប្រវត្តិ។</li>
+<li>(PC) ជ្រើស <b>Curve/Ease</b> ដើម្បីឲ្យចលនារលូន។</li><li>Play ពិនិត្យ — Keyframe អាចប្រើលើ Position, Rotation, Opacity, Volume, Filter, Mask…</li></ol>
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Ken Burns</b>៖ Zoom 100% → 115% យឺតៗលើរូបថតនឹង = វីដេអូមានជីវិត។</li><li><b>Zoom on beat</b>៖ Keyframe Scale 100% → 110% → 100% ក្នុង 0.2s នៅលើ Beat។</li><li>Keyframe Opacity 0 → 100% = Fade in · Volume Keyframe = ចុះ Music ពេលមានការនិយាយ (Audio ducking)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>ចង់ឲ្យ Logo រំកិលពីឆ្វេងទៅស្តាំក្នុង 2 វិនាទី។ ត្រូវការ Keyframe ប៉ុន្មាន និងនៅលើលក្ខណៈអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>2 Keyframes</b> លើ <b>Position</b>៖ 0s (ឆ្វេង) និង 2s (ស្តាំ)។</p></details></div>
+
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>កែពណ៌ (Color grading)</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 240" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="240" fill="#fff"/><rect x="20" y="30" width="140" height="140" rx="10" fill="#8d8172"/><circle cx="90" cy="85" r="28" fill="#fff" opacity=".35"/><rect x="40" y="125" width="100" height="26" rx="6" fill="#000" opacity=".2"/><text x="90" y="196" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">Original</text><rect x="172" y="30" width="140" height="140" rx="10" fill="#b3a594"/><circle cx="242" cy="85" r="28" fill="#fff" opacity=".35"/><rect x="192" y="125" width="100" height="26" rx="6" fill="#000" opacity=".2"/><text x="242" y="196" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">Brightness +</text><rect x="324" y="30" width="140" height="140" rx="10" fill="#6b5d4f"/><circle cx="394" cy="85" r="28" fill="#fff" opacity=".35"/><rect x="344" y="125" width="100" height="26" rx="6" fill="#000" opacity=".2"/><text x="394" y="196" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">Contrast +</text><rect x="476" y="30" width="140" height="140" rx="10" fill="#b07a3a"/><circle cx="546" cy="85" r="28" fill="#fff" opacity=".35"/><rect x="496" y="125" width="100" height="26" rx="6" fill="#000" opacity=".2"/><text x="546" y="196" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">Saturation +</text><rect x="628" y="30" width="140" height="140" rx="10" fill="#6f86a3"/><circle cx="698" cy="85" r="28" fill="#fff" opacity=".35"/><rect x="648" y="125" width="100" height="26" rx="6" fill="#000" opacity=".2"/><text x="698" y="196" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">Temperature − (ត្រជាក់)</text><rect x="780" y="30" width="140" height="140" rx="10" fill="#c08a52"/><circle cx="850" cy="85" r="28" fill="#fff" opacity=".35"/><rect x="800" y="125" width="100" height="26" rx="6" fill="#000" opacity=".2"/><text x="850" y="196" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">Temperature + (ក្តៅ)</text><text x="470" y="228" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">Adjust → Basic៖ កែម្តងមួយៗ ហើយប្រៀបធៀប Before/After</text></svg><figcaption>🖼️ Adjust ម្តងមួយៗ</figcaption></figure>
+
+<table><tr><th>Adjust</th><th>ធ្វើអ្វី</th><th>គន្លឹះ</th></tr><tr><td>Brightness / Exposure</td><td>ពន្លឺទាំងមូល</td><td>កែមុនគេ</td></tr><tr><td>Contrast</td><td>ភាពខុសគ្នាភ្លឺ/ងងឹត</td><td>+ បន្តិច = ស្រស់</td></tr><tr><td>Highlights / Shadows</td><td>សង្គ្រោះមេឃភ្លឺ / ស្រមោលងងឹត</td><td>Highlights − · Shadows +</td></tr><tr><td>Saturation</td><td>ភាពដិតពណ៌</td><td>កុំលើស (ស្បែកមនុស្សក្រហមពេក)</td></tr><tr><td>Temperature / Tint</td><td>ក្តៅ (លឿង) / ត្រជាក់ (ខៀវ)</td><td>ធ្វើឲ្យ Clip ទាំងអស់ដូចគ្នា</td></tr><tr><td>HSL / Curves</td><td>កែពណ៌នីមួយៗ / Curve RGB</td><td>PC: កែមេឃឲ្យខៀវជាង</td></tr><tr><td>LUT</td><td>Preset ពណ៌ (.cube)</td><td>PC: Import LUT</td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>លំដាប់៖ <b>Correction</b> (កែឲ្យត្រឹមត្រូវ៖ ពន្លឺ White balance) → <b>Grading</b> (បង្កើត Mood៖ Cinematic, Warm…)។</li><li>ចម្លង Adjust ទៅ Clip ផ្សេង (Copy/Paste attributes ឬ Apply to all) ដើម្បីឲ្យពណ៌ស្មើគ្នា។</li><li>ពិនិត្យស្បែកមនុស្សជានិច្ច — ពណ៌ស្បែកខុស ធ្វើឲ្យវីដេអូមើលទៅមិនល្អភ្លាម។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>វីដេអូថតក្រោមភ្លើង LED លឿងពេក។ កែអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>បន្ថយ <b>Temperature</b> (ទៅខៀវ) រហូតដល់ពណ៌សមើលទៅស · ពិនិត្យស្បែក · បន្ទាប់មកទើបកែ Contrast/Saturation។</p></details></div>
+
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>Templates · Stickers · ឧបករណ៍ AI · ក្រមសីលធម៌</h2>
+
+<div class="grid"><div class="card"><b>📋 Templates</b><br>ជំនួសរូប/វីដេអូ → វីដេអូរួចភ្លាម · ល្អសម្រាប់ចាប់ផ្តើម តែកុំពឹងពេក</div><div class="card"><b>🤖 AI tools</b><br>Auto captions · Remove background · Auto reframe · Enhance/Upscale · Retouch · Script/Text-to-video · AI voice</div><div class="card"><b>🧩 Stickers / GIF</b><br>បន្ថែមភាពរីករាយ · Emoji · Arrow ចង្អុល</div><div class="card"><b>📸 Photo/Product</b><br>កាត់ផ្ទៃក្រោយផលិតផល — ល្អសម្រាប់លក់អនឡាញ</div></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>Template ពេញនិយមប្រើដោយមនុស្សរាប់ពាន់ → ដើម្បីលេចធ្លោ បង្កើត <b>Style ផ្ទាល់ខ្លួន</b> (ពុម្ពអក្សរ ពណ៌ Intro)។</li><li>ឧបករណ៍ AI ខ្លះត្រូវការ <b>Pro</b> ឬ Credit — ពិនិត្យមុនប្រើក្នុង Project។</li><li><b>ក្រមសីលធម៌</b>៖ កុំប្រើ AI ក្លែងមុខ/សំឡេងមនុស្សពិត (Deepfake) ដោយគ្មានការអនុញ្ញាត · កុំបង្កើតព័ត៌មានក្លែងក្លាយ · ប្រាប់អ្នកមើលពេលប្រើខ្លឹមសារ AI តាមច្បាប់វេទិកា។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>មិត្តចង់ប្រើ AI ធ្វើសំឡេងតារាល្បីម្នាក់ ឲ្យនិយាយផ្សព្វផ្សាយផលិតផលហាង។ គួរធ្វើទេ?</p><details><summary>មើលចម្លើយ</summary><p><b>មិនគួរ</b> — ក្លែងមនុស្សពិតដោយគ្មានការអនុញ្ញាត អាចខុសច្បាប់ ខុសលក្ខខណ្ឌវេទិកា និងបោកអ្នកទិញ។ ប្រើសំឡេងខ្លួនឯង ឬ AI voice ទូទៅ។</p></details></div>
+
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>និទានរឿង (Storytelling) &amp; វីដេអូខ្លី</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 200" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="200" fill="#fff"/><rect x="30.0" y="50" width="41.0" height="70" rx="8" fill="#e03131"/><text x="52.0" y="90" text-anchor="middle" font-size="10.5" font-weight="700" fill="#fff">Hook</text><text x="52.0" y="140" text-anchor="middle" font-size="12" font-weight="400" fill="#64748b">0–3s</text><rect x="74.0" y="50" width="99.66666666666667" height="70" rx="8" fill="#f59f00"/><text x="125.33333333333334" y="90" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">បញ្ហា</text><text x="125.33333333333334" y="140" text-anchor="middle" font-size="12" font-weight="400" fill="#64748b">3–10s</text><rect x="176.66666666666666" y="50" width="510.33333333333337" height="70" rx="8" fill="#1c7ed6"/><text x="433.33333333333337" y="90" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">ខ្លឹមសារ (Value)</text><text x="433.33333333333337" y="140" text-anchor="middle" font-size="12" font-weight="400" fill="#64748b">10–45s</text><rect x="690.0" y="50" width="143.66666666666666" height="70" rx="8" fill="#2b8a3e"/><text x="763.3333333333334" y="90" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Payoff</text><text x="763.3333333333334" y="140" text-anchor="middle" font-size="12" font-weight="400" fill="#64748b">45–55s</text><rect x="836.6666666666666" y="50" width="70.33333333333333" height="70" rx="8" fill="#7048e8"/><text x="873.3333333333333" y="90" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">CTA</text><text x="873.3333333333333" y="140" text-anchor="middle" font-size="12" font-weight="400" fill="#64748b">55–60s</text><text x="470" y="30" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">រចនាសម្ព័ន្ធវីដេអូខ្លី ៦០ វិនាទី</text><text x="470" y="180" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">អ្នកមើលសម្រេចចិត្តថាមើលបន្ត ឬរំកិលចេញ ក្នុង ១–៣ វិនាទីដំបូង</text></svg><figcaption>🖼️ Hook → Value → Payoff → CTA</figcaption></figure>
+
+<figure class="fig"><svg viewBox="0 0 940 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="230" fill="#fff"/><text x="230" y="24" text-anchor="middle" font-size="16" font-weight="800" fill="#0f172a">J-cut</text><rect x="30" y="44" width="270" height="30" rx="5" fill="#1c7ed6"/><text x="40" y="64" text-anchor="start" font-size="12" font-weight="700" fill="#fff">Video A</text><rect x="300" y="44" width="140" height="30" rx="5" fill="#e8590c"/><text x="310" y="64" text-anchor="start" font-size="12" font-weight="700" fill="#fff">Video B</text><rect x="30" y="84" width="200" height="26" rx="5" fill="#74c0fc"/><text x="40" y="102" text-anchor="start" font-size="12" font-weight="700" fill="#0b3d91">Audio A</text><rect x="230" y="84" width="210" height="26" rx="5" fill="#ffc078"/><text x="240" y="102" text-anchor="start" font-size="12" font-weight="700" fill="#7c2d12">Audio B</text><text x="230" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">សំឡេងឈុតបន្ទាប់ចាប់ផ្តើមមុន រូបភាព</text><text x="700" y="24" text-anchor="middle" font-size="16" font-weight="800" fill="#0f172a">L-cut</text><rect x="500" y="44" width="270" height="30" rx="5" fill="#1c7ed6"/><text x="510" y="64" text-anchor="start" font-size="12" font-weight="700" fill="#fff">Video A</text><rect x="770" y="44" width="140" height="30" rx="5" fill="#e8590c"/><text x="780" y="64" text-anchor="start" font-size="12" font-weight="700" fill="#fff">Video B</text><rect x="500" y="84" width="340" height="26" rx="5" fill="#74c0fc"/><text x="510" y="102" text-anchor="start" font-size="12" font-weight="700" fill="#0b3d91">Audio A</text><rect x="840" y="84" width="70" height="26" rx="5" fill="#ffc078"/><text x="850" y="102" text-anchor="start" font-size="12" font-weight="700" fill="#7c2d12">Audio B</text><text x="700" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">សំឡេងឈុតមុន បន្តលើរូបភាពឈុតថ្មី</text><text x="470" y="200" text-anchor="middle" font-size="13.5" font-weight="700" fill="#0f172a">ប្រើសម្រាប់ Interview, Vlog, ភាពយន្តខ្លី — ធ្វើឲ្យការផ្លាស់ប្តូរឈុត រលូន និងធម្មជាតិ</text></svg><figcaption>🖼️ J-cut និង L-cut</figcaption></figure>
+
+<table><tr><th>បច្ចេកទេស</th><th>ន័យ</th></tr><tr><td><b>Hook</b> 1–3s</td><td>សំណួរ លទ្ធផលចុងក្រោយ ឬរឿងភ្ញាក់ផ្អើល — «ខ្ញុំធ្វើនំនេះ ត្រឹម 50 រៀល!»</td></tr><tr><td><b>B-roll</b></td><td>វីដេអូបន្ថែមលើការនិយាយ (ដៃ ផលិតផល ទីកន្លែង)</td></tr><tr><td><b>Pacing</b></td><td>ប្តូររូបភាព ១–៣ វិនាទីម្តង សម្រាប់ Short-form</td></tr><tr><td><b>Shot types</b></td><td>Wide (ទីកន្លែង) · Medium · Close-up (អារម្មណ៍/ព័ត៌មានលម្អិត)</td></tr><tr><td><b>CTA</b></td><td>Follow, Comment, ទិញ — ១ CTA ច្បាស់</td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>សរសេរ <b>Script/Storyboard</b> មុនថត (App → 📝 Storyboard)។</li><li>ថត <b>B-roll ច្រើន</b> — វាជួយកាត់ការនិយាយខុស ដោយគ្មាន Jump cut ឃើញច្បាស់។</li><li>ពិនិត្យ <b>Retention</b> ក្នុង Analytics — វិនាទីណាអ្នកមើលចាកចេញ → កែវីដេអូបន្ទាប់។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>សរសេរ Hook ៣ វិនាទី សម្រាប់វីដេអូ «របៀបរៀនភាសាអង់គ្លេសដោយខ្លួនឯង»។</p><details><summary>មើលចម្លើយ</summary><p>ឧ. «ខ្ញុំមិនដែលចូលរៀនវគ្គអង់គ្លេសទេ តែឥឡូវនិយាយបាន — នេះជា ៣ វិធីដែលខ្ញុំធ្វើរៀងរាល់ថ្ងៃ»។</p></details></div>
+
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>Export &amp; Publish</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20" y="40" width="200" height="90" rx="14" fill="#1c7ed6"/><text x="120.0" y="79.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Resolution</text><text x="120.0" y="101.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">1080p · 2K · 4K</text><line x1="222" y1="85" x2="252" y2="85" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="256" y="40" width="200" height="90" rx="14" fill="#7048e8"/><text x="356.0" y="79.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Frame rate</text><text x="356.0" y="101.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">24 · 30 · 60 fps</text><line x1="458" y1="85" x2="488" y2="85" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="492" y="40" width="200" height="90" rx="14" fill="#e8590c"/><text x="592.0" y="79.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Bitrate / Quality</text><text x="592.0" y="101.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Recommended · Higher</text><line x1="694" y1="85" x2="724" y2="85" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="728" y="40" width="192" height="90" rx="14" fill="#2b8a3e"/><text x="824.0" y="79.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">MP4 (H.264/HEVC)</text><text x="824.0" y="101.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Upload ✓</text><text x="470" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">ទំហំ File ≈ Bitrate × រយៈពេល</text></svg><figcaption>🖼️ ការកំណត់ Export</figcaption></figure>
+
+<table><tr><th>Setting</th><th>ណែនាំ</th><th>ហេតុអ្វី</th></tr><tr><td>Resolution</td><td>1080p (Short-form) · 4K បើថត 4K</td><td>TikTok/Reels បង្ហាញ 1080p</td></tr><tr><td>Frame rate</td><td>ដូចវីដេអូដើម (30 ឬ 60)</td><td>ប្តូរ FPS ធ្វើឲ្យរអាក់</td></tr><tr><td>Bitrate / Quality</td><td>Recommended ឬ Higher</td><td>ខ្ពស់ពេក = File ធំ · ទាបពេក = ព្រិល</td></tr><tr><td>Format/Codec</td><td>MP4 · H.264 (ឬ HEVC/H.265 File តូចជាង)</td><td>គាំទ្រគ្រប់វេទិកា</td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>ទំហំ File (MB) ≈ Bitrate (Mbps) × វិនាទី ÷ 8</b> — ឧ. 10 Mbps × 60s ÷ 8 = 75 MB (សាកក្នុង App → 📐 Export)។</li><li>Ending/Watermark៖ កំណែឥតគិតថ្លៃអាចមាន Ending clip — លុបវាបានក្នុង Timeline (បើមាន) · ពិនិត្យលក្ខខណ្ឌ Template ខ្លះ។</li><li>មុន Post៖ មើលម្តងទៀតលើទូរស័ព្ទ · ពិនិត្យអក្ខរាវិរុទ្ធ · Thumbnail/Cover ច្បាស់ · Hashtag ៣–៥ ពាក់ព័ន្ធ។</li><li>Backup Project និង File ដើម — កុំលុបរហូតដល់ Post រួច។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>វីដេអូ 90 វិនាទី Export 1080p Bitrate 12 Mbps។ ទំហំ File ប្រហែលប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>12 × 90 ÷ 8 = <b>135 MB</b>។</p></details></div>
+
+</section>
+<section id="cheat">
+<h2>📋 Cheat Sheet</h2>
+
+<table><tr><th>Shortcut (PC)</th><th>Windows</th><th>Mac</th></tr><tr><td>Play/Pause</td><td>Space</td><td>Space</td></tr><tr><td>Split</td><td>Ctrl+B</td><td>Cmd+B</td></tr><tr><td>Undo / Redo</td><td>Ctrl+Z / Ctrl+Shift+Z</td><td>Cmd+Z / Cmd+Shift+Z</td></tr><tr><td>Zoom timeline</td><td>Ctrl + / −</td><td>Cmd + / −</td></tr><tr><td>Copy / Paste</td><td>Ctrl+C / Ctrl+V</td><td>Cmd+C / Cmd+V</td></tr><tr><td>Export</td><td>Ctrl+E</td><td>Cmd+E</td></tr></table>
+
+<div class="note">💡 Shortcut អាចប្តូរតាមកំណែ — មើលក្នុង Menu → Keyboard shortcuts។ រូបមន្ត៖ Speed n× → រយៈពេល ÷ n · 1 Beat = 60 ÷ BPM · File MB ≈ Mbps × s ÷ 8។</div>
+
+</section>
+<section id="pro">
+<h2>🏆 គម្រោង៖ វីដេអូ ៦០ វិនាទី សម្រាប់អាជីវកម្មក្នុងស្រុក</h2>
+
+<ol class="steps"><li>ជ្រើសប្រធានបទ៖ ហាងកាហ្វេ ផលិតផលគ្រួសារ សាលា ឬទីកន្លែងទេសចរណ៍ក្បែរផ្ទះ (សុំការអនុញ្ញាតម្ចាស់ហាង/មនុស្សដែលបង្ហាញមុខ)។</li>
+<li>សរសេរ Storyboard ៦–១០ Shot (App → 📝)៖ Hook · ៣ ចំណុចពិសេស · CTA។</li><li>ថត៖ Wide + Medium + Close-up · B-roll · សំឡេងស្អាត។</li>
+<li>កាត់ក្នុង CapCut៖ 9:16 · Beat sync · Subtitle ខ្មែរ · Keyframe zoom ២–៣ · Color correction · Music មានសិទ្ធិ។</li>
+<li>Export 1080p · Post · បន្ទាប់ ៣ ថ្ងៃ កត់ Views, Watch time, Retention → សរសេរមេរៀន ៣ ចំណុច។</li></ol>
+</section>
+<section id="pro-app">
+<h2>💻 CapCut Lab (App)</h2>
+
+<p><b>🎬 Mini Editor</b>៖ ជ្រើសវីដេអូរបស់អ្នក (ឬ Demo) → Ratio, Fill/Blur, Trim, Speed, Filter, Text animation, Ken Burns keyframe, Safe zone → Preview និង Export WebM ក្នុង Browser · <b>📐 Export</b>៖ គណនាទំហំ File · <b>🎵 Beat Tap</b>៖ រក BPM និងចំណុចកាត់ · <b>📝 Storyboard</b>៖ រៀប Shot និងរយៈពេល។</p>
+
+<div class="itk" id="cc">
+<div class="itk-tabs"><button class="on" data-t="ed">🎬 Mini Editor</button><button data-t="ex">📐 Export</button><button data-t="bt">🎵 Beat Tap</button><button data-t="sb">📝 Storyboard</button></div>
+
+<div class="itk-p on" data-p="ed">
+ <div class="itk-row">
+  <label>វីដេអូ<input type="file" id="e_file" accept="video/*" style="max-width:210px"></label>
+  <label>Ratio<select id="e_ratio"><option value="9:16">9:16 TikTok</option><option value="16:9">16:9 YouTube</option><option value="1:1">1:1</option><option value="4:5">4:5</option></select></label>
+  <label>Fit<select id="e_fit"><option value="cover">Fill (ពង្រីក)</option><option value="blur">Blur background</option><option value="contain">Fit (ស៊ុមខ្មៅ)</option></select></label>
+  <label>Filter<select id="e_flt"><option value="none">គ្មាន</option><option value="brightness(1.12) contrast(1.1) saturate(1.15)">ស្រស់ (Vivid)</option><option value="sepia(.35) saturate(1.2) contrast(1.05)">ក្តៅ (Warm)</option><option value="contrast(1.15) saturate(.8) hue-rotate(-8deg)">Cinematic</option><option value="grayscale(1) contrast(1.15)">ខ្មៅ-ស</option></select></label>
+  <label>Speed<select id="e_spd"><option>0.5</option><option selected>1</option><option>1.5</option><option>2</option></select></label>
+ </div>
+ <div class="itk-row">
+  <label>Trim ចាប់ពី (s)<input id="e_in" type="number" value="0" step="0.1" min="0" style="width:80px"></label>
+  <label>ដល់ (s)<input id="e_out" type="number" value="6" step="0.1" min="0" style="width:80px"></label>
+  <label>Text<input id="e_txt" value="ចាប់ផ្តើមរៀន CapCut!" style="width:200px"></label>
+  <label>Text ពី–ដល់ (s)<input id="e_t1" type="number" value="0.3" step="0.1" style="width:64px"><input id="e_t2" type="number" value="3" step="0.1" style="width:64px"></label>
+  <label>Animation<select id="e_anim"><option value="pop">Pop</option><option value="fade">Fade</option><option value="type">Typewriter</option><option value="slide">Slide up</option></select></label>
+  <label>Zoom keyframe<select id="e_zoom"><option value="0">គ្មាន</option><option value="1" selected>Ken Burns 100→115%</option></select></label>
+  <label><input type="checkbox" id="e_safe" checked> Safe zone</label>
+ </div>
+ <div style="display:flex;justify-content:center;background:#111;border-radius:12px;padding:10px"><canvas id="e_cv" width="360" height="640" style="max-width:100%;max-height:560px;border-radius:6px;background:#000"></canvas></div>
+ <div class="itk-row" style="margin-top:8px"><button class="btn" id="e_play">▶ Preview</button><button class="btn" id="e_rec">⏺ Export (WebM)</button><span id="e_info" style="color:var(--muted);font-size:13.5px"></span></div>
+ <div class="itk-out" id="e_out2">គ្មានវីដេអូ? ប្រើ <b>Demo</b> (ចលនាពណ៌) ដោយស្វ័យប្រវត្តិ — ឬជ្រើសវីដេអូពីឧបករណ៍របស់អ្នក (វីដេអូមិនចេញពី Browser ទេ)។</div>
+</div>
+
+<div class="itk-p" data-p="ex">
+ <div class="itk-row">
+  <label>វេទិកា<select id="x_pf"><option value="tt">TikTok/Reels/Shorts</option><option value="yt">YouTube 1080p</option><option value="yt4">YouTube 4K</option><option value="fb">Facebook Feed 4:5</option></select></label>
+  <label>រយៈពេល (s)<input id="x_d" type="number" value="60" style="width:90px"></label>
+  <label>FPS<select id="x_f"><option>24</option><option selected>30</option><option>60</option></select></label>
+  <label>Bitrate (Mbps)<input id="x_b" type="number" value="10" step="1" style="width:90px"></label>
+  <label>Codec<select id="x_c"><option value="1">H.264</option><option value="0.6">HEVC (H.265)</option></select></label>
+ </div>
+ <div class="itk-out" id="x_out"></div>
+</div>
+
+<div class="itk-p" data-p="bt">
+ <p class="vl-tip">ជ្រើសបទ (ពីឧបករណ៍របស់អ្នក) ចុច ▶ ហើយចុច <b>TAP</b> (ឬ Space) តាមចង្វាក់ ៨ ដងឡើង → ទទួលបាន BPM និងចំណុចកាត់ (Beat marks)។</p>
+ <div class="itk-row"><label>Audio<input type="file" id="b_file" accept="audio/*"></label><button class="btn" id="b_play">▶ / ⏸</button><button class="btn" id="b_tap" style="min-width:140px;font-weight:800">🥁 TAP</button><button class="btn" id="b_clr">♻ Reset</button>
+ <label>ប្តូររូបរៀងរាល់<select id="b_every"><option value="1">1 Beat</option><option value="2" selected>2 Beats</option><option value="4">4 Beats (1 bar)</option></select></label></div>
+ <audio id="b_au" style="display:none"></audio>
+ <canvas id="b_cv" width="900" height="90" style="width:100%;background:#f8fafc;border:1px solid var(--line);border-radius:10px"></canvas>
+ <div class="itk-out" id="b_out"></div>
+</div>
+
+<div class="itk-p" data-p="sb">
+ <div class="itk-row">
+  <label>Shot<select id="s_t"><option>Hook</option><option>Wide</option><option>Medium</option><option>Close-up</option><option>B-roll</option><option>Text/Graphic</option><option>CTA</option></select></label>
+  <label>ពិពណ៌នា<input id="s_d" value="បង្ហាញលទ្ធផលចុងក្រោយភ្លាម" style="width:240px"></label>
+  <label>វិនាទី<input id="s_s" type="number" value="3" step="0.5" style="width:70px"></label>
+  <label>សំឡេង/Text<input id="s_a" value="«ធ្វើបានក្នុង ៥ នាទី!»" style="width:180px"></label>
+  <button class="btn" id="s_add">➕ បន្ថែម</button><button class="btn" id="s_demo">📋 គំរូ</button>
+ </div>
+ <div class="itk-out" id="s_list"></div>
+</div>
+</div>
+<script>
+(() => {
+const $ = id => document.getElementById(id), root = $("cc");
+const st = { get(k, d) { try { const v = localStorage.getItem("cc_" + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem("cc_" + k, JSON.stringify(v)); } catch (e) {} } };
+root.querySelectorAll(".itk-tabs button").forEach(b => b.onclick = () => { root.querySelectorAll(".itk-tabs button").forEach(x => x.classList.toggle("on", x === b)); root.querySelectorAll(".itk-p").forEach(p => p.classList.toggle("on", p.dataset.p === b.dataset.t)); if (b.dataset.t === "bt") drawBeats(); });
+
+/* ---------------- mini editor ---------------- */
+const cv = $("e_cv"), g = cv.getContext("2d"), vid = document.createElement("video");
+vid.muted = true; vid.playsInline = true; vid.crossOrigin = "anonymous";
+let hasVid = false, playing = false, t0 = 0, raf = 0, rec = null;
+const R = { "9:16": [360, 640], "16:9": [640, 360], "1:1": [480, 480], "4:5": [432, 540] };
+function setRatio() { const [w, h] = R[$("e_ratio").value]; cv.width = w; cv.height = h; frame(0); }
+$("e_file").onchange = e => { const f = e.target.files[0]; if (!f) return; vid.src = URL.createObjectURL(f); vid.onloadedmetadata = () => { hasVid = true; $("e_out").value = Math.min(vid.duration, 15).toFixed(1); $("e_info").textContent = `${vid.videoWidth}×${vid.videoHeight} · ${vid.duration.toFixed(1)}s`; vid.currentTime = +$("e_in").value; }; vid.onseeked = () => { if (!playing) frame(0); }; };
+function demo(t, w, h) { const gr = g.createLinearGradient(0, 0, w, h); gr.addColorStop(0, `hsl(${(t * 40) % 360},70%,45%)`); gr.addColorStop(1, `hsl(${(t * 40 + 120) % 360},70%,35%)`); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+  for (let i = 0; i < 6; i++) { g.beginPath(); g.fillStyle = "rgba(255,255,255,.18)"; g.arc(w / 2 + Math.cos(t * 1.3 + i) * w * .32, h / 2 + Math.sin(t * .9 + i * 2) * h * .3, 30 + i * 9, 0, 7); g.fill(); }
+  g.fillStyle = "rgba(255,255,255,.85)"; g.font = "bold 22px sans-serif"; g.textAlign = "center"; g.fillText("DEMO CLIP", w / 2, h * .16); }
+function drawMedia(t) {
+  const w = cv.width, h = cv.height, fit = $("e_fit").value, z = $("e_zoom").value === "1" ? 1 + .15 * Math.min(1, t / Math.max(.1, dur())) : 1;
+  g.save(); g.filter = $("e_flt").value;
+  if (!hasVid) { g.translate(w / 2, h / 2); g.scale(z, z); g.translate(-w / 2, -h / 2); demo(t, w, h); g.restore(); return; }
+  const vw = vid.videoWidth, vh = vid.videoHeight, sCover = Math.max(w / vw, h / vh), sFit = Math.min(w / vw, h / vh);
+  g.fillStyle = "#000"; g.fillRect(0, 0, w, h);
+  if (fit === "blur") { g.filter = $("e_flt").value + " blur(18px) brightness(.7)"; g.drawImage(vid, (w - vw * sCover) / 2, (h - vh * sCover) / 2, vw * sCover, vh * sCover); g.filter = $("e_flt").value; }
+  const s = (fit === "cover" ? sCover : sFit) * z; g.drawImage(vid, (w - vw * s) / 2, (h - vh * s) / 2, vw * s, vh * s); g.restore();
+}
+function drawText(t) {
+  const a = +$("e_t1").value, b = +$("e_t2").value, s = $("e_txt").value; if (t < a || t > b || !s) return;
+  const w = cv.width, h = cv.height, p = Math.min(1, (t - a) / .35), out = Math.min(1, (b - t) / .25), anim = $("e_anim").value;
+  let alpha = Math.min(1, out), sc = 1, dy = 0, shown = s;
+  if (anim === "pop") sc = p < 1 ? .6 + .5 * Math.sin(p * Math.PI / 2) * (1 + .15 * Math.sin(p * Math.PI)) : 1;
+  if (anim === "fade") alpha *= p;
+  if (anim === "slide") { dy = (1 - p) * 40; alpha *= p; }
+  if (anim === "type") shown = Array.from(s).slice(0, Math.ceil(Array.from(s).length * Math.min(1, (t - a) / 1.2))).join("");
+  const fs = Math.round(w * .075); g.save(); g.globalAlpha = Math.max(0, alpha); g.translate(w / 2, h * .38 + dy); g.scale(sc, sc);
+  g.font = `800 ${fs}px "Kantumruy Pro","Noto Sans Khmer","Khmer OS Battambang",sans-serif`; g.textAlign = "center"; g.textBaseline = "middle";
+  const tw = g.measureText(shown).width; g.fillStyle = "rgba(0,0,0,.55)"; g.beginPath(); (g.roundRect ? g.roundRect(-tw / 2 - 14, -fs * .75, tw + 28, fs * 1.5, 10) : g.rect(-tw / 2 - 14, -fs * .75, tw + 28, fs * 1.5)); g.fill();
+  g.lineWidth = 4; g.strokeStyle = "#000"; g.strokeText(shown, 0, 0); g.fillStyle = "#fff"; g.fillText(shown, 0, 0); g.restore();
+}
+function drawSafe() { if (!$("e_safe").checked || $("e_ratio").value !== "9:16" || rec) return; const w = cv.width, h = cv.height; g.save(); g.fillStyle = "rgba(255,59,59,.18)"; g.fillRect(w * .84, h * .35, w * .16, h * .5); g.fillRect(0, h * .82, w, h * .18); g.fillStyle = "#ffb3b3"; g.font = "11px sans-serif"; g.fillText("UI TikTok", w * .85, h * .34); g.fillText("Caption / Username", 8, h * .815); g.restore(); }
+const dur = () => Math.max(.1, (+$("e_out").value - +$("e_in").value) / +$("e_spd").value);
+function frame(t) { drawMedia(t); drawText(t); drawSafe(); g.fillStyle = "rgba(0,0,0,.5)"; if (!rec) { g.fillRect(0, cv.height - 4, cv.width, 4); g.fillStyle = "#00e5ff"; g.fillRect(0, cv.height - 4, cv.width * Math.min(1, t / dur()), 4); } }
+function loop() { const t = (performance.now() - t0) / 1000; if (t >= dur()) { stop(); return; } frame(t); raf = requestAnimationFrame(loop); }
+function start() { playing = true; $("e_play").textContent = "⏸ Stop"; if (hasVid) { vid.currentTime = +$("e_in").value; vid.playbackRate = +$("e_spd").value; vid.play().catch(() => {}); } t0 = performance.now(); loop(); }
+function stop() { playing = false; cancelAnimationFrame(raf); if (hasVid) vid.pause(); $("e_play").textContent = "▶ Preview"; if (rec && rec.state === "recording") rec.stop(); }
+$("e_play").onclick = () => playing ? stop() : start();
+$("e_rec").onclick = () => {
+  if (!cv.captureStream || !window.MediaRecorder) { $("e_out2").innerHTML = "⚠️ Browser នេះមិនគាំទ្រការ Export (សាក Chrome/Edge)"; return; }
+  const chunks = []; rec = new MediaRecorder(cv.captureStream(30), { mimeType: MediaRecorder.isTypeSupported("video/webm;codecs=vp9") ? "video/webm;codecs=vp9" : "video/webm" });
+  rec.ondataavailable = e => e.data.size && chunks.push(e.data);
+  rec.onstop = () => { const blob = new Blob(chunks, { type: "video/webm" }), url = URL.createObjectURL(blob); rec = null;
+    $("e_out2").innerHTML = `✅ Export រួច៖ ${(blob.size / 1048576).toFixed(2)} MB · ${dur().toFixed(1)}s · ${cv.width}×${cv.height} — <a href="${url}" download="capcut-lab.webm">⤓ ទាញយក</a> (WebM · គ្មានសំឡេង · CapCut ពិត Export MP4 + សំឡេង)<br><video src="${url}" controls style="max-width:220px;margin-top:6px;border-radius:8px"></video>`; frame(0); };
+  rec.start(); $("e_out2").textContent = "⏺ កំពុង Export…"; start();
+};
+["e_ratio"].forEach(id => $(id).onchange = setRatio); ["e_fit", "e_flt", "e_txt", "e_t1", "e_t2", "e_anim", "e_zoom", "e_safe", "e_in", "e_spd"].forEach(id => $(id).oninput = () => { if (id === "e_in" && hasVid) vid.currentTime = +$("e_in").value; if (!playing) frame(Math.min(+$("e_t1").value + .6, dur())); });
+
+/* ---------------- export calc ---------------- */
+const PF = { tt: [1080, 1920, 10], yt: [1920, 1080, 12], yt4: [3840, 2160, 45], fb: [1080, 1350, 8] };
+$("x_pf").onchange = () => { $("x_b").value = PF[$("x_pf").value][2]; xc(); };
+function xc() { const [w, h] = PF[$("x_pf").value], d = +$("x_d").value, b = +$("x_b").value * +$("x_c").value, f = +$("x_f").value, mb = b * d / 8;
+  const bpp = b * 1e6 / (w * h * f);
+  $("x_out").innerHTML = `Resolution <b>${w}×${h}</b> · ${f} fps · Bitrate ពិត ≈ <b>${b.toFixed(1)} Mbps</b><br>ទំហំ File ≈ <b>${mb.toFixed(1)} MB</b> (${(mb / 1024).toFixed(2)} GB) — រូបមន្ត Mbps × វិនាទី ÷ 8<br>Upload លើ 4G (≈ 10 Mbps) ≈ <b>${Math.ceil(mb * 8 / 10)} វិនាទី</b><br>Bits per pixel ≈ ${bpp.toFixed(3)} → ${bpp < .04 ? '<span style="color:#e03131">⚠️ ទាបពេក អាចព្រិល</span>' : bpp > .2 ? "ខ្ពស់ (File ធំ គុណភាពមិនកើនប៉ុន្មាន)" : "✅ សមល្មម"}`; }
+["x_d", "x_f", "x_b", "x_c"].forEach(id => $(id).oninput = xc);
+
+/* ---------------- beat tap ---------------- */
+const au = $("b_au"); let taps = [];
+$("b_file").onchange = e => { const f = e.target.files[0]; if (f) { au.src = URL.createObjectURL(f); taps = []; drawBeats(); } };
+$("b_play").onclick = () => { if (!au.src) { $("b_out").innerHTML = "ជ្រើសបទសិន — ឬចុច TAP ដោយគ្មានបទ (ប្រើម៉ោងពិត)"; return; } au.paused ? au.play() : au.pause(); };
+function now() { return au.src && !au.paused ? au.currentTime : performance.now() / 1000; }
+function tap() { taps.push(now()); if (taps.length > 64) taps.shift(); drawBeats(); }
+$("b_tap").onclick = tap; document.addEventListener("keydown", e => { if (e.code === "Space" && root.querySelector('[data-p="bt"]').classList.contains("on") && e.target.tagName !== "INPUT") { e.preventDefault(); tap(); } });
+$("b_clr").onclick = () => { taps = []; drawBeats(); }; $("b_every").onchange = drawBeats;
+function drawBeats() { const c = $("b_cv"), x = c.getContext("2d"); x.clearRect(0, 0, c.width, c.height); x.fillStyle = "#f8fafc"; x.fillRect(0, 0, c.width, c.height);
+  if (taps.length < 2) { $("b_out").innerHTML = `Tap ${taps.length}/8…`; return; }
+  const iv = taps.slice(1).map((t, i) => t - taps[i]).filter(d => d > .2 && d < 2), mean = iv.reduce((a, b) => a + b, 0) / (iv.length || 1), bpm = 60 / mean, n = +$("b_every").value;
+  const sd = Math.sqrt(iv.reduce((a, b) => a + (b - mean) ** 2, 0) / (iv.length || 1));
+  for (let i = 0; i < 24; i++) { const xx = 20 + i * 36; x.fillStyle = i % n === 0 ? "#f59f00" : "#ced4da"; x.fillRect(xx, i % n === 0 ? 14 : 34, i % n === 0 ? 6 : 3, i % n === 0 ? 62 : 22); }
+  x.fillStyle = "#334155"; x.font = "12px sans-serif"; x.fillText("◆ = ចំណុចកាត់ (Split)", 20, 86);
+  const t1 = taps[0], cuts = Array.from({ length: 8 }, (_, i) => (t1 + i * n * mean).toFixed(2) + "s");
+  $("b_out").innerHTML = `BPM ≈ <b>${bpm.toFixed(1)}</b> · 1 Beat = <b>${mean.toFixed(3)}s</b> · ភាពទៀងទាត់ ±${(sd * 1000).toFixed(0)} ms ${taps.length < 8 ? "(Tap បន្ថែមដើម្បីឲ្យច្បាស់)" : "✅"}<br>ប្តូររូបរៀងរាល់ ${n} Beat = <b>${(n * mean).toFixed(2)}s</b> ក្នុងមួយ Clip · ${au.src ? "ចំណុចកាត់ក្នុងបទ៖ " + cuts.join(" · ") : "ជ្រើសបទ ដើម្បីបានពេលកាត់ពិត"}`; }
+
+/* ---------------- storyboard ---------------- */
+let SB = st.get("sb", []);
+function sb() { const tot = SB.reduce((a, s) => a + s.s, 0);
+  $("s_list").innerHTML = SB.length ? `<b>សរុប ${tot.toFixed(1)}s</b> ${tot > 60 ? '· <span style="color:#e03131">លើស 60s</span>' : ""} ${SB[0] && SB[0].t !== "Hook" ? '· <span style="color:#e8590c">⚠️ Shot ទី ១ គួរជា Hook</span>' : ""}<br>` +
+    SB.map((s, i) => `${i + 1}. <b>${s.t}</b> (${s.s}s) — ${s.d.replace(/[<>&]/g, "")} · 🔊 ${s.a.replace(/[<>&]/g, "")} <button class="btn" data-up="${i}" style="padding:0 6px;font-size:12px">↑</button><button class="btn" data-del="${i}" style="padding:0 6px;font-size:12px">🗑</button>`).join("<br>") : "Storyboard ទទេ — ចុច 📋 គំរូ ឬបន្ថែម Shot";
+  $("s_list").querySelectorAll("[data-del]").forEach(b => b.onclick = () => { SB.splice(+b.dataset.del, 1); st.set("sb", SB); sb(); });
+  $("s_list").querySelectorAll("[data-up]").forEach(b => b.onclick = () => { const i = +b.dataset.up; if (i) { [SB[i - 1], SB[i]] = [SB[i], SB[i - 1]]; st.set("sb", SB); sb(); } }); }
+$("s_add").onclick = () => { SB.push({ t: $("s_t").value, d: $("s_d").value, s: +$("s_s").value || 1, a: $("s_a").value }); st.set("sb", SB); sb(); };
+$("s_demo").onclick = () => { SB = [{ t: "Hook", d: "កាហ្វេទឹកដោះគោត្រជាក់ ចាក់ពីលើ Slow-mo", s: 2.5, a: "«កាហ្វេល្អបំផុតក្នុងសង្កាត់?»" }, { t: "Wide", d: "ខាងមុខហាង ពេលព្រឹក", s: 3, a: "Music ចាប់ផ្តើម" },
+  { t: "Close-up", d: "ដៃកិនគ្រាប់កាហ្វេ", s: 2, a: "សំឡេងកិន (ASMR)" }, { t: "Medium", d: "ម្ចាស់ហាងនិយាយ ១ ប្រយោគ", s: 6, a: "«យើងប្រើកាហ្វេមណ្ឌលគិរី»" }, { t: "B-roll", d: "អតិថិជនញញឹម", s: 3, a: "Beat drop" }, { t: "CTA", d: "ផែនទី + ម៉ោងបើក", s: 3.5, a: "«មកសាកមើល!»" }]; st.set("sb", SB); sb(); };
+
+setRatio(); xc(); sb(); frame(.8);
+})();
+</script>
+
+<h3>🏆 Quiz CapCut ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["CapCut បង្កើតដោយក្រុមហ៊ុន?", ["Google", "ByteDance", "Adobe", "Meta"], 1], ["ឈ្មោះ CapCut នៅប្រទេសចិន?", ["Douyin", "剪映 JianYing", "WeChat", "Kuaishou"], 1], ["CapCut ប្តូរឈ្មោះ និងចេញទូទាំងពិភពលោកឆ្នាំ?", ["2016", "2020", "2023", "2010"], 1], ["Non-linear editing លើកុំព្យូទ័រ (1989) ពី?", ["Avid", "CapCut", "TikTok", "Canva"], 0], ["Ratio សម្រាប់ TikTok/Reels?", ["16:9", "9:16", "4:3", "21:9"], 1], ["Resolution ណែនាំ TikTok?", ["720×480", "1080×1920", "1920×1080", "640×640"], 1], ["Split ធ្វើអ្វី?", ["លុប Clip", "កាត់ Clip ជាពីរនៅ Playhead", "បន្ថែម Music", "Export"], 1], ["Clip 24s Speed 3× → ?", ["72s", "8s", "12s", "3s"], 1], ["Slow motion ល្អ គួរថតនៅ?", ["15fps", "24fps", "60fps ឡើង", "1fps"], 2], ["100 BPM → 1 Beat = ?", ["0.6s", "1s", "1.6s", "0.1s"], 0], ["Music ពេលមានការនិយាយ គួរ?", ["100%", "បន្ថយ ~10–25%", "បិទមិនបាច់មាន", "200%"], 1], ["Subtitle អានងាយ៖", ["ពណ៌ស + Stroke ខ្មៅ", "លឿងលើផ្ទៃស", "អក្សរតូចបំផុត", "៥ ជួរ"], 0], ["Transition ច្រើនប្រភេទពេក →", ["អាជីព", "មើលវិលមុខ មិនអាជីព", "File តូច", "គ្មានឥទ្ធិពល"], 1], ["ធ្វើ Clone ខ្លួនឯងប្រើ?", ["Overlay + Mask", "Filter", "Speed", "Export"], 0], ["Chroma key ប្រើជាមួយ?", ["Green screen", "Music", "Subtitle", "Sticker"], 0], ["Zoom យឺតៗលើរូបថត ហៅថា?", ["Ken Burns", "J-cut", "Jump cut", "LUT"], 0], ["J-cut = ?", ["សំឡេងឈុតបន្ទាប់ចាប់ផ្តើមមុនរូបភាព", "រូបមុនសំឡេង", "កាត់លោត", "Freeze"], 0], ["Hook គួរនៅ?", ["វិនាទីចុងក្រោយ", "១–៣ វិនាទីដំបូង", "កណ្តាល", "គ្មាន"], 1], ["10 Mbps × 60s ÷ 8 ≈ ?", ["75 MB", "600 MB", "7.5 MB", "1 GB"], 0], ["ប្រើ AI ក្លែងសំឡេងតារាដោយគ្មានការអនុញ្ញាត?", ["ល្អ", "មិនគួរ — ខុសក្រមសីលធម៌/ច្បាប់", "ចាំបាច់", "គ្មានបញ្ហា"], 1]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+
+<ol class="steps"><li><b>CapCut Mobile</b>៖ Template → កាត់ → Text → Music (សប្តាហ៍ ១–២)</li><li><b>CapCut PC</b>៖ Keyframe, Mask, Color, Beat sync, Subtitle ខ្មែរ (សប្តាហ៍ ៣–៤)</li>
+<li>Post វីដេអូ ១ រៀងរាល់សប្តាហ៍ ហើយមើល Analytics (Retention)</li><li>វគ្គបន្ទាប់លើ site៖ <b>Adobe Premiere</b> → <b>After Effects</b> (Motion) → <b>DaVinci Resolve</b> (Color) · <b>Photoshop</b> (Thumbnail)</li>
+<li>Portfolio ៥–១០ វីដេអូ → Freelance/Content creator · រៀនការថត (ពន្លឺ សំឡេង Composition) ព្រោះ «Footage ល្អ = Edit ងាយ»</li></ol>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="capcut"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

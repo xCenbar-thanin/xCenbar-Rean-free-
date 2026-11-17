@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន PHP & Laravel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#ff2d20; --accent2:#f9322c; --accent-soft:#ffeceb;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#ff6b61; --accent2:#ff8a80; --accent-soft:#2d0f0d;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#ff6b61; --accent2:#ff8a80; --accent-soft:#2d0f0d;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#1f1235,#777bb3 45%,#ff2d20);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/laravel.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/laravel.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>PHP &amp; Laravel ពីដើមដល់ Deploy</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. PHP &amp; Laravel ជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#install">២. ដំឡើង PHP, Composer &amp; Laravel</a>
+<a href="#elements">៣. ធាតុនីមួយៗរបស់ Laravel (MVC)</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: PHP មូលដ្ឋាន៖ Variable, Type, String &amp; Condition</a>
+<a href="#l2">មេរៀន ២: Array &amp; Function</a>
+<a href="#l3">មេរៀន ៣: OOP៖ Class, Interface, Enum &amp; Readonly</a>
+<a href="#l4">មេរៀន ៤: PHP + HTML៖ Form, Session &amp; សុវត្ថិភាព XSS</a>
+<a href="#l5">មេរៀន ៥: Database ជាមួយ PDO &amp; SQL Injection</a>
+<a href="#l6">មេរៀន ៦: Composer, Namespace &amp; Autoload (PSR-4)</a>
+<a href="#l7">មេរៀន ៧: Router ដោយដៃ៖ យល់ពី Laravel ពីខាងក្នុង</a>
+<a href="#l8">មេរៀន ៨: Laravel៖ Routes &amp; Artisan</a>
+<a href="#l9">មេរៀន ៩: Controller &amp; Blade Views</a>
+<a href="#l10">មេរៀន ១០: Migration, Eloquent Model &amp; Relationships</a>
+<a href="#l11">មេរៀន ១១: CRUD + Validation (FormRequest)</a>
+<a href="#l12">មេរៀន ១២: Authentication, Middleware &amp; Policy</a>
+<a href="#l13">មេរៀន ១៣: File Upload &amp; Storage</a>
+<a href="#l14">មេរៀន ១៤: REST API សម្រាប់ Mobile App (Sanctum)</a>
+<a href="#l15">មេរៀន ១៥: Queue, Mail, Notification &amp; Schedule</a>
+<a href="#l16">មេរៀន ១៦: Testing (Pest) &amp; Deploy</a>
+<a href="#cheat">📋 Cheat Sheet</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងអាជីព៖ Kafe POS &amp; Online Order (Laravel)</a>
+<a href="#pro-app">💻 Laravel Lab Pro (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🐘 PHP + Laravel — Website &amp; API ពេញនិយមនៅកម្ពុជា</h2>
+  <p>រៀនពី <b>PHP 8</b> (Array, OOP, Enum, Form, Session, PDO, Composer) រហូតដល់ <b>Laravel</b>៖ Routes, Controller, Blade, Migration, Eloquent, Validation, Auth, Upload, <b>API Sanctum</b>, Queue, Test និង Deploy — PHP រត់ពិតលើ PHP 8.3។</p>
+  <p><span class="badge">📘 ១៦ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">💻 Code មានពណ៌ + លទ្ធផល</span><span class="badge">🐘 Laravel Lab Pro</span></p>
+</section>
+<section id="intro">
+<h2>១. PHP &amp; Laravel ជាអ្វី? អ្នកណាបង្កើត?</h2>
+
+<p><b>PHP</b> គឺជាភាសាសរសេរកម្មវិធីខាង <b>Server</b> សម្រាប់បង្កើត Website ដែលប្រែប្រួល (Dynamic)៖ Login, ទំនិញ, Order, Admin panel។ <b>Laravel</b> គឺជា <b>Framework</b> PHP ពេញនិយមបំផុត ដែលផ្តល់រចនាសម្ព័ន្ធ <b>MVC</b>, Database (Eloquent), Login, API, Queue និងសុវត្ថិភាពស្រាប់។ <button class="btn say" data-say="PHP and Laravel">🔊 អានពាក្យ</button></p>
+<table><tr><th>ឆ្នាំ</th><th>ព្រឹត្តិការណ៍</th></tr><tr><td>1994</td><td><b>Rasmus Lerdorf</b> (ជនជាតិដាណឺម៉ាក-កាណាដា) សរសេរ "Personal Home Page Tools" — កំណើត PHP</td></tr><tr><td>1998</td><td>PHP 3 (Andi Gutmans &amp; Zeev Suraski) → ឈ្មោះថ្មី <b>PHP: Hypertext Preprocessor</b></td></tr><tr><td>2003–2004</td><td><b>WordPress</b> (Matt Mullenweg) · <b>Facebook</b> ចាប់ផ្តើមដោយ PHP</td></tr><tr><td>2011</td><td><b>Taylor Otwell</b> បញ្ចេញ <b>Laravel</b> ជំនាន់ដំបូង</td></tr><tr><td>2012</td><td><b>Composer</b> (Nils Adermann &amp; Jordi Boggiano) — កម្មវិធីគ្រប់គ្រង Package</td></tr><tr><td>2020</td><td><b>PHP 8</b>៖ JIT, match, Named arguments, Attributes</td></tr><tr><td>2024–2025</td><td>PHP 8.4 · <b>Laravel 11/12</b> (រចនាសម្ព័ន្ធស្រាល, SQLite លំនាំដើម, Starter kits ថ្មី)</td></tr></table>
+
+<div class="grid"><div class="card"><b>🌍 WordPress</b><br>Website ច្រើនជាង ៤០% លើពិភពលោក</div><div class="card"><b>🏢 ក្រុមហ៊ុន</b><br>Facebook (Hack), Wikipedia, Slack (ផ្នែកខ្លះ)</div><div class="card"><b>🇰🇭 កម្ពុជា</b><br>ការងារ Laravel/PHP ច្រើន៖ Website ក្រុមហ៊ុន, ERP, POS, E-commerce</div><div class="card"><b>📱 API</b><br>Backend ឲ្យ App Flutter/React Native</div></div>
+
+</section>
+<section id="install">
+<h2>២. ដំឡើង PHP, Composer &amp; Laravel</h2>
+
+<ol class="steps"><li><b>ងាយបំផុត</b>៖ <b>Laravel Herd</b> (herd.laravel.com — Windows/macOS) មាន PHP + Composer + Nginx ស្រាប់ · ឬ <b>XAMPP</b> / <b>Laragon</b> (Windows)។</li>
+<li>ពិនិត្យ៖ <code class='i'>php -v</code> និង <code class='i'>composer -V</code>។</li>
+<li>បង្កើត Project Laravel ហើយបើក <b>http://localhost:8000</b>។</li>
+<li>Editor៖ <b>VS Code</b> + Extension "PHP Intelephense" &amp; "Laravel"។</li></ol>
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+composer global require laravel/installer
+laravel new kafe              # ជ្រើស Starter kit (None / React / Vue / Livewire) + Database (SQLite)
+# ឬ: composer create-project laravel/laravel kafe
+
+cd kafe
+php artisan serve             # → http://127.0.0.1:8000
+npm install && npm run dev    # Vite (CSS/JS)
+</script>
+
+<script type="text/x-code" data-lang="txt" data-label="Laravel Project">
+kafe/
+├── app/
+│   ├── Http/Controllers/     ← Controller (Logic)
+│   ├── Models/               ← Eloquent Model (តារាង)
+│   └── Policies/             ← សិទ្ធិ (Authorization)
+├── bootstrap/app.php         ← Middleware, Routing, Exceptions
+├── config/                   ← ការកំណត់
+├── database/migrations/      ← បង្កើត/កែតារាង
+├── public/index.php          ← ច្រកចូលតែមួយ (Web root)
+├── resources/views/          ← Blade templates
+├── routes/web.php · api.php  ← URL → Controller
+├── storage/                  ← Log, Cache, File upload
+├── .env                      ← Password DB, APP_KEY (កុំ Commit!)
+└── artisan                   ← Command line របស់ Laravel
+</script>
+
+<div class="note">💡 PHP ធម្មតា (មេរៀន ១–៧) ខ្ញុំ <b>រត់ពិត</b> ដោយ PHP 8.3 + Composer នៅទីនេះ។ Laravel មិនអាចទាញយកនៅទីនេះបាន (គ្មាន Internet) ដូច្នេះលទ្ធផល Laravel ជា <b>គំរូដែលពិនិត្យដោយដៃ</b> — សាកផ្ទាល់លើកុំព្យូទ័រអ្នក ឬប្រើ <b>Laravel Lab Pro</b> នៅខាងចុង។</div>
+
+</section>
+<section id="elements">
+<h2>៣. ធាតុនីមួយៗរបស់ Laravel (MVC)</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 300" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="300" fill="#fff"/><rect x="15" y="110" width="140" height="80" rx="14" fill="#0ea5e9"/><text x="85.0" y="144.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🌐 Browser</text><text x="85.0" y="166.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">GET /products</text><rect x="195" y="110" width="150" height="80" rx="14" fill="#f59e0b"/><text x="270.0" y="144.0" text-anchor="middle" font-size="17" font-weight="700" fill="#111">🛣️ Route</text><text x="270.0" y="166.0" text-anchor="middle" font-size="13" fill="#111" opacity=".92">routes/web.php</text><rect x="385" y="110" width="170" height="80" rx="14" fill="#ff2d20"/><text x="470.0" y="144.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🎮 Controller</text><text x="470.0" y="166.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ProductController</text><rect x="600" y="20" width="160" height="80" rx="14" fill="#16a34a"/><text x="680.0" y="54.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🗃️ Model</text><text x="680.0" y="76.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Eloquent → SQL</text><rect x="600" y="200" width="160" height="80" rx="14" fill="#7c3aed"/><text x="680.0" y="234.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🎨 View</text><text x="680.0" y="256.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Blade → HTML</text><rect x="800" y="20" width="125" height="80" rx="14" fill="#334155"/><text x="862.5" y="54.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🛢️ DB</text><text x="862.5" y="76.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">MySQL/SQLite</text><line x1="157" y1="150" x2="191" y2="150" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="347" y1="150" x2="381" y2="150" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="557" y1="130" x2="596" y2="70" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="576.5" y="92.0" text-anchor="middle" font-size="13" fill="#334155">ទិន្នន័យ</text><line x1="557" y1="170" x2="596" y2="230" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="576.5" y="192.0" text-anchor="middle" font-size="13" fill="#334155">បង្ហាញ</text><line x1="762" y1="60" x2="796" y2="60" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><path d="M600 262 Q300 300 85 192" fill="none" stroke="#475569" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/><text x="330" y="296" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">HTML Response</text><text x="470" y="18" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">MVC = Model · View · Controller</text></svg><figcaption>🖼️ MVC៖ Route → Controller → Model (DB) + View (Blade)</figcaption></figure>
+
+<figure class="fig"><svg viewBox="0 0 940 200" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="200" fill="#fff"/><rect x="10" y="50" width="120" height="76" rx="14" fill="#0ea5e9"/><text x="70.0" y="82.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Request</text><text x="70.0" y="104.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">HTTP</text><rect x="143" y="50" width="120" height="76" rx="14" fill="#334155"/><text x="203.0" y="82.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">public/</text><text x="203.0" y="104.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">index.php</text><rect x="276" y="50" width="120" height="76" rx="14" fill="#f59e0b"/><text x="336.0" y="82.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Middleware</text><text x="336.0" y="104.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">auth · csrf</text><rect x="409" y="50" width="120" height="76" rx="14" fill="#ea580c"/><text x="469.0" y="82.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Router</text><text x="469.0" y="104.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">រក Route</text><rect x="542" y="50" width="120" height="76" rx="14" fill="#ff2d20"/><text x="602.0" y="82.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Controller</text><text x="602.0" y="104.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Logic</text><rect x="675" y="50" width="120" height="76" rx="14" fill="#16a34a"/><text x="735.0" y="82.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Model/View</text><text x="735.0" y="104.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">DB · Blade</text><rect x="808" y="50" width="120" height="76" rx="14" fill="#7c3aed"/><text x="868.0" y="82.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Response</text><text x="868.0" y="104.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">HTML/JSON</text><line x1="132" y1="88" x2="141" y2="88" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="265" y1="88" x2="274" y2="88" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="398" y1="88" x2="407" y2="88" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="531" y1="88" x2="540" y2="88" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="664" y1="88" x2="673" y2="88" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="797" y1="88" x2="806" y2="88" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="470" y="160" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">Middleware អាចបញ្ឈប់ Request មុន (ឧ. មិន Login → redirect /login · CSRF ខុស → 419)</text><text x="470" y="186" text-anchor="middle" font-size="13" font-weight="400" fill="#64748b">Laravel Request Lifecycle</text></svg><figcaption>🖼️ ដំណើររបស់ Request មួយក្នុង Laravel</figcaption></figure>
+
+<table><tr><th>ធាតុ</th><th>តួនាទី</th><th>ឯកសារ</th><th>មេរៀន</th></tr><tr><td>Route</td><td>URL ណា → Code ណា</td><td>routes/web.php</td><td>៨</td></tr><tr><td>Controller</td><td>Logic ទទួល Request</td><td>app/Http/Controllers</td><td>៩ · ១១</td></tr><tr><td>Blade</td><td>Template HTML</td><td>resources/views</td><td>៩</td></tr><tr><td>Migration</td><td>បង្កើតតារាងដោយ Code</td><td>database/migrations</td><td>១០</td></tr><tr><td>Eloquent Model</td><td>តារាង ↔ Object</td><td>app/Models</td><td>១០</td></tr><tr><td>Validation</td><td>ពិនិត្យ Form</td><td>FormRequest</td><td>១១</td></tr><tr><td>Middleware · Auth · Policy</td><td>Login និងសិទ្ធិ</td><td>bootstrap/app.php · Policies</td><td>១២</td></tr><tr><td>Storage</td><td>File upload</td><td>storage/app/public</td><td>១៣</td></tr><tr><td>API + Sanctum</td><td>JSON ឲ្យ Mobile App</td><td>routes/api.php</td><td>១៤</td></tr><tr><td>Queue · Mail · Schedule</td><td>ការងារខាងក្រោយ</td><td>app/Jobs · Mail</td><td>១៥</td></tr><tr><td>Artisan</td><td>Command បង្កើត Code</td><td>php artisan …</td><td>៨–១៦</td></tr></table>
+
+</section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>PHP មូលដ្ឋាន៖ Variable, Type, String &amp; Condition</h2>
+
+<script type="text/x-code" data-lang="php" data-label="basics.php">
+<?php
+declare(strict_types=1);
+
+$shop  = "Kafe Angkor";          // string
+$cups  = 3;                      // int
+$price = 2.5;                    // float
+$open  = true;                   // bool
+$cups += 2;
+
+echo "$shop លក់ $cups កែវ = " . $cups * $price . "$\n";
+echo "ប្រភេទ: " . gettype($price) . "\n";
+printf("តម្លៃ: %.2f$ · VAT 10%%: %.2f$\n", $price, $price * 1.1);
+
+$coupon = null;
+echo "Coupon: " . ($coupon ?? "គ្មាន") . "\n";      // Null coalescing
+
+$level = match (true) {                             // PHP 8 match
+    $cups >= 10 => "Gold",
+    $cups >= 5  => "Silver",
+    default     => "Member",
+};
+echo "Level: $level\n";
+
+if ($open && $cups > 0) {
+    echo strtoupper("open") . " · " . mb_strlen("កាហ្វេ") . " តួអក្សរខ្មែរ\n";
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PHP 8.3</span></div><pre>Kafe Angkor លក់ 5 កែវ = 12.5$
+ប្រភេទ: double
+តម្លៃ: 2.50$ · VAT 10%: 2.75$
+Coupon: គ្មាន
+Level: Silver
+OPEN · 6 តួអក្សរខ្មែរ</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>&lt;?php</code> — ចាប់ផ្តើម Code PHP · Variable ចាប់ផ្តើមដោយ <code class='i'>$</code>។</li><li><code class='i'>declare(strict_types=1)</code> — ឲ្យ PHP តឹងរឹងលើ Type (ល្អសម្រាប់កម្មវិធីធំ)។</li><li><code class='i'>"... $shop ..."</code> — Double quote បញ្ចូល Variable · <code class='i'>.</code> = ភ្ជាប់ String។</li><li><code class='i'>??</code> — តម្លៃជំនួសពេល null · <code class='i'>match</code> — ដូច switch តែត្រឡប់តម្លៃ និងប្រៀបធៀបតឹង (===)។</li><li><code class='i'>mb_strlen</code> — រាប់តួអក្សរ Unicode (ខ្មែរ) ត្រឹមត្រូវ · <code class='i'>strlen</code> រាប់ Byte។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>ហេតុអ្វី <code class='i'>strlen("កាហ្វេ")</code> ធំជាង <code class='i'>mb_strlen</code>?</p><details><summary>មើលចម្លើយ</summary><p>អក្សរខ្មែរម្តួ = ៣ Byte ក្នុង UTF-8។ <code class='i'>strlen</code> = 18 Byte · <code class='i'>mb_strlen</code> = 6 តួ។</p></details></div>
+
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>Array &amp; Function</h2>
+
+<script type="text/x-code" data-lang="php" data-label="arrays.php">
+<?php
+$menu = [
+    ["id" => 1, "name" => "Americano",  "price" => 2.0,  "hot" => true],
+    ["id" => 2, "name" => "Iced Latte", "price" => 2.5,  "hot" => false],
+    ["id" => 3, "name" => "Mocha",      "price" => 2.75, "hot" => true],
+];
+
+foreach ($menu as $i => $item) {
+    echo ($i + 1) . ". {$item['name']} — \${$item['price']}\n";
+}
+
+// Array functions + Arrow function (fn)
+$hot   = array_filter($menu, fn($m) => $m["hot"]);
+$names = array_map(fn($m) => $m["name"], $hot);
+$total = array_sum(array_column($menu, "price"));
+echo implode(", ", $names) . " | total = $total\n";
+
+usort($menu, fn($a, $b) => $b["price"] <=> $a["price"]);   // ថ្លៃ → ថោក
+echo "ថ្លៃបំផុត: " . $menu[0]["name"] . "\n";
+
+// Function: Type, Default, Named arguments
+function lineTotal(float $price, int $qty = 1, float $discount = 0): float {
+    return round($price * $qty * (1 - $discount), 2);
+}
+echo lineTotal(2.5, 3) . " · " . lineTotal(qty: 2, price: 2.75, discount: 0.1) . "\n";
+
+// Associative array → JSON (API)
+echo json_encode(["shop" => "Kafe", "items" => count($menu)], JSON_UNESCAPED_UNICODE) . "\n";
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PHP 8.3</span></div><pre>1. Americano — $2
+2. Iced Latte — $2.5
+3. Mocha — $2.75
+Americano, Mocha | total = 7.25
+ថ្លៃបំផុត: Mocha
+7.5 · 4.95
+{&quot;shop&quot;:&quot;Kafe&quot;,&quot;items&quot;:3}</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>["key" =&gt; value]</code> — Associative array (ដូច Object/Map) · <code class='i'>foreach ($arr as $i =&gt; $v)</code>។</li><li><code class='i'>fn($m) =&gt; ...</code> — Arrow function · <code class='i'>array_filter/map/column/sum</code> — ធ្វើការលើ Array។</li><li><code class='i'>&lt;=&gt;</code> Spaceship operator — ប្រៀបធៀបសម្រាប់ <code class='i'>usort</code>។</li><li>Type hints <code class='i'>float $price</code>, Default <code class='i'>int $qty = 1</code>, <b>Named arguments</b> <code class='i'>qty: 2</code>។</li><li><code class='i'>json_encode</code> — Array → JSON (ប្រើក្នុង API · <code class='i'>JSON_UNESCAPED_UNICODE</code> រក្សាអក្សរខ្មែរ)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>រកមធ្យមតម្លៃ Menu។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="php" data-label="answer.php">
+$avg = array_sum(array_column($menu, "price")) / count($menu);   // 2.4166...
+echo round($avg, 2);   // 2.42
+</script>
+</details></div>
+
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>OOP៖ Class, Interface, Enum &amp; Readonly</h2>
+
+<script type="text/x-code" data-lang="php" data-label="oop.php">
+<?php
+declare(strict_types=1);
+
+enum Status: string {
+    case Pending = "pending";
+    case Ready   = "ready";
+    public function label(): string {
+        return match ($this) { Status::Pending => "⏳ កំពុងរៀបចំ", Status::Ready => "✅ រួចរាល់" };
+    }
+}
+
+interface HasTotal { public function total(): float; }
+
+final class Product {
+    public function __construct(                       // Constructor promotion
+        public readonly string $name,
+        public readonly float $price,
+    ) {}
+}
+
+class Order implements HasTotal {
+    private array $lines = [];
+    private static int $count = 0;
+    public Status $status = Status::Pending;
+
+    public function __construct(public readonly string $customer) { self::$count++; }
+
+    public function add(Product $p, int $qty = 1): static {   // return $this → chain
+        $this->lines[] = [$p, $qty];
+        return $this;
+    }
+    public function total(): float {
+        return array_sum(array_map(fn($l) => $l[0]->price * $l[1], $this->lines));
+    }
+    public static function count(): int { return self::$count; }
+}
+
+$latte = new Product("Iced Latte", 2.5);
+$mocha = new Product("Mocha", 2.75);
+
+$order = (new Order("Dara"))->add($latte, 2)->add($mocha);
+echo "{$order->customer}: \${$order->total()} · {$order->status->label()}\n";
+$order->status = Status::Ready;
+echo $order->status->label() . " · value=" . $order->status->value . "\n";
+echo "Orders: " . Order::count() . "\n";
+
+try {
+    $latte->price = 0;                                  // readonly!
+} catch (Error $e) {
+    echo "Error: " . $e->getMessage() . "\n";
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PHP 8.3</span></div><pre>Dara: $7.75 · ⏳ កំពុងរៀបចំ
+✅ រួចរាល់ · value=ready
+Orders: 1
+Error: Cannot modify readonly property Product::$price</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>class</code> + <code class='i'>new</code> — បង្កើត Object · <code class='i'>$this-&gt;</code> = Object ខ្លួនឯង · <code class='i'>self::</code> = Static។</li><li><b>Constructor promotion</b> <code class='i'>public readonly string $name</code> — ប្រកាស Property + កំណត់តម្លៃក្នុងមួយបន្ទាត់ · <b>readonly</b> មិនអាចប្តូរ (ឃើញ Error ពិតខាងលើ)។</li><li><code class='i'>interface</code> — កិច្ចសន្យា (Method ដែលត្រូវមាន) · <code class='i'>final</code> — មិនអាច extends។</li><li><code class='i'>enum Status: string</code> — តម្លៃកំណត់ (pending/ready) មាន Method ផ្ទាល់ — Laravel cast Column ទៅ Enum បាន។</li><li><code class='i'>return $this</code> — Method chaining (ដូច Laravel Query Builder <code class='i'>-&gt;where()-&gt;orderBy()</code>)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>បន្ថែម case <code class='i'>Done = "done"</code> ទៅ Enum។ កន្លែងណាទៀតត្រូវកែ?</p><details><summary>មើលចម្លើយ</summary><p>ក្នុង <code class='i'>label()</code> — match ត្រូវគ្រប់ case បើមិនដូច្នោះ PHP បោះ <code class='i'>UnhandledMatchError</code>។ បន្ថែម <code class='i'>Status::Done =&gt; "🎉 បានប្រគល់"</code>។</p></details></div>
+
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>PHP + HTML៖ Form, Session &amp; សុវត្ថិភាព XSS</h2>
+
+<script type="text/x-code" data-lang="php" data-label="order.php">
+<?php
+session_start();
+$_SESSION["visits"] = ($_SESSION["visits"] ?? 0) + 1;
+$name = trim($_POST["name"] ?? "");
+$errors = [];
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    if ($name === "") $errors[] = "សូមបញ្ចូលឈ្មោះ";
+    elseif (mb_strlen($name) > 30) $errors[] = "ឈ្មោះវែងពេក";
+}
+?>
+<h1>Kafe Angkor ☕ (visit #<?= $_SESSION["visits"] ?>)</h1>
+<?php foreach ($errors as $e): ?>
+<p class="error"><?= $e ?></p>
+<?php endforeach; ?>
+<?php if ($_SERVER["REQUEST_METHOD"] === "POST" && !$errors): ?>
+<p>✅ សូមអរគុណ <?= htmlspecialchars($name) ?>!</p>
+<?php endif; ?>
+<form method="post"><input name="name"><button>បញ្ជាទិញ</button></form>
+</script>
+
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+php -S localhost:8000      # Server សាកល្បងរបស់ PHP
+# Terminal ទី ២:
+curl -s -b cj -c cj localhost:8000/order.php
+curl -s -b cj -c cj -d "name=Dara" localhost:8000/order.php | grep -v form
+curl -s -b cj -c cj -d "name=" localhost:8000/order.php | grep error
+curl -s -b cj -c cj --data-urlencode "name=<script>alert(1)<\/script>" localhost:8000/order.php | grep អរគុណ
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · php -S + curl</span></div><pre><span class="tp">dara@pc:~$</span> <span class="tc">curl -s -b cj -c cj localhost:8000/order.php</span>
+&lt;h1&gt;Kafe Angkor ☕ (visit #1)&lt;/h1&gt;
+&lt;form method=&quot;post&quot;&gt;&lt;input name=&quot;name&quot;&gt;&lt;button&gt;បញ្ជាទិញ&lt;/button&gt;&lt;/form&gt;
+<span class="tp">dara@pc:~$</span> <span class="tc">curl -s -b cj -c cj -d &quot;name=Dara&quot; localhost:8000/order.php | grep -v form</span>
+&lt;h1&gt;Kafe Angkor ☕ (visit #2)&lt;/h1&gt;
+&lt;p&gt;✅ សូមអរគុណ Dara!&lt;/p&gt;
+<span class="tp">dara@pc:~$</span> <span class="tc">curl -s -b cj -c cj -d &quot;name=&quot; localhost:8000/order.php | grep error</span>
+&lt;p class=&quot;error&quot;&gt;សូមបញ្ចូលឈ្មោះ&lt;/p&gt;
+<span class="tp">dara@pc:~$</span> <span class="tc">curl -s -b cj -c cj --data-urlencode &quot;name=&lt;script&gt;alert(1)&lt;/script&gt;&quot; localhost:8000/order.php | grep អរគុណ</span>
+&lt;p&gt;✅ សូមអរគុណ &amp;lt;script&amp;gt;alert(1)&amp;lt;/script&amp;gt;!&lt;/p&gt;</pre></div>
+
+<figure class="phf"><div style="max-width:560px;margin:auto;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;color:#111;box-shadow:0 10px 30px rgba(0,0,0,.12)"><div style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:#f1f3f5;border-bottom:1px solid #dee2e6"><i style="width:11px;height:11px;border-radius:50%;background:#ff5f57"></i><i style="width:11px;height:11px;border-radius:50%;background:#febc2e"></i><i style="width:11px;height:11px;border-radius:50%;background:#28c840"></i><span style="flex:1;margin-left:8px;background:#fff;border-radius:7px;padding:3px 10px;font:12.5px monospace;color:#495057">🔒 localhost:8000/order.php</span></div><div style="padding:14px 16px;font-size:14.5px"><h3 style="margin:0 0 8px">Kafe Angkor ☕ (visit #2)</h3><p style="margin:4px 0">✅ សូមអរគុណ Dara!</p><input style="border:1px solid #ccc;border-radius:6px;padding:5px" placeholder="name"> <button style="background:#ff2d20;color:#fff;border:0;border-radius:6px;padding:6px 12px">បញ្ជាទិញ</button></div></div><figcaption>🖥️ លទ្ធផលក្នុង Browser</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>PHP លាយជាមួយ HTML៖ <code class='i'>&lt;?= $x ?&gt;</code> = echo · <code class='i'>&lt;?php foreach (...): ?&gt; ... &lt;?php endforeach; ?&gt;</code>។</li><li><code class='i'>$_POST</code> / <code class='i'>$_GET</code> — ទិន្នន័យពី Form/URL · <code class='i'>$_SERVER["REQUEST_METHOD"]</code> — GET ឬ POST។</li><li><code class='i'>session_start()</code> + <code class='i'>$_SESSION</code> — ចងចាំអ្នកប្រើឆ្លងទំព័រ (Cookie PHPSESSID) — visit កើនពី 1 → 2 → 3 → 4 ខាងលើ។</li><li><b>XSS</b>៖ <code class='i'>htmlspecialchars()</code> បំលែង <code class='i'>&lt;script&gt;</code> ទៅ <code class='i'>&amp;lt;script&amp;gt;</code> — ឃើញពិតក្នុងលទ្ធផលចុងក្រោយ។ Laravel Blade <code class='i'>{{ }}</code> ធ្វើស្វ័យប្រវត្តិ។</li><li><code class='i'>php -S</code> — Server សាកល្បង (Development) មិនមែនសម្រាប់ Production។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>ហេតុអ្វីមិនត្រូវ <code class='i'>echo $_GET["q"]</code> ផ្ទាល់?</p><details><summary>មើលចម្លើយ</summary><p>អ្នកវាយប្រហារអាចផ្ញើ Link <code class='i'>?q=&lt;script&gt;...&lt;/script&gt;</code> ដើម្បីលួច Cookie (XSS)។ ត្រូវ <code class='i'>htmlspecialchars($_GET["q"] ?? "")</code>។</p></details></div>
+
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>Database ជាមួយ PDO &amp; SQL Injection</h2>
+
+<script type="text/x-code" data-lang="php" data-label="pdo.php">
+<?php
+$db = new PDO("sqlite::memory:", options: [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+]);
+$db->exec("CREATE TABLE users (id INTEGER PRIMARY KEY, email TEXT UNIQUE, password TEXT)");
+
+// ចុះឈ្មោះ: Password ត្រូវ Hash ជានិច្ច
+$stmt = $db->prepare("INSERT INTO users (email, password) VALUES (:email, :pw)");
+foreach (["dara@kafe.kh" => "secret123", "sokha@kafe.kh" => "pass456"] as $email => $pw) {
+    $stmt->execute(["email" => $email, "pw" => password_hash($pw, PASSWORD_DEFAULT)]);
+}
+echo "Users: " . $db->query("SELECT count(*) FROM users")->fetchColumn() . "\n";
+
+// ❌ ងាយរងគ្រោះ: ភ្ជាប់ String ចូល SQL
+$input = "x' OR '1'='1";
+$bad = $db->query("SELECT email FROM users WHERE email = '$input'")->fetchAll();
+echo "SQL Injection → លេចធ្លាយ " . count($bad) . " គណនី!\n";
+
+// ✅ Prepared statement: input ជាទិន្នន័យ មិនមែន SQL
+$safe = $db->prepare("SELECT email FROM users WHERE email = ?");
+$safe->execute([$input]);
+echo "Prepared → " . count($safe->fetchAll()) . " គណនី\n";
+
+// Login
+function login(PDO $db, string $email, string $pw): string {
+    $s = $db->prepare("SELECT password FROM users WHERE email = ?");
+    $s->execute([$email]);
+    $hash = $s->fetchColumn();
+    return $hash && password_verify($pw, $hash) ? "✅ Login ជោគជ័យ" : "⛔ Email ឬ Password ខុស";
+}
+echo login($db, "dara@kafe.kh", "secret123") . "\n";
+echo login($db, "dara@kafe.kh", "wrong") . "\n";
+echo "Hash ចាប់ផ្តើម: " . substr(password_hash("x", PASSWORD_DEFAULT), 0, 7) . "…\n";
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PHP 8.3</span></div><pre>Users: 2
+SQL Injection → លេចធ្លាយ 2 គណនី!
+Prepared → 0 គណនី
+✅ Login ជោគជ័យ
+⛔ Email ឬ Password ខុស
+Hash ចាប់ផ្តើម: $2y$10$…</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>PDO</b> — ភ្ជាប់ Database ច្រើនប្រភេទ (MySQL, PostgreSQL, SQLite) ដោយ API តែមួយ។</li><li><code class='i'>ERRMODE_EXCEPTION</code> — SQL ខុសបោះ Exception (មិនស្ងាត់)។</li><li><b>SQL Injection</b>៖ input <code class='i'>x' OR '1'='1</code> ប្តូរអត្ថន័យ SQL → លេចធ្លាយគណនីទាំង ២ (លទ្ធផលពិត)!</li><li><b>Prepared statement</b> <code class='i'>?</code> ឬ <code class='i'>:name</code> — Database ចាត់ input ជាទិន្នន័យ → 0 គណនី។</li><li><code class='i'>password_hash</code> (bcrypt <code class='i'>$2y$</code>) + <code class='i'>password_verify</code> — កុំរក្សា Password ជាអក្សរធម្មតា។ Laravel <code class='i'>Hash::make</code> ប្រើដូចគ្នា។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>ប្តូរ Query ខាងក្រោមឲ្យមានសុវត្ថិភាព៖ <code class='i'>"SELECT * FROM orders WHERE id = " . $_GET["id"]</code></p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="php" data-label="answer.php">
+$s = $db->prepare("SELECT * FROM orders WHERE id = ?");
+$s->execute([(int) ($_GET["id"] ?? 0)]);
+$order = $s->fetch();
+</script>
+</details></div>
+
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Composer, Namespace &amp; Autoload (PSR-4)</h2>
+
+<script type="text/x-code" data-lang="json" data-label="composer.json">
+{
+    "name": "dara/kafe",
+    "version": "1.0.0",
+    "autoload": {
+        "psr-4": {
+            "Kafe\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=8.2"
+    }
+}
+</script>
+
+<script type="text/x-code" data-lang="php" data-label="src/Models/Product.php">
+<?php
+namespace Kafe\Models;
+
+class Product {
+    public function __construct(public string $name, public float $price) {}
+}
+</script>
+
+<script type="text/x-code" data-lang="php" data-label="src/Services/Cart.php">
+<?php
+namespace Kafe\Services;
+
+use Kafe\Models\Product;
+
+class Cart {
+    private array $items = [];
+    public function add(Product $p, int $qty = 1): void { $this->items[] = [$p, $qty]; }
+    public function total(): float {
+        return array_sum(array_map(fn($i) => $i[0]->price * $i[1], $this->items));
+    }
+}
+</script>
+
+<script type="text/x-code" data-lang="php" data-label="index.php">
+<?php
+require __DIR__ . '/vendor/autoload.php';
+
+use Kafe\Models\Product;
+use Kafe\Services\Cart;
+
+$cart = new Cart();
+$cart->add(new Product('Latte', 2.5), 2);
+$cart->add(new Product('Mocha', 2.75));
+echo 'Total: $' . $cart->total() . PHP_EOL;
+echo 'Class: ' . Cart::class . PHP_EOL;
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Composer + PHP 8.3</span></div><pre><span class="tp">dara@pc:~/kafe$</span> <span class="tc">composer dump-autoload --no-interaction</span>
+Generating autoload files
+Generated autoload files
+<span class="tp">dara@pc:~/kafe$</span> <span class="tc">php index.php</span>
+Total: $7.75
+Class: Kafe\Services\Cart
+<span class="tp">dara@pc:~/kafe$</span> <span class="tc">ls vendor vendor/composer | head -8</span>
+vendor:
+autoload.php
+composer
+
+vendor/composer:
+ClassLoader.php
+LICENSE
+autoload_classmap.php</pre></div>
+<script type="text/x-code" data-lang="bash" data-label="Commands សំខាន់">
+composer require guzzlehttp/guzzle      # ដំឡើង Package ពី packagist.org
+composer require --dev pestphp/pest     # សម្រាប់ Test ប៉ុណ្ណោះ
+composer update                         # Update តាម composer.json
+composer install --no-dev -o            # Production (ប្រើ composer.lock)
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Composer</b> — គ្រប់គ្រង Package (ដូច npm) · ឯកសារ <code class='i'>composer.json</code> + <code class='i'>composer.lock</code>។</li><li><code class='i'>namespace Kafe\Models;</code> — ក្រុម Class (ការពារឈ្មោះជាន់គ្នា) · <code class='i'>use</code> — Import។</li><li><b>PSR-4</b>៖ <code class='i'>Kafe\</code> → <code class='i'>src/</code> · Class <code class='i'>Kafe\Services\Cart</code> = File <code class='i'>src/Services/Cart.php</code>។</li><li><code class='i'>require 'vendor/autoload.php'</code> — Load Class ស្វ័យប្រវត្តិ មិនបាច់ require ម្តងមួយៗ (Total: $7.75 ពិតខាងលើ)។</li><li>Laravel ទាំងមូល = Package Composer · <code class='i'>App\</code> → <code class='i'>app/</code>។ កុំ Commit <code class='i'>vendor/</code>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>Class <code class='i'>Kafe\Http\OrderController</code> ត្រូវនៅ File ណា?</p><details><summary>មើលចម្លើយ</summary><p><code class='i'>src/Http/OrderController.php</code></p></details></div>
+
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Router ដោយដៃ៖ យល់ពី Laravel ពីខាងក្នុង</h2>
+
+<p>មុនប្រើ Laravel តោះសរសេរ <b>Router</b> តូចមួយដោយខ្លួនឯង ដើម្បីយល់ថា Laravel ធ្វើអ្វីខាងក្រោយ (Code រត់ពិត)៖</p>
+<script type="text/x-code" data-lang="php" data-label="mini-router.php">
+<?php
+final class Router {
+    private array $routes = [];
+    private array $middleware = [];
+
+    public function get(string $path, callable $action): static  { return $this->add("GET", $path, $action); }
+    public function post(string $path, callable $action): static { return $this->add("POST", $path, $action); }
+    private function add(string $m, string $path, callable $a): static {
+        // /products/{id} → regex #^/products/(?P<id>[^/]+)$#
+        $regex = "#^" . preg_replace("#\\{(\\w+)\\}#", "(?P<$1>[^/]+)", $path) . "$#";
+        $this->routes[] = compact("m", "regex", "a");
+        return $this;
+    }
+    public function middleware(callable $mw): static { $this->middleware[] = $mw; return $this; }
+
+    public function dispatch(string $method, string $uri, array $user = []): string {
+        foreach ($this->middleware as $mw) {
+            if ($stop = $mw($method, $uri, $user)) return $stop;      // Middleware បញ្ឈប់បាន
+        }
+        foreach ($this->routes as $r) {
+            if ($r["m"] === $method && preg_match($r["regex"], $uri, $mt)) {
+                $params = array_filter($mt, "is_string", ARRAY_FILTER_USE_KEY);
+                return "200 " . ($r["a"])(...$params);
+            }
+        }
+        return "404 Not Found";
+    }
+}
+
+$products = [1 => "Americano", 2 => "Iced Latte"];
+$app = new Router();
+$app->get("/", fn() => "Home ☕")
+    ->get("/products", fn() => implode(", ", $products))
+    ->get("/products/{id}", fn($id) => $products[$id] ?? "គ្មាន")
+    ->post("/orders", fn() => "Order created")
+    ->middleware(fn($m, $uri, $user) => str_starts_with($uri, "/orders") && !$user ? "302 → /login" : null);
+
+foreach ([["GET", "/"], ["GET", "/products"], ["GET", "/products/2"], ["POST", "/orders"], ["GET", "/admin"]] as [$m, $u]) {
+    printf("%-5s %-12s → %s\n", $m, $u, $app->dispatch($m, $u));
+}
+echo "POST  /orders (Login) → " . $app->dispatch("POST", "/orders", ["id" => 1]) . "\n";
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PHP 8.3</span></div><pre>GET   /            → 200 Home ☕
+GET   /products    → 200 Americano, Iced Latte
+GET   /products/2  → 200 Iced Latte
+POST  /orders      → 302 → /login
+GET   /admin       → 404 Not Found
+POST  /orders (Login) → 200 Order created</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>Route = <b>Method + Path + Action</b>។ <code class='i'>{id}</code> ប្តូរទៅ Regex Named group ដើម្បីចាប់តម្លៃ។</li><li><code class='i'>dispatch</code> — រត់ Middleware មុន (អាចបញ្ឈប់ ឧ. មិន Login → 302) ហើយរក Route ត្រូវ → ហៅ Action ជាមួយ Parameter។</li><li>គ្មាន Route ត្រូវ → <b>404</b>។</li><li>Laravel ធ្វើដូចនេះ ប៉ុន្តែមាន Dependency injection, Route model binding, Cache, Name routes ... ស្រាប់។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>បន្ថែម Route <code class='i'>GET /products/{id}/price</code>។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="php" data-label="answer.php">
+$app->get("/products/{id}/price", fn($id) => "$" . [1 => 2.0, 2 => 2.5][$id]);
+</script>
+</details></div>
+
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Laravel៖ Routes &amp; Artisan</h2>
+
+<script type="text/x-code" data-lang="php" data-label="routes/web.php">
+<?php
+// routes/web.php
+use App\Http\Controllers\ProductController;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', fn () => view('welcome'))->name('home');
+
+Route::get('/about', function () {
+    return view('about', ['shop' => 'Kafe Angkor']);
+});
+
+// Route parameter + Constraint
+Route::get('/products/{product}', [ProductController::class, 'show'])
+    ->whereNumber('product')
+    ->name('products.show');
+
+// Resource: 7 routes CRUD ក្នុងមួយបន្ទាត់ + តែអ្នក Login
+Route::resource('admin/products', ProductController::class)
+    ->middleware('auth')
+    ->names('admin.products');
+
+// Group
+Route::prefix('shop')->name('shop.')->group(function () {
+    Route::get('/cart', fn () => view('cart'))->name('cart');        // shop.cart
+});
+</script>
+
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+php artisan route:list --except-vendor
+php artisan make:controller ProductController --resource --model=Product
+php artisan tinker          # Console សាក Code (>>> App\Models\Product::count())
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>ឧទាហរណ៍លទ្ធផល · php artisan route:list</span></div><pre>
+  GET|HEAD   / ........................................ home
+  GET|HEAD   about ....................................
+  GET|HEAD   admin/products ........ admin.products.index › ProductController@index
+  POST       admin/products ........ admin.products.store › ProductController@store
+  GET|HEAD   admin/products/create . admin.products.create › ProductController@create
+  GET|HEAD   admin/products/{product} admin.products.show › ProductController@show
+  PUT|PATCH  admin/products/{product} admin.products.update › ProductController@update
+  DELETE     admin/products/{product} admin.products.destroy › ProductController@destroy
+  GET|HEAD   admin/products/{product}/edit admin.products.edit › ProductController@edit
+  GET|HEAD   products/{product} ... products.show › ProductController@show
+  GET|HEAD   shop/cart ................................ shop.cart</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>Route::get(path, action)</code> — action ជា Closure ឬ <code class='i'>[Controller::class, 'method']</code>។</li><li><code class='i'>-&gt;name('products.show')</code> — ឈ្មោះ Route · បង្កើត URL <code class='i'>route('products.show', 5)</code> (មិន Hardcode URL)។</li><li><code class='i'>Route::resource</code> — CRUD ៧ Routes (index, create, store, show, edit, update, destroy)។</li><li><code class='i'>-&gt;middleware('auth')</code> — ត្រូវ Login · <code class='i'>prefix/name/group</code> — ក្រុម Routes។</li><li><b>Artisan</b> — បង្កើត File (make:*), មើល Routes, Migration, Tinker ...</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>Form Edit ផ្ញើ <code class='i'>PUT</code> ប៉ុន្តែ HTML Form មានតែ GET/POST។ Laravel ដោះស្រាយយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="blade" data-label="answer.blade.php">
+<form method="POST" action="{{ route('admin.products.update', $product) }}">
+    @csrf
+    @method('PUT')   {{-- បញ្ចូល <input type=hidden name=_method value=PUT> --}}
+</form>
+</script>
+</details></div>
+
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Controller &amp; Blade Views</h2>
+
+<script type="text/x-code" data-lang="php" data-label="app/Http/Controllers/ProductController.php">
+<?php
+namespace App\Http\Controllers;
+
+use App\Models\Product;
+use Illuminate\Http\Request;
+
+class ProductController extends Controller
+{
+    public function index(Request $request)
+    {
+        $products = Product::query()
+            ->when($request->q, fn ($q, $term) => $q->where('name', 'like', "%{$term}%"))
+            ->orderBy('name')
+            ->paginate(12);
+
+        return view('products.index', compact('products'));
+    }
+
+    public function show(Product $product)            // Route model binding: id → Product (404 បើគ្មាន)
+    {
+        return view('products.show', ['product' => $product]);
+    }
+}
+</script>
+
+<script type="text/x-code" data-lang="blade" data-label="components/layout.blade.php">
+{{-- resources/views/components/layout.blade.php --}}
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="utf-8">
+    <title>{{ $title ?? 'Kafe Angkor' }}</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body>
+    <nav><a href="{{ route('home') }}">☕ Kafe</a> @auth {{ auth()->user()->name }} @else <a href="/login">Login</a> @endauth</nav>
+    <main>{{ $slot }}</main>
+</body>
+</html>
+</script>
+
+<script type="text/x-code" data-lang="blade" data-label="products/index.blade.php">
+{{-- resources/views/products/index.blade.php --}}
+<x-layout title="Menu">
+    <form><input name="q" value="{{ request('q') }}" placeholder="ស្វែងរក…"></form>
+
+    @forelse ($products as $product)
+        <div class="card">
+            <h3><a href="{{ route('products.show', $product) }}">{{ $product->name }}</a></h3>
+            <p>${{ number_format($product->price, 2) }}</p>
+            @if ($product->stock < 5)
+                <span class="badge">ជិតអស់ ({{ $product->stock }})</span>
+            @endif
+        </div>
+    @empty
+        <p>មិនមានទំនិញ</p>
+    @endforelse
+
+    {{ $products->links() }}   {{-- Pagination --}}
+</x-layout>
+</script>
+
+<figure class="phf"><div style="max-width:560px;margin:auto;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;color:#111;box-shadow:0 10px 30px rgba(0,0,0,.12)"><div style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:#f1f3f5;border-bottom:1px solid #dee2e6"><i style="width:11px;height:11px;border-radius:50%;background:#ff5f57"></i><i style="width:11px;height:11px;border-radius:50%;background:#febc2e"></i><i style="width:11px;height:11px;border-radius:50%;background:#28c840"></i><span style="flex:1;margin-left:8px;background:#fff;border-radius:7px;padding:3px 10px;font:12.5px monospace;color:#495057">🔒 localhost:8000/products?q=</span></div><div style="padding:14px 16px;font-size:14.5px"><div style="font-weight:700;margin-bottom:8px">☕ Kafe <span style="float:right;font-weight:400">Dara</span></div><input style="border:1px solid #ccc;border-radius:6px;padding:4px 8px;width:60%" placeholder="ស្វែងរក…"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><div style="border:1px solid #eee;border-radius:8px;padding:8px"><b>Americano</b><br>$2.00</div><div style="border:1px solid #eee;border-radius:8px;padding:8px"><b>Iced Latte</b><br>$2.50 <span style="background:#ffe3e3;color:#c92a2a;border-radius:6px;padding:0 6px;font-size:12px">ជិតអស់ (3)</span></div></div><div style="margin-top:8px;font-size:13px;color:#555">« 1 2 3 »</div></div></div><figcaption>🖥️ លទ្ធផល Blade</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>Controller ទទួល <code class='i'>Request</code> → យកទិន្នន័យពី Model → <code class='i'>return view('products.index', [...])</code>។</li><li><code class='i'>-&gt;when($request-&gt;q, ...)</code> — បន្ថែម where តែពេលមានការស្វែងរក · <code class='i'>paginate(12)</code> — ចែកទំព័រស្វ័យប្រវត្តិ។</li><li><b>Route model binding</b> <code class='i'>show(Product $product)</code> — Laravel រក Product តាម id ឲ្យ (404 បើគ្មាន)។</li><li>Blade៖ <code class='i'>{{ $x }}</code> echo + Escape (ការពារ XSS) · <code class='i'>@if @foreach @forelse @auth</code>។</li><li><b>Component</b> <code class='i'>&lt;x-layout&gt;</code> + <code class='i'>{{ $slot }}</code> — Layout ប្រើឡើងវិញ · <code class='i'>@vite</code> ភ្ជាប់ CSS/JS។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>ពេលណាប្រើ <code class='i'>{!! $html !!}</code>?</p><details><summary>មើលចម្លើយ</summary><p>តែពេល HTML មកពីប្រភពដែលទុកចិត្ត (ឧ. Markdown ដែល Server បំលែង និង Sanitize រួច)។ ទិន្នន័យពីអ្នកប្រើ ប្រើ <code class='i'>{{ }}</code> ជានិច្ច។</p></details></div>
+
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>Migration, Eloquent Model &amp; Relationships</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 250" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="250" fill="#fff"/><rect x="20" y="30" width="230" height="160" rx="12" fill="#fff" stroke="#0ea5e9" stroke-width="2.5"/><rect x="20" y="30" width="230" height="36" rx="12" fill="#0ea5e9"/><text x="135" y="54" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">users</text><text x="36" y="92" text-anchor="start" font-size="13.5" font-weight="400" fill="#334155">id</text><text x="36" y="118" text-anchor="start" font-size="13.5" font-weight="400" fill="#334155">name</text><text x="36" y="144" text-anchor="start" font-size="13.5" font-weight="400" fill="#334155">email</text><text x="36" y="170" text-anchor="start" font-size="13.5" font-weight="400" fill="#334155">password (hash)</text><rect x="355" y="30" width="230" height="160" rx="12" fill="#fff" stroke="#ff2d20" stroke-width="2.5"/><rect x="355" y="30" width="230" height="36" rx="12" fill="#ff2d20"/><text x="470" y="54" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">orders</text><text x="371" y="92" text-anchor="start" font-size="13.5" font-weight="400" fill="#334155">id</text><text x="371" y="118" text-anchor="start" font-size="13.5" font-weight="400" fill="#334155">user_id → users.id</text><text x="371" y="144" text-anchor="start" font-size="13.5" font-weight="400" fill="#334155">status</text><text x="371" y="170" text-anchor="start" font-size="13.5" font-weight="400" fill="#334155">total</text><rect x="690" y="30" width="230" height="160" rx="12" fill="#fff" stroke="#16a34a" stroke-width="2.5"/><rect x="690" y="30" width="230" height="36" rx="12" fill="#16a34a"/><text x="805" y="54" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">products</text><text x="706" y="92" text-anchor="start" font-size="13.5" font-weight="400" fill="#334155">id</text><text x="706" y="118" text-anchor="start" font-size="13.5" font-weight="400" fill="#334155">category_id</text><text x="706" y="144" text-anchor="start" font-size="13.5" font-weight="400" fill="#334155">name</text><text x="706" y="170" text-anchor="start" font-size="13.5" font-weight="400" fill="#334155">price</text><line x1="252" y1="110" x2="351" y2="110" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="301.5" y="102.0" text-anchor="middle" font-size="13" fill="#334155">hasMany</text><line x1="351" y1="140" x2="252" y2="140" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="301.5" y="132.0" text-anchor="middle" font-size="13" fill="#334155">belongsTo</text><line x1="587" y1="110" x2="686" y2="110" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="636.5" y="102.0" text-anchor="middle" font-size="13" fill="#334155">belongsToMany</text><text x="637" y="150" text-anchor="middle" font-size="12.5" font-weight="400" fill="#64748b">(order_product)</text><text x="470" y="225" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">$user->orders · $order->user · $order->products — Eloquent Relationships</text></svg><figcaption>🖼️ Relationships រវាងតារាង</figcaption></figure>
+
+<script type="text/x-code" data-lang="php" data-label="migration">
+<?php
+// database/migrations/2025_01_01_000000_create_products_table.php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    public function up(): void
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
+            $table->string('name')->unique();
+            $table->decimal('price', 8, 2);
+            $table->unsignedInteger('stock')->default(0);
+            $table->string('photo')->nullable();
+            $table->timestamps();                     // created_at, updated_at
+        });
+    }
+    public function down(): void { Schema::dropIfExists('products'); }
+};
+</script>
+
+<script type="text/x-code" data-lang="php" data-label="app/Models/Product.php">
+<?php
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany};
+
+class Product extends Model
+{
+    protected $fillable = ['category_id', 'name', 'price', 'stock', 'photo'];   // Mass assignment
+
+    protected function casts(): array
+    {
+        return ['price' => 'decimal:2'];
+    }
+
+    public function category(): BelongsTo { return $this->belongsTo(Category::class); }
+    public function orders(): BelongsToMany { return $this->belongsToMany(Order::class)->withPivot('qty'); }
+}
+
+// ប្រើ Eloquent (ក្នុង Controller ឬ php artisan tinker)
+$latte = Product::create(['category_id' => 1, 'name' => 'Iced Latte', 'price' => 2.5, 'stock' => 20]);
+$cheap = Product::where('price', '<=', 2.5)->orderBy('price')->get();
+$latte->update(['stock' => $latte->stock - 1]);   // ឬ $latte->decrement('stock')
+$orders = User::find(1)->orders()->latest()->get();
+
+// ⚠️ N+1: 1 + N queries
+foreach (Order::all() as $o) echo $o->user->name;
+// ✅ Eager loading: 2 queries
+foreach (Order::with('user', 'products')->get() as $o) echo $o->user->name;
+</script>
+
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+php artisan make:model Product -mfs      # Model + migration + factory + seeder
+php artisan migrate                      # បង្កើតតារាង
+php artisan migrate:fresh --seed         # លុបទាំងអស់ បង្កើតថ្មី + ទិន្នន័យសាក
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>ឧទាហរណ៍លទ្ធផល · php artisan migrate</span></div><pre>
+   INFO  Running migrations.
+
+  0001_01_01_000000_create_users_table ................ 12.41ms DONE
+  2025_01_01_000000_create_categories_table ............ 3.02ms DONE
+  2025_01_01_000001_create_products_table .............. 4.87ms DONE
+  2025_01_01_000002_create_orders_table ................ 4.10ms DONE</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Migration</b> — សរសេរតារាងជា Code (Version control) · <code class='i'>up()</code> បង្កើត · <code class='i'>down()</code> ត្រឡប់។</li><li><code class='i'>foreignId('category_id')-&gt;constrained()</code> — Foreign key ទៅ categories.id។</li><li><b>Eloquent Model</b>៖ Class <code class='i'>Product</code> ↔ តារាង <code class='i'>products</code> · <code class='i'>$fillable</code> ការពារ Mass assignment។</li><li>Relationships៖ <code class='i'>belongsTo, hasMany, belongsToMany</code> → <code class='i'>$order-&gt;user</code>, <code class='i'>$user-&gt;orders</code>។</li><li><b>N+1 problem</b>៖ Loop ហៅ Relationship = Query ច្រើនពេក → ប្រើ <code class='i'>with()</code> (សាកក្នុង Laravel Lab Pro)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>Category មាន Products ច្រើន។ សរសេរ Relationship ក្នុង Category។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="php" data-label="answer.php">
+public function products(): HasMany
+{
+    return $this->hasMany(Product::class);
+}
+// ប្រើ: $category->products()->count();
+</script>
+</details></div>
+
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>CRUD + Validation (FormRequest)</h2>
+
+<script type="text/x-code" data-lang="php" data-label="StoreProductRequest.php + Controller">
+<?php
+// php artisan make:request StoreProductRequest
+class StoreProductRequest extends FormRequest
+{
+    public function authorize(): bool { return $this->user()?->is_admin ?? false; }
+
+    public function rules(): array
+    {
+        return [
+            'name'        => ['required', 'string', 'max:80', Rule::unique('products')->ignore($this->product)],
+            'price'       => ['required', 'numeric', 'min:0.25', 'max:100'],
+            'stock'       => ['required', 'integer', 'min:0'],
+            'category_id' => ['required', 'exists:categories,id'],
+            'photo'       => ['nullable', 'image', 'max:2048'],      // ≤ 2 MB
+        ];
+    }
+
+    public function messages(): array
+    {
+        return ['name.required' => 'សូមបញ្ចូលឈ្មោះទំនិញ', 'price.min' => 'តម្លៃយ៉ាងតិច $0.25'];
+    }
+}
+
+// ProductController
+public function store(StoreProductRequest $request)
+{
+    Product::create($request->validated());           // តែ Field ដែលបាន Validate
+    return redirect()->route('admin.products.index')->with('success', 'បានបន្ថែមទំនិញ ✅');
+}
+
+public function update(StoreProductRequest $request, Product $product)
+{
+    $product->update($request->validated());
+    return back()->with('success', 'បានកែប្រែ ✅');
+}
+
+public function destroy(Product $product)
+{
+    $product->delete();
+    return back()->with('success', 'បានលុប 🗑️');
+}
+</script>
+
+<script type="text/x-code" data-lang="blade" data-label="admin/products/create.blade.php">
+<form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data">
+    @csrf
+    @if (session('success')) <div class="alert">{{ session('success') }}</div> @endif
+
+    <input name="name" value="{{ old('name') }}" placeholder="ឈ្មោះ">
+    @error('name') <p class="error">{{ $message }}</p> @enderror
+
+    <input name="price" type="number" step="0.25" value="{{ old('price') }}">
+    @error('price') <p class="error">{{ $message }}</p> @enderror
+
+    <select name="category_id">
+        @foreach ($categories as $c)
+            <option value="{{ $c->id }}" @selected(old('category_id') == $c->id)>{{ $c->name }}</option>
+        @endforeach
+    </select>
+    <button>រក្សាទុក</button>
+</form>
+</script>
+
+<figure class="phf"><div style="max-width:560px;margin:auto;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;color:#111;box-shadow:0 10px 30px rgba(0,0,0,.12)"><div style="display:flex;align-items:center;gap:6px;padding:8px 10px;background:#f1f3f5;border-bottom:1px solid #dee2e6"><i style="width:11px;height:11px;border-radius:50%;background:#ff5f57"></i><i style="width:11px;height:11px;border-radius:50%;background:#febc2e"></i><i style="width:11px;height:11px;border-radius:50%;background:#28c840"></i><span style="flex:1;margin-left:8px;background:#fff;border-radius:7px;padding:3px 10px;font:12.5px monospace;color:#495057">🔒 localhost:8000/admin/products/create</span></div><div style="padding:14px 16px;font-size:14.5px"><div style="font-weight:700;margin-bottom:6px">បន្ថែមទំនិញ</div><input style="border:1px solid #e03131;border-radius:6px;padding:4px 8px;width:70%" value=""><p style="color:#e03131;margin:2px 0 6px;font-size:13px">សូមបញ្ចូលឈ្មោះទំនិញ</p><input style="border:1px solid #e03131;border-radius:6px;padding:4px 8px;width:30%" value="0"><p style="color:#e03131;margin:2px 0 6px;font-size:13px">តម្លៃយ៉ាងតិច $0.25</p><button style="background:#ff2d20;color:#fff;border:0;border-radius:6px;padding:6px 12px">រក្សាទុក</button></div></div><figcaption>🖥️ Validation Error ត្រឡប់មកវិញ + old() រក្សាតម្លៃ</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>FormRequest</b> — ដាក់ច្បាប់ Validation + Authorization ដាច់ពី Controller (ស្អាត)។</li><li>បើខុស Laravel <b>redirect back</b> ស្វ័យប្រវត្តិជាមួយ <code class='i'>$errors</code> + <code class='i'>old()</code> (API ត្រឡប់ <b>422</b> JSON)។</li><li><code class='i'>$request-&gt;validated()</code> — យកតែ Field ដែលត្រឹមត្រូវ → ការពារ Field ក្លែង (ឧ. is_admin)។</li><li><code class='i'>@csrf</code> — Token ការពារ CSRF (គ្មាន = Error <b>419</b>)។</li><li><code class='i'>-&gt;with('success', ...)</code> — Flash message (បង្ហាញម្តង)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>Validation phone លេខកម្ពុជា (0 + ៨–៩ ខ្ទង់)?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="php" data-label="answer.php">
+'phone' => ['required', 'regex:/^0\d{8,9}$/'],
+</script>
+</details></div>
+
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>Authentication, Middleware &amp; Policy</h2>
+
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+laravel new kafe                    # ជ្រើស Starter kit (Livewire / React / Vue) → Login, Register, Reset password ស្រាប់
+# ឬ Project ចាស់:
+composer require laravel/breeze --dev && php artisan breeze:install blade
+php artisan migrate && npm install && npm run build
+</script>
+
+<script type="text/x-code" data-lang="php" data-label="Auth.php">
+<?php
+// Login ដោយដៃ (Starter kit បានធ្វើរួចហើយ)
+if (Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+    $request->session()->regenerate();                 // ការពារ Session fixation
+    return redirect()->intended('/dashboard');
+}
+return back()->withErrors(['email' => 'Email ឬ Password ខុស'])->onlyInput('email');
+
+// Middleware ផ្ទាល់ខ្លួន: php artisan make:middleware EnsureAdmin
+class EnsureAdmin
+{
+    public function handle(Request $request, Closure $next): Response
+    {
+        abort_unless($request->user()?->is_admin, 403, 'សម្រាប់ Admin ប៉ុណ្ណោះ');
+        return $next($request);
+    }
+}
+
+// bootstrap/app.php (Laravel 11+)
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->alias(['admin' => EnsureAdmin::class]);
+})
+
+// Policy: php artisan make:policy OrderPolicy --model=Order
+class OrderPolicy
+{
+    public function view(User $user, Order $order): bool   { return $user->id === $order->user_id || $user->is_admin; }
+    public function update(User $user, Order $order): bool { return $user->is_admin; }
+}
+
+// Controller
+public function show(Order $order)
+{
+    Gate::authorize('view', $order);                   // 403 បើគ្មានសិទ្ធិ
+    return view('orders.show', compact('order'));
+}
+</script>
+
+<script type="text/x-code" data-lang="blade" data-label="orders/show.blade.php">
+@can('update', $order)
+    <button>ប្តូរ Status</button>
+@endcan
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Authentication</b> = អ្នកណា (Login) · <b>Authorization</b> = មានសិទ្ធិធ្វើអ្វី (Policy/Gate)។</li><li>Starter kit បង្កើត Login/Register/Reset/Verify email រួចរាល់ · Password Hash ដោយ bcrypt។</li><li><code class='i'>Auth::attempt</code> + <code class='i'>session()-&gt;regenerate()</code> — Login សុវត្ថិភាព។</li><li><b>Middleware</b> — ពិនិត្យមុនដល់ Controller (<code class='i'>auth</code>, <code class='i'>admin</code>, <code class='i'>throttle</code>)។</li><li><b>Policy</b> — ច្បាប់តាម Model · <code class='i'>Gate::authorize</code> / <code class='i'>@can</code> — 403 បើគ្មានសិទ្ធិ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>Login ខុសច្រើនដង ចង់កំណត់ ៥ ដង/នាទី។ ប្រើអ្វី?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="php" data-label="answer.php">
+Route::post('/login', [LoginController::class, 'store'])->middleware('throttle:5,1');
+</script>
+</details></div>
+
+</section>
+<section id="l13">
+<h2><span class="badge">មេរៀន ១៣</span>File Upload &amp; Storage</h2>
+
+<script type="text/x-code" data-lang="php" data-label="ProductController.php">
+<?php
+public function store(StoreProductRequest $request)
+{
+    $data = $request->validated();
+
+    if ($request->hasFile('photo')) {
+        // storage/app/public/products/xxxx.jpg (ឈ្មោះ Random មិនស្ទួន)
+        $data['photo'] = $request->file('photo')->store('products', 'public');
+    }
+    Product::create($data);
+    return to_route('admin.products.index');
+}
+
+public function destroy(Product $product)
+{
+    if ($product->photo) Storage::disk('public')->delete($product->photo);
+    $product->delete();
+    return back();
+}
+</script>
+
+<script type="text/x-code" data-lang="blade" data-label="blade">
+<input type="file" name="photo" accept="image/*">   {{-- Form ត្រូវមាន enctype="multipart/form-data" --}}
+
+@if ($product->photo)
+    <img src="{{ Storage::url($product->photo) }}" alt="{{ $product->name }}" width="240">
+@endif
+</script>
+
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+php artisan storage:link        # public/storage → storage/app/public
+# Production ធំ: ប្តូរ Disk ទៅ S3 / Cloudflare R2 ក្នុង .env (FILESYSTEM_DISK=s3)
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>$request-&gt;file('photo')-&gt;store('products', 'public')</code> — រក្សាទុក ហើយត្រឡប់ Path។</li><li>Validation <code class='i'>image|max:2048</code> — ការពារ File មិនមែនរូប/ធំពេក។</li><li><code class='i'>storage:link</code> — ឲ្យ Browser ចូលដល់ File · <code class='i'>Storage::url()</code> បង្កើត URL។</li><li><b>Disk</b>៖ local, public, s3 — ប្តូរកន្លែងរក្សាទុកដោយមិនកែ Code។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៣</h4><p>ហេតុអ្វីមិនរក្សាទុកដោយឈ្មោះ File ដើមរបស់អ្នកប្រើ?</p><details><summary>មើលចម្លើយ</summary><p>ឈ្មោះអាចស្ទួន (ជាន់គ្នា) ឬមានតួអក្សរគ្រោះថ្នាក់ (<code class='i'>../../</code>, <code class='i'>.php</code>)។ <code class='i'>store()</code> បង្កើតឈ្មោះ Random + Extension តាមប្រភេទពិត។</p></details></div>
+
+</section>
+<section id="l14">
+<h2><span class="badge">មេរៀន ១៤</span>REST API សម្រាប់ Mobile App (Sanctum)</h2>
+
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+php artisan install:api                       # បង្កើត routes/api.php + Laravel Sanctum
+php artisan make:resource ProductResource
+</script>
+
+<script type="text/x-code" data-lang="php" data-label="routes/api.php">
+<?php
+// routes/api.php  (URL ចាប់ផ្តើម /api)
+Route::post('/login', function (Request $request) {
+    $request->validate(['email' => 'required|email', 'password' => 'required', 'device' => 'required']);
+    $user = User::where('email', $request->email)->first();
+    if (! $user || ! Hash::check($request->password, $user->password)) {
+        return response()->json(['message' => 'Email ឬ Password ខុស'], 401);
+    }
+    return ['token' => $user->createToken($request->device)->plainTextToken];
+});
+
+Route::get('/products', fn () => ProductResource::collection(Product::with('category')->paginate(20)));
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/me', fn (Request $r) => $r->user());
+    Route::post('/orders', [OrderController::class, 'store']);
+});
+
+// app/Http/Resources/ProductResource.php — រៀបចំ JSON
+class ProductResource extends JsonResource
+{
+    public function toArray(Request $request): array
+    {
+        return [
+            'id'       => $this->id,
+            'name'     => $this->name,
+            'price'    => (float) $this->price,
+            'photo'    => $this->photo ? Storage::url($this->photo) : null,
+            'category' => $this->whenLoaded('category', fn () => $this->category->name),
+        ];
+    }
+}
+</script>
+
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+curl -X POST http://localhost:8000/api/login -H "Accept: application/json" \
+     -d email=dara@kafe.kh -d password=secret123 -d device=pixel8
+curl http://localhost:8000/api/me -H "Authorization: Bearer 1|Xk2f...token" -H "Accept: application/json"
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>ឧទាហរណ៍លទ្ធផល · API</span></div><pre>{&quot;token&quot;:&quot;1|Xk2fQ9pZ0aLmN3vB7cR1sT5uW8yE4hJ6kD2gF0qA&quot;}
+{&quot;id&quot;:1,&quot;name&quot;:&quot;Dara&quot;,&quot;email&quot;:&quot;dara@kafe.kh&quot;,&quot;created_at&quot;:&quot;2025-06-01T08:00:00.000000Z&quot;}</pre></div>
+
+<script type="text/x-code" data-lang="dart" data-label="api.dart">
+// Flutter (វគ្គ Flutter មេរៀន ១៣) ហៅ Laravel API
+final res = await http.get(Uri.parse('$baseUrl/api/me'),
+    headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'});
+final me = jsonDecode(res.body);
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>install:api</code> (Laravel 11+) — បន្ថែម <code class='i'>routes/api.php</code> + <b>Sanctum</b>។</li><li>Mobile app Login → ទទួល <b>Token</b> → ផ្ញើ <code class='i'>Authorization: Bearer ...</code> រាល់ Request (រក្សាក្នុង SecureStore/Keychain)។</li><li><code class='i'>auth:sanctum</code> — Route ការពារ · Token ខុស → <b>401</b>។</li><li><b>API Resource</b> — កំណត់ JSON ដែលចេញ (កុំបង្ហាញ password/ព័ត៌មានឯកជន) · <code class='i'>whenLoaded</code> ជៀស N+1។</li><li>Header <code class='i'>Accept: application/json</code> — Validation error ត្រឡប់ជា JSON 422 ជំនួស redirect។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៤</h4><p>Logout ពីទូរស័ព្ទនេះ (លុប Token បច្ចុប្បន្ន)?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="php" data-label="answer.php">
+Route::middleware('auth:sanctum')->post('/logout', function (Request $r) {
+    $r->user()->currentAccessToken()->delete();
+    return response()->noContent();   // 204
+});
+</script>
+</details></div>
+
+</section>
+<section id="l15">
+<h2><span class="badge">មេរៀន ១៥</span>Queue, Mail, Notification &amp; Schedule</h2>
+
+<script type="text/x-code" data-lang="php" data-label="Jobs &amp; Mail">
+<?php
+// php artisan make:mail OrderReady --markdown=mail.order-ready
+class OrderReady extends Mailable
+{
+    public function __construct(public Order $order) {}
+    public function envelope(): Envelope { return new Envelope(subject: "☕ Order #{$this->order->id} រួចរាល់"); }
+    public function content(): Content { return new Content(markdown: 'mail.order-ready'); }
+}
+
+// php artisan make:job SendOrderReady — រត់ខាងក្រោយ (មិនឲ្យអ្នកប្រើរង់ចាំ)
+class SendOrderReady implements ShouldQueue
+{
+    use Queueable;
+    public int $tries = 3;                               // ព្យាយាម ៣ ដងបើបរាជ័យ
+    public function __construct(public Order $order) {}
+    public function handle(): void
+    {
+        Mail::to($this->order->user)->send(new OrderReady($this->order));
+    }
+}
+
+// Controller: ពេល Barista ប្តូរ Status
+$order->update(['status' => 'ready']);
+SendOrderReady::dispatch($order);
+
+// routes/console.php — Scheduler
+Schedule::command('orders:cancel-unpaid')->everyFifteenMinutes();
+Schedule::call(fn () => Report::sendDaily())->dailyAt('22:00')->timezone('Asia/Phnom_Penh');
+</script>
+
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+php artisan queue:work          # Worker រត់ Job (Production ប្រើ Supervisor)
+php artisan schedule:work       # Local · Production: cron "* * * * * php artisan schedule:run"
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Mailable</b> — Email ជា Class + Template Markdown · តេស្តដោយ Mailpit/log driver។</li><li><b>Job + ShouldQueue</b> — ការងារយឺត (Email, Resize រូប, Push) រត់ក្នុង Queue → Page លឿន · <code class='i'>$tries</code> retry។</li><li>Queue driver៖ <code class='i'>database</code> (លំនាំដើម Laravel 11+) · Redis សម្រាប់ធំ។</li><li><b>Scheduler</b> — Cron ក្នុង Code · <code class='i'>timezone('Asia/Phnom_Penh')</code>។</li><li><b>Notification</b> — ផ្ញើ Mail/SMS/Telegram/Database តាម Channel ច្រើនដោយ Class តែមួយ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៥</h4><p>ហេតុអ្វីមិនផ្ញើ Email ផ្ទាល់ក្នុង Controller?</p><details><summary>មើលចម្លើយ</summary><p>SMTP អាចចំណាយ ១–៥ វិនាទី ឬបរាជ័យ → អ្នកប្រើរង់ចាំ/ឃើញ Error។ Queue ធ្វើខាងក្រោយ និង Retry ស្វ័យប្រវត្តិ។</p></details></div>
+
+</section>
+<section id="l16">
+<h2><span class="badge">មេរៀន ១៦</span>Testing (Pest) &amp; Deploy</h2>
+
+<script type="text/x-code" data-lang="php" data-label="tests/Feature/ProductTest.php">
+<?php
+// tests/Feature/ProductTest.php — php artisan test
+use App\Models\{User, Product};
+
+it('shows the menu', function () {
+    Product::factory()->create(['name' => 'Iced Latte']);
+    $this->get('/products')->assertOk()->assertSee('Iced Latte');
+});
+
+it('blocks guests from admin', function () {
+    $this->get('/admin/products')->assertRedirect('/login');
+});
+
+it('validates price', function () {
+    $admin = User::factory()->create(['is_admin' => true]);
+    $this->actingAs($admin)
+        ->post('/admin/products', ['name' => 'Free', 'price' => 0, 'stock' => 1, 'category_id' => 1])
+        ->assertSessionHasErrors('price');
+});
+
+it('returns products as JSON', function () {
+    Product::factory()->count(3)->create();
+    $this->getJson('/api/products')->assertOk()->assertJsonCount(3, 'data');
+});
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>ឧទាហរណ៍លទ្ធផល · php artisan test</span></div><pre>
+   PASS  Tests\Feature\ProductTest
+  ✓ it shows the menu                                     0.12s
+  ✓ it blocks guests from admin                           0.02s
+  ✓ it validates price                                    0.04s
+  ✓ it returns products as JSON                           0.03s
+
+  Tests:    4 passed (7 assertions)
+  Duration: 0.34s</pre></div>
+
+<script type="text/x-code" data-lang="bash" data-label="deploy.sh">
+# Deploy លើ VPS (Ubuntu + Nginx + PHP-FPM + MySQL)
+git pull origin main
+composer install --no-dev --optimize-autoloader
+php artisan migrate --force
+npm ci && npm run build
+php artisan optimize            # Cache config, routes, views
+sudo systemctl reload php8.3-fpm
+</script>
+
+<script type="text/x-code" data-lang="txt" data-label="nginx.conf">
+# /etc/nginx/sites-available/kafe
+server {
+    server_name kafe.example.com;
+    root /var/www/kafe/public;          # ⚠️ ត្រូវជា public/ មិនមែន Project root
+    index index.php;
+    location / { try_files $uri $uri/ /index.php?$query_string; }
+    location ~ \.php$ { include snippets/fastcgi-php.conf; fastcgi_pass unix:/run/php/php8.3-fpm.sock; }
+}
+</script>
+
+<table><tr><th>✅ .env Production</th><th>តម្លៃ</th></tr><tr><td>APP_ENV</td><td>production</td></tr><tr><td>APP_DEBUG</td><td><b>false</b> (true = បង្ហាញ Password DB ពេល Error!)</td></tr><tr><td>APP_KEY</td><td><code class='i'>php artisan key:generate</code></td></tr><tr><td>APP_URL</td><td>https://kafe.example.com (HTTPS ដោយ Certbot/Let's Encrypt)</td></tr></table>
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Pest</b> — Test ងាយអាន · <code class='i'>actingAs</code> ក្លែង Login · <code class='i'>assertOk/Redirect/SessionHasErrors/JsonCount</code>។</li><li><b>Factory</b> — បង្កើតទិន្នន័យសាក · Test Database ថ្មីរាល់ Test (<code class='i'>RefreshDatabase</code>)។</li><li>Nginx <code class='i'>root .../public</code> — Code និង .env មិនអាចចូលពី Browser។</li><li><code class='i'>php artisan optimize</code> — Cache → លឿន · ជម្រើសងាយ៖ <b>Laravel Cloud</b>, Forge, ឬ Shared hosting (cPanel) ដែលគាំទ្រ PHP 8.2+។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៦</h4><p>Website Production បង្ហាញ Error page ពណ៌ដែលមាន Password DB។ ខុសត្រង់ណា?</p><details><summary>មើលចម្លើយ</summary><p><code class='i'>APP_DEBUG=true</code> — ត្រូវដាក់ <b>false</b> ក្នុង Production ហើយ <code class='i'>php artisan config:cache</code> ម្តងទៀត។</p></details></div>
+
+</section>
+<section id="cheat">
+<h2>📋 Cheat Sheet</h2>
+
+<table><tr><th>Artisan</th><th>ធ្វើអ្វី</th></tr><tr><td>php artisan serve</td><td>Server Local</td></tr><tr><td>make:model Product -mcr</td><td>Model + Migration + Resource Controller</td></tr><tr><td>make:request / make:policy / make:middleware</td><td>Validation / សិទ្ធិ / Middleware</td></tr><tr><td>migrate · migrate:fresh --seed</td><td>តារាង</td></tr><tr><td>route:list</td><td>មើល Routes</td></tr><tr><td>tinker</td><td>Console សាក Code</td></tr><tr><td>install:api</td><td>API + Sanctum</td></tr><tr><td>queue:work · schedule:work</td><td>Jobs · Cron</td></tr><tr><td>test</td><td>រត់ Test</td></tr><tr><td>optimize</td><td>Cache សម្រាប់ Production</td></tr></table>
+
+<table><tr><th>Blade</th><th>Eloquent</th></tr><tr><td>{{ $x }} · {!! $html !!}</td><td>Product::all() · find(1) · where()->get()</td></tr><tr><td>@if @foreach @forelse</td><td>create([...]) · update([...]) · delete()</td></tr><tr><td>@csrf @method('PUT')</td><td>with('user') (Eager) · paginate(12)</td></tr><tr><td>@auth @can @error</td><td>belongsTo · hasMany · belongsToMany</td></tr><tr><td>&lt;x-layout&gt; {{ $slot }}</td><td>increment('stock') · latest()</td></tr></table>
+
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងអាជីព៖ Kafe POS &amp; Online Order (Laravel)</h2>
+
+<p>ប្រព័ន្ធពេញលេញ៖ <b>Website Menu + Cart → Checkout → Admin (CRUD ទំនិញ, រូបភាព) → Barista dashboard ប្តូរ Status → Email/Notification → API ឲ្យ App Flutter → Report ចំណូលប្រចាំថ្ងៃ</b>។</p>
+<script type="text/x-code" data-lang="txt" data-label="Project structure">
+kafe/
+├── app/
+│   ├── Enums/OrderStatus.php            ← enum (មេរៀន ៣)
+│   ├── Http/Controllers/
+│   │   ├── MenuController.php           ← Website (៨–៩)
+│   │   ├── CartController.php           ← Session cart
+│   │   ├── CheckoutController.php       ← DB::transaction
+│   │   ├── Admin/ProductController.php  ← CRUD + Upload (១១, ១៣)
+│   │   └── Api/OrderController.php      ← Sanctum (១៤)
+│   ├── Http/Requests/ · Policies/OrderPolicy.php (១២)
+│   ├── Jobs/SendOrderReady.php · Mail/OrderReady.php (១៥)
+│   └── Models/ User · Category · Product · Order
+├── database/migrations/ · factories/ · seeders/
+├── resources/views/ (layout, menu, cart, admin/*)
+├── routes/web.php · api.php · console.php
+└── tests/Feature/ (១៦)
+</script>
+
+<script type="text/x-code" data-lang="php" data-label="CheckoutController.php">
+<?php
+// CheckoutController — Transaction: Order + Items + កាត់ Stock ទាំងអស់ ឬមិនធ្វើសោះ
+public function store(Request $request)
+{
+    $cart = collect(session('cart', []));                 // [product_id => qty]
+    abort_if($cart->isEmpty(), 422, 'កន្ត្រកទទេ');
+
+    $order = DB::transaction(function () use ($cart, $request) {
+        $products = Product::whereIn('id', $cart->keys())->lockForUpdate()->get()->keyBy('id');
+        $order = $request->user()->orders()->create(['status' => OrderStatus::Pending, 'total' => 0]);
+        $total = 0;
+        foreach ($cart as $id => $qty) {
+            $p = $products[$id] ?? throw ValidationException::withMessages(['cart' => 'ទំនិញមិនមាន']);
+            if ($p->stock < $qty) throw ValidationException::withMessages(['cart' => "{$p->name} អស់ស្តុក"]);
+            $order->products()->attach($id, ['qty' => $qty, 'price' => $p->price]);   // តម្លៃពី DB មិនមែនពី Form
+            $p->decrement('stock', $qty);
+            $total += $p->price * $qty;
+        }
+        $order->update(['total' => $total]);
+        return $order;
+    });
+
+    session()->forget('cart');
+    return to_route('orders.show', $order)->with('success', "Order #{$order->id} ✅");
+}
+</script>
+
+<table><tr><th>មុខងារ</th><th>មេរៀន</th></tr><tr><td>PHP, Array, OOP, Enum</td><td>១–៣</td></tr><tr><td>Form, Session, XSS</td><td>៤</td></tr><tr><td>SQL Injection, Hash</td><td>៥</td></tr><tr><td>Composer</td><td>៦</td></tr><tr><td>Routes, Controller, Blade</td><td>៧–៩</td></tr><tr><td>Migration, Eloquent</td><td>១០</td></tr><tr><td>CRUD + Validation</td><td>១១</td></tr><tr><td>Login, Policy</td><td>១២</td></tr><tr><td>Upload</td><td>១៣</td></tr><tr><td>API Mobile</td><td>១៤</td></tr><tr><td>Email/Queue</td><td>១៥</td></tr><tr><td>Test + Deploy</td><td>១៦</td></tr></table>
+
+</section>
+<section id="pro-app">
+<h2>💻 Laravel Lab Pro (App)</h2>
+
+<p><b>CRUD Generator</b>៖ វាយឈ្មោះ Model + Fields → ទទួល Migration, Model, FormRequest, Controller, Routes, Blade, API Resource ពេញលេញ។ <b>Request Lifecycle</b>៖ មើល Request ធ្វើដំណើរ ហើយឈប់ត្រង់ណា (302/403/404/419/422)។ <b>Eloquent → SQL</b>៖ មើល SQL ដែល Laravel បង្កើត និងបញ្ហា N+1។ <b>Blade XSS</b>៖ ប្រៀបធៀប <code class='i'>{{ }}</code> និង <code class='i'>{!! !!}</code>។</p>
+
+<div class="itk" id="lv">
+<div class="itk-tabs"><button class="on" data-t="g">🏗️ CRUD Generator</button><button data-t="l">🛣️ Request Lifecycle</button><button data-t="e">🗃️ Eloquent → SQL</button><button data-t="x">🛡️ Blade XSS</button></div>
+
+<div class="itk-p on" data-p="g">
+ <div class="itk-row">
+  <label>Model<input id="g_m" value="Product" size="12"></label>
+  <label style="flex:1;min-width:260px">Fields (ឈ្មោះ:ប្រភេទ មួយបន្ទាត់)<textarea id="g_f" rows="5" style="font:13px 'JetBrains Mono',monospace;padding:6px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text)">name:string
+price:decimal
+stock:integer
+is_hot:boolean
+category:foreign
+description:text?</textarea></label>
+ </div>
+ <p style="font-size:13px;color:var(--muted);margin:4px 0">ប្រភេទ៖ string · text · integer · decimal · boolean · date · foreign (Relationship) · បន្ថែម <b>?</b> = nullable</p>
+ <div class="itk-tabs" id="g_tabs" style="border-radius:10px"></div>
+ <pre id="g_code" class="itk-out" style="white-space:pre;overflow:auto;max-height:440px;font:12.5px/1.6 'JetBrains Mono',monospace;color:var(--text);margin-top:0"></pre>
+ <button class="btn" id="g_copy">📋 Copy</button>
+</div>
+
+<div class="itk-p" data-p="l">
+ <label>Request<select id="l_r" style="min-width:320px">
+  <option value="ok">GET /products</option><option value="guest">GET /admin/products (មិន Login)</option><option value="user">GET /admin/products (User ធម្មតា)</option>
+  <option value="admin">GET /admin/products (Admin)</option><option value="csrf">POST /admin/products (គ្មាន @csrf)</option><option value="val">POST /admin/products (price = 0)</option>
+  <option value="store">POST /admin/products (ត្រឹមត្រូវ)</option><option value="404">GET /products/999</option><option value="api">GET /api/me (គ្មាន Token)</option><option value="apiok">GET /api/me (Bearer token)</option></select></label>
+ <button class="btn" id="l_go">▶ ផ្ញើ Request</button>
+ <div id="l_pipe" style="display:flex;flex-wrap:wrap;gap:6px;margin:14px 0"></div>
+ <div class="itk-out" id="l_out"></div>
+</div>
+
+<div class="itk-p" data-p="e">
+ <div class="itk-row">
+  <label><span><input type="checkbox" id="e_w" checked> where price &lt;=</span><input id="e_wv" type="number" value="2.5" step="0.25" style="width:80px"></label>
+  <label><span><input type="checkbox" id="e_s" checked> ស្វែងរកឈ្មោះ</span><input id="e_sv" value="latte" size="8"></label>
+  <label>orderBy<select id="e_o"><option value="">(គ្មាន)</option><option selected>price</option><option>name</option><option>created_at</option></select></label>
+  <label>យក<select id="e_p"><option value="get">get()</option><option value="pag" selected>paginate(12)</option><option value="first">first()</option><option value="count">count()</option></select></label>
+ </div>
+ <pre id="e_code" class="itk-out" style="white-space:pre-wrap;font:13px/1.6 'JetBrains Mono',monospace;color:var(--text)"></pre>
+ <h4 style="margin:16px 0 6px">⚠️ N+1 Query ពេលបង្ហាញ Orders + ឈ្មោះអតិថិជន</h4>
+ <div class="itk-row"><label>ចំនួន Orders<input id="n_n" type="range" min="1" max="50" value="20"></label><label><span><input type="checkbox" id="n_w"> ប្រើ with('user')</span></label></div>
+ <div class="itk-out" id="n_out"></div>
+</div>
+
+<div class="itk-p" data-p="x">
+ <label style="display:flex">អ្នកប្រើវាយ (Comment)<input id="x_in" style="width:100%" value="&lt;img src=x onerror=&quot;alert('hacked')&quot;&gt; កាហ្វេឆ្ងាញ់!"></label>
+ <div class="fb-grid" style="grid-template-columns:1fr 1fr;margin-top:10px">
+  <div class="itk-out"><b>✅ {{ $comment }}</b><div style="font-size:13px;color:var(--muted)">HTML ដែលផ្ញើទៅ Browser៖</div><code id="x_e" style="word-break:break-all"></code><div style="font-size:13px;color:var(--muted);margin-top:8px">អ្នកមើលឃើញ៖</div><div id="x_v" style="padding:6px;border:1px dashed var(--line);border-radius:6px"></div></div>
+  <div class="itk-out" style="border-color:#e03131"><b style="color:#e03131">⛔ {!! $comment !!}</b><div style="font-size:13px;color:var(--muted)">HTML ដែលផ្ញើទៅ Browser៖</div><code id="x_r" style="word-break:break-all;color:#e03131"></code><div id="x_w" style="margin-top:8px;font-weight:700"></div></div>
+ </div>
+</div>
+</div>
+<script>
+(()=>{
+const $=id=>document.getElementById(id),R=$("lv");
+R.querySelectorAll(":scope>.itk-tabs button").forEach(b=>b.onclick=()=>{R.querySelectorAll(":scope>.itk-tabs button").forEach(x=>x.classList.toggle("on",x===b));R.querySelectorAll(":scope>.itk-p").forEach(p=>p.classList.toggle("on",p.dataset.p===b.dataset.t))});
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+/* ---------- CRUD generator ---------- */
+const snake=s=>s.replace(/([a-z0-9])([A-Z])/g,"$1_$2").toLowerCase();
+const plural=s=>/(s|x|ch|sh)$/.test(s)?s+"es":/[^aeiou]y$/.test(s)?s.slice(0,-1)+"ies":s+"s";
+const camel=s=>s.replace(/_(\w)/g,(_,c)=>c.toUpperCase());
+const studly=s=>{const c=camel(s);return c[0].toUpperCase()+c.slice(1)};
+let gtab="mig",G={};
+function gen(){
+ const M=studly(($("g_m").value.trim()||"Product").replace(/\W/g,"")),m=camel(M[0].toLowerCase()+M.slice(1)),tbl=plural(snake(M)),route=tbl.replace(/_/g,"-");
+ const F=$("g_f").value.split("\n").map(l=>l.trim()).filter(Boolean).map(l=>{let[n,t="string"]=l.split(":");const nul=t.endsWith("?");t=t.replace("?","");n=snake(n.trim());return{n,t,nul}});
+ const col=f=>{const nul=f.nul?"->nullable()":"";switch(f.t){case"foreign":return`$table->foreignId('${f.n}_id')${nul}->constrained()->cascadeOnDelete();`;case"decimal":return`$table->decimal('${f.n}', 10, 2)${nul};`;case"integer":return`$table->integer('${f.n}')${nul}->default(0);`;case"boolean":return`$table->boolean('${f.n}')->default(false);`;case"text":return`$table->text('${f.n}')${nul};`;case"date":return`$table->date('${f.n}')${nul};`;default:return`$table->string('${f.n}')${nul};`}};
+ const key=f=>f.t==="foreign"?f.n+"_id":f.n;
+ const rule=f=>{const r=[f.nul?"'nullable'":f.t==="boolean"?"'boolean'":"'required'"];switch(f.t){case"foreign":r.push(`'exists:${plural(f.n)},id'`);break;case"decimal":r.push("'numeric'","'min:0'");break;case"integer":r.push("'integer'","'min:0'");break;case"boolean":r.splice(0,1,"'boolean'");break;case"date":r.push("'date'");break;case"text":r.push("'string'");break;default:r.push("'string'","'max:255'")}return`            '${key(f)}' => [${r.join(", ")}],`};
+ const casts=F.filter(f=>["decimal","boolean","date"].includes(f.t)).map(f=>`            '${f.n}' => '${f.t==="decimal"?"decimal:2":f.t}',`);
+ const rels=F.filter(f=>f.t==="foreign").map(f=>`\n    public function ${camel(f.n)}(): BelongsTo\n    {\n        return $this->belongsTo(${studly(f.n)}::class);\n    }`).join("\n");
+ const show=F.filter(f=>f.t!=="text").slice(0,4);
+ G={
+ cmd:["artisan",`php artisan make:model ${M} -mcr --requests\nphp artisan make:resource ${M}Resource\n# កែ File ខាងក្រោម រួច:\nphp artisan migrate\nphp artisan route:list --name=${route}`],
+ mig:["migration",`<?php\n\nuse Illuminate\\Database\\Migrations\\Migration;\nuse Illuminate\\Database\\Schema\\Blueprint;\nuse Illuminate\\Support\\Facades\\Schema;\n\nreturn new class extends Migration\n{\n    public function up(): void\n    {\n        Schema::create('${tbl}', function (Blueprint $table) {\n            $table->id();\n${F.map(f=>"            "+col(f)).join("\n")}\n            $table->timestamps();\n        });\n    }\n\n    public function down(): void\n    {\n        Schema::dropIfExists('${tbl}');\n    }\n};`],
+ model:[`Models/${M}.php`,`<?php\n\nnamespace App\\Models;\n\nuse Illuminate\\Database\\Eloquent\\Model;${rels?"\nuse Illuminate\\Database\\Eloquent\\Relations\\BelongsTo;":""}\n\nclass ${M} extends Model\n{\n    protected $fillable = [${F.map(f=>`'${key(f)}'`).join(", ")}];\n${casts.length?`\n    protected function casts(): array\n    {\n        return [\n${casts.join("\n")}\n        ];\n    }\n`:""}${rels}\n}`],
+ req:[`Store${M}Request.php`,`<?php\n\nnamespace App\\Http\\Requests;\n\nuse Illuminate\\Foundation\\Http\\FormRequest;\n\nclass Store${M}Request extends FormRequest\n{\n    public function authorize(): bool\n    {\n        return $this->user() !== null;\n    }\n\n    public function rules(): array\n    {\n        return [\n${F.map(rule).join("\n")}\n        ];\n    }\n}`],
+ ctrl:[`${M}Controller.php`,`<?php\n\nnamespace App\\Http\\Controllers;\n\nuse App\\Http\\Requests\\Store${M}Request;\nuse App\\Models\\${M};\n\nclass ${M}Controller extends Controller\n{\n    public function index()\n    {\n        $${plural(m)} = ${M}::${F.some(f=>f.t==="foreign")?`with(${F.filter(f=>f.t==="foreign").map(f=>`'${camel(f.n)}'`).join(", ")})->`:"query()->"}latest()->paginate(15);\n        return view('${route}.index', compact('${plural(m)}'));\n    }\n\n    public function create()\n    {\n        return view('${route}.create');\n    }\n\n    public function store(Store${M}Request $request)\n    {\n        ${M}::create($request->validated());\n        return to_route('${route}.index')->with('success', 'បានបន្ថែម ✅');\n    }\n\n    public function edit(${M} $${m})\n    {\n        return view('${route}.edit', compact('${m}'));\n    }\n\n    public function update(Store${M}Request $request, ${M} $${m})\n    {\n        $${m}->update($request->validated());\n        return to_route('${route}.index')->with('success', 'បានកែប្រែ ✅');\n    }\n\n    public function destroy(${M} $${m})\n    {\n        $${m}->delete();\n        return back()->with('success', 'បានលុប 🗑️');\n    }\n}`],
+ routes:["routes/web.php",`use App\\Http\\Controllers\\${M}Controller;\n\nRoute::resource('${route}', ${M}Controller::class)\n    ->except('show')\n    ->middleware('auth');`],
+ view:[`${route}/index.blade.php`,`<x-layout title="${M}">\n    @if (session('success'))\n        <div class="alert">{{ session('success') }}</div>\n    @endif\n\n    <a href="{{ route('${route}.create') }}">＋ បន្ថែម</a>\n\n    <table>\n        <tr>${show.map(f=>`<th>${f.n}</th>`).join("")}<th></th></tr>\n        @foreach ($${plural(m)} as $${m})\n            <tr>\n${show.map(f=>`                <td>{{ $${m}->${f.t==="foreign"?camel(f.n)+"?->name":f.t==="boolean"?f.n+" ? '✅' : '—'":f.n} }}</td>`).join("\n")}\n                <td>\n                    <a href="{{ route('${route}.edit', $${m}) }}">កែ</a>\n                    <form method="POST" action="{{ route('${route}.destroy', $${m}) }}">\n                        @csrf @method('DELETE')\n                        <button onclick="return confirm('លុប?')">លុប</button>\n                    </form>\n                </td>\n            </tr>\n        @endforeach\n    </table>\n\n    {{ $${plural(m)}->links() }}\n</x-layout>`],
+ api:[`${M}Resource.php`,`<?php\n\nnamespace App\\Http\\Resources;\n\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Http\\Resources\\Json\\JsonResource;\n\nclass ${M}Resource extends JsonResource\n{\n    public function toArray(Request $request): array\n    {\n        return [\n            'id' => $this->id,\n${F.map(f=>f.t==="foreign"?`            '${f.n}' => $this->whenLoaded('${camel(f.n)}'),`:`            '${f.n}' => ${f.t==="decimal"?"(float) ":""}$this->${f.n},`).join("\n")}\n        ];\n    }\n}\n\n// routes/api.php\nRoute::apiResource('${route}', Api\\${M}Controller::class)->middleware('auth:sanctum');`]};
+ $("g_tabs").innerHTML=Object.entries(G).map(([k,[n]])=>`<button data-k="${k}" class="${k===gtab?"on":""}">${esc(n)}</button>`).join("");
+ $("g_tabs").querySelectorAll("button").forEach(b=>b.onclick=()=>{gtab=b.dataset.k;gen()});
+ $("g_code").textContent=G[gtab][1];
+}
+$("g_m").oninput=gen;$("g_f").oninput=gen;
+$("g_copy").onclick=()=>{try{navigator.clipboard.writeText($("g_code").textContent);$("g_copy").textContent="✅ Copied"}catch(e){}setTimeout(()=>$("g_copy").textContent="📋 Copy",1200)};
+gen();
+/* ---------- Lifecycle ---------- */
+const STEPS=["🌐 Request","📂 public/index.php","🛡️ Middleware","🛣️ Router","🎮 Controller","✔️ Validation","🗃️ Model/DB","🎨 View/JSON","📤 Response"];
+const CASES={
+ ok:{stop:8,code:"200 OK",c:"#2f9e44",msg:"Route products.index → ProductController@index → Product::paginate() → Blade products.index → HTML",skip:[5]},
+ guest:{stop:2,code:"302 Found → /login",c:"#f08c00",msg:"Middleware <b>auth</b>៖ មិនទាន់ Login → redirect ទៅ /login (Controller មិនត្រូវហៅ)"},
+ user:{stop:2,code:"403 Forbidden",c:"#e03131",msg:"Middleware <b>admin</b>៖ abort_unless($user->is_admin, 403)"},
+ admin:{stop:8,code:"200 OK",c:"#2f9e44",msg:"auth ✓ admin ✓ → ProductController@index → Admin table",skip:[5]},
+ csrf:{stop:2,code:"419 Page Expired",c:"#e03131",msg:"Middleware <b>ValidateCsrfToken</b>៖ Form POST គ្មាន _token → 419 (ការពារ CSRF)"},
+ val:{stop:5,code:"302 → back (errors)",c:"#f08c00",msg:"StoreProductRequest៖ price.min → redirect back ជាមួយ $errors + old() (API = 422 JSON)"},
+ store:{stop:8,code:"302 → /admin/products",c:"#2f9e44",msg:"Validation ✓ → Product::create($request->validated()) → INSERT → redirect + flash 'បានបន្ថែម ✅'"},
+ "404":{stop:3,code:"404 Not Found",c:"#e03131",msg:"Route model binding៖ Product::findOrFail(999) រកមិនឃើញ → 404"},
+ api:{stop:2,code:"401 Unauthorized",c:"#e03131",msg:"Middleware <b>auth:sanctum</b>៖ គ្មាន Bearer token → {\"message\":\"Unauthenticated.\"}"},
+ apiok:{stop:8,code:"200 OK (JSON)",c:"#2f9e44",msg:"Token ✓ → $request->user() → JSON {\"id\":1,\"name\":\"Dara\"}",skip:[5,6]}};
+let timer;
+function pipe(n,c,skip=[]){ $("l_pipe").innerHTML=STEPS.map((s,i)=>`<span style="padding:6px 10px;border-radius:8px;font-size:13.5px;border:1px solid var(--line);${i<n?"background:var(--accent-soft)":""}${i===n-1?`;background:${c};color:#fff;border-color:${c}`:""}${skip.includes(i)&&i<n?";opacity:.45;text-decoration:line-through":""}">${s}</span>`).join("<span style='align-self:center'>→</span>");}
+function go(){clearTimeout(timer);const k=$("l_r").value,C=CASES[k];let i=0;$("l_out").innerHTML="⏳ …";
+ const tick=()=>{i++;pipe(i,i===C.stop+1?C.c:"var(--accent)",C.skip);if(i<=C.stop)timer=setTimeout(tick,260);else $("l_out").innerHTML=`<b style="font-size:20px;color:${C.c}">${C.code}</b><br>${C.msg}`;};tick();}
+$("l_go").onclick=go;$("l_r").onchange=go;pipe(0,"");
+/* ---------- Eloquent ---------- */
+function eq(){
+ const w=$("e_w").checked,wv=$("e_wv").value||0,s=$("e_s").checked,sv=$("e_sv").value,o=$("e_o").value,p=$("e_p").value;
+ let e="Product::query()",q="select * from `products`",wh=[];
+ if(w){e+=`\n    ->where('price', '<=', ${wv})`;wh.push("`price` <= "+wv);}
+ if(s){e+=`\n    ->where('name', 'like', '%${sv}%')`;wh.push("`name` like '%"+sv+"%'");}
+ if(o){e+=`\n    ->orderBy('${o}')`;}
+ const W=wh.length?" where "+wh.join(" and "):"",O=o?" order by `"+o+"` asc":"";
+ let sql;
+ if(p==="get"){e+="\n    ->get();";sql=q+W+O;}
+ else if(p==="first"){e+="\n    ->first();";sql=q+W+O+" limit 1";}
+ else if(p==="count"){e+="\n    ->count();";sql="select count(*) as aggregate from `products`"+W;}
+ else{e+="\n    ->paginate(12);";sql="select count(*) as aggregate from `products`"+W+"\n"+q+W+O+" limit 12 offset 0";}
+ $("e_code").textContent="// Eloquent\n$products = "+e+"\n\n-- SQL ដែល Laravel បង្កើត (DB::enableQueryLog / Debugbar)\n"+sql+";";
+ const n=+$("n_n").value,wi=$("n_w").checked,qs=wi?2:n+1;
+ const list=wi?["select * from `orders`","select * from `users` where `users`.`id` in (1, 2, 3, …)"]:["select * from `orders`",...Array.from({length:Math.min(n,4)},(_,i)=>`select * from \`users\` where \`users\`.\`id\` = ${i+1} limit 1`),...(n>4?[`… (${n-4} queries ទៀត)`]:[])];
+ $("n_out").innerHTML=`<code>${wi?"Order::with('user')->get()":"Order::all()"}</code> + <code>@foreach … {{ $order->user->name }}</code><br><b style="font-size:20px;color:${wi?"#2f9e44":qs>10?"#e03131":"#f08c00"}">${qs} queries</b> ${wi?"✅ Eager loading":"⚠️ N+1"}<div style="font:12.5px/1.6 'JetBrains Mono',monospace;margin-top:6px">${list.map(esc).join("<br>")}</div>`;
+}
+["e_w","e_wv","e_s","e_sv","e_o","e_p","n_n","n_w"].forEach(i=>$(i).oninput=eq);eq();
+/* ---------- XSS ---------- */
+function xss(){const v=$("x_in").value;$("x_e").textContent=esc(v);$("x_v").textContent=v;$("x_r").textContent=v;
+ $("x_w").innerHTML=/<\s*(script|img|svg|iframe)|on\w+\s*=|javascript:/i.test(v)?"🚨 Browser នឹងរត់ Code នេះ → លួច Cookie/Session បាន (XSS)!":"(គ្មាន Tag គ្រោះថ្នាក់ — ប៉ុន្តែកុំប្រើ {!! !!} ជាមួយទិន្នន័យអ្នកប្រើ)";}
+$("x_in").oninput=xss;xss();
+})();
+</script>
+
+<h3>🏆 Quiz PHP &amp; Laravel ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["អ្នកបង្កើតភាសា PHP?", ["Taylor Otwell", "Rasmus Lerdorf", "Guido van Rossum", "Brendan Eich"], 1], ["អ្នកបង្កើត Laravel?", ["Taylor Otwell", "Matt Mullenweg", "Rasmus Lerdorf", "Jordi Boggiano"], 0], ["Laravel ចេញដំបូងឆ្នាំ?", ["2005", "2011", "2016", "2020"], 1], ["Variable ក្នុង PHP ចាប់ផ្តើមដោយ?", ["@", "#", "$", "&amp;"], 2], ["រាប់តួអក្សរខ្មែរត្រឹមត្រូវ ប្រើ?", ["strlen", "mb_strlen", "count", "sizeof"], 1], ["ការពារ XSS ក្នុង PHP ធម្មតា ប្រើ?", ["htmlspecialchars", "md5", "trim", "json_encode"], 0], ["ការពារ SQL Injection ប្រើ?", ["addslashes", "Prepared statements", "strtoupper", "echo"], 1], ["រក្សា Password ត្រឹមត្រូវ?", ["md5()", "password_hash()", "base64_encode()", "អក្សរធម្មតា"], 1], ["Composer ប្រើសម្រាប់?", ["រចនា UI", "គ្រប់គ្រង Package + Autoload", "Database", "Deploy"], 1], ["MVC: C ជា?", ["Class", "Controller", "Component", "Cache"], 1], ["Route::resource បង្កើតប៉ុន្មាន Routes?", ["4", "5", "7", "10"], 2], ["Blade echo ដែល Escape ស្វ័យប្រវត្តិ?", ["{!! $x !!}", "{{ $x }}", "&lt;?= $x ?&gt;", "@echo"], 1], ["Form POST គ្មាន @csrf បាន Error?", ["404", "419", "500", "302"], 1], ["បង្កើតតារាងដោយ Code ក្នុង Laravel ហៅថា?", ["Seeder", "Migration", "Factory", "Policy"], 1], ["ដោះស្រាយ N+1 query ប្រើ?", ["with() (Eager loading)", "all()", "dd()", "sleep()"], 0], ["យកតែ Field ដែលបាន Validate?", ["$request->all()", "$request->validated()", "$_POST", "input()"], 1], ["Token API សម្រាប់ Mobile App ក្នុង Laravel?", ["Sanctum", "Blade", "Vite", "Tinker"], 0], ["ការងារយឺត (Email) គួរដាក់ក្នុង?", ["Controller", "Queue Job", "Blade", "Migration"], 1], ["Nginx root ត្រូវចង្អុលទៅ?", ["Project root", "public/", "storage/", "vendor/"], 1], ["Production ត្រូវដាក់ APP_DEBUG=?", ["true", "false", "1", "debug"], 1]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+
+<ol class="steps"><li><b>PHP &amp; Laravel</b> (វគ្គនេះ) ✅</li><li>Livewire / Inertia (React/Vue) · Filament (Admin panel រហ័ស)</li>
+<li>Database កម្រិតខ្ពស់៖ វគ្គ <b>SQL</b> · <b>PostgreSQL</b> · Index, Transaction</li><li>API ឲ្យ Mobile៖ វគ្គ <b>Flutter</b> · <b>React Native</b></li>
+<li>សុវត្ថិភាព &amp; Deploy៖ វគ្គ <b>Website Security</b> · <b>Docker &amp; CI/CD</b></li><li>Payment KHQR/Bakong · WordPress plugin (PHP) · Portfolio</li></ol>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="laravel"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

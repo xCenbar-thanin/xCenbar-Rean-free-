@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន SQL ពីដើមដល់ចប់</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f7fb; --panel:#ffffff; --text:#1b2433; --muted:#5a6578; --line:#dde3ee;
+  --accent:#1f6feb; --accent2:#4a8ff0; --accent-soft:#e6efff;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e9f7ee; --tip-line:#2da44e;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#58a6ff; --accent2:#388bfd; --accent-soft:#132238;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#10261a;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#58a6ff; --accent2:#388bfd; --accent-soft:#132238;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#10261a;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:38px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace;font-size:13px}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#0b4fbf,#3d8bfd);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw);font-weight:600} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.result{font-family:"JetBrains Mono",monospace;font-size:13.5px}
+.result th{background:var(--bg)}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+</style>
+<link rel="icon" href="../assets/icons/sql.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/sql.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>វគ្គសិក្សា SQL ពីដើមដល់កម្រិតអាជីព</h1>
+  <button class="btn" id="themeBtn">🌓</button>
+</header>
+
+<div class="layout">
+<nav class="side" id="side">
+  <h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+  <a href="#intro">១. SQL ជាអ្វី?</a>
+  <a href="#history">២. អ្នកបង្កើត និងប្រវត្តិ</a>
+  <a href="#uses">៣. គេប្រើធ្វើអ្វី?</a>
+  <a href="#install">៤. ដំឡើង + VS Code</a>
+  <a href="#elements">៥. ធាតុនីមួយៗរបស់ SQL</a>
+  <a href="#dataset">៦. ទិន្នន័យគំរូ (Shop DB)</a>
+  <h4>ផ្នែកទី ២ – មេរៀន</h4>
+  <a href="#l1">មេរៀន ១: CREATE Database & Table</a>
+  <a href="#l2">មេរៀន ២: Data Types & Constraints</a>
+  <a href="#l3">មេរៀន ៣: INSERT</a>
+  <a href="#l4">មេរៀន ៤: SELECT & WHERE</a>
+  <a href="#l5">មេរៀន ៥: ORDER BY, LIMIT, LIKE...</a>
+  <a href="#l6">មេរៀន ៦: Aggregate & GROUP BY</a>
+  <a href="#l7">មេរៀន ៧: UPDATE & DELETE</a>
+  <a href="#l8">មេរៀន ៨: JOIN</a>
+  <a href="#l9">មេរៀន ៩: Subquery & CTE</a>
+  <a href="#l10">មេរៀន ១០: Functions & CASE</a>
+  <a href="#l11">មេរៀន ១១: ALTER, VIEW, INDEX</a>
+  <a href="#l12">មេរៀន ១២: Transactions</a>
+  <a href="#l13">មេរៀន ១៣: Procedure & Trigger</a>
+  <a href="#l14">មេរៀន ១៤: Window Functions</a>
+  <h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+  <a href="#pro">Database Design</a>
+  <a href="#pro-norm">Normalization</a>
+  <a href="#pro-project">គម្រោង: ប្រព័ន្ធលក់ទំនិញ</a>
+  <a href="#pro-perf">Performance (EXPLAIN)</a>
+  <a href="#pro-security">Security & SQL Injection</a>
+  <a href="#pro-backup">Backup & Restore</a>
+  <a href="#roadmap">ផែនទីបន្តការសិក្សា</a>
+</nav>
+
+<main>
+
+<!-- ===================== INTRO ===================== -->
+<section class="hero" id="intro">
+  <h2>១. SQL ជាអ្វី?</h2>
+  <p><b>SQL</b> (Structured Query Language — អានថា «អេស-គីវ-អែល» ឬ «ស៊ីឃ្វែល») គឺជា <b>ភាសាសម្រាប់គ្រប់គ្រង និងសួរទិន្នន័យ</b> ក្នុង <b>Relational Database</b> (មូលដ្ឋានទិន្នន័យដែលរក្សាទុកទិន្នន័យជាតារាង មានជួរដេក និងជួរឈរ)។</p>
+  <p>ជាមួយ SQL យើងអាច៖ បង្កើតតារាង បញ្ចូល អាន កែប្រែ លុបទិន្នន័យ ហើយធ្វើរបាយការណ៍ពីទិន្នន័យរាប់លានជួរក្នុងរយៈពេលប៉ុន្មានវិនាទី។</p>
+</section>
+
+<section id="history">
+  <h2>២. អ្នកបង្កើត និងប្រវត្តិ</h2>
+  <div class="grid">
+    <div class="card"><b>បិតានៃ Relational Model</b><br><b style="font-size:19px">Edgar F. Codd</b><br>អ្នកវិទ្យាសាស្ត្រនៅ IBM បោះពុម្ពទ្រឹស្តីឆ្នាំ 1970</div>
+    <div class="card"><b>អ្នកបង្កើតភាសា SQL</b><br><b style="font-size:19px">Donald D. Chamberlin</b> &amp; <b style="font-size:19px">Raymond F. Boyce</b><br>នៅ IBM ដើមទសវត្សរ៍ 1970</div>
+    <div class="card"><b>ឈ្មោះដំបូង</b><br><b>SEQUEL</b> (Structured English Query Language) ក្រោយមកប្តូរជា SQL</div>
+    <div class="card"><b>ស្តង់ដារ</b><br>ក្លាយជាស្តង់ដារ <b>ANSI</b> ឆ្នាំ 1986 និង <b>ISO</b> ឆ្នាំ 1987</div>
+  </div>
+  <h3>ពេលវេលាសំខាន់ៗ</h3>
+  <table>
+    <tr><th>ឆ្នាំ</th><th>ព្រឹត្តិការណ៍</th></tr>
+    <tr><td>1970</td><td>Edgar F. Codd បោះពុម្ពអត្ថបទ «A Relational Model of Data for Large Shared Data Banks»</td></tr>
+    <tr><td>1974</td><td>Chamberlin និង Boyce បង្កើតភាសា SEQUEL សម្រាប់គម្រោង System R របស់ IBM</td></tr>
+    <tr><td>1979</td><td>Oracle (ពេលនោះហៅ Relational Software) ចេញ Database ពាណិជ្ជកម្មដំបូងដែលប្រើ SQL</td></tr>
+    <tr><td>1986–87</td><td>SQL ក្លាយជាស្តង់ដារ ANSI និង ISO</td></tr>
+    <tr><td>1995–96</td><td><b>MySQL</b> និង <b>PostgreSQL</b> ចេញជា Open Source</td></tr>
+    <tr><td>2000</td><td><b>SQLite</b> ត្រូវបានបង្កើតដោយ D. Richard Hipp</td></tr>
+    <tr><td>បច្ចុប្បន្ន</td><td>SQL នៅតែជាភាសាទិន្នន័យដែលប្រើច្រើនបំផុតក្នុងពិភពលោក</td></tr>
+  </table>
+</section>
+
+<section id="uses">
+  <h2>៣. គេប្រើប្រាស់ SQL សម្រាប់ធ្វើអ្វី?</h2>
+  <div class="grid">
+    <div class="card">🌐 <b>Website & App</b><br>រក្សាទុក User, ផលិតផល, ការកុម្ម៉ង់</div>
+    <div class="card">🏦 <b>ធនាគារ & ហិរញ្ញវត្ថុ</b><br>គណនី ប្រតិបត្តិការ ដែលត្រូវការភាពត្រឹមត្រូវ ១០០%</div>
+    <div class="card">📊 <b>Data Analysis</b><br>វិភាគការលក់ ធ្វើរបាយការណ៍ Dashboard</div>
+    <div class="card">🏥 <b>មន្ទីរពេទ្យ & សាលា</b><br>កំណត់ត្រាអ្នកជំងឺ សិស្ស ពិន្ទុ</div>
+    <div class="card">🛒 <b>E-commerce & POS</b><br>ស្តុកទំនិញ វិក្កយបត្រ</div>
+    <div class="card">📱 <b>Mobile App</b><br>SQLite នៅក្នុង Android/iOS</div>
+    <div class="card">🤖 <b>Data Science & AI</b><br>ទាញទិន្នន័យសម្រាប់ Train Model</div>
+    <div class="card">🏢 <b>ERP / CRM</b><br>គ្រប់គ្រងបុគ្គលិក អតិថិជន ហិរញ្ញវត្ថុ</div>
+  </div>
+  <h3>Database ពេញនិយមដែលប្រើ SQL</h3>
+  <table>
+    <tr><th>Database</th><th>លក្ខណៈ</th></tr>
+    <tr><td><b>MySQL / MariaDB</b></td><td>ពេញនិយមបំផុតសម្រាប់ Website (PHP, Node.js) ងាយរៀន</td></tr>
+    <tr><td><b>PostgreSQL</b></td><td>មានមុខងារខ្លាំង ស្តង់ដារខ្ពស់ ពេញនិយមក្នុង Startup</td></tr>
+    <tr><td><b>SQLite</b></td><td>Database ជា File តែមួយ មិនចាំបាច់ Server — ល្អសម្រាប់រៀន និង Mobile</td></tr>
+    <tr><td><b>Microsoft SQL Server</b></td><td>ប្រើច្រើនក្នុងក្រុមហ៊ុនធំៗ និង .NET</td></tr>
+    <tr><td><b>Oracle Database</b></td><td>ធនាគារ និងស្ថាប័នធំៗ</td></tr>
+  </table>
+  <div class="note">💡 វគ្គនេះប្រើ <b>MySQL</b> ជាគោល ព្រោះងាយរៀន និងពេញនិយម។ កន្លែងណាដែល PostgreSQL ខុសគ្នា ខ្ញុំនឹងសរសេរចំណាំប្រាប់។ ៩០% នៃ SQL ដូចគ្នាគ្រប់ Database។</div>
+</section>
+
+<!-- ===================== INSTALL ===================== -->
+<section id="install">
+  <h2>៤. របៀបដំឡើង MySQL និងប្រើក្នុង VS Code</h2>
+  <div class="note">💡 SQL ជាភាសា មិនមែនជាកម្មវិធីទេ។ យើងត្រូវដំឡើង <b>Database Server</b> (ឧ. MySQL) លើកុំព្យូទ័រ រួចប្រើ VS Code ជាឧបករណ៍សរសេរ និងដំណើរការ Query។</div>
+
+  <h3>ជម្រើស A: ដំឡើង MySQL (ណែនាំ)</h3>
+  <ol class="steps">
+    <li>ចូលទៅ <a href="https://dev.mysql.com/downloads/" target="_blank">dev.mysql.com/downloads</a> → ជ្រើស <b>MySQL Installer</b> (Windows) ឬ <b>MySQL Community Server</b> (macOS/Linux)</li>
+    <li>ពេលដំឡើង ជ្រើស <b>Server only</b> ឬ <b>Developer Default</b> (មាន MySQL Workbench ផង)</li>
+    <li>កំណត់ <b>Root Password</b> — សូមចងចាំវាឱ្យបាន!</li>
+    <li>ទុក Port ដើម <code class="i">3306</code> ហើយចុច Next រហូតដល់ Finish</li>
+    <li>បើក Terminal ហើយពិនិត្យ:</li>
+  </ol>
+  <div class="codebox"><span class="label">Terminal</span><pre><code class="bash"># ពិនិត្យ Version
+mysql --version
+
+# ចូល MySQL (វាសួរ Password)
+mysql -u root -p</code></pre></div>
+  <div class="note">💡 <b>ងាយជាងសម្រាប់អ្នកចាប់ផ្តើម:</b> ដំឡើង <b>XAMPP</b> (មាន MySQL/MariaDB + phpMyAdmin) ឬប្រើ <b>Docker</b>: <code class="i">docker run --name mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql</code></div>
+
+  <h3>ជម្រើស B: SQLite (មិនចាំបាច់ Server)</h3>
+  <p>ល្អសម្រាប់ហាត់រៀនលឿនៗ — Database ជា File <code class="i">.db</code> តែមួយ។ ទាញយកពី <a href="https://sqlite.org/download.html" target="_blank">sqlite.org</a> ឬប្រើ Extension ក្នុង VS Code ផ្ទាល់។</p>
+
+  <h3>ភ្ជាប់ VS Code ជាមួយ Database</h3>
+  <ol class="steps">
+    <li>បើក VS Code → ចុច Icon <b>Extensions</b> (Ctrl + Shift + X)</li>
+    <li>ស្វែងរក និងដំឡើង <b>SQLTools</b></li>
+    <li>ដំឡើង Driver: <b>SQLTools MySQL/MariaDB</b> (ឬ PostgreSQL / SQLite តាមអ្វីដែលអ្នកប្រើ)</li>
+    <li>ចុច Icon SQLTools នៅរបារខាងឆ្វេង → <b>Add New Connection</b> → ជ្រើស MySQL</li>
+    <li>បំពេញ: Server <code class="i">localhost</code>, Port <code class="i">3306</code>, Username <code class="i">root</code>, Password របស់អ្នក → <b>Test Connection</b> → <b>Save</b></li>
+    <li>បង្កើត File <code class="i">lesson1.sql</code> សរសេរ Query ហើយចុច <b>Ctrl + E, Ctrl + E</b> (ឬ Right-click → Run Selected Query)</li>
+  </ol>
+  <table>
+    <tr><th>Extension / ឧបករណ៍</th><th>មុខងារ</th></tr>
+    <tr><td><b>SQLTools</b> + Driver</td><td>ភ្ជាប់ Database និងដំណើរការ Query ក្នុង VS Code</td></tr>
+    <tr><td><b>SQLite Viewer</b></td><td>បើកមើល File SQLite ជាតារាង</td></tr>
+    <tr><td><b>MySQL Workbench</b></td><td>កម្មវិធីផ្លូវការរបស់ MySQL (គូរ ERD បាន)</td></tr>
+    <tr><td><b>DBeaver</b></td><td>កម្មវិធីឥតគិតថ្លៃ ប្រើបានគ្រប់ Database</td></tr>
+  </table>
+</section>
+
+<!-- ===================== ELEMENTS ===================== -->
+<section id="elements">
+  <h2>៥. ធាតុ (Elements) នីមួយៗរបស់ SQL</h2>
+  <h3>ក) ធាតុនៃ Database</h3>
+  <table>
+    <tr><th>ធាតុ</th><th>ពន្យល់</th></tr>
+    <tr><td><b>Database</b></td><td>កន្លែងផ្ទុកតារាងទាំងអស់របស់ Project មួយ</td></tr>
+    <tr><td><b>Table (តារាង)</b></td><td>ផ្ទុកទិន្នន័យប្រភេទមួយ ឧ. <code class="i">customers</code></td></tr>
+    <tr><td><b>Column / Field (ជួរឈរ)</b></td><td>លក្ខណៈមួយ ឧ. <code class="i">name</code>, <code class="i">phone</code></td></tr>
+    <tr><td><b>Row / Record (ជួរដេក)</b></td><td>ទិន្នន័យមួយ ឧ. អតិថិជនម្នាក់</td></tr>
+    <tr><td><b>Primary Key (PK)</b></td><td>Column ដែលមានតម្លៃមិនស្ទួន ប្រើសម្គាល់ Row នីមួយៗ (ឧ. <code class="i">id</code>)</td></tr>
+    <tr><td><b>Foreign Key (FK)</b></td><td>Column ដែលយោងទៅ PK នៃតារាងផ្សេង — បង្កើតទំនាក់ទំនង</td></tr>
+    <tr><td><b>Constraint</b></td><td>ច្បាប់ការពារទិន្នន័យ: NOT NULL, UNIQUE, CHECK, DEFAULT</td></tr>
+    <tr><td><b>Index</b></td><td>ដូចសន្ទស្សន៍សៀវភៅ — ធ្វើឱ្យការស្វែងរកលឿន</td></tr>
+    <tr><td><b>View</b></td><td>តារាងនិម្មិត ដែលបង្កើតពី Query</td></tr>
+    <tr><td><b>Stored Procedure / Function</b></td><td>កូដ SQL ដែលរក្សាទុកក្នុង Database ហៅប្រើឡើងវិញបាន</td></tr>
+    <tr><td><b>Trigger</b></td><td>កូដដែលដំណើរការស្វ័យប្រវត្តិ ពេល INSERT/UPDATE/DELETE</td></tr>
+    <tr><td><b>Transaction</b></td><td>ក្រុមនៃ Query ដែលត្រូវតែជោគជ័យទាំងអស់ ឬបរាជ័យទាំងអស់</td></tr>
+  </table>
+
+  <h3>ខ) ប្រភេទពាក្យបញ្ជា SQL (៥ ក្រុម)</h3>
+  <div class="grid">
+    <div class="card"><b>DDL</b> – Data Definition<br><code class="i">CREATE</code> <code class="i">ALTER</code> <code class="i">DROP</code> <code class="i">TRUNCATE</code><br>កំណត់រចនាសម្ព័ន្ធ</div>
+    <div class="card"><b>DML</b> – Data Manipulation<br><code class="i">INSERT</code> <code class="i">UPDATE</code> <code class="i">DELETE</code><br>កែប្រែទិន្នន័យ</div>
+    <div class="card"><b>DQL</b> – Data Query<br><code class="i">SELECT</code><br>សួរ/អានទិន្នន័យ</div>
+    <div class="card"><b>DCL</b> – Data Control<br><code class="i">GRANT</code> <code class="i">REVOKE</code><br>គ្រប់គ្រងសិទ្ធិ</div>
+    <div class="card"><b>TCL</b> – Transaction Control<br><code class="i">START TRANSACTION</code> <code class="i">COMMIT</code> <code class="i">ROLLBACK</code></div>
+  </div>
+
+  <h3>គ) លំដាប់សរសេរ vs លំដាប់ដំណើរការ SELECT</h3>
+  <table>
+    <tr><th>លំដាប់សរសេរ</th><th>លំដាប់ Database ដំណើរការ</th></tr>
+    <tr><td>1. SELECT</td><td>1. FROM / JOIN</td></tr>
+    <tr><td>2. FROM / JOIN</td><td>2. WHERE</td></tr>
+    <tr><td>3. WHERE</td><td>3. GROUP BY</td></tr>
+    <tr><td>4. GROUP BY</td><td>4. HAVING</td></tr>
+    <tr><td>5. HAVING</td><td>5. SELECT</td></tr>
+    <tr><td>6. ORDER BY</td><td>6. ORDER BY</td></tr>
+    <tr><td>7. LIMIT</td><td>7. LIMIT</td></tr>
+  </table>
+  <div class="note">💡 ការយល់លំដាប់នេះ ជួយពន្យល់ថាហេតុអ្វីយើងមិនអាចប្រើ Alias របស់ SELECT ក្នុង WHERE បាន។</div>
+</section>
+
+<section id="dataset">
+  <h2>៦. ទិន្នន័យគំរូ: Shop Database</h2>
+  <p>មេរៀនទាំងអស់ប្រើ Database ហាងតូចមួយ។ ទំនាក់ទំនងរវាងតារាង:</p>
+  <div class="codebox"><span class="label">ERD (សាមញ្ញ)</span><pre><code class="txt">┌──────────────┐        ┌──────────────┐        ┌──────────────┐
+│  customers   │        │    orders    │        │ order_items  │
+├──────────────┤        ├──────────────┤        ├──────────────┤
+│ PK id        │──1───N─│ PK id        │──1───N─│ PK id        │
+│    name      │        │ FK customer_id        │ FK order_id  │
+│    email     │        │    order_date│        │ FK product_id│──┐
+│    city      │        │    status    │        │    quantity  │  │
+└──────────────┘        └──────────────┘        │    price     │  │
+                                                └──────────────┘  │
+┌──────────────┐        ┌──────────────┐                          │
+│  categories  │──1───N─│   products   │──1───────────────────N───┘
+├──────────────┤        ├──────────────┤
+│ PK id        │        │ PK id        │
+│    name      │        │ FK category_id
+└──────────────┘        │    name      │
+                        │    price     │
+                        │    stock     │
+                        └──────────────┘</code></pre></div>
+  <p>Script បង្កើតតារាងនៅមេរៀនទី ១ និងបញ្ចូលទិន្នន័យនៅមេរៀនទី ៣។</p>
+</section>
+
+<!-- ===================== LESSONS ===================== -->
+<section id="l1">
+  <h2><span class="badge">មេរៀន ១</span>CREATE Database & Table (DDL)</h2>
+  <div class="codebox"><span class="label">lesson1.sql</span><pre><code class="sql">-- បង្កើត Database (utf8mb4 គាំទ្រអក្សរខ្មែរ និង Emoji)
+CREATE DATABASE IF NOT EXISTS shop_db
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+-- ជ្រើសប្រើ Database
+USE shop_db;
+
+-- បង្ហាញ Database ទាំងអស់
+SHOW DATABASES;
+
+-- តារាង categories
+CREATE TABLE categories (
+  id    INT AUTO_INCREMENT PRIMARY KEY,
+  name  VARCHAR(100) NOT NULL UNIQUE
+);
+
+-- តារាង products
+CREATE TABLE products (
+  id           INT AUTO_INCREMENT PRIMARY KEY,
+  category_id  INT,
+  name         VARCHAR(150) NOT NULL,
+  price        DECIMAL(10, 2) NOT NULL CHECK (price >= 0),
+  stock        INT NOT NULL DEFAULT 0,
+  created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (category_id) REFERENCES categories(id)
+);
+
+-- តារាង customers
+CREATE TABLE customers (
+  id     INT AUTO_INCREMENT PRIMARY KEY,
+  name   VARCHAR(100) NOT NULL,
+  email  VARCHAR(150) UNIQUE,
+  city   VARCHAR(50)
+);
+
+-- តារាង orders
+CREATE TABLE orders (
+  id           INT AUTO_INCREMENT PRIMARY KEY,
+  customer_id  INT NOT NULL,
+  order_date   DATE NOT NULL,
+  status       VARCHAR(20) DEFAULT 'pending',
+  FOREIGN KEY (customer_id) REFERENCES customers(id)
+);
+
+-- តារាង order_items
+CREATE TABLE order_items (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  order_id    INT NOT NULL,
+  product_id  INT NOT NULL,
+  quantity    INT NOT NULL CHECK (quantity > 0),
+  price       DECIMAL(10, 2) NOT NULL,
+  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+  FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+SHOW TABLES;
+DESCRIBE products;</code></pre></div>
+  <div class="note">💡 <b>PostgreSQL:</b> ប្រើ <code class="i">id SERIAL PRIMARY KEY</code> ឬ <code class="i">id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY</code> ជំនួស <code class="i">AUTO_INCREMENT</code>។</div>
+  <div class="codebox"><span class="label">លុប</span><pre><code class="sql">DROP TABLE IF EXISTS test_table;   -- លុបតារាងទាំងមូល
+TRUNCATE TABLE test_table;         -- លុបទិន្នន័យទាំងអស់ ប៉ុន្តែទុកតារាង
+DROP DATABASE IF EXISTS test_db;   -- ⚠️ លុប Database ទាំងមូល</code></pre></div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ១</h4>
+    <p>បង្កើត Database <code class="i">school_db</code> និងតារាង <code class="i">students</code> (id, full_name, gender ('M'/'F'), birth_date, phone UNIQUE) និង <code class="i">classes</code> (id, class_name)។ បន្ថែម FK <code class="i">class_id</code> ក្នុង students។</p>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">answer1.sql</span><pre><code class="sql">CREATE DATABASE school_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE school_db;
+
+CREATE TABLE classes (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  class_name  VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE students (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  full_name   VARCHAR(100) NOT NULL,
+  gender      CHAR(1) CHECK (gender IN ('M', 'F')),
+  birth_date  DATE,
+  phone       VARCHAR(20) UNIQUE,
+  class_id    INT,
+  FOREIGN KEY (class_id) REFERENCES classes(id)
+);</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l2">
+  <h2><span class="badge">មេរៀន ២</span>Data Types & Constraints</h2>
+  <h3>Data Types សំខាន់ៗ</h3>
+  <table>
+    <tr><th>ប្រភេទ</th><th>Data Type</th><th>ឧទាហរណ៍</th></tr>
+    <tr><td>លេខគត់</td><td><code class="i">TINYINT</code>, <code class="i">INT</code>, <code class="i">BIGINT</code></td><td>អាយុ, ចំនួន, id</td></tr>
+    <tr><td>លេខទសភាគ (ត្រឹមត្រូវ)</td><td><code class="i">DECIMAL(10,2)</code></td><td>💰 ប្រាក់ — ប្រើវានេះជានិច្ចសម្រាប់លុយ!</td></tr>
+    <tr><td>លេខទសភាគ (ប្រហាក់ប្រហែល)</td><td><code class="i">FLOAT</code>, <code class="i">DOUBLE</code></td><td>ទិន្នន័យវិទ្យាសាស្ត្រ</td></tr>
+    <tr><td>អក្សរខ្លី</td><td><code class="i">CHAR(n)</code>, <code class="i">VARCHAR(n)</code></td><td>ឈ្មោះ, Email</td></tr>
+    <tr><td>អក្សរវែង</td><td><code class="i">TEXT</code></td><td>អត្ថបទ, ការពិពណ៌នា</td></tr>
+    <tr><td>កាលបរិច្ឆេទ</td><td><code class="i">DATE</code>, <code class="i">TIME</code>, <code class="i">DATETIME</code>, <code class="i">TIMESTAMP</code></td><td>ថ្ងៃកំណើត, ម៉ោងកុម្ម៉ង់</td></tr>
+    <tr><td>ពិត/មិនពិត</td><td><code class="i">BOOLEAN</code></td><td>is_active</td></tr>
+    <tr><td>ជម្រើសកំណត់</td><td><code class="i">ENUM('a','b')</code></td><td>status</td></tr>
+    <tr><td>JSON</td><td><code class="i">JSON</code></td><td>ការកំណត់ (Settings)</td></tr>
+  </table>
+  <h3>Constraints (ច្បាប់ការពារទិន្នន័យ)</h3>
+  <div class="codebox"><span class="label">constraints.sql</span><pre><code class="sql">CREATE TABLE employees (
+  id          INT AUTO_INCREMENT PRIMARY KEY,         -- មិនស្ទួន + មិន NULL
+  name        VARCHAR(100) NOT NULL,                  -- ត្រូវតែមានតម្លៃ
+  email       VARCHAR(150) NOT NULL UNIQUE,           -- មិនអាចស្ទួន
+  salary      DECIMAL(10,2) CHECK (salary > 0),       -- លក្ខខណ្ឌ
+  is_active   BOOLEAN DEFAULT TRUE,                   -- តម្លៃលំនាំដើម
+  role        ENUM('staff', 'manager', 'admin') DEFAULT 'staff',
+  manager_id  INT,
+  CONSTRAINT fk_manager FOREIGN KEY (manager_id) REFERENCES employees(id)
+);</code></pre></div>
+  <div class="warn">⚠️ កុំប្រើ <code class="i">FLOAT</code> សម្រាប់ប្រាក់។ ឧ. 0.1 + 0.2 អាចក្លាយជា 0.30000000000000004។ ប្រើ <code class="i">DECIMAL</code> ជំនួស។</div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ២</h4>
+    <p>បង្កើតតារាង <code class="i">bank_accounts</code>: account_no (PK, VARCHAR 20), owner_name (NOT NULL), balance (DECIMAL មិនអវិជ្ជមាន, default 0), currency (USD ឬ KHR), opened_at (default ពេលបច្ចុប្បន្ន)។</p>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">answer2.sql</span><pre><code class="sql">CREATE TABLE bank_accounts (
+  account_no  VARCHAR(20) PRIMARY KEY,
+  owner_name  VARCHAR(100) NOT NULL,
+  balance     DECIMAL(15, 2) NOT NULL DEFAULT 0 CHECK (balance >= 0),
+  currency    ENUM('USD', 'KHR') NOT NULL DEFAULT 'USD',
+  opened_at   DATETIME DEFAULT CURRENT_TIMESTAMP
+);</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l3">
+  <h2><span class="badge">មេរៀន ៣</span>INSERT – បញ្ចូលទិន្នន័យ</h2>
+  <div class="codebox"><span class="label">seed.sql (ទិន្នន័យគំរូ)</span><pre><code class="sql">USE shop_db;
+
+-- បញ្ចូលមួយជួរ
+INSERT INTO categories (name) VALUES ('ភេសជ្ជៈ');
+
+-- បញ្ចូលច្រើនជួរក្នុងពេលតែមួយ
+INSERT INTO categories (name) VALUES ('អាហារ'), ('គ្រឿងអេឡិចត្រូនិក'), ('សម្លៀកបំពាក់');
+
+INSERT INTO products (category_id, name, price, stock) VALUES
+  (1, 'កាហ្វេទឹកដោះគោ', 1.50, 100),
+  (1, 'តែបៃតង',         1.25, 80),
+  (1, 'ទឹកក្រូច',        2.00, 0),
+  (2, 'បាយឆា',          3.50, 50),
+  (2, 'គុយទាវ',          2.75, 60),
+  (3, 'កាសស្តាប់',       25.00, 15),
+  (3, 'Power Bank',     18.99, 20),
+  (4, 'អាវយឺត',         8.00, 40);
+
+INSERT INTO customers (name, email, city) VALUES
+  ('សុខ ដារា',   'dara@mail.com',   'ភ្នំពេញ'),
+  ('ចាន់ សុភា',   'sophea@mail.com', 'សៀមរាប'),
+  ('លី វិចិត្រ',   'vichet@mail.com', 'ភ្នំពេញ'),
+  ('ហេង ស្រីនី',  'srey@mail.com',   'បាត់ដំបង'),
+  ('កែវ មករា',    NULL,              'កំពត');
+
+INSERT INTO orders (customer_id, order_date, status) VALUES
+  (1, '2026-10-01', 'completed'),
+  (1, '2026-10-15', 'completed'),
+  (2, '2026-10-20', 'pending'),
+  (3, '2026-11-02', 'completed'),
+  (4, '2026-11-05', 'cancelled');
+
+INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
+  (1, 1, 2, 1.50), (1, 4, 1, 3.50),
+  (2, 6, 1, 25.00),
+  (3, 2, 3, 1.25), (3, 5, 2, 2.75),
+  (4, 7, 1, 18.99), (4, 8, 2, 8.00),
+  (5, 1, 1, 1.50);</code></pre></div>
+  <div class="codebox"><span class="label">ទម្រង់ផ្សេងៗ</span><pre><code class="sql">-- Copy ទិន្នន័យពីតារាងមួយទៅតារាងមួយទៀត
+CREATE TABLE vip_customers LIKE customers;
+INSERT INTO vip_customers SELECT * FROM customers WHERE city = 'ភ្នំពេញ';
+
+-- បើស្ទួន UNIQUE ត្រូវ Update ជំនួស (MySQL)
+INSERT INTO customers (name, email, city)
+VALUES ('សុខ ដារា', 'dara@mail.com', 'តាកែវ')
+ON DUPLICATE KEY UPDATE city = VALUES(city);
+-- PostgreSQL: ON CONFLICT (email) DO UPDATE SET city = EXCLUDED.city;</code></pre></div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ៣</h4>
+    <p>បញ្ចូលថ្នាក់ ២ (10A, 10B) និងសិស្ស ៥ នាក់ទៅក្នុង <code class="i">school_db</code> ពីលំហាត់ ១។</p>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">answer3.sql</span><pre><code class="sql">USE school_db;
+
+INSERT INTO classes (class_name) VALUES ('10A'), ('10B');
+
+INSERT INTO students (full_name, gender, birth_date, phone, class_id) VALUES
+  ('សុខ ពិសិដ្ឋ', 'M', '2010-03-12', '012111222', 1),
+  ('ម៉ៅ ចន្ធូ',   'F', '2010-07-25', '012333444', 1),
+  ('ឈឹម រតនា',  'F', '2009-12-01', '015555666', 2),
+  ('អ៊ុំ សំណាង',  'M', '2010-01-30', '016777888', 2),
+  ('ពៅ នារី',    'F', '2010-05-18', '017999000', 1);</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l4">
+  <h2><span class="badge">មេរៀន ៤</span>SELECT & WHERE</h2>
+  <div class="codebox"><span class="label">select.sql</span><pre><code class="sql">-- យកគ្រប់ Column (ប្រើតែពេលរៀន/សាក)
+SELECT * FROM products;
+
+-- យក Column ជាក់លាក់ + Alias
+SELECT name AS product_name, price, stock
+FROM products;
+
+-- គណនាក្នុង SELECT
+SELECT name, price, stock, price * stock AS stock_value
+FROM products;
+
+-- WHERE – ច្រោះលក្ខខណ្ឌ
+SELECT * FROM products WHERE price > 5;
+SELECT * FROM products WHERE stock = 0;
+SELECT * FROM customers WHERE city = 'ភ្នំពេញ';
+
+-- AND / OR / NOT
+SELECT * FROM products
+WHERE category_id = 1 AND price &lt; 2;
+
+SELECT * FROM customers
+WHERE city = 'ភ្នំពេញ' OR city = 'សៀមរាប';
+
+-- NULL ត្រូវប្រើ IS NULL / IS NOT NULL (មិនមែន = NULL)
+SELECT * FROM customers WHERE email IS NULL;</code></pre></div>
+  <h3>Operators</h3>
+  <table>
+    <tr><th>Operator</th><th>អត្ថន័យ</th></tr>
+    <tr><td><code class="i">=</code>, <code class="i">&lt;></code> ឬ <code class="i">!=</code></td><td>ស្មើ, មិនស្មើ</td></tr>
+    <tr><td><code class="i">></code>, <code class="i">&lt;</code>, <code class="i">>=</code>, <code class="i">&lt;=</code></td><td>ធំជាង, តូចជាង...</td></tr>
+    <tr><td><code class="i">AND</code>, <code class="i">OR</code>, <code class="i">NOT</code></td><td>តក្កវិទ្យា</td></tr>
+    <tr><td><code class="i">IS NULL</code></td><td>គ្មានតម្លៃ</td></tr>
+  </table>
+  <div class="result"><p><b>លទ្ធផល</b> <code class="i">SELECT name, price FROM products WHERE price > 5;</code></p>
+  <table><tr><th>name</th><th>price</th></tr><tr><td>កាសស្តាប់</td><td>25.00</td></tr><tr><td>Power Bank</td><td>18.99</td></tr><tr><td>អាវយឺត</td><td>8.00</td></tr></table></div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ៤</h4>
+    <ol>
+      <li>បង្ហាញផលិតផលដែលអស់ស្តុក</li>
+      <li>បង្ហាញផលិតផល category 1 ឬ 2 ដែលតម្លៃ ≥ 2</li>
+      <li>បង្ហាញឈ្មោះ និង Email អតិថិជនដែលមិននៅភ្នំពេញ ហើយមាន Email</li>
+    </ol>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">answer4.sql</span><pre><code class="sql">-- 1
+SELECT * FROM products WHERE stock = 0;
+
+-- 2
+SELECT * FROM products
+WHERE (category_id = 1 OR category_id = 2) AND price >= 2;
+
+-- 3
+SELECT name, email FROM customers
+WHERE city &lt;> 'ភ្នំពេញ' AND email IS NOT NULL;</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l5">
+  <h2><span class="badge">មេរៀន ៥</span>ORDER BY, LIMIT, DISTINCT, LIKE, IN, BETWEEN</h2>
+  <div class="codebox"><span class="label">filter.sql</span><pre><code class="sql">-- តម្រៀប (ASC = តូចទៅធំ, DESC = ធំទៅតូច)
+SELECT name, price FROM products ORDER BY price DESC;
+SELECT name, city FROM customers ORDER BY city ASC, name ASC;
+
+-- យកតែ 3 ជួរដំបូង (Top 3 ថ្លៃបំផុត)
+SELECT name, price FROM products ORDER BY price DESC LIMIT 3;
+
+-- Pagination: ទំព័រទី 2, មួយទំព័រ 3 ជួរ
+SELECT * FROM products ORDER BY id LIMIT 3 OFFSET 3;
+
+-- DISTINCT – លុបតម្លៃស្ទួន
+SELECT DISTINCT city FROM customers;
+
+-- LIKE – ស្វែងរកតាមលំនាំ (% = តួអក្សរណាក៏បាន, _ = មួយតួ)
+SELECT * FROM products  WHERE name LIKE 'កា%';     -- ចាប់ផ្តើមដោយ "កា"
+SELECT * FROM customers WHERE email LIKE '%@mail.com';
+SELECT * FROM products  WHERE name LIKE '%Bank%';
+
+-- IN – ក្នុងបញ្ជី
+SELECT * FROM customers WHERE city IN ('ភ្នំពេញ', 'កំពត');
+
+-- BETWEEN – ចន្លោះ (រួមទាំងចុងទាំងពីរ)
+SELECT * FROM products WHERE price BETWEEN 2 AND 10;
+SELECT * FROM orders WHERE order_date BETWEEN '2026-10-01' AND '2026-10-31';</code></pre></div>
+  <div class="note">💡 <b>SQL Server</b> ប្រើ <code class="i">SELECT TOP 3 ...</code> ជំនួស <code class="i">LIMIT 3</code>។</div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ៥</h4>
+    <ol>
+      <li>បង្ហាញផលិតផលថោកបំផុត ២</li>
+      <li>បង្ហាញការកុម្ម៉ង់ក្នុងខែ ១១ ឆ្នាំ 2026 តម្រៀបតាមថ្ងៃថ្មីបំផុត</li>
+      <li>បង្ហាញផលិតផលដែលឈ្មោះមានពាក្យ «តែ» ឬ «កាហ្វេ»</li>
+    </ol>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">answer5.sql</span><pre><code class="sql">-- 1
+SELECT name, price FROM products ORDER BY price ASC LIMIT 2;
+
+-- 2
+SELECT * FROM orders
+WHERE order_date BETWEEN '2026-11-01' AND '2026-11-30'
+ORDER BY order_date DESC;
+
+-- 3
+SELECT * FROM products
+WHERE name LIKE '%តែ%' OR name LIKE '%កាហ្វេ%';</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l6">
+  <h2><span class="badge">មេរៀន ៦</span>Aggregate Functions, GROUP BY, HAVING</h2>
+  <div class="codebox"><span class="label">aggregate.sql</span><pre><code class="sql">-- Aggregate functions
+SELECT
+  COUNT(*)            AS total_products,
+  SUM(stock)          AS total_stock,
+  AVG(price)          AS avg_price,
+  MIN(price)          AS cheapest,
+  MAX(price)          AS most_expensive
+FROM products;
+
+-- COUNT(column) មិនរាប់ NULL
+SELECT COUNT(email) AS has_email FROM customers;
+
+-- GROUP BY – ដាក់ជាក្រុម
+SELECT city, COUNT(*) AS total_customers
+FROM customers
+GROUP BY city
+ORDER BY total_customers DESC;
+
+SELECT category_id, COUNT(*) AS items, ROUND(AVG(price), 2) AS avg_price
+FROM products
+GROUP BY category_id;
+
+-- HAVING – ច្រោះក្រោយ GROUP BY (WHERE ច្រោះមុន)
+SELECT customer_id, COUNT(*) AS total_orders
+FROM orders
+WHERE status = 'completed'
+GROUP BY customer_id
+HAVING COUNT(*) >= 2;</code></pre></div>
+  <div class="warn">⚠️ <b>WHERE</b> មិនអាចប្រើជាមួយ Aggregate (ដូចជា <code class="i">WHERE COUNT(*) > 2</code>) បានទេ — ត្រូវប្រើ <b>HAVING</b>។</div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ៦</h4>
+    <ol>
+      <li>គណនាចំណូលសរុបពី <code class="i">order_items</code> (quantity × price)</li>
+      <li>រាប់ការកុម្ម៉ង់តាម status</li>
+      <li>បង្ហាញ order_id ដែលមានតម្លៃសរុបលើស $10</li>
+    </ol>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">answer6.sql</span><pre><code class="sql">-- 1
+SELECT SUM(quantity * price) AS total_revenue FROM order_items;
+
+-- 2
+SELECT status, COUNT(*) AS total FROM orders GROUP BY status;
+
+-- 3
+SELECT order_id, SUM(quantity * price) AS order_total
+FROM order_items
+GROUP BY order_id
+HAVING SUM(quantity * price) > 10;</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l7">
+  <h2><span class="badge">មេរៀន ៧</span>UPDATE & DELETE</h2>
+  <div class="codebox"><span class="label">update-delete.sql</span><pre><code class="sql">-- UPDATE មួយ Column
+UPDATE products SET stock = 30 WHERE id = 3;
+
+-- UPDATE ច្រើន Column
+UPDATE customers
+SET city = 'ភ្នំពេញ', email = 'makara@mail.com'
+WHERE id = 5;
+
+-- UPDATE ដោយគណនា: ឡើងថ្លៃ 10% សម្រាប់ភេសជ្ជៈ
+UPDATE products SET price = price * 1.10 WHERE category_id = 1;
+
+-- DELETE
+DELETE FROM orders WHERE status = 'cancelled';</code></pre></div>
+  <div class="warn">⚠️ <b>គ្រោះថ្នាក់ធំ!</b> បើភ្លេច <code class="i">WHERE</code> — <code class="i">UPDATE products SET price = 0;</code> នឹងកែគ្រប់ជួរ! <b>វិធីការពារ:</b>
+    <ol>
+      <li>សរសេរ <code class="i">SELECT</code> ជាមួយ WHERE ដូចគ្នាមុនសិន ដើម្បីមើលជួរដែលនឹងរងផលប៉ះពាល់</li>
+      <li>ប្រើ Transaction (មេរៀន ១២) ដើម្បីអាច ROLLBACK</li>
+      <li>MySQL Workbench មាន Safe Update Mode: <code class="i">SET SQL_SAFE_UPDATES = 1;</code></li>
+    </ol>
+  </div>
+  <div class="note">💡 <b>Soft Delete:</b> ក្នុង App ពិត គេច្រើនមិនលុបពិតប្រាកដទេ គឺបន្ថែម Column <code class="i">deleted_at</code> ហើយ UPDATE វាជំនួសវិញ ដើម្បីអាចស្តារវិញបាន។</div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ៧</h4>
+    <ol>
+      <li>បញ្ចុះតម្លៃ 20% សម្រាប់ផលិតផលដែលមានស្តុកលើស 50</li>
+      <li>ប្តូរ status ការកុម្ម៉ង់ pending ទាំងអស់ទៅ processing</li>
+      <li>លុបផលិតផលដែលអស់ស្តុក ហើយមិនដែលត្រូវបានលក់</li>
+    </ol>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">answer7.sql</span><pre><code class="sql">-- 1
+UPDATE products SET price = ROUND(price * 0.8, 2) WHERE stock > 50;
+
+-- 2
+UPDATE orders SET status = 'processing' WHERE status = 'pending';
+
+-- 3
+DELETE FROM products
+WHERE stock = 0
+  AND id NOT IN (SELECT DISTINCT product_id FROM order_items);</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l8">
+  <h2><span class="badge">មេរៀន ៨</span>JOIN – ភ្ជាប់តារាង</h2>
+  <div class="codebox"><span class="label">JOIN Diagram</span><pre><code class="txt">  INNER JOIN         LEFT JOIN          RIGHT JOIN        FULL OUTER JOIN
+   ┌───┬───┐         ┌───┬───┐         ┌───┬───┐         ┌───┬───┐
+   │ A │███│ B       │███│███│ B       │ A │███│███      │███│███│███
+   └───┴───┘         └───┴───┘         └───┴───┘         └───┴───┘
+ តែដែលត្រូវគ្នា     A ទាំងអស់ +        B ទាំងអស់ +       ទាំងអស់ពីរខាង
+                    ដែលត្រូវគ្នាក្នុង B   ដែលត្រូវគ្នាក្នុង A</code></pre></div>
+  <div class="codebox"><span class="label">joins.sql</span><pre><code class="sql">-- INNER JOIN: ផលិតផល + ឈ្មោះប្រភេទ
+SELECT p.name AS product, c.name AS category, p.price
+FROM products p
+INNER JOIN categories c ON p.category_id = c.id;
+
+-- ការកុម្ម៉ង់ + ឈ្មោះអតិថិជន
+SELECT o.id AS order_id, cu.name AS customer, o.order_date, o.status
+FROM orders o
+JOIN customers cu ON o.customer_id = cu.id;
+
+-- LEFT JOIN: អតិថិជនទាំងអស់ រួមទាំងអ្នកមិនដែលកុម្ម៉ង់
+SELECT cu.name, o.id AS order_id
+FROM customers cu
+LEFT JOIN orders o ON o.customer_id = cu.id;
+
+-- រកអតិថិជនដែលមិនដែលកុម្ម៉ង់
+SELECT cu.name
+FROM customers cu
+LEFT JOIN orders o ON o.customer_id = cu.id
+WHERE o.id IS NULL;
+
+-- JOIN ច្រើនតារាង: វិក្កយបត្រលម្អិត
+SELECT
+  o.id                     AS order_id,
+  cu.name                  AS customer,
+  p.name                   AS product,
+  oi.quantity,
+  oi.price,
+  oi.quantity * oi.price   AS line_total
+FROM orders o
+JOIN customers   cu ON cu.id = o.customer_id
+JOIN order_items oi ON oi.order_id = o.id
+JOIN products    p  ON p.id = oi.product_id
+ORDER BY o.id;
+
+-- SELF JOIN: បុគ្គលិក + ឈ្មោះអ្នកគ្រប់គ្រង
+SELECT e.name AS employee, m.name AS manager
+FROM employees e
+LEFT JOIN employees m ON e.manager_id = m.id;</code></pre></div>
+  <div class="note">💡 MySQL មិនមាន <code class="i">FULL OUTER JOIN</code> ទេ — ប្រើ <code class="i">LEFT JOIN ... UNION ... RIGHT JOIN</code> ជំនួស។ PostgreSQL មាន។</div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ៨</h4>
+    <ol>
+      <li>បង្ហាញឈ្មោះអតិថិជន និងចំនួនទឹកប្រាក់សរុបដែលពួកគេបានចំណាយ (តែ completed)</li>
+      <li>បង្ហាញប្រភេទ (category) នីមួយៗ និងចំនួនផលិតផល រួមទាំងប្រភេទដែលគ្មានផលិតផល</li>
+      <li>រកផលិតផលដែលមិនដែលលក់ចេញ</li>
+    </ol>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">answer8.sql</span><pre><code class="sql">-- 1
+SELECT cu.name, SUM(oi.quantity * oi.price) AS total_spent
+FROM customers cu
+JOIN orders o       ON o.customer_id = cu.id
+JOIN order_items oi ON oi.order_id = o.id
+WHERE o.status = 'completed'
+GROUP BY cu.id, cu.name
+ORDER BY total_spent DESC;
+
+-- 2
+SELECT c.name, COUNT(p.id) AS product_count
+FROM categories c
+LEFT JOIN products p ON p.category_id = c.id
+GROUP BY c.id, c.name;
+
+-- 3
+SELECT p.name
+FROM products p
+LEFT JOIN order_items oi ON oi.product_id = p.id
+WHERE oi.id IS NULL;</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l9">
+  <h2><span class="badge">មេរៀន ៩</span>Subquery & CTE (WITH)</h2>
+  <div class="codebox"><span class="label">subquery.sql</span><pre><code class="sql">-- Subquery ក្នុង WHERE: ផលិតផលថ្លៃជាងតម្លៃមធ្យម
+SELECT name, price
+FROM products
+WHERE price > (SELECT AVG(price) FROM products);
+
+-- Subquery ជាមួយ IN: អតិថិជនដែលធ្លាប់ទិញ "កាសស្តាប់"
+SELECT name FROM customers
+WHERE id IN (
+  SELECT o.customer_id
+  FROM orders o
+  JOIN order_items oi ON oi.order_id = o.id
+  WHERE oi.product_id = 6
+);
+
+-- EXISTS
+SELECT c.name FROM categories c
+WHERE EXISTS (SELECT 1 FROM products p WHERE p.category_id = c.id AND p.stock = 0);
+
+-- Subquery ក្នុង FROM (Derived table)
+SELECT AVG(order_total) AS avg_order_value
+FROM (
+  SELECT order_id, SUM(quantity * price) AS order_total
+  FROM order_items
+  GROUP BY order_id
+) AS t;</code></pre></div>
+  <h3>CTE – Common Table Expression (អានងាយជាង Subquery)</h3>
+  <div class="codebox"><span class="label">cte.sql</span><pre><code class="sql">WITH order_totals AS (
+  SELECT order_id, SUM(quantity * price) AS total
+  FROM order_items
+  GROUP BY order_id
+),
+customer_totals AS (
+  SELECT o.customer_id, SUM(ot.total) AS spent
+  FROM orders o
+  JOIN order_totals ot ON ot.order_id = o.id
+  GROUP BY o.customer_id
+)
+SELECT cu.name, ct.spent
+FROM customer_totals ct
+JOIN customers cu ON cu.id = ct.customer_id
+WHERE ct.spent > 10
+ORDER BY ct.spent DESC;
+
+-- Recursive CTE: បង្កើតលេខ 1 ដល់ 10
+WITH RECURSIVE nums AS (
+  SELECT 1 AS n
+  UNION ALL
+  SELECT n + 1 FROM nums WHERE n &lt; 10
+)
+SELECT n FROM nums;</code></pre></div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ៩</h4>
+    <ol>
+      <li>រកផលិតផលដែលថ្លៃបំផុតក្នុងប្រភេទនីមួយៗ (ប្រើ Subquery)</li>
+      <li>ប្រើ CTE ដើម្បីរកអតិថិជនដែលចំណាយលើសមធ្យមនៃអតិថិជនទាំងអស់</li>
+    </ol>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">answer9.sql</span><pre><code class="sql">-- 1 (Correlated subquery)
+SELECT p.category_id, p.name, p.price
+FROM products p
+WHERE p.price = (
+  SELECT MAX(p2.price) FROM products p2 WHERE p2.category_id = p.category_id
+);
+
+-- 2
+WITH spending AS (
+  SELECT o.customer_id, SUM(oi.quantity * oi.price) AS spent
+  FROM orders o
+  JOIN order_items oi ON oi.order_id = o.id
+  GROUP BY o.customer_id
+)
+SELECT cu.name, s.spent
+FROM spending s
+JOIN customers cu ON cu.id = s.customer_id
+WHERE s.spent > (SELECT AVG(spent) FROM spending);</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l10">
+  <h2><span class="badge">មេរៀន ១០</span>Built-in Functions & CASE</h2>
+  <div class="codebox"><span class="label">functions.sql</span><pre><code class="sql">-- String functions
+SELECT
+  UPPER('hello')                  AS up,         -- HELLO
+  LOWER('HELLO')                  AS low,        -- hello
+  LENGTH('Node')                  AS len,        -- 4 (bytes)
+  CHAR_LENGTH('សួស្តី')             AS chars,      -- ចំនួនតួអក្សរ
+  CONCAT('Mr. ', 'Dara')          AS full_name,
+  SUBSTRING('Database', 1, 4)     AS sub,        -- Data
+  REPLACE('I like SQL', 'like', 'love') AS rep,
+  TRIM('   hi   ')                AS trimmed;
+
+-- Number functions
+SELECT ROUND(3.14159, 2), CEIL(4.1), FLOOR(4.9), ABS(-7), MOD(10, 3);
+
+-- Date functions (MySQL)
+SELECT
+  NOW()                                 AS now_time,
+  CURDATE()                             AS today,
+  YEAR(order_date)                      AS y,
+  MONTH(order_date)                     AS m,
+  DATEDIFF(CURDATE(), order_date)       AS days_ago,
+  DATE_ADD(order_date, INTERVAL 7 DAY)  AS due_date,
+  DATE_FORMAT(order_date, '%d/%m/%Y')   AS formatted
+FROM orders;
+
+-- NULL handling
+SELECT name, COALESCE(email, 'គ្មាន Email') AS email FROM customers;
+
+-- CASE – ដូច if/else
+SELECT name, price,
+  CASE
+    WHEN price >= 20 THEN 'ថ្លៃ'
+    WHEN price >= 5  THEN 'មធ្យម'
+    ELSE 'ថោក'
+  END AS price_level
+FROM products;
+
+-- CASE ក្នុង Aggregate (Pivot)
+SELECT
+  SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) AS completed,
+  SUM(CASE WHEN status = 'pending'   THEN 1 ELSE 0 END) AS pending,
+  SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) AS cancelled
+FROM orders;</code></pre></div>
+  <div class="note">💡 <b>PostgreSQL:</b> ប្រើ <code class="i">CURRENT_DATE</code>, <code class="i">EXTRACT(YEAR FROM d)</code>, <code class="i">d + INTERVAL '7 days'</code>, <code class="i">TO_CHAR(d, 'DD/MM/YYYY')</code> និង <code class="i">||</code> សម្រាប់ភ្ជាប់ String។</div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ១០</h4>
+    <ol>
+      <li>បង្ហាញស្ថានភាពស្តុក: 0 → «អស់», ≤ 20 → «ជិតអស់», ផ្សេងៗ → «មាន»</li>
+      <li>គណនាចំណូលតាមខែ (ទម្រង់ YYYY-MM)</li>
+    </ol>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">answer10.sql</span><pre><code class="sql">-- 1
+SELECT name, stock,
+  CASE
+    WHEN stock = 0   THEN 'អស់'
+    WHEN stock &lt;= 20 THEN 'ជិតអស់'
+    ELSE 'មាន'
+  END AS stock_status
+FROM products;
+
+-- 2
+SELECT DATE_FORMAT(o.order_date, '%Y-%m') AS month,
+       SUM(oi.quantity * oi.price)        AS revenue
+FROM orders o
+JOIN order_items oi ON oi.order_id = o.id
+WHERE o.status = 'completed'
+GROUP BY month
+ORDER BY month;</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l11">
+  <h2><span class="badge">មេរៀន ១១</span>ALTER TABLE, VIEW, INDEX</h2>
+  <div class="codebox"><span class="label">alter.sql</span><pre><code class="sql">-- បន្ថែម Column
+ALTER TABLE customers ADD COLUMN phone VARCHAR(20) AFTER email;
+
+-- កែប្រភេទ Column
+ALTER TABLE customers MODIFY COLUMN city VARCHAR(100);
+
+-- ប្តូរឈ្មោះ Column
+ALTER TABLE customers RENAME COLUMN phone TO phone_number;
+
+-- លុប Column
+ALTER TABLE customers DROP COLUMN phone_number;
+
+-- បន្ថែម Constraint
+ALTER TABLE products ADD CONSTRAINT uq_product_name UNIQUE (name);
+
+-- ប្តូរឈ្មោះតារាង
+RENAME TABLE vip_customers TO top_customers;</code></pre></div>
+  <h3>VIEW – តារាងនិម្មិត</h3>
+  <div class="codebox"><span class="label">view.sql</span><pre><code class="sql">CREATE OR REPLACE VIEW v_order_summary AS
+SELECT
+  o.id                          AS order_id,
+  cu.name                       AS customer,
+  o.order_date,
+  o.status,
+  SUM(oi.quantity * oi.price)   AS total
+FROM orders o
+JOIN customers cu   ON cu.id = o.customer_id
+JOIN order_items oi ON oi.order_id = o.id
+GROUP BY o.id, cu.name, o.order_date, o.status;
+
+-- ប្រើ View ដូចតារាងធម្មតា
+SELECT * FROM v_order_summary WHERE total > 10;
+
+DROP VIEW IF EXISTS v_order_summary;</code></pre></div>
+  <h3>INDEX – ធ្វើឱ្យ Query លឿន</h3>
+  <div class="codebox"><span class="label">index.sql</span><pre><code class="sql">-- Index លើ Column ដែលស្វែងរកញឹកញាប់
+CREATE INDEX idx_customers_city ON customers(city);
+
+-- Composite index (ច្រើន Column) — លំដាប់ Column សំខាន់!
+CREATE INDEX idx_orders_customer_date ON orders(customer_id, order_date);
+
+-- Unique index
+CREATE UNIQUE INDEX idx_customers_email ON customers(email);
+
+SHOW INDEX FROM orders;
+DROP INDEX idx_customers_city ON customers;</code></pre></div>
+  <div class="note">💡 Index ធ្វើឱ្យ <b>SELECT លឿន</b> ប៉ុន្តែធ្វើឱ្យ <b>INSERT/UPDATE យឺតបន្តិច</b> និងប្រើទំហំ Disk។ បង្កើត Index តែលើ Column ដែលប្រើក្នុង <code class="i">WHERE</code>, <code class="i">JOIN</code>, <code class="i">ORDER BY</code> ញឹកញាប់។ FK គួរមាន Index ជានិច្ច។</div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ១១</h4>
+    <ol>
+      <li>បន្ថែម Column <code class="i">is_active BOOLEAN DEFAULT TRUE</code> ទៅ products</li>
+      <li>បង្កើត View <code class="i">v_low_stock</code> បង្ហាញផលិតផលដែលស្តុក &lt; 20 ជាមួយឈ្មោះប្រភេទ</li>
+    </ol>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">answer11.sql</span><pre><code class="sql">-- 1
+ALTER TABLE products ADD COLUMN is_active BOOLEAN DEFAULT TRUE;
+
+-- 2
+CREATE VIEW v_low_stock AS
+SELECT p.id, p.name, c.name AS category, p.stock
+FROM products p
+JOIN categories c ON c.id = p.category_id
+WHERE p.stock &lt; 20;
+
+SELECT * FROM v_low_stock;</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l12">
+  <h2><span class="badge">មេរៀន ១២</span>Transactions & ACID</h2>
+  <p>Transaction ធានាថា Query មួយក្រុម <b>ជោគជ័យទាំងអស់</b> ឬ <b>បរាជ័យទាំងអស់</b>។ ឧ. ផ្ទេរប្រាក់: ដកពី A ហើយបូកឱ្យ B — មិនអាចធ្វើតែពាក់កណ្តាលបានទេ។</p>
+  <table>
+    <tr><th>ACID</th><th>អត្ថន័យ</th></tr>
+    <tr><td><b>A</b>tomicity</td><td>ទាំងអស់ ឬគ្មានអ្វីសោះ</td></tr>
+    <tr><td><b>C</b>onsistency</td><td>ទិន្នន័យតែងតែត្រឹមត្រូវតាមច្បាប់ (Constraints)</td></tr>
+    <tr><td><b>I</b>solation</td><td>Transaction នីមួយៗមិនរំខានគ្នា</td></tr>
+    <tr><td><b>D</b>urability</td><td>ពេល COMMIT ហើយ ទិន្នន័យមិនបាត់ ទោះដាច់ភ្លើង</td></tr>
+  </table>
+  <div class="codebox"><span class="label">transaction.sql</span><pre><code class="sql">-- ផ្ទេរប្រាក់ $100 ពីគណនី A ទៅ B
+START TRANSACTION;
+
+UPDATE bank_accounts SET balance = balance - 100 WHERE account_no = 'A001';
+UPDATE bank_accounts SET balance = balance + 100 WHERE account_no = 'B002';
+
+-- បើគ្រប់យ៉ាងត្រឹមត្រូវ
+COMMIT;
+
+-- បើមានបញ្ហា ត្រឡប់ទៅដូចដើមវិញ
+-- ROLLBACK;
+
+-- SAVEPOINT – ចំណុចត្រឡប់ក្រោយ
+START TRANSACTION;
+INSERT INTO orders (customer_id, order_date) VALUES (1, CURDATE());
+SAVEPOINT after_order;
+INSERT INTO order_items (order_id, product_id, quantity, price)
+VALUES (LAST_INSERT_ID(), 999, 1, 1.00);  -- product 999 មិនមាន → Error
+ROLLBACK TO after_order;
+COMMIT;</code></pre></div>
+  <div class="warn">⚠️ Transaction ដំណើរការតែលើតារាងប្រភេទ <b>InnoDB</b> (Default ក្នុង MySQL ថ្មីៗ)។ ពាក្យបញ្ជា DDL (CREATE/DROP) ធ្វើ COMMIT ស្វ័យប្រវត្តិក្នុង MySQL។</div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ១២</h4>
+    <p>សរសេរ Transaction សម្រាប់ «លក់ទំនិញ»: បង្កើត Order ថ្មីសម្រាប់ customer 2, បន្ថែម Item (product 1, ចំនួន 3), ហើយដកស្តុក product 1 ចំនួន 3។</p>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">answer12.sql</span><pre><code class="sql">START TRANSACTION;
+
+INSERT INTO orders (customer_id, order_date, status)
+VALUES (2, CURDATE(), 'completed');
+
+SET @order_id = LAST_INSERT_ID();
+
+INSERT INTO order_items (order_id, product_id, quantity, price)
+SELECT @order_id, id, 3, price FROM products WHERE id = 1;
+
+UPDATE products SET stock = stock - 3 WHERE id = 1 AND stock >= 3;
+
+-- ពិនិត្យថាស្តុកគ្រប់គ្រាន់ (ROW_COUNT() = 1) រួច
+COMMIT;</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l13">
+  <h2><span class="badge">មេរៀន ១៣</span>Stored Procedure, Function & Trigger</h2>
+  <div class="codebox"><span class="label">procedure.sql (MySQL)</span><pre><code class="sql">DELIMITER //
+
+-- Stored Procedure: យកការកុម្ម៉ង់របស់អតិថិជន
+CREATE PROCEDURE get_customer_orders(IN p_customer_id INT)
+BEGIN
+  SELECT o.id, o.order_date, o.status, SUM(oi.quantity * oi.price) AS total
+  FROM orders o
+  JOIN order_items oi ON oi.order_id = o.id
+  WHERE o.customer_id = p_customer_id
+  GROUP BY o.id, o.order_date, o.status;
+END //
+
+-- Function: គណនាតម្លៃក្រោយបញ្ចុះ
+CREATE FUNCTION discounted_price(p_price DECIMAL(10,2), p_percent INT)
+RETURNS DECIMAL(10,2)
+DETERMINISTIC
+BEGIN
+  RETURN ROUND(p_price * (100 - p_percent) / 100, 2);
+END //
+
+DELIMITER ;
+
+-- ហៅប្រើ
+CALL get_customer_orders(1);
+SELECT name, price, discounted_price(price, 15) AS sale_price FROM products;</code></pre></div>
+  <h3>Trigger – ដំណើរការស្វ័យប្រវត្តិ</h3>
+  <div class="codebox"><span class="label">trigger.sql (MySQL)</span><pre><code class="sql">-- តារាងកំណត់ត្រាការប្តូរតម្លៃ
+CREATE TABLE price_history (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  product_id  INT,
+  old_price   DECIMAL(10,2),
+  new_price   DECIMAL(10,2),
+  changed_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+DELIMITER //
+
+-- រាល់ពេលតម្លៃប្តូរ កត់ត្រាទុក
+CREATE TRIGGER trg_price_change
+AFTER UPDATE ON products
+FOR EACH ROW
+BEGIN
+  IF OLD.price &lt;> NEW.price THEN
+    INSERT INTO price_history (product_id, old_price, new_price)
+    VALUES (NEW.id, OLD.price, NEW.price);
+  END IF;
+END //
+
+-- ដកស្តុកស្វ័យប្រវត្តិពេលលក់
+CREATE TRIGGER trg_reduce_stock
+AFTER INSERT ON order_items
+FOR EACH ROW
+BEGIN
+  UPDATE products SET stock = stock - NEW.quantity WHERE id = NEW.product_id;
+END //
+
+DELIMITER ;
+
+UPDATE products SET price = 1.75 WHERE id = 1;
+SELECT * FROM price_history;</code></pre></div>
+  <div class="note">💡 <b>PostgreSQL</b> ប្រើ <code class="i">CREATE FUNCTION ... LANGUAGE plpgsql</code> ហើយ Trigger ហៅ Function នោះ។ មិនប្រើ <code class="i">DELIMITER</code> ទេ គឺប្រើ <code class="i">$$ ... $$</code>។</div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ១៣</h4>
+    <p>បង្កើត Trigger <code class="i">BEFORE INSERT</code> លើ order_items ដែលបដិសេធ (SIGNAL error) បើស្តុកមិនគ្រប់គ្រាន់។</p>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">answer13.sql</span><pre><code class="sql">DELIMITER //
+
+CREATE TRIGGER trg_check_stock
+BEFORE INSERT ON order_items
+FOR EACH ROW
+BEGIN
+  DECLARE current_stock INT;
+  SELECT stock INTO current_stock FROM products WHERE id = NEW.product_id;
+
+  IF current_stock &lt; NEW.quantity THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'ស្តុកមិនគ្រប់គ្រាន់';
+  END IF;
+END //
+
+DELIMITER ;</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l14">
+  <h2><span class="badge">មេរៀន ១៤</span>Window Functions (កម្រិតខ្ពស់)</h2>
+  <p>Window Function គណនាលើក្រុមជួរ ដោយ <b>មិនបង្រួមជួរ</b> ដូច GROUP BY។ (MySQL 8+, PostgreSQL)</p>
+  <div class="codebox"><span class="label">window.sql</span><pre><code class="sql">-- ចំណាត់ថ្នាក់ផលិតផលតាមតម្លៃ ក្នុងប្រភេទនីមួយៗ
+SELECT
+  category_id, name, price,
+  ROW_NUMBER() OVER (PARTITION BY category_id ORDER BY price DESC) AS row_num,
+  RANK()       OVER (PARTITION BY category_id ORDER BY price DESC) AS rnk,
+  DENSE_RANK() OVER (ORDER BY price DESC)                          AS overall_rank
+FROM products;
+
+-- តម្លៃមធ្យមនៃប្រភេទ បង្ហាញក្បែរជួរនីមួយៗ
+SELECT name, category_id, price,
+  ROUND(AVG(price) OVER (PARTITION BY category_id), 2) AS category_avg,
+  price - AVG(price) OVER (PARTITION BY category_id)   AS diff
+FROM products;
+
+-- ចំណូលបូកបន្ត (Running total) តាមថ្ងៃ
+WITH daily AS (
+  SELECT o.order_date, SUM(oi.quantity * oi.price) AS revenue
+  FROM orders o JOIN order_items oi ON oi.order_id = o.id
+  GROUP BY o.order_date
+)
+SELECT order_date, revenue,
+  SUM(revenue) OVER (ORDER BY order_date)        AS running_total,
+  LAG(revenue)  OVER (ORDER BY order_date)       AS prev_day,
+  revenue - LAG(revenue) OVER (ORDER BY order_date) AS change_amount
+FROM daily;
+
+-- Top 1 ផលិតផលថ្លៃបំផុតក្នុងប្រភេទនីមួយៗ
+WITH ranked AS (
+  SELECT *, ROW_NUMBER() OVER (PARTITION BY category_id ORDER BY price DESC) AS rn
+  FROM products
+)
+SELECT category_id, name, price FROM ranked WHERE rn = 1;</code></pre></div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ១៤</h4>
+    <p>ចាត់ថ្នាក់អតិថិជនតាមទឹកប្រាក់ចំណាយ ហើយបែងចែកជា ៣ ក្រុម (Gold/Silver/Bronze) ដោយប្រើ <code class="i">NTILE(3)</code>។</p>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">answer14.sql</span><pre><code class="sql">WITH spending AS (
+  SELECT cu.name, SUM(oi.quantity * oi.price) AS spent
+  FROM customers cu
+  JOIN orders o       ON o.customer_id = cu.id
+  JOIN order_items oi ON oi.order_id = o.id
+  GROUP BY cu.id, cu.name
+)
+SELECT name, spent,
+  RANK() OVER (ORDER BY spent DESC) AS rnk,
+  CASE NTILE(3) OVER (ORDER BY spent DESC)
+    WHEN 1 THEN 'Gold'
+    WHEN 2 THEN 'Silver'
+    ELSE 'Bronze'
+  END AS tier
+FROM spending;</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<!-- ===================== PRO ===================== -->
+<section class="hero" id="pro">
+  <h2>🏆 ផ្នែកទី ៣: SQL កម្រិតអាជីព</h2>
+  <p>ផ្នែកនេះបង្រៀនពីរបៀបរចនា Database ដូចអ្នកជំនាញ: Normalization, ការរចនា Schema ពេញលេញសម្រាប់ប្រព័ន្ធលក់ទំនិញ, Performance, Security និង Backup។</p>
+</section>
+
+<section id="pro-norm">
+  <h2>📐 Normalization – រៀបចំតារាងឱ្យត្រឹមត្រូវ</h2>
+  <p>គោលបំណង: កាត់បន្ថយទិន្នន័យស្ទួន និងការពារកំហុសពេល Update។</p>
+  <h3>❌ តារាងមិនល្អ (Unnormalized)</h3>
+  <table class="result">
+    <tr><th>order_id</th><th>customer</th><th>phone</th><th>products</th></tr>
+    <tr><td>1</td><td>ដារា</td><td>012111</td><td>កាហ្វេ, បាយឆា</td></tr>
+    <tr><td>2</td><td>ដារា</td><td>012111</td><td>កាសស្តាប់</td></tr>
+  </table>
+  <p>បញ្ហា: ទិន្នន័យ «ដារា, 012111» ស្ទួន; Column products មានតម្លៃច្រើន; បើដារាប្តូរលេខ ត្រូវកែច្រើនកន្លែង។</p>
+  <table>
+    <tr><th>Normal Form</th><th>ច្បាប់</th><th>ដំណោះស្រាយ</th></tr>
+    <tr><td><b>1NF</b></td><td>Cell នីមួយៗមានតម្លៃតែមួយ (Atomic) គ្មាន Column ដដែលៗ</td><td>បំបែក products ជាជួរនីមួយៗ</td></tr>
+    <tr><td><b>2NF</b></td><td>1NF + Column ទាំងអស់អាស្រ័យលើ PK ទាំងមូល</td><td>បំបែកជាតារាង orders និង order_items</td></tr>
+    <tr><td><b>3NF</b></td><td>2NF + គ្មាន Column អាស្រ័យលើ Column មិនមែន Key</td><td>ផ្លាស់ phone ទៅតារាង customers</td></tr>
+  </table>
+  <div class="note">💡 ក្នុងការងារពិត ៣NF គឺគ្រប់គ្រាន់សម្រាប់ App ភាគច្រើន។ ពេលខ្លះគេ <b>Denormalize</b> (ទុកទិន្នន័យស្ទួនខ្លះ) ដើម្បីល្បឿនរបាយការណ៍ — ឧ. រក្សាទុក <code class="i">price</code> ក្នុង order_items ដើម្បីរក្សាតម្លៃពេលលក់ ទោះតម្លៃផលិតផលប្តូរក្រោយមក។</div>
+  <h3>ប្រភេទទំនាក់ទំនង</h3>
+  <div class="grid">
+    <div class="card"><b>One-to-One (1:1)</b><br>users ↔ user_profiles</div>
+    <div class="card"><b>One-to-Many (1:N)</b><br>customers → orders</div>
+    <div class="card"><b>Many-to-Many (N:N)</b><br>orders ↔ products តាមរយៈតារាងកណ្តាល order_items</div>
+  </div>
+</section>
+
+<section id="pro-project">
+  <h2>🛒 គម្រោង: Schema ប្រព័ន្ធលក់ទំនិញកម្រិតអាជីព</h2>
+  <p>Schema នេះមានលក្ខណៈដូចប្រព័ន្ធពិត: ច្បាប់ដាក់ឈ្មោះច្បាស់លាស់, Timestamps, Soft delete, Audit, Index, និងស្ថានភាពជា ENUM។</p>
+  <div class="codebox"><span class="label">pro_schema.sql</span><pre><code class="sql">CREATE DATABASE IF NOT EXISTS pos_pro
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE pos_pro;
+
+-- ===== Users & Roles =====
+CREATE TABLE roles (
+  id    TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name  VARCHAR(30) NOT NULL UNIQUE           -- admin, cashier, manager
+);
+
+CREATE TABLE users (
+  id             BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  role_id        TINYINT UNSIGNED NOT NULL,
+  full_name      VARCHAR(100) NOT NULL,
+  email          VARCHAR(150) NOT NULL UNIQUE,
+  password_hash  VARCHAR(255) NOT NULL,      -- កុំរក្សាទុក Password ផ្ទាល់!
+  is_active      BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_users_role FOREIGN KEY (role_id) REFERENCES roles(id)
+) ENGINE = InnoDB;
+
+-- ===== Catalog =====
+CREATE TABLE categories (
+  id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  parent_id   INT UNSIGNED NULL,                    -- ប្រភេទរង (Tree)
+  name        VARCHAR(100) NOT NULL,
+  slug        VARCHAR(120) NOT NULL UNIQUE,
+  CONSTRAINT fk_categories_parent FOREIGN KEY (parent_id) REFERENCES categories(id)
+) ENGINE = InnoDB;
+
+CREATE TABLE products (
+  id           BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  category_id  INT UNSIGNED NOT NULL,
+  sku          VARCHAR(50) NOT NULL UNIQUE,          -- លេខកូដទំនិញ / Barcode
+  name         VARCHAR(150) NOT NULL,
+  description  TEXT,
+  cost_price   DECIMAL(12,2) NOT NULL DEFAULT 0 CHECK (cost_price >= 0),
+  sell_price   DECIMAL(12,2) NOT NULL CHECK (sell_price >= 0),
+  stock        INT NOT NULL DEFAULT 0 CHECK (stock >= 0),
+  reorder_level INT NOT NULL DEFAULT 10,
+  created_at   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deleted_at   DATETIME NULL,                        -- Soft delete
+  CONSTRAINT fk_products_category FOREIGN KEY (category_id) REFERENCES categories(id),
+  INDEX idx_products_name (name),
+  INDEX idx_products_category (category_id)
+) ENGINE = InnoDB;
+
+-- ===== Customers =====
+CREATE TABLE customers (
+  id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  full_name   VARCHAR(100) NOT NULL,
+  phone       VARCHAR(20) UNIQUE,
+  email       VARCHAR(150) UNIQUE,
+  points      INT NOT NULL DEFAULT 0,               -- ពិន្ទុសមាជិក
+  created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE = InnoDB;
+
+-- ===== Sales =====
+CREATE TABLE sales (
+  id              BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  invoice_no      VARCHAR(30) NOT NULL UNIQUE,
+  customer_id     BIGINT UNSIGNED NULL,
+  cashier_id      BIGINT UNSIGNED NOT NULL,
+  status          ENUM('draft', 'paid', 'refunded', 'void') NOT NULL DEFAULT 'draft',
+  subtotal        DECIMAL(12,2) NOT NULL DEFAULT 0,
+  discount        DECIMAL(12,2) NOT NULL DEFAULT 0,
+  tax             DECIMAL(12,2) NOT NULL DEFAULT 0,
+  total           DECIMAL(12,2) NOT NULL DEFAULT 0,
+  payment_method  ENUM('cash', 'card', 'khqr') NOT NULL DEFAULT 'cash',
+  sold_at         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_sales_customer FOREIGN KEY (customer_id) REFERENCES customers(id),
+  CONSTRAINT fk_sales_cashier  FOREIGN KEY (cashier_id)  REFERENCES users(id),
+  INDEX idx_sales_sold_at (sold_at),
+  INDEX idx_sales_status_date (status, sold_at)
+) ENGINE = InnoDB;
+
+CREATE TABLE sale_items (
+  id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  sale_id     BIGINT UNSIGNED NOT NULL,
+  product_id  BIGINT UNSIGNED NOT NULL,
+  quantity    INT NOT NULL CHECK (quantity > 0),
+  unit_price  DECIMAL(12,2) NOT NULL,     -- តម្លៃពេលលក់ (មិនប្តូរតាមផលិតផល)
+  unit_cost   DECIMAL(12,2) NOT NULL,     -- សម្រាប់គណនាប្រាក់ចំណេញ
+  line_total  DECIMAL(12,2) AS (quantity * unit_price) STORED,  -- Generated column
+  CONSTRAINT fk_items_sale    FOREIGN KEY (sale_id)    REFERENCES sales(id) ON DELETE CASCADE,
+  CONSTRAINT fk_items_product FOREIGN KEY (product_id) REFERENCES products(id)
+) ENGINE = InnoDB;
+
+-- ===== Inventory movements (Audit ស្តុក) =====
+CREATE TABLE stock_movements (
+  id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  product_id  BIGINT UNSIGNED NOT NULL,
+  change_qty  INT NOT NULL,                              -- +ចូល / -ចេញ
+  reason      ENUM('purchase', 'sale', 'refund', 'adjust') NOT NULL,
+  ref_id      BIGINT UNSIGNED NULL,                      -- sale_id ឬ purchase_id
+  user_id     BIGINT UNSIGNED NULL,
+  created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_moves_product FOREIGN KEY (product_id) REFERENCES products(id),
+  INDEX idx_moves_product_date (product_id, created_at)
+) ENGINE = InnoDB;</code></pre></div>
+
+  <h3>Stored Procedure: ការលក់មួយ (Transaction + Error handling)</h3>
+  <div class="codebox"><span class="label">sp_add_sale_item.sql</span><pre><code class="sql">DELIMITER //
+
+CREATE PROCEDURE sp_add_sale_item(
+  IN p_sale_id BIGINT UNSIGNED,
+  IN p_product_id BIGINT UNSIGNED,
+  IN p_qty INT,
+  IN p_user_id BIGINT UNSIGNED
+)
+BEGIN
+  DECLARE v_stock INT;
+  DECLARE v_price DECIMAL(12,2);
+  DECLARE v_cost  DECIMAL(12,2);
+
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    ROLLBACK;
+    RESIGNAL;   -- បញ្ជូន Error ទៅ App
+  END;
+
+  START TRANSACTION;
+
+  -- FOR UPDATE: ចាក់សោជួរនេះ ការពារការលក់ក្នុងពេលតែមួយ (Race condition)
+  SELECT stock, sell_price, cost_price INTO v_stock, v_price, v_cost
+  FROM products
+  WHERE id = p_product_id AND deleted_at IS NULL
+  FOR UPDATE;
+
+  IF v_stock IS NULL THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'រកមិនឃើញផលិតផល';
+  END IF;
+
+  IF v_stock &lt; p_qty THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'ស្តុកមិនគ្រប់គ្រាន់';
+  END IF;
+
+  INSERT INTO sale_items (sale_id, product_id, quantity, unit_price, unit_cost)
+  VALUES (p_sale_id, p_product_id, p_qty, v_price, v_cost);
+
+  UPDATE products SET stock = stock - p_qty WHERE id = p_product_id;
+
+  INSERT INTO stock_movements (product_id, change_qty, reason, ref_id, user_id)
+  VALUES (p_product_id, -p_qty, 'sale', p_sale_id, p_user_id);
+
+  UPDATE sales
+  SET subtotal = (SELECT SUM(line_total) FROM sale_items WHERE sale_id = p_sale_id),
+      total    = subtotal - discount + tax
+  WHERE id = p_sale_id;
+
+  COMMIT;
+END //
+
+DELIMITER ;</code></pre></div>
+
+  <h3>Query របាយការណ៍ពេញនិយម</h3>
+  <div class="codebox"><span class="label">reports.sql</span><pre><code class="sql">-- 1) ចំណូល ថ្លៃដើម ប្រាក់ចំណេញ តាមថ្ងៃ (៣០ថ្ងៃចុងក្រោយ)
+SELECT DATE(s.sold_at)                                   AS sale_date,
+       COUNT(DISTINCT s.id)                              AS invoices,
+       SUM(si.line_total)                                AS revenue,
+       SUM(si.quantity * si.unit_cost)                   AS cost,
+       SUM(si.line_total - si.quantity * si.unit_cost)   AS profit
+FROM sales s
+JOIN sale_items si ON si.sale_id = s.id
+WHERE s.status = 'paid'
+  AND s.sold_at >= CURDATE() - INTERVAL 30 DAY
+GROUP BY DATE(s.sold_at)
+ORDER BY sale_date;
+
+-- 2) Top 10 ផលិតផលលក់ដាច់បំផុត ខែនេះ
+SELECT p.sku, p.name, SUM(si.quantity) AS qty_sold, SUM(si.line_total) AS revenue
+FROM sale_items si
+JOIN sales s    ON s.id = si.sale_id
+JOIN products p ON p.id = si.product_id
+WHERE s.status = 'paid'
+  AND s.sold_at >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+GROUP BY p.id, p.sku, p.name
+ORDER BY qty_sold DESC
+LIMIT 10;
+
+-- 3) ទំនិញដែលត្រូវបញ្ជាទិញបន្ថែម
+SELECT sku, name, stock, reorder_level
+FROM products
+WHERE deleted_at IS NULL AND stock &lt;= reorder_level
+ORDER BY stock;
+
+-- 4) ការលក់តាមអ្នកគិតលុយ និងវិធីបង់ប្រាក់
+SELECT u.full_name AS cashier,
+       SUM(CASE WHEN s.payment_method = 'cash' THEN s.total ELSE 0 END) AS cash,
+       SUM(CASE WHEN s.payment_method = 'khqr' THEN s.total ELSE 0 END) AS khqr,
+       SUM(CASE WHEN s.payment_method = 'card' THEN s.total ELSE 0 END) AS card,
+       SUM(s.total) AS total
+FROM sales s
+JOIN users u ON u.id = s.cashier_id
+WHERE s.status = 'paid' AND DATE(s.sold_at) = CURDATE()
+GROUP BY u.id, u.full_name;
+
+-- 5) កំណើនចំណូលធៀបខែមុន (Month-over-Month)
+WITH monthly AS (
+  SELECT DATE_FORMAT(sold_at, '%Y-%m') AS ym, SUM(total) AS revenue
+  FROM sales WHERE status = 'paid'
+  GROUP BY ym
+)
+SELECT ym, revenue,
+       LAG(revenue) OVER (ORDER BY ym) AS prev_month,
+       ROUND((revenue - LAG(revenue) OVER (ORDER BY ym))
+             / LAG(revenue) OVER (ORDER BY ym) * 100, 1) AS growth_pct
+FROM monthly;</code></pre></div>
+</section>
+
+<section id="pro-perf">
+  <h2>⚡ Performance: EXPLAIN & Optimization</h2>
+  <div class="codebox"><span class="label">explain.sql</span><pre><code class="sql">-- មើលថា Database ដំណើរការ Query យ៉ាងដូចម្តេច
+EXPLAIN SELECT * FROM sales WHERE status = 'paid' AND sold_at >= '2026-11-01';
+
+-- MySQL 8+: វាស់ពេលពិតប្រាកដ
+EXPLAIN ANALYZE SELECT * FROM sales WHERE status = 'paid' AND sold_at >= '2026-11-01';</code></pre></div>
+  <table>
+    <tr><th>Column ក្នុង EXPLAIN</th><th>មើលអ្វី?</th></tr>
+    <tr><td><b>type</b></td><td><code class="i">ALL</code> = Full table scan (អាក្រក់) · <code class="i">ref</code>, <code class="i">range</code>, <code class="i">const</code> = ល្អ</td></tr>
+    <tr><td><b>key</b></td><td>Index ដែលត្រូវបានប្រើ (NULL = មិនប្រើ Index)</td></tr>
+    <tr><td><b>rows</b></td><td>ចំនួនជួរដែលត្រូវអាន — កាន់តែតិចកាន់តែល្អ</td></tr>
+  </table>
+  <h3>គន្លឹះ Optimization</h3>
+  <div class="codebox"><span class="label">tips.sql</span><pre><code class="sql">-- ❌ កុំប្រើ SELECT * ក្នុង App
+SELECT * FROM products;
+-- ✅ យកតែ Column ដែលត្រូវការ
+SELECT id, name, sell_price FROM products;
+
+-- ❌ Function លើ Column ធ្វើឱ្យ Index មិនដំណើរការ
+SELECT * FROM sales WHERE YEAR(sold_at) = 2026;
+-- ✅ ប្រើចន្លោះជំនួស
+SELECT * FROM sales WHERE sold_at >= '2026-01-01' AND sold_at &lt; '2027-01-01';
+
+-- ❌ LIKE ដែលចាប់ផ្តើមដោយ % មិនប្រើ Index
+SELECT * FROM products WHERE name LIKE '%phone';
+-- ✅ ប្រើ prefix ឬ FULLTEXT INDEX
+SELECT * FROM products WHERE name LIKE 'phone%';
+
+-- ✅ Pagination លឿនសម្រាប់តារាងធំ (Keyset pagination)
+SELECT id, name FROM products WHERE id > 1000 ORDER BY id LIMIT 20;
+-- ជំនួស: LIMIT 20 OFFSET 100000 (យឺតខ្លាំង)</code></pre></div>
+</section>
+
+<section id="pro-security">
+  <h2>🛡️ Security: Users, Permissions & SQL Injection</h2>
+  <h3>បង្កើត User និងផ្តល់សិទ្ធិតិចបំផុត (Least Privilege)</h3>
+  <div class="codebox"><span class="label">security.sql</span><pre><code class="sql">-- User សម្រាប់ App (មិនប្រើ root ក្នុង App!)
+CREATE USER 'pos_app'@'localhost' IDENTIFIED BY 'Strong#Passw0rd!2026';
+GRANT SELECT, INSERT, UPDATE, DELETE ON pos_pro.* TO 'pos_app'@'localhost';
+GRANT EXECUTE ON pos_pro.* TO 'pos_app'@'localhost';
+
+-- User សម្រាប់អ្នកវិភាគ (អានបានតែប៉ុណ្ណោះ)
+CREATE USER 'analyst'@'%' IDENTIFIED BY 'Another#Strong1';
+GRANT SELECT ON pos_pro.* TO 'analyst'@'%';
+
+-- ដកសិទ្ធិ
+REVOKE DELETE ON pos_pro.* FROM 'pos_app'@'localhost';
+
+SHOW GRANTS FOR 'pos_app'@'localhost';</code></pre></div>
+  <h3>SQL Injection – គ្រោះថ្នាក់ធំបំផុត</h3>
+  <p>កើតឡើងពេលភ្ជាប់ Input របស់ User ចូល Query ផ្ទាល់។ ឧ. User វាយ Email ជា <code class="i">' OR '1'='1</code>:</p>
+  <div class="codebox"><span class="label">❌ គ្រោះថ្នាក់ (Node.js)</span><pre><code class="js">// កុំធ្វើបែបនេះ!
+const sql = "SELECT * FROM users WHERE email = '" + email + "'";
+// ក្លាយជា: SELECT * FROM users WHERE email = '' OR '1'='1'  → យក User ទាំងអស់!</code></pre></div>
+  <div class="codebox"><span class="label">✅ សុវត្ថិភាព: Prepared Statement (Node.js + mysql2)</span><pre><code class="js">import mysql from "mysql2/promise";
+
+const pool = mysql.createPool({
+  host: "localhost",
+  user: "pos_app",
+  password: process.env.DB_PASSWORD,
+  database: "pos_pro",
+});
+
+// ? = placeholder — Database បំបែកទិន្នន័យចេញពីកូដ
+const [rows] = await pool.execute(
+  "SELECT id, full_name FROM users WHERE email = ? AND is_active = ?",
+  [email, true]
+);</code></pre></div>
+  <div class="codebox"><span class="label">✅ Prepared Statement ក្នុង SQL ផ្ទាល់</span><pre><code class="sql">PREPARE stmt FROM 'SELECT id, full_name FROM users WHERE email = ?';
+SET @email = 'dara@mail.com';
+EXECUTE stmt USING @email;
+DEALLOCATE PREPARE stmt;</code></pre></div>
+  <table>
+    <tr><th>Checklist សុវត្ថិភាព</th></tr>
+    <tr><td>✅ ប្រើ Prepared Statements / ORM ជានិច្ច</td></tr>
+    <tr><td>✅ កុំប្រើ <code class="i">root</code> ក្នុង App — បង្កើត User ដែលមានសិទ្ធិតិចបំផុត</td></tr>
+    <tr><td>✅ Hash Password ជាមួយ bcrypt/argon2 (មិនមែន MD5)</td></tr>
+    <tr><td>✅ កុំបើក Port 3306 ទៅ Internet</td></tr>
+    <tr><td>✅ ប្រើ SSL/TLS ពេលភ្ជាប់ពីចម្ងាយ</td></tr>
+    <tr><td>✅ Backup ជាប្រចាំ និងសាកល្បង Restore</td></tr>
+  </table>
+</section>
+
+<section id="pro-backup">
+  <h2>💾 Backup & Restore</h2>
+  <div class="codebox"><span class="label">Terminal</span><pre><code class="bash"># Backup Database ទាំងមូល
+mysqldump -u root -p pos_pro > pos_pro_backup.sql
+
+# Backup រួមទាំង Procedures និង Triggers
+mysqldump -u root -p --routines --triggers --single-transaction pos_pro > full_backup.sql
+
+# Backup តែរចនាសម្ព័ន្ធ (គ្មានទិន្នន័យ)
+mysqldump -u root -p --no-data pos_pro > schema_only.sql
+
+# Restore
+mysql -u root -p pos_pro &lt; pos_pro_backup.sql
+
+# PostgreSQL
+pg_dump -U postgres pos_pro > backup.sql
+psql -U postgres -d pos_pro -f backup.sql</code></pre></div>
+  <div class="note">💡 <b>វិធីអាជីព:</b> កំណត់ Backup ស្វ័យប្រវត្តិរៀងរាល់ថ្ងៃ (cron job), រក្សាទុក Backup ក្នុងកន្លែងផ្សេង (Cloud), ហើយសាកល្បង Restore ម្តងម្កាល — Backup ដែលមិនដែលសាក Restore គឺមិនទាន់ប្រាកដថាប្រើបានទេ។</div>
+
+  <div class="ex"><h4>🏁 លំហាត់គម្រោងចុងក្រោយ</h4>
+    <ol>
+      <li>បញ្ចូលទិន្នន័យគំរូក្នុង <code class="i">pos_pro</code>: roles ៣, users ៣, categories ៤, products ១០, customers ៥</li>
+      <li>បង្កើត Sale ៥ ដោយប្រើ <code class="i">sp_add_sale_item</code></li>
+      <li>បង្កើត View <code class="i">v_daily_profit</code> ពីរបាយការណ៍ទី ១</li>
+      <li>បង្កើត Procedure <code class="i">sp_refund_sale(sale_id)</code> ដែលប្តូរ status ជា refunded ហើយបូកស្តុកវិញ</li>
+      <li>បន្ថែម Index ដែលសមស្រប ហើយប្រើ EXPLAIN ពិនិត្យរបាយការណ៍ទី ២</li>
+      <li>បង្កើត User <code class="i">pos_app</code> ហើយភ្ជាប់ពី Node.js ដោយប្រើ Prepared Statement</li>
+    </ol>
+    <details><summary>មើលចម្លើយ (ចំណុចទី ៤)</summary>
+    <div class="codebox"><span class="label">sp_refund_sale.sql</span><pre><code class="sql">DELIMITER //
+
+CREATE PROCEDURE sp_refund_sale(IN p_sale_id BIGINT UNSIGNED, IN p_user_id BIGINT UNSIGNED)
+BEGIN
+  DECLARE v_status VARCHAR(20);
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN ROLLBACK; RESIGNAL; END;
+
+  START TRANSACTION;
+
+  SELECT status INTO v_status FROM sales WHERE id = p_sale_id FOR UPDATE;
+
+  IF v_status IS NULL OR v_status &lt;> 'paid' THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'អាច Refund បានតែការលក់ដែលបានបង់ប្រាក់';
+  END IF;
+
+  -- បូកស្តុកវិញ
+  UPDATE products p
+  JOIN sale_items si ON si.product_id = p.id
+  SET p.stock = p.stock + si.quantity
+  WHERE si.sale_id = p_sale_id;
+
+  -- កត់ត្រាចលនាស្តុក
+  INSERT INTO stock_movements (product_id, change_qty, reason, ref_id, user_id)
+  SELECT product_id, quantity, 'refund', p_sale_id, p_user_id
+  FROM sale_items WHERE sale_id = p_sale_id;
+
+  UPDATE sales SET status = 'refunded' WHERE id = p_sale_id;
+
+  COMMIT;
+END //
+
+DELIMITER ;</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="roadmap">
+  <h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+  <ol class="steps">
+    <li><b>មូលដ្ឋាន</b> – SELECT, WHERE, INSERT, UPDATE, DELETE (មេរៀន ១–៧)</li>
+    <li><b>កម្រិតមធ្យម</b> – JOIN, GROUP BY, Subquery, CTE (មេរៀន ៦–១០)</li>
+    <li><b>កម្រិតខ្ពស់</b> – Index, Transaction, Procedure, Trigger, Window Functions (មេរៀន ១១–១៤)</li>
+    <li><b>Database Design</b> – ERD, Normalization, ការដាក់ឈ្មោះស្តង់ដារ</li>
+    <li><b>Performance</b> – EXPLAIN, Index strategy, Query tuning</li>
+    <li><b>ភ្ជាប់ជាមួយ App</b> – Node.js (mysql2, pg), ORM ដូចជា Prisma, Sequelize</li>
+    <li><b>PostgreSQL ស៊ីជម្រៅ</b> – JSONB, Full-text search, Extensions</li>
+    <li><b>Data Analysis</b> – SQL សម្រាប់ BI (Power BI, Metabase, Looker Studio)</li>
+    <li><b>DevOps សម្រាប់ Database</b> – Migrations, Replication, Backup ស្វ័យប្រវត្តិ</li>
+  </ol>
+  <div class="note">🎯 <b>គន្លឹះ:</b> ហាត់សរសេរ Query រៀងរាល់ថ្ងៃ។ គេហទំព័រហាត់ឥតគិតថ្លៃ: <b>SQLBolt</b>, <b>LeetCode (Database)</b>, <b>HackerRank SQL</b>, <b>SQLZoo</b>។</div>
+  <p><b>ឯកសារយោងផ្លូវការ:</b> <a href="https://dev.mysql.com/doc/" target="_blank">dev.mysql.com/doc</a> · <a href="https://www.postgresql.org/docs/" target="_blank">postgresql.org/docs</a> · <a href="https://sqlite.org/docs.html" target="_blank">sqlite.org/docs</a></p>
+</section>
+
+</main>
+</div>
+
+<script>
+// ===== Syntax highlighter (គ្មាន Library ខាងក្រៅ) =====
+const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+const SQL_KW = "SELECT|FROM|WHERE|AND|OR|NOT|INSERT|INTO|VALUES|UPDATE|SET|DELETE|CREATE|TABLE|DATABASE|IF|EXISTS|DROP|ALTER|ADD|COLUMN|MODIFY|RENAME|TO|AFTER|BEFORE|PRIMARY|KEY|FOREIGN|REFERENCES|UNIQUE|INDEX|CHECK|DEFAULT|NULL|IS|AS|ON|JOIN|INNER|LEFT|RIGHT|FULL|OUTER|CROSS|GROUP|BY|ORDER|HAVING|LIMIT|OFFSET|ASC|DESC|DISTINCT|LIKE|IN|BETWEEN|UNION|ALL|CASE|WHEN|THEN|ELSE|END|WITH|RECURSIVE|VIEW|REPLACE|USE|SHOW|DESCRIBE|TRUNCATE|CONSTRAINT|AUTO_INCREMENT|CHARACTER|COLLATE|START|TRANSACTION|COMMIT|ROLLBACK|SAVEPOINT|PROCEDURE|FUNCTION|TRIGGER|BEGIN|DECLARE|RETURN|RETURNS|DETERMINISTIC|CALL|DELIMITER|FOR|EACH|ROW|NEW|OLD|SIGNAL|SQLSTATE|MESSAGE_TEXT|OVER|PARTITION|INTERVAL|DAY|GRANT|REVOKE|USER|IDENTIFIED|PREPARE|EXECUTE|USING|DEALLOCATE|EXPLAIN|ANALYZE|CASCADE|ENGINE|UNSIGNED|STORED|LIKE|DUPLICATE|EXIT|HANDLER|SQLEXCEPTION|RESIGNAL|TRUE|FALSE|IN|OUT|INOUT|DATABASES|TABLES|GRANTS|CONFLICT|DO|EXCLUDED|SERIAL|GENERATED|ALWAYS|IDENTITY";
+const SQL_TYPES = "INT|INTEGER|TINYINT|SMALLINT|BIGINT|DECIMAL|NUMERIC|FLOAT|DOUBLE|CHAR|VARCHAR|TEXT|DATE|TIME|DATETIME|TIMESTAMP|BOOLEAN|ENUM|JSON|utf8mb4|utf8mb4_unicode_ci|InnoDB";
+const sqlRe = new RegExp(
+  "(--.*$|\\/\\*[\\s\\S]*?\\*\\/)" +            // 1 comment
+  "|('(?:''|[^'])*')" +                          // 2 string
+  "|\\b(" + SQL_KW + ")\\b" +                    // 3 keyword
+  "|\\b(" + SQL_TYPES + ")\\b" +                 // 4 type
+  "|\\b(\\d+(?:\\.\\d+)?)\\b" +                  // 5 number
+  "|([A-Za-z_][\\w]*)(?=\\s*\\()" +              // 6 function
+  "|(@\\w+)",                                    // 7 variable
+  "gmi"
+);
+
+const JS_BI = "console|process|JSON|Math|Promise|Object|Array|Number|String|Date|Error|mysql|pool";
+const jsRe = new RegExp(
+  "(\\/\\/.*$|\\/\\*[\\s\\S]*?\\*\\/)" +
+  "|(`(?:\\\\.|[^`\\\\])*`|'(?:\\\\.|[^'\\\\\\n])*'|\"(?:\\\\.|[^\"\\\\\\n])*\")" +
+  "|\\b(const|let|var|function|return|if|else|for|while|async|await|new|class|import|from|export|default|try|catch|throw|of|in|this|true|false|null|undefined)\\b" +
+  "|\\b(\\d+(?:\\.\\d+)?)\\b" +
+  "|\\b(" + JS_BI + ")\\b" +
+  "|([A-Za-z_$][\\w$]*)(?=\\s*\\()",
+  "gm"
+);
+const bashRe = /(#.*$)|("(?:\\.|[^"\\])*"|'[^']*')|^(\s*)(mysql|mysqldump|pg_dump|psql|docker|sqlite3)\b|(\s-{1,2}[\w-]+)/gm;
+
+function highlight(text, re, map) {
+  let out = "", last = 0, m;
+  re.lastIndex = 0;
+  while ((m = re.exec(text))) {
+    if (m[0] === "") { re.lastIndex++; continue; }
+    out += esc(text.slice(last, m.index));
+    out += map(m);
+    last = re.lastIndex;
+  }
+  return out + esc(text.slice(last));
+}
+
+const span = (cls, s) => `<span class="${cls}">${esc(s)}</span>`;
+
+document.querySelectorAll("pre code").forEach((el) => {
+  const src = el.textContent;
+  if (el.classList.contains("sql")) {
+    el.innerHTML = highlight(src, sqlRe, (m) => {
+      if (m[1]) return span("tok-com", m[0]);
+      if (m[2]) return span("tok-str", m[0]);
+      if (m[3]) return span("tok-kw", m[0]);
+      if (m[4]) return span("tok-bi", m[0]);
+      if (m[5]) return span("tok-num", m[0]);
+      if (m[6]) return span("tok-fn", m[0]);
+      if (m[7]) return span("tok-cmd", m[0]);
+      return esc(m[0]);
+    });
+  } else if (el.classList.contains("js")) {
+    el.innerHTML = highlight(src, jsRe, (m) => {
+      if (m[1]) return span("tok-com", m[0]);
+      if (m[2]) return span("tok-str", m[0]);
+      if (m[3]) return span("tok-kw", m[0]);
+      if (m[4]) return span("tok-num", m[0]);
+      if (m[5]) return span("tok-bi", m[0]);
+      if (m[6]) return span("tok-fn", m[0]);
+      return esc(m[0]);
+    });
+  } else if (el.classList.contains("bash")) {
+    el.innerHTML = highlight(src, bashRe, (m) => {
+      if (m[1]) return span("tok-com", m[0]);
+      if (m[2]) return span("tok-str", m[0]);
+      if (m[4]) return esc(m[3]) + span("tok-cmd", m[4]);
+      if (m[5]) return span("tok-bi", m[0]);
+      return esc(m[0]);
+    });
+  }
+});
+
+// ===== Copy buttons =====
+document.querySelectorAll(".codebox").forEach((box) => {
+  const btn = document.createElement("button");
+  btn.className = "btn copy";
+  btn.textContent = "ចម្លង";
+  btn.onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(box.querySelector("code").textContent);
+      btn.textContent = "✔ បានចម្លង";
+    } catch { btn.textContent = "បរាជ័យ"; }
+    setTimeout(() => (btn.textContent = "ចម្លង"), 1500);
+  };
+  box.appendChild(btn);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="sql"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

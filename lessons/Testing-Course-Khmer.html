@@ -1,0 +1,1962 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន Software Testing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f5faf9; --panel:#ffffff; --text:#13221f; --muted:#5b6b61; --line:#d7e9e6;
+  --accent:#0f766e; --accent2:#14a394; --accent-soft:#e6f6f4;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#5eead4; --accent2:#14a394; --accent-soft:#0f2523;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#5eead4; --accent2:#14a394; --accent-soft:#0f2523;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#0b5650,#14a394);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .te{color:#ff8b8b}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+</style>
+<link rel="icon" href="../assets/icons/testing.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/testing.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>វគ្គសិក្សា Software Testing: Unit, Integration, E2E (Node test, Vitest, Playwright)</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Software Testing ជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#install">២. របៀបដំឡើងក្នុង VS Code</a>
+<a href="#elements">៣. ធាតុនីមួយៗរបស់ Testing</a>
+<h4>ផ្នែកទី ២ – Unit & Integration</h4>
+<a href="#l1">មេរៀន ១: Test ដំបូង: node:test + assert</a>
+<a href="#l2">មេរៀន ២: describe, Hooks &amp; ពេល Test ធ្លាក់</a>
+<a href="#l3">មេរៀន ៣: Edge Cases &amp; Table-driven Tests</a>
+<a href="#l4">មេរៀន ៤: TDD: Red → Green → Refactor</a>
+<a href="#l5">មេរៀន ៥: Async Tests, Errors &amp; ពេលវេលា (Fake timers)</a>
+<a href="#l6">មេរៀន ៦: Mocks, Spies &amp; Stubs</a>
+<a href="#l7">មេរៀន ៧: Coverage: Tests ប៉ះកូដប៉ុន្មាន?</a>
+<a href="#l8">មេរៀន ៨: Integration Tests: API ពិត + HTTP</a>
+<h4>ផ្នែកទី ៣ – Vitest, React, E2E</h4>
+<a href="#l9">មេរៀន ៩: Vitest: Setup, Config &amp; Syntax</a>
+<a href="#l10">មេរៀន ១០: React Testing Library: Test ដូចអ្នកប្រើ</a>
+<a href="#l11">មេរៀន ១១: Mock Network ដោយ MSW</a>
+<a href="#l12">មេរៀន ១២: Playwright E2E: Test ក្នុង Browser ពិត</a>
+<a href="#l13">មេរៀន ១៣: Playwright កម្រិតខ្ពស់: Page Object, Network mock, Trace</a>
+<a href="#l14">មេរៀន ១៤: CI, Flaky Tests &amp; យុទ្ធសាស្ត្រ Testing</a>
+<a href="#cheat">📋 Cheat Sheet</a>
+<h4>ផ្នែកទី ៤ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងអាជីព: Kafe Test Suite ពេញលេញ</a>
+<a href="#pro-run">▶ រត់ Suite ទាំងមូល (លទ្ធផលពិត)</a>
+<a href="#pro-app">🎭 E2E Runner Simulator</a>
+<a href="#pro-check">✅ Checklist &amp; គម្រោងចុងក្រោយ</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+
+</nav>
+<main>
+<section class="hero">
+  <h2>✅ Software Testing ពីដើមដល់ចប់: Unit, Integration, E2E</h2>
+  <p>រៀនសរសេរ <b>Tests</b> ដែលធ្វើឱ្យអ្នក Deploy ដោយទំនុកចិត្ត៖ Node.js test runner, Assertions, TDD, Async, Mocks, Coverage, API Integration tests, <b>Vitest</b> + React Testing Library, MSW, <b>Playwright E2E</b> និង CI។ Tests ក្នុងមេរៀនត្រូវបាន <b>រត់ពិត</b> (រួមទាំង Playwright ជាមួយ Chromium) ហើយលទ្ធផលបង្ហាញក្រោមកូដ។</p>
+  <p><span class="badge">📘 ១៤ មេរៀន</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">🧪 Output ពិត</span><span class="badge">🎭 Playwright E2E</span></p>
+</section>
+
+<!-- NAV: ផ្នែកទី ១ – មូលដ្ឋាន -->
+<section id="intro">
+  <h2>១. Software Testing ជាអ្វី? អ្នកណាបង្កើត?</h2>
+  <p><b>Automated testing</b> = កូដដែលពិនិត្យកូដរបស់អ្នកដោយស្វ័យប្រវត្តិ។ ជំនួសឱ្យការចុចសាកដោយដៃរាល់ពេលកែកូដ Tests រត់ក្នុងប៉ុន្មានវិនាទី ហើយប្រាប់ភ្លាមថាអ្វីខូច — មុនអ្នកប្រើឃើញ។</p>
+  <div class="grid">
+    <div class="card"><b>Unit testing / TDD</b><br><b style="font-size:19px">Kent Beck</b><br>SUnit (Smalltalk, 1990s) · <b>JUnit</b> ជាមួយ Erich Gamma · សៀវភៅ <i>Test-Driven Development</i> (2002)</div>
+    <div class="card"><b>Jest</b><br>Facebook (Meta), 2014 — Test framework JavaScript ពេញនិយមយូរ</div>
+    <div class="card"><b>Vitest</b><br><b>Anthony Fu</b> និងក្រុម Vite (2021–22) — លឿន, API ស្រដៀង Jest, ធ្វើការជាមួយ Vite/TypeScript ស្រាប់</div>
+    <div class="card"><b>Playwright</b><br><b>Microsoft</b>, 2020 — ក្រុមដែលធ្លាប់បង្កើត Puppeteer នៅ Google · Chromium, Firefox, WebKit</div>
+  </div>
+  <h3>ហេតុអ្វីត្រូវ Test?</h3>
+  <div class="grid">
+    <div class="card">🛡️ <b>ការពារ Regression</b><br>កែ A ហើយ B ខូចដោយមិនដឹង — Test ចាប់បាន</div>
+    <div class="card">🚀 <b>Deploy ដោយទំនុកចិត្ត</b><br>CI រត់ Tests រាល់ PR</div>
+    <div class="card">🔧 <b>Refactor ដោយសុវត្ថិភាព</b><br>ប្តូរកូដខាងក្នុង ហើយ Tests នៅតែជាប់</div>
+    <div class="card">📖 <b>ឯកសាររស់</b><br>Test បង្ហាញពីរបៀបប្រើកូដ</div>
+    <div class="card">🧠 <b>រចនាកូដល្អ</b><br>កូដងាយ Test = កូដបំបែកល្អ</div>
+    <div class="card">💼 <b>ការងារ</b><br>ក្រុមហ៊ុនភាគច្រើនតម្រូវ Tests ក្នុង PR</div>
+  </div>
+  <h3>Testing Pyramid (ពីរ៉ាមីត)</h3>
+  <script type="text/x-code" data-lang="txt" data-label="Pyramid">
+              ╱╲
+             ╱E2E╲          តិច · យឺត · ថ្លៃ · ជឿជាក់ខ្ពស់ (Browser ពិត)       ← Playwright
+            ╱──────╲
+           ╱ Integr.╲       មធ្យម · API + Database + Components រួមគ្នា       ← node:test / Vitest + fetch
+          ╱──────────╲
+         ╱    Unit    ╲     ច្រើន · លឿន (ms) · Function/Component តែមួយ       ← node:test / Vitest
+        ╱──────────────╲
+  + Static: TypeScript, ESLint (ចាប់កំហុសមុនរត់)          + Manual / Exploratory testing
+</script>
+</section>
+
+<section id="install">
+  <h2>២. របៀបដំឡើងក្នុង VS Code</h2>
+  <ol class="steps">
+    <li><b>Node.js LTS</b> (22+) — មាន Test runner ស្រាប់ (<code class="i">node --test</code>) មិនចាំបាច់ដំឡើងអ្វី</li>
+    <li><b>Vitest</b> (គម្រោង Vite/React)៖ <code class="i">npm i -D vitest</code></li>
+    <li><b>Playwright</b>៖ <code class="i">npm init playwright@latest</code> (ដំឡើង Browsers + Config + Example)</li>
+    <li>VS Code Extensions៖ <b>Vitest</b> (ផ្លូវការ) — ▶ រត់ Test ម្តងមួយពីក្នុង Editor · <b>Playwright Test for VS Code</b> (Microsoft) — Record, Pick locator, Debug</li>
+    <li>VS Code មាន <b>Testing panel</b> (រូបដបពិសោធន៍ 🧪) បង្ហាញ Tests ទាំងអស់</li>
+  </ol>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+node --test                         # រក *.test.js ហើយរត់
+node --test --watch                 # រត់ឡើងវិញពេលរក្សាទុក
+
+npm install -D vitest @testing-library/react @testing-library/jest-dom @testing-library/user-event jsdom
+npx vitest                          # Watch mode
+npx vitest run --coverage
+
+npm init playwright@latest          # ជ្រើស JavaScript/TypeScript, Folder e2e, GitHub Actions
+npx playwright test                 # រត់ E2E
+npx playwright test --ui            # UI mode (មើលជំហាន, Time travel)
+npx playwright codegen localhost:3000   # ថតសកម្មភាព → បង្កើតកូដ Test
+</script>
+  <h3>គម្រោងគំរូ <code class="i">kafe/</code> (ប្រើក្នុងមេរៀនទាំងអស់)</h3>
+  <script type="text/x-code" data-lang="txt" data-label="kafe/">
+kafe/
+├── package.json         "test": "node --test --test-reporter=spec" · "e2e": "playwright test"
+├── src/cart.js          addItem, removeItem, totalCents (Coupon), formatUSD, formatKHR
+├── src/validate.js      validatePhone
+├── src/api.js           API តូច (node:http): GET /api/products · POST /api/orders
+├── public/index.html    Kafe Shop (Menu → កន្ត្រក → Coupon → បញ្ជាទិញ)
+├── server.mjs           រត់ API + Website នៅ :3000
+├── playwright.config.js
+├── tests/               Unit + Integration tests
+└── e2e/                 Playwright tests
+</script>
+  <script type="text/x-code" data-lang="js" data-label="src/cart.js (កូដដែលយើងនឹង Test)">
+// Pure functions — ងាយ Test បំផុត
+export const RATE_KHR = 4100;
+
+export function addItem(cart, product, qty = 1) {
+  if (!Number.isInteger(qty) || qty < 1) throw new RangeError("qty ត្រូវជាចំនួនគត់ ≥ 1");
+  const found = cart.find(i => i.id === product.id);
+  if (found) return cart.map(i => (i.id === product.id ? { ...i, qty: i.qty + qty } : i));
+  return [...cart, { id: product.id, name: product.name, price: product.price, qty }];
+}
+
+export function removeItem(cart, id) {
+  return cart.filter(i => i.id !== id);
+}
+
+// សរុបជា «សេន» (cents) ដើម្បីជៀសវាងកំហុស Floating point (0.1 + 0.2)
+export function totalCents(cart, { coupon } = {}) {
+  const sub = cart.reduce((s, i) => s + Math.round(i.price * 100) * i.qty, 0);
+  const pct = coupon === "KAFE10" ? 10 : 0;
+  return sub - Math.round((sub * pct) / 100);
+}
+
+export const formatUSD = cents => `$${(cents / 100).toFixed(2)}`;
+export const formatKHR = cents => `${Math.round((cents / 100) * RATE_KHR).toLocaleString("en-US")} ៛`;
+</script>
+</section>
+
+<section id="elements">
+  <h2>៣. ធាតុនីមួយៗរបស់ Testing</h2>
+  <table>
+    <tr><th>ធាតុ</th><th>ពន្យល់</th></tr>
+    <tr><td><b>Test runner</b></td><td>កម្មវិធីរក និងរត់ Tests៖ node:test, Vitest, Jest, Playwright Test</td></tr>
+    <tr><td><b>Test / Suite</b></td><td><code class="i">test()</code>/<code class="i">it()</code> = ករណីមួយ · <code class="i">describe()</code> = ក្រុម</td></tr>
+    <tr><td><b>Assertion</b></td><td>ពិនិត្យលទ្ធផល៖ <code class="i">assert.equal</code> / <code class="i">expect(x).toBe(y)</code></td></tr>
+    <tr><td><b>AAA</b></td><td><b>Arrange</b> (រៀបចំ) → <b>Act</b> (ធ្វើ) → <b>Assert</b> (ពិនិត្យ)</td></tr>
+    <tr><td><b>Hooks</b></td><td><code class="i">before</code>, <code class="i">beforeEach</code>, <code class="i">after</code>, <code class="i">afterEach</code></td></tr>
+    <tr><td><b>Test double</b></td><td><b>Mock</b>/<b>Spy</b>/<b>Stub</b>/<b>Fake</b> — ជំនួស Dependency (API, Email, ពេលវេលា)</td></tr>
+    <tr><td><b>Fixture</b></td><td>ទិន្នន័យ/បរិស្ថានដែលរៀបចំសម្រាប់ Test</td></tr>
+    <tr><td><b>Coverage</b></td><td>% បន្ទាត់/Branch ដែល Tests បានរត់កាត់</td></tr>
+    <tr><td><b>Locator</b> (E2E)</td><td>វិធីរកធាតុលើទំព័រ៖ <code class="i">getByRole</code>, <code class="i">getByLabel</code>, <code class="i">getByTestId</code></td></tr>
+    <tr><td><b>Flaky test</b></td><td>Test ដែលពេលជាប់ពេលធ្លាក់ដោយគ្មានការកែកូដ — ត្រូវជួសជុល</td></tr>
+    <tr><td><b>CI</b></td><td>រត់ Tests ដោយស្វ័យប្រវត្តិរាល់ Push/PR</td></tr>
+  </table>
+</section>
+
+<!-- NAV: ផ្នែកទី ២ – Unit & Integration -->
+<section id="l1">
+  <h2><span class="badge">មេរៀន ១</span>Test ដំបូង: node:test + assert</h2>
+  <script type="text/x-code" data-lang="js" data-label="tests/cart.test.js" data-file="tests/cart.test.js" data-cmd="npm test">
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { addItem, formatUSD } from "../src/cart.js";
+
+test("addItem បន្ថែមផលិតផលថ្មីទៅកន្ត្រកទទេ", () => {
+  // Arrange
+  const latte = { id: 1, name: "Latte", price: 2.5 };
+  // Act
+  const cart = addItem([], latte);
+  // Assert
+  assert.deepEqual(cart, [{ id: 1, name: "Latte", price: 2.5, qty: 1 }]);
+});
+
+test("formatUSD បង្ហាញ 2 ខ្ទង់ក្រោយក្បៀស", () => {
+  assert.equal(formatUSD(250), "$2.50");
+  assert.equal(formatUSD(5), "$0.05");
+});
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Terminal លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npm test</span>
+
+&gt; test
+&gt; node --test --test-reporter=spec
+
+✔ addItem បន្ថែមផលិតផលថ្មីទៅកន្ត្រកទទេ (1.025342ms)
+✔ formatUSD បង្ហាញ 2 ខ្ទង់ក្រោយក្បៀស (0.135899ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 55.262072</pre></div>
+  <table>
+    <tr><th>node:assert/strict</th><th>Vitest / Jest</th></tr>
+    <tr><td><code class="i">assert.equal(a, b)</code></td><td><code class="i">expect(a).toBe(b)</code></td></tr>
+    <tr><td><code class="i">assert.deepEqual(a, b)</code></td><td><code class="i">expect(a).toEqual(b)</code></td></tr>
+    <tr><td><code class="i">assert.ok(x)</code></td><td><code class="i">expect(x).toBeTruthy()</code></td></tr>
+    <tr><td><code class="i">assert.throws(fn, /msg/)</code></td><td><code class="i">expect(fn).toThrow(/msg/)</code></td></tr>
+    <tr><td><code class="i">await assert.rejects(p)</code></td><td><code class="i">await expect(p).rejects.toThrow()</code></td></tr>
+    <tr><td><code class="i">assert.match(s, /re/)</code></td><td><code class="i">expect(s).toMatch(/re/)</code></td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ១</h4>
+    <p>សរសេរ Test ពីរសម្រាប់ <code class="i">formatKHR</code>៖ $1.00 → «4,100 ៛» និង $2.50 → «10,250 ៛»។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="js" data-label="tests/format.test.js" data-file="tests/format.test.js" data-cmd="npm test">
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { formatKHR } from "../src/cart.js";
+
+test("formatKHR $1.00", () => assert.equal(formatKHR(100), "4,100 ៛"));
+test("formatKHR $2.50", () => assert.equal(formatKHR(250), "10,250 ៛"));
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Terminal លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npm test</span>
+
+&gt; test
+&gt; node --test --test-reporter=spec
+
+✔ formatKHR $1.00 (10.92149ms)
+✔ formatKHR $2.50 (0.177413ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 62.231453</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l2">
+  <h2><span class="badge">មេរៀន ២</span>describe, Hooks & ពេល Test ធ្លាក់</h2>
+  <script type="text/x-code" data-lang="js" data-label="tests/cart.test.js" data-file="tests/cart.test.js" data-cmd="npm test">
+import { describe, it, beforeEach } from "node:test";
+import assert from "node:assert/strict";
+import { addItem, removeItem, totalCents } from "../src/cart.js";
+
+describe("Cart", () => {
+  let cart;
+  const latte = { id: 1, name: "Latte", price: 2.5 };
+  const tea = { id: 2, name: "Green Tea", price: 2.2 };
+
+  beforeEach(() => { cart = addItem([], latte); });   // កន្ត្រកថ្មីសម្រាប់ Test នីមួយៗ
+
+  it("បន្ថែមផលិតផលដដែល → បូក qty", () => {
+    cart = addItem(cart, latte, 2);
+    assert.equal(cart.length, 1);
+    assert.equal(cart[0].qty, 3);
+  });
+
+  it("removeItem លុបតែផលិតផលនោះ", () => {
+    cart = removeItem(addItem(cart, tea), 1);
+    assert.deepEqual(cart.map(i => i.name), ["Green Tea"]);
+  });
+
+  it("❌ Test ដែលសរសេរខុសដោយចេតនា (មើលរបៀប Error បង្ហាញ)", () => {
+    assert.equal(totalCents(cart), 300);              // ពិតគឺ 250
+  });
+});
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Terminal លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npm test</span>
+
+&gt; test
+&gt; node --test --test-reporter=spec
+
+▶ Cart
+  ✔ បន្ថែមផលិតផលដដែល → បូក qty (0.555121ms)
+  ✔ removeItem លុបតែផលិតផលនោះ (1.514635ms)
+  ✖ ❌ Test ដែលសរសេរខុសដោយចេតនា (មើលរបៀប Error បង្ហាញ) (0.828002ms)
+✖ Cart (3.581636ms)
+ℹ tests 3
+ℹ suites 1
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 59.094631
+
+✖ failing tests:
+
+test at tests/cart.test.js:23:3
+✖ ❌ Test ដែលសរសេរខុសដោយចេតនា (មើលរបៀប Error បង្ហាញ) (0.828002ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  250 !== 300
+  
+      at TestContext.&lt;anonymous&gt; (file:///home/dara/kafe/tests/cart.test.js:24:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: &#x27;ERR_ASSERTION&#x27;,
+    actual: 250,
+    expected: 300,
+    operator: &#x27;strictEqual&#x27;,
+    diff: &#x27;simple&#x27;
+  }</pre></div>
+  <div class="note">💡 Test ល្អ៖ <b>ឯករាជ្យ</b> (មិនពឹងលើលំដាប់), <b>ឈ្មោះច្បាស់</b> (អានដូចប្រយោគ), <b>ពិនិត្យរឿងតែមួយ</b>, <b>លឿន</b>។ សារ Error បង្ហាញ Expected vs Actual — អានវាមុនកែ។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ២</h4>
+    <p>បន្ថែម Test ក្នុង describe ខាងលើ ដែលពិនិត្យថា <code class="i">addItem</code> <b>មិនកែ</b> Array ដើម (Immutability)។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="js" data-label="tests/immutable.test.js" data-file="tests/immutable.test.js" data-cmd="npm test">
+import { it } from "node:test";
+import assert from "node:assert/strict";
+import { addItem } from "../src/cart.js";
+
+it("addItem មិនកែ Array ដើម", () => {
+  const original = Object.freeze([]);                      // freeze → បើកែនឹង Throw
+  const next = addItem(original, { id: 1, name: "Latte", price: 2.5 });
+  assert.equal(original.length, 0);
+  assert.notEqual(next, original);
+});
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Terminal លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npm test</span>
+
+&gt; test
+&gt; node --test --test-reporter=spec
+
+✔ addItem មិនកែ Array ដើម (0.587421ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 53.844382</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l3">
+  <h2><span class="badge">មេរៀន ៣</span>Edge Cases & Table-driven Tests</h2>
+  <p>Bug ភាគច្រើនលាក់នៅ <b>ព្រំដែន</b>៖ 0, អវិជ្ជមាន, ទទេ, null, ធំខ្លាំង, Floating point (<code class="i">0.1 + 0.2 = 0.30000000000000004</code>)។</p>
+  <script type="text/x-code" data-lang="js" data-label="tests/edge.test.js" data-file="tests/edge.test.js" data-cmd="npm test">
+import { describe, it } from "node:test";
+import assert from "node:assert/strict";
+import { addItem, totalCents } from "../src/cart.js";
+import { validatePhone } from "../src/validate.js";
+
+describe("totalCents", () => {
+  const cases = [
+    { name: "កន្ត្រកទទេ", cart: [], expected: 0 },
+    { name: "Floating point 0.1 × 3", cart: [{ price: 0.1, qty: 3 }], expected: 30 },
+    { name: "ច្រើនមុខ", cart: [{ price: 2.5, qty: 2 }, { price: 1.5, qty: 1 }], expected: 650 },
+  ];
+  for (const c of cases) it(c.name, () => assert.equal(totalCents(c.cart), c.expected));
+
+  it("Coupon KAFE10 បញ្ចុះ 10%", () => assert.equal(totalCents([{ price: 2.5, qty: 2 }], { coupon: "KAFE10" }), 450));
+  it("Coupon ខុស → គ្មានបញ្ចុះ", () => assert.equal(totalCents([{ price: 2.5, qty: 2 }], { coupon: "FREE" }), 500));
+});
+
+describe("addItem qty ខុស", () => {
+  for (const qty of [0, -1, 1.5, "2"]) {
+    it(`qty = ${JSON.stringify(qty)} → RangeError`, () =>
+      assert.throws(() => addItem([], { id: 1, name: "Latte", price: 2.5 }, qty), RangeError));
+  }
+});
+
+describe("validatePhone", () => {
+  for (const [input, ok] of [["012345678", true], ["012 345 678", true], ["+85512345678", true], ["12345", false], ["", false], [null, false]]) {
+    it(`${JSON.stringify(input)} → ${ok ? "ត្រឹមត្រូវ" : "ខុស"}`, () => assert.equal(validatePhone(input).ok, ok));
+  }
+});
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Terminal លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npm test</span>
+
+&gt; test
+&gt; node --test --test-reporter=spec
+
+▶ totalCents
+  ✔ កន្ត្រកទទេ (2.022327ms)
+  ✔ Floating point 0.1 × 3 (0.110822ms)
+  ✔ ច្រើនមុខ (0.343687ms)
+  ✔ Coupon KAFE10 បញ្ចុះ 10% (0.112949ms)
+  ✔ Coupon ខុស → គ្មានបញ្ចុះ (0.069507ms)
+✔ totalCents (3.4095ms)
+▶ addItem qty ខុស
+  ✔ qty = 0 → RangeError (0.504318ms)
+  ✔ qty = -1 → RangeError (0.116267ms)
+  ✔ qty = 1.5 → RangeError (0.658292ms)
+  ✔ qty = &quot;2&quot; → RangeError (0.136143ms)
+✔ addItem qty ខុស (1.683982ms)
+▶ validatePhone
+  ✔ &quot;012345678&quot; → ត្រឹមត្រូវ (0.283428ms)
+  ✔ &quot;012 345 678&quot; → ត្រឹមត្រូវ (0.080494ms)
+  ✔ &quot;+85512345678&quot; → ត្រឹមត្រូវ (0.036951ms)
+  ✔ &quot;12345&quot; → ខុស (0.03153ms)
+  ✔ &quot;&quot; → ខុស (0.031413ms)
+  ✔ null → ខុស (0.026949ms)
+✔ validatePhone (0.594739ms)
+ℹ tests 15
+ℹ suites 3
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 66.104127</pre></div>
+  <div class="ex"><h4>✍️ លំហាត់ ៣</h4>
+    <p>រាយ Edge cases ៥ សម្រាប់ Function <code class="i">paginate(items, page, limit)</code>។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ol><li>Array ទទេ</li><li>page = 0 ឬអវិជ្ជមាន</li><li>page លើសចំនួនទំព័រ (Return [] ?)</li><li>limit = 0 / ធំជាងចំនួនធាតុ / មិនមែនចំនួនគត់</li><li>ចំនួនធាតុចែកមិនដាច់នឹង limit (ទំព័រចុងក្រោយខ្លី)</li></ol>
+    </details>
+  </div>
+</section>
+
+<section id="l4">
+  <h2><span class="badge">មេរៀន ៤</span>TDD: Red → Green → Refactor</h2>
+  <p><b>Test-Driven Development</b>៖ ① សរសេរ Test ដែល <b>ធ្លាក់</b> (Red) ② សរសេរកូដតិចបំផុតឱ្យ <b>ជាប់</b> (Green) ③ <b>Refactor</b> ឱ្យស្អាត ដោយ Tests នៅតែជាប់។</p>
+  <h3>① Red: Test សម្រាប់ Function ដែលមិនទាន់មាន</h3>
+  <script type="text/x-code" data-lang="js" data-label="src/loyalty.js (ទទេសិន)" data-file="src/loyalty.js">
+export function points(totalCents) {
+  return 0; // TODO
+}
+</script>
+  <script type="text/x-code" data-lang="js" data-label="tests/loyalty.test.js" data-file="tests/loyalty.test.js" data-cmd="npm test">
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { points } from "../src/loyalty.js";
+
+// ច្បាប់: 1 ពិន្ទុ ក្នុង $1 (ចុះក្រោម) · Order ≥ $10 ទទួល x2
+test("$2.50 → 2 ពិន្ទុ", () => assert.equal(points(250), 2));
+test("$9.99 → 9 ពិន្ទុ", () => assert.equal(points(999), 9));
+test("$10.00 → 20 ពិន្ទុ (x2)", () => assert.equal(points(1000), 20));
+test("$0 → 0", () => assert.equal(points(0), 0));
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Terminal លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npm test</span>
+
+&gt; test
+&gt; node --test --test-reporter=spec
+
+✖ $2.50 → 2 ពិន្ទុ (1.074652ms)
+✖ $9.99 → 9 ពិន្ទុ (0.167871ms)
+✖ $10.00 → 20 ពិន្ទុ (x2) (0.098102ms)
+✔ $0 → 0 (0.12425ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 1
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 62.548982
+
+✖ failing tests:
+
+test at tests/loyalty.test.js:6:1
+✖ $2.50 → 2 ពិន្ទុ (1.074652ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 2
+  
+      at TestContext.&lt;anonymous&gt; (file:///home/dara/kafe/tests/loyalty.test.js:6:39)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.start (node:internal/test_runner/test:944:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17) {
+    generatedMessage: true,
+    code: &#x27;ERR_ASSERTION&#x27;,
+    actual: 0,
+    expected: 2,
+    operator: &#x27;strictEqual&#x27;,
+    diff: &#x27;simple&#x27;
+  }
+
+test at tests/loyalty.test.js:7:1
+✖ $9.99 → 9 ពិន្ទុ (0.167871ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 9
+  
+      at TestContext.&lt;anonymous&gt; (file:///home/dara/kafe/tests/loyalty.test.js:7:39)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3) {
+    generatedMessage: true,
+    code: &#x27;ERR_ASSERTION&#x27;,
+    actual: 0,
+    expected: 9,
+    operator: &#x27;strictEqual&#x27;,
+    diff: &#x27;simple&#x27;
+  }
+
+test at tests/loyalty.test.js:8:1
+✖ $10.00 → 20 ពិន្ទុ (x2) (0.098102ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 20
+  
+      at TestContext.&lt;anonymous&gt; (file:///home/dara/kafe/tests/loyalty.test.js:8:46)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: &#x27;ERR_ASSERTION&#x27;,
+    actual: 0,
+    expected: 20,
+    operator: &#x27;strictEqual&#x27;,
+    diff: &#x27;simple&#x27;
+  }</pre></div>
+  <h3>② Green → ③ Refactor</h3>
+  <script type="text/x-code" data-lang="js" data-label="src/loyalty.js" data-file="src/loyalty.js">
+const DOUBLE_FROM_CENTS = 1000;
+
+export function points(totalCents) {
+  const base = Math.floor(totalCents / 100);
+  return totalCents >= DOUBLE_FROM_CENTS ? base * 2 : base;
+}
+</script>
+  <script type="text/x-code" data-lang="js" data-label="tests/loyalty.test.js (ដដែល)" data-file="tests/loyalty.test.js" data-cmd="npm test">
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { points } from "../src/loyalty.js";
+
+test("$2.50 → 2 ពិន្ទុ", () => assert.equal(points(250), 2));
+test("$9.99 → 9 ពិន្ទុ", () => assert.equal(points(999), 9));
+test("$10.00 → 20 ពិន្ទុ (x2)", () => assert.equal(points(1000), 20));
+test("$0 → 0", () => assert.equal(points(0), 0));
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Terminal លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npm test</span>
+
+&gt; test
+&gt; node --test --test-reporter=spec
+
+✔ $2.50 → 2 ពិន្ទុ (0.551595ms)
+✔ $9.99 → 9 ពិន្ទុ (0.082975ms)
+✔ $10.00 → 20 ពិន្ទុ (x2) (0.060463ms)
+✔ $0 → 0 (0.057137ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 60.727505</pre></div>
+  <div class="ex"><h4>✍️ លំហាត់ ៤</h4>
+    <p>ប្រើ TDD បន្ថែមច្បាប់៖ សមាជិក «gold» ទទួលពិន្ទុ +50%។ សរសេរ Test មុន (Signature <code class="i">points(totalCents, { tier })</code>)។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="js" data-label="src/loyalty.js" data-file="src/loyalty.js">
+export function points(totalCents, { tier = "basic" } = {}) {
+  const base = Math.floor(totalCents / 100);
+  const doubled = totalCents >= 1000 ? base * 2 : base;
+  return tier === "gold" ? Math.floor(doubled * 1.5) : doubled;
+}
+</script>
+<script type="text/x-code" data-lang="js" data-label="tests/loyalty.test.js" data-file="tests/loyalty.test.js" data-cmd="npm test">
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { points } from "../src/loyalty.js";
+
+test("basic ដដែល (Regression)", () => assert.equal(points(1000), 20));
+test("gold $5 → 7 ពិន្ទុ", () => assert.equal(points(500, { tier: "gold" }), 7));
+test("gold $10 → 30 ពិន្ទុ", () => assert.equal(points(1000, { tier: "gold" }), 30));
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Terminal លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npm test</span>
+
+&gt; test
+&gt; node --test --test-reporter=spec
+
+✔ basic ដដែល (Regression) (0.57829ms)
+✔ gold $5 → 7 ពិន្ទុ (0.085201ms)
+✔ gold $10 → 30 ពិន្ទុ (0.066384ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 54.828909</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l5">
+  <h2><span class="badge">មេរៀន ៥</span>Async Tests, Errors & ពេលវេលា (Fake timers)</h2>
+  <script type="text/x-code" data-lang="js" data-label="tests/async.test.js" data-file="tests/async.test.js" data-cmd="npm test">
+import { test, mock } from "node:test";
+import assert from "node:assert/strict";
+
+// កូដដែលត្រូវ Test
+async function fetchJson(url, { fetchFn = fetch } = {}) {
+  const res = await fetchFn(url);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+function debounce(fn, ms) {
+  let t;
+  return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
+}
+
+test("fetchJson ត្រឡប់ទិន្នន័យ", async () => {
+  const fakeFetch = async () => new Response(JSON.stringify({ ok: 1 }), { status: 200 });
+  assert.deepEqual(await fetchJson("/x", { fetchFn: fakeFetch }), { ok: 1 });
+});
+
+test("fetchJson បោះ Error ពេល 404", async () => {
+  const fakeFetch = async () => new Response("nope", { status: 404 });
+  await assert.rejects(fetchJson("/x", { fetchFn: fakeFetch }), /HTTP 404/);
+});
+
+test("debounce ហៅតែម្តងក្រោយ 300ms (Fake timers — មិនរង់ចាំពិត)", () => {
+  mock.timers.enable({ apis: ["setTimeout"] });
+  const spy = mock.fn();
+  const search = debounce(spy, 300);
+  search("l"); search("la"); search("lat");
+  mock.timers.tick(299);
+  assert.equal(spy.mock.callCount(), 0);
+  mock.timers.tick(1);
+  assert.equal(spy.mock.callCount(), 1);
+  assert.deepEqual(spy.mock.calls[0].arguments, ["lat"]);
+  mock.timers.reset();
+});
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Terminal លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npm test</span>
+
+&gt; test
+&gt; node --test --test-reporter=spec
+
+(node:1814) ExperimentalWarning: The MockTimers API is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ fetchJson ត្រឡប់ទិន្នន័យ (20.172251ms)
+✔ fetchJson បោះ Error ពេល 404 (0.467197ms)
+✔ debounce ហៅតែម្តងក្រោយ 300ms (Fake timers — មិនរង់ចាំពិត) (0.656972ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 75.645723</pre></div>
+  <div class="warn">⚠️ ភ្លេច <code class="i">await</code> ក្នុង Async test = Test អាច «ជាប់» ទោះកូដខុស។ ជានិច្ច <code class="i">await</code> Promise ឬ <code class="i">await assert.rejects(...)</code>។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៥</h4>
+    <p>Test Function <code class="i">retry(fn, times)</code> ដែលព្យាយាមម្តងទៀតពេល Error៖ fn បរាជ័យ ២ ដងហើយជោគជ័យ → ត្រូវហៅ ៣ ដង។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="js" data-label="tests/retry.test.js" data-file="tests/retry.test.js" data-cmd="npm test">
+import { test, mock } from "node:test";
+import assert from "node:assert/strict";
+
+async function retry(fn, times = 3) {
+  let last;
+  for (let i = 0; i < times; i++) { try { return await fn(); } catch (e) { last = e; } }
+  throw last;
+}
+
+test("retry ព្យាយាមរហូតជោគជ័យ", async () => {
+  let n = 0;
+  const fn = mock.fn(async () => { if (++n < 3) throw new Error("timeout"); return "ok"; });
+  assert.equal(await retry(fn, 3), "ok");
+  assert.equal(fn.mock.callCount(), 3);
+});
+
+test("retry បោះ Error ចុងក្រោយ ពេលអស់ចំនួន", async () => {
+  await assert.rejects(retry(async () => { throw new Error("down"); }, 2), /down/);
+});
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Terminal លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npm test</span>
+
+&gt; test
+&gt; node --test --test-reporter=spec
+
+✔ retry ព្យាយាមរហូតជោគជ័យ (0.790756ms)
+✔ retry បោះ Error ចុងក្រោយ ពេលអស់ចំនួន (0.318761ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 60.339039</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l6">
+  <h2><span class="badge">មេរៀន ៦</span>Mocks, Spies & Stubs</h2>
+  <p>ប្រើ Test double ពេល Dependency <b>យឺត</b> (Network), <b>ថ្លៃ</b> (SMS, Payment), ឬ <b>មិនទៀង</b> (ពេលវេលា, Random)។ ប៉ុន្តែ Mock ច្រើនពេក = Test មិនបញ្ជាក់ថាប្រព័ន្ធពិតដំណើរការ។</p>
+  <script type="text/x-code" data-lang="js" data-label="tests/notify.test.js" data-file="tests/notify.test.js" data-cmd="npm test">
+import { test, mock } from "node:test";
+import assert from "node:assert/strict";
+
+// កូដ: ផ្ញើ SMS ពេល Order បានបង់ (Dependency injection: sms ជា Parameter)
+async function onOrderPaid(order, { sms, now = () => new Date() }) {
+  if (!order.phone) return { sent: false };
+  const hour = now().getHours();
+  const greet = hour < 12 ? "អរុណសួស្តី" : "សួស្តី";
+  await sms.send(order.phone, `${greet}! Order #${order.id} រួចរាល់`);
+  return { sent: true };
+}
+
+test("ផ្ញើ SMS ត្រឹមត្រូវ (Spy)", async () => {
+  const sms = { send: mock.fn(async () => {}) };
+  const res = await onOrderPaid({ id: 7, phone: "012345678" }, { sms, now: () => new Date("2026-11-13T08:00:00") });
+  assert.deepEqual(res, { sent: true });
+  assert.equal(sms.send.mock.callCount(), 1);
+  assert.deepEqual(sms.send.mock.calls[0].arguments, ["012345678", "អរុណសួស្តី! Order #7 រួចរាល់"]);
+});
+
+test("គ្មានលេខទូរស័ព្ទ → មិនផ្ញើ", async () => {
+  const sms = { send: mock.fn() };
+  assert.deepEqual(await onOrderPaid({ id: 8 }, { sms }), { sent: false });
+  assert.equal(sms.send.mock.callCount(), 0);
+});
+
+test("mock.method: Stub Math.random", () => {
+  mock.method(Math, "random", () => 0.42);
+  assert.equal(Math.random(), 0.42);
+  mock.restoreAll();
+});
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Terminal លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npm test</span>
+
+&gt; test
+&gt; node --test --test-reporter=spec
+
+✔ ផ្ញើ SMS ត្រឹមត្រូវ (Spy) (1.344069ms)
+✔ គ្មានលេខទូរស័ព្ទ → មិនផ្ញើ (0.132396ms)
+✔ mock.method: Stub Math.random (0.196735ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 61.372142</pre></div>
+  <table>
+    <tr><th>node:test</th><th>Vitest</th></tr>
+    <tr><td><code class="i">mock.fn(impl)</code></td><td><code class="i">vi.fn(impl)</code></td></tr>
+    <tr><td><code class="i">fn.mock.callCount()</code> · <code class="i">fn.mock.calls[0].arguments</code></td><td><code class="i">expect(fn).toHaveBeenCalledTimes(1)</code> · <code class="i">toHaveBeenCalledWith(...)</code></td></tr>
+    <tr><td><code class="i">mock.method(obj, "m", impl)</code></td><td><code class="i">vi.spyOn(obj, "m").mockImplementation(impl)</code></td></tr>
+    <tr><td><code class="i">mock.timers.enable()</code> · <code class="i">tick(ms)</code></td><td><code class="i">vi.useFakeTimers()</code> · <code class="i">vi.advanceTimersByTime(ms)</code></td></tr>
+    <tr><td>Module mock៖ <code class="i">mock.module()</code> (experimental)</td><td><code class="i">vi.mock("./sms.js")</code></td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ៦</h4>
+    <p>ហេតុអ្វីបានជា <code class="i">onOrderPaid</code> ទទួល <code class="i">now</code> ជា Parameter ជាជាងហៅ <code class="i">new Date()</code> ផ្ទាល់?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p><b>Dependency injection</b>៖ Test អាចកំណត់ពេលវេលាថេរ (8:00 ព្រឹក) → លទ្ធផលទៀងទាត់ មិនអាស្រ័យលើម៉ោងដែល CI រត់។ បើហៅ <code class="i">new Date()</code> ផ្ទាល់ Test អាចជាប់ពេលព្រឹក ហើយធ្លាក់ពេលល្ងាច (Flaky)។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l7">
+  <h2><span class="badge">មេរៀន ៧</span>Coverage: Tests ប៉ះកូដប៉ុន្មាន?</h2>
+  <script type="text/x-code" data-lang="js" data-label="tests/cart.test.js (មិនទាន់គ្រប់)" data-file="tests/cart.test.js" data-cmd="npm run coverage">
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { addItem, totalCents } from "../src/cart.js";
+
+test("total", () => {
+  const cart = addItem([], { id: 1, name: "Latte", price: 2.5 }, 2);
+  assert.equal(totalCents(cart), 500);
+});
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Terminal លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npm run coverage</span>
+
+&gt; coverage
+&gt; node --test --test-reporter=spec --experimental-test-coverage
+
+✔ total (0.679435ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 66.699918
+ℹ start of coverage report
+ℹ --------------------------------------------------------------
+ℹ file          | line % | branch % | funcs % | uncovered lines
+ℹ --------------------------------------------------------------
+ℹ src           |        |          |         | 
+ℹ  cart.js      |  91.30 |    57.14 |   37.50 | 12-13
+ℹ tests         |        |          |         | 
+ℹ  cart.test.js | 100.00 |   100.00 |  100.00 | 
+ℹ --------------------------------------------------------------
+ℹ all files     |  93.55 |    66.67 |   44.44 | 
+ℹ --------------------------------------------------------------
+ℹ end of coverage report</pre></div>
+  <p>មើលរបាយការណ៍៖ <b>uncovered lines 12-13</b> = <code class="i">removeItem</code> · <b>branch %</b> ទាប = ករណី qty ខុស និង Coupon មិនទាន់ត្រូវ Test · <b>funcs %</b> ទាប = <code class="i">formatUSD</code>/<code class="i">formatKHR</code> មិនដែលត្រូវហៅ។ Vitest៖ <code class="i">npx vitest run --coverage</code> (v8) បង្កើតរបាយការណ៍ HTML។</p>
+  <div class="warn">⚠️ Coverage 100% ≠ គ្មាន Bug — វាប្រាប់តែថាបន្ទាត់ត្រូវបានរត់ មិនមែនថាបានពិនិត្យត្រឹមត្រូវ។ គោលដៅជាក់ស្តែង ៧០–៩០% លើ Logic សំខាន់ ហើយផ្តោតលើ <b>Branch</b> (if/else) ដែលមានហានិភ័យ។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៧</h4>
+    <p>បន្ថែម Tests ដើម្បីគ្របដណ្តប់ <code class="i">cart.js</code> ១០០%។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="js" data-label="tests/cart.test.js" data-file="tests/cart.test.js" data-cmd="npm run coverage">
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { addItem, removeItem, totalCents, formatUSD, formatKHR } from "../src/cart.js";
+
+const latte = { id: 1, name: "Latte", price: 2.5 };
+test("total + coupon", () => {
+  const cart = addItem(addItem([], latte, 2), latte);
+  assert.equal(totalCents(cart), 750);
+  assert.equal(totalCents(cart, { coupon: "KAFE10" }), 675);
+});
+test("remove", () => assert.deepEqual(removeItem(addItem([], latte), 1), []));
+test("bad qty", () => assert.throws(() => addItem([], latte, 0), RangeError));
+test("format", () => { assert.equal(formatUSD(675), "$6.75"); assert.equal(formatKHR(100), "4,100 ៛"); });
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Terminal លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npm run coverage</span>
+
+&gt; coverage
+&gt; node --test --test-reporter=spec --experimental-test-coverage
+
+✔ total + coupon (0.834685ms)
+✔ remove (0.758318ms)
+✔ bad qty (0.363059ms)
+✔ format (10.557247ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 85.943674
+ℹ start of coverage report
+ℹ --------------------------------------------------------------
+ℹ file          | line % | branch % | funcs % | uncovered lines
+ℹ --------------------------------------------------------------
+ℹ src           |        |          |         | 
+ℹ  cart.js      | 100.00 |    94.12 |  100.00 | 
+ℹ tests         |        |          |         | 
+ℹ  cart.test.js | 100.00 |   100.00 |  100.00 | 
+ℹ --------------------------------------------------------------
+ℹ all files     | 100.00 |    95.65 |  100.00 | 
+ℹ --------------------------------------------------------------
+ℹ end of coverage report</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l8">
+  <h2><span class="badge">មេរៀន ៨</span>Integration Tests: API ពិត + HTTP</h2>
+  <p>ចាប់ផ្តើម Server ពិតលើ Port ចៃដន្យ (<code class="i">listen(0)</code>) ហើយផ្ញើ Request ពិតដោយ <code class="i">fetch</code> — Test ផ្លូវទាំងមូល (Routing, JSON, Validation, Status codes)។</p>
+  <script type="text/x-code" data-lang="js" data-label="tests/api.test.js" data-file="tests/api.test.js" data-cmd="npm test">
+import { describe, it, before, after } from "node:test";
+import assert from "node:assert/strict";
+import { createServer } from "../src/api.js";
+
+describe("Kafe API", () => {
+  let server, base;
+  before(async () => {
+    server = createServer().listen(0);
+    await new Promise(r => server.once("listening", r));
+    base = `http://localhost:${server.address().port}/api`;
+  });
+  after(() => server.close());
+
+  const post = body => fetch(`${base}/orders`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+
+  it("GET /products → 200 + 3 មុខ", async () => {
+    const res = await fetch(`${base}/products`);
+    assert.equal(res.status, 200);
+    assert.equal((await res.json()).length, 3);
+  });
+
+  it("POST /orders ជាមួយ Coupon → 201 + total ត្រឹមត្រូវ", async () => {
+    const res = await post({ items: [{ id: 1, qty: 2 }, { id: 2, qty: 1 }], coupon: "KAFE10" });
+    assert.equal(res.status, 201);
+    assert.equal((await res.json()).totalCents, 648);         // (500 + 220) − 10%
+  });
+
+  it("កន្ត្រកទទេ → 422", async () => assert.equal((await post({ items: [] })).status, 422));
+  it("អស់ស្តុក → 409", async () => {
+    const res = await post({ items: [{ id: 3, qty: 1 }] });
+    assert.equal(res.status, 409);
+    assert.match((await res.json()).error, /អស់ស្តុក/);
+  });
+  it("JSON ខូច → 400", async () => {
+    const res = await fetch(`${base}/orders`, { method: "POST", body: "{bad" });
+    assert.equal(res.status, 400);
+  });
+});
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Terminal លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npm test</span>
+
+&gt; test
+&gt; node --test --test-reporter=spec
+
+▶ Kafe API
+  ✔ GET /products → 200 + 3 មុខ (18.340815ms)
+  ✔ POST /orders ជាមួយ Coupon → 201 + total ត្រឹមត្រូវ (6.343139ms)
+  ✔ កន្ត្រកទទេ → 422 (3.514587ms)
+  ✔ អស់ស្តុក → 409 (4.767322ms)
+  ✔ JSON ខូច → 400 (2.058998ms)
+✔ Kafe API (38.314156ms)
+ℹ tests 5
+ℹ suites 1
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 150.025982</pre></div>
+  <div class="note">💡 សម្រាប់ Database៖ ប្រើ Database ដាច់សម្រាប់ Test (SQLite <code class="i">:memory:</code>, ឬ Postgres ក្នុង Docker / Testcontainers) ហើយ Reset ទិន្នន័យក្នុង <code class="i">beforeEach</code> ឬរុំ Test ក្នុង Transaction ហើយ Rollback។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៨</h4>
+    <p>បន្ថែម Test៖ ផលិតផលដែលមិនមាន (id 99) → 422 និង Route មិនស្គាល់ → 404។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="js" data-label="tests/api2.test.js" data-file="tests/api2.test.js" data-cmd="npm test">
+import { test, before, after } from "node:test";
+import assert from "node:assert/strict";
+import { createServer } from "../src/api.js";
+
+let server, base;
+before(async () => { server = createServer().listen(0); await new Promise(r => server.once("listening", r)); base = `http://localhost:${server.address().port}`; });
+after(() => server.close());
+
+test("ផលិតផលមិនមាន → 422", async () => {
+  const res = await fetch(`${base}/api/orders`, { method: "POST", body: JSON.stringify({ items: [{ id: 99, qty: 1 }] }) });
+  assert.equal(res.status, 422);
+});
+test("Route មិនស្គាល់ → 404", async () => assert.equal((await fetch(`${base}/api/nope`)).status, 404));
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Terminal លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npm test</span>
+
+&gt; test
+&gt; node --test --test-reporter=spec
+
+✔ ផលិតផលមិនមាន → 422 (28.653127ms)
+✔ Route មិនស្គាល់ → 404 (4.425167ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 133.854356</pre></div>
+    </details>
+  </div>
+</section>
+
+<!-- NAV: ផ្នែកទី ៣ – Vitest, React, E2E -->
+<section id="l9">
+  <h2><span class="badge">មេរៀន ៩</span>Vitest: Setup, Config & Syntax</h2>
+  <p>គម្រោង <b>Vite/React/TypeScript</b> ប្រើ Vitest ព្រោះវាប្រើ Config Vite ដដែល (Alias, TS, JSX) និង Watch mode លឿនខ្លាំង។ Syntax ស្ទើរតែដូច Jest។</p>
+  <script type="text/x-code" data-lang="ts" data-label="vite.config.ts">
+import { defineConfig } from "vitest/config";
+import react from "@vitejs/plugin-react";
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    environment: "jsdom",               // Browser APIs (document, window) សម្រាប់ React
+    globals: true,                      // describe/it/expect ដោយមិនបាច់ import
+    setupFiles: ["./src/test/setup.ts"],
+    coverage: { provider: "v8", reporter: ["text", "html"] },
+  },
+});
+</script>
+  <script type="text/x-code" data-lang="ts" data-label="src/cart.test.ts (Vitest)">
+import { describe, it, expect, vi } from "vitest";
+import { addItem, totalCents } from "./cart";
+
+describe("cart", () => {
+  it("adds item", () => {
+    expect(addItem([], { id: 1, name: "Latte", price: 2.5 })).toEqual([{ id: 1, name: "Latte", price: 2.5, qty: 1 }]);
+  });
+
+  it.each([
+    [[], 0],
+    [[{ price: 0.1, qty: 3 }], 30],
+  ])("totalCents(%j) = %i", (cart, expected) => {
+    expect(totalCents(cart as any)).toBe(expected);
+  });
+
+  it("spy", () => {
+    const fn = vi.fn().mockReturnValue(42);
+    expect(fn("x")).toBe(42);
+    expect(fn).toHaveBeenCalledWith("x");
+  });
+});
+</script>
+  <script type="text/x-code" data-lang="json" data-label="package.json scripts">
+{
+  "scripts": {
+    "test": "vitest",
+    "test:run": "vitest run",
+    "coverage": "vitest run --coverage"
+  }
+}
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ៩</h4>
+    <p>បំប្លែង Test node:test នេះទៅ Vitest៖ <code class="i">assert.throws(() =&gt; addItem([], p, 0), RangeError)</code></p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="ts" data-label="Answer">
+expect(() => addItem([], p, 0)).toThrow(RangeError);
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l10">
+  <h2><span class="badge">មេរៀន ១០</span>React Testing Library: Test ដូចអ្នកប្រើ</h2>
+  <p>គោលការណ៍៖ <b>«Test តាមរបៀបដែលអ្នកប្រើប្រើ»</b> — រកធាតុតាម Role/Label/Text (ដូចអ្នកមើល/Screen reader) មិនមែនតាម Class ឬ State ខាងក្នុង។</p>
+  <script type="text/x-code" data-lang="ts" data-label="src/test/setup.ts">
+import "@testing-library/jest-dom/vitest";      // toBeInTheDocument, toHaveTextContent, toBeDisabled…
+</script>
+  <script type="text/x-code" data-lang="ts" data-label="src/components/Counter.test.tsx">
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { describe, it, expect, vi } from "vitest";
+import { ProductCard } from "./ProductCard";
+
+describe("<ProductCard>", () => {
+  const latte = { id: 1, name: "Latte", price: 2.5, stock: 3, category: "coffee" as const };
+
+  it("បង្ហាញឈ្មោះ និងតម្លៃ", () => {
+    render(<ProductCard product={latte} onAdd={() => {}} />);
+    expect(screen.getByRole("heading", { name: "Latte" })).toBeInTheDocument();
+    expect(screen.getByText("$2.50")).toBeInTheDocument();
+  });
+
+  it("ចុច ＋ ហៅ onAdd ជាមួយ id និង qty", async () => {
+    const user = userEvent.setup();
+    const onAdd = vi.fn();
+    render(<ProductCard product={latte} onAdd={onAdd} />);
+    await user.click(screen.getByRole("button", { name: /បន្ថែម latte/i }));
+    expect(onAdd).toHaveBeenCalledWith(1, 1);
+  });
+
+  it("អស់ស្តុក → ប៊ូតុង Disabled", () => {
+    render(<ProductCard product={{ ...latte, stock: 0 }} onAdd={() => {}} />);
+    expect(screen.getByRole("button", { name: /អស់ស្តុក/ })).toBeDisabled();
+  });
+});
+</script>
+  <table>
+    <tr><th>Query</th><th>ពេលប្រើ</th></tr>
+    <tr><td><code class="i">getByRole("button", { name })</code> ⭐</td><td>ល្អបំផុត — ក៏ពិនិត្យ Accessibility ផង</td></tr>
+    <tr><td><code class="i">getByLabelText("អ៊ីមែល")</code></td><td>Form inputs</td></tr>
+    <tr><td><code class="i">getByText</code> · <code class="i">getByPlaceholderText</code></td><td>អត្ថបទ</td></tr>
+    <tr><td><code class="i">getByTestId</code></td><td>ចុងក្រោយ ពេលគ្មានវិធីផ្សេង</td></tr>
+    <tr><td><code class="i">findBy…</code> (async) · <code class="i">queryBy…</code></td><td>រង់ចាំធាតុលេចឡើង · ពិនិត្យថា <b>មិនមាន</b></td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ១០</h4>
+    <p>សរសេរ Test សម្រាប់ LoginForm៖ វាយអ៊ីមែល/Password ហើយចុច «Login» → <code class="i">onSubmit</code> ត្រូវបានហៅជាមួយទិន្នន័យ។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="ts" data-label="LoginForm.test.tsx">
+it("submits credentials", async () => {
+  const user = userEvent.setup();
+  const onSubmit = vi.fn();
+  render(<LoginForm onSubmit={onSubmit} />);
+  await user.type(screen.getByLabelText("អ៊ីមែល"), "admin@kafe.com");
+  await user.type(screen.getByLabelText("ពាក្យសម្ងាត់"), "secret123");
+  await user.click(screen.getByRole("button", { name: "Login" }));
+  expect(onSubmit).toHaveBeenCalledWith({ email: "admin@kafe.com", password: "secret123" });
+});
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l11">
+  <h2><span class="badge">មេរៀន ១១</span>Mock Network ដោយ MSW</h2>
+  <p><b>MSW</b> (Mock Service Worker) ស្ទាក់ <code class="i">fetch</code> នៅកម្រិត Network — Component ហៅ API ពិតៗ ប៉ុន្តែទទួលចម្លើយក្លែង។ ប្រើបានទាំង Tests និង Development។</p>
+  <script type="text/x-code" data-lang="ts" data-label="src/test/server.ts (npm i -D msw)">
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
+
+export const handlers = [
+  http.get("/api/products", () => HttpResponse.json([{ id: 1, name: "Latte", price: 2.5, stock: 3 }])),
+];
+export const server = setupServer(...handlers);
+
+// setup.ts:
+// beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
+// afterEach(() => server.resetHandlers());
+// afterAll(() => server.close());
+</script>
+  <script type="text/x-code" data-lang="ts" data-label="ProductList.test.tsx">
+it("បង្ហាញ Error ពេល API ធ្លាក់", async () => {
+  server.use(http.get("/api/products", () => HttpResponse.json({ error: "down" }, { status: 500 })));   // Override សម្រាប់ Test នេះ
+  render(<ProductList />);
+  expect(await screen.findByRole("alert")).toHaveTextContent(/មិនអាចទាញ/);
+});
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១១</h4>
+    <p>ហេតុអ្វី MSW ល្អជាង <code class="i">vi.mock("./api")</code> សម្រាប់ Component tests?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p>MSW Mock នៅ <b>ព្រំដែន Network</b> → កូដ fetch, Parse JSON, Error handling, Headers របស់អ្នកត្រូវបាន Test ពិត។ <code class="i">vi.mock</code> ជំនួស Module ទាំងមូល → Test ពឹងលើរចនាសម្ព័ន្ធខាងក្នុង ហើយ Refactor (ប្តូរ api.ts) ធ្វើឱ្យ Test ខូច ទោះ App នៅដំណើរការ។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l12">
+  <h2><span class="badge">មេរៀន ១២</span>Playwright E2E: Test ក្នុង Browser ពិត</h2>
+  <p>Playwright បើក <b>Browser ពិត</b> (Chromium/Firefox/WebKit) ចុច វាយ ពិនិត្យ ដូចអ្នកប្រើ។ <code class="i">webServer</code> ក្នុង Config ចាប់ផ្តើម App ដោយស្វ័យប្រវត្តិ។ <b>Auto-waiting</b>៖ Playwright រង់ចាំធាតុរួចរាល់ដោយខ្លួនឯង (មិនបាច់ sleep)។</p>
+  <script type="text/x-code" data-lang="js" data-label="playwright.config.js">
+import { defineConfig, devices } from "@playwright/test";
+
+export default defineConfig({
+  testDir: "./e2e",
+  fullyParallel: true,
+  retries: process.env.CI ? 2 : 0,
+  reporter: process.env.CI ? "github" : "list",
+  use: { baseURL: "http://localhost:3000", trace: "on-first-retry" },
+  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  webServer: { command: "node server.mjs", url: "http://localhost:3000/api/products", reuseExistingServer: !process.env.CI },
+});
+</script>
+  <script type="text/x-code" data-lang="js" data-label="e2e/shop.spec.js" data-file="e2e/shop.spec.js" data-cmd="npx playwright test">
+import { test, expect } from "@playwright/test";
+
+test.beforeEach(async ({ page }) => {
+  await page.goto("/");
+});
+
+test("បង្ហាញ Menu ពី API", async ({ page }) => {
+  await expect(page.getByRole("heading", { name: /Kafe Shop/ })).toBeVisible();
+  await expect(page.getByRole("list", { name: "Menu" }).getByRole("listitem")).toHaveCount(3);
+  await expect(page.getByRole("button", { name: "អស់ស្តុក" })).toBeDisabled();
+});
+
+test("បន្ថែមកន្ត្រក + Coupon → សរុបត្រឹមត្រូវ", async ({ page }) => {
+  await page.getByRole("button", { name: "បន្ថែម Latte" }).click();
+  await page.getByRole("button", { name: "បន្ថែម Latte" }).click();
+  await page.getByRole("button", { name: "បន្ថែម Green Tea" }).click();
+  await expect(page.getByTestId("count")).toHaveText("3");
+  await expect(page.getByTestId("total")).toHaveText("$7.20");
+  await page.getByLabel("Coupon").fill("KAFE10");
+  await expect(page.getByTestId("total")).toHaveText("$6.48");
+});
+
+test("បញ្ជាទិញ: លេខទូរស័ព្ទខុស → Error · ត្រឹមត្រូវ → ជោគជ័យ", async ({ page }) => {
+  await page.getByRole("button", { name: "បន្ថែម Latte" }).click();
+  await page.getByLabel("ទូរស័ព្ទ").fill("123");
+  await page.getByRole("button", { name: "បញ្ជាទិញ" }).click();
+  await expect(page.getByRole("status")).toContainText("លេខទូរស័ព្ទមិនត្រឹមត្រូវ");
+
+  await page.getByLabel("ទូរស័ព្ទ").fill("012 345 678");
+  await page.getByRole("button", { name: "បញ្ជាទិញ" }).click();
+  await expect(page.getByRole("status")).toHaveText(/✅ បញ្ជាទិញ #\d+ · \$2\.50/);
+  await expect(page.getByTestId("count")).toHaveText("0");
+});
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Terminal លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npx playwright test</span>
+[WebServer] (node:2063) Warning: The &#x27;NO_COLOR&#x27; env is ignored due to the &#x27;FORCE_COLOR&#x27; env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:2071) Warning: The &#x27;NO_COLOR&#x27; env is ignored due to the &#x27;FORCE_COLOR&#x27; env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › e2e/shop.spec.js:7:1 › បង្ហាញ Menu ពី API (185ms)
+  ✓  2 [chromium] › e2e/shop.spec.js:13:1 › បន្ថែមកន្ត្រក + Coupon → សរុបត្រឹមត្រូវ (296ms)
+  ✓  3 [chromium] › e2e/shop.spec.js:23:1 › បញ្ជាទិញ: លេខទូរស័ព្ទខុស → Error · ត្រឹមត្រូវ → ជោគជ័យ (286ms)
+
+  3 passed (1.5s)</pre></div>
+  <table>
+    <tr><th>Locator</th><th>Assertion (auto-retry)</th></tr>
+    <tr><td><code class="i">page.getByRole("button", { name })</code></td><td><code class="i">await expect(loc).toBeVisible()</code></td></tr>
+    <tr><td><code class="i">page.getByLabel("អ៊ីមែល")</code></td><td><code class="i">toHaveText</code> · <code class="i">toContainText</code></td></tr>
+    <tr><td><code class="i">page.getByText("…")</code> · <code class="i">getByTestId</code></td><td><code class="i">toHaveCount</code> · <code class="i">toBeDisabled</code></td></tr>
+    <tr><td><code class="i">loc.filter({ hasText })</code> · <code class="i">.nth(0)</code></td><td><code class="i">expect(page).toHaveURL(/orders/)</code></td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ១២</h4>
+    <p>សរសេរ E2E test៖ Coupon ខុស «FREE» → សរុបមិនប្តូរ ($2.50 សម្រាប់ Latte មួយ)។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="js" data-label="e2e/coupon.spec.js" data-file="e2e/coupon.spec.js" data-cmd="npx playwright test">
+import { test, expect } from "@playwright/test";
+
+test("Coupon ខុសមិនបញ្ចុះតម្លៃ", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "បន្ថែម Latte" }).click();
+  await page.getByLabel("Coupon").fill("FREE");
+  await expect(page.getByTestId("total")).toHaveText("$2.50");
+});
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Terminal លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npx playwright test</span>
+[WebServer] (node:2201) Warning: The &#x27;NO_COLOR&#x27; env is ignored due to the &#x27;FORCE_COLOR&#x27; env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:2209) Warning: The &#x27;NO_COLOR&#x27; env is ignored due to the &#x27;FORCE_COLOR&#x27; env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › e2e/coupon.spec.js:3:1 › Coupon ខុសមិនបញ្ចុះតម្លៃ (199ms)
+
+  1 passed (775ms)</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l13">
+  <h2><span class="badge">មេរៀន ១៣</span>Playwright កម្រិតខ្ពស់: Page Object, Network mock, Trace</h2>
+  <script type="text/x-code" data-lang="js" data-label="e2e/pages/shop.js (Page Object Model)" data-file="e2e/pages/shop.js">
+export class ShopPage {
+  constructor(page) {
+    this.page = page;
+    this.total = page.getByTestId("total");
+    this.status = page.getByRole("status");
+  }
+  async open() { await this.page.goto("/"); }
+  async add(name, times = 1) { for (let i = 0; i < times; i++) await this.page.getByRole("button", { name: `បន្ថែម ${name}` }).click(); }
+  async checkout(phone) {
+    await this.page.getByLabel("ទូរស័ព្ទ").fill(phone);
+    await this.page.getByRole("button", { name: "បញ្ជាទិញ" }).click();
+  }
+}
+</script>
+  <script type="text/x-code" data-lang="js" data-label="e2e/advanced.spec.js" data-file="e2e/advanced.spec.js" data-cmd="npx playwright test">
+import { test, expect } from "@playwright/test";
+import { ShopPage } from "./pages/shop.js";
+
+test("Page Object: Checkout ២ មុខ", async ({ page }) => {
+  const shop = new ShopPage(page);
+  await shop.open();
+  await shop.add("Green Tea", 2);
+  await expect(shop.total).toHaveText("$4.40");
+  await shop.checkout("+85512345678");
+  await expect(shop.status).toContainText("✅");
+});
+
+test("Mock API: Server ឆ្លើយ 409 (អស់ស្តុក)", async ({ page }) => {
+  await page.route("**/api/orders", route =>
+    route.fulfill({ status: 409, contentType: "application/json", body: JSON.stringify({ error: "Latte អស់ស្តុក" }) }));
+  const shop = new ShopPage(page);
+  await shop.open();
+  await shop.add("Latte");
+  await shop.checkout("012345678");
+  await expect(shop.status).toHaveText("⚠ Latte អស់ស្តុក");
+});
+
+test("Mobile viewport", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 700 });
+  await page.goto("/");
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await page.getByRole("button", { name: "បញ្ជាទិញ" }).scrollIntoViewIfNeeded();
+  await expect(page.getByRole("button", { name: "បញ្ជាទិញ" })).toBeInViewport();
+});
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Terminal លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npx playwright test</span>
+[WebServer] (node:2321) Warning: The &#x27;NO_COLOR&#x27; env is ignored due to the &#x27;FORCE_COLOR&#x27; env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:2329) Warning: The &#x27;NO_COLOR&#x27; env is ignored due to the &#x27;FORCE_COLOR&#x27; env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › e2e/advanced.spec.js:4:1 › Page Object: Checkout ២ មុខ (276ms)
+  ✓  2 [chromium] › e2e/advanced.spec.js:13:1 › Mock API: Server ឆ្លើយ 409 (អស់ស្តុក) (200ms)
+  ✓  3 [chromium] › e2e/advanced.spec.js:23:1 › Mobile viewport (141ms)
+
+  3 passed (1.3s)</pre></div>
+  <ul>
+    <li><b>Trace viewer</b>៖ <code class="i">trace: "on-first-retry"</code> → <code class="i">npx playwright show-trace trace.zip</code> មើល Screenshot/DOM/Network គ្រប់ជំហាន</li>
+    <li><b>Auth state</b>៖ Login ម្តងក្នុង <code class="i">setup</code> project ហើយរក្សា <code class="i">storageState</code> → Tests ផ្សេងមិនបាច់ Login ឡើងវិញ</li>
+    <li><b>Visual testing</b>៖ <code class="i">await expect(page).toHaveScreenshot()</code></li>
+    <li><b>Accessibility</b>៖ <code class="i">@axe-core/playwright</code> រកបញ្ហា A11y ដោយស្វ័យប្រវត្តិ</li>
+  </ul>
+  <div class="ex"><h4>✍️ លំហាត់ ១៣</h4>
+    <p>ហេតុអ្វី Page Object Model ជួយពេល UI ប្តូរ (ឧ. ប៊ូតុង «បញ្ជាទិញ» ប្តូរជា «ទូទាត់»)?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p>Locator ស្ថិតនៅកន្លែងតែមួយ (<code class="i">ShopPage.checkout</code>) → កែតែ ១ បន្ទាត់ ជំនួសការកែ Test រាប់សិប។ Tests អានដូចសកម្មភាពអាជីវកម្ម (<code class="i">shop.checkout(phone)</code>) មិនមែនលម្អិត UI។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l14">
+  <h2><span class="badge">មេរៀន ១៤</span>CI, Flaky Tests & យុទ្ធសាស្ត្រ Testing</h2>
+  <script type="text/x-code" data-lang="bash" data-label=".github/workflows/test.yml">
+name: test
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npm run typecheck --if-present
+      - run: npm test                                   # Unit + Integration
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test                        # E2E (webServer ចាប់ផ្តើម App)
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with: { name: playwright-report, path: playwright-report/, retention-days: 14 }
+</script>
+  <table>
+    <tr><th>មូលហេតុ Flaky</th><th>ដំណោះស្រាយ</th></tr>
+    <tr><td><code class="i">sleep(2000)</code> / waitForTimeout</td><td>Web-first assertions (<code class="i">await expect(...).toHaveText</code>) រង់ចាំដោយខ្លួនឯង</td></tr>
+    <tr><td>Tests ចែកទិន្នន័យគ្នា</td><td>ទិន្នន័យដាច់សម្រាប់ Test នីមួយៗ · Reset DB</td></tr>
+    <tr><td>ពេលវេលា/Random/Timezone</td><td>Fake timers · Seed · កំណត់ TZ</td></tr>
+    <tr><td>Network ខាងក្រៅ (API ភាគីទី ៣)</td><td>Mock (MSW / page.route)</td></tr>
+    <tr><td>Selector ផុយ (<code class="i">.btn:nth-child(3)</code>)</td><td><code class="i">getByRole</code> / <code class="i">getByTestId</code></td></tr>
+  </table>
+  <h3>Test អ្វី? (យុទ្ធសាស្ត្រ)</h3>
+  <ul>
+    <li><b>Unit</b>៖ Logic អាជីវកម្ម (តម្លៃ, បញ្ចុះ, ពិន្ទុ, Validation) — ច្រើនបំផុត</li>
+    <li><b>Integration</b>៖ API Routes + DB, Components + Hooks + Network (MSW)</li>
+    <li><b>E2E</b>៖ ផ្លូវសំខាន់ៗ (Critical paths) — Login, Checkout, Payment — ៥–២០ Tests</li>
+    <li><b>Bug ថ្មីនីមួយៗ</b> → សរសេរ Test ដែលបង្ហាញ Bug មុន បន្ទាប់មកជួសជុល (Regression test)</li>
+    <li>កុំ Test Library ខាងក្រៅ ឬលម្អិតខាងក្នុង (Private state) — Test <b>អាកប្បកិរិយា</b></li>
+  </ul>
+  <div class="ex"><h4>✍️ លំហាត់ ១៤</h4>
+    <p>អតិថិជនរាយការណ៍ថា «Coupon kafe10 (អក្សរតូច) មិនដំណើរការ»។ សរសេរជំហាន TDD ដើម្បីជួសជុល។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="js" data-label="tests/coupon.test.js" data-file="tests/coupon.test.js" data-cmd="npm test">
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { totalCents } from "../src/cart.js";
+
+// ① Regression test (Red): បង្ហាញ Bug — Test នេះធ្លាក់ជាមួយកូដបច្ចុប្បន្ន
+test("Coupon មិនខ្វល់អក្សរធំតូច + ដកឃ្លា", () => {
+  assert.equal(totalCents([{ price: 2.5, qty: 2 }], { coupon: " kafe10 " }), 450);
+});
+// ② Green: ក្នុង cart.js ប្តូរ  coupon === "KAFE10"  →  coupon?.trim().toUpperCase() === "KAFE10"
+// ③ រត់ Tests ទាំងអស់ម្តងទៀត · Commit Test + Fix ជាមួយគ្នា
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Terminal លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npm test</span>
+
+&gt; test
+&gt; node --test --test-reporter=spec
+
+✖ Coupon មិនខ្វល់អក្សរធំតូច + ដកឃ្លា (0.892615ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 47.02067
+
+✖ failing tests:
+
+test at tests/coupon.test.js:6:1
+✖ Coupon មិនខ្វល់អក្សរធំតូច + ដកឃ្លា (0.892615ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  500 !== 450
+  
+      at TestContext.&lt;anonymous&gt; (file:///home/dara/kafe/tests/coupon.test.js:7:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.start (node:internal/test_runner/test:944:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17) {
+    generatedMessage: true,
+    code: &#x27;ERR_ASSERTION&#x27;,
+    actual: 500,
+    expected: 450,
+    operator: &#x27;strictEqual&#x27;,
+    diff: &#x27;simple&#x27;
+  }</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="cheat">
+  <h2>📋 Cheat Sheet</h2>
+  <table>
+    <tr><th></th><th>node:test</th><th>Vitest</th><th>Playwright</th></tr>
+    <tr><td>រត់</td><td><code class="i">node --test</code></td><td><code class="i">vitest</code></td><td><code class="i">playwright test</code></td></tr>
+    <tr><td>Test</td><td><code class="i">test / it / describe</code></td><td><code class="i">it / test / describe</code></td><td><code class="i">test / test.describe</code></td></tr>
+    <tr><td>Assert</td><td><code class="i">assert.equal</code></td><td><code class="i">expect().toBe</code></td><td><code class="i">await expect(loc).toHaveText</code></td></tr>
+    <tr><td>Mock</td><td><code class="i">mock.fn</code></td><td><code class="i">vi.fn</code></td><td><code class="i">page.route</code></td></tr>
+    <tr><td>Only / Skip</td><td><code class="i">test.only</code> · <code class="i">{ skip: true }</code></td><td><code class="i">it.only</code> · <code class="i">it.skip</code></td><td><code class="i">test.only</code> · <code class="i">test.skip</code></td></tr>
+    <tr><td>Debug</td><td><code class="i">--test-name-pattern</code></td><td><code class="i">vitest --ui</code></td><td><code class="i">--ui</code> · <code class="i">--debug</code> · <code class="i">codegen</code></td></tr>
+  </table>
+</section>
+
+<!-- NAV: ផ្នែកទី ៤ – កម្រិតអាជីព -->
+<section class="hero" id="pro">
+  <h2>🏆 គម្រោងអាជីព: Kafe Test Suite ពេញលេញ</h2>
+  <p>Test Suite ដូចក្រុមហ៊ុនពិត៖ <b>Unit</b> (Cart, Validation) + <b>Integration</b> (API) + <b>E2E</b> (Playwright, 3 Flows) ដែលរត់ក្នុង CI រាល់ PR។ ខាងក្រោមជាលទ្ធផល <b>ពិត</b> នៃការរត់ទាំងអស់ព្រមគ្នា បន្ទាប់មកមាន <b>E2E Runner Simulator</b> ដែលអ្នកអាចមើល Tests ចុចលើ App ជំហានម្តងៗ ហើយសាកដាក់ Bug។</p>
+</section>
+
+<section id="pro-run">
+  <h2>▶ រត់ Suite ទាំងមូល (លទ្ធផលពិត)</h2>
+  <script type="text/x-code" data-lang="js" data-label="tests/cart.test.js" data-file="tests/cart.test.js">
+import { describe, it } from "node:test";
+import assert from "node:assert/strict";
+import { addItem, removeItem, totalCents, formatUSD, formatKHR } from "../src/cart.js";
+
+const latte = { id: 1, name: "Latte", price: 2.5 };
+describe("cart (unit)", () => {
+  it("adds and merges", () => assert.equal(addItem(addItem([], latte), latte)[0].qty, 2));
+  it("removes", () => assert.deepEqual(removeItem(addItem([], latte), 1), []));
+  it("rejects bad qty", () => assert.throws(() => addItem([], latte, -1), RangeError));
+  it("totals in cents", () => assert.equal(totalCents([{ price: 0.1, qty: 3 }]), 30));
+  it("applies KAFE10", () => assert.equal(totalCents([{ price: 2.5, qty: 2 }], { coupon: "KAFE10" }), 450));
+  it("formats", () => { assert.equal(formatUSD(648), "$6.48"); assert.equal(formatKHR(250), "10,250 ៛"); });
+});
+</script>
+  <script type="text/x-code" data-lang="js" data-label="tests/api.test.js" data-file="tests/api.test.js">
+import { describe, it, before, after } from "node:test";
+import assert from "node:assert/strict";
+import { createServer } from "../src/api.js";
+
+describe("api (integration)", () => {
+  let server, base;
+  before(async () => { server = createServer().listen(0); await new Promise(r => server.once("listening", r)); base = `http://localhost:${server.address().port}/api`; });
+  after(() => server.close());
+  const post = b => fetch(`${base}/orders`, { method: "POST", body: JSON.stringify(b) });
+  it("lists products", async () => assert.equal((await (await fetch(`${base}/products`)).json()).length, 3));
+  it("creates order", async () => assert.equal((await post({ items: [{ id: 1, qty: 1 }] })).status, 201));
+  it("rejects out of stock", async () => assert.equal((await post({ items: [{ id: 3, qty: 1 }] })).status, 409));
+});
+</script>
+  <script type="text/x-code" data-lang="js" data-label="e2e/checkout.spec.js" data-file="e2e/checkout.spec.js" data-cmd="npm test\nnpx playwright test --reporter=list">
+import { test, expect } from "@playwright/test";
+
+test.describe("checkout (e2e)", () => {
+  test.beforeEach(async ({ page }) => page.goto("/"));
+
+  test("happy path", async ({ page }) => {
+    await page.getByRole("button", { name: "បន្ថែម Latte" }).click();
+    await page.getByLabel("ទូរស័ព្ទ").fill("012345678");
+    await page.getByRole("button", { name: "បញ្ជាទិញ" }).click();
+    await expect(page.getByRole("status")).toContainText("✅ បញ្ជាទិញ #");
+  });
+
+  test("coupon", async ({ page }) => {
+    await page.getByRole("button", { name: "បន្ថែម Green Tea" }).click();
+    await page.getByLabel("Coupon").fill("KAFE10");
+    await expect(page.getByTestId("total")).toHaveText("$1.98");
+  });
+
+  test("validation", async ({ page }) => {
+    await page.getByRole("button", { name: "បញ្ជាទិញ" }).click();
+    await expect(page.getByRole("status")).toContainText("លេខទូរស័ព្ទមិនត្រឹមត្រូវ");
+  });
+});
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Terminal លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npm test</span>
+
+&gt; test
+&gt; node --test --test-reporter=spec
+
+▶ api (integration)
+  ✔ lists products (17.964331ms)
+  ✔ creates order (4.998144ms)
+  ✔ rejects out of stock (2.002245ms)
+✔ api (integration) (27.798629ms)
+▶ cart (unit)
+  ✔ adds and merges (0.514809ms)
+  ✔ removes (0.38034ms)
+  ✔ rejects bad qty (0.984252ms)
+  ✔ totals in cents (0.14051ms)
+  ✔ applies KAFE10 (0.070708ms)
+  ✔ formats (10.053069ms)
+✔ cart (unit) (12.830795ms)
+ℹ tests 9
+ℹ suites 2
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 178.234368
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npx playwright test --reporter=list</span>
+[WebServer] (node:2533) Warning: The &#x27;NO_COLOR&#x27; env is ignored due to the &#x27;FORCE_COLOR&#x27; env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:2541) Warning: The &#x27;NO_COLOR&#x27; env is ignored due to the &#x27;FORCE_COLOR&#x27; env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › e2e/checkout.spec.js:6:3 › checkout (e2e) › happy path (217ms)
+  ✓  2 [chromium] › e2e/checkout.spec.js:13:3 › checkout (e2e) › coupon (143ms)
+  ✓  3 [chromium] › e2e/checkout.spec.js:19:3 › checkout (e2e) › validation (138ms)
+
+  3 passed (1.1s)</pre></div>
+</section>
+
+<section id="pro-app">
+  <h2>🎭 E2E Runner Simulator</h2>
+  <p>ចុច <b>▶ Run tests</b> ដើម្បីមើល Tests ចុច/វាយលើ Kafe Shop ជំហានម្តងៗ (ដូច Playwright UI mode)។ បន្ទាប់មកបើក <b>🐞 Bug</b> មួយ ហើយរត់ម្តងទៀត — មើលថា Test ណាធ្លាក់ និងហេតុអ្វី។</p>
+  <script type="text/x-code" data-lang="html" data-label="Kafe E2E Runner (Simulator)" data-demo>
+<style>
+  * { box-sizing:border-box; }
+  body { margin:0; background:#eef4f3; color:#13221f; font-family:"Kantumruy Pro",system-ui,sans-serif; }
+  .wrap { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); gap:12px; padding:12px; }
+  @media (max-width:700px) { .wrap { grid-template-columns:1fr; } }
+  .panel { background:#fff; border:1px solid #d7e9e6; border-radius:12px; padding:12px; min-width:0; }
+  .shop h3 { margin:0 0 6px; } .shop li { margin:4px 0; } .shop ul { padding-left:18px; margin:4px 0; }
+  .shop button, .shop input { font:inherit; font-size:14px; min-height:32px; border-radius:6px; border:1px solid #c9d8d5; padding:0 8px; background:#fff; }
+  .shop button { cursor:pointer; margin-left:6px; } .shop button:disabled { opacity:.5; }
+  .shop label { display:block; margin:6px 0; font-size:14px; }
+  .hl { outline:3px solid #f59e0b !important; outline-offset:2px; transition:outline .1s; }
+  .cursor { position:fixed; width:18px; height:18px; border-radius:50%; background:#f59e0b88; border:2px solid #b45309; pointer-events:none; transition:left .25s, top .25s; z-index:9; display:none; }
+  .bar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:10px; }
+  .bar button { font:inherit; font-size:14px; min-height:36px; border-radius:8px; border:1px solid #0f766e; background:#0f766e; color:#fff; padding:0 14px; cursor:pointer; }
+  .bar button:disabled { opacity:.5; }
+  .bugs { display:flex; gap:8px; flex-wrap:wrap; font-size:13px; margin-bottom:8px; }
+  .bugs label { background:#fff7ed; border:1px solid #fed7aa; border-radius:99px; padding:2px 10px; cursor:pointer; }
+  .t { border:1px solid #e3eeec; border-radius:8px; margin:6px 0; overflow:hidden; }
+  .t > div:first-child { padding:6px 10px; font-weight:600; display:flex; gap:8px; align-items:center; }
+  .t.pass > div:first-child { background:#ecfdf3; color:#05603a; } .t.fail > div:first-child { background:#fef3f2; color:#b42318; } .t.run > div:first-child { background:#fffbeb; }
+  .steps { font:12.5px/1.6 "JetBrains Mono",monospace; padding:4px 10px 8px 26px; margin:0; color:#334; }
+  .steps li.ok::marker { content:"✓ "; color:#05603a; } .steps li.bad::marker { content:"✗ "; color:#b42318; } .steps li.cur::marker { content:"▶ "; color:#b45309; }
+  .err { color:#b42318; white-space:pre-wrap; }
+  .sum { font-weight:700; margin-top:8px; }
+</style>
+
+<div class="wrap">
+  <div class="panel shop" id="shop" aria-label="Kafe Shop (App under test)">
+    <h3>☕ Kafe Shop</h3>
+    <ul id="menu" aria-label="Menu"></ul>
+    <div>កន្ត្រក (<span data-testid="count">0</span>)</div>
+    <ul id="cart"></ul>
+    <label>Coupon <input id="coupon" placeholder="KAFE10"></label>
+    <div>សរុប: <strong data-testid="total">$0.00</strong></div>
+    <label>ទូរស័ព្ទ <input id="phone" placeholder="012345678"></label>
+    <button id="checkout" style="margin:0">បញ្ជាទិញ</button>
+    <p role="status" id="msg"></p>
+  </div>
+  <div class="panel">
+    <div class="bar"><button id="run">▶ Run tests</button><button id="reset" style="background:#fff;color:#0f766e">↺ Reset app</button><span id="speedLbl" style="font-size:13px">ល្បឿន: <select id="speed"><option value="350">ធម្មតា</option><option value="120">លឿន</option><option value="700">យឺត</option></select></span></div>
+    <div class="bugs"><b style="font-size:13px">🐞 ដាក់ Bug៖</b>
+      <label><input type="checkbox" id="bugCoupon"> Coupon បញ្ចុះ 20%</label>
+      <label><input type="checkbox" id="bugPhone"> មិនពិនិត្យលេខទូរស័ព្ទ</label>
+      <label><input type="checkbox" id="bugDouble"> ចុចម្តង បន្ថែម 2</label>
+    </div>
+    <div id="results"></div>
+  </div>
+</div>
+<div class="cursor" id="cursor"></div>
+
+<script>
+  /* ===================== App under test ===================== */
+  const PRODUCTS = [{ id: 1, name: "Latte", price: 2.5, stock: 40 }, { id: 2, name: "Green Tea", price: 2.2, stock: 25 }, { id: 3, name: "Croissant", price: 1.5, stock: 0 }];
+  const bug = id => document.getElementById(id).checked;
+  let cart = [], orderNo = 1;
+  const $ = s => document.querySelector(s);
+  const fmt = c => `$${(c / 100).toFixed(2)}`;
+  const total = () => {
+    const sub = cart.reduce((s, i) => s + Math.round(i.price * 100) * i.qty, 0);
+    const pct = $("#coupon").value.trim() === "KAFE10" ? (bug("bugCoupon") ? 20 : 10) : 0;
+    return sub - Math.round(sub * pct / 100);
+  };
+  function render() {
+    $("#cart").innerHTML = cart.map(i => `<li>${i.name} × ${i.qty}</li>`).join("");
+    $('[data-testid="count"]').textContent = cart.reduce((s, i) => s + i.qty, 0);
+    $('[data-testid="total"]').textContent = fmt(total());
+  }
+  function resetApp() {
+    cart = []; $("#coupon").value = ""; $("#phone").value = ""; $("#msg").textContent = ""; render();
+  }
+  $("#menu").innerHTML = PRODUCTS.map(p => `<li>${p.name} $${p.price.toFixed(2)}<button data-id="${p.id}" ${p.stock ? "" : "disabled"}>${p.stock ? "បន្ថែម " + p.name : "អស់ស្តុក"}</button></li>`).join("");
+  $("#menu").onclick = e => {
+    const id = +e.target.dataset.id; if (!id) return;
+    const p = PRODUCTS.find(x => x.id === id), qty = bug("bugDouble") ? 2 : 1;
+    const f = cart.find(i => i.id === id);
+    cart = f ? cart.map(i => i.id === id ? { ...i, qty: i.qty + qty } : i) : [...cart, { ...p, qty }];
+    render();
+  };
+  $("#coupon").oninput = render;
+  $("#checkout").onclick = () => {
+    const phone = $("#phone").value.replace(/[\s-]/g, "").replace(/^\+855/, "0");
+    if (!bug("bugPhone") && !/^0\d{8,9}$/.test(phone)) { $("#msg").textContent = "⚠ លេខទូរស័ព្ទមិនត្រឹមត្រូវ"; return; }
+    if (!cart.length) { $("#msg").textContent = "⚠ កន្ត្រកទទេ"; return; }
+    $("#msg").textContent = `✅ បញ្ជាទិញ #${orderNo++} · ${fmt(total())}`; cart = []; render();
+  };
+  resetApp();
+
+  /* ===================== Mini "Playwright" ===================== */
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const delay = () => +$("#speed").value;
+  async function point(el) {
+    const r = el.getBoundingClientRect(), c = $("#cursor");
+    c.style.display = "block"; c.style.left = (r.left + r.width / 2 - 9) + "px"; c.style.top = (r.top + r.height / 2 - 9) + "px";
+    el.classList.add("hl"); await sleep(delay()); el.classList.remove("hl");
+  }
+  const byRole = (role, name) => {
+    const sel = { button: "button", status: '[role="status"]' }[role];
+    const el = [...document.querySelectorAll("#shop " + sel)].find(e => !name || e.textContent.trim() === name);
+    if (!el) throw new Error(`locator getByRole("${role}"${name ? `, { name: "${name}" }` : ""}) មិនឃើញធាតុ`);
+    return el;
+  };
+  const byLabel = text => { const l = [...document.querySelectorAll("#shop label")].find(l => l.textContent.trim().startsWith(text)); if (!l) throw new Error(`getByLabel("${text}") មិនឃើញ`); return l.querySelector("input"); };
+  const byTestId = id => $(`#shop [data-testid="${id}"]`);
+  const page = {
+    async click(el, label) { await point(el); if (el.disabled) throw new Error(`${label} disabled`); el.click(); },
+    async fill(el, v) { await point(el); el.value = v; el.dispatchEvent(new Event("input")); },
+    async expectText(el, expected, contains = false) {
+      await point(el);
+      const deadline = Date.now() + 1000;            // auto-retry (ដូច Playwright)
+      while (true) {
+        const t = el.textContent.trim();
+        if (contains ? t.includes(expected) : t === expected) return;
+        if (Date.now() > deadline) throw new Error(`expect(locator).${contains ? "toContainText" : "toHaveText"}("${expected}")\n  Received: "${t}"`);
+        await sleep(50);
+      }
+    },
+  };
+  const TESTS = [
+    { name: "បន្ថែមកន្ត្រក → ចំនួន និងសរុប", steps: [
+      ["click getByRole('button', { name: 'បន្ថែម Latte' })", () => page.click(byRole("button", "បន្ថែម Latte"), "button")],
+      ["click getByRole('button', { name: 'បន្ថែម Green Tea' })", () => page.click(byRole("button", "បន្ថែម Green Tea"), "button")],
+      ["expect(getByTestId('count')).toHaveText('2')", () => page.expectText(byTestId("count"), "2")],
+      ["expect(getByTestId('total')).toHaveText('$4.70')", () => page.expectText(byTestId("total"), "$4.70")],
+    ] },
+    { name: "Coupon KAFE10 បញ្ចុះ 10%", steps: [
+      ["click getByRole('button', { name: 'បន្ថែម Latte' })", () => page.click(byRole("button", "បន្ថែម Latte"), "button")],
+      ["fill getByLabel('Coupon') 'KAFE10'", () => page.fill(byLabel("Coupon"), "KAFE10")],
+      ["expect(getByTestId('total')).toHaveText('$2.25')", () => page.expectText(byTestId("total"), "$2.25")],
+    ] },
+    { name: "លេខទូរស័ព្ទខុស → Error", steps: [
+      ["click getByRole('button', { name: 'បន្ថែម Latte' })", () => page.click(byRole("button", "បន្ថែម Latte"), "button")],
+      ["fill getByLabel('ទូរស័ព្ទ') '123'", () => page.fill(byLabel("ទូរស័ព្ទ"), "123")],
+      ["click getByRole('button', { name: 'បញ្ជាទិញ' })", () => page.click(byRole("button", "បញ្ជាទិញ"), "button")],
+      ["expect(getByRole('status')).toContainText('មិនត្រឹមត្រូវ')", () => page.expectText(byRole("status"), "មិនត្រឹមត្រូវ", true)],
+    ] },
+    { name: "Checkout ជោគជ័យ", steps: [
+      ["click getByRole('button', { name: 'បន្ថែម Green Tea' })", () => page.click(byRole("button", "បន្ថែម Green Tea"), "button")],
+      ["fill getByLabel('ទូរស័ព្ទ') '012 345 678'", () => page.fill(byLabel("ទូរស័ព្ទ"), "012 345 678")],
+      ["click getByRole('button', { name: 'បញ្ជាទិញ' })", () => page.click(byRole("button", "បញ្ជាទិញ"), "button")],
+      ["expect(getByRole('status')).toContainText('$2.20')", () => page.expectText(byRole("status"), "$2.20", true)],
+      ["expect(getByTestId('count')).toHaveText('0')", () => page.expectText(byTestId("count"), "0")],
+    ] },
+  ];
+
+  async function runAll() {
+    $("#run").disabled = true;
+    const box = $("#results"); box.innerHTML = "";
+    let pass = 0; const t0 = performance.now();
+    for (const t of TESTS) {
+      resetApp();                                       // ឯករាជ្យ: State ថ្មីសម្រាប់ Test នីមួយៗ
+      const el = document.createElement("div"); el.className = "t run";
+      el.innerHTML = `<div>⏳ ${t.name}</div><ol class="steps">${t.steps.map(s => `<li>${s[0]}</li>`).join("")}</ol>`;
+      box.appendChild(el);
+      const lis = el.querySelectorAll("li"); let failed = null;
+      for (let i = 0; i < t.steps.length; i++) {
+        lis[i].className = "cur";
+        try { await t.steps[i][1](); lis[i].className = "ok"; }
+        catch (e) { lis[i].className = "bad"; failed = e; for (let j = i + 1; j < lis.length; j++) lis[j].style.opacity = .4; break; }
+      }
+      el.className = "t " + (failed ? "fail" : "pass");
+      el.firstElementChild.textContent = (failed ? "✗ " : "✓ ") + t.name;
+      if (failed) { const d = document.createElement("div"); d.className = "steps err"; d.textContent = "Error: " + failed.message; el.appendChild(d); } else pass++;
+    }
+    const s = document.createElement("div"); s.className = "sum";
+    s.textContent = `${pass} passed${TESTS.length - pass ? ` · ${TESTS.length - pass} failed` : ""} (${((performance.now() - t0) / 1000).toFixed(1)}s)`;
+    s.style.color = pass === TESTS.length ? "#05603a" : "#b42318";
+    box.appendChild(s);
+    $("#cursor").style.display = "none"; $("#run").disabled = false;
+  }
+  $("#run").onclick = runAll;
+  $("#reset").onclick = resetApp;
+<\/script>
+</script>
+</section>
+
+<section id="pro-check">
+  <h2>✅ Checklist & គម្រោងចុងក្រោយ</h2>
+  <table>
+    <tr><th>ពិនិត្យ</th><th>✔</th></tr>
+    <tr><td>Logic អាជីវកម្មមាន Unit tests (Edge cases + Table-driven)</td><td>☐</td></tr>
+    <tr><td>API Routes មាន Integration tests (Success + 4xx)</td><td>☐</td></tr>
+    <tr><td>Critical paths មាន E2E (Login, Checkout)</td><td>☐</td></tr>
+    <tr><td>Tests ឯករាជ្យ · គ្មាន sleep · គ្មាន Network ខាងក្រៅ</td><td>☐</td></tr>
+    <tr><td>CI រត់ Tests រាល់ PR · Required check មុន Merge</td><td>☐</td></tr>
+    <tr><td>Bug ថ្មី = Regression test ថ្មី</td><td>☐</td></tr>
+  </table>
+  <div class="ex"><h4>🏁 លំហាត់គម្រោងចុងក្រោយ</h4>
+    <ol>
+      <li>Kafe API (TypeScript/Postgres)៖ Integration tests សម្រាប់ Products CRUD + Orders (409 ស្តុក)</li>
+      <li>React client៖ Vitest + RTL សម្រាប់ ProductCard, LoginForm, ProductList (MSW)</li>
+      <li>Playwright៖ Login (storageState), Admin បន្ថែមផលិតផល, Checkout</li>
+      <li>Coverage ≥ 80% លើ <code class="i">src/</code> Logic</li>
+      <li>GitHub Actions៖ typecheck → unit → e2e · Upload Playwright report</li>
+    </ol>
+  </div>
+</section>
+
+<section id="roadmap">
+  <h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+  <ol class="steps">
+    <li><b>Testing</b> — មេរៀន ១–១៤ ✅</li>
+    <li><b>Contract testing</b> — OpenAPI + ពិនិត្យ Schema</li>
+    <li><b>Performance testing</b> — k6, Lighthouse CI</li>
+    <li><b>Accessibility testing</b> — axe-core</li>
+    <li><b>Next.js</b> + Tailwind (វគ្គបន្ទាប់)</li>
+  </ol>
+  <p><b>ប្រភពរៀនបន្ថែម:</b> <a href="https://nodejs.org/api/test.html" target="_blank">Node.js Test runner</a> · <a href="https://vitest.dev" target="_blank">vitest.dev</a> · <a href="https://testing-library.com" target="_blank">Testing Library</a> · <a href="https://playwright.dev" target="_blank">playwright.dev</a> · <a href="https://mswjs.io" target="_blank">mswjs.io</a></p>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^']|'')*'", 's'], ['\\$\\$[\\s\\S]*?\\$\\$', 's'],
+        ['\\b(?:SELECT|FROM|WHERE|AND|OR|NOT|IN|IS|NULL|AS|ON|JOIN|LEFT|RIGHT|INNER|FULL|OUTER|CROSS|GROUP|BY|ORDER|HAVING|LIMIT|OFFSET|INSERT|INTO|VALUES|UPDATE|SET|DELETE|RETURNING|CREATE|TABLE|INDEX|UNIQUE|PRIMARY|KEY|FOREIGN|REFERENCES|CASCADE|CHECK|DEFAULT|CONSTRAINT|ALTER|ADD|DROP|COLUMN|IF|EXISTS|BEGIN|COMMIT|ROLLBACK|SAVEPOINT|TRANSACTION|WITH|RECURSIVE|CASE|WHEN|THEN|ELSE|END|DISTINCT|UNION|ALL|EXCEPT|INTERSECT|OVER|PARTITION|ROWS|BETWEEN|LIKE|ILIKE|ASC|DESC|NULLS|FIRST|LAST|EXPLAIN|ANALYZE|VIEW|MATERIALIZED|FUNCTION|RETURNS|LANGUAGE|TRIGGER|FOR|EACH|ROW|EXECUTE|GRANT|REVOKE|ROLE|USER|TO|CONFLICT|DO|NOTHING|USING|FILTER|TRUE|FALSE|LATERAL|ANY|SOME|EXCLUDED|GENERATED|ALWAYS|IDENTITY|TYPE|ENUM|SCHEMA|EXTENSION|COPY|FORMAT|OF|CURRENT_DATE|NOW)\\b', 'kw'],
+        ['\\b(?:serial|bigserial|integer|int|bigint|smallint|numeric|decimal|real|text|varchar|char|boolean|bool|date|timestamptz|timestamp|interval|uuid|jsonb|json|bytea|tsvector)\\b', 'hook'],
+        ['\\b[a-z_][a-z0-9_]*(?=\\()', 'f'], ['\\\\[a-z]+\\+?', 'attr'], NUM, ['::|<>|!=|>=|<=|->>|->|\\|\\||[=<>*+/-]', 'op']],
+  prisma: [['//[^\\n]*', 'c'], STR, ['\\b(?:model|enum|generator|datasource|type|view)\\b', 'kw'],
+        ['@@?[a-zA-Z.]+', 'hook'], ['\\b(?:String|Int|BigInt|Float|Decimal|Boolean|DateTime|Json|Bytes)\\b', 'attr'], ['\\b[a-z_][A-Za-z0-9_]*(?=\\()', 'f'], NUM],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http') ? 'm' : lang === 'sql' ? 'i' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', sql: 'SQL', prisma: 'Prisma Schema', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="testing"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន CSS កម្រិតខ្ពស់</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1a2133; --muted:#5b6b61; --line:#dfe4ef;
+  --accent:#2965f1; --accent2:#4f83f5; --accent-soft:#e8effe;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#8fb0ff; --accent2:#4f83f5; --accent-soft:#141f38;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#8fb0ff; --accent2:#4f83f5; --accent-soft:#141f38;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:#2965f1;color:#fff;font-size:12px;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#1b46b0,#4f83f5);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.c{color:#8b949e;font-style:italic}.sel{color:#ffa657}.at{color:#ff7b72}.pr{color:#79c0ff}
+.s{color:#a5d6ff}.n{color:#79c0ff}.f{color:#d2a8ff}.v{color:#a5d6ff}.tg{color:#7ee787}.pn{color:#8b949e}.at2{color:#79c0ff}
+.sw{display:inline-block;width:.9em;height:.9em;border-radius:3px;border:1px solid #888;margin-right:4px;vertical-align:-1px}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.level{font-size:12px;background:#fde68a;color:#92400e;padding:1px 8px;border-radius:99px;margin-left:6px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em}
+
+</style>
+<link rel="icon" href="../assets/icons/css.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/css.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>វគ្គសិក្សា CSS កម្រិតខ្ពស់ ដល់កម្រិតអាជីព</h1>
+  <button class="btn" id="themeBtn">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. CSS ជាអ្វី? អ្នកបង្កើត</a>
+<a href="#history">២. ប្រវត្តិ CSS</a>
+<a href="#install">៣. ត្រៀម VS Code</a>
+<a href="#elements">៤. ធាតុនីមួយៗរបស់ CSS</a>
+<h4>ផ្នែកទី ២ – មេរៀនកម្រិតខ្ពស់</h4>
+<a href="#a1">មេរៀន ១: Cascade, Specificity និង @layer</a>
+<a href="#a2">មេរៀន ២: Selector ទំនើប: :is, :where, :has, :not និង Nesting</a>
+<a href="#a3">មេរៀន ៣: clamp(), min(), max() និង Fluid Design</a>
+<a href="#a4">មេរៀន ៤: Container Queries</a>
+<a href="#a5">មេរៀន ៥: Grid កម្រិតខ្ពស់: grid-template-areas, auto-fit, subgrid</a>
+<a href="#a6">មេរៀន ៦: Dark Mode ពេញលេញ</a>
+<a href="#a7">មេរៀន ៧: Animation កម្រិតខ្ពស់</a>
+<a href="#a8">មេរៀន ៨: clip-path, mask, filter និង blend-mode</a>
+<a href="#a9">មេរៀន ៩: @font-face និង Variable Fonts</a>
+<a href="#a10">មេរៀន ១០: រចនាសម្ព័ន្ធ CSS ធំៗ: BEM និង Architecture</a>
+<a href="#a11">មេរៀន ១១: Sass/SCSS, Bootstrap និង Tailwind (សង្ខេប)</a>
+<a href="#a12">មេរៀន ១២: Accessibility និង Performance</a>
+<a href="#a13">មេរៀន ១៣: Print Stylesheet និង @supports</a>
+<h4>សង្ខេប លំហាត់ & គម្រោង</h4>
+<a href="#cheat">📚 តារាងសង្ខេបមុខងារកម្រិតខ្ពស់</a>
+<a href="#exercises">✍️ លំហាត់កម្រិតខ្ពស់ (មានចម្លើយ)</a>
+<a href="#project">🚀 គម្រោងចុងក្រោយ៖ Portfolio ទំនើប (Dark mode + Responsive)</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">Design System</a>
+<a href="#pro-structure">រចនាសម្ព័ន្ធ CSS</a>
+<a href="#pro-code">កូដពេញលេញ</a>
+<a href="#pro-check">Checklist & Stylelint</a>
+<a href="#roadmap">ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🚀 CSS កម្រិតខ្ពស់</h2>
+  <p>@layer, :has(), Container Queries, Dark mode, Animation កម្រិតខ្ពស់, BEM, Accessibility, គម្រោង Portfolio និង Design System កម្រិតអាជីព — រាល់ឧទាហរណ៍មាន <b>លទ្ធផលផ្ទាល់</b> ក្រោមកូដ។</p>
+  <p><span class="badge">📘 ១៣ មេរៀន</span><span class="badge">✍️ ៨ លំហាត់</span><span class="badge">🚀 Portfolio</span><span class="badge">🏆 Design System</span></p>
+</section>
+
+<section id="intro">
+  <h2>១. CSS ជាអ្វី? អ្នកណាបង្កើត?</h2>
+  <p><b>CSS</b> (Cascading Style Sheets) គឺជាភាសាសម្រាប់ <b>រចនា</b> គេហទំព័រ៖ ពណ៌ អក្សរ គម្លាត ប្លង់ ចលនា និងការបត់បែនតាមអេក្រង់។ HTML = គ្រោងឆ្អឹង, <b>CSS = សម្លៀកបំពាក់ និងការតុបតែង</b>, JavaScript = ចលនា និងខួរក្បាល។</p>
+  <div class="grid">
+    <div class="card"><b>អ្នកស្នើគំនិត</b><br><b style="font-size:19px">Håkon Wium Lie</b><br>នៅ CERN ឆ្នាំ 1994</div>
+    <div class="card"><b>សហការី</b><br><b style="font-size:19px">Bert Bos</b><br>ចូលរួមរចនា CSS1</div>
+    <div class="card"><b>ស្តង់ដារ</b><br><b>W3C</b> (CSS Working Group)</div>
+    <div class="card"><b>Cascading</b><br>Style ច្រើនធ្លាក់ «ជាន់គ្នា» ហើយមានច្បាប់សម្រេចថាមួយណាឈ្នះ</div>
+  </div>
+  <h3>គេប្រើ CSS ធ្វើអ្វី?</h3>
+  <ul>
+    <li>រចនាគេហទំព័រ Web App និង Email ឱ្យស្អាត និងមានអត្តសញ្ញាណម៉ាក (Brand)</li>
+    <li>ប្លង់ Responsive លើទូរស័ព្ទ Tablet កុំព្យូទ័រ (Flexbox, Grid, Media/Container Queries)</li>
+    <li>Animation និង Transition ដោយមិនចាំបាច់ JavaScript</li>
+    <li>Dark mode, Theme, Design System សម្រាប់ក្រុមធំ</li>
+    <li>ទម្រង់បោះពុម្ព (Print), PDF, និង UI ក្នុង App (Electron, React Native Web)</li>
+  </ul>
+</section>
+
+<section id="history">
+  <h2>២. ប្រវត្តិ CSS</h2>
+  <table>
+    <tr><th>ឆ្នាំ</th><th>ព្រឹត្តិការណ៍</th></tr>
+    <tr><td>1994</td><td>Håkon Wium Lie ស្នើ «Cascading HTML Style Sheets» នៅ CERN</td></tr>
+    <tr><td>1996</td><td><b>CSS1</b> ក្លាយជា W3C Recommendation (ពណ៌ Font Margin)</td></tr>
+    <tr><td>1998</td><td><b>CSS2</b> — position, z-index, media types</td></tr>
+    <tr><td>2011</td><td><b>CSS 2.1</b> — កែសម្រួល និងបញ្ជាក់ CSS2</td></tr>
+    <tr><td>2012 →</td><td><b>«CSS3»</b> ត្រូវបំបែកជា Module ដាច់ៗ (Flexbox, Grid, Animations…) ដែលវិវឌ្ឍដោយឡែក</td></tr>
+    <tr><td>2017</td><td><b>CSS Grid</b> ដំណើរការគ្រប់ Browser ធំៗ</td></tr>
+    <tr><td>2022–2024</td><td>:has(), Container Queries, @layer, Nesting, light-dark() — «CSS ទំនើប»</td></tr>
+    <tr><td>បច្ចុប្បន្ន</td><td>គ្មាន «CSS4» ទេ — Feature ថ្មីចេញជាបន្តបន្ទាប់ ហើយស្លាក <b>Baseline</b> ប្រាប់ថាប្រើបានគ្រប់ Browser ធំៗហើយ</td></tr>
+  </table>
+</section>
+
+<section id="install">
+  <h2>៣. ត្រៀម VS Code សម្រាប់ CSS</h2>
+  <ol class="steps">
+    <li>ដំឡើង <b>VS Code</b> ពី <a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a></li>
+    <li>ដំឡើង Extension <b>Live Server</b> (Ctrl + Shift + X) → ទំព័រ Refresh ស្វ័យប្រវត្តិរាល់ពេល Save</li>
+    <li>បង្កើត Folder <code class="i">css-advanced</code> ដែលមាន <code class="i">index.html</code> និង <code class="i">style.css</code></li>
+    <li>ភ្ជាប់ CSS ក្នុង <code class="i">&lt;head&gt;</code> ហើយ Right-click → <b>Open with Live Server</b></li>
+    <li>ចុច <b>F12</b> → tab <b>Elements</b> → ផ្ទាំង <b>Styles</b> ដើម្បីមើល/កែ CSS ផ្ទាល់ និងមើលថា Rule ណាឈ្នះ (Rule ដែលចាញ់មានបន្ទាត់គូសកាត់)</li>
+  </ol>
+  <script type="text/x-code" data-lang="html" data-label="index.html">
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CSS កម្រិតខ្ពស់</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1 class="title">សួស្តី CSS!</h1>
+</body>
+</html>
+</script>
+  <script type="text/x-code" data-lang="css" data-label="style.css">
+:root { --brand: #4f46e5; }
+.title { color: var(--brand); font-size: clamp(1.5rem, 5vw, 3rem); }
+</script>
+  <table>
+    <tr><th>Extension / ឧបករណ៍</th><th>មុខងារ</th></tr>
+    <tr><td><b>Live Server</b></td><td>បើកទំព័រ + Auto refresh</td></tr>
+    <tr><td><b>Prettier</b></td><td>រៀបចំទម្រង់ CSS ស្វ័យប្រវត្តិ</td></tr>
+    <tr><td><b>Stylelint</b></td><td>រកកំហុស CSS និងរក្សាស្តង់ដារក្រុម</td></tr>
+    <tr><td><b>Color Highlight</b></td><td>បង្ហាញពណ៌ក្បែរលេខកូដពណ៌</td></tr>
+    <tr><td><b>caniuse.com</b> / MDN «Baseline»</td><td>ពិនិត្យថា Browser គាំទ្រ Feature ឬនៅ</td></tr>
+  </table>
+</section>
+
+<section id="elements">
+  <h2>៤. ធាតុនីមួយៗរបស់ CSS</h2>
+  <script type="text/x-code" data-lang="txt" data-label="Anatomy of a Rule">
+selector      property   value
+     │             │         │
+  .card__title  {  color :  #4f46e5 ;  }   ← ទាំងមូល = Rule
+                └──────────────────┘
+                     declaration
+</script>
+  <script type="text/x-code" data-lang="txt" data-label="Box Model">
+┌──────────── margin ────────────┐
+│ ┌────────── border ──────────┐ │
+│ │ ┌──────── padding ───────┐ │ │
+│ │ │        content         │ │ │
+│ │ └────────────────────────┘ │ │
+│ └────────────────────────────┘ │
+└────────────────────────────────┘
+box-sizing: border-box → width រួមបញ្ចូល padding + border
+</script>
+  <table>
+    <tr><th>ធាតុ</th><th>ពន្យល់</th></tr>
+    <tr><td><b>Selector</b></td><td>ជ្រើស Element ដែលត្រូវរចនា៖ <code class="i">p</code>, <code class="i">.class</code>, <code class="i">#id</code>, <code class="i">[attr]</code>, <code class="i">:hover</code>, <code class="i">::before</code></td></tr>
+    <tr><td><b>Cascade</b></td><td>ច្បាប់សម្រេចថា Style ណាឈ្នះ៖ Origin/!important → @layer → Specificity → លំដាប់សរសេរ (មេរៀនទី ១)</td></tr>
+    <tr><td><b>Inheritance</b></td><td>កូនទទួលមរតក Property ខ្លះពីមេ (color, font) តែមិនទាំងអស់ (margin, border)</td></tr>
+    <tr><td><b>Box Model</b></td><td>គ្រប់ Element ជាប្រអប់៖ content + padding + border + margin</td></tr>
+    <tr><td><b>Units</b></td><td><code class="i">px</code> (ថេរ), <code class="i">rem</code> (តាម font root), <code class="i">em</code>, <code class="i">%</code>, <code class="i">vw/vh</code> (តាម Screen), <code class="i">ch</code> (ទទឹងអក្សរ), <code class="i">fr</code> (Grid)</td></tr>
+    <tr><td><b>Layout</b></td><td>Normal flow, <b>Flexbox</b> (១ ទិស), <b>Grid</b> (២ ទិស), Position</td></tr>
+    <tr><td><b>Custom Properties</b></td><td>អថេរ CSS៖ <code class="i">--brand: #4f46e5</code> → <code class="i">var(--brand)</code></td></tr>
+    <tr><td><b>At-rules</b></td><td><code class="i">@media, @container, @layer, @supports, @keyframes, @font-face, @page</code></td></tr>
+    <tr><td><b>Rendering</b></td><td>Browser៖ HTML → DOM + CSS → CSSOM → Layout → Paint → Composite (មេរៀនទី ១២)</td></tr>
+  </table>
+</section>
+
+
+
+<!-- A1 -->
+<section id="a1">
+<h2><span class="badge">មេរៀន ១</span>Cascade, Specificity និង @layer</h2>
+<p>ពេល style ជាន់គ្នា browser សម្រេចដោយលំដាប់៖ <b>(១) Origin/!important → (២) @layer → (៣) Specificity → (៤) លំដាប់សរសេរ</b>។</p>
+<h3>គណនា Specificity</h3>
+<table>
+<tr><th>ប្រភេទ</th><th>ពិន្ទុ (a,b,c)</th><th>ឧទាហរណ៍</th></tr>
+<tr><td>Inline style</td><td>ខ្លាំងជាងទាំងអស់</td><td><code>style="..."</code></td></tr>
+<tr><td>ID</td><td>(1,0,0)</td><td><code>#nav</code></td></tr>
+<tr><td>Class / attribute / pseudo-class</td><td>(0,1,0)</td><td><code>.btn, [type], :hover</code></td></tr>
+<tr><td>Element / pseudo-element</td><td>(0,0,1)</td><td><code>p, ::before</code></td></tr>
+</table>
+<p>ឧ. <code class="i">#nav .item a:hover</code> = (1,2,1)។ <code class="i">:where()</code> ទទួលពិន្ទុ 0 ហើយ <code class="i">:is()</code> យកពិន្ទុខ្ពស់បំផុតក្នុងបញ្ជី។</p>
+
+<h3>@layer — កំណត់អាទិភាពជាស្រទាប់</h3>
+<p>Layer ក្រោយ <b>ឈ្នះ</b> layer មុន ទោះ specificity ទាបជាងក៏ដោយ។ ល្អសម្រាប់ដាក់ reset, framework និង style ខ្លួនឯងឲ្យមានលំដាប់ច្បាស់។</p>
+<script type="text/x-code" data-lang="html" data-demo>
+<style>
+  @layer base, components, utilities;   /* លំដាប់: utilities ឈ្នះ */
+
+  @layer base {
+    p { color: gray; }
+  }
+  @layer components {
+    #box .text { color: royalblue; }     /* specificity ខ្ពស់ តែ layer ទាបជាង utilities */
+  }
+  @layer utilities {
+    .text-red { color: crimson; }        /* ឈ្នះ! */
+  }
+</style>
+<div id="box"><p class="text text-red">អក្សរនេះក្រហម ព្រោះ layer utilities ឈ្នះ</p></div>
+</script>
+<div class="warn"><b>⚠️</b> style ដែលមិនស្ថិតក្នុង layer ណាមួយ <b>ឈ្នះ</b> style ក្នុង layer ទាំងអស់ (ក្រៅពី !important)។ ចំពោះ <code class="i">!important</code> លំដាប់ត្រូវ <b>បញ្ច្រាស</b>៖ <code class="i">!important</code> ក្នុង layer មុន (ឧ. base) ឈ្នះ layer ក្រោយ។</div>
+</section>
+
+<!-- A2 -->
+<section id="a2">
+<h2><span class="badge">មេរៀន ២</span>Selector ទំនើប: :is, :where, :has, :not និង Nesting</h2>
+<table>
+<tr><th>Selector</th><th>ពន្យល់</th></tr>
+<tr><td><code>:is(h1, h2, h3)</code></td><td>ជ្រើសក្រុម ដោយសរសេរខ្លីជាង</td></tr>
+<tr><td><code>:where(...)</code></td><td>ដូច :is តែ specificity = 0 (ងាយសរសេរជាន់)</td></tr>
+<tr><td><code>:has(img)</code></td><td><b>"Parent selector"</b>៖ ជ្រើស element ដែលមានកូនតាមលក្ខខណ្ឌ</td></tr>
+<tr><td><code>:not(.x)</code></td><td>លើកលែង</td></tr>
+<tr><td><code>:focus-visible</code></td><td>focus ពេលប្រើ keyboard ប៉ុណ្ណោះ</td></tr>
+<tr><td><code>:focus-within</code></td><td>មេដែលកូនកំពុង focus</td></tr>
+<tr><td><code>&amp;</code> (nesting)</td><td>សរសេរ selector ក្នុង selector ដូច Sass</td></tr>
+</table>
+<script type="text/x-code" data-lang="html" data-demo>
+<style>
+  :is(h1, h2, h3) { color: #4f46e5; margin: 0 0 8px; }
+
+  /* :has(): card ដែលមានរូបភាព ទទួល style ផ្សេង */
+  .card { border:2px solid #e5e7eb; border-radius:12px; padding:12px; margin-bottom:10px; }
+  .card:has(.pic) { border-color:#ec4899; background:#fdf2f8; }
+
+  /* មេ form ភ្លឺឡើងពេលកូន input focus */
+  .field { padding:10px; border-radius:10px; background:#f3f4f6; }
+  .field:focus-within { background:#e0e7ff; outline:2px solid #6366f1; }
+
+  /* Nesting */
+  .menu {
+    display:flex; gap:10px; list-style:none; padding:0;
+    & a { padding:6px 14px; border-radius:20px; text-decoration:none; color:#374151; background:#e5e7eb;
+      &:hover { background:#4f46e5; color:#fff; }
+    }
+  }
+  .pic { display:inline-block; width:30px; height:30px; background:#f472b6; border-radius:50%; vertical-align:middle; }
+</style>
+<h2>ចំណងជើង :is()</h2>
+<div class="card">Card ធម្មតា</div>
+<div class="card"><span class="pic"></span> Card មានរូប (:has)</div>
+<div class="field"><input placeholder="focus ខ្ញុំ" style="padding:6px"></div>
+<ul class="menu"><li><a href="#">Nesting 1</a></li><li><a href="#">Nesting 2</a></li></ul>
+</script>
+</section>
+
+<!-- A3 -->
+<section id="a3">
+<h2><span class="badge">មេរៀន ៣</span>clamp(), min(), max() និង Fluid Design</h2>
+<table>
+<tr><th>Function</th><th>ន័យ</th></tr>
+<tr><td><code>min(a, b)</code></td><td>យកតម្លៃតូចជាង</td></tr>
+<tr><td><code>max(a, b)</code></td><td>យកតម្លៃធំជាង</td></tr>
+<tr><td><code>clamp(min, ideal, max)</code></td><td>ទំហំបត់បែន ក្នុងចន្លោះ min ដល់ max ⭐</td></tr>
+<tr><td><code>calc()</code></td><td>គណនារវាងខ្នាតផ្សេងៗ</td></tr>
+</table>
+<script type="text/x-code" data-lang="html" data-demo>
+<style>
+  h1 { font-size: clamp(1.4rem, 5vw, 3rem); color:#0f766e; margin:0 0 10px; }  /* អក្សរធំតូចតាម screen */
+  .wrap { width: min(90%, 600px); margin-inline: auto; background:#ccfbf1; padding: clamp(12px, 3vw, 32px); border-radius:12px; }
+  .col { width: max(200px, 40%); background:#99f6e4; padding:10px; border-radius:8px; margin-top:10px; }
+</style>
+<div class="wrap">
+  <h1>ចំណងជើង Fluid</h1>
+  <p>ទទឹង = min(90%, 600px) ហើយ padding ប្តូរតាម screen។ សាកល្បងបន្ថយទំហំបង្អួច browser!</p>
+  <div class="col">max(200px, 40%)</div>
+</div>
+</script>
+<div class="note"><b>💡</b> <code class="i">margin-inline</code>, <code class="i">padding-block</code> ជា <b>Logical Properties</b> — ដំណើរការត្រឹមត្រូវសម្រាប់គ្រប់ទិសដៅសរសេរ។ <code class="i">inset: 0</code> = top/right/bottom/left: 0។</div>
+</section>
+
+<!-- A4 -->
+<section id="a4">
+<h2><span class="badge">មេរៀន ៤</span>Container Queries</h2>
+<p>ក្នុង Media Query យើងធៀបនឹង <b>ទំហំ screen</b>។ ក្នុង Container Query យើងធៀបនឹង <b>ទំហំប្រអប់មេ</b> — ធ្វើឲ្យ component ឆ្លាតដោយខ្លួនឯង ទោះដាក់នៅកន្លែងណាក៏ដោយ។</p>
+<script type="text/x-code" data-lang="html" data-demo>
+<style>
+  .wrapper { container-type: inline-size; container-name: card; border:2px dashed #94a3b8; padding:8px; margin-bottom:12px; }
+  .item { display:grid; gap:8px; background:#fff; padding:12px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,.12); }
+  .thumb { height:60px; background:linear-gradient(135deg,#6366f1,#ec4899); border-radius:8px; }
+
+  @container card (min-width: 380px) {      /* ពេលមេទូលាយ ≥ 380px */
+    .item { grid-template-columns: 100px 1fr; align-items:center; }
+    .thumb { height:80px; }
+  }
+</style>
+<div class="wrapper" style="width:220px"><div class="item"><div class="thumb"></div><div>មេតូច 220px → ជួរឈរតែមួយ</div></div></div>
+<div class="wrapper"><div class="item"><div class="thumb"></div><div>មេធំ → រៀបជា ២ ជួរឈរ</div></div></div>
+</script>
+</section>
+
+<!-- A5 -->
+<section id="a5">
+<h2><span class="badge">មេរៀន ៥</span>Grid កម្រិតខ្ពស់: grid-template-areas, auto-fit, subgrid</h2>
+<script type="text/x-code" data-lang="html" data-demo>
+<style>
+  .page {
+    display:grid; gap:8px; min-height:260px;
+    grid-template-columns: 150px 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      "header header"
+      "side   main"
+      "footer footer";
+  }
+  .page > * { padding:12px; border-radius:8px; color:#fff; font-weight:bold; }
+  header { grid-area: header; background:#6366f1; }
+  aside  { grid-area: side;   background:#ec4899; }
+  main   { grid-area: main;   background:#0ea5e9; }
+  footer { grid-area: footer; background:#14b8a6; }
+  @media (max-width: 420px) {
+    .page { grid-template-columns: 1fr;
+      grid-template-areas: "header" "main" "side" "footer"; }
+  }
+</style>
+<div class="page"><header>Header</header><aside>Sidebar</aside><main>Main content</main><footer>Footer</footer></div>
+</script>
+<h3>ពាក្យគន្លឹះ Grid ដែលគួរចាំ</h3>
+<table>
+<tr><th>Property</th><th>ពន្យល់</th></tr>
+<tr><td><code>grid-template-areas</code></td><td>ដាក់ឈ្មោះតំបន់ ហើយគូរ layout ជាអក្សរ</td></tr>
+<tr><td><code>minmax(200px, 1fr)</code></td><td>ទំហំអប្បបរមា និងអតិបរមា</td></tr>
+<tr><td><code>auto-fit / auto-fill</code></td><td>បង្កើតជួរឈរស្វ័យប្រវត្តិ</td></tr>
+<tr><td><code>place-items: center</code></td><td>តម្រឹមកណ្ដាលទាំង ២ ទិស ក្នុងបន្ទាត់តែមួយ</td></tr>
+<tr><td><code>grid-auto-flow: dense</code></td><td>បំពេញចន្លោះទំនេរ</td></tr>
+<tr><td><code>subgrid</code></td><td>ឲ្យកូនប្រើ track របស់ Grid មេ (តម្រឹមមាតិកា card ឲ្យស្មើគ្នា)</td></tr>
+</table>
+<script type="text/x-code" data-lang="css">
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.card  { display: grid; grid-row: span 3; grid-template-rows: subgrid; }  /* ក្បាល/តួ/ជើង តម្រឹមស្មើ */
+.center { display: grid; place-items: center; min-height: 100vh; }
+</script>
+</section>
+
+<!-- A6 -->
+<section id="a6">
+<h2><span class="badge">មេរៀន ៦</span>Dark Mode ពេញលេញ</h2>
+<p>មាន ៣ វិធីជាមូលដ្ឋាន៖ (១) <code class="i">prefers-color-scheme</code> តាមប្រព័ន្ធ (២) ប៊ូតុងប្តូរ theme ដោយ <code class="i">data-theme</code> (៣) ដំណើរការ <code class="i">light-dark()</code> ។</p>
+<script type="text/x-code" data-lang="css">
+/* វិធី ១: តាមការកំណត់ប្រព័ន្ធ */
+:root { --bg:#fff; --text:#111827; --card:#f3f4f6; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#0f172a; --text:#e5e7eb; --card:#1e293b; }
+}
+
+/* វិធី ៣: light-dark() — ត្រូវតែមាន color-scheme ទើបដំណើរការ */
+:root { color-scheme: light dark; }
+body { background: light-dark(#ffffff, #0f172a); color: light-dark(#111827, #e5e7eb); }
+</script>
+<h3>វិធី ២: ប៊ូតុងប្តូរ theme (សាកល្បងចុច)</h3>
+<script type="text/x-code" data-lang="html" data-demo>
+<style>
+  :root { --bg:#ffffff; --text:#111827; --card:#eef2ff; --accent:#4f46e5; }
+  [data-theme="dark"] { --bg:#0f172a; --text:#e5e7eb; --card:#1e293b; --accent:#a78bfa; }
+  body { background:var(--bg); color:var(--text); transition: background .3s, color .3s; }
+  .card { background:var(--card); padding:16px; border-radius:12px; margin-top:10px; border-left:5px solid var(--accent); }
+  button { background:var(--accent); color:#fff; border:0; padding:8px 18px; border-radius:20px; cursor:pointer; font-family:inherit; }
+</style>
+<button id="t">🌙 ប្តូរ Theme</button>
+<div class="card"><b>Dark mode</b><br>ពណ៌ទាំងអស់មកពី CSS Variables ដូច្នេះប្តូរតែ variable ក៏ប្តូរទាំងទំព័រ។</div>
+<script>
+  document.getElementById('t').onclick = () => {
+    const el = document.documentElement;
+    el.dataset.theme = el.dataset.theme === 'dark' ? 'light' : 'dark';
+  };
+<\/script>
+</script>
+<div class="note"><b>✅</b> ដើម្បីចងចាំជម្រើសអ្នកប្រើ ត្រូវប្រើ <code class="i">localStorage</code> ក្នុង JavaScript។</div>
+</section>
+
+<!-- A7 -->
+<section id="a7">
+<h2><span class="badge">មេរៀន ៧</span>Animation កម្រិតខ្ពស់</h2>
+<table>
+<tr><th>Property</th><th>ពន្យល់</th></tr>
+<tr><td><code>animation-name / duration</code></td><td>ឈ្មោះ keyframes / រយៈពេល</td></tr>
+<tr><td><code>animation-timing-function</code></td><td><code>ease, linear, cubic-bezier(), steps(5)</code></td></tr>
+<tr><td><code>animation-delay / iteration-count</code></td><td>ពន្យារ / ចំនួនដង (<code>infinite</code>)</td></tr>
+<tr><td><code>animation-direction</code></td><td><code>alternate, reverse</code></td></tr>
+<tr><td><code>animation-fill-mode</code></td><td><code>forwards</code> (ជាប់ស្ថានភាពចុងក្រោយ)</td></tr>
+<tr><td><code>animation-play-state</code></td><td><code>paused / running</code></td></tr>
+</table>
+<script type="text/x-code" data-lang="html" data-demo>
+<style>
+  .stage { position:relative; height:90px; background:#0f172a; border-radius:12px; overflow:hidden; }
+  .dot { position:absolute; top:30px; left:0; width:30px; height:30px; background:#facc15; border-radius:50%;
+         animation: run 3s cubic-bezier(.68,-0.55,.27,1.55) infinite alternate; }
+  .dot:hover { animation-play-state: paused; }   /* hover ដើម្បីបញ្ឈប់ */
+  @keyframes run {
+    0%   { left:0;    background:#facc15; transform: scale(1); }
+    50%  { left:45%;  background:#34d399; transform: scale(1.6); }
+    100% { left:calc(100% - 30px); background:#f472b6; transform: scale(1); }
+  }
+
+  .typing { font-family: monospace; font-size:18px; border-right:3px solid #4f46e5; width:17ch; white-space:nowrap; overflow:hidden;
+            animation: type 3s steps(17) infinite alternate, blink .6s step-end infinite; margin-top:14px; }
+  @keyframes type { from { width:0 } to { width:17ch } }   /* "Hello, CSS world!" = 17 តួ */
+  @keyframes blink { 50% { border-color:transparent } }
+
+  .fade { margin-top:14px; padding:12px; background:#e0e7ff; border-radius:10px; animation: fadeUp .8s ease-out both; }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(24px);} to { opacity:1; transform:none; } }
+</style>
+<div class="stage"><div class="dot"></div></div>
+<div class="typing">Hello, CSS world!</div>
+<div class="fade">ចូលមកដោយ fadeUp (fill-mode: both)</div>
+</script>
+<h3>Scroll-driven animation (browser ថ្មី)</h3>
+<script type="text/x-code" data-lang="css">
+/* របារវឌ្ឍនភាពទំព័រ ដោយគ្មាន JavaScript */
+.progress {
+  position: fixed; top: 0; left: 0; height: 4px; background: #6366f1;
+  transform-origin: left; animation: grow linear; animation-timeline: scroll(root);
+}
+@keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* ចេញមកពេល element ចូលក្នុងអេក្រង់ */
+/* ប្រើ @keyframes fadeUp ពីឧទាហរណ៍ខាងលើ */
+.reveal { animation: fadeUp both; animation-timeline: view(); animation-range: entry 0% cover 30%; }
+</script>
+<div class="warn"><b>⚠️</b> <code class="i">animation-timeline</code> ដំណើរការលើ Chrome/Edge ថ្មី ហើយ browser ខ្លះនៅមិនទាន់គាំទ្រ — ត្រួតពិនិត្យនៅ <code class="i">caniuse.com</code> មុនប្រើ។</div>
+</section>
+
+<!-- A8 -->
+<section id="a8">
+<h2><span class="badge">មេរៀន ៨</span>clip-path, mask, filter និង blend-mode</h2>
+<script type="text/x-code" data-lang="html" data-demo>
+<style>
+  .row { display:flex; gap:12px; flex-wrap:wrap; }
+  .s { width:100px; height:100px; background:linear-gradient(135deg,#f97316,#ec4899); }
+  .tri  { clip-path: polygon(50% 0, 0 100%, 100% 100%); }
+  .hex  { clip-path: polygon(25% 5%,75% 5%,100% 50%,75% 95%,25% 95%,0 50%); }
+  .circ { clip-path: circle(48% at 50% 50%); }
+  .star { clip-path: polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%); }
+  .mix  { background: #6366f1; mix-blend-mode: multiply; margin-left:-40px; border-radius:50%; }
+  .base { background:#facc15; border-radius:50%; }
+  .blur { filter: blur(3px) saturate(2); }
+  .gray { filter: grayscale(1); transition:.3s; } .gray:hover { filter:none; }
+</style>
+<div class="row">
+  <div class="s tri"></div><div class="s hex"></div><div class="s circ"></div><div class="s star"></div>
+</div>
+<div class="row" style="margin-top:12px">
+  <div class="s base"></div><div class="s mix"></div>
+  <div class="s blur"></div><div class="s gray" title="hover"></div>
+</div>
+</script>
+<table>
+<tr><th>Property</th><th>ប្រើសម្រាប់</th></tr>
+<tr><td><code>clip-path</code></td><td>កាត់ element ជារូបរាងផ្សេងៗ</td></tr>
+<tr><td><code>mask-image</code></td><td>បិទបាំងដោយ gradient ឬរូប (fade ជាយ)</td></tr>
+<tr><td><code>filter</code></td><td><code>blur, brightness, contrast, grayscale, drop-shadow</code></td></tr>
+<tr><td><code>backdrop-filter</code></td><td>ឥទ្ធិពលលើអ្វីដែលនៅខាងក្រោយ (glassmorphism)</td></tr>
+<tr><td><code>mix-blend-mode</code></td><td>លាយពណ៌ដូច Photoshop</td></tr>
+<tr><td><code>object-fit / object-position</code></td><td>ឲ្យរូបភាពចុះក្នុងប្រអប់ដោយមិនខូចសមាមាត្រ</td></tr>
+</table>
+</section>
+
+<!-- A9 -->
+<section id="a9">
+<h2><span class="badge">មេរៀន ៩</span>@font-face និង Variable Fonts</h2>
+<p>ប្រើ font ផ្ទាល់ខ្លួន ឬ font ខ្មែរពីឯកសារ (.woff2) ដោយមិនពឹងលើ Google Fonts។</p>
+<script type="text/x-code" data-lang="css">
+@font-face {
+  font-family: "KhmerBrand";
+  src: url("fonts/KhmerBrand.woff2") format("woff2");
+  font-weight: 100 900;        /* variable font: គ្រប់កម្រាស់ */
+  font-display: swap;          /* បង្ហាញ font បម្រុងសិន ហើយប្តូរ */
+}
+body { font-family: "KhmerBrand", "Noto Sans Khmer", system-ui, sans-serif; }
+.title { font-weight: 650; }   /* variable font: ប្រើលេខណាក៏បាន 100–900 */
+</script>
+<div class="note"><b>💡</b> ប្រើ <code class="i">font-display: swap</code> ជានិច្ច ដើម្បីកុំឲ្យទំព័រទទេពេល font កំពុងផ្ទុក។ ជ្រើស <b>woff2</b> ព្រោះតូចជាងគេ។ ឧទាហរណ៍ font ប្រព័ន្ធលឿន៖ <code class="i">system-ui, -apple-system, "Segoe UI", sans-serif</code>។</div>
+</section>
+
+<!-- A10 -->
+<section id="a10">
+<h2><span class="badge">មេរៀន ១០</span>រចនាសម្ព័ន្ធ CSS ធំៗ: BEM និង Architecture</h2>
+<p><b>BEM</b> = Block__Element--Modifier ជាវិធីដាក់ឈ្មោះ class ឲ្យច្បាស់ ជៀសវាងជាន់គ្នា។</p>
+<script type="text/x-code" data-lang="html" data-demo>
+<style>
+  .card { width:260px; border-radius:14px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,.15); font-family:inherit; }
+  .card__img   { height:80px; background:linear-gradient(135deg,#22d3ee,#6366f1); }
+  .card__body  { padding:14px; }
+  .card__title { margin:0 0 6px; font-size:1.1rem; }
+  .card__btn   { border:0; padding:8px 16px; border-radius:8px; background:#4f46e5; color:#fff; cursor:pointer; }
+  .card__btn--danger { background:#dc2626; }            /* Modifier */
+  .card--featured { outline:3px solid #facc15; }        /* Modifier លើ Block */
+</style>
+<div class="card card--featured">
+  <div class="card__img"></div>
+  <div class="card__body">
+    <h3 class="card__title">BEM Card</h3>
+    <button class="card__btn">យល់ព្រម</button>
+    <button class="card__btn card__btn--danger">លុប</button>
+  </div>
+</div>
+</script>
+<h3>រចនាសម្ព័ន្ធ folder ណែនាំ (ITCSS/7-1)</h3>
+<script type="text/x-code" data-lang="css">
+/*
+css/
+ ├─ base/        reset.css, typography.css
+ ├─ layout/      grid.css, header.css, footer.css
+ ├─ components/  button.css, card.css, navbar.css
+ ├─ utilities/   spacing.css, text.css
+ └─ main.css     @import ឬ @layer ភ្ជាប់ទាំងអស់
+*/
+@layer reset, base, layout, components, utilities;
+</script>
+</section>
+
+<!-- A11 -->
+<section id="a11">
+<h2><span class="badge">មេរៀន ១១</span>Sass/SCSS, Bootstrap និង Tailwind (សង្ខេប)</h2>
+<h3>Sass/SCSS — CSS ដែលមាន variable, nesting, mixin</h3>
+<p>ត្រូវ compile ទៅជា CSS (ដំឡើងដោយ <code class="i">npm install -g sass</code> រួចរត់ <code class="i">sass style.scss style.css</code>)។ ឥឡូវ CSS ដើមមាន variable និង nesting ដែរ តែ Sass នៅមាន mixin/function/loop។</p>
+<script type="text/x-code" data-lang="css">
+/* style.scss */
+@use "sass:color";
+$brand: #6366f1;
+
+@mixin center { display: flex; justify-content: center; align-items: center; }
+
+.card {
+  @include center;
+  background: $brand;
+  &:hover { background: color.adjust($brand, $lightness: -10%); }  /* darken() លែងណែនាំ (deprecated) */
+  .title { font-weight: bold; }
+}
+
+@each $name, $c in (success: #16a34a, danger: #dc2626) {
+  .btn-#{$name} { background: $c; }
+}
+</script>
+
+<h3>Bootstrap vs Tailwind</h3>
+<table>
+<tr><th></th><th>Bootstrap</th><th>Tailwind CSS</th></tr>
+<tr><td>ស្ទីល</td><td>Component ដែលរួចរាល់ (<code>btn btn-primary</code>)</td><td>Utility class (<code>bg-blue-500 px-4 rounded</code>)</td></tr>
+<tr><td>លឿន</td><td>ធ្វើ prototype លឿនបំផុត</td><td>រចនាផ្ទាល់ខ្លួនបានទាំងស្រុង</td></tr>
+<tr><td>ដំឡើង</td><td>CDN <code>&lt;link&gt;</code> ឬ npm</td><td>CDN សម្រាប់សាកល្បង ឬ build tool សម្រាប់ផលិតកម្ម</td></tr>
+</table>
+<script type="text/x-code" data-lang="html">
+<!-- Bootstrap -->
+<button class="btn btn-primary">Bootstrap</button>
+
+<!-- Tailwind -->
+<button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg">Tailwind</button>
+</script>
+<div class="note"><b>✅ យោបល់៖</b> ត្រូវស្ទាត់ CSS ជាមុន ទើបប្រើ Bootstrap/Tailwind បានមានប្រសិទ្ធភាព ព្រោះ framework ទាំងនោះគ្រាន់តែជា CSS ដែលសរសេររួចស្រាប់។</div>
+</section>
+
+<!-- A12 -->
+<section id="a12">
+<h2><span class="badge">មេរៀន ១២</span>Accessibility និង Performance</h2>
+<h3>♿ Accessibility (a11y)</h3>
+<ul>
+<li><b>Contrast៖</b> អក្សរធៀបផ្ទៃ ≥ <b>4.5:1</b> (WCAG AA) — ពិនិត្យដោយ DevTools</li>
+<li><b>Focus ឃើញច្បាស់៖</b> កុំលុប outline ដោយមិនមានជំនួស; ប្រើ <code class="i">:focus-visible</code></li>
+<li><b>គោរពអ្នកមិនចូលចិត្តចលនា៖</b> <code class="i">prefers-reduced-motion</code></li>
+<li>ប៊ូតុង/តំណ ទំហំចុចយ៉ាងតិច <b>44×44px</b> លើទូរស័ព្ទ</li>
+<li>កុំប្រើតែពណ៌ដើម្បីបង្ហាញព័ត៌មាន (ជនពិការភ្នែកពណ៌)</li>
+</ul>
+<script type="text/x-code" data-lang="html" data-demo>
+<style>
+  .btn { background:#1d4ed8; color:#fff; border:0; padding:12px 24px; border-radius:10px; min-height:44px; cursor:pointer; font-family:inherit; }
+  .btn:focus-visible { outline:3px solid #facc15; outline-offset:3px; }   /* focus ច្បាស់ពេលប្រើ Tab */
+  .pulse { margin-top:14px; width:40px; height:40px; background:#ec4899; border-radius:50%; animation:pulse 1s infinite alternate; }
+  @keyframes pulse { to { transform: scale(1.5); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pulse { animation: none; }       /* បិទចលនាសម្រាប់អ្នកដែលជ្រើស */
+  }
+</style>
+<button class="btn">ចុច Tab មកខ្ញុំ</button>
+<div class="pulse"></div>
+</script>
+
+<h3>⚡ Performance</h3>
+<table>
+<tr><th>បច្ចេកទេស</th><th>ពន្យល់</th></tr>
+<tr><td>animate តែ <code>transform</code> និង <code>opacity</code></td><td>ស្រាលជាង width/top/left (មិនបង្កើត reflow)</td></tr>
+<tr><td><code>will-change: transform</code></td><td>ប្រាប់ browser ឲ្យត្រៀម (ប្រើតិចតួច)</td></tr>
+<tr><td><code>content-visibility: auto</code></td><td>រំលងការគូរផ្នែកក្រៅអេក្រង់</td></tr>
+<tr><td><code>contain: layout paint</code></td><td>កំណត់ព្រំដែន render</td></tr>
+<tr><td>បង្រួម (minify) CSS</td><td>កាត់បន្ថយទំហំ file</td></tr>
+<tr><td>ជៀស selector ជ្រៅ</td><td>ឧ. <code>.a .b .c .d span</code> យឺត និងពិបាកថែរក្សា</td></tr>
+</table>
+</section>
+
+<!-- A13 -->
+<section id="a13">
+<h2><span class="badge">មេរៀន ១៣</span>Print Stylesheet និង @supports</h2>
+<script type="text/x-code" data-lang="css">
+@media print {
+  nav, footer, .no-print { display: none; }       /* លាក់ពេលបោះពុម្ព */
+  body { color: #000; background: #fff; font-size: 12pt; }
+  a[href]::after { content: " (" attr(href) ")"; }  /* បង្ហាញ URL ក្រោយតំណ */
+  h2 { break-after: avoid; }                        /* កុំកាត់ទំព័រក្រោយចំណងជើង */
+}
+@page { size: A4; margin: 2cm; }
+
+/* ពិនិត្យថា browser គាំទ្រ feature ឬអត់ */
+@supports (display: grid) and (gap: 1rem) {
+  .layout { display: grid; gap: 1rem; }
+}
+@supports not (backdrop-filter: blur(4px)) {
+  .glass { background: rgba(255,255,255,.9); }     /* ជម្រើសបម្រុង */
+}
+</script>
+<div class="note"><b>💡</b> សាកល្បងមើល print ក្នុង Chrome ដោយចុច <kbd>Ctrl</kbd>+<kbd>P</kbd> ឬ DevTools → ⋮ → More tools → Rendering → Emulate CSS media type: print។</div>
+</section>
+
+<!-- CHEAT -->
+<section id="cheat">
+<h2>📚 តារាងសង្ខេបមុខងារកម្រិតខ្ពស់</h2>
+<table>
+<tr><th>ការងារ</th><th>ប្រើអ្វី</th></tr>
+<tr><td>គ្រប់គ្រងអាទិភាព style</td><td><code>@layer</code>, <code>:where()</code></td></tr>
+<tr><td>ជ្រើស parent តាមកូន</td><td><code>:has()</code></td></tr>
+<tr><td>អក្សរ/គម្លាតបត់បែន</td><td><code>clamp()</code>, <code>min()</code>, <code>max()</code></td></tr>
+<tr><td>Component តបតាមទំហំមេ</td><td><code>@container</code></td></tr>
+<tr><td>Layout ទំព័រជា "ផែនទី"</td><td><code>grid-template-areas</code></td></tr>
+<tr><td>Dark mode</td><td>CSS Variables + <code>prefers-color-scheme</code> / <code>light-dark()</code></td></tr>
+<tr><td>រូបរាងមិនមែនចតុកោណ</td><td><code>clip-path</code>, <code>border-radius</code>, <code>mask</code></td></tr>
+<tr><td>ចលនា scroll</td><td><code>animation-timeline</code></td></tr>
+<tr><td>ដាក់ឈ្មោះ class</td><td>BEM</td></tr>
+<tr><td>គោរពអ្នកប្រើ</td><td><code>prefers-reduced-motion</code>, <code>:focus-visible</code></td></tr>
+<tr><td>បោះពុម្ព</td><td><code>@media print</code>, <code>@page</code></td></tr>
+</table>
+</section>
+
+<!-- EXERCISES -->
+<section id="exercises">
+<h2>✍️ លំហាត់កម្រិតខ្ពស់ (មានចម្លើយ)</h2>
+
+<div class="ex"><h4>✍️ លំហាត់ ១ — Layers <span class="level">មធ្យម</span></h4>
+<p>បង្កើត layer <code class="i">base, theme</code> ហើយធ្វើឲ្យ <code class="i">.btn</code> ក្នុង theme ឈ្នះ <code class="i">button</code> ក្នុង base ទោះជា selector ក្នុង base (<code class="i">button.btn</code>) មាន specificity ខ្ពស់ជាងក៏ដោយ។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="html" data-demo>
+<style>
+  @layer base, theme;
+  @layer base  { button.btn { background: gray; color:#fff; } }
+  @layer theme { .btn { background: #16a34a; padding:10px 22px; border:0; border-radius:8px; } }
+</style>
+<button class="btn">បៃតង (theme ឈ្នះ)</button>
+</script></details></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ២ — :has() <span class="level">មធ្យម</span></h4>
+<p>ធ្វើ <code class="i">label</code> ដែលមាន checkbox ដែលបានធីក ប្តូរផ្ទៃទៅពណ៌បៃតងស្រាល ដោយមិនប្រើ JavaScript។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="html" data-demo>
+<style>
+  label { display:flex; gap:10px; align-items:center; padding:12px; border:2px solid #d1d5db; border-radius:10px; margin-bottom:8px; cursor:pointer; }
+  label:has(input:checked) { background:#dcfce7; border-color:#16a34a; }
+</style>
+<label><input type="checkbox"> រៀន HTML</label>
+<label><input type="checkbox"> រៀន CSS</label>
+<label><input type="checkbox"> រៀន JavaScript</label>
+</script></details></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៣ — Fluid Typography <span class="level">មធ្យម</span></h4>
+<p>ធ្វើ h1 ដែលទំហំអក្សរចន្លោះ 24px ដល់ 56px តាមទទឹង screen ដោយ <code class="i">clamp()</code>។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="html" data-demo>
+<style> h1 { font-size: clamp(24px, 6vw, 56px); color:#9333ea; } </style>
+<h1>ស្វាគមន៍</h1>
+</script></details></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៤ — Container Query Card <span class="level">ពិបាក</span></h4>
+<p>ធ្វើ card ដែលនៅមេតូចបង្ហាញជាជួរឈរ ហើយនៅមេទូលាយ (≥ 400px) បង្ហាញរូបនៅឆ្វេង អក្សរនៅស្តាំ។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="html" data-demo>
+<style>
+  .box { container-type: inline-size; }
+  .c { display:flex; flex-direction:column; gap:10px; padding:12px; background:#fef3c7; border-radius:12px; }
+  .c .img { height:60px; background:#f59e0b; border-radius:8px; }
+  @container (min-width: 400px) {
+    .c { flex-direction: row; align-items:center; }
+    .c .img { width:100px; height:80px; flex-shrink:0; }
+  }
+</style>
+<div class="box"><div class="c"><div class="img"></div><p>អត្ថបទ card ដែលតម្រូវខ្លួនតាមទំហំមេ។</p></div></div>
+</script></details></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៥ — Grid Areas <span class="level">ពិបាក</span></h4>
+<p>ធ្វើ layout ទំព័រ Blog៖ header, nav (ឆ្វេង), article, ads (ស្តាំ), footer ដោយ <code class="i">grid-template-areas</code>។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="html" data-demo>
+<style>
+  .blog { display:grid; gap:8px; grid-template-columns:100px 1fr 90px;
+    grid-template-areas: "h h h" "n a ad" "f f f"; }
+  .blog > div { padding:14px; color:#fff; border-radius:8px; text-align:center; }
+  .h{grid-area:h;background:#4f46e5}.n{grid-area:n;background:#db2777}.a{grid-area:a;background:#0284c7;min-height:80px}
+  .ad{grid-area:ad;background:#ca8a04}.f{grid-area:f;background:#0d9488}
+</style>
+<div class="blog"><div class="h">Header</div><div class="n">Nav</div><div class="a">Article</div><div class="ad">Ads</div><div class="f">Footer</div></div>
+</script></details></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៦ — រូបរាងដោយ clip-path <span class="level">មធ្យម</span></h4>
+<p>បង្កើតប៊ូតុងរាង arrow (ព្រួញចង្អុលស្តាំ) ដោយ <code class="i">clip-path: polygon()</code>។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="html" data-demo>
+<style>
+  .arrow { display:inline-block; background:#2563eb; color:#fff; padding:14px 50px 14px 24px; font-weight:bold;
+           clip-path: polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%); transition:.2s; }
+  .arrow:hover { background:#1e40af; padding-right:60px; }
+</style>
+<div class="arrow">ជំហានបន្ទាប់</div>
+</script></details></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៧ — Accessible Animation <span class="level">មធ្យម</span></h4>
+<p>ធ្វើប៊ូតុងមាន animation pulse ប៉ុន្តែបិទ animation ពេលអ្នកប្រើជ្រើស reduced motion។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="html" data-demo>
+<style>
+  .cta { background:#e11d48; color:#fff; border:0; padding:14px 30px; border-radius:30px; font-size:16px; font-family:inherit; animation:glow 1.4s infinite; }
+  @keyframes glow { 0%,100%{ box-shadow:0 0 0 0 rgba(225,29,72,.6);} 50%{ box-shadow:0 0 0 14px rgba(225,29,72,0);} }
+  @media (prefers-reduced-motion: reduce) { .cta { animation:none; } }
+</style>
+<button class="cta">ចុះឈ្មោះ</button>
+</script></details></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៨ — Theme Switch <span class="level">ពិបាក</span></h4>
+<p>ធ្វើកាត ២ theme (Light/Dark) ដោយ CSS Variables និងប៊ូតុងប្តូរ។ បន្ថែម transition រលូន។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="html" data-demo>
+<style>
+  :root { --bg:#ffffff; --text:#111827; --card:#eef2ff; --accent:#4f46e5; color-scheme: light; }
+  [data-theme="dark"] { --bg:#0f172a; --text:#e5e7eb; --card:#1e293b; --accent:#a78bfa; color-scheme: dark; }
+  body  { background:var(--bg); color:var(--text); transition: background .3s, color .3s; }
+  .card { background:var(--card); padding:16px; border-radius:12px; margin-top:10px; border-left:5px solid var(--accent); transition: background .3s; }
+  button { background:var(--accent); color:#fff; border:0; padding:8px 18px; border-radius:20px; cursor:pointer; font-family:inherit; }
+  @media (prefers-reduced-motion: reduce) { body, .card { transition: none; } }
+</style>
+<button id="t" aria-pressed="false">🌙 Dark</button>
+<div class="card">Light / Dark theme ជាមួយ transition រលូន ហើយចងចាំជម្រើស</div>
+<script>
+  const root = document.documentElement, btn = document.getElementById('t');
+  function apply(theme) {
+    root.dataset.theme = theme;
+    btn.textContent = theme === 'dark' ? '☀️ Light' : '🌙 Dark';
+    btn.setAttribute('aria-pressed', theme === 'dark');
+  }
+  let saved = null;
+  try { saved = localStorage.getItem('theme'); } catch (e) {}   // អាចបរាជ័យក្នុង Private mode
+  apply(saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+  btn.onclick = () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    apply(next);
+    try { localStorage.setItem('theme', next); } catch (e) {}
+  };
+<\/script>
+</script>
+</details></div>
+</section>
+
+<!-- PROJECT -->
+<section id="project">
+<h2>🚀 គម្រោងចុងក្រោយ៖ Portfolio ទំនើប (Dark mode + Responsive)</h2>
+<p>បញ្ចូលអ្វីដែលបានរៀន៖ CSS Variables, Dark mode, Grid auto-fit, clamp(), :has(), container query, animation, focus-visible, reduced-motion។</p>
+<script type="text/x-code" data-lang="html" data-demo>
+<!DOCTYPE html>
+<html lang="km" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  @layer reset, base, components;
+
+  @layer reset { * { box-sizing:border-box; margin:0; } }
+
+  @layer base {
+    :root { --bg:#f8fafc; --text:#0f172a; --muted:#64748b; --card:#ffffff; --accent:#6366f1; --accent2:#ec4899; --line:#e2e8f0; }
+    [data-theme="dark"] { --bg:#0b1020; --text:#e5e7eb; --muted:#94a3b8; --card:#151b2e; --accent:#a78bfa; --accent2:#f472b6; --line:#243049; }
+    body { font-family:"Noto Sans Khmer",system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.7; transition:background .3s,color .3s; }
+    h1 { font-size:clamp(1.8rem, 6vw, 3.2rem); line-height:1.2; }
+    :focus-visible { outline:3px solid var(--accent2); outline-offset:3px; }
+  }
+
+  @layer components {
+    .bar { display:flex; justify-content:space-between; align-items:center; padding:14px min(6%,40px); position:sticky; top:0; backdrop-filter:blur(10px); background:color-mix(in srgb, var(--bg) 80%, transparent); border-bottom:1px solid var(--line); }
+    .brand { font-weight:800; background:linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .toggle { background:var(--card); color:var(--text); border:1px solid var(--line); border-radius:99px; padding:6px 16px; cursor:pointer; font-family:inherit; }
+
+    .hero { text-align:center; padding:clamp(32px,8vw,80px) 6%; }
+    .hero p { color:var(--muted); max-width:46ch; margin:12px auto 0; }
+    .hero .cta { display:inline-block; margin-top:20px; padding:12px 28px; border-radius:99px; color:#fff; text-decoration:none; font-weight:600;
+                 background:linear-gradient(135deg,var(--accent),var(--accent2)); transition:transform .25s, box-shadow .25s; }
+    .hero .cta:hover { transform:translateY(-3px); box-shadow:0 12px 26px rgba(99,102,241,.4); }
+
+    .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(210px,1fr)); gap:16px; padding:0 min(6%,40px) 40px; }
+    .project { background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden; transition:transform .25s, box-shadow .25s; animation:rise .6s ease-out both; }
+    .project:hover { transform:translateY(-6px); box-shadow:0 14px 30px rgba(0,0,0,.18); }
+    .project:has(.tag:hover) { border-color:var(--accent); }
+    .project__img { height:90px; background:linear-gradient(135deg,var(--accent),var(--accent2)); }
+    .project__body { padding:14px; }
+    .tag { display:inline-block; font-size:.75rem; padding:1px 10px; border-radius:99px; background:color-mix(in srgb, var(--accent) 18%, transparent); color:var(--accent); }
+    .project:nth-child(2){ animation-delay:.1s } .project:nth-child(3){ animation-delay:.2s } .project:nth-child(4){ animation-delay:.3s }
+    @keyframes rise { from { opacity:0; transform:translateY(20px);} to { opacity:1; transform:none; } }
+    @media (prefers-reduced-motion: reduce) { * { animation:none !important; transition:none !important; } }
+  }
+</style>
+</head>
+<body>
+  <div class="bar"><span class="brand">Dara.dev</span><button class="toggle" id="t">🌙 Theme</button></div>
+  <section class="hero">
+    <h1>សួស្តី! ខ្ញុំជា Web Developer</h1>
+    <p>ខ្ញុំបង្កើតគេហទំព័រស្អាត លឿន និងងាយប្រើ ដោយ HTML, CSS និង JavaScript។</p>
+    <a class="cta" href="#">មើលស្នាដៃ</a>
+  </section>
+  <section class="grid">
+    <article class="project"><div class="project__img"></div><div class="project__body"><span class="tag">Landing</span><h3>ហាងកាហ្វេ</h3><p>Responsive Layout</p></div></article>
+    <article class="project"><div class="project__img"></div><div class="project__body"><span class="tag">Dashboard</span><h3>ផ្ទាំងស្ថិតិ</h3><p>Grid + Charts</p></div></article>
+    <article class="project"><div class="project__img"></div><div class="project__body"><span class="tag">Shop</span><h3>ហាងអនឡាញ</h3><p>Flex + Animation</p></div></article>
+    <article class="project"><div class="project__img"></div><div class="project__body"><span class="tag">Blog</span><h3>ប្លក់ផ្ទាល់ខ្លួន</h3><p>Typography</p></div></article>
+  </section>
+  <script>
+    const t = document.getElementById('t');
+    t.onclick = () => {
+      const r = document.documentElement;
+      r.dataset.theme = r.dataset.theme === 'dark' ? 'light' : 'dark';
+      t.textContent = r.dataset.theme === 'dark' ? '☀️ Theme' : '🌙 Theme';
+    };
+  <\/script>
+</body>
+</html>
+</script>
+<div class="note"><b>🏆 អបអរសាទរ!</b> អ្នកបានបញ្ចប់ CSS ទាំងកម្រិតមូលដ្ឋាន និងកម្រិតខ្ពស់។ ជំហានបន្ទាប់៖ <b>JavaScript</b>, <b>Git/GitHub</b> សម្រាប់ដាក់ស្នាដៃ, <b>Tailwind CSS</b>, និង <b>React</b> ឬ framework ដទៃ។</div>
+<h3>🔗 ប្រភពរៀនបន្ថែម</h3>
+<ul>
+<li>MDN Web Docs — <code class="i">developer.mozilla.org/en-US/docs/Web/CSS</code></li>
+<li>web.dev/learn/css — វគ្គ CSS ឥតគិតថ្លៃពី Google</li>
+<li>caniuse.com — ពិនិត្យការគាំទ្ររបស់ browser</li>
+<li>CSS-Tricks, Josh Comeau's "CSS for JavaScript Developers"</li>
+</ul>
+</section>
+
+
+
+<section class="hero" id="pro">
+  <h2>🏆 ផ្នែកទី ៣: CSS កម្រិតអាជីព — Design System</h2>
+  <p>ក្រុមហ៊ុនធំៗ មិនសរសេរ CSS ផ្តេសផ្តាសទេ គឺសាងសង់ <b>Design System</b>៖ <b>Design Tokens</b> (ពណ៌ គម្លាត អក្សរ) នៅកន្លែងតែមួយ, <b>@layer</b> កំណត់អាទិភាពច្បាស់, Component តាម <b>BEM</b>, <b>Container Queries</b>, Dark mode ដោយ <b>light-dark()</b> ដែលចងចាំជម្រើស, Form validation ដោយ <b>:has()</b> និង Accessibility។</p>
+  <p><span class="badge">✔ សាកល្បងរួច</span> លើទទឹង 900px និង 380px៖ Card ប្តូរប្លង់តាមមេ, Theme ប្តូរ, Error បង្ហាញ និងមិនរំកិលចំហៀង។</p>
+</section>
+
+<section id="pro-structure">
+  <h2>📁 រចនាសម្ព័ន្ធ CSS ក្នុង Project ពិត</h2>
+  <script type="text/x-code" data-lang="txt" data-label="Folder Structure">
+css/
+├── main.css            # @layer + @import ទាំងអស់
+├── reset.css
+├── tokens.css          # ពណ៌ គម្លាត អក្សរ (Design Tokens)
+├── base.css            # body, h1–h6, a, :focus-visible
+├── layout.css          # .container, .stack, .auto-grid
+├── components/
+│   ├── button.css      # .btn, .btn--ghost
+│   ├── card.css        # .card, .card__media, @container
+│   └── field.css
+└── utilities.css       # .visually-hidden
+</script>
+  <script type="text/x-code" data-lang="css" data-label="main.css">
+/* លំដាប់ Layer ប្រកាសម្តងនៅខាងលើ — ខាងក្រោយឈ្នះ */
+@layer reset, tokens, base, layout, components, utilities;
+
+@import url("reset.css") layer(reset);
+@import url("tokens.css") layer(tokens);
+@import url("base.css") layer(base);
+@import url("layout.css") layer(layout);
+@import url("components/button.css") layer(components);
+@import url("components/card.css") layer(components);
+@import url("components/field.css") layer(components);
+@import url("utilities.css") layer(utilities);
+/* ក្នុង Production: ប្រើ Build tool (Vite/Lightning CSS) បញ្ចូលជា File តែមួយ និង Minify */
+</script>
+  <div class="note">💡 <b>ច្បាប់មាស Design System៖</b> Component មិនដែលសរសេរពណ៌ ឬលេខផ្ទាល់ (<code class="i">#4f46e5</code>, <code class="i">17px</code>) ទេ — ប្រើតែ Token (<code class="i">var(--color-primary)</code>, <code class="i">var(--space-3)</code>)។ ប្តូរ Brand ឬ Dark mode = ប្តូរ Token តែកន្លែងមួយ។</div>
+</section>
+
+<section id="pro-code">
+  <h2>🧱 កូដពេញលេញ (សាកល្បងផ្ទាល់ខាងក្រោម)</h2>
+  <p>ចុចប៊ូតុង <b>🌙 Dark</b>, វាយអ៊ីមែលខុសហើយចុច «ផ្ញើ», ហើយបង្រួមបង្អួច Browser ដើម្បីមើល Card ប្តូរប្លង់។</p>
+  <script type="text/x-code" data-lang="html" data-label="index.html" data-demo>
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design System Demo</title>
+<style>
+/* ===== 1. លំដាប់ Layer: Layer ខាងក្រោយឈ្នះ ===== */
+@layer reset, tokens, base, layout, components, utilities;
+
+@layer reset {
+  *, *::before, *::after { box-sizing: border-box; }
+  * { margin: 0; }
+  img { display: block; max-width: 100%; }
+  button, input { font: inherit; }
+}
+
+/* ===== 2. Design Tokens: តម្លៃទាំងអស់នៅកន្លែងតែមួយ ===== */
+@layer tokens {
+  :root {
+    color-scheme: light dark;              /* តាមប្រព័ន្ធ (Light/Dark) */
+    --color-bg:         light-dark(#f8fafc, #0b1020);
+    --color-surface:    light-dark(#ffffff, #151b2e);
+    --color-text:       light-dark(#0f172a, #e5e7eb);
+    --color-muted:      light-dark(#475569, #94a3b8);
+    --color-line:       light-dark(#e2e8f0, #243049);
+    --color-primary:    light-dark(#4f46e5, #a5b4fc);
+    --color-on-primary: light-dark(#ffffff, #1e1b4b);
+    --color-danger:     light-dark(#dc2626, #fca5a5);
+
+    --space-1: .25rem; --space-2: .5rem; --space-3: 1rem; --space-4: 1.5rem; --space-5: 2.5rem;
+    --radius: 12px;
+    --shadow: 0 6px 20px rgb(0 0 0 / .12);
+    --font: "Noto Sans Khmer", system-ui, sans-serif;
+
+    /* Fluid type scale */
+    --step-0: clamp(1rem, .95rem + .25vw, 1.125rem);
+    --step-2: clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem);
+    --step-3: clamp(1.9rem, 1.4rem + 2.6vw, 3.2rem);
+    --ease: cubic-bezier(.2, .8, .2, 1);
+  }
+  /* ប៊ូតុង Theme បង្ខំ Light ឬ Dark → light-dark() ប្តូរតាម */
+  [data-theme="light"] { color-scheme: light; }
+  [data-theme="dark"]  { color-scheme: dark; }
+}
+
+/* ===== 3. Base: Element ធម្មតា ===== */
+@layer base {
+  body { font-family: var(--font); font-size: var(--step-0); line-height: 1.7;
+         background: var(--color-bg); color: var(--color-text); }
+  h1 { font-size: var(--step-3); line-height: 1.2; }
+  h2 { font-size: var(--step-2); line-height: 1.3; }
+  a  { color: var(--color-primary); }
+  :focus-visible { outline: 3px solid var(--color-primary); outline-offset: 3px; }
+}
+
+/* ===== 4. Layout: ប្លង់ដែលប្រើឡើងវិញបាន ===== */
+@layer layout {
+  .container { width: min(100% - 2rem, 960px); margin-inline: auto; }
+  .stack > * + * { margin-block-start: var(--space-3); }
+  .auto-grid { display: grid; gap: var(--space-3);
+               grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); }
+}
+
+/* ===== 5. Components (BEM) ===== */
+@layer components {
+  .site-header { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--color-line);
+                 background: color-mix(in srgb, var(--color-bg) 85%, transparent); backdrop-filter: blur(8px); }
+  .site-header__inner { display: flex; align-items: center; justify-content: space-between; padding-block: var(--space-2); }
+  .logo { font-weight: 800; }
+
+  .btn { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 44px; padding: 0 var(--space-4);
+         border: 1px solid transparent; border-radius: 999px; background: var(--color-primary); color: var(--color-on-primary);
+         text-decoration: none; cursor: pointer; transition: transform .2s var(--ease), box-shadow .2s var(--ease); }
+  .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .btn--ghost { background: transparent; color: var(--color-text); border-color: var(--color-line); }
+
+  .hero { padding-block: var(--space-5); text-align: center; }
+  .hero p { color: var(--color-muted); max-width: 50ch; margin-inline: auto; }
+
+  /* Card: Container Query — តម្រូវខ្លួនតាមទំហំមេ មិនមែនទំហំ Screen */
+  .card-wrap { container: card / inline-size; }
+  .card { display: grid; gap: var(--space-3); padding: var(--space-3); height: 100%;
+          background: var(--color-surface); border: 1px solid var(--color-line); border-radius: var(--radius); }
+  .card__media { aspect-ratio: 16 / 9; border-radius: calc(var(--radius) - 4px);
+                 background: linear-gradient(135deg, var(--color-primary), #ec4899); }
+  .card__title { font-size: 1.1rem; }
+  .card__text { color: var(--color-muted); }
+  .card:has(.badge--new) { border-color: var(--color-primary); }      /* :has() = Parent selector */
+  @container card (min-width: 520px) {
+    .card { grid-template-columns: 180px 1fr; align-items: center; }
+  }
+
+  .badge { display: inline-block; padding: 0 var(--space-2); border-radius: 999px; font-size: .8rem;
+           background: color-mix(in srgb, var(--color-primary) 15%, transparent); color: var(--color-primary); }
+
+  .field { display: grid; gap: var(--space-1); max-width: 420px; }
+  .field input { padding: var(--space-2) var(--space-3); border: 2px solid var(--color-line); border-radius: 10px;
+                 background: var(--color-surface); color: var(--color-text); }
+  .field input:user-invalid { border-color: var(--color-danger); }
+  .field__error { display: none; color: var(--color-danger); font-size: .85rem; }
+  .field:has(input:user-invalid) .field__error { display: block; }    /* បង្ហាញ Error ដោយគ្មាន JS */
+}
+
+/* ===== 6. Utilities ===== */
+@layer utilities {
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+
+/* ===== 7. នៅក្រៅ Layer → ឈ្នះគ្រប់ Layer ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+@media print {
+  .site-header, .btn { display: none; }
+  body { background: #fff; color: #000; }
+}
+</style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <span class="logo">Dara.dev</span>
+      <button class="btn btn--ghost" id="theme" type="button" aria-pressed="false">🌙 Dark</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero stack">
+      <h1>Design System ដោយ CSS សុទ្ធ</h1>
+      <p>Tokens · @layer · BEM · Container Queries · :has() · light-dark() · Accessibility</p>
+      <a class="btn" href="#work">មើលស្នាដៃ</a>
+    </section>
+
+    <section id="work" class="stack" aria-labelledby="work-title">
+      <h2 id="work-title">ស្នាដៃ</h2>
+      <div class="auto-grid">
+        <div class="card-wrap">
+          <article class="card">
+            <div class="card__media" role="img" aria-label="រូបគម្រោង ហាងកាហ្វេ"></div>
+            <div class="stack">
+              <span class="badge badge--new">ថ្មី</span>
+              <h3 class="card__title">ហាងកាហ្វេ</h3>
+              <p class="card__text">មេតូច → Card រៀបជាជួរឈរ</p>
+            </div>
+          </article>
+        </div>
+        <div class="card-wrap">
+          <article class="card">
+            <div class="card__media" role="img" aria-label="រូបគម្រោង Dashboard"></div>
+            <div class="stack">
+              <span class="badge">Dashboard</span>
+              <h3 class="card__title">ផ្ទាំងស្ថិតិ</h3>
+              <p class="card__text">Grid + Container Query</p>
+            </div>
+          </article>
+        </div>
+      </div>
+      <div class="card-wrap">
+        <article class="card">
+          <div class="card__media" role="img" aria-label="រូបគម្រោង Blog"></div>
+          <div class="stack">
+            <span class="badge">Blog</span>
+            <h3 class="card__title">Card ដដែល ក្នុងមេទូលាយ</h3>
+            <p class="card__text">មេ ≥ 520px → រូបនៅឆ្វេង អក្សរនៅស្តាំ (កូដ CSS ដដែល!)</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="hero stack" aria-labelledby="contact-title">
+      <h2 id="contact-title">ទាក់ទង</h2>
+      <form class="field" style="margin-inline:auto; text-align:left" onsubmit="event.preventDefault()">
+        <label for="email">អ៊ីមែល</label>
+        <input id="email" type="email" required placeholder="you@example.com">
+        <span class="field__error">សូមបញ្ចូលអ៊ីមែលត្រឹមត្រូវ</span>
+        <button class="btn" type="submit">ផ្ញើ</button>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    // ចងចាំ Theme: localStorage ប្រសិនមាន បើមិនមានយកតាមប្រព័ន្ធ
+    const root = document.documentElement;
+    const btn = document.getElementById("theme");
+    function apply(theme) {
+      root.dataset.theme = theme;
+      const dark = theme === "dark";
+      btn.textContent = dark ? "☀️ Light" : "🌙 Dark";
+      btn.setAttribute("aria-pressed", String(dark));
+    }
+    let saved = null;
+    try { saved = localStorage.getItem("theme"); } catch {}
+    apply(saved ?? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+    btn.addEventListener("click", () => {
+      const next = root.dataset.theme === "dark" ? "light" : "dark";
+      apply(next);
+      try { localStorage.setItem("theme", next); } catch {}
+    });
+  <\/script>
+</body>
+</html>
+</script>
+</section>
+
+<section id="pro-check">
+  <h2>✅ Checklist & ឧបករណ៍កម្រិតអាជីព</h2>
+  <table>
+    <tr><th>ផ្នែក</th><th>វិធី</th></tr>
+    <tr><td><b>Tokens</b></td><td>ពណ៌ គម្លាត Radius Shadow Font ទាំងអស់ជា Custom Properties</td></tr>
+    <tr><td><b>អាទិភាព</b></td><td><code class="i">@layer</code> ជំនួស <code class="i">!important</code> និង Selector វែងៗ</td></tr>
+    <tr><td><b>Naming</b></td><td>BEM៖ <code class="i">.card</code>, <code class="i">.card__title</code>, <code class="i">.btn--ghost</code></td></tr>
+    <tr><td><b>Responsive</b></td><td>Fluid type (<code class="i">clamp</code>), <code class="i">auto-fit</code> + <code class="i">minmax(min(240px,100%),1fr)</code>, <code class="i">@container</code></td></tr>
+    <tr><td><b>Dark mode</b></td><td><code class="i">color-scheme</code> + <code class="i">light-dark()</code> + <code class="i">data-theme</code> + localStorage</td></tr>
+    <tr><td><b>Accessibility</b></td><td>Contrast ≥ 4.5:1, <code class="i">:focus-visible</code>, ប៊ូតុង ≥ 44px, <code class="i">prefers-reduced-motion</code>, <code class="i">aria-pressed</code></td></tr>
+    <tr><td><b>Performance</b></td><td>Animate តែ <code class="i">transform/opacity</code>, Minify, លុប CSS មិនប្រើ</td></tr>
+    <tr><td><b>Quality</b></td><td>Stylelint + Prettier ក្នុង VS Code និង CI</td></tr>
+  </table>
+  <script type="text/x-code" data-lang="txt" data-label=".stylelintrc.json">
+{
+  "extends": ["stylelint-config-standard"],
+  "rules": {
+    "selector-class-pattern": "^[a-z]+(-[a-z]+)*(__[a-z]+(-[a-z]+)*)?(--[a-z]+(-[a-z]+)*)?$",
+    "declaration-no-important": true
+  }
+}
+</script>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+npm install --save-dev stylelint stylelint-config-standard
+npx stylelint "css/**/*.css"
+</script>
+  <div class="ex"><h4>🏁 លំហាត់គម្រោងចុងក្រោយ</h4>
+    <ol>
+      <li>បំបែក CSS ក្នុងគម្រោងខាងលើជា File តាមរចនាសម្ព័ន្ធ Folder ហើយប្រើ <code class="i">main.css</code></li>
+      <li>ប្តូរ Brand ទៅពណ៌បៃតង ដោយកែតែ <code class="i">tokens.css</code></li>
+      <li>បន្ថែម Component ថ្មី <code class="i">.alert</code> (info / success / danger) ដោយប្រើតែ Token</li>
+      <li>រត់ Stylelint ហើយកែរហូតគ្មាន Error</li>
+      <li>រត់ Lighthouse (F12) ហើយធ្វើឱ្យ Accessibility ≥ 95</li>
+    </ol>
+  </div>
+</section>
+
+<section id="roadmap">
+  <h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+  <ol class="steps">
+    <li><b>CSS មូលដ្ឋាន</b> – Selector, Box model, Flexbox, Grid, Responsive</li>
+    <li><b>CSS កម្រិតខ្ពស់</b> – មេរៀន ១–១៣ ក្នុងឯកសារនេះ ✅</li>
+    <li><b>Design System</b> – Tokens, @layer, BEM (ផ្នែកទី ៣)</li>
+    <li><b>Framework</b> – Tailwind CSS (Utility-first) ឬ Bootstrap</li>
+    <li><b>JavaScript</b> – DOM, Events, ប្តូរ Theme/Class</li>
+    <li><b>Component Framework</b> – React/Vue ជាមួយ CSS Modules</li>
+  </ol>
+</section>
+
+</main>
+</div>
+<script>
+/* ---------- Syntax highlighter ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const sp = (c,t) => `<span class="${c}">${esc(t)}</span>`;
+function tok(s, re, fn){
+  let out='', last=0, m; re.lastIndex = 0;
+  while((m = re.exec(s))){
+    out += esc(s.slice(last, m.index)) + fn(m);
+    last = m.index + m[0].length;
+    if(m[0]==='') re.lastIndex++;
+  }
+  return out + esc(s.slice(last));
+}
+const NAMED = new Set('red green blue yellow orange purple pink black white gray grey tomato crimson royalblue skyblue teal navy gold coral salmon orchid violet indigo lime cyan magenta brown maroon olive silver aqua khaki plum turquoise'.split(' '));
+function hlValue(v){
+  const re = /(\/\*[\s\S]*?\*\/)|("[^"]*"|'[^']*')|(#[0-9a-fA-F]{3,8}\b)|((?<![\w#-])-?\d*\.?\d+(?:px|rem|em|%|vh|vw|s|ms|deg|fr|ch)?)|([a-zA-Z-]+)(?=\()|(!?[a-zA-Z][a-zA-Z-]*)/g;
+  return tok(v, re, m => {
+    if(m[1]) return sp('c', m[1]);
+    if(m[2]) return sp('s', m[2]);
+    if(m[3]) return `<span class="sw" style="background:${m[3]}"></span>` + sp('n', m[3]);
+    if(m[4]) return sp('n', m[4]);
+    if(m[5]) return sp('f', m[5]);
+    if(m[6]){
+      if(NAMED.has(m[6])) return `<span class="sw" style="background:${m[6]}"></span>` + sp('v', m[6]);
+      return sp('v', m[6]);
+    }
+    return esc(m[0]);
+  });
+}
+function hlSelector(s){
+  return tok(s, /\/\*[\s\S]*?\*\//g, m => sp('c', m[0])).replace(
+    /(^|<\/span>)([^<]+?)(?=<span|$)/g, (all, a, b) => {
+      if(!b.trim()) return all;
+      return a + (b.trim().startsWith('@') ? `<span class="at">${b}</span>` : `<span class="sel">${b}</span>`);
+    });
+}
+function hlCSS(code){
+  const re = /(\/\*[\s\S]*?\*\/)|([^{};]+?)(\s*\{)|([\w-]+)(\s*:\s*)([^;{}]*)(;?)|([{}])/g;
+  return tok(code, re, m => {
+    if(m[1]) return sp('c', m[1]);
+    if(m[2] !== undefined && m[3]) return hlSelector(m[2]) + sp('pn', m[3]);
+    if(m[4]) return sp('pr', m[4]) + sp('pn', m[5]) + hlValue(m[6]) + sp('pn', m[7]);
+    return sp('pn', m[0]);
+  });
+}
+function hlTag(tag){
+  const m = tag.match(/^(<\/?)([\w-]+)([\s\S]*?)(\/?>)$/);
+  if(!m) return esc(tag);
+  const attrs = tok(m[3], /([\w:@-]+)(=)("[^"]*"|'[^']*')|([\w-]+)/g, a =>
+    a[1] ? sp('at2', a[1]) + sp('pn', a[2]) + sp('s', a[3]) : sp('at2', a[4]));
+  return sp('pn', m[1]) + sp('tg', m[2]) + attrs + sp('pn', m[4]);
+}
+const JS_KW = new Set('const let var function return if else for while do switch case break continue new class extends import export from default async await try catch finally throw typeof instanceof of in this delete void yield static get set'.split(' '));
+const JS_LIT = new Set(['true','false','null','undefined','NaN','Infinity']);
+function hlJS(code){
+  const re = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|(`(?:\\[\s\S]|[^`\\])*`|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*')|(\b\d+\.?\d*\b)|([A-Za-z_$][\w$]*)(?=\s*\()|([A-Za-z_$][\w$]*)/g;
+  return tok(code, re, m => {
+    if(m[1]) return sp('c', m[1]);
+    if(m[2]) return sp('s', m[2]);
+    if(m[3]) return sp('n', m[3]);
+    if(m[4]) return JS_KW.has(m[4]) ? sp('at', m[4]) : sp('f', m[4]);
+    if(m[5]){
+      if(JS_KW.has(m[5])) return sp('at', m[5]);
+      if(JS_LIT.has(m[5])) return sp('tg', m[5]);
+      if(/^[A-Z]/.test(m[5])) return sp('sel', m[5]);
+      return sp('pr', m[5]);
+    }
+    return esc(m[0]);
+  });
+}
+function hlHTML(code){
+  const re = /(<!--[\s\S]*?-->)|(<style[^>]*>)([\s\S]*?)(<\/style>)|(<script[^>]*>)([\s\S]*?)(<\/script>)|(<!DOCTYPE[^>]*>)|(<\/?[a-zA-Z][^>]*>)/gi;
+  return tok(code, re, m => {
+    if(m[1]) return sp('c', m[1]);
+    if(m[2]) return hlTag(m[2]) + hlCSS(m[3]) + hlTag(m[4]);
+    if(m[5]) return hlTag(m[5]) + hlJS(m[6]) + hlTag(m[7]);
+    if(m[8]) return sp('pn', m[8]);
+    return hlTag(m[9]);
+  });
+}
+
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;600;800&display=swap" rel="stylesheet"><style>body{font-family:"Noto Sans Khmer",system-ui,sans-serif;margin:12px;line-height:1.7}</style>';
+const FRAME_JS = '<style>#out{background:#0f172a;color:#a7f3d0;font-family:"Fira Code",monospace;font-size:13px;line-height:1.6;padding:10px 12px;border-radius:8px;white-space:pre-wrap;margin:8px 0 0;min-height:36px}</style><script>function log(){var o=document.getElementById("out");if(!o){o=document.createElement("pre");o.id="out";document.body.appendChild(o);}var a=[].slice.call(arguments).map(function(x){return typeof x==="object"&&x!==null?JSON.stringify(x):String(x)});o.textContent+=a.join(" ")+"\\n";}window.onerror=function(m){log("❌",m)};window.addEventListener("unhandledrejection",function(e){log("❌",e.reason)});<\/script>';
+const FRAME_HEAD_FULL = FRAME_HEAD + FRAME_JS;
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'css';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || ({ js: 'JavaScript', html: 'HTML', css: 'CSS', bash: 'Terminal', txt: 'Text' }[lang] || lang.toUpperCase());
+  const pre = document.createElement('pre');
+  const code = document.createElement('code');
+  code.innerHTML = lang === 'html' ? hlHTML(raw) : lang === 'js' ? hlJS(raw) : lang === 'css' ? hlCSS(raw) : esc(raw);
+  pre.appendChild(code);
+  const btn = document.createElement('button');
+  btn.className = 'btn copy';
+  btn.textContent = 'ចម្លង';
+  btn.onclick = async () => {
+    try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+    catch { btn.textContent = 'បរាជ័យ'; }
+    setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+  };
+  box.append(label, pre, btn);
+  if (sc.hasAttribute('data-demo')) {
+    const res = document.createElement('div');
+    res.className = 'result';
+    res.innerHTML = '<div class="lbl">▶ លទ្ធផល (Result)</div>';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = 'លទ្ធផល';
+    fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { fr.style.height = Math.max(90, fr.contentDocument.documentElement.scrollHeight + 4) + 'px'; }
+      catch (e) { fr.style.height = '240px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); };
+    res.appendChild(fr);
+    box.appendChild(res);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="css"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ស្ថិតិសម្រាប់ Data Analysis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#5f3dc4; --accent2:#7950f2; --accent-soft:#f3f0ff;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#b197fc; --accent2:#d0bfff; --accent-soft:#1a1233;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#b197fc; --accent2:#d0bfff; --accent-soft:#1a1233;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#120b26,#5f3dc4 55%,#40c057);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/da2.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/da2.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>ស្ថិតិសម្រាប់ Data Analysis</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. ស្ថិតិ — អ្នកណាបង្កើត? ប្រើធ្វើអ្វី?</a>
+<a href="#setup">២. ត្រៀមខ្លួន</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: ប្រភេទទិន្នន័យ · Population &amp; Sample</a>
+<a href="#l2">មេរៀន ២: Central tendency — Mean · Median · Mode</a>
+<a href="#l3">មេរៀន ៣: Spread — Range · Variance · SD · IQR</a>
+<a href="#l4">មេរៀន ៤: Distribution · Box plot · Outliers</a>
+<a href="#l5">មេរៀន ៥: Probability &amp; Normal distribution</a>
+<a href="#l6">មេរៀន ៦: Sampling · Confidence interval</a>
+<a href="#l7">មេរៀន ៧: Hypothesis testing · p-value</a>
+<a href="#l8">មេរៀន ៨: A/B testing</a>
+<a href="#l9">មេរៀន ៩: Correlation</a>
+<a href="#l10">មេរៀន ១០: Linear regression</a>
+<a href="#l11">មេរៀន ១១: Chi-square &amp; ANOVA (ណែនាំ)</a>
+<a href="#l12">មេរៀន ១២: កុំឲ្យស្ថិតិបោក — Bias &amp; Paradox</a>
+<a href="#cheat">📋 សង្ខេប (Cheat sheet)</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងចុងវគ្គ</a>
+<a href="#pro-app">💻 Data Lab (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>📐 ស្ថិតិសម្រាប់ Data Analysis — សម្រេចចិត្តដោយភស្តុតាង</h2>
+  <p>Mean/Median/SD, <b>Box plot &amp; Outlier</b>, <b>Normal distribution</b>, Confidence interval, <b>Hypothesis test &amp; p-value</b>, <b>A/B test</b>, Correlation, <b>Regression</b>, Chi-square/ANOVA, Bias &amp; Simpson’s paradox — ឧទាហរណ៍គណនា + រូបមន្ត Excel (គ្មាន Code)។</p>
+  <p><span class="badge">📘 ១២ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">🧮 រូបមន្ត Excel/DAX + លទ្ធផល</span><span class="badge">📊 Data Lab</span></p>
+</section>
+<section id="intro">
+<h2>១. ស្ថិតិ — អ្នកណាបង្កើត? ប្រើធ្វើអ្វី?</h2>
+
+
+<p><b>ស្ថិតិ (Statistics)</b> ជួយយើងសង្ខេបទិន្នន័យ វាស់ភាពមិនប្រាកដប្រជា ហើយសម្រេចចិត្តដោយ <b>ភស្តុតាង</b> ជាជាងអារម្មណ៍។ វគ្គនេះពន្យល់ដោយឧទាហរណ៍ពិត (ពិន្ទុសិស្ស ការលក់ A/B test) — ឧទាហរណ៍គណនាបង្ហាញតែ <b>លទ្ធផល</b> ហើយមានរូបមន្ត Excel សម្រាប់អនុវត្ត។</p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#868e96"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#868e96">1763</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Bayes</text><circle cx="200" cy="115" r="11" fill="#1c7ed6"/><text x="200" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#1c7ed6">1809</text><text x="200" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Gauss · Normal</text><circle cx="320" cy="115" r="11" fill="#d6336c"/><text x="320" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#d6336c">1858</text><text x="320" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Nightingale chart</text><circle cx="440" cy="115" r="11" fill="#7048e8"/><text x="440" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#7048e8">1886</text><text x="440" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Galton · Regression</text><circle cx="560" cy="115" r="11" fill="#0ca678"/><text x="560" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#0ca678">1896</text><text x="560" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Pearson r</text><circle cx="680" cy="115" r="11" fill="#e8590c"/><text x="680" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#e8590c">1908</text><text x="680" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Student's t</text><circle cx="800" cy="115" r="11" fill="#2f9e44"/><text x="800" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#2f9e44">1925</text><text x="800" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Fisher · p-value</text><circle cx="920" cy="115" r="11" fill="#495057"/><text x="920" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#495057">1977</text><text x="920" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Tukey · Box plot</text></svg><figcaption>🖼️ ប្រវត្តិស្ថិតិ</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>1763</td><td><b>Thomas Bayes</b> (ចេញផ្សាយក្រោយមរណភាព)</td><td>ទ្រឹស្តីបទ Bayes — កែប្រែជំនឿតាមភស្តុតាង</td></tr><tr><td>1809</td><td><b>Carl Friedrich Gauss</b></td><td>Normal distribution &amp; Least squares</td></tr><tr><td>1858</td><td><b>Florence Nightingale</b></td><td>Chart បង្ហាញថាទាហានស្លាប់ដោយជំងឺច្រើនជាងរបួស → កែទម្រង់មន្ទីរពេទ្យ</td></tr><tr><td>1886–1896</td><td><b>Francis Galton</b> · <b>Karl Pearson</b></td><td>Regression · Correlation coefficient r</td></tr><tr><td>1908</td><td><b>William S. Gosset</b> («Student») — រោងចក្រស្រាបៀរ Guinness</td><td>t-test សម្រាប់គំរូតូច</td></tr><tr><td>1925</td><td><b>Ronald Fisher</b></td><td>p-value 0.05 · ANOVA · ការរចនាពិសោធន៍</td></tr><tr><td>1977</td><td><b>John Tukey</b></td><td>Exploratory data analysis · Box plot</td></tr></table>
+
+<h3>ប្រើសម្រាប់អ្វី?</h3>
+<div class="grid"><div class="card"><b>🏢 អាជីវកម្ម</b><br>របាយការណ៍លក់ · ស្តុក · KPI</div><div class="card"><b>🏦 ធនាគារ/MFI</b><br>ហានិភ័យឥណទាន · អតិថិជន</div><div class="card"><b>🏥 សុខាភិបាល/អប់រំ</b><br>វិភាគអ្នកជំងឺ · ពិន្ទុសិស្ស</div><div class="card"><b>💼 អាជីព</b><br>Data Analyst · BI Developer · Business Analyst</div></div>
+
+</section>
+<section id="setup">
+<h2>២. ត្រៀមខ្លួន</h2>
+<ol class='steps'><li>Microsoft Excel 365/2021 (ឬ Excel for the web ឥតគិតថ្លៃ) · Google Sheets ក៏ប្រើបានភាគច្រើន។</li><li>Power BI Desktop (ឥតគិតថ្លៃ លើ Windows)។</li><li>ទិន្នន័យហាត់៖ ប្រើ <b>Data Lab</b> ក្នុងវគ្គ (ទិន្នន័យលក់ហាងកាហ្វេ ៤ ខេត្ត ១២ ខែ) ឬទិន្នន័យសាធារណៈ។</li><li>ឧទាហរណ៍គណនាក្នុងវគ្គ បង្ហាញតែ <b>លទ្ធផល</b> — មិនចាំបាច់ចេះ Programming។</li></ol></section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>ប្រភេទទិន្នន័យ · Population &amp; Sample</h2>
+<table><tr><th>ប្រភេទ</th><th>ឧទាហរណ៍</th><th>វាស់ដោយ</th></tr><tr><td>Nominal</td><td>ខេត្ត · ភេទ</td><td>Mode · %</td></tr><tr><td>Ordinal</td><td>ពេញចិត្ត ១–៥ · ថ្នាក់</td><td>Median</td></tr><tr><td>Discrete</td><td>ចំនួនកូន</td><td>Mean · Median</td></tr><tr><td>Continuous</td><td>កម្ពស់ · ប្រាក់ខែ</td><td>Mean · SD</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li><b>Population</b> = ទាំងអស់ (សិស្សកម្ពុជាទាំងអស់) · <b>Sample</b> = មួយផ្នែកដែលយើងសិក្សា។</li><li>គំរូត្រូវ <b>ចៃដន្យ (Random)</b> និងតំណាងបាន — សួរតែមិត្តលើ Facebook = Bias។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>ស្ទង់មតិ «ពេញចិត្ត ១–៥» ជាទិន្នន័យប្រភេទណា?</p><details><summary>មើលចម្លើយ</summary><p><b>Ordinal</b>។</p></details></div>
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>Central tendency — Mean · Median · Mode</h2>
+<script type="text/x-code" data-lang="xl" data-label="Excel">
+=AVERAGE(B2:B10)   =MEDIAN(B2:B10)   =MODE.SNGL(B2:B10)   =TRIMMEAN(B2:B10, 0.2)
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Mean   = 777.8
+Median = 450
+Mode   = 2 (ឧទាហរណ៍ទំហំកែវ)
+ដក Outlier (3500): Mean = 437.5 · Median = 435.0</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ប្រាក់ខែ/តម្លៃផ្ទះ (មាន Outlier) → ប្រើ <b>Median</b>។</li><li>Mean &gt; Median → ទិន្នន័យ <b>Skew ស្តាំ</b>។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>ប្រាក់ខែបុគ្គលិក ៩ នាក់ Mean $778 តែ Median $450។ ហេតុអ្វី? គួររាយការណ៍មួយណា?</p><details><summary>មើលចម្លើយ</summary><p>មាន Outlier ($3,500) ទាញ Mean ឡើង — រាយការណ៍ <b>Median</b>។</p></details></div>
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Spread — Range · Variance · SD · IQR</h2>
+<script type="text/x-code" data-lang="xl" data-label="Excel">
+=STDEV.S(B2:B31)     // Sample
+=STDEV.P(B2:B31)     // Population
+=QUARTILE.INC(B2:B31, 3) - QUARTILE.INC(B2:B31, 1)    // IQR
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>ថ្នាក់ A: Mean 75.0 · SD 3.7 · Range 10 · IQR 7.0
+ថ្នាក់ B: Mean 75.0 · SD 21.9 · Range 60 · IQR 37.5</pre></div>
+<div class="note">💡 Mean ដូចគ្នា (≈75) តែ SD ខុសគ្នាខ្លាំង — ថ្នាក់ B មានសិស្សខ្លាំង និងខ្សោយខ្លាំង។ សាក <b>📐 ស្ថិតិ</b> ក្នុង Data Lab។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>SD ធំ មានន័យថាអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>ទិន្នន័យ <b>រាយប៉ាយ</b> ឆ្ងាយពី Mean ច្រើន (មិនស្មើគ្នា)។</p></details></div>
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Distribution · Box plot · Outliers</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Q1 71.5 · Median 79.5 · Q3 85.75 · IQR 14.25
+Fence: 50.125 – 107.125 → Outliers: [30]</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Box plot (Tukey)៖ ប្រអប់ = Q1–Q3 · បន្ទាត់កណ្តាល = Median · Whiskers · ចំណុច = Outlier។</li><li>Outlier ≠ ខុសជានិច្ច — ពិនិត្យថាជាកំហុសវាយ ឬករណីពិសេសពិត។</li><li>Histogram បង្ហាញរូបរាង៖ Normal · Skewed · Bimodal។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>ពិន្ទុ 30 ក្នុងទិន្នន័យខាងលើ គួរលុបចោលទេ?</p><details><summary>មើលចម្លើយ</summary><p><b>មិនលុបភ្លាម</b> — ពិនិត្យមុន (សិស្សឈឺ? វាយខុស?)។ រាយការណ៍ទាំងមាន និងគ្មាន Outlier។</p></details></div>
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>Probability &amp; Normal distribution</h2>
+<figure class="fig"><svg viewBox="0 0 940 280" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="280" fill="#fff"/><line x1="70" y1="240.0" x2="910" y2="240.0" stroke="#eef1f5"/><text x="64" y="244.0" text-anchor="end" font-size="11" font-weight="400" fill="#94a3b8">0</text><line x1="70" y1="190.0" x2="910" y2="190.0" stroke="#eef1f5"/><text x="64" y="194.0" text-anchor="end" font-size="11" font-weight="400" fill="#94a3b8">27</text><line x1="70" y1="140.0" x2="910" y2="140.0" stroke="#eef1f5"/><text x="64" y="144.0" text-anchor="end" font-size="11" font-weight="400" fill="#94a3b8">54</text><line x1="70" y1="90.0" x2="910" y2="90.0" stroke="#eef1f5"/><text x="64" y="94.0" text-anchor="end" font-size="11" font-weight="400" fill="#94a3b8">81</text><line x1="70" y1="40.0" x2="910" y2="40.0" stroke="#eef1f5"/><text x="64" y="44.0" text-anchor="end" font-size="11" font-weight="400" fill="#94a3b8">108</text><text x="70.0" y="264" text-anchor="middle" font-size="11.5" font-weight="400" fill="#64748b">-4.0</text><text x="175.0" y="264" text-anchor="middle" font-size="11.5" font-weight="400" fill="#64748b">-3.0</text><text x="280.0" y="264" text-anchor="middle" font-size="11.5" font-weight="400" fill="#64748b">-2.0</text><text x="385.0" y="264" text-anchor="middle" font-size="11.5" font-weight="400" fill="#64748b">-1.0</text><text x="490.0" y="264" text-anchor="middle" font-size="11.5" font-weight="400" fill="#64748b">0.0</text><text x="595.0" y="264" text-anchor="middle" font-size="11.5" font-weight="400" fill="#64748b">1.0</text><text x="700.0" y="264" text-anchor="middle" font-size="11.5" font-weight="400" fill="#64748b">2.0</text><text x="805.0" y="264" text-anchor="middle" font-size="11.5" font-weight="400" fill="#64748b">3.0</text><text x="910.0" y="264" text-anchor="middle" font-size="11.5" font-weight="400" fill="#64748b">4.0</text><polyline points="70.0,240.0 122.5,239.6 175.0,238.0 227.5,231.9 280.0,215.0 332.5,179.8 385.0,127.6 437.5,76.7 490.0,54.8 542.5,76.7 595.0,127.6 647.5,179.8 700.0,215.0 752.5,231.9 805.0,238.0 857.5,239.6 910.0,240.0" fill="none" stroke="#7048e8" stroke-width="3"/><rect x="80" y="12" width="16" height="4" fill="#7048e8"/><text x="102" y="18" text-anchor="start" font-size="12.5" font-weight="700" fill="#7048e8">Normal (μ=0, σ=1)</text><text x="470.0" y="278" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">Bell curve — ៦៨% ក្នុង ±1σ · ៩៥% ក្នុង ±2σ · ៩៩.៧% ក្នុង ±3σ</text></svg><figcaption>🖼️ Probability &amp; Normal distribution</figcaption></figure>
+<script type="text/x-code" data-lang="xl" data-label="Excel">
+=1 - NORM.DIST(85, 70, 10, TRUE)
+=NORM.INV(0.9, 70, 10)
+=STANDARDIZE(90, 70, 10)
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>P(ពិន្ទុ &gt; 85) = 6.7%
+P(60 &lt; ពិន្ទុ &lt; 80) = 68.3%
+Top 10% ត្រូវការពិន្ទុ ≥ 82.8
+Z-score នៃពិន្ទុ 90 = 2.0</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>ពិន្ទុ Mean 70 SD 10។ សិស្សបាន 90 មាន Z-score ប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>(90 − 70) ÷ 10 = <b>2</b> — ខ្ពស់ជាងប្រហែល ៩៧.៧% នៃសិស្ស។</p></details></div>
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Sampling · Confidence interval</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>95% CI = 62% ± 4.8% → 57.2% ដល់ 66.8%
+n=  100 → Margin of error ±9.5%
+n=  400 → Margin of error ±4.8%
+n= 1600 → Margin of error ±2.4%</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>CI 95% = បើធ្វើស្ទង់មតិ ១០០ ដង ប្រហែល ៩៥ ដង ចន្លោះនឹងគ្របតម្លៃពិត។</li><li>គំរូ ×4 → Margin of error ÷2 (√n)។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>ចង់កាត់ Margin of error ពាក់កណ្តាល ត្រូវការគំរូប៉ុន្មានដង?</p><details><summary>មើលចម្លើយ</summary><p><b>៤ ដង</b> (ព្រោះ Error ∝ 1/√n)។</p></details></div>
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Hypothesis testing · p-value</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="156.0" height="96" rx="14" fill="#868e96"/><text x="98.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">H₀</text><text x="98.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">គ្មានភាពខុសគ្នា</text><line x1="178.0" y1="82" x2="204.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="206.0" y="34" width="156.0" height="96" rx="14" fill="#1c7ed6"/><text x="284.0" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">ប្រមូលទិន្នន័យ</text><line x1="364.0" y1="82" x2="390.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="392.0" y="34" width="156.0" height="96" rx="14" fill="#7048e8"/><text x="470.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Test</text><text x="470.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">t / z / χ²</text><line x1="550.0" y1="82" x2="576.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="578.0" y="34" width="156.0" height="96" rx="14" fill="#e8590c"/><text x="656.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">p-value</text><text x="656.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">&lt; 0.05 ?</text><line x1="736.0" y1="82" x2="762.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="764.0" y="34" width="156.0" height="96" rx="14" fill="#2f9e44"/><text x="842.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">សេចក្តីសន្និដ្ឋាន</text><text x="842.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Reject / មិន Reject H₀</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">ជំហាន Hypothesis test</text></svg><figcaption>🖼️ Hypothesis testing · p-value</figcaption></figure>
+<script type="text/x-code" data-lang="xl" data-label="Excel">
+=T.TEST(B2:B11, C2:C11, 2, 2)     // two-tailed · two-sample equal variance
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Mean old 70.8 · new 77.1 · t = 5.01 · p = 0.00009
+✅ វិធីបង្រៀនថ្មី ល្អជាង (Significant)</pre></div>
+<div class="warn">⚠️ p-value <b>មិនមែន</b> ប្រូបាប៊ីលីតេដែល H₀ ពិត · Significant ≠ សំខាន់ក្នុងជីវិតពិត — ពិនិត្យ <b>Effect size</b> ផង។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>p = 0.20។ សន្និដ្ឋានយ៉ាងណា?</p><details><summary>មើលចម្លើយ</summary><p><b>មិន Reject H₀</b> — ភស្តុតាងមិនគ្រប់គ្រាន់ (មិនមែនបញ្ជាក់ថាដូចគ្នាទេ)។</p></details></div>
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>A/B testing</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>A 4.00% · B 5.57% · Lift +39.4% · z = 2.54 · p = 0.0110</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>កំណត់ Metric មុន (Conversion) · បែងចែកចៃដន្យ · ទំហំគំរូគ្រប់ · កុំបញ្ឈប់ពេលឃើញលទ្ធផលល្អ (Peeking)។</li><li>សាក <b>🧪 A/B test</b> ក្នុង Data Lab។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>ហេតុអ្វីមិនគួរបញ្ឈប់ A/B test ភ្លាមពេល p &lt; 0.05 នៅថ្ងៃទី ២?</p><details><summary>មើលចម្លើយ</summary><p><b>Peeking</b> បង្កើន False positive — កំណត់ទំហំគំរូ/រយៈពេលមុន ហើយរង់ចាំដល់ចប់។</p></details></div>
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Correlation</h2>
+<figure class="fig"><svg viewBox="0 0 940 300" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="300" fill="#fff"/><line x1="70" y1="255" x2="910" y2="255" stroke="#94a3b8"/><line x1="70" y1="30" x2="70" y2="255" stroke="#94a3b8"/><line x1="70" y1="255.0" x2="910" y2="255.0" stroke="#eef1f5"/><text x="64" y="259.0" text-anchor="end" font-size="11" font-weight="400" fill="#94a3b8">0</text><text x="70.0" y="271" text-anchor="middle" font-size="11" font-weight="400" fill="#94a3b8">100</text><line x1="70" y1="198.8" x2="910" y2="198.8" stroke="#eef1f5"/><text x="64" y="202.75" text-anchor="end" font-size="11" font-weight="400" fill="#94a3b8">813</text><text x="280.0" y="271" text-anchor="middle" font-size="11" font-weight="400" fill="#94a3b8">188</text><line x1="70" y1="142.5" x2="910" y2="142.5" stroke="#eef1f5"/><text x="64" y="146.5" text-anchor="end" font-size="11" font-weight="400" fill="#94a3b8">1,625</text><text x="490.0" y="271" text-anchor="middle" font-size="11" font-weight="400" fill="#94a3b8">275</text><line x1="70" y1="86.2" x2="910" y2="86.2" stroke="#eef1f5"/><text x="64" y="90.25" text-anchor="end" font-size="11" font-weight="400" fill="#94a3b8">2,438</text><text x="700.0" y="271" text-anchor="middle" font-size="11" font-weight="400" fill="#94a3b8">362</text><line x1="70" y1="30.0" x2="910" y2="30.0" stroke="#eef1f5"/><text x="64" y="34.0" text-anchor="end" font-size="11" font-weight="400" fill="#94a3b8">3,251</text><text x="910.0" y="271" text-anchor="middle" font-size="11" font-weight="400" fill="#94a3b8">450</text><circle cx="70.0" cy="159.8" r="6" fill="#1c7ed6" opacity=".85"/><circle cx="130.0" cy="156.4" r="6" fill="#1c7ed6" opacity=".85"/><circle cx="190.0" cy="145.3" r="6" fill="#1c7ed6" opacity=".85"/><circle cx="250.0" cy="134.2" r="6" fill="#1c7ed6" opacity=".85"/><circle cx="310.0" cy="130.7" r="6" fill="#1c7ed6" opacity=".85"/><circle cx="370.0" cy="119.7" r="6" fill="#1c7ed6" opacity=".85"/><circle cx="430.0" cy="116.2" r="6" fill="#1c7ed6" opacity=".85"/><circle cx="490.0" cy="105.1" r="6" fill="#1c7ed6" opacity=".85"/><circle cx="550.0" cy="94.1" r="6" fill="#1c7ed6" opacity=".85"/><circle cx="610.0" cy="90.6" r="6" fill="#1c7ed6" opacity=".85"/><circle cx="670.0" cy="79.5" r="6" fill="#1c7ed6" opacity=".85"/><circle cx="730.0" cy="76.1" r="6" fill="#1c7ed6" opacity=".85"/><circle cx="790.0" cy="65.0" r="6" fill="#1c7ed6" opacity=".85"/><circle cx="850.0" cy="53.9" r="6" fill="#1c7ed6" opacity=".85"/><circle cx="910.0" cy="50.5" r="6" fill="#1c7ed6" opacity=".85"/><line x1="70.0" y1="160.9" x2="910.0" y2="49.4" stroke="#e03131" stroke-width="3"/><text x="470.0" y="292" text-anchor="middle" font-size="12.5" font-weight="400" fill="#64748b">ថវិកា $  →</text><text x="18" y="36" text-anchor="start" font-size="12.5" font-weight="400" fill="#64748b">លក់ $</text><text x="470.0" y="18" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">ថវិកាផ្សាយពាណិជ្ជកម្ម vs ការលក់ (r ≈ 0.99)</text></svg><figcaption>🖼️ Correlation</figcaption></figure>
+<script type="text/x-code" data-lang="xl" data-label="Excel">
+=CORREL(B2:B9, C2:C9)
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>r(ads, sales) = 0.993
+r(ice cream, drowning) = 0.989 ← អថេរលាក់: អាកាសធាតុក្តៅ</pre></div>
+<div class="warn">⚠️ <b>Correlation ≠ Causation</b>៖ ការលក់ការ៉េម និងការលង់ទឹក ជាប់ទាក់ទងគ្នា ព្រោះ <b>រដូវក្តៅ</b> (Confounder)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>r = −0.85 មានន័យថាអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>ទំនាក់ទំនង <b>អវិជ្ជមានខ្លាំង</b> — x ឡើង y ចុះ។</p></details></div>
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>Linear regression</h2>
+<script type="text/x-code" data-lang="xl" data-label="Excel">
+=SLOPE(C2:C9, B2:B9)   =INTERCEPT(C2:C9, B2:B9)   =RSQ(C2:C9, B2:B9)
+=FORECAST.LINEAR(500, C2:C9, B2:B9)
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Sales = 5.38 × Ads + 670  ·  R² = 0.985
+Ads $500 → Sales ≈ $3,361  (⚠️ Extrapolation)
+ចំណាយ $1 បន្ថែម → លក់បន្ថែម ≈ $5.38</pre></div>
+<div class="note">💡 សាក <b>📈 Regression</b> ក្នុង Data Lab — កែទិន្នន័យ ហើយមើល Slope និង R² ប្តូរ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>R² = 0.97 មានន័យថាអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>៩៧% នៃបម្រែបម្រួលការលក់ ពន្យល់ដោយថវិកាផ្សាយ (ក្នុងទិន្នន័យនេះ)។</p></details></div>
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>Chi-square &amp; ANOVA (ណែនាំ)</h2>
+<table><tr><th>Test</th><th>ប្រើពេល</th></tr><tr><td>t-test</td><td>ប្រៀបធៀប Mean ២ ក្រុម</td></tr><tr><td>ANOVA</td><td>Mean ៣ ក្រុមឡើង</td></tr><tr><td>Chi-square</td><td>អថេរប្រភេទ (Categorical) ២</td></tr><tr><td>Correlation/Regression</td><td>អថេរលេខ ២</td></tr></table>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Chi-square = 8.43 · p = 0.0037 → ខុសគ្នា Significant
+ANOVA (៣ ថ្នាក់): F = 18.0 · p = 0.00071</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>ចង់ដឹងថាភេទ និងការជ្រើសរើសផលិតផល (A/B/C) ទាក់ទងគ្នាឬទេ។ Test អ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Chi-square test of independence</b>។</p></details></div>
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>កុំឲ្យស្ថិតិបោក — Bias &amp; Paradox</h2>
+<table><tr><th>អន្ទាក់</th><th>ឧទាហរណ៍</th></tr><tr><td>Sampling bias</td><td>ស្ទង់មតិតែលើ Facebook</td></tr><tr><td>Survivorship bias</td><td>សិក្សាតែក្រុមហ៊ុនជោគជ័យ</td></tr><tr><td>Simpson's paradox</td><td>និន្នាការក្នុងក្រុមនីមួយៗ បញ្ច្រាសពេលផ្គុំ</td></tr><tr><td>Cherry-picking</td><td>ជ្រើសតែរយៈពេលល្អ</td></tr><tr><td>Axis truncated</td><td>Chart Axis មិនចាប់ពី 0 ធ្វើឲ្យភាពខុសគ្នាធំ</td></tr><tr><td>p-hacking</td><td>សាក Test ច្រើនរហូត p &lt; 0.05</td></tr></table>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>វិធី A: តូច 93% · ធំ 73% · សរុប 78%
+វិធី B: តូច 87% · ធំ 69% · សរុប 83%
+→ A ល្អជាងក្នុងក្រុមនីមួយៗ តែសរុប B មើលទៅល្អជាង!</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>សិក្សាតែសិស្សដែលបញ្ចប់ការសិក្សា ដើម្បីវាយតម្លៃសាលា។ Bias អ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Survivorship bias</b> — ខ្វះសិស្សដែលបោះបង់។</p></details></div>
+</section>
+<section id="cheat">
+<h2>📋 សង្ខេប (Cheat sheet)</h2>
+<table><tr><th>ពាក្យ / រូបមន្ត</th><th>ន័យ</th></tr><tr><td>Median</td><td>ប្រើពេលមាន Outlier</td></tr><tr><td>SD</td><td>ភាពរាយប៉ាយ</td></tr><tr><td>IQR 1.5×</td><td>រក Outlier</td></tr><tr><td>68–95–99.7</td><td>Normal ±1/2/3σ</td></tr><tr><td>95% CI</td><td>± 1.96 × SE</td></tr><tr><td>p &lt; 0.05</td><td>Significant (មិនមែនសំខាន់ជានិច្ច)</td></tr><tr><td>r</td><td>−1 … +1 · ≠ Causation</td></tr><tr><td>R²</td><td>% ពន្យល់ដោយ Model</td></tr></table>
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងចុងវគ្គ</h2>
+<ol class='steps'><li>រចនាការស្ទង់មតិ ១០ សំណួរ (ឧ. ទម្លាប់អានសៀវភៅរបស់សិស្ស) · គំរូ ≥ ១០០។</li><li>Descriptive៖ Mean/Median/SD · Histogram · Box plot។</li><li>CI 95% សម្រាប់ % សំខាន់ ១។</li><li>Hypothesis test ១ (t-test ឬ Chi-square)។</li><li>Report ២ ទំព័រ៖ លទ្ធផល · ដែនកំណត់ (Bias) · អនុសាសន៍។</li></ol></section>
+<section id="pro-app">
+<h2>💻 Data Lab (App)</h2>
+
+<p><b>📋 Pivot</b> (CSV → PivotTable + Chart) · <b>📐 ស្ថិតិ</b> (Mean, Median, SD, Box plot, Outlier) · <b>📈 Regression</b> (r, R², ទស្សន៍ទាយ) · <b>🧪 A/B test</b> (p-value, CI) · <b>📊 Dashboard</b> (KPI + Slicer) — ដំណើរការក្នុង Browser មិនផ្ញើទិន្នន័យចេញ។</p>
+
+<div class="itk" id="dl">
+<div class="itk-tabs"><button class="on" data-t="pv">📋 Pivot</button><button data-t="st">📐 ស្ថិតិ</button><button data-t="rg">📈 Regression</button><button data-t="ab">🧪 A/B test</button><button data-t="db">📊 Dashboard</button></div>
+
+<div class="itk-p on" data-p="pv">
+ <p class="vl-tip">បិទភ្ជាប់ CSV (ជួរទី ១ = ឈ្មោះ Column) ឬប្រើទិន្នន័យលក់គំរូ។ Column <b>Revenue = Units × Price</b> ត្រូវបានបន្ថែមស្វ័យប្រវត្តិ បើមាន Units និង Price។</p>
+ <textarea id="pv_csv" rows="6" style="width:100%;font-family:monospace;font-size:12.5px"></textarea>
+ <div class="itk-row"><label>Rows<select id="pv_r"></select></label><label>Values<select id="pv_v"></select></label><label>Aggregate<select id="pv_a"><option>Sum</option><option>Average</option><option>Count</option><option>Max</option><option>Min</option></select></label><button class="btn" id="pv_go">▶ Pivot</button><button class="btn" id="pv_demo">📋 ទិន្នន័យគំរូ</button></div>
+ <div class="itk-out" id="pv_out"></div>
+</div>
+
+<div class="itk-p" data-p="st">
+ <p class="vl-tip">វាយលេខ (បំបែកដោយ , ឬ Space) — ឧ. ពិន្ទុប្រឡង ឬប្រាក់ខែ។</p>
+ <textarea id="st_in" rows="3" style="width:100%;font-family:monospace">72, 85, 90, 66, 78, 95, 88, 70, 81, 77, 69, 84, 92, 58, 100, 74, 80, 79, 83, 30</textarea>
+ <div class="itk-out" id="st_out"></div>
+</div>
+
+<div class="itk-p" data-p="rg">
+ <p class="vl-tip">ជួរនីមួយៗ៖ <b>x, y</b> — ឧ. ថវិកាផ្សាយពាណិជ្ជកម្ម ($) និងការលក់ ($)។</p>
+ <textarea id="rg_in" rows="6" style="width:100%;font-family:monospace">100, 1200
+150, 1500
+200, 1650
+250, 2100
+300, 2300
+350, 2500
+400, 2950
+450, 3000</textarea>
+ <div class="itk-row"><label>ទស្សន៍ទាយ x =<input id="rg_x" type="number" value="500" style="width:90px"></label></div>
+ <div class="itk-out" id="rg_out"></div>
+</div>
+
+<div class="itk-p" data-p="ab">
+ <div class="itk-row"><label>A Visitors<input id="ab_na" type="number" value="2400" style="width:90px"></label><label>A Conversions<input id="ab_ca" type="number" value="96" style="width:80px"></label></div>
+ <div class="itk-row"><label>B Visitors<input id="ab_nb" type="number" value="2350" style="width:90px"></label><label>B Conversions<input id="ab_cb" type="number" value="131" style="width:80px"></label></div>
+ <div class="itk-out" id="ab_out"></div>
+</div>
+
+<div class="itk-p" data-p="db">
+ <div class="itk-row"><label>Region<select id="db_r"><option>All</option></select></label><label>Product<select id="db_p"><option>All</option></select></label></div>
+ <div class="itk-out" id="db_out"></div>
+</div>
+</div>
+<script>
+(() => {
+const $ = id => document.getElementById(id), root = $("dl");
+root.querySelectorAll(".itk-tabs button").forEach(b => b.onclick = () => { root.querySelectorAll(".itk-tabs button").forEach(x => x.classList.toggle("on", x === b)); root.querySelectorAll(".itk-p").forEach(p => p.classList.toggle("on", p.dataset.p === b.dataset.t)); });
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const f2 = (v, d = 2) => Number.isFinite(v) ? v.toLocaleString("en-US", { maximumFractionDigits: d }) : "—";
+/* ---------- sample data (deterministic) ---------- */
+const REG = ["Phnom Penh", "Siem Reap", "Battambang", "Kampot"], PROD = ["Coffee", "Tea", "Juice", "Bakery"], PRICE = { Coffee: 2.5, Tea: 1.8, Juice: 2.2, Bakery: 1.5 };
+const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const SALES = []; MON.forEach((m, mi) => REG.forEach((r, ri) => PROD.forEach((p, pi) => { const base = [120, 70, 45, 30][ri] * [1.4, .8, 1, .9][pi]; SALES.push({ Month: m, Region: r, Product: p, Units: Math.round(base * (1 + mi * .03) * (.8 + rnd() * .4)), Price: PRICE[p] }); })));
+const DEMO_CSV = "Month,Region,Product,Units,Price\n" + SALES.filter((_, i) => i % 3 === 0).slice(0, 40).map(o => [o.Month, o.Region, o.Product, o.Units, o.Price].join(",")).join("\n");
+function bar(data, w = 400, color = "#1c7ed6") { const mx = Math.max(...data.map(d => Math.abs(d[1])), 1), bh = 26; return `<svg viewBox="0 0 ${w} ${data.length * bh + 10}" style="width:100%;max-width:${w}px;background:#fff;border-radius:10px">` + data.map(([l, v], i) => `<text x="4" y="${i * bh + 21}" font-size="13" fill="#334155">${esc(String(l).slice(0, 12))}</text><rect x="120" y="${i * bh + 8}" width="${Math.max(1, (w - 220) * Math.abs(v) / mx)}" height="16" rx="4" fill="${color}"/><text x="${126 + (w - 220) * Math.abs(v) / mx}" y="${i * bh + 21}" font-size="13" fill="#0f172a">${f2(v)}</text>`).join("") + "</svg>"; }
+/* ---------- pivot ---------- */
+function parse(csv) { const lines = csv.trim().split(/\r?\n/).filter(Boolean); const head = lines.shift().split(",").map(s => s.trim()); const rows = lines.map(l => { const c = l.split(","); const o = {}; head.forEach((h, i) => { const v = (c[i] || "").trim(); o[h] = v !== "" && !isNaN(+v) ? +v : v; }); return o; });
+  if (head.includes("Units") && head.includes("Price") && !head.includes("Revenue")) { head.push("Revenue"); rows.forEach(o => o.Revenue = Math.round(o.Units * o.Price * 100) / 100); } return { head, rows }; }
+function pvFields() { try { const { head, rows } = parse($("pv_csv").value); const num = head.filter(h => rows.every(r => typeof r[h] === "number")), cat = head.filter(h => !num.includes(h));
+  const keepR = $("pv_r").value, keepV = $("pv_v").value; $("pv_r").innerHTML = cat.map(h => `<option>${esc(h)}</option>`).join(""); $("pv_v").innerHTML = num.map(h => `<option>${esc(h)}</option>`).join("");
+  if (cat.includes(keepR)) $("pv_r").value = keepR; else if (cat.includes("Region")) $("pv_r").value = "Region"; if (num.includes(keepV)) $("pv_v").value = keepV; else if (num.includes("Revenue")) $("pv_v").value = "Revenue"; } catch (e) {} }
+function pivot() { try { const { rows } = parse($("pv_csv").value), r = $("pv_r").value, v = $("pv_v").value, a = $("pv_a").value; const g = {};
+  rows.forEach(o => (g[o[r]] = g[o[r]] || []).push(+o[v]));
+  const agg = xs => a === "Sum" ? xs.reduce((s, x) => s + x, 0) : a === "Average" ? xs.reduce((s, x) => s + x, 0) / xs.length : a === "Count" ? xs.length : a === "Max" ? Math.max(...xs) : Math.min(...xs);
+  const out = Object.entries(g).map(([k, xs]) => [k, agg(xs)]).sort((x, y) => y[1] - x[1]); const tot = a === "Count" ? rows.length : agg(rows.map(o => +o[v]));
+  $("pv_out").innerHTML = `<b>${a} of ${esc(v)}</b> by <b>${esc(r)}</b> · ${rows.length} rows<div style="overflow-x:auto"><table><tr><th>${esc(r)}</th><th>${a} of ${esc(v)}</th><th>%</th></tr>${out.map(([k, x]) => `<tr><td>${esc(k)}</td><td>${f2(x)}</td><td>${a === "Sum" || a === "Count" ? f2(x / tot * 100, 1) + "%" : ""}</td></tr>`).join("")}<tr><th>Grand total</th><th>${f2(tot)}</th><th></th></tr></table></div>${bar(out)}`;
+  } catch (e) { $("pv_out").textContent = "CSV មិនត្រឹមត្រូវ៖ " + e.message; } }
+$("pv_csv").oninput = pvFields; $("pv_go").onclick = pivot; ["pv_r", "pv_v", "pv_a"].forEach(id => $(id).onchange = pivot);
+$("pv_demo").onclick = () => { $("pv_csv").value = DEMO_CSV; pvFields(); pivot(); };
+/* ---------- stats ---------- */
+const q = (s, p) => { const i = (s.length - 1) * p, lo = Math.floor(i), hi = Math.ceil(i); return s[lo] + (s[hi] - s[lo]) * (i - lo); };
+function stats() { const xs = $("st_in").value.split(/[\s,;]+/).map(Number).filter(Number.isFinite); if (xs.length < 2) { $("st_out").textContent = "វាយលេខយ៉ាងហោចណាស់ ២"; return; }
+  const s = [...xs].sort((a, b) => a - b), n = xs.length, mean = xs.reduce((a, b) => a + b, 0) / n, sd = Math.sqrt(xs.reduce((a, x) => a + (x - mean) ** 2, 0) / (n - 1));
+  const cnt = {}; xs.forEach(x => cnt[x] = (cnt[x] || 0) + 1); const mc = Math.max(...Object.values(cnt)); const mode = mc > 1 ? Object.keys(cnt).filter(k => cnt[k] === mc).join(", ") : "គ្មាន";
+  const q1 = q(s, .25), med = q(s, .5), q3 = q(s, .75), iqr = q3 - q1, lo = q1 - 1.5 * iqr, hi = q3 + 1.5 * iqr, out = xs.filter(x => x < lo || x > hi);
+  const W = 560, mn = s[0], mx = s[n - 1], X = v => 20 + (v - mn) / ((mx - mn) || 1) * (W - 40);
+  const bins = 8, bw = (mx - mn) / bins || 1, h = Array(bins).fill(0); xs.forEach(x => h[Math.min(bins - 1, Math.floor((x - mn) / bw))]++); const hm = Math.max(...h);
+  const hist = `<svg viewBox="0 0 ${W} 190" style="width:100%;max-width:${W}px;background:#fff;border-radius:10px">${h.map((c, i) => `<rect x="${20 + i * (W - 40) / bins + 2}" y="${120 - c / hm * 100}" width="${(W - 40) / bins - 4}" height="${c / hm * 100}" fill="#7048e8" rx="3"/><text x="${20 + (i + .5) * (W - 40) / bins}" y="${115 - c / hm * 100}" font-size="11" text-anchor="middle">${c}</text>`).join("")}
+  <line x1="${X(lo < mn ? mn : lo)}" y1="160" x2="${X(q1)}" y2="160" stroke="#334155"/><rect x="${X(q1)}" y="146" width="${X(q3) - X(q1)}" height="28" fill="#e7f5ff" stroke="#1c7ed6"/><line x1="${X(med)}" y1="146" x2="${X(med)}" y2="174" stroke="#e03131" stroke-width="3"/><line x1="${X(q3)}" y1="160" x2="${X(Math.min(hi, mx))}" y2="160" stroke="#334155"/>
+  ${out.map(o => `<circle cx="${X(o)}" cy="160" r="5" fill="#e03131"/>`).join("")}<text x="20" y="188" font-size="11">${f2(mn)}</text><text x="${W - 20}" y="188" font-size="11" text-anchor="end">${f2(mx)}</text></svg>`;
+  $("st_out").innerHTML = `<div style="overflow-x:auto"><table><tr><th>n</th><th>Mean</th><th>Median</th><th>Mode</th><th>SD (sample)</th><th>Min</th><th>Q1</th><th>Q3</th><th>Max</th><th>IQR</th></tr><tr><td>${n}</td><td>${f2(mean)}</td><td>${f2(med)}</td><td>${mode}</td><td>${f2(sd)}</td><td>${f2(mn)}</td><td>${f2(q1)}</td><td>${f2(q3)}</td><td>${f2(mx)}</td><td>${f2(iqr)}</td></tr></table></div>
+  ${hist}<br>${out.length ? `🔴 Outlier (ក្រៅ ${f2(lo)}–${f2(hi)}): <b>${out.join(", ")}</b> — Mean ${f2(mean)} ទាបជាង/ខ្ពស់ជាង Median ${f2(med)} ព្រោះ Outlier` : "✅ គ្មាន Outlier (វិធាន 1.5×IQR)"}`; }
+$("st_in").oninput = stats;
+/* ---------- regression ---------- */
+function reg() { const P = $("rg_in").value.trim().split(/\n/).map(l => l.split(/[,\s]+/).map(Number)).filter(p => p.length >= 2 && p.every(Number.isFinite)); if (P.length < 3) { $("rg_out").textContent = "ត្រូវការយ៉ាងហោចណាស់ ៣ ចំណុច"; return; }
+  const n = P.length, mx = P.reduce((a, p) => a + p[0], 0) / n, my = P.reduce((a, p) => a + p[1], 0) / n; let sxy = 0, sxx = 0, syy = 0; P.forEach(([x, y]) => { sxy += (x - mx) * (y - my); sxx += (x - mx) ** 2; syy += (y - my) ** 2; });
+  const b = sxy / sxx, a = my - b * mx, r = sxy / Math.sqrt(sxx * syy), xp = +$("rg_x").value;
+  const W = 560, H = 260, xs = P.map(p => p[0]).concat(xp), ys = P.map(p => p[1]).concat(a + b * xp), x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(0, ...ys), y1 = Math.max(...ys) * 1.1;
+  const X = v => 40 + (v - x0) / ((x1 - x0) || 1) * (W - 60), Y = v => 20 + (y1 - v) / ((y1 - y0) || 1) * (H - 50);
+  $("rg_out").innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;background:#fff;border-radius:10px"><line x1="40" y1="${H - 30}" x2="${W - 20}" y2="${H - 30}" stroke="#94a3b8"/>${P.map(([x, y]) => `<circle cx="${X(x)}" cy="${Y(y)}" r="6" fill="#1c7ed6"/>`).join("")}<line x1="${X(x0)}" y1="${Y(a + b * x0)}" x2="${X(x1)}" y2="${Y(a + b * x1)}" stroke="#e03131" stroke-width="3"/><circle cx="${X(xp)}" cy="${Y(a + b * xp)}" r="8" fill="#f59f00"/></svg>
+  <br><b>y = ${f2(b, 3)}·x + ${f2(a)}</b> · r = <b>${f2(r, 3)}</b> · R² = <b>${f2(r * r, 3)}</b> (${f2(r * r * 100, 1)}% នៃបម្រែបម្រួល y ពន្យល់ដោយ x)<br>🟠 ទស្សន៍ទាយ x = ${f2(xp)} → y ≈ <b>${f2(a + b * xp)}</b>${xp > Math.max(...P.map(p => p[0])) || xp < Math.min(...P.map(p => p[0])) ? " ⚠️ Extrapolation (ក្រៅជួរទិន្នន័យ) — ប្រុងប្រយ័ត្ន" : ""}<br>💡 Correlation ≠ Causation`; }
+["rg_in", "rg_x"].forEach(id => $(id).oninput = reg);
+/* ---------- A/B ---------- */
+const Phi = z => { const t = 1 / (1 + .2316419 * Math.abs(z)), d = .3989423 * Math.exp(-z * z / 2), p = d * t * (.3193815 + t * (-.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274)))); return z > 0 ? 1 - p : p; };
+function ab() { const na = +$("ab_na").value, ca = +$("ab_ca").value, nb = +$("ab_nb").value, cb = +$("ab_cb").value; if (!(na > 0 && nb > 0)) return;
+  const pa = ca / na, pb = cb / nb, pp = (ca + cb) / (na + nb), se = Math.sqrt(pp * (1 - pp) * (1 / na + 1 / nb)), z = (pb - pa) / se, p = 2 * (1 - Phi(Math.abs(z)));
+  const se2 = Math.sqrt(pa * (1 - pa) / na + pb * (1 - pb) / nb), lo = pb - pa - 1.96 * se2, hi = pb - pa + 1.96 * se2;
+  $("ab_out").innerHTML = `${bar([["A", pa * 100], ["B", pb * 100]], 460, "#0ca678")}<br>Conversion A <b>${f2(pa * 100)}%</b> · B <b>${f2(pb * 100)}%</b> · Lift <b>${f2((pb / pa - 1) * 100, 1)}%</b><br>z = ${f2(z, 2)} · p-value = <b>${p < .0001 ? "< 0.0001" : f2(p, 4)}</b> · 95% CI នៃភាពខុសគ្នា: ${f2(lo * 100)}% → ${f2(hi * 100)}%<br>${p < .05 ? "✅ <b>Significant</b> (p &lt; 0.05) — ភាពខុសគ្នាទំនងមិនមែនដោយចៃដន្យ" : "⚪ <b>មិន Significant</b> — ត្រូវការទិន្នន័យបន្ថែម ឬគ្មានភាពខុសគ្នាពិត"}`; }
+["ab_na", "ab_ca", "ab_nb", "ab_cb"].forEach(id => $(id).oninput = ab);
+/* ---------- dashboard ---------- */
+$("db_r").innerHTML += REG.map(r => `<option>${r}</option>`).join(""); $("db_p").innerHTML += PROD.map(r => `<option>${r}</option>`).join("");
+function dash() { const r = $("db_r").value, p = $("db_p").value, d = SALES.filter(o => (r === "All" || o.Region === r) && (p === "All" || o.Product === p));
+  const rev = d.reduce((a, o) => a + o.Units * o.Price, 0), units = d.reduce((a, o) => a + o.Units, 0), byM = MON.map(m => d.filter(o => o.Month === m).reduce((a, o) => a + o.Units * o.Price, 0));
+  const growth = (byM[11] / byM[0] - 1) * 100, W = 400, H = 170, mx = Math.max(...byM) * 1.1, X = i => 30 + i * (W - 50) / 11, Y = v => 15 + (1 - v / mx) * (H - 40);
+  const kpi = (t, v, c) => `<div style="flex:1;min-width:120px;background:#fff;border:1px solid #dee2e6;border-radius:12px;padding:10px;color:#0f172a"><div style="font-size:12px;color:#64748b">${t}</div><div style="font-size:20px;font-weight:800;color:${c}">${v}</div></div>`;
+  const by = (k, keys) => keys.map(x => [x, d.filter(o => o[k] === x).reduce((a, o) => a + o.Units * o.Price, 0)]).filter(e => e[1] > 0).sort((a, b) => b[1] - a[1]);
+  $("db_out").innerHTML = `<div style="display:flex;gap:8px;flex-wrap:wrap">${kpi("Revenue", "$" + f2(rev, 0), "#1c7ed6")}${kpi("Units", f2(units, 0), "#7048e8")}${kpi("Avg price", "$" + f2(rev / units), "#0ca678")}${kpi("Dec vs Jan", (growth >= 0 ? "▲ " : "▼ ") + f2(growth, 1) + "%", growth >= 0 ? "#2f9e44" : "#e03131")}</div>
+  <p><b>Revenue តាមខែ</b></p><svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;background:#fff;border-radius:10px"><polyline points="${byM.map((v, i) => X(i) + "," + Y(v)).join(" ")}" fill="none" stroke="#1c7ed6" stroke-width="3"/>${byM.map((v, i) => `<circle cx="${X(i)}" cy="${Y(v)}" r="3.5" fill="#1c7ed6"/><text x="${X(i)}" y="${H - 6}" font-size="11" text-anchor="middle">${MON[i]}</text>`).join("")}</svg>
+  <p><b>តាម Product</b></p>${bar(by("Product", PROD), 400, "#7048e8")}<p><b>តាម Region</b></p>${bar(by("Region", REG), 400, "#0ca678")}`; }
+["db_r", "db_p"].forEach(id => $(id).onchange = dash);
+$("pv_csv").value = DEMO_CSV; pvFields(); pivot(); stats(); reg(); ab(); dash();
+})();
+</script>
+
+<h3>🏆 Quiz ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["Gosset បោះពុម្ពជាឈ្មោះ?", ["Student", "Fisher", "Gauss", "Guinness"], 0], ["Box plot បង្កើតដោយ?", ["Tukey", "Pearson", "Bayes", "Galton"], 0], ["Ordinal?", ["ខេត្ត", "ពេញចិត្ត ១–៥", "កម្ពស់", "ទម្ងន់"], 1], ["មាន Outlier ប្រើ?", ["Mean", "Median", "Max", "Sum"], 1], ["SD ធំ?", ["រាយប៉ាយ", "ស្មើគ្នា", "Mean ធំ", "គ្មាន"], 0], ["IQR =", ["Q3 − Q1", "Max − Min", "Mean − Median", "Q2"], 0], ["Outlier fence?", ["Q1 − 1.5×IQR", "Mean ± 1", "Median × 2", "Q3 + 10"], 0], ["Normal ±2σ?", ["68%", "95%", "99.7%", "50%"], 1], ["Z(90; 70, 10)?", ["1", "2", "9", "0.2"], 1], ["Margin ÷2 ត្រូវ n ×?", ["2", "4", "8", "1"], 1], ["p &lt; 0.05?", ["Reject H₀", "Accept H₁ ១០០%", "Effect ធំ", "ខុស"], 0], ["Peeking ក្នុង A/B?", ["ល្អ", "បង្កើន False positive", "លឿន", "ចាំបាច់"], 1], ["r = −0.85?", ["អវិជ្ជមានខ្លាំង", "គ្មាន", "វិជ្ជមានខ្សោយ", "Causation"], 0], ["Correlation ≠ ?", ["Causation", "Regression", "Mean", "Data"], 0], ["R² 0.97?", ["97% ពន្យល់បាន", "97 ចំណុច", "ខុស 97%", "p"], 0], ["Mean ៣ ក្រុម?", ["t-test", "ANOVA", "Chi-square", "r"], 1], ["Categorical ២?", ["Chi-square", "ANOVA", "Regression", "SD"], 0], ["សិក្សាតែក្រុមហ៊ុនជោគជ័យ?", ["Survivorship bias", "Simpson", "Peeking", "Normal"], 0], ["Simpson's paradox?", ["និន្នាការបញ្ច្រាសពេលផ្គុំក្រុម", "Outlier", "Normal", "Mode"], 0], ["p-value 0.05 ពី?", ["Fisher", "Tukey", "Nightingale", "Bayes"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+<ol class='steps'><li>Excel វិភាគទិន្នន័យ ✅</li><li><b>ស្ថិតិ</b> (វគ្គនេះ) ✅</li><li><b>Power BI</b></li><li>បន្ទាប់៖ AI កម្រិតដំបូង (Machine Learning) · Math for IT</li></ol></section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="da2"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

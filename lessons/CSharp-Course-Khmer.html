@@ -1,0 +1,2452 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន C# ពីដើមដល់ចប់</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f8f7fb; --panel:#ffffff; --text:#1d1a2b; --muted:#5b6b61; --line:#e1dded;
+  --accent:#6a2c91; --accent2:#9b4dca; --accent-soft:#f1e8f8;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#c9a0ee; --accent2:#9b4dca; --accent-soft:#2a2038;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#c9a0ee; --accent2:#9b4dca; --accent-soft:#2a2038;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#4b1d6b,#9b4dca);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.tok-type{color:#7ee787}
+.note br{display:block;content:'';margin-top:2px}
+
+</style>
+<link rel="icon" href="../assets/icons/csharp.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/csharp.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>វគ្គសិក្សា C# ពីដើមដល់កម្រិតអាជីព</h1>
+  <button class="btn" id="themeBtn">🌓</button>
+</header>
+
+<div class="layout">
+<nav class="side" id="side">
+  <h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+  <a href="#intro">១. C# ជាអ្វី? អ្នកបង្កើត</a>
+  <a href="#history">២. ប្រវត្តិ C#</a>
+  <a href="#uses">៣. គេប្រើធ្វើអ្វី?</a>
+  <a href="#install">៤. ដំឡើង .NET + VS Code</a>
+  <a href="#elements">៥. ធាតុនីមួយៗរបស់ C# / .NET</a>
+  <h4>មេរៀនមូលដ្ឋាន (១–៨)</h4>
+  <a href="#l1">មេរៀន ១: កម្មវិធីដំបូង៖ Hello World</a>
+  <a href="#l2">មេរៀន ២: អថេរ និងប្រភេទទិន្នន័យ</a>
+  <a href="#l3">មេរៀន ៣: Operators (ប្រមាណវិធី)</a>
+  <a href="#l4">មេរៀន ៤: Input / Output និង String Interpolation</a>
+  <a href="#l5">មេរៀន ៥: លក្ខខណ្ឌ៖ if, else, switch</a>
+  <a href="#l6">មេរៀន ៦: Loop (រង្វិលជុំ)</a>
+  <a href="#l7">មេរៀន ៧: Array និង List</a>
+  <a href="#l8">មេរៀន ៨: Method (អនុគមន៍)</a>
+  <h4>កម្រិតមធ្យម (៩–១៧)</h4>
+  <a href="#l9">មេរៀន ៩: String (អក្សរ)</a>
+  <a href="#l10">មេរៀន ១០: Class និង Object</a>
+  <a href="#l11">មេរៀន ១១: OOP ៤ ស្ដម្ភ</a>
+  <a href="#l12">មេរៀន ១២: Interface, Enum, Struct</a>
+  <a href="#l13">មេរៀន ១៣: Exception (ការចាប់កំហុស)</a>
+  <a href="#l14">មេរៀន ១៤: Collection៖ Dictionary, HashSet, Queue, Stack</a>
+  <a href="#l15">មេរៀន ១៥: Lambda និង LINQ</a>
+  <a href="#l16">មេរៀន ១៦: ការអាន/សរសេរ File</a>
+  <a href="#l17">មេរៀន ១៧: Async / await</a>
+  <h4>កម្រិតខ្ពស់ (១៨–២២)</h4>
+  <a href="#l18">មេរៀន ១៨: Generics (ប្រភេទទូទៅ)</a>
+  <a href="#l19">មេរៀន ១៩: Null Safety និង Pattern Matching</a>
+  <a href="#l20">មេរៀន ២០: Web API ដំបូង ជាមួយ ASP.NET Core</a>
+  <a href="#l21">មេរៀន ២១: Database ជាមួយ Entity Framework Core (SQLite)</a>
+  <a href="#l22">មេរៀន ២២: C# សម្រាប់ហ្គេមក្នុង Unity</a>
+  <h4>គម្រោង & លំហាត់</h4>
+  <a href="#project">គម្រោង ១: បញ្ជីកិច្ចការ (Console)</a>
+  <a href="#project2">គម្រោង ២: Web API + Database</a>
+  <a href="#bank">លំហាត់បន្ថែម ២៤</a>
+  <a href="#quiz">សំណួរសាកល្បងខ្លួនឯង</a>
+  <h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+  <a href="#pro">App កម្រិតអាជីព</a>
+  <a href="#pro-structure">រចនាសម្ព័ន្ធ Project</a>
+  <a href="#pro-code">កូដ App ពេញលេញ</a>
+  <a href="#pro-test">Integration Tests</a>
+  <a href="#pro-deploy">Security & Docker</a>
+  <a href="#next">ជំហានបន្ទាប់</a>
+</nav>
+
+<main>
+
+<section class="hero">
+  <h2>មេរៀន C# ពីដើមដល់ចប់</h2>
+  <p>ឯកសាររៀនសម្រាប់អ្នកចាប់ផ្ដើម៖ <b>២២ មេរៀន</b> មានឧទាហរណ៍កូដពណ៌ លទ្ធផល លំហាត់ និងចម្លើយ ព្រមទាំងគម្រោង លំហាត់បន្ថែម ២៤ និង App កម្រិតអាជីព។ អានតាមលំដាប់ ហើយវាយកូដខ្លួនឯងរាល់ដង។</p>
+  <p><span class="badge">C# 14</span><span class="badge">.NET 10 (LTS)</span><span class="badge">Visual Studio Code</span></p>
+</section>
+
+<section id="intro">
+  <h2>១. C# ជាអ្វី? អ្នកណាបង្កើត?</h2>
+  
+
+<p><b>C#</b> (អានថា “ស៊ី-សាប”) ជាភាសាសរសេរកម្មវិធីទំនើប ប្រភេទ object-oriented ដែលសុវត្ថិភាពប្រភេទទិន្នន័យ (type-safe) និងងាយរៀន។ កូដ C# ត្រូវបាន compile ហើយដំណើរការលើ <b>.NET</b> ដែលជាវេទិការបស់ Microsoft ដែល open-source និងដំណើរការបានលើ Windows, macOS និង Linux។</p>
+<div class="grid">
+<div class="card"><b>អ្នកបង្កើត</b><p><b>Anders Hejlsberg</b> ជាស្ថាបត្យករចម្បង រួមជាមួយក្រុមវិស្វករ Microsoft។ គាត់ក៏ជាអ្នកបង្កើត Turbo Pascal និង Delphi ហើយក្រោយមកបង្កើត TypeScript ផងដែរ។</p></div>
+<div class="card"><b>ក្រុមហ៊ុន</b><p><b>Microsoft</b> ចេញផ្សាយជាផ្លូវការឆ្នាំ <b>2002</b> ជាមួយ .NET Framework ដំបូង (ឈ្មោះកូដដំបូង “Cool”)។</p></div>
+<div class="card"><b>ស្តង់ដារ</b><p>ត្រូវបានកំណត់ជាស្តង់ដារដោយ <b>ECMA</b> និង <b>ISO</b>។ បច្ចុប្បន្នអភិវឌ្ឍជា open-source នៅលើ GitHub។</p></div>
+<div class="card"><b>កំណែថ្មី</b><p>C# ចេញកំណែថ្មីរៀងរាល់ឆ្នាំជាមួយ .NET។ ឯកសារនេះប្រើ <b>.NET 10 (LTS)</b> និង <b>C# 14</b>។ កូដមូលដ្ឋានដំណើរការលើកំណែថ្មីៗទាំងអស់។</p></div>
+</div>
+<div class="note">📌 <b>ហេតុអ្វីឈ្មោះ “C Sharp”?</b><br/>និមិត្តសញ្ញា ♯ មានន័យថា “ខ្ពស់ជាងមួយកម្រិត” ក្នុងតន្ត្រី ជាសញ្ញាបង្ហាញថាវាជាកំណែវិវឌ្ឍពី C/C++។ សូមកត់សម្គាល់៖ វាយក្នុងកុំព្យូទ័រជា <code class="i">C#</code>។</div>
+
+</section>
+
+<section id="history">
+  <h2>២. ប្រវត្តិ C#</h2>
+  <table>
+    <tr><th>ឆ្នាំ</th><th>Version</th><th>មុខងារសំខាន់</th></tr>
+    <tr><td>2000</td><td>—</td><td>Microsoft ប្រកាស C# និង .NET (ឈ្មោះកូដដំបូង “Cool”)</td></tr>
+    <tr><td>2002</td><td>C# 1.0</td><td>ចេញជាផ្លូវការជាមួយ .NET Framework 1.0</td></tr>
+    <tr><td>2005</td><td>C# 2.0</td><td>Generics, Nullable types</td></tr>
+    <tr><td>2007</td><td>C# 3.0</td><td>LINQ, Lambda, <code class="i">var</code></td></tr>
+    <tr><td>2012</td><td>C# 5.0</td><td><code class="i">async</code> / <code class="i">await</code></td></tr>
+    <tr><td>2014–2016</td><td>—</td><td>Compiler (Roslyn) ក្លាយជា Open Source · .NET Core ដំណើរការលើ Linux/macOS</td></tr>
+    <tr><td>2020</td><td>C# 9</td><td>Records, Top-level statements (.NET 5 រួមបញ្ចូល .NET តែមួយ)</td></tr>
+    <tr><td>2023</td><td>C# 12</td><td>Primary constructors, Collection expressions</td></tr>
+    <tr><td>2025</td><td>C# 14</td><td>ចេញជាមួយ .NET 10 (LTS — គាំទ្រ ៣ ឆ្នាំ)</td></tr>
+  </table>
+  <div class="note">💡 <b>LTS (Long Term Support)</b> = Version ដែលទទួលការគាំទ្រយូរ (៣ ឆ្នាំ)។ .NET Version គូ (8, 10, ...) ជា LTS — ណែនាំសម្រាប់អ្នករៀន និងគម្រោងពិត។</div>
+</section>
+
+<section id="uses">
+  <h2>៣. គេប្រើ C# សម្រាប់ធ្វើអ្វី?</h2>
+  
+
+<div class="grid">
+<div class="card"><b>គេហទំព័រ និង API</b><p>ASP.NET Core សម្រាប់ website, REST API, Microservices។ ល្បឿនលឿនខ្លាំង ហើយប្រើដោយក្រុមហ៊ុនធំៗ។</p></div>
+<div class="card"><b>ហ្គេម (Unity)</b><p>Unity ជា game engine ដ៏ពេញនិយមបំផុត ប្រើ C# ជាភាសាសរសេរស្គ្រីប។ ហ្គេមមូលដ្ឋានលើទូរស័ព្ទជាច្រើនបង្កើតដោយ Unity។</p></div>
+<div class="card"><b>កម្មវិធី Desktop</b><p>WinForms, WPF, WinUI សម្រាប់កម្មវិធី Windows ដូចជាប្រព័ន្ធគ្រប់គ្រងហាង ប្រព័ន្ធគណនេយ្យ POS។</p></div>
+<div class="card"><b>កម្មវិធីទូរស័ព្ទ</b><p>.NET MAUI បង្កើតកម្មវិធី Android, iOS, Windows, macOS ពីកូដតែមួយ។</p></div>
+<div class="card"><b>Cloud និង Azure</b><p>Azure Functions, Worker Services, សេវាកម្មផ្ទៃខាងក្រោយ។ ទទួលបានការគាំទ្រល្អបំផុតពី Microsoft Azure។</p></div>
+<div class="card"><b>ទិន្នន័យ និង AI</b><p>Entity Framework Core សម្រាប់ database, ML.NET សម្រាប់ Machine Learning និងការភ្ជាប់ទៅ AI API ផ្សេងៗ។</p></div>
+</div>
+<div class="note">📌 <b>តម្រូវការការងារ</b><br/>C# ជាភាសាដែលក្រុមហ៊ុន ធនាគារ និងស្ថាប័នធំៗប្រើច្រើន ដូច្នេះជាជម្រើសល្អសម្រាប់អ្នកចង់ធ្វើជា Backend Developer, Game Developer ឬ Software Engineer។</div>
+
+  <p><b>ក្រុមហ៊ុនល្បីៗដែលប្រើ C#/.NET:</b> Microsoft, Stack Overflow, Unity Technologies, Siemens, Accenture, ធនាគារ និងស្ថាប័នរដ្ឋជាច្រើន។</p>
+</section>
+
+<section id="install">
+  <h2>៤. ដំឡើង C# ក្នុង VS Code</h2>
+  
+
+<p>C# មិនមាន “កម្មវិធីដំឡើង” ដាច់ដោយឡែកទេ។ អ្នកត្រូវការ ២ យ៉ាង៖ <b>.NET SDK</b> (ជា compiler និងឧបករណ៍ដំណើរការ) និង <b>VS Code</b> ជាកម្មវិធីសរសេរកូដ ព្រមទាំង extension C#។</p>
+<ol class="steps">
+<li><b>ទាញយក និងដំឡើង .NET SDK</b><br/>ចូល <a href="https://dotnet.microsoft.com/download" rel="noopener" target="_blank">dotnet.microsoft.com/download</a> ជ្រើស <b>.NET 10 SDK</b> (ជំនាន់ LTS) តាមប្រព័ន្ធប្រតិបត្តិការរបស់អ្នក ហើយដំឡើងតាមលំនាំដើម។ សូមកុំជ្រើស “Runtime” ព្រោះអ្នកត្រូវការ <b>SDK</b>។</li>
+<li><b>ដំឡើង Visual Studio Code</b><br/>ទាញយកពី <a href="https://code.visualstudio.com" rel="noopener" target="_blank">code.visualstudio.com</a> ហើយដំឡើង។ លើ Windows សូមធីក “Add to PATH”។</li>
+<li><b>ដំឡើង Extension “C# Dev Kit”</b><br/>បើក VS Code ចុចរូប Extensions (<code class="i">Ctrl+Shift+X</code>) ស្វែងរក <b>C# Dev Kit</b> (ដោយ Microsoft) ចុច Install។ វានឹងដំឡើង extension <b>C#</b> និង <b>.NET Install Tool</b> មកជាមួយ។</li>
+<li><b>ពិនិត្យការដំឡើង</b><br/>បើក Terminal (<code class="i">Ctrl+`</code>) ហើយវាយ៖
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">dotnet --version
+dotnet --list-sdks</code></pre></div>
+បើឃើញលេខកំណែ (ឧ. <code class="i">10.0.x</code>) មានន័យថាដំឡើងជោគជ័យ។</li>
+<li><b>បង្កើតគម្រោងដំបូង</b><br/>វាយក្នុង Terminal៖
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">mkdir HelloCSharp
+cd HelloCSharp
+dotnet new console
+code .</code></pre></div>
+ពាក្យបញ្ជា <code class="i">dotnet new console</code> បង្កើតឯកសារ <code class="i">Program.cs</code> និង <code class="i">HelloCSharp.csproj</code>។ ចុច “Yes, I trust the authors” ពេល VS Code សួរ។</li>
+<li><b>ដំណើរការកម្មវិធី</b><br/>ក្នុង Terminal វាយ <code class="i">dotnet run</code> ឬចុច <code class="i">Ctrl+F5</code> ក្នុង VS Code ដើម្បី Run without debugging។ ចុច <code class="i">F5</code> សម្រាប់ Debug។</li>
+</ol>
+<table>
+<tr><th>ពាក្យបញ្ជា</th><th>មុខងារ</th></tr>
+<tr><td><code class="i">dotnet new console</code></td><td>បង្កើតគម្រោង Console ថ្មី</td></tr>
+<tr><td><code class="i">dotnet run</code></td><td>Build និងដំណើរការកម្មវិធី</td></tr>
+<tr><td><code class="i">dotnet build</code></td><td>Compile កូដ ដើម្បីរកកំហុស</td></tr>
+<tr><td><code class="i">dotnet watch</code></td><td>ដំណើរការឡើងវិញដោយស្វ័យប្រវត្តិពេលរក្សាទុកកូដ</td></tr>
+<tr><td><code class="i">dotnet new list</code></td><td>បង្ហាញប្រភេទគម្រោងទាំងអស់</td></tr>
+</table>
+<div class="note">💡 <b>បញ្ហាជួបញឹកញាប់</b><br/>បើ Terminal ប្រាប់ថា “dotnet is not recognized” សូមបិទ ហើយបើក VS Code (ឬ restart កុំព្យូទ័រ) ឱ្យ PATH ថ្មីដំណើរការ។ បើ C# Dev Kit សុំចូលគណនី Microsoft សូមមើល extension “C#” ធម្មតាក៏ប្រើបានដែរ។</div>
+<div class="note">📌 <b>ជម្រើសផ្សេង</b><br/>បើមិនចង់ដំឡើងអ្វីសោះ អាចសាកល្បងកូដនៅ <a href="https://dotnetfiddle.net" rel="noopener" target="_blank">dotnetfiddle.net</a> លើ browser។</div>
+
+</section>
+
+<section id="elements">
+  <h2>៥. ធាតុ (Components) នីមួយៗរបស់ C# / .NET</h2>
+<div class="codebox"><span class="label">ដំណើរការពីកូដទៅកម្មវិធី</span><pre><code class="txt"> Program.cs ──► [C# Compiler (Roslyn)] ──► IL (.dll) ──► [CLR + JIT] ──► Machine Code ──► ដំណើរការ
+                                           (Intermediate Language)</code></pre></div>
+  <table>
+    <tr><th>ធាតុ</th><th>ពន្យល់</th></tr>
+    <tr><td><b>.NET SDK</b></td><td>កញ្ចប់ឧបករណ៍សម្រាប់អ្នកសរសេរកូដ៖ Compiler, <code class="i">dotnet</code> CLI, Templates</td></tr>
+    <tr><td><b>.NET Runtime / CLR</b></td><td>Common Language Runtime — ម៉ាស៊ីនដែលដំណើរការកម្មវិធី .NET</td></tr>
+    <tr><td><b>Roslyn</b></td><td>C# Compiler (Open Source) បំប្លែង C# ទៅជា IL</td></tr>
+    <tr><td><b>IL & JIT</b></td><td>IL = កូដកណ្តាល · JIT (Just-In-Time) បំប្លែង IL ជា Machine Code ពេលដំណើរការ</td></tr>
+    <tr><td><b>Garbage Collector (GC)</b></td><td>លុប Object ដែលលែងប្រើចេញពី Memory ដោយស្វ័យប្រវត្តិ</td></tr>
+    <tr><td><b>BCL</b></td><td>Base Class Library — Class មានស្រាប់៖ <code class="i">Console</code>, <code class="i">List&lt;T&gt;</code>, <code class="i">File</code>, <code class="i">HttpClient</code>...</td></tr>
+    <tr><td><b>Project (.csproj)</b></td><td>File កំណត់ Project៖ Target framework, Packages, Settings</td></tr>
+    <tr><td><b>NuGet</b></td><td>កន្លែងផ្ទុក Package (ដូច npm) — <code class="i">dotnet add package ...</code></td></tr>
+    <tr><td><b>Namespace</b></td><td>ក្រុមនៃ Class ឧ. <code class="i">System.IO</code>, <code class="i">System.Linq</code></td></tr>
+    <tr><td><b>Value vs Reference type</b></td><td><code class="i">int</code>, <code class="i">struct</code> ចម្លងតម្លៃ · <code class="i">class</code>, <code class="i">string</code>, Array ចម្លង Reference</td></tr>
+    <tr><td><b>Nullable reference types</b></td><td><code class="i">string?</code> អាចជា null · <code class="i">string</code> មិនគួរជា null — Compiler ព្រមានមុន</td></tr>
+    <tr><td><b>Implicit usings</b></td><td>Project ថ្មីៗ <code class="i">using System; System.Linq; System.IO;</code>... ដោយស្វ័យប្រវត្តិ</td></tr>
+  </table>
+</section>
+
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>កម្មវិធីដំបូង៖ Hello World</h2>
+<p>បើក <code class="i">Program.cs</code> ហើយជំនួសមាតិកាដោយកូដខាងក្រោម។ ចាប់ពី C# 9 យើងសរសេរ <b>top-level statements</b> ដោយមិនចាំបាច់មាន <code class="i">class Program</code> ឬ <code class="i">Main</code>។</p>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">// នេះជា comment មួយបន្ទាត់
+Console.WriteLine("សួស្ដី C#!");
+Console.WriteLine("Hello, World!");
+
+/* comment
+   ច្រើនបន្ទាត់ */</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">សួស្ដី C#!
+Hello, World!</code></pre></div>
+<h3>ច្បាប់មូលដ្ឋាន</h3>
+<ul>
+<li>ចុងបញ្ចប់នៃ statement នីមួយៗត្រូវមាន <code class="i">;</code></li>
+<li>C# ញែកអក្សរធំ/តូច (case-sensitive)៖ <code class="i">Console</code> ≠ <code class="i">console</code></li>
+<li><code class="i">Console.WriteLine</code> បោះពុម្ពហើយចុះបន្ទាត់ រីឯ <code class="i">Console.Write</code> មិនចុះបន្ទាត់</li>
+<li>Comment ដោយ <code class="i">//</code> ឬ <code class="i">/* */</code></li>
+</ul>
+<div class="note">📌 <b>ទម្រង់បុរាណ (Main method)</b><br/>កូដចាស់ៗ ឬសៀវភៅជាច្រើនសរសេរបែបនេះ ដែលសមមូលនឹងខាងលើ៖</div>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">using System;
+
+namespace HelloCSharp
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello, World!");
+        }
+    }
+}</code></pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4>
+<p>សរសេរកម្មវិធីបោះពុម្ពឈ្មោះរបស់អ្នក អាយុ និងទីក្រុង ក្នុង ៣ បន្ទាត់។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">Console.WriteLine("ឈ្មោះ: សុខា");
+Console.WriteLine("អាយុ: 20");
+Console.WriteLine("ទីក្រុង: ភ្នំពេញ");</code></pre></div></details></div>
+</section>
+
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>អថេរ និងប្រភេទទិន្នន័យ</h2>
+<p><b>អថេរ (variable)</b> ជាកន្លែងផ្ទុកទិន្នន័យក្នុងអង្គចងចាំ។ ត្រូវប្រកាសប្រភេទមុន ហើយដាក់ឈ្មោះ។</p>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">int age = 20;                 // ចំនួនគត់
+double price = 9.99;          // ចំនួនទសភាគ (ជាទូទៅ)
+decimal money = 1250.50m;     // ប្រើជាមួយលុយ (ត្រូវមាន m)
+float temp = 36.6f;           // ទសភាគតូច (ត្រូវមាន f)
+bool isStudent = true;        // true ឬ false
+char grade = 'A';             // តួអក្សរតែមួយ (ក្នុង ' ')
+string name = "សុខា";         // អក្សរ (ក្នុង " ")
+long population = 17_000_000L; // ចំនួនគត់ធំ
+
+var city = "Phnom Penh";      // var ឱ្យ compiler ទាយប្រភេទ
+const double Pi = 3.14159;    // ថេរ មិនអាចផ្លាស់ប្ដូរ
+
+Console.WriteLine($"{name} អាយុ {age} ឆ្នាំ នៅ {city}");</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">សុខា អាយុ 20 ឆ្នាំ នៅ Phnom Penh</code></pre></div>
+<table>
+<tr><th>ប្រភេទ</th><th>ទំហំ</th><th>ជួរតម្លៃ / ការប្រើ</th></tr>
+<tr><td><code class="i">int</code></td><td>4 byte</td><td>−2,147,483,648 ដល់ 2,147,483,647</td></tr>
+<tr><td><code class="i">long</code></td><td>8 byte</td><td>ចំនួនគត់ធំខ្លាំង</td></tr>
+<tr><td><code class="i">double</code></td><td>8 byte</td><td>ទសភាគ ~15 ខ្ទង់</td></tr>
+<tr><td><code class="i">decimal</code></td><td>16 byte</td><td>ទសភាគច្បាស់លាស់ ~28 ខ្ទង់ សម្រាប់លុយ</td></tr>
+<tr><td><code class="i">bool</code></td><td>1 byte</td><td><code class="i">true</code> / <code class="i">false</code></td></tr>
+<tr><td><code class="i">char</code></td><td>2 byte</td><td>តួអក្សរ Unicode មួយ</td></tr>
+<tr><td><code class="i">string</code></td><td>ប្រែប្រួល</td><td>អត្ថបទ</td></tr>
+</table>
+<h3>ការបម្លែងប្រភេទ (Type Conversion)</h3>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">int a = 10;
+double b = a;               // implicit: ស្វ័យប្រវត្តិ (មិនបាត់ទិន្នន័យ)
+double pi = 3.99;
+int c = (int)pi;            // explicit cast: ទទួលបាន 3 (កាត់ទសភាគ)
+
+string s = "123";
+int n1 = int.Parse(s);      // បង្កើត error បើមិនមែនលេខ
+bool ok = int.TryParse("abc", out int n2);  // សុវត្ថិភាព
+string t = 456.ToString();
+int n3 = Convert.ToInt32("789");
+
+Console.WriteLine($"{c} {n1} {ok} {t} {n3}");</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">3 123 False 456 789</code></pre></div>
+<div class="note">💡 <b>ច្បាប់ដាក់ឈ្មោះ</b><br/>ឈ្មោះអថេរចាប់ផ្ដើមដោយអក្សរ ឬ <code class="i">_</code> មិនមានដកឃ្លា ហើយមិនជាន់ keyword។ អថេរប្រើ <code class="i">camelCase</code> (<code class="i">studentName</code>) ចំណែក class និង method ប្រើ <code class="i">PascalCase</code> (<code class="i">StudentName</code>)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4>
+<p>ប្រកាសអថេរ <code class="i">width = 8.5</code> និង <code class="i">height = 4</code> ហើយបោះពុម្ពក្រឡាផ្ទៃចតុកោណ។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">double width = 8.5;
+int height = 4;
+double area = width * height;
+Console.WriteLine($"ក្រឡាផ្ទៃ = {area}");</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">ក្រឡាផ្ទៃ = 34</code></pre></div></details></div>
+</section>
+
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Operators (ប្រមាណវិធី)</h2>
+<table>
+<tr><th>ប្រភេទ</th><th>Operators</th><th>ឧទាហរណ៍</th></tr>
+<tr><td>គណិតវិទ្យា</td><td><code class="i">+ - * / %</code></td><td><code class="i">10 % 3</code> = 1</td></tr>
+<tr><td>ផ្ទៀងផ្ទាត់</td><td><code class="i">== != &gt; &lt; &gt;= &lt;=</code></td><td><code class="i">5 &gt; 3</code> = true</td></tr>
+<tr><td>តក្កវិជ្ជា</td><td><code class="i">&amp;&amp; || !</code></td><td><code class="i">a &amp;&amp; b</code></td></tr>
+<tr><td>កំណត់តម្លៃ</td><td><code class="i">= += -= *= /=</code></td><td><code class="i">x += 5</code></td></tr>
+<tr><td>បង្កើន/បន្ថយ</td><td><code class="i">++ --</code></td><td><code class="i">i++</code></td></tr>
+</table>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">int a = 17, b = 5;
+Console.WriteLine(a + b);     // 22
+Console.WriteLine(a / b);     // 3  (ចែកចំនួនគត់)
+Console.WriteLine(a % b);     // 2  (សំណល់)
+Console.WriteLine((double)a / b); // 3.4
+
+bool hasId = true, isAdult = false;
+Console.WriteLine(hasId &amp;&amp; isAdult); // False
+Console.WriteLine(hasId || isAdult); // True
+Console.WriteLine(!hasId);           // False
+
+int x = 10;
+x += 5;   // x = 15
+x++;      // x = 16
+string result = x &gt; 10 ? "ធំ" : "តូច"; // ternary
+Console.WriteLine(result);</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">22
+3
+2
+3.4
+False
+True
+False
+ធំ</code></pre></div>
+<div class="note">📌 <b>សូមប្រុងប្រយ័ត្ន</b><br/><code class="i">17 / 5</code> បានលទ្ធផល <code class="i">3</code> ព្រោះទាំងពីរជា int។ ចង់បានទសភាគត្រូវ cast ណាមួយជា <code class="i">double</code>។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4>
+<p>បម្លែង 250 វិនាទី ទៅជា នាទី និងវិនាទីសល់ (ប្រើ <code class="i">/</code> និង <code class="i">%</code>)។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">int total = 250;
+int minutes = total / 60;
+int seconds = total % 60;
+Console.WriteLine($"{minutes} នាទី {seconds} វិនាទី");</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">4 នាទី 10 វិនាទី</code></pre></div></details></div>
+</section>
+
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Input / Output និង String Interpolation</h2>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">Console.Write("បញ្ចូលឈ្មោះ: ");
+string? name = Console.ReadLine();
+
+Console.Write("បញ្ចូលអាយុ: ");
+int age = int.Parse(Console.ReadLine() ?? "0");
+
+Console.WriteLine($"សួស្ដី {name}! ឆ្នាំក្រោយអ្នកអាយុ {age + 1} ឆ្នាំ");
+Console.WriteLine($"តម្លៃ: {1234.5:N2}");   // 1,234.50
+Console.WriteLine($"ភាគរយ: {0.256:P1}");    // 25.6%</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">បញ្ចូលឈ្មោះ: សុខា
+បញ្ចូលអាយុ: 20
+សួស្ដី សុខា! ឆ្នាំក្រោយអ្នកអាយុ 21 ឆ្នាំ
+តម្លៃ: 1,234.50
+ភាគរយ: 25.6%</code></pre></div>
+<div class="note">💡 <b>បង្ហាញអក្សរខ្មែរក្នុង Terminal</b><br/>បើអក្សរខ្មែរបង្ហាញជាសញ្ញា ? សូមដាក់បន្ទាត់នេះនៅដើមកម្មវិធី៖ <code class="i">Console.OutputEncoding = System.Text.Encoding.UTF8;</code> ហើយប្រើ Terminal ដែលគាំទ្រ Unicode (ឧ. Windows Terminal)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4>
+<p>សុំលេខ ២ ពីអ្នកប្រើ ហើយបង្ហាញផលបូក ផលដក ផលគុណ និងផលចែក។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">Console.Write("លេខទី១: ");
+double a = double.Parse(Console.ReadLine()!);
+Console.Write("លេខទី២: ");
+double b = double.Parse(Console.ReadLine()!);
+
+Console.WriteLine($"{a} + {b} = {a + b}");
+Console.WriteLine($"{a} - {b} = {a - b}");
+Console.WriteLine($"{a} * {b} = {a * b}");
+Console.WriteLine($"{a} / {b} = {a / b}");</code></pre></div></details></div>
+</section>
+
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>លក្ខខណ្ឌ៖ if, else, switch</h2>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">int score = 78;
+
+if (score &gt;= 90)
+{
+    Console.WriteLine("ពូកែណាស់ (A)");
+}
+else if (score &gt;= 70)
+{
+    Console.WriteLine("ល្អ (B)");
+}
+else if (score &gt;= 50)
+{
+    Console.WriteLine("មធ្យម (C)");
+}
+else
+{
+    Console.WriteLine("ធ្លាក់");
+}</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">ល្អ (B)</code></pre></div>
+<h3>switch expression (ទំនើប)</h3>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">int day = 3;
+string dayName = day switch
+{
+    1 =&gt; "ច័ន្ទ",
+    2 =&gt; "អង្គារ",
+    3 =&gt; "ពុធ",
+    4 =&gt; "ព្រហស្បតិ៍",
+    5 =&gt; "សុក្រ",
+    6 or 7 =&gt; "ចុងសប្ដាហ៍",
+    _ =&gt; "មិនត្រឹមត្រូវ"
+};
+Console.WriteLine(dayName);
+
+// switch statement បែបបុរាណ
+switch (day)
+{
+    case 1:
+        Console.WriteLine("ចាប់ផ្ដើមសប្ដាហ៍");
+        break;
+    default:
+        Console.WriteLine("ថ្ងៃធម្មតា");
+        break;
+}</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">ពុធ
+ថ្ងៃធម្មតា</code></pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4>
+<p>សរសេរកម្មវិធីសុំលេខ ១ ហើយប្រាប់ថាជាលេខ <b>គូ</b> ឬ <b>សេស</b> និង <b>វិជ្ជមាន</b>, <b>អវិជ្ជមាន</b> ឬ <b>សូន្យ</b>។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">Console.Write("បញ្ចូលលេខ: ");
+int n = int.Parse(Console.ReadLine()!);
+
+string parity = n % 2 == 0 ? "គូ" : "សេស";
+string sign = n &gt; 0 ? "វិជ្ជមាន" : n &lt; 0 ? "អវិជ្ជមាន" : "សូន្យ";
+Console.WriteLine($"{n} ជាលេខ{parity} និង{sign}");</code></pre></div></details></div>
+</section>
+
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Loop (រង្វិលជុំ)</h2>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">// for: ដឹងចំនួនដងច្បាស់លាស់
+for (int i = 1; i &lt;= 5; i++)
+{
+    Console.Write(i + " ");
+}
+Console.WriteLine();
+
+// while: ធ្វើដដែលៗ ដរាបណាលក្ខខណ្ឌពិត
+int n = 3;
+while (n &gt; 0)
+{
+    Console.WriteLine($"រាប់ថយក្រោយ: {n}");
+    n--;
+}
+
+// do-while: ធ្វើយ៉ាងហោចណាស់ម្ដង
+int input;
+do
+{
+    Console.Write("បញ្ចូលលេខធំជាង 0: ");
+    input = int.Parse(Console.ReadLine()!);
+} while (input &lt;= 0);
+
+// foreach: ដើរតាមធាតុក្នុង collection
+string[] fruits = { "ស្វាយ", "ចេក", "ម្នាស់" };
+foreach (string f in fruits)
+{
+    Console.WriteLine(f);
+}
+
+// break និង continue
+for (int i = 1; i &lt;= 10; i++)
+{
+    if (i % 2 == 0) continue;  // រំលងលេខគូ
+    if (i &gt; 7) break;          // ឈប់
+    Console.Write(i + " ");
+}</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">1 2 3 4 5 
+រាប់ថយក្រោយ: 3
+រាប់ថយក្រោយ: 2
+រាប់ថយក្រោយ: 1
+...
+1 3 5 7</code></pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4>
+<p>(ក) បោះពុម្ពតារាងគុណនៃលេខ 7 ពី 1 ដល់ 10។ (ខ) គណនាផលបូក 1+2+...+100។ (គ) <b>FizzBuzz</b>៖ ពី 1 ដល់ 30 បោះពុម្ព “Fizz” បើចែក 3 ដាច់ “Buzz” បើចែក 5 ដាច់ “FizzBuzz” បើទាំងពីរ បើមិនដូច្នេះបោះពុម្ពលេខ។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">for (int i = 1; i &lt;= 10; i++)
+    Console.WriteLine($"7 x {i} = {7 * i}");
+
+int sum = 0;
+for (int i = 1; i &lt;= 100; i++) sum += i;
+Console.WriteLine(sum);   // 5050
+
+for (int i = 1; i &lt;= 30; i++)
+{
+    if (i % 15 == 0) Console.WriteLine("FizzBuzz");
+    else if (i % 3 == 0) Console.WriteLine("Fizz");
+    else if (i % 5 == 0) Console.WriteLine("Buzz");
+    else Console.WriteLine(i);
+}</code></pre></div></details></div>
+</section>
+
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Array និង List</h2>
+<p><b>Array</b> មានទំហំថេរ ចំណែក <b>List&lt;T&gt;</b> អាចបន្ថែម/លុបបាន។ Index ចាប់ផ្ដើមពី <code class="i">0</code>។</p>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">int[] scores = { 80, 65, 92, 71 };
+int[] empty = new int[5];            // [0,0,0,0,0]
+
+Console.WriteLine(scores[0]);        // 80
+Console.WriteLine(scores.Length);    // 4
+Console.WriteLine(scores[^1]);       // 71 (ធាតុចុងក្រោយ)
+scores[1] = 70;
+Array.Sort(scores);
+
+// List
+var names = new List&lt;string&gt; { "សុខា", "ដារា" };
+names.Add("វិចិត្រ");
+names.Remove("ដារា");
+names.Insert(0, "ម៉ាលី");
+Console.WriteLine(names.Count);      // 3
+Console.WriteLine(names.Contains("សុខា")); // True
+
+foreach (var n in names) Console.WriteLine(n);
+
+// Array 2 វិមាត្រ
+int[,] grid = { {1, 2, 3}, {4, 5, 6} };
+Console.WriteLine(grid[1, 2]);       // 6</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">80
+4
+71
+3
+True
+ម៉ាលី
+សុខា
+វិចិត្រ
+6</code></pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4>
+<p>មាន array <code class="i">{ 45, 12, 89, 33, 67 }</code>។ រកលេខធំបំផុត តូចបំផុត និងមធ្យមភាគ (មិនប្រើ LINQ)។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">int[] a = { 45, 12, 89, 33, 67 };
+int max = a[0], min = a[0], sum = 0;
+foreach (int x in a)
+{
+    if (x &gt; max) max = x;
+    if (x &lt; min) min = x;
+    sum += x;
+}
+Console.WriteLine($"Max={max}, Min={min}, Avg={(double)sum / a.Length}");</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">Max=89, Min=12, Avg=49.2</code></pre></div></details></div>
+</section>
+
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Method (អនុគមន៍)</h2>
+<p><b>Method</b> គឺប្លុកកូដដែលមានឈ្មោះ អាចហៅប្រើម្ដងហើយម្ដងទៀត ដើម្បីកាត់បន្ថយកូដស្ទួន។</p>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">int result = Add(3, 4);
+Console.WriteLine(result);              // 7
+
+Greet("សុខា");                          // សួស្ដី សុខា!
+Greet();                                // ប្រើតម្លៃលំនាំដើម
+Console.WriteLine(Area(width: 5, height: 3)); // named arguments
+
+var (min, max) = MinMax(new[] { 4, 9, 2 });
+Console.WriteLine($"{min} {max}");      // 2 9
+
+Console.WriteLine(Factorial(5));        // 120
+
+static int Add(int a, int b) =&gt; a + b;   // expression-bodied
+
+static void Greet(string name = "មិត្ត")   // default parameter
+{
+    Console.WriteLine($"សួស្ដី {name}!");
+}
+
+static double Area(double width, double height) =&gt; width * height;
+
+static (int, int) MinMax(int[] arr)        // return tuple
+{
+    return (arr.Min(), arr.Max());
+}
+
+static int Factorial(int n)                // recursion
+{
+    if (n &lt;= 1) return 1;
+    return n * Factorial(n - 1);
+}</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">7
+សួស្ដី សុខា!
+សួស្ដី មិត្ត!
+15
+2 9
+120</code></pre></div>
+<div class="note">📌 <b>ref និង out</b><br/>ជាលំនាំដើម argument ត្រូវបានចម្លង (pass by value)។ ប្រើ <code class="i">ref</code> ឬ <code class="i">out</code> ដើម្បីផ្ដល់ការផ្លាស់ប្ដូរត្រឡប់មកវិញ ដូចក្នុង <code class="i">int.TryParse(s, out int n)</code>។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4>
+<p>សរសេរ method <code class="i">IsPrime(int n)</code> ត្រឡប់ <code class="i">bool</code> ហើយបោះពុម្ពចំនួនបឋមទាំងអស់ពី 1 ដល់ 50។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">for (int i = 1; i &lt;= 50; i++)
+    if (IsPrime(i)) Console.Write(i + " ");
+
+static bool IsPrime(int n)
+{
+    if (n &lt; 2) return false;
+    for (int i = 2; i * i &lt;= n; i++)
+        if (n % i == 0) return false;
+    return true;
+}</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">2 3 5 7 11 13 17 19 23 29 31 37 41 43 47</code></pre></div></details></div>
+</section>
+
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>String (អក្សរ)</h2>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">string s = "  Hello C# World  ";
+
+Console.WriteLine(s.Length);            // 18
+Console.WriteLine(s.Trim());            // "Hello C# World"
+Console.WriteLine(s.ToUpper());         // "  HELLO C# WORLD  "
+Console.WriteLine(s.Replace("World", "Cambodia"));
+Console.WriteLine(s.Contains("C#"));    // True
+Console.WriteLine(s.Trim().Substring(6, 2)); // "C#"
+Console.WriteLine(s.Trim().StartsWith("Hello")); // True
+
+string[] parts = "a,b,c".Split(',');
+Console.WriteLine(string.Join(" - ", parts));   // a - b - c
+
+string path = @"C:\Users\Sokha";        // verbatim string
+string multi = """
+    បន្ទាត់ទី១
+    បន្ទាត់ទី២
+    """;                                 // raw string literal
+Console.WriteLine(string.IsNullOrWhiteSpace("  ")); // True</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">18
+Hello C# World
+  HELLO C# WORLD  
+  Hello C# Cambodia  
+True
+C#
+True
+a - b - c
+True</code></pre></div>
+<div class="note">📌 <b>String មិនប្ដូរ (immutable)</b><br/>method ទាំងនេះបង្កើត string ថ្មី ដោយមិនកែ string ដើម។ បើត្រូវភ្ជាប់អក្សរច្រើនដង ក្នុង loop សូមប្រើ <code class="i">StringBuilder</code> ដើម្បីល្បឿនល្អ។</div>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">using System.Text;
+
+var sb = new StringBuilder();
+for (int i = 1; i &lt;= 3; i++) sb.Append($"ជុំទី {i}; ");
+Console.WriteLine(sb.ToString());</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">ជុំទី 1; ជុំទី 2; ជុំទី 3;</code></pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4>
+<p>សរសេរកម្មវិធីពិនិត្យថា string ដែលបញ្ចូលជា <b>palindrome</b> ឬទេ (ឧ. “level”, “Madam”) ដោយមិនគិតអក្សរធំតូច។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">Console.Write("បញ្ចូលពាក្យ: ");
+string w = Console.ReadLine()!.ToLower();
+string reversed = new string(w.Reverse().ToArray());
+Console.WriteLine(w == reversed ? "ជា palindrome" : "មិនមែន palindrome");</code></pre></div></details></div>
+</section>
+
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>Class និង Object</h2>
+<p><b>Class</b> ជាគំរូ (blueprint) ចំណែក <b>Object</b> ជាវត្ថុដែលបង្កើតពីគំរូនោះ។ Class មាន <b>field/property</b> (ទិន្នន័យ) និង <b>method</b> (សកម្មភាព)។</p>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">var s1 = new Student("សុខា", 20);
+var s2 = new Student("ដារា", 22) { Major = "IT" };
+
+s1.Introduce();
+s2.Introduce();
+s1.Age = 21;                       // កែ property
+Console.WriteLine(Student.Count);  // 2 (static)
+
+class Student
+{
+    public string Name { get; }              // អានបានតែប៉ុណ្ណោះ
+    public int Age { get; set; }
+    public string Major { get; set; } = "General";
+    public static int Count { get; private set; }
+
+    public Student(string name, int age)     // constructor
+    {
+        Name = name;
+        Age = age;
+        Count++;
+    }
+
+    public void Introduce()
+    {
+        Console.WriteLine($"ខ្ញុំឈ្មោះ {Name} អាយុ {Age} ឆ្នាំ ឯកទេស {Major}");
+    }
+}</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">ខ្ញុំឈ្មោះ សុខា អាយុ 20 ឆ្នាំ ឯកទេស General
+ខ្ញុំឈ្មោះ ដារា អាយុ 22 ឆ្នាំ ឯកទេស IT
+2</code></pre></div>
+<table>
+<tr><th>Access modifier</th><th>អាចចូលប្រើពី</th></tr>
+<tr><td><code class="i">public</code></td><td>គ្រប់ទីកន្លែង</td></tr>
+<tr><td><code class="i">private</code></td><td>ក្នុង class ខ្លួនឯងតែប៉ុណ្ណោះ (លំនាំដើមសម្រាប់ member)</td></tr>
+<tr><td><code class="i">protected</code></td><td>ក្នុង class និង class កូន</td></tr>
+<tr><td><code class="i">internal</code></td><td>ក្នុង project (assembly) តែមួយ</td></tr>
+</table>
+<div class="note">📌 <b>សម្រាប់ record</b><br/>បើត្រូវការ class សម្រាប់ទុកទិន្នន័យ សាមញ្ញៗ ប្រើ <code class="i">record Point(int X, int Y);</code> វាបង្កើត property, ការប្រៀបធៀបតម្លៃ និង <code class="i">ToString()</code> ឱ្យស្វ័យប្រវត្តិ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4>
+<p>បង្កើត class <code class="i">BankAccount</code> ដែលមាន <code class="i">Owner</code>, <code class="i">Balance</code> (មើលបានតែខាងក្រៅ) និង method <code class="i">Deposit(decimal)</code>, <code class="i">Withdraw(decimal)</code> ដែលមិនអនុញ្ញាតដកលើសសមតុល្យ។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">var acc = new BankAccount("សុខា", 100m);
+acc.Deposit(50m);
+acc.Withdraw(500m);   // បរាជ័យ
+acc.Withdraw(30m);
+Console.WriteLine(acc.Balance);  // 120
+
+class BankAccount
+{
+    public string Owner { get; }
+    public decimal Balance { get; private set; }
+
+    public BankAccount(string owner, decimal initial)
+    {
+        Owner = owner;
+        Balance = initial;
+    }
+
+    public void Deposit(decimal amount)
+    {
+        if (amount &gt; 0) Balance += amount;
+    }
+
+    public bool Withdraw(decimal amount)
+    {
+        if (amount &lt;= 0 || amount &gt; Balance)
+        {
+            Console.WriteLine("សមតុល្យមិនគ្រប់គ្រាន់");
+            return false;
+        }
+        Balance -= amount;
+        return true;
+    }
+}</code></pre></div></details></div>
+</section>
+
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>OOP ៤ ស្ដម្ភ</h2>
+<div class="grid">
+<div class="card"><b>Encapsulation</b><p>លាក់ទិន្នន័យ ដោយប្រើ <code class="i">private</code> ហើយបើកតាមរយៈ property/method។</p></div>
+<div class="card"><b>Inheritance</b><p>Class កូនទទួលមរតកពី class ឪពុក ដោយប្រើ <code class="i">:</code>។</p></div>
+<div class="card"><b>Polymorphism</b><p>Method ដូចគ្នា ប៉ុន្តែឥរិយាបថខុសគ្នាតាមប្រភេទ object ដោយ <code class="i">virtual/override</code>។</p></div>
+<div class="card"><b>Abstraction</b><p>បង្ហាញតែអ្វីចាំបាច់ ដោយ <code class="i">abstract class</code> និង <code class="i">interface</code>។</p></div>
+</div>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">Animal[] zoo = { new Dog("ឡុង"), new Cat("មីមី"), new Dog("ខ្មៅ") };
+
+foreach (Animal a in zoo)
+{
+    a.Eat();         // method ពី class ឪពុក
+    a.MakeSound();   // polymorphism: ហៅតាមប្រភេទពិត
+}
+
+abstract class Animal
+{
+    public string Name { get; }
+    protected Animal(string name) =&gt; Name = name;
+
+    public void Eat() =&gt; Console.WriteLine($"{Name} កំពុងស៊ី");
+    public abstract void MakeSound();            // ត្រូវតែ override
+}
+
+class Dog : Animal
+{
+    public Dog(string name) : base(name) { }
+    public override void MakeSound() =&gt; Console.WriteLine($"{Name}: ហ្វូវ ហ្វូវ!");
+}
+
+class Cat : Animal
+{
+    public Cat(string name) : base(name) { }
+    public override void MakeSound() =&gt; Console.WriteLine($"{Name}: ម្យ៉ាវ!");
+}</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">ឡុង កំពុងស៊ី
+ឡុង: ហ្វូវ ហ្វូវ!
+មីមី កំពុងស៊ី
+មីមី: ម្យ៉ាវ!
+ខ្មៅ កំពុងស៊ី
+ខ្មៅ: ហ្វូវ ហ្វូវ!</code></pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4>
+<p>បង្កើត abstract class <code class="i">Shape</code> ដែលមាន <code class="i">abstract double Area()</code> ហើយបង្កើត <code class="i">Circle</code>, <code class="i">Rectangle</code> ដើម្បី override។ ដាក់ក្នុង array ហើយបោះពុម្ពក្រឡាផ្ទៃ។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">Shape[] shapes = { new Circle(2), new Rectangle(3, 4) };
+foreach (var s in shapes)
+    Console.WriteLine($"{s.GetType().Name}: {s.Area():F2}");
+
+abstract class Shape
+{
+    public abstract double Area();
+}
+class Circle(double r) : Shape          // primary constructor
+{
+    public override double Area() =&gt; Math.PI * r * r;
+}
+class Rectangle(double w, double h) : Shape
+{
+    public override double Area() =&gt; w * h;
+}</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">Circle: 12.57
+Rectangle: 12.00</code></pre></div></details></div>
+</section>
+
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>Interface, Enum, Struct</h2>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">// Enum: សំណុំតម្លៃថេរដែលមានឈ្មោះ
+enum Status { Pending, Active, Closed }
+
+// Interface: កិច្ចសន្យាដែល class ត្រូវអនុវត្ត
+interface IPayable
+{
+    decimal Pay();
+}
+
+class Employee : IPayable
+{
+    public decimal Salary { get; init; }
+    public decimal Pay() =&gt; Salary;
+}
+
+class Freelancer : IPayable
+{
+    public decimal Rate { get; init; }
+    public int Hours { get; init; }
+    public decimal Pay() =&gt; Rate * Hours;
+}
+
+// Struct: value type ស្រាល សម្រាប់ទិន្នន័យតូចៗ
+struct Point
+{
+    public int X, Y;
+    public Point(int x, int y) { X = x; Y = y; }
+}
+
+class Demo
+{
+    static void Main()
+    {
+        Status st = Status.Active;
+        Console.WriteLine($"{st} = {(int)st}");   // Active = 1
+
+        IPayable[] list =
+        {
+            new Employee { Salary = 800m },
+            new Freelancer { Rate = 15m, Hours = 40 }
+        };
+        foreach (var p in list) Console.WriteLine(p.Pay());
+
+        var pt = new Point(3, 4);
+        Console.WriteLine($"({pt.X}, {pt.Y})");
+    }
+}</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">Active = 1
+800
+600
+(3, 4)</code></pre></div>
+<div class="note">💡 <b>Class ឬ Struct?</b><br/>Class ជា reference type (ចម្លងតែ reference) ហើយ struct ជា value type (ចម្លងតម្លៃទាំងមូល)។ ប្រើ class ជាធម្មតា ហើយ struct សម្រាប់ទិន្នន័យតូចៗ ដូចជា point ឬ color។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4>
+<p>បង្កើត enum <code class="i">Season</code> (Dry, Rainy) និង interface <code class="i">IDescribable</code> ដែលមាន <code class="i">string Describe()</code>។ ឱ្យ class <code class="i">Product</code> អនុវត្តវា ហើយបោះពុម្ពព័ត៌មាន។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">var p = new Product("ឆ័ត្រ", 5.5m, Season.Rainy);
+Console.WriteLine(p.Describe());
+
+enum Season { Dry, Rainy }
+interface IDescribable { string Describe(); }
+
+class Product(string name, decimal price, Season season) : IDescribable
+{
+    public string Describe() =&gt; $"{name} ${price} សម្រាប់រដូវ{season}";
+}</code></pre></div></details></div>
+</section>
+
+<section id="l13">
+<h2><span class="badge">មេរៀន ១៣</span>Exception (ការចាប់កំហុស)</h2>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">try
+{
+    Console.Write("បញ្ចូលលេខ: ");
+    int n = int.Parse(Console.ReadLine()!);
+    Console.WriteLine(100 / n);
+}
+catch (FormatException)
+{
+    Console.WriteLine("សូមបញ្ចូលតែលេខ!");
+}
+catch (DivideByZeroException)
+{
+    Console.WriteLine("មិនអាចចែកនឹង 0!");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"កំហុសផ្សេង: {ex.Message}");
+}
+finally
+{
+    Console.WriteLine("ចប់ការដំណើរការ");   // ដំណើរការជានិច្ច
+}
+
+// បោះ exception ខ្លួនឯង
+static void SetAge(int age)
+{
+    if (age &lt; 0) throw new ArgumentException("អាយុមិនអាចអវិជ្ជមាន");
+}</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">បញ្ចូលលេខ: abc
+សូមបញ្ចូលតែលេខ!
+ចប់ការដំណើរការ</code></pre></div>
+<div class="note">📌 <b>using statement</b><br/>ធនធានដូចជា file ត្រូវបិទបន្ទាប់ប្រើ។ ប្រើ <code class="i">using var f = File.OpenRead("a.txt");</code> ដើម្បីបិទដោយស្វ័យប្រវត្តិពេលចេញពី scope។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣</h4>
+<p>សរសេរ method <code class="i">Divide(int a, int b)</code> ដែលបោះ <code class="i">ArgumentException</code> បើ b = 0 ហើយហៅវាក្នុង try/catch។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">try
+{
+    Console.WriteLine(Divide(10, 2));
+    Console.WriteLine(Divide(5, 0));
+}
+catch (ArgumentException ex)
+{
+    Console.WriteLine($"Error: {ex.Message}");
+}
+
+static int Divide(int a, int b)
+{
+    if (b == 0) throw new ArgumentException("b មិនអាចជា 0");
+    return a / b;
+}</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">5
+Error: b មិនអាចជា 0</code></pre></div></details></div>
+</section>
+
+<section id="l14">
+<h2><span class="badge">មេរៀន ១៤</span>Collection៖ Dictionary, HashSet, Queue, Stack</h2>
+<table>
+<tr><th>ប្រភេទ</th><th>ប្រើពេល</th></tr>
+<tr><td><code class="i">List&lt;T&gt;</code></td><td>បញ្ជីតាមលំដាប់ អាចបន្ថែម/លុប</td></tr>
+<tr><td><code class="i">Dictionary&lt;K,V&gt;</code></td><td>រកតម្លៃតាម key យ៉ាងលឿន (មិនធានាលំដាប់ — ប្រើ <code class="i">SortedDictionary</code> បើត្រូវការលំដាប់)</td></tr>
+<tr><td><code class="i">HashSet&lt;T&gt;</code></td><td>សំណុំមិនស្ទួន</td></tr>
+<tr><td><code class="i">Queue&lt;T&gt;</code></td><td>មកមុនចេញមុន (FIFO)</td></tr>
+<tr><td><code class="i">Stack&lt;T&gt;</code></td><td>មកក្រោយចេញមុន (LIFO)</td></tr>
+</table>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">var capital = new Dictionary&lt;string, string&gt;
+{
+    ["កម្ពុជា"] = "ភ្នំពេញ",
+    ["ថៃ"] = "បាងកក"
+};
+capital["ឡាវ"] = "វៀងចន្ទន៍";
+
+if (capital.TryGetValue("ថៃ", out var c))
+    Console.WriteLine(c);                       // បាងកក
+
+foreach (var (country, city) in capital)
+    Console.WriteLine($"{country} -&gt; {city}");
+
+var set = new HashSet&lt;int&gt; { 1, 2, 2, 3, 3, 3 };
+Console.WriteLine(set.Count);                   // 3
+
+var queue = new Queue&lt;string&gt;();
+queue.Enqueue("A"); queue.Enqueue("B");
+Console.WriteLine(queue.Dequeue());             // A
+
+var stack = new Stack&lt;string&gt;();
+stack.Push("A"); stack.Push("B");
+Console.WriteLine(stack.Pop());                 // B</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">បាងកក
+កម្ពុជា -&gt; ភ្នំពេញ
+ថៃ -&gt; បាងកក
+ឡាវ -&gt; វៀងចន្ទន៍
+3
+A
+B</code></pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៤</h4>
+<p>រាប់ចំនួនដងដែលពាក្យនីមួយៗលេចឡើងក្នុងប្រយោគ “a b a c b a” ដោយប្រើ Dictionary។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">var count = new Dictionary&lt;string, int&gt;();
+foreach (var w in "a b a c b a".Split(' '))
+{
+    count[w] = count.GetValueOrDefault(w) + 1;
+}
+foreach (var (k, v) in count) Console.WriteLine($"{k}: {v}");</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">a: 3
+b: 2
+c: 1</code></pre></div></details></div>
+</section>
+
+<section id="l15">
+<h2><span class="badge">មេរៀន ១៥</span>Lambda និង LINQ</h2>
+<p><b>Lambda</b> ជា method តូចមិនមានឈ្មោះ សរសេរជា <code class="i">x =&gt; x * 2</code>។ <b>LINQ</b> ប្រើ lambda ដើម្បីច្រោះ បម្លែង និងតម្រៀបទិន្នន័យយ៉ាងខ្លី។</p>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">var nums = new List&lt;int&gt; { 5, 12, 8, 3, 20, 15 };
+
+var even   = nums.Where(n =&gt; n % 2 == 0).ToList();   // [12, 8, 20]
+var squares = nums.Select(n =&gt; n * n).ToList();
+var sorted = nums.OrderByDescending(n =&gt; n).ToList();
+
+Console.WriteLine(nums.Sum());                        // 63
+Console.WriteLine(nums.Average());                    // 10.5
+Console.WriteLine(nums.Max());                        // 20
+Console.WriteLine(nums.Any(n =&gt; n &gt; 18));              // True
+Console.WriteLine(nums.First(n =&gt; n &gt; 10));            // 12
+Console.WriteLine(string.Join(", ", even));
+
+var students = new[]
+{
+    new { Name = "សុខា", Score = 85, Class = "A" },
+    new { Name = "ដារា", Score = 92, Class = "B" },
+    new { Name = "ម៉ាលី", Score = 78, Class = "A" },
+};
+
+var top = students.Where(s =&gt; s.Score &gt;= 80)
+                  .OrderByDescending(s =&gt; s.Score)
+                  .Select(s =&gt; s.Name);
+Console.WriteLine(string.Join(", ", top));            // ដារា, សុខា
+
+foreach (var g in students.GroupBy(s =&gt; s.Class))
+    Console.WriteLine($"ថ្នាក់ {g.Key}: មធ្យម {g.Average(s =&gt; s.Score)}");
+
+Func&lt;int, int, int&gt; add = (a, b) =&gt; a + b;          // delegate
+Console.WriteLine(add(2, 3));                         // 5</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">63
+10.5
+20
+True
+12
+12, 8, 20
+ដារា, សុខា
+ថ្នាក់ A: មធ្យម 81.5
+ថ្នាក់ B: មធ្យម 92
+5</code></pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៥</h4>
+<p>ពី list ពាក្យ <code class="i">{"apple","kiwi","banana","fig","cherry"}</code> ស្វែងរកពាក្យដែលមានអក្សរច្រើនជាង 4 តម្រៀបតាមអក្ខរក្រម ហើយបម្លែងជាអក្សរធំ។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">var words = new[] { "apple", "kiwi", "banana", "fig", "cherry" };
+var r = words.Where(w =&gt; w.Length &gt; 4)
+             .OrderBy(w =&gt; w)
+             .Select(w =&gt; w.ToUpper());
+Console.WriteLine(string.Join(", ", r));</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">APPLE, BANANA, CHERRY</code></pre></div></details></div>
+</section>
+
+<section id="l16">
+<h2><span class="badge">មេរៀន ១៦</span>ការអាន/សរសេរ File</h2>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">string path = "notes.txt";
+
+File.WriteAllText(path, "បន្ទាត់ទី១\n");                 // សរសេរជាន់
+File.AppendAllText(path, "បន្ទាត់ទី២\n");                // បន្ថែម
+File.WriteAllLines("list.txt", new[] { "A", "B", "C" });
+
+if (File.Exists(path))
+{
+    string text = File.ReadAllText(path);
+    Console.WriteLine(text);
+
+    foreach (string line in File.ReadLines("list.txt"))
+        Console.WriteLine(line);
+}
+
+// StreamWriter / StreamReader (សម្រាប់ file ធំ)
+using (var w = new StreamWriter("log.txt"))
+{
+    w.WriteLine("ចាប់ផ្ដើម");
+}
+using var r = new StreamReader("log.txt");
+Console.WriteLine(r.ReadLine());
+
+Console.WriteLine(Path.Combine("data", "file.txt"));</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">បន្ទាត់ទី១
+បន្ទាត់ទី២
+
+A
+B
+C
+ចាប់ផ្ដើម
+data/file.txt      (លើ Windows: data\file.txt)</code></pre></div>
+<div class="note">📌 <b>ទីតាំង file</b><br/>File ដែលបង្កើតដោយ path ទំនាក់ទំនង ត្រូវបានបង្កើតក្នុង <b>working directory</b> របស់កម្មវិធី (ពេលប្រើ <code class="i">dotnet run</code> គឺ folder គម្រោង)។ ចង់ប្រាកដ សូមបោះពុម្ព <code class="i">Environment.CurrentDirectory</code>។ ប្រើ <code class="i">Path.Combine</code> ដើម្បីឱ្យដំណើរការលើគ្រប់ប្រព័ន្ធ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១៦</h4>
+<p>សរសេរកម្មវិធីសុំឈ្មោះ ៣ ដង ហើយរក្សាទុកក្នុង <code class="i">names.txt</code> ទាំង ៣ បន្ទាត់ រួចអានមកបង្ហាញវិញ។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">var names = new List&lt;string&gt;();
+for (int i = 1; i &lt;= 3; i++)
+{
+    Console.Write($"ឈ្មោះទី {i}: ");
+    names.Add(Console.ReadLine()!);
+}
+File.WriteAllLines("names.txt", names);
+
+Console.WriteLine("--- មាតិកាក្នុង file ---");
+foreach (var n in File.ReadAllLines("names.txt"))
+    Console.WriteLine(n);</code></pre></div></details></div>
+</section>
+
+<section id="l17">
+<h2><span class="badge">មេរៀន ១៧</span>Async / await</h2>
+<p>ការងារយឺតដូចជាទាញទិន្នន័យពីអ៊ីនធឺណិត ឬអាន file មិនគួរធ្វើឱ្យកម្មវិធីគាំងឡើយ។ <code class="i">async</code> / <code class="i">await</code> អនុញ្ញាតឱ្យរង់ចាំលទ្ធផល ដោយមិនបិទផ្លូវ (non-blocking)។</p>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">Console.WriteLine("ចាប់ផ្ដើម");
+
+string a = await FetchAsync("ទិន្នន័យ A", 1000);
+Console.WriteLine(a);
+
+// ដំណើរការស្របគ្នា ឱ្យលឿនជាង
+var t1 = FetchAsync("ទិន្នន័យ B", 1000);
+var t2 = FetchAsync("ទិន្នន័យ C", 1000);
+string[] all = await Task.WhenAll(t1, t2);   // ប្រើពេលប្រហែល 1 វិនាទីប៉ុណ្ណោះ
+Console.WriteLine(string.Join(" | ", all));
+
+// ទាញពី web (ត្រូវការអ៊ីនធឺណិត)
+using var http = new HttpClient();
+string html = await http.GetStringAsync("https://example.com");
+Console.WriteLine($"ទំហំ: {html.Length} តួអក្សរ");
+
+static async Task&lt;string&gt; FetchAsync(string name, int ms)
+{
+    await Task.Delay(ms);        // ក្លែងធ្វើការរង់ចាំ
+    return $"{name} រួចរាល់";
+}</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">ចាប់ផ្ដើម
+ទិន្នន័យ A រួចរាល់
+ទិន្នន័យ B រួចរាល់ | ទិន្នន័យ C រួចរាល់
+ទំហំ: ... តួអក្សរ   (លេខអាស្រ័យលើគេហទំព័រ)</code></pre></div>
+<div class="note">💡 <b>ក្បួនសំខាន់</b><br/>method <code class="i">async</code> ត្រឡប់ <code class="i">Task</code> ឬ <code class="i">Task&lt;T&gt;</code> (មិនមែន <code class="i">void</code> លើកលែងតែ event handler)។ ហើយតែងតែ <code class="i">await</code> ជំនួស <code class="i">.Result</code> ឬ <code class="i">.Wait()</code> ដើម្បីជៀសវាង deadlock។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១៧</h4>
+<p>បង្កើត <code class="i">async Task&lt;int&gt; SlowSquareAsync(int n)</code> ដែលរង់ចាំ 500ms ហើយត្រឡប់ n*n។ ហៅវាបី​ដងស្របគ្នាជាមួយ <code class="i">Task.WhenAll</code> ហើយបង្ហាញផលបូក។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">var results = await Task.WhenAll(
+    SlowSquareAsync(2), SlowSquareAsync(3), SlowSquareAsync(4));
+Console.WriteLine(results.Sum());   // 29
+
+static async Task&lt;int&gt; SlowSquareAsync(int n)
+{
+    await Task.Delay(500);
+    return n * n;
+}</code></pre></div></details></div>
+</section>
+
+<section id="l18">
+<h2><span class="badge">មេរៀន ១៨</span>Generics (ប្រភេទទូទៅ)</h2>
+<p><b>Generics</b> អនុញ្ញាតឱ្យសរសេរកូដម្ដងប្រើបានជាមួយប្រភេទច្រើន ដោយរក្សា type-safety។ <code class="i">List&lt;int&gt;</code> និង <code class="i">Dictionary&lt;K,V&gt;</code> ជា generic ដែលអ្នកបានប្រើរួចហើយ។</p>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">Console.WriteLine(Max(3, 9));          // 9
+Console.WriteLine(Max("apple", "pear")); // pear
+
+var box = new Box&lt;string&gt;("កាដូ");
+Console.WriteLine(box.Value);
+
+var stack = new SimpleStack&lt;int&gt;();
+stack.Push(1); stack.Push(2);
+Console.WriteLine(stack.Pop());        // 2
+
+// generic method ដែលមានលក្ខខណ្ឌ (constraint)
+static T Max&lt;T&gt;(T a, T b) where T : IComparable&lt;T&gt;
+    =&gt; a.CompareTo(b) &gt;= 0 ? a : b;
+
+class Box&lt;T&gt;(T value)
+{
+    public T Value { get; } = value;
+}
+
+class SimpleStack&lt;T&gt;
+{
+    private readonly List&lt;T&gt; _items = new();
+    public void Push(T item) =&gt; _items.Add(item);
+    public T Pop()
+    {
+        if (_items.Count == 0) throw new InvalidOperationException("ទទេ");
+        var item = _items[^1];
+        _items.RemoveAt(_items.Count - 1);
+        return item;
+    }
+}</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">9
+pear
+កាដូ
+2</code></pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៨</h4>
+<p>សរសេរ generic method <code class="i">Swap&lt;T&gt;(ref T a, ref T b)</code> ដែលប្ដូរតម្លៃអថេរពីរ។ សាកល្បងជាមួយ int និង string។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">int x = 1, y = 2;
+Swap(ref x, ref y);
+Console.WriteLine($"{x} {y}");   // 2 1
+
+string a = "A", b = "B";
+Swap(ref a, ref b);
+Console.WriteLine($"{a} {b}");   // B A
+
+static void Swap&lt;T&gt;(ref T a, ref T b)
+{
+    T temp = a;
+    a = b;
+    b = temp;
+}</code></pre></div></details></div>
+</section>
+
+<section id="l19">
+<h2><span class="badge">មេរៀន ១៩</span>Null Safety និង Pattern Matching</h2>
+<p>កំហុស <code class="i">NullReferenceException</code> ជាកំហុសញឹកញាប់បំផុត។ C# មាន operator ជួយការពារ។</p>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">string? name = null;                    // ? មានន័យថាអាចជា null
+
+Console.WriteLine(name?.Length);        // ?. : បើ null ឱ្យលទ្ធផល null
+Console.WriteLine(name ?? "អនាមិក");     // ?? : តម្លៃជំនួសបើ null
+name ??= "លំនាំដើម";                     // ??= : កំណត់បើ null
+Console.WriteLine(name);
+
+// Pattern matching
+object value = 42;
+if (value is int n &amp;&amp; n &gt; 40)
+    Console.WriteLine($"ជាលេខធំ {n}");
+
+string Describe(object o) =&gt; o switch
+{
+    null           =&gt; "គ្មានអ្វី",
+    int i when i &lt; 0 =&gt; "លេខអវិជ្ជមាន",
+    int i          =&gt; $"លេខ {i}",
+    string { Length: 0 } =&gt; "string ទទេ",
+    string s       =&gt; $"អក្សរ '{s}'",
+    _              =&gt; "ប្រភេទផ្សេង"
+};
+
+Console.WriteLine(Describe(-5));
+Console.WriteLine(Describe(""));
+Console.WriteLine(Describe("សួស្ដី"));
+Console.WriteLine(Describe(3.14));
+
+int score = 85;
+string grade = score switch
+{
+    &gt;= 90 =&gt; "A",
+    &gt;= 80 =&gt; "B",
+    &gt;= 70 =&gt; "C",
+    _ =&gt; "F"
+};
+Console.WriteLine(grade);</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">
+អនាមិក
+លំនាំដើម
+ជាលេខធំ 42
+លេខអវិជ្ជមាន
+string ទទេ
+អក្សរ 'សួស្ដី'
+ប្រភេទផ្សេង
+B</code></pre></div>
+<div class="note">📌 <b>ចំណាំ</b><br/>បន្ទាត់ទទេដំបូងនៃលទ្ធផល គឺ <code class="i">name?.Length</code> ដែលបោះពុម្ពតម្លៃ null ជាអក្សរទទេ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១៩</h4>
+<p>សរសេរ method <code class="i">Classify(int age)</code> ប្រើ switch expression និង relational pattern៖ 0–12 “កុមារ”, 13–17 “ជំទង់”, 18–59 “មនុស្សពេញវ័យ”, 60+ “ជន​ចាស់”, តិចជាង 0 “មិនត្រឹមត្រូវ”។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">Console.WriteLine(Classify(15));   // ជំទង់
+
+static string Classify(int age) =&gt; age switch
+{
+    &lt; 0   =&gt; "មិនត្រឹមត្រូវ",
+    &lt;= 12 =&gt; "កុមារ",
+    &lt;= 17 =&gt; "ជំទង់",
+    &lt;= 59 =&gt; "មនុស្សពេញវ័យ",
+    _     =&gt; "ជនចាស់"
+};</code></pre></div></details></div>
+</section>
+
+<section id="l20">
+<h2><span class="badge">មេរៀន ២០</span>Web API ដំបូង ជាមួយ ASP.NET Core</h2>
+<p>ASP.NET Core ជាវេទិកាបង្កើតគេហទំព័រ និង API របស់ C#។ <b>Minimal API</b> អនុញ្ញាតឱ្យបង្កើត API ក្នុងកូដតិចតួច។ នេះជាជំហានដំបូងសម្រាប់ Backend Developer។</p>
+<ol class="steps">
+<li><b>បង្កើតគម្រោង</b>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">dotnet new web -n MyApi
+cd MyApi
+code .</code></pre></div></li>
+<li><b>ជំនួស Program.cs</b> ដោយកូដខាងក្រោម។</li>
+<li><b>ដំណើរការ</b> ដោយ <code class="i">dotnet run</code> ហើយបើក URL ដែលបង្ហាញក្នុង Terminal (ឧ. <code class="i">http://localhost:5000</code>)។</li>
+</ol>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+var books = new List&lt;Book&gt;
+{
+    new(1, "រឿងរាមកេរ្តិ៍", "ក្រុមអ្នកនិពន្ធ"),
+    new(2, "C# Basics", "Sokha")
+};
+
+app.MapGet("/", () =&gt; "សួស្ដី Web API!");
+
+app.MapGet("/books", () =&gt; books);
+
+app.MapGet("/books/{id:int}", (int id) =&gt;
+    books.FirstOrDefault(b =&gt; b.Id == id) is Book found
+        ? Results.Ok(found)
+        : Results.NotFound());
+
+app.MapPost("/books", (Book book) =&gt;
+{
+    books.Add(book);
+    return Results.Created($"/books/{book.Id}", book);
+});
+
+app.MapDelete("/books/{id:int}", (int id) =&gt;
+{
+    int removed = books.RemoveAll(b =&gt; b.Id == id);
+    return removed &gt; 0 ? Results.NoContent() : Results.NotFound();
+});
+
+app.Run();
+
+record Book(int Id, string Title, string Author);</code></pre></div>
+<table>
+<tr><th>HTTP</th><th>URL</th><th>មុខងារ</th></tr>
+<tr><td><code class="i">GET</code></td><td><code class="i">/books</code></td><td>បញ្ជីសៀវភៅទាំងអស់ (ត្រឡប់ JSON)</td></tr>
+<tr><td><code class="i">GET</code></td><td><code class="i">/books/1</code></td><td>សៀវភៅលេខ 1 ឬ 404</td></tr>
+<tr><td><code class="i">POST</code></td><td><code class="i">/books</code></td><td>បន្ថែមសៀវភៅថ្មី</td></tr>
+<tr><td><code class="i">DELETE</code></td><td><code class="i">/books/1</code></td><td>លុបសៀវភៅ</td></tr>
+</table>
+<p>សាកល្បង POST ដោយ <code class="i">curl</code>៖</p>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">curl -X POST http://localhost:5000/books \
+  -H "Content-Type: application/json" \
+  -d '{"id":3,"title":"Khmer Code","author":"Dara"}'</code></pre></div>
+<div class="note">💡 <b>ចំណាំ Port</b><br/>លេខ port អាចខុសគ្នាតាមកុំព្យូទ័រ។ សូមមើលបន្ទាត់ <code class="i">Now listening on: http://localhost:xxxx</code> ក្នុង Terminal។ ទិន្នន័យក្នុង List បាត់ពេលបិទកម្មវិធី។ ដើម្បីរក្សាទុកជាអចិន្ត្រៃយ៍ ត្រូវប្រើ database (មើលមេរៀនបន្ទាប់)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ២០</h4>
+<p>បន្ថែម endpoint <code class="i">GET /books/search?title=...</code> ដែលស្វែងរកសៀវភៅតាមចំណងជើង (មិនគិតអក្សរធំតូច)។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">app.MapGet("/books/search", (string title) =&gt;
+    books.Where(b =&gt; b.Title.Contains(title,
+        StringComparison.OrdinalIgnoreCase)));</code></pre></div>
+<p>ដាក់មុន <code class="i">app.Run();</code> ហើយសាកល្បង៖ <code class="i">/books/search?title=c%23</code></p></details></div>
+</section>
+
+<section id="l21">
+<h2><span class="badge">មេរៀន ២១</span>Database ជាមួយ Entity Framework Core (SQLite)</h2>
+<p><b>Entity Framework Core (EF Core)</b> ភ្ជាប់ class C# ទៅតារាង database ដោយមិនចាំបាច់សរសេរ SQL ដោយដៃ។ យើងប្រើ <b>SQLite</b> ដែលជា database ក្នុង file តែមួយ គ្មានអ្វីត្រូវដំឡើង។</p>
+<ol class="steps">
+<li><b>បង្កើតគម្រោង និងបន្ថែម package</b>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">dotnet new console -n SchoolDb
+cd SchoolDb
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite</code></pre></div>
+ត្រូវការអ៊ីនធឺណិតដើម្បីទាញ package ពី NuGet។</li>
+<li><b>សរសេរ Model និង DbContext</b> ដូចកូដខាងក្រោម។</li>
+</ol>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">using Microsoft.EntityFrameworkCore;
+
+using var db = new SchoolContext();
+db.Database.EnsureCreated();             // បង្កើត file និងតារាងបើមិនទាន់មាន
+
+// Create
+if (!db.Students.Any())
+{
+    db.Students.AddRange(
+        new Student { Name = "សុខា", Score = 85 },
+        new Student { Name = "ដារា", Score = 92 });
+    db.SaveChanges();
+}
+
+// Read + LINQ
+var top = db.Students.Where(s =&gt; s.Score &gt;= 90).OrderBy(s =&gt; s.Name).ToList();
+foreach (var s in top) Console.WriteLine($"{s.Id}: {s.Name} ({s.Score})");
+
+// Update
+var first = db.Students.First();
+first.Score += 5;
+db.SaveChanges();
+
+// Delete
+var toDelete = db.Students.FirstOrDefault(s =&gt; s.Name == "ដារា");
+if (toDelete != null)
+{
+    db.Students.Remove(toDelete);
+    db.SaveChanges();
+}
+
+Console.WriteLine($"សិស្សសរុប: {db.Students.Count()}");
+
+class Student
+{
+    public int Id { get; set; }               // Primary key (ស្វ័យប្រវត្តិ)
+    public string Name { get; set; } = "";
+    public int Score { get; set; }
+}
+
+class SchoolContext : DbContext
+{
+    public DbSet&lt;Student&gt; Students =&gt; Set&lt;Student&gt;();
+
+    protected override void OnConfiguring(DbContextOptionsBuilder options)
+        =&gt; options.UseSqlite("Data Source=school.db");
+}</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">2: ដារា (92)
+សិស្សសរុប: 1</code></pre></div>
+<div class="note">📌 <b>ពេលដំណើរការលើកទីពីរ</b><br/>file <code class="i">school.db</code> មានរួចហើយ ដូច្នេះទិន្នន័យត្រូវបានរក្សា។ លុប file នោះដើម្បីចាប់ផ្ដើមថ្មី។ សម្រាប់គម្រោងពិត សូមសិក្សា <b>Migrations</b> (<code class="i">dotnet ef migrations add</code>) ដើម្បីគ្រប់គ្រងការប្ដូរ schema។</div>
+<div class="ex"><h4>✍️ លំហាត់ ២១</h4>
+<p>បន្ថែម property <code class="i">Major</code> (string) ទៅ <code class="i">Student</code> លុប <code class="i">school.db</code> ហើយបង្ហាញសិស្សទាំងអស់ដែលមាន <code class="i">Major == "IT"</code>។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">// ក្នុង class Student បន្ថែម៖
+public string Major { get; set; } = "";
+
+// ពេលបន្ថែមទិន្នន័យ៖
+new Student { Name = "សុខា", Score = 85, Major = "IT" }
+
+// ស្វែងរក៖
+foreach (var s in db.Students.Where(s =&gt; s.Major == "IT"))
+    Console.WriteLine($"{s.Name} - {s.Major}");</code></pre></div></details></div>
+</section>
+
+<section id="l22">
+<h2><span class="badge">មេរៀន ២២</span>C# សម្រាប់ហ្គេមក្នុង Unity</h2>
+<p><b>Unity</b> ជា game engine ដែលប្រើ C# សរសេរឥរិយាបថរបស់វត្ថុក្នុងហ្គេម។ មេរៀននេះបង្ហាញគំនិតមូលដ្ឋាន ដើម្បីអ្នកចាប់ផ្ដើមបានលឿន។ កូដ Unity ដំណើរការក្នុង Unity Editor មិនមែនក្នុង <code class="i">dotnet run</code> ទេ។</p>
+<ol class="steps">
+<li><b>ដំឡើង Unity Hub</b> ពី unity.com ហើយដំឡើង Unity Editor កំណែ LTS ចុងក្រោយ (ជាមួយគណនី Unity ឥតគិតថ្លៃ)។</li>
+<li><b>បង្កើតគម្រោង 3D</b> ក្នុង Unity Hub។ ក្នុង Scene បង្កើត <b>GameObject &gt; 3D Object &gt; Cube</b>។</li>
+<li><b>បង្កើត Script</b> ក្នុងផ្ទាំង Project (<b>Create &gt; C# Script</b>) ដាក់ឈ្មោះ <code class="i">PlayerMove</code> ហើយអូសទៅដាក់លើ Cube។</li>
+<li><b>កំណត់ VS Code ជា editor</b> ដោយដំឡើង extension “Unity” ក្នុង VS Code ហើយជ្រើស VS Code នៅ <b>Edit &gt; Preferences &gt; External Tools</b> ក្នុង Unity។</li>
+<li><b>ចុច Play</b> ក្នុង Unity ដើម្បីសាកល្បង។</li>
+</ol>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">using UnityEngine;
+
+public class PlayerMove : MonoBehaviour
+{
+    public float speed = 5f;       // បង្ហាញក្នុង Inspector ឱ្យកែបាន
+    private int score = 0;
+
+    void Start()
+    {
+        // ដំណើរការម្ដង ពេលហ្គេមចាប់ផ្ដើម
+        Debug.Log("ហ្គេមចាប់ផ្ដើម!");
+    }
+
+    void Update()
+    {
+        // ដំណើរការរាល់ frame
+        float h = Input.GetAxis("Horizontal");   // A/D ឬ ព្រួញឆ្វេង/ស្ដាំ
+        float v = Input.GetAxis("Vertical");     // W/S ឬ ព្រួញឡើង/ចុះ
+        Vector3 move = new Vector3(h, 0, v);
+
+        transform.Translate(move * speed * Time.deltaTime);
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (TryGetComponent(out Rigidbody rb))      // កុំប្រើ ?. ជាមួយ Component របស់ Unity
+                rb.AddForce(Vector3.up * 5f, ForceMode.Impulse);
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Coin"))
+        {
+            score++;
+            Debug.Log($"ពិន្ទុ: {score}");
+            Destroy(other.gameObject);   // លុបកាក់
+        }
+    }
+}</code></pre></div>
+<table>
+<tr><th>Method / ពាក្យ</th><th>ន័យ</th></tr>
+<tr><td><code class="i">MonoBehaviour</code></td><td>class មូលដ្ឋានសម្រាប់ script ដែលភ្ជាប់ទៅ GameObject</td></tr>
+<tr><td><code class="i">Start()</code></td><td>ហៅម្ដងពេល script ចាប់ផ្ដើម</td></tr>
+<tr><td><code class="i">Update()</code></td><td>ហៅរាល់ frame (ប្រើសម្រាប់ input និងចលនា)</td></tr>
+<tr><td><code class="i">Time.deltaTime</code></td><td>ពេលវេលារវាង frame ធ្វើឱ្យចលនាស្មើគ្នាលើកុំព្យូទ័រគ្រប់ល្បឿន</td></tr>
+<tr><td><code class="i">transform</code></td><td>ទីតាំង ការបង្វិល និងទំហំរបស់វត្ថុ</td></tr>
+<tr><td><code class="i">public float speed</code></td><td>អថេរ public បង្ហាញក្នុង Inspector</td></tr>
+<tr><td><code class="i">OnTriggerEnter</code></td><td>ហៅពេលវត្ថុប៉ះ trigger collider</td></tr>
+</table>
+<div class="note">📌 <b>តម្រូវការរៀបចំសម្រាប់ OnTriggerEnter</b><br/>កាក់ត្រូវមាន Collider ដែលធីក <b>Is Trigger</b> និងមាន Tag ឈ្មោះ “Coin”។ Player ត្រូវមាន <b>Rigidbody</b> និង Collider។ ប្រើ <code class="i">TryGetComponent</code> ដើម្បីពិនិត្យថាមាន Rigidbody ឬអត់។ <b>កុំប្រើ</b> <code class="i">?.</code> ឬ <code class="i">??</code> ជាមួយ object របស់ Unity ព្រោះ Unity កំណត់ការប្រៀបធៀប null ខុសពី C# ធម្មតា ដែលអាចធ្វើឱ្យ <code class="i">?.</code> មិនការពារកំហុស។</div><div class="note">📌 <b>Input System</b><br/>កូដខាងលើប្រើ <code class="i">Input.GetAxis</code> (Input Manager ចាស់)។ Project Unity 6 ថ្មីប្រើ <b>Input System Package</b> ជាលំនាំដើម ដូច្នេះត្រូវទៅ <b>Edit &gt; Project Settings &gt; Player &gt; Active Input Handling</b> ហើយជ្រើស <b>Both</b> ឬ <b>Input Manager (Old)</b>។</div>
+<div class="ex"><h4>✍️ លំហាត់ ២២</h4>
+<p>បង្កើត script <code class="i">Spinner</code> ដែលបង្វិល Cube ជុំវិញអ័ក្ស Y ដោយល្បឿន 90 ដឺក្រេ/វិនាទី។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">using UnityEngine;
+
+public class Spinner : MonoBehaviour
+{
+    public float degreesPerSecond = 90f;
+
+    void Update()
+    {
+        transform.Rotate(0, degreesPerSecond * Time.deltaTime, 0);
+    }
+}</code></pre></div></details></div>
+<div class="note">💡 <b>ចង់ធ្វើកម្មវិធីទូរស័ព្ទ?</b><br/>ប្រើ <b>.NET MAUI</b> ដែលសរសេរ UI ជា XAML និង logic ជា C# ដូចគ្នា។ ដំឡើងជាមួយ <code class="i">dotnet workload install maui</code> (ត្រូវការ Android SDK ឬ Xcode សម្រាប់ដំណើរការលើឧបករណ៍)។ វាជាប្រធានបទធំ ដូច្នេះគួររៀនបន្ទាប់ពីស្ទាត់ C# មូលដ្ឋាន។</div>
+</section>
+
+<section id="project">
+<h2><span class="badge">គម្រោង ១</span>គម្រោងបញ្ចប់៖ បញ្ជីកិច្ចការ (To-Do)</h2>
+<p>ផ្សំអ្វីដែលបានរៀន៖ class, List, LINQ, switch, file និង loop។ បង្កើតគម្រោងថ្មី <code class="i">dotnet new console -n TodoApp</code> ហើយជំនួស <code class="i">Program.cs</code> ដោយកូដនេះ។ កម្មវិធីរក្សាទុកកិច្ចការក្នុង <code class="i">todo.txt</code>។</p>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">const string FilePath = "todo.txt";
+var tasks = Load();
+
+while (true)
+{
+    Console.WriteLine("\n=== TODO ===");
+    Console.WriteLine("1) បង្ហាញ  2) បន្ថែម  3) ធ្វើរួច  4) លុប  0) ចេញ");
+    Console.Write("ជ្រើសរើស: ");
+
+    switch (Console.ReadLine())
+    {
+        case "1": Show(); break;
+        case "2":
+            Console.Write("កិច្ចការ: ");
+            var title = Console.ReadLine()?.Trim();
+            if (!string.IsNullOrEmpty(title)) tasks.Add(new TodoItem(title, false));
+            Save();
+            break;
+        case "3":
+            Show();
+            if (TryPick(out int d)) { tasks[d] = tasks[d] with { Done = true }; Save(); }
+            break;
+        case "4":
+            Show();
+            if (TryPick(out int r)) { tasks.RemoveAt(r); Save(); }
+            break;
+        case "0": return;
+        default: Console.WriteLine("ជម្រើសមិនត្រឹមត្រូវ"); break;
+    }
+}
+
+void Show()
+{
+    if (tasks.Count == 0) { Console.WriteLine("(គ្មានកិច្ចការ)"); return; }
+    for (int i = 0; i &lt; tasks.Count; i++)
+        Console.WriteLine($"{i + 1}. [{(tasks[i].Done ? "x" : " ")}] {tasks[i].Title}");
+    Console.WriteLine($"ធ្វើរួច {tasks.Count(t =&gt; t.Done)}/{tasks.Count}");
+}
+
+bool TryPick(out int index)
+{
+    Console.Write("លេខរៀង: ");
+    bool ok = int.TryParse(Console.ReadLine(), out index);
+    index--;
+    return ok &amp;&amp; index &gt;= 0 &amp;&amp; index &lt; tasks.Count;
+}
+
+List&lt;TodoItem&gt; Load() =&gt;
+    !File.Exists(FilePath) ? new() :
+    File.ReadAllLines(FilePath)
+        .Select(l =&gt; l.Split('|', 2))   // 2 = បំបែកតែលើកដំបូង (ចំណងជើងអាចមាន '|')
+        .Where(p =&gt; p.Length == 2)
+        .Select(p =&gt; new TodoItem(p[1], p[0] == "1"))
+        .ToList();
+
+void Save() =&gt;
+    File.WriteAllLines(FilePath, tasks.Select(t =&gt; $"{(t.Done ? 1 : 0)}|{t.Title}"));
+
+record TodoItem(string Title, bool Done);</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">=== TODO ===
+1) បង្ហាញ  2) បន្ថែម  3) ធ្វើរួច  4) លុប  0) ចេញ
+ជ្រើសរើស: 1
+1. [x] រៀន C#
+2. [ ] ធ្វើលំហាត់
+ធ្វើរួច 1/2</code></pre></div>
+<div class="note">📌 <b>បន្ថែមខ្លួនឯង</b><br/>សាកល្បងបន្ថែម ៖ ថ្ងៃកំណត់ (DateTime) ការស្វែងរក ការតម្រៀបតាមស្ថានភាព ឬរក្សាទុកជា JSON ដោយប្រើ <code class="i">System.Text.Json</code>។</div>
+</section>
+
+<section id="project2">
+<h2><span class="badge">គម្រោង ២</span>គម្រោងបន្ថែម៖ Web API ជាមួយ Database</h2>
+<p>ផ្សំមេរៀន ២០ និង ២១៖ API បញ្ជីកិច្ចការដែលរក្សាទុកក្នុង SQLite។ ទិន្នន័យមិនបាត់ពេលបិទកម្មវិធី។</p>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">dotnet new web -n TodoApi
+cd TodoApi
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite</code></pre></div>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext&lt;TodoDb&gt;(o =&gt; o.UseSqlite("Data Source=todo.db"));
+var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+    scope.ServiceProvider.GetRequiredService&lt;TodoDb&gt;().Database.EnsureCreated();
+
+app.MapGet("/todos", async (TodoDb db) =&gt; await db.Todos.ToListAsync());
+
+app.MapGet("/todos/{id:int}", async (int id, TodoDb db) =&gt;
+    await db.Todos.FindAsync(id) is Todo t ? Results.Ok(t) : Results.NotFound());
+
+app.MapPost("/todos", async (Todo todo, TodoDb db) =&gt;
+{
+    db.Todos.Add(todo);
+    await db.SaveChangesAsync();
+    return Results.Created($"/todos/{todo.Id}", todo);
+});
+
+app.MapPut("/todos/{id:int}", async (int id, Todo input, TodoDb db) =&gt;
+{
+    var todo = await db.Todos.FindAsync(id);
+    if (todo is null) return Results.NotFound();
+    todo.Title = input.Title;
+    todo.Done = input.Done;
+    await db.SaveChangesAsync();
+    return Results.NoContent();
+});
+
+app.MapDelete("/todos/{id:int}", async (int id, TodoDb db) =&gt;
+{
+    var todo = await db.Todos.FindAsync(id);
+    if (todo is null) return Results.NotFound();
+    db.Todos.Remove(todo);
+    await db.SaveChangesAsync();
+    return Results.NoContent();
+});
+
+app.Run();
+
+class Todo
+{
+    public int Id { get; set; }
+    public string Title { get; set; } = "";
+    public bool Done { get; set; }
+}
+
+class TodoDb(DbContextOptions&lt;TodoDb&gt; options) : DbContext(options)
+{
+    public DbSet&lt;Todo&gt; Todos =&gt; Set&lt;Todo&gt;();
+}</code></pre></div>
+<div class="note">📌 <b>គំនិតថ្មីក្នុងកូដនេះ</b><br/><code class="i">AddDbContext</code> ចុះឈ្មោះ database ក្នុង <b>Dependency Injection</b> ហើយ ASP.NET Core ផ្ដល់ <code class="i">TodoDb db</code> ឱ្យ endpoint ដោយស្វ័យប្រវត្តិ។ ការប្រើ <code class="i">async</code>/<code class="i">await</code> (មេរៀន ១៧) ធ្វើឱ្យ server ទទួលសំណើច្រើនក្នុងពេលតែមួយ។</div>
+<div class="ex"><h4>✍️ លំហាត់ គម្រោង ២</h4>
+<p>បន្ថែម endpoint <code class="i">GET /todos/done</code> ដែលត្រឡប់តែកិច្ចការដែលធ្វើរួច។</p>
+<details><summary>មើលចម្លើយ</summary>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">app.MapGet("/todos/done", async (TodoDb db) =&gt;
+    await db.Todos.Where(t =&gt; t.Done).ToListAsync());</code></pre></div>
+<p>ដាក់មុន <code class="i">app.Run();</code> ។ ព្រោះ <code class="i">/todos/done</code> ជា path ថេរ វាត្រូវបានជ្រើសមុន <code class="i">/todos/{id:int}</code> ដែលទាមទារលេខ។</p></details></div>
+</section>
+
+<section id="bank">
+<h2><span class="badge">លំហាត់</span>លំហាត់បន្ថែម ២៤ លំហាត់</h2>
+<p>ហាត់តាមកម្រិត។ ព្យាយាមសរសេរដោយខ្លួនឯងសិន មុនចុចមើលចម្លើយ។ ចម្លើយគឺជាវិធីមួយក្នុងចំណោមវិធីជាច្រើន។</p>
+<h3>កម្រិតងាយ (ក១ ដល់ ក៨)</h3>
+<div class="ex"><h4>ក១. បម្លែងសីតុណ្ហភាព</h4><p>សុំអង្សាសេ (°C) ហើយបង្ហាញជាហ្វារ៉ង់ហៃ (°F) ដោយ F = C × 9/5 + 32។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">Console.Write("°C: ");
+double c = double.Parse(Console.ReadLine()!);
+Console.WriteLine($"{c}°C = {c * 9 / 5 + 32}°F");</code></pre></div></details></div>
+<div class="ex"><h4>ក២. ផលបូកខ្ទង់</h4><p>សុំលេខគត់វិជ្ជមាន ហើយគណនាផលបូកខ្ទង់ (ឧ. 1234 ជា 10)។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">int n = int.Parse(Console.ReadLine()!);
+int sum = 0;
+while (n &gt; 0)
+{
+    sum += n % 10;
+    n /= 10;
+}
+Console.WriteLine(sum);</code></pre></div></details></div>
+<div class="ex"><h4>ក៣. ឆ្នាំបង្គ្រប់</h4><p>សុំឆ្នាំ ហើយប្រាប់ថាជាឆ្នាំបង្គ្រប់ (leap year) ឬទេ។ ឆ្នាំបង្គ្រប់៖ ចែក 4 ដាច់ ប៉ុន្តែបើចែក 100 ដាច់ ត្រូវចែក 400 ដាច់ផង។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">int y = int.Parse(Console.ReadLine()!);
+bool leap = (y % 4 == 0 &amp;&amp; y % 100 != 0) || y % 400 == 0;
+Console.WriteLine(leap ? "ឆ្នាំបង្គ្រប់" : "មិនមែនឆ្នាំបង្គ្រប់");</code></pre></div></details></div>
+<div class="ex"><h4>ក៤. ម៉ាស៊ីនគិតលេខ</h4><p>សុំលេខពីរ និង operator (<code class="i">+ - * /</code>) ហើយបង្ហាញលទ្ធផល។ បើចែកនឹង 0 ត្រូវប្រាប់កំហុស។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">Console.Write("a: "); double a = double.Parse(Console.ReadLine()!);
+Console.Write("op: "); string op = Console.ReadLine()!;
+Console.Write("b: "); double b = double.Parse(Console.ReadLine()!);
+
+string result = op switch
+{
+    "+" =&gt; (a + b).ToString(),
+    "-" =&gt; (a - b).ToString(),
+    "*" =&gt; (a * b).ToString(),
+    "/" when b == 0 =&gt; "មិនអាចចែកនឹង 0",
+    "/" =&gt; (a / b).ToString(),
+    _ =&gt; "operator មិនត្រឹមត្រូវ"
+};
+Console.WriteLine(result);</code></pre></div></details></div>
+<div class="ex"><h4>ក៥. ត្រីកោណផ្កាយ</h4><p>បោះពុម្ពត្រីកោណផ្កាយ 5 ជួរ (ជួរទី i មាន i ផ្កាយ)។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">for (int i = 1; i &lt;= 5; i++)
+    Console.WriteLine(new string('*', i));</code></pre></div><div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">*
+**
+***
+****
+*****</code></pre></div></details></div>
+<div class="ex"><h4>ក៦. រាប់ស្រៈ</h4><p>សុំ string អង់គ្លេស ហើយរាប់ចំនួនស្រៈ (a, e, i, o, u)។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">string s = Console.ReadLine()!.ToLower();
+int count = s.Count(ch =&gt; "aeiou".Contains(ch));
+Console.WriteLine(count);</code></pre></div></details></div>
+<div class="ex"><h4>ក៧. Fibonacci</h4><p>បោះពុម្ពលេខ Fibonacci ដំបូង 10 ខ្ទង់ (0 1 1 2 3 5 ...)។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">int a = 0, b = 1;
+for (int i = 0; i &lt; 10; i++)
+{
+    Console.Write(a + " ");
+    (a, b) = (b, a + b);
+}</code></pre></div><div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">0 1 1 2 3 5 8 13 21 34</code></pre></div></details></div>
+<div class="ex"><h4>ក៨. ទាយលេខ</h4><p>កម្មវិធីជ្រើសលេខ 1–100 ដោយចៃដន្យ ហើយឱ្យអ្នកប្រើទាយ។ ប្រាប់ “ធំពេក” ឬ “តូចពេក” រហូតទាយត្រូវ ហើយបង្ហាញចំនួនដងទាយ។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">int secret = Random.Shared.Next(1, 101);
+int tries = 0, guess;
+do
+{
+    Console.Write("ទាយ: ");
+    guess = int.Parse(Console.ReadLine()!);
+    tries++;
+    if (guess &gt; secret) Console.WriteLine("ធំពេក");
+    else if (guess &lt; secret) Console.WriteLine("តូចពេក");
+} while (guess != secret);
+Console.WriteLine($"ត្រូវហើយ! ទាយ {tries} ដង");</code></pre></div></details></div>
+<h3>កម្រិតមធ្យម (ខ១ ដល់ ខ៨)</h3>
+<div class="ex"><h4>ខ១. ដកលេខស្ទួន</h4><p>មាន <code class="i">{3,1,3,2,1,5}</code> ដកលេខស្ទួន ហើយតម្រៀបពីតូចទៅធំ។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">var r = new[] { 3, 1, 3, 2, 1, 5 }.Distinct().OrderBy(x =&gt; x);
+Console.WriteLine(string.Join(", ", r));   // 1, 2, 3, 5</code></pre></div></details></div>
+<div class="ex"><h4>ខ២. Bubble Sort</h4><p>តម្រៀប array ដោយខ្លួនឯង (មិនប្រើ <code class="i">Array.Sort</code>) ដោយ bubble sort។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">int[] a = { 5, 2, 9, 1, 7 };
+for (int i = 0; i &lt; a.Length - 1; i++)
+    for (int j = 0; j &lt; a.Length - 1 - i; j++)
+        if (a[j] &gt; a[j + 1])
+            (a[j], a[j + 1]) = (a[j + 1], a[j]);
+Console.WriteLine(string.Join(" ", a));    // 1 2 5 7 9</code></pre></div></details></div>
+<div class="ex"><h4>ខ៣. Anagram</h4><p>ពិនិត្យថា string ពីរជា anagram (អក្សរដូចគ្នា លំដាប់ខុស) ឬទេ ឧ. “listen” និង “silent”។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">Console.WriteLine(IsAnagram("listen", "silent"));   // True
+
+static bool IsAnagram(string a, string b) =&gt;
+    a.ToLower().OrderBy(c =&gt; c).SequenceEqual(b.ToLower().OrderBy(c =&gt; c));</code></pre></div></details></div>
+<div class="ex"><h4>ខ៤. ពាក្យញឹកញាប់បំផុត</h4><p>ពីប្រយោគមួយ រកពាក្យដែលលេចឡើងច្រើនបំផុត (LINQ GroupBy)។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">string text = "the cat and the dog and the bird";
+var top = text.Split(' ')
+              .GroupBy(w =&gt; w)
+              .OrderByDescending(g =&gt; g.Count())
+              .First();
+Console.WriteLine($"{top.Key}: {top.Count()}");   // the: 3</code></pre></div></details></div>
+<div class="ex"><h4>ខ៥. Class Rectangle</h4><p>បង្កើត class <code class="i">Rectangle</code> ដែលមាន Width, Height និង method <code class="i">Area()</code>, <code class="i">Perimeter()</code> ហើយ override <code class="i">ToString()</code>។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">var r = new Rectangle(4, 6);
+Console.WriteLine(r);
+
+class Rectangle(double width, double height)
+{
+    public double Area() =&gt; width * height;
+    public double Perimeter() =&gt; 2 * (width + height);
+    public override string ToString() =&gt;
+        $"{width}x{height} ក្រឡាផ្ទៃ={Area()} បរិមាត្រ={Perimeter()}";
+}</code></pre></div><div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">4x6 ក្រឡាផ្ទៃ=24 បរិមាត្រ=20</code></pre></div></details></div>
+<div class="ex"><h4>ខ៦. បញ្ជីសិស្ស</h4><p>មាន <code class="i">List&lt;Student&gt;</code> (Name, Score)។ បង្ហាញសិស្សដែលពិន្ទុខ្ពស់បំផុត និងមធ្យមភាគថ្នាក់។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">var list = new List&lt;Student&gt;
+{
+    new("សុខា", 85), new("ដារា", 92), new("ម៉ាលី", 78)
+};
+var best = list.MaxBy(s =&gt; s.Score)!;
+Console.WriteLine($"ខ្ពស់បំផុត: {best.Name} ({best.Score})");
+Console.WriteLine($"មធ្យមភាគ: {list.Average(s =&gt; s.Score):F1}");
+
+record Student(string Name, int Score);</code></pre></div><div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">ខ្ពស់បំផុត: ដារា (92)
+មធ្យមភាគ: 85.0</code></pre></div></details></div>
+<div class="ex"><h4>ខ៧. Interface ទូទៅ</h4><p>បង្កើត <code class="i">interface ILogger { void Log(string msg); }</code> និង class <code class="i">ConsoleLogger</code>, <code class="i">FileLogger</code>។ ឱ្យ method មួយទទួល <code class="i">ILogger</code> ហើយ log ជាមួយទាំងពីរ។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">Run(new ConsoleLogger());
+Run(new FileLogger("app.log"));
+
+static void Run(ILogger logger) =&gt; logger.Log("ចាប់ផ្ដើមកម្មវិធី");
+
+interface ILogger { void Log(string msg); }
+
+class ConsoleLogger : ILogger
+{
+    public void Log(string msg) =&gt; Console.WriteLine($"[Console] {msg}");
+}
+
+class FileLogger(string path) : ILogger
+{
+    public void Log(string msg) =&gt; File.AppendAllText(path, msg + Environment.NewLine);
+}</code></pre></div></details></div>
+<div class="ex"><h4>ខ៨. Parse ដោយសុវត្ថិភាព</h4><p>សុំលេខរហូតអ្នកប្រើបញ្ចូលត្រឹមត្រូវ ដោយប្រើ <code class="i">TryParse</code> ហើយបង្ហាញផលបូកលេខទាំង ៣ ដែលបញ្ចូល។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">int total = 0;
+for (int i = 1; i &lt;= 3; i++)
+{
+    int n;
+    Console.Write($"លេខទី {i}: ");
+    while (!int.TryParse(Console.ReadLine(), out n))
+        Console.Write("មិនមែនលេខ សូមព្យាយាមម្ដងទៀត: ");
+    total += n;
+}
+Console.WriteLine($"ផលបូក = {total}");</code></pre></div></details></div>
+<h3>កម្រិតពិបាក (គ១ ដល់ គ៨)</h3>
+<div class="ex"><h4>គ១. Binary Search</h4><p>សរសេរ binary search លើ array ដែលតម្រៀបរួច ត្រឡប់ index ឬ -1។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">int[] a = { 1, 3, 5, 7, 9, 11 };
+Console.WriteLine(Search(a, 7));    // 3
+Console.WriteLine(Search(a, 4));    // -1
+
+static int Search(int[] arr, int target)
+{
+    int lo = 0, hi = arr.Length - 1;
+    while (lo &lt;= hi)
+    {
+        int mid = lo + (hi - lo) / 2;
+        if (arr[mid] == target) return mid;
+        if (arr[mid] &lt; target) lo = mid + 1;
+        else hi = mid - 1;
+    }
+    return -1;
+}</code></pre></div></details></div>
+<div class="ex"><h4>គ២. ដង្កៀបត្រឹមត្រូវ</h4><p>ពិនិត្យ string ដែលមាន <code class="i">()[]{}</code> ថាបិទបើកត្រឹមត្រូវឬទេ ដោយប្រើ <code class="i">Stack</code>។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">Console.WriteLine(IsBalanced("{[()]}"));   // True
+Console.WriteLine(IsBalanced("([)]"));     // False
+
+static bool IsBalanced(string s)
+{
+    var pairs = new Dictionary&lt;char, char&gt; { [')'] = '(', [']'] = '[', ['}'] = '{' };
+    var stack = new Stack&lt;char&gt;();
+    foreach (char c in s)
+    {
+        if ("([{".Contains(c)) stack.Push(c);
+        else if (pairs.TryGetValue(c, out char open))
+        {
+            if (stack.Count == 0 || stack.Pop() != open) return false;
+        }
+    }
+    return stack.Count == 0;
+}</code></pre></div></details></div>
+<div class="ex"><h4>គ៣. Generic Repository</h4><p>បង្កើត <code class="i">Repository&lt;T&gt;</code> ដែលមាន <code class="i">Add</code>, <code class="i">GetAll</code> និង <code class="i">Find(Func&lt;T,bool&gt;)</code>។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">var repo = new Repository&lt;string&gt;();
+repo.Add("apple"); repo.Add("banana"); repo.Add("avocado");
+foreach (var x in repo.Find(s =&gt; s.StartsWith("a")))
+    Console.WriteLine(x);
+
+class Repository&lt;T&gt;
+{
+    private readonly List&lt;T&gt; _items = new();
+    public void Add(T item) =&gt; _items.Add(item);
+    public IReadOnlyList&lt;T&gt; GetAll() =&gt; _items;
+    public IEnumerable&lt;T&gt; Find(Func&lt;T, bool&gt; predicate) =&gt; _items.Where(predicate);
+}</code></pre></div></details></div>
+<div class="ex"><h4>គ៤. Event ក្នុង C#</h4><p>បង្កើត class <code class="i">Button</code> ដែលមាន event <code class="i">Clicked</code> ហើយដាក់ handler ពីរពេលហៅ <code class="i">Click()</code>។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">var btn = new Button();
+btn.Clicked += () =&gt; Console.WriteLine("Handler 1");
+btn.Clicked += () =&gt; Console.WriteLine("Handler 2");
+btn.Click();
+
+class Button
+{
+    public event Action? Clicked;
+    public void Click() =&gt; Clicked?.Invoke();
+}</code></pre></div><div class="codebox"><span class="label">លទ្ធផល</span><pre><code class="txt">Handler 1
+Handler 2</code></pre></div></details></div>
+<div class="ex"><h4>គ៥. ទាញយកពីរ URL ស្របគ្នា</h4><p>ប្រើ <code class="i">HttpClient</code> និង <code class="i">Task.WhenAll</code> ទាញ <code class="i">https://example.com</code> និង <code class="i">https://example.org</code> ស្របគ្នា ហើយបង្ហាញប្រវែង HTML នីមួយៗ (ត្រូវការអ៊ីនធឺណិត)។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">using var http = new HttpClient();
+string[] urls = { "https://example.com", "https://example.org" };
+
+var pages = await Task.WhenAll(urls.Select(u =&gt; http.GetStringAsync(u)));
+for (int i = 0; i &lt; urls.Length; i++)
+    Console.WriteLine($"{urls[i]}: {pages[i].Length} តួអក្សរ");</code></pre></div></details></div>
+<div class="ex"><h4>គ៦. ប្រព័ន្ធបណ្ណាល័យ</h4><p>បង្កើត class <code class="i">Book</code> និង <code class="i">Library</code> ដែលអាច <code class="i">Borrow(title)</code>, <code class="i">Return(title)</code> និងបង្ហាញសៀវភៅដែលនៅទំនេរ។ សៀវភៅដែលខ្ចីរួចមិនអាចខ្ចីម្ដងទៀតបានទេ។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">var lib = new Library();
+lib.Add("C# Basics"); lib.Add("Algorithms");
+Console.WriteLine(lib.Borrow("C# Basics"));   // True
+Console.WriteLine(lib.Borrow("C# Basics"));   // False
+lib.Return("C# Basics");
+Console.WriteLine(string.Join(", ", lib.Available()));
+
+class Book(string title) { public string Title { get; } = title; public bool Borrowed { get; set; } }
+
+class Library
+{
+    private readonly List&lt;Book&gt; _books = new();
+    public void Add(string title) =&gt; _books.Add(new Book(title));
+
+    public bool Borrow(string title)
+    {
+        var b = _books.FirstOrDefault(x =&gt; x.Title == title &amp;&amp; !x.Borrowed);
+        if (b is null) return false;
+        b.Borrowed = true;
+        return true;
+    }
+
+    public void Return(string title)
+    {
+        var b = _books.FirstOrDefault(x =&gt; x.Title == title);
+        if (b is not null) b.Borrowed = false;
+    }
+
+    public IEnumerable&lt;string&gt; Available() =&gt;
+        _books.Where(b =&gt; !b.Borrowed).Select(b =&gt; b.Title);
+}</code></pre></div></details></div>
+<div class="ex"><h4>គ៧. អានលេខពី File</h4><p>file <code class="i">numbers.txt</code> មានលេខមួយបន្ទាត់មួយ (អាចមានបន្ទាត់មិនមែនលេខ)។ អានតែលេខត្រឹមត្រូវ ហើយបង្ហាញចំនួន ផលបូក និងធំបំផុត។ បើ file មិនមាន ត្រូវប្រាប់កំហុសច្បាស់លាស់។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">C#</span><pre><code class="cs">const string path = "numbers.txt";
+try
+{
+    var nums = File.ReadLines(path)
+        .Select(l =&gt; int.TryParse(l, out int n) ? (int?)n : null)
+        .Where(n =&gt; n.HasValue)
+        .Select(n =&gt; n!.Value)
+        .ToList();
+
+    if (nums.Count == 0) { Console.WriteLine("គ្មានលេខត្រឹមត្រូវ"); return; }
+    Console.WriteLine($"ចំនួន={nums.Count} ផលបូក={nums.Sum()} ធំបំផុត={nums.Max()}");
+}
+catch (FileNotFoundException)
+{
+    Console.WriteLine($"រកមិនឃើញ file {path}");
+}</code></pre></div></details></div>
+<div class="ex"><h4>គ៨. សរសេរ Unit Test</h4><p>បង្កើតគម្រោង xUnit ហើយសរសេរ test សម្រាប់ method <code class="i">IsPrime</code> ក្នុងលំហាត់ ៨។</p>
+<details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">Terminal</span><pre><code class="bash">dotnet new xunit -n MathTests
+cd MathTests
+dotnet test</code></pre></div>
+<div class="codebox"><span class="label">C#</span><pre><code class="cs">using Xunit;
+
+public class PrimeTests
+{
+    [Theory]
+    [InlineData(2, true)]
+    [InlineData(17, true)]
+    [InlineData(1, false)]
+    [InlineData(21, false)]
+    public void IsPrime_ReturnsExpected(int n, bool expected)
+    {
+        Assert.Equal(expected, IsPrime(n));
+    }
+
+    static bool IsPrime(int n)
+    {
+        if (n &lt; 2) return false;
+        for (int i = 2; i * i &lt;= n; i++)
+            if (n % i == 0) return false;
+        return true;
+    }
+}</code></pre></div>
+<p>ក្នុងគម្រោងពិត ដាក់ <code class="i">IsPrime</code> ក្នុង project ផ្សេង ហើយ reference មកក្នុង test project។</p></details></div>
+</section>
+
+<section id="quiz">
+<h2><span class="badge">សាកល្បង</span>សំណួរសាកល្បងខ្លួនឯង</h2>
+<p>ឆ្លើយក្នុងចិត្តសិន ទើបចុចមើលចម្លើយ។</p>
+<div class="ex"><h4>១. <code class="i">10 / 4</code> ក្នុង C# ដែលជា int ទាំងពីរ បានលទ្ធផលប៉ុន្មាន?</h4>
+<details><summary>មើលចម្លើយ</summary><p><code class="i">2</code> ព្រោះការចែកចំនួនគត់កាត់ទសភាគចោល។ ចង់បាន 2.5 ត្រូវប្រើ <code class="i">10.0 / 4</code> ឬ <code class="i">(double)10 / 4</code>។</p></details></div>
+<div class="ex"><h4>២. ហេតុអ្វីប្រើ <code class="i">decimal</code> សម្រាប់លុយ មិនប្រើ <code class="i">double</code>?</h4>
+<details><summary>មើលចម្លើយ</summary><p><code class="i">double</code> តំណាងលេខគោលពីរ ដូច្នេះមានកំហុសបូកសរុបតូចៗ (ឧ. 0.1 + 0.2 ≠ 0.3 ពិតប្រាកដ)។ <code class="i">decimal</code> ត្រឹមត្រូវជាងសម្រាប់ការគណនាលុយ។</p></details></div>
+<div class="ex"><h4>៣. តើ index ដំបូងរបស់ array គឺប៉ុន្មាន? ហើយ <code class="i">arr[^1]</code> ជាអ្វី?</h4>
+<details><summary>មើលចម្លើយ</summary><p>Index ដំបូងគឺ <code class="i">0</code>។ <code class="i">arr[^1]</code> គឺធាតុចុងក្រោយ។</p></details></div>
+<div class="ex"><h4>៤. ភាពខុសគ្នារវាង <code class="i">int.Parse</code> និង <code class="i">int.TryParse</code>?</h4>
+<details><summary>មើលចម្លើយ</summary><p><code class="i">Parse</code> បោះ exception បើទិន្នន័យមិនមែនលេខ។ <code class="i">TryParse</code> ត្រឡប់ <code class="i">false</code> ដោយមិនបោះ exception ហើយផ្ដល់លទ្ធផលតាម <code class="i">out</code>។</p></details></div>
+<div class="ex"><h4>៥. តើ <code class="i">class</code> និង <code class="i">struct</code> ខុសគ្នាយ៉ាងដូចម្តេច?</h4>
+<details><summary>មើលចម្លើយ</summary><p>Class ជា reference type (អថេរពីរអាចចង្អុលទៅ object តែមួយ)។ Struct ជា value type (ការចម្លងបង្កើតតម្លៃថ្មីដាច់ដោយឡែក)។</p></details></div>
+<div class="ex"><h4>៦. <code class="i">virtual</code>, <code class="i">override</code> និង <code class="i">abstract</code> ប្រើសម្រាប់អ្វី?</h4>
+<details><summary>មើលចម្លើយ</summary><p><code class="i">virtual</code> អនុញ្ញាតឱ្យ class កូនកែ method។ <code class="i">override</code> ជាការកែនោះក្នុង class កូន។ <code class="i">abstract</code> ជា method គ្មានតួ ដែល class កូនត្រូវតែ override (polymorphism)។</p></details></div>
+<div class="ex"><h4>៧. <code class="i">finally</code> ដំណើរការពេលណា?</h4>
+<details><summary>មើលចម្លើយ</summary><p>ជានិច្ច ទោះមាន exception ឬមិនមាន។ ប្រើសម្រាប់បិទធនធាន ឬសម្អាត។</p></details></div>
+<div class="ex"><h4>៨. តើ LINQ <code class="i">Where</code> និង <code class="i">Select</code> ធ្វើអ្វី?</h4>
+<details><summary>មើលចម្លើយ</summary><p><code class="i">Where</code> ច្រោះធាតុតាមលក្ខខណ្ឌ។ <code class="i">Select</code> បម្លែងធាតុនីមួយៗទៅជាតម្លៃថ្មី។</p></details></div>
+<div class="ex"><h4>៩. ហេតុអ្វីមិនគួរប្រើ <code class="i">.Result</code> លើ Task?</h4>
+<details><summary>មើលចម្លើយ</summary><p>វាបិទ thread រង់ចាំ ហើយអាចបង្កឱ្យមាន deadlock ក្នុងកម្មវិធី UI ឬ web។ ប្រើ <code class="i">await</code> ជំនួស។</p></details></div>
+<div class="ex"><h4>១០. តើ <code class="i">name?.Length ?? 0</code> មានន័យដូចម្ដេច?</h4>
+<details><summary>មើលចម្លើយ</summary><p>បើ <code class="i">name</code> ជា null វាមិនបោះ error ហើយផ្ដល់តម្លៃ <code class="i">0</code>។ បើមិនមែន null វាផ្ដល់ប្រវែងរបស់ string។</p></details></div>
+</section>
+
+<section class="hero" id="pro">
+  <h2>🏆 ផ្នែកទី ៣: App កម្រិតអាជីព (Professional Upgrade)</h2>
+  <p>យើងនឹងលើកកម្រិត <b>គម្រោង ២ (Todo Web API)</b> ទៅជាស្តង់ដារក្រុមហ៊ុន៖ បំបែកជា Layer (Endpoints → Service → Database), DTO, Validation, Dependency Injection, ProblemDetails សម្រាប់កំហុស, Pagination, OpenAPI, Integration Tests និង Docker។</p>
+</section>
+
+<section id="pro-structure">
+  <h2>📁 រចនាសម្ព័ន្ធ Project</h2>
+<div class="codebox"><span class="label">Folder Structure</span><pre><code class="txt">TodoSolution/
+├── TodoApi/
+│   ├── Data/TodoDb.cs               # DbContext (EF Core)
+│   ├── Models/Todo.cs               # Entity ក្នុង Database
+│   ├── Dtos/TodoDtos.cs             # ទិន្នន័យចេញ/ចូល API
+│   ├── Services/ITodoService.cs     # Interface (កិច្ចសន្យា)
+│   ├── Services/TodoService.cs      # Business logic
+│   ├── Endpoints/TodoEndpoints.cs   # HTTP routes + validation
+│   ├── appsettings.json             # Connection string, Logging
+│   └── Program.cs                   # Setup DI + Middleware
+├── TodoApi.Tests/
+│   └── TodoApiTests.cs              # Integration tests (xUnit)
+└── Dockerfile</code></pre></div>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">mkdir TodoSolution
+cd TodoSolution
+dotnet new sln
+dotnet new web -n TodoApi
+dotnet add TodoApi package Microsoft.EntityFrameworkCore.Sqlite
+dotnet add TodoApi package Microsoft.AspNetCore.OpenApi
+dotnet new xunit -n TodoApi.Tests
+dotnet add TodoApi.Tests reference TodoApi
+dotnet add TodoApi.Tests package Microsoft.AspNetCore.Mvc.Testing
+dotnet sln add TodoApi TodoApi.Tests</code></pre></div>
+  <div class="note">💡 <b>ហេតុអ្វីបំបែកជា Layer?</b> Endpoint មានតែការទទួល/ឆ្លើយ HTTP។ Logic នៅក្នុង Service ដែលភ្ជាប់តាម <b>Interface</b> ដូច្នេះអាចប្តូរ Database ឬសរសេរ Test បានដោយមិនកែ Endpoint។ <b>DTO</b> ការពារមិនឱ្យ Client កែ Field ដែលមិនគួរកែ (ឧ. <code class="i">Id</code>, <code class="i">CreatedAt</code>)។</div>
+</section>
+
+<section id="pro-code">
+  <h2>🧱 កូដ App ពេញលេញ</h2>
+  <h3>1) Program.cs – Setup</h3>
+  <div class="codebox"><span class="label">TodoApi/Program.cs</span><pre><code class="cs">using Microsoft.EntityFrameworkCore;
+using TodoApi.Data;
+using TodoApi.Endpoints;
+using TodoApi.Services;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// ---- Services (Dependency Injection) ----
+builder.Services.AddDbContext&lt;TodoDb&gt;(o =&gt;
+    o.UseSqlite(builder.Configuration.GetConnectionString(&quot;Todo&quot;)));
+builder.Services.AddScoped&lt;ITodoService, TodoService&gt;();
+builder.Services.AddProblemDetails();      // កំហុសទាំងអស់ត្រឡប់ជា JSON ស្តង់ដារ (RFC 9457)
+builder.Services.AddOpenApi();             // ឯកសារ API ស្វ័យប្រវត្តិ
+
+var app = builder.Build();
+
+// ---- Middleware ----
+app.UseExceptionHandler();                 // ចាប់ exception មិនរំពឹងទុក → 500 JSON (មិនបង្ហាញ stack trace)
+app.UseStatusCodePages();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();                      // GET /openapi/v1.json
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    scope.ServiceProvider.GetRequiredService&lt;TodoDb&gt;().Database.EnsureCreated();
+}
+
+// ---- Endpoints ----
+app.MapGet(&quot;/health&quot;, () =&gt; Results.Ok(new { status = &quot;ok&quot; }));
+app.MapTodoEndpoints();
+
+app.Run();
+
+public partial class Program { }           // ឱ្យ Test project ចូលប្រើ Program បាន</code></pre></div>
+  <div class="codebox"><span class="label">TodoApi/appsettings.json</span><pre><code class="txt">{
+  &quot;ConnectionStrings&quot;: {
+    &quot;Todo&quot;: &quot;Data Source=todo.db&quot;
+  },
+  &quot;Logging&quot;: {
+    &quot;LogLevel&quot;: {
+      &quot;Default&quot;: &quot;Information&quot;,
+      &quot;Microsoft.AspNetCore&quot;: &quot;Warning&quot;
+    }
+  },
+  &quot;AllowedHosts&quot;: &quot;*&quot;
+}</code></pre></div>
+  <h3>2) Model, DTO & Database</h3>
+  <div class="codebox"><span class="label">TodoApi/Models/Todo.cs</span><pre><code class="cs">namespace TodoApi.Models;
+
+public class Todo
+{
+    public int Id { get; set; }
+    public string Title { get; set; } = &quot;&quot;;
+    public bool Done { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+}</code></pre></div>
+  <div class="codebox"><span class="label">TodoApi/Dtos/TodoDtos.cs</span><pre><code class="cs">namespace TodoApi.Dtos;
+
+// DTO = ទិន្នន័យដែលចេញ/ចូលតាម API (ដាច់ពី Model ក្នុង Database)
+public record CreateTodoRequest(string? Title);
+public record UpdateTodoRequest(string? Title, bool Done);
+public record TodoResponse(int Id, string Title, bool Done, DateTime CreatedAt);</code></pre></div>
+  <div class="codebox"><span class="label">TodoApi/Data/TodoDb.cs</span><pre><code class="cs">using Microsoft.EntityFrameworkCore;
+using TodoApi.Models;
+
+namespace TodoApi.Data;
+
+public class TodoDb(DbContextOptions&lt;TodoDb&gt; options) : DbContext(options)
+{
+    public DbSet&lt;Todo&gt; Todos =&gt; Set&lt;Todo&gt;();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity&lt;Todo&gt;()
+            .Property(t =&gt; t.Title)
+            .HasMaxLength(200)
+            .IsRequired();
+    }
+}</code></pre></div>
+  <h3>3) Service Layer</h3>
+  <div class="codebox"><span class="label">TodoApi/Services/ITodoService.cs</span><pre><code class="cs">using TodoApi.Dtos;
+
+namespace TodoApi.Services;
+
+public interface ITodoService
+{
+    Task&lt;IReadOnlyList&lt;TodoResponse&gt;&gt; ListAsync(bool? done, int page, int pageSize, CancellationToken ct);
+    Task&lt;TodoResponse?&gt; GetAsync(int id, CancellationToken ct);
+    Task&lt;TodoResponse&gt; CreateAsync(string title, CancellationToken ct);
+    Task&lt;bool&gt; UpdateAsync(int id, string title, bool done, CancellationToken ct);
+    Task&lt;bool&gt; DeleteAsync(int id, CancellationToken ct);
+}</code></pre></div>
+  <div class="codebox"><span class="label">TodoApi/Services/TodoService.cs</span><pre><code class="cs">using Microsoft.EntityFrameworkCore;
+using TodoApi.Data;
+using TodoApi.Dtos;
+using TodoApi.Models;
+
+namespace TodoApi.Services;
+
+public class TodoService(TodoDb db) : ITodoService
+{
+    public async Task&lt;IReadOnlyList&lt;TodoResponse&gt;&gt; ListAsync(bool? done, int page, int pageSize, CancellationToken ct)
+    {
+        IQueryable&lt;Todo&gt; query = db.Todos.AsNoTracking();
+        if (done is bool d)
+            query = query.Where(t =&gt; t.Done == d);
+
+        return await query
+            .OrderBy(t =&gt; t.Id)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(t =&gt; new TodoResponse(t.Id, t.Title, t.Done, t.CreatedAt))
+            .ToListAsync(ct);
+    }
+
+    public Task&lt;TodoResponse?&gt; GetAsync(int id, CancellationToken ct) =&gt;
+        db.Todos.AsNoTracking()
+            .Where(t =&gt; t.Id == id)
+            .Select(t =&gt; new TodoResponse(t.Id, t.Title, t.Done, t.CreatedAt))
+            .FirstOrDefaultAsync(ct);
+
+    public async Task&lt;TodoResponse&gt; CreateAsync(string title, CancellationToken ct)
+    {
+        var todo = new Todo { Title = title };
+        db.Todos.Add(todo);
+        await db.SaveChangesAsync(ct);
+        return new TodoResponse(todo.Id, todo.Title, todo.Done, todo.CreatedAt);
+    }
+
+    public async Task&lt;bool&gt; UpdateAsync(int id, string title, bool done, CancellationToken ct)
+    {
+        var todo = await db.Todos.FindAsync(new object[] { id }, ct);
+        if (todo is null) return false;
+        todo.Title = title;
+        todo.Done = done;
+        await db.SaveChangesAsync(ct);
+        return true;
+    }
+
+    public async Task&lt;bool&gt; DeleteAsync(int id, CancellationToken ct) =&gt;
+        await db.Todos.Where(t =&gt; t.Id == id).ExecuteDeleteAsync(ct) &gt; 0;
+}</code></pre></div>
+  <h3>4) Endpoints + Validation</h3>
+  <div class="codebox"><span class="label">TodoApi/Endpoints/TodoEndpoints.cs</span><pre><code class="cs">using Microsoft.AspNetCore.Http.HttpResults;
+using TodoApi.Dtos;
+using TodoApi.Services;
+
+namespace TodoApi.Endpoints;
+
+public static class TodoEndpoints
+{
+    private const int MaxTitleLength = 200;
+
+    public static void MapTodoEndpoints(this IEndpointRouteBuilder app)
+    {
+        var group = app.MapGroup(&quot;/api/todos&quot;).WithTags(&quot;Todos&quot;);
+
+        // GET /api/todos?done=true&amp;page=1&amp;pageSize=20
+        group.MapGet(&quot;/&quot;, async (ITodoService svc, bool? done, int? page, int? pageSize, CancellationToken ct) =&gt;
+        {
+            int p = Math.Max(page ?? 1, 1);
+            int size = Math.Clamp(pageSize ?? 20, 1, 100);
+            return TypedResults.Ok(await svc.ListAsync(done, p, size, ct));
+        });
+
+        group.MapGet(&quot;/{id:int}&quot;, async Task&lt;Results&lt;Ok&lt;TodoResponse&gt;, NotFound&gt;&gt; (
+            int id, ITodoService svc, CancellationToken ct) =&gt;
+        {
+            var todo = await svc.GetAsync(id, ct);
+            return todo is null ? TypedResults.NotFound() : TypedResults.Ok(todo);
+        });
+
+        group.MapPost(&quot;/&quot;, async Task&lt;Results&lt;Created&lt;TodoResponse&gt;, ValidationProblem&gt;&gt; (
+            CreateTodoRequest req, ITodoService svc, CancellationToken ct) =&gt;
+        {
+            if (ValidateTitle(req.Title) is { } errors)
+                return TypedResults.ValidationProblem(errors);
+
+            var todo = await svc.CreateAsync(req.Title!.Trim(), ct);
+            return TypedResults.Created($&quot;/api/todos/{todo.Id}&quot;, todo);
+        });
+
+        group.MapPut(&quot;/{id:int}&quot;, async Task&lt;Results&lt;NoContent, NotFound, ValidationProblem&gt;&gt; (
+            int id, UpdateTodoRequest req, ITodoService svc, CancellationToken ct) =&gt;
+        {
+            if (ValidateTitle(req.Title) is { } errors)
+                return TypedResults.ValidationProblem(errors);
+
+            bool updated = await svc.UpdateAsync(id, req.Title!.Trim(), req.Done, ct);
+            return updated ? TypedResults.NoContent() : TypedResults.NotFound();
+        });
+
+        group.MapDelete(&quot;/{id:int}&quot;, async Task&lt;Results&lt;NoContent, NotFound&gt;&gt; (
+            int id, ITodoService svc, CancellationToken ct) =&gt;
+        {
+            bool deleted = await svc.DeleteAsync(id, ct);
+            return deleted ? TypedResults.NoContent() : TypedResults.NotFound();
+        });
+    }
+
+    // ត្រឡប់ null បើត្រឹមត្រូវ ឬ dictionary នៃកំហុស (→ 400 ValidationProblem)
+    private static Dictionary&lt;string, string[]&gt;? ValidateTitle(string? title)
+    {
+        if (string.IsNullOrWhiteSpace(title))
+            return new() { [&quot;title&quot;] = new[] { &quot;Title is required.&quot; } };
+        if (title.Trim().Length &gt; MaxTitleLength)
+            return new() { [&quot;title&quot;] = new[] { $&quot;Title must be {MaxTitleLength} characters or fewer.&quot; } };
+        return null;
+    }
+}</code></pre></div>
+  <table>
+    <tr><th>HTTP</th><th>URL</th><th>លទ្ធផល</th></tr>
+    <tr><td>GET</td><td>/api/todos?done=true&amp;page=1&amp;pageSize=20</td><td>200 + បញ្ជី</td></tr>
+    <tr><td>GET</td><td>/api/todos/{id}</td><td>200 / 404</td></tr>
+    <tr><td>POST</td><td>/api/todos</td><td>201 / 400 (ValidationProblem)</td></tr>
+    <tr><td>PUT</td><td>/api/todos/{id}</td><td>204 / 400 / 404</td></tr>
+    <tr><td>DELETE</td><td>/api/todos/{id}</td><td>204 / 404</td></tr>
+  </table>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">dotnet run --project TodoApi
+curl -X POST http://localhost:5000/api/todos -H &quot;Content-Type: application/json&quot; -d &#x27;{&quot;title&quot;:&quot;Learn C#&quot;}&#x27;
+curl &quot;http://localhost:5000/api/todos?done=false&quot;</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផលពេល title ទទេ (400)</span><pre><code class="txt">{
+  &quot;type&quot;: &quot;https://tools.ietf.org/html/rfc9110#section-15.5.1&quot;,
+  &quot;title&quot;: &quot;One or more validation errors occurred.&quot;,
+  &quot;status&quot;: 400,
+  &quot;errors&quot;: { &quot;title&quot;: [ &quot;Title is required.&quot; ] }
+}</code></pre></div>
+</section>
+
+<section id="pro-test">
+  <h2>🧪 Integration Tests (xUnit + WebApplicationFactory)</h2>
+  <p>Test ទាំងនេះដំណើរការ API ពិតប្រាកដក្នុង Memory ហើយផ្ញើ HTTP Request ទៅវា — ប្រើ Database SQLite ថ្មីសម្រាប់ Test នីមួយៗ។</p>
+  <div class="codebox"><span class="label">TodoApi.Tests/TodoApiTests.cs</span><pre><code class="cs">using System.Net;
+using System.Net.Http.Json;
+using Microsoft.AspNetCore.Mvc.Testing;
+using TodoApi.Dtos;
+
+namespace TodoApi.Tests;
+
+// xUnit បង្កើត object ថ្មីសម្រាប់ test នីមួយៗ → database ថ្មីរាល់ test
+public class TodoApiTests : IDisposable
+{
+    private readonly WebApplicationFactory&lt;Program&gt; _factory;
+    private readonly HttpClient _client;
+
+    public TodoApiTests()
+    {
+        var dbPath = Path.Combine(Path.GetTempPath(), $&quot;todo-test-{Guid.NewGuid()}.db&quot;);
+        Environment.SetEnvironmentVariable(&quot;ConnectionStrings__Todo&quot;, $&quot;Data Source={dbPath}&quot;);
+        _factory = new WebApplicationFactory&lt;Program&gt;();
+        _client = _factory.CreateClient();
+    }
+
+    public void Dispose()
+    {
+        _client.Dispose();
+        _factory.Dispose();
+    }
+
+    [Fact]
+    public async Task Health_ReturnsOk()
+    {
+        var res = await _client.GetAsync(&quot;/health&quot;);
+        Assert.Equal(HttpStatusCode.OK, res.StatusCode);
+    }
+
+    [Fact]
+    public async Task Create_ThenGet_ReturnsSameTodo()
+    {
+        var created = await _client.PostAsJsonAsync(&quot;/api/todos&quot;, new CreateTodoRequest(&quot;Learn C#&quot;));
+        Assert.Equal(HttpStatusCode.Created, created.StatusCode);
+
+        var todo = await created.Content.ReadFromJsonAsync&lt;TodoResponse&gt;();
+        Assert.NotNull(todo);
+
+        var fetched = await _client.GetFromJsonAsync&lt;TodoResponse&gt;($&quot;/api/todos/{todo.Id}&quot;);
+        Assert.Equal(&quot;Learn C#&quot;, fetched!.Title);
+        Assert.False(fetched.Done);
+    }
+
+    [Theory]
+    [InlineData(&quot;&quot;)]
+    [InlineData(&quot;   &quot;)]
+    public async Task Create_WithEmptyTitle_ReturnsBadRequest(string title)
+    {
+        var res = await _client.PostAsJsonAsync(&quot;/api/todos&quot;, new CreateTodoRequest(title));
+        Assert.Equal(HttpStatusCode.BadRequest, res.StatusCode);
+    }
+
+    [Fact]
+    public async Task Update_Filter_Delete_Flow()
+    {
+        var created = await _client.PostAsJsonAsync(&quot;/api/todos&quot;, new CreateTodoRequest(&quot;Write tests&quot;));
+        var todo = (await created.Content.ReadFromJsonAsync&lt;TodoResponse&gt;())!;
+
+        var put = await _client.PutAsJsonAsync($&quot;/api/todos/{todo.Id}&quot;, new UpdateTodoRequest(&quot;Write tests&quot;, true));
+        Assert.Equal(HttpStatusCode.NoContent, put.StatusCode);
+
+        var doneList = await _client.GetFromJsonAsync&lt;List&lt;TodoResponse&gt;&gt;(&quot;/api/todos?done=true&quot;);
+        Assert.Single(doneList!);
+
+        var del = await _client.DeleteAsync($&quot;/api/todos/{todo.Id}&quot;);
+        Assert.Equal(HttpStatusCode.NoContent, del.StatusCode);
+
+        var missing = await _client.GetAsync($&quot;/api/todos/{todo.Id}&quot;);
+        Assert.Equal(HttpStatusCode.NotFound, missing.StatusCode);
+    }
+}</code></pre></div>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">dotnet test</code></pre></div>
+</section>
+
+<section id="pro-deploy">
+  <h2>🛡️ Security Checklist & Docker</h2>
+  <table>
+    <tr><th>ផ្នែក</th><th>វិធី</th></tr>
+    <tr><td>Validation</td><td>ពិនិត្យរាល់ Input (ដូច <code class="i">ValidateTitle</code>) — មិនទុកចិត្ត Client</td></tr>
+    <tr><td>កំហុស</td><td><code class="i">UseExceptionHandler</code> + ProblemDetails — មិនបង្ហាញ Stack trace ទៅ User</td></tr>
+    <tr><td>Secrets</td><td>ប្រើ <code class="i">dotnet user-secrets</code> (Dev) និង Environment Variables (Prod) — មិនដាក់ Password ក្នុង appsettings.json</td></tr>
+    <tr><td>HTTPS</td><td><code class="i">app.UseHttpsRedirection()</code> ឬ Reverse proxy ដែលមាន SSL</td></tr>
+    <tr><td>Authentication</td><td>JWT Bearer ឬ ASP.NET Core Identity (ជំហានបន្ទាប់)</td></tr>
+    <tr><td>Rate limiting</td><td><code class="i">builder.Services.AddRateLimiter(...)</code> ការពារការវាយប្រហារ</td></tr>
+    <tr><td>Migrations</td><td>ក្នុងគម្រោងពិត ប្រើ <code class="i">dotnet ef migrations</code> ជំនួស <code class="i">EnsureCreated()</code></td></tr>
+  </table>
+  <div class="codebox"><span class="label">Dockerfile</span><pre><code class="txt">FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+WORKDIR /src
+COPY TodoApi/TodoApi.csproj TodoApi/
+RUN dotnet restore TodoApi/TodoApi.csproj
+COPY TodoApi/ TodoApi/
+RUN dotnet publish TodoApi/TodoApi.csproj -c Release -o /app
+
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
+WORKDIR /app
+COPY --from=build /app .
+RUN mkdir -p /data &amp;&amp; chown $APP_UID /data
+USER $APP_UID
+ENV ConnectionStrings__Todo=&quot;Data Source=/data/todo.db&quot;
+EXPOSE 8080
+ENTRYPOINT [&quot;dotnet&quot;, &quot;TodoApi.dll&quot;]</code></pre></div>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">docker build -t todo-api .
+docker run -p 8080:8080 -v todo-data:/data todo-api</code></pre></div>
+  <div class="ex"><h4>🏁 លំហាត់គម្រោងចុងក្រោយ</h4>
+    <ol>
+      <li>បន្ថែម Field <code class="i">DueDate</code> និង Endpoint <code class="i">GET /api/todos/overdue</code></li>
+      <li>បន្ថែមការស្វែងរក <code class="i">?search=...</code> ក្នុង <code class="i">ListAsync</code></li>
+      <li>ប្តូរ <code class="i">EnsureCreated()</code> ទៅប្រើ EF Core Migrations</li>
+      <li>បន្ថែម JWT Authentication ឱ្យ User នីមួយៗឃើញតែកិច្ចការរបស់ខ្លួន</li>
+      <li>ដំណើរការ <code class="i">dotnet test</code> ដោយស្វ័យប្រវត្តិជាមួយ GitHub Actions</li>
+    </ol>
+  </div>
+</section>
+
+<section id="next">
+  <h2>🗺️ ជំហានបន្ទាប់</h2>
+  
+
+<ol>
+<li><b>ហាត់រាល់ថ្ងៃ</b> ១៥–៣០ នាទី ល្អជាងរៀនយូរម្ដងម្កាល។ សាកល្បងបញ្ហានៅ <a href="https://exercism.org/tracks/csharp" rel="noopener" target="_blank">Exercism</a> ឬ <a href="https://www.codewars.com" rel="noopener" target="_blank">Codewars</a>។</li>
+<li><b>ឯកសារផ្លូវការ</b> <a href="https://learn.microsoft.com/dotnet/csharp/" rel="noopener" target="_blank">Microsoft Learn: C#</a> មានមេរៀនឥតគិតថ្លៃ និង tour ដ៏ល្អ។</li>
+<li><b>ជ្រើសផ្លូវ</b> ស៊ីជម្រៅ ASP.NET Core (Authentication, Dependency Injection) · ហ្គេម (Unity) · Desktop/Mobile (.NET MAUI) · ទិន្នន័យ (Entity Framework Core)។</li>
+<li><b>រៀនបន្ថែម</b> Git/GitHub, SQL, Unit testing (xUnit), Dependency Injection, Design Patterns។</li>
+<li><b>បង្កើតគម្រោងពិត</b> ឧ. កម្មវិធីគ្រប់គ្រងស្តុក កម្មវិធីគណនេយ្យតូច ឬហ្គេមសាមញ្ញ ហើយដាក់លើ GitHub។</li>
+</ol>
+<div class="note">💡 <b>ការណែនាំចុងក្រោយ</b><br/>កុំចម្លងកូដឱ្យតែប៉ុណ្ណោះ។ វាយខ្លួនឯង ធ្វើឱ្យខូច ហើយជួសជុលវា។ ការអានសារ error ឱ្យយល់ គឺជាជំនាញដ៏សំខាន់បំផុតរបស់អ្នកសរសេរកម្មវិធី។</div>
+
+</section>
+
+</main>
+</div>
+
+<script>
+// ===== Syntax highlighter (គ្មាន Library ខាងក្រៅ) =====
+const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const span = (cls, s) => `<span class="${cls}">${esc(s)}</span>`;
+
+const CS_KW = "abstract|as|async|await|base|break|case|catch|class|const|continue|default|delegate|do|else|enum|event|explicit|false|finally|for|foreach|get|if|implicit|in|init|interface|internal|is|lock|namespace|new|not|null|operator|or|and|out|override|params|private|protected|public|readonly|record|ref|return|sealed|set|static|struct|switch|this|throw|true|try|typeof|using|var|virtual|void|when|where|while|with|yield";
+const CS_TYPE = "int|long|short|byte|double|float|decimal|bool|char|string|object|dynamic|List|Dictionary|HashSet|Queue|Stack|Task|IEnumerable|IReadOnlyList|IQueryable|Func|Action|DateTime|StringBuilder|HttpClient|Results|TypedResults|CancellationToken|Exception|ArgumentException|FormatException|DivideByZeroException|InvalidOperationException|FileNotFoundException";
+const CS_BI = "Console|Math|File|Path|Environment|Convert|Random|Array|Assert|WebApplication|Debug|Input|Time|Vector3|transform";
+const csRe = new RegExp(
+  "(\\/\\/.*$|\\/\\*[\\s\\S]*?\\*\\/)" +                                                       // 1 comment
+  "|(\"\"\"[\\s\\S]*?\"\"\"|\\$?@\"(?:\"\"|[^\"])*\"|\\$?\"(?:\\\\.|[^\"\\\\\\n])*\"|'(?:\\\\.|[^'\\\\\\n])')" + // 2 string
+  "|(^[ \\t]*\\[[A-Z]\\w*(?:\\([^\\]\\n]*\\))?\\])" +                                          // 3 attribute
+  "|\\b(" + CS_KW + ")\\b" +                                                                    // 4 keyword
+  "|\\b(" + CS_TYPE + ")\\b" +                                                                  // 5 type
+  "|\\b(\\d[\\d_]*(?:\\.\\d+)?[mMfFdDlL]?)\\b" +                                                // 6 number
+  "|\\b(" + CS_BI + ")\\b" +                                                                    // 7 builtin class
+  "|([A-Za-z_]\\w*)(?=\\s*(?:<[\\w<>, ?]*>)?\\()",                                              // 8 method
+  "gm"
+);
+const bashRe = /(#.*$)|("(?:\\.|[^"\\])*"|'[^']*')|^(\s*)(dotnet|mkdir|cd|code|curl|docker)\b/gm;
+
+function highlight(text, re, map) {
+  let out = "", last = 0, m;
+  re.lastIndex = 0;
+  while ((m = re.exec(text))) {
+    if (m[0] === "") { re.lastIndex++; continue; }
+    out += esc(text.slice(last, m.index)) + map(m);
+    last = re.lastIndex;
+  }
+  return out + esc(text.slice(last));
+}
+
+document.querySelectorAll("pre code").forEach((el) => {
+  const src = el.textContent;
+  if (el.classList.contains("cs")) {
+    el.innerHTML = highlight(src, csRe, (m) => {
+      if (m[1]) return span("tok-com", m[0]);
+      if (m[2]) return span("tok-str", m[0]);
+      if (m[3]) return span("tok-bi", m[0]);
+      if (m[4]) return span("tok-kw", m[0]);
+      if (m[5]) return span("tok-type", m[0]);
+      if (m[6]) return span("tok-num", m[0]);
+      if (m[7]) return span("tok-bi", m[0]);
+      if (m[8]) return span("tok-fn", m[0]);
+      return esc(m[0]);
+    });
+  } else if (el.classList.contains("bash")) {
+    el.innerHTML = highlight(src, bashRe, (m) => {
+      if (m[1]) return span("tok-com", m[0]);
+      if (m[2]) return span("tok-str", m[0]);
+      if (m[4]) return esc(m[3]) + span("tok-cmd", m[4]);
+      return esc(m[0]);
+    });
+  }
+});
+
+// ===== Copy buttons =====
+document.querySelectorAll(".codebox").forEach((box) => {
+  const btn = document.createElement("button");
+  btn.className = "btn copy";
+  btn.textContent = "ចម្លង";
+  btn.onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(box.querySelector("code").textContent);
+      btn.textContent = "✔ បានចម្លង";
+    } catch { btn.textContent = "បរាជ័យ"; }
+    setTimeout(() => (btn.textContent = "ចម្លង"), 1500);
+  };
+  box.appendChild(btn);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="csharp"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

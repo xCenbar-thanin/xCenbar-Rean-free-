@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន Flutter Mobile App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#0175c2; --accent2:#13b9fd; --accent-soft:#e6f4ff;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#54c5f8; --accent2:#13b9fd; --accent-soft:#0b2236;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#54c5f8; --accent2:#13b9fd; --accent-soft:#0b2236;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#042b59,#0175c2 55%,#13b9fd);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/flutter.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/flutter.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Mobile App ជាមួយ Flutter ពីដើមដល់ Publish</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Mobile App ជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#install">២. ដំឡើង Flutter &amp; ត្រៀម</a>
+<a href="#elements">៣. ធាតុនីមួយៗរបស់ Flutter</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Dart មូលដ្ឋាន៖ Variable, Type &amp; Null Safety</a>
+<a href="#l2">មេរៀន ២: Dart៖ Function, List/Map &amp; Class</a>
+<a href="#l3">មេរៀន ៣: Async៖ Future, async/await &amp; Stream</a>
+<a href="#l4">មេរៀន ៤: App Flutter ដំបូង៖ MaterialApp, Scaffold &amp; Hot Reload</a>
+<a href="#l5">មេរៀន ៥: Widgets មូលដ្ឋាន៖ Text, Image, Icon, Button, Container</a>
+<a href="#l6">មេរៀន ៦: Layout៖ Row, Column, Stack, Expanded &amp; Padding</a>
+<a href="#l7">មេរៀន ៧: StatefulWidget &amp; setState</a>
+<a href="#l8">មេរៀន ៨: ListView &amp; Card (បញ្ជីទំនិញ)</a>
+<a href="#l9">មេរៀន ៩: Form, TextField &amp; Validation</a>
+<a href="#l10">មេរៀន ១០: Navigation &amp; Routes (go_router)</a>
+<a href="#l11">មេរៀន ១១: Theme, Dark Mode, Assets &amp; Font ខ្មែរ</a>
+<a href="#l12">មេរៀន ១២: State Management៖ Provider (Cart)</a>
+<a href="#l13">មេរៀន ១៣: HTTP &amp; JSON (REST API)</a>
+<a href="#l14">មេរៀន ១៤: Local Storage៖ shared_preferences &amp; SQLite</a>
+<a href="#l15">មេរៀន ១៥: Firebase៖ Login, Firestore &amp; Notification</a>
+<a href="#l16">មេរៀន ១៦: មុខងារទូរស័ព្ទ៖ Camera, Location &amp; Permission</a>
+<a href="#l17">មេរៀន ១៧: Testing, Debugging &amp; Performance</a>
+<a href="#l18">មេរៀន ១៨: Build &amp; Publish៖ Play Store &amp; App Store</a>
+<a href="#cheat">📋 Cheat Sheet</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងអាជីព៖ Kafe Order App</a>
+<a href="#pro-app">💻 Flutter Playground Pro (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>📱 Mobile App Development ជាមួយ Flutter</h2>
+  <p>រៀនធ្វើ App <b>Android &amp; iPhone</b> ដោយ Code តែមួយ៖ <b>Dart</b>, Widgets, Layout, State, ListView, Form, Navigation, Theme &amp; Font ខ្មែរ, Provider, <b>REST API</b>, Storage, <b>Firebase</b>, Camera/GPS, Test រហូតដល់ <b>Publish លើ Play Store &amp; App Store</b> — មានទូរស័ព្ទគំរូបង្ហាញលទ្ធផល។</p>
+  <p><span class="badge">📘 ១៨ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">💻 Code មានពណ៌ + លទ្ធផល</span><span class="badge">📱 Flutter Playground Pro</span></p>
+</section>
+<section id="intro">
+<h2>១. Mobile App ជាអ្វី? អ្នកណាបង្កើត?</h2>
+
+<p><b>Mobile App</b> គឺជាកម្មវិធីដំឡើងលើទូរស័ព្ទ (Android / iPhone)។ វគ្គនេះបង្រៀន <b>Flutter</b> — Framework របស់ <b>Google</b> ដែលសរសេរ Code <b>តែមួយ</b> ដោយភាសា <b>Dart</b> ហើយបង្កើត App បានទាំង <b>Android, iOS, Web, Windows, macOS និង Linux</b>។ <button class="btn say" data-say="Flutter">🔊 អានពាក្យ</button></p>
+<h3>👤 អ្នកណាបង្កើត?</h3>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#16a34a"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#16a34a">2003</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Android Inc. (Rubin)</text><circle cx="200" cy="115" r="11" fill="#0f172a"/><text x="200" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#0f172a">2007</text><text x="200" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">iPhone + iOS</text><circle cx="320" cy="115" r="11" fill="#2563eb"/><text x="320" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#2563eb">2008</text><text x="320" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Android 1.0 + App Store</text><circle cx="440" cy="115" r="11" fill="#0891b2"/><text x="440" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#0891b2">2011</text><text x="440" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Dart (Google)</text><circle cx="560" cy="115" r="11" fill="#ea580c"/><text x="560" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#ea580c">2014</text><text x="560" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Swift (Apple)</text><circle cx="680" cy="115" r="11" fill="#0ea5e9"/><text x="680" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#0ea5e9">2015</text><text x="680" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">React Native (Meta)</text><circle cx="800" cy="115" r="11" fill="#7c3aed"/><text x="800" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#7c3aed">2017</text><text x="800" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Kotlin ផ្លូវការ Android</text><circle cx="920" cy="115" r="11" fill="#02569b"/><text x="920" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#02569b">2018</text><text x="920" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Flutter 1.0</text></svg><figcaption>🖼️ ប្រវត្តិ Mobile platform &amp; Framework</figcaption></figure>
+
+<table><tr><th>បច្ចេកវិទ្យា</th><th>អ្នកបង្កើត</th><th>ឆ្នាំ</th></tr><tr><td><b>Android</b></td><td>Andy Rubin, Rich Miner, Nick Sears, Chris White (Android Inc.) → Google ទិញ 2005</td><td>Android 1.0 · 2008</td></tr><tr><td><b>iOS (iPhone OS)</b></td><td>Apple — ប្រកាសដោយ Steve Jobs</td><td>2007</td></tr><tr><td><b>Dart</b></td><td><b>Lars Bak</b> និង <b>Kasper Lund</b> (Google)</td><td>2011</td></tr><tr><td><b>Swift</b></td><td><b>Chris Lattner</b> (Apple)</td><td>2014</td></tr><tr><td><b>React Native</b></td><td>Meta (Facebook)</td><td>2015</td></tr><tr><td><b>Kotlin</b></td><td>JetBrains → Google ប្រកាសជាភាសាផ្លូវការ Android</td><td>2011 · 2017</td></tr><tr><td><b>Flutter</b></td><td>Google (គម្រោង “Sky” 2015) → <b>Flutter 1.0</b> ខែធ្នូ</td><td>2018</td></tr></table>
+
+<h3>🎯 គេប្រើ Flutter ធ្វើអ្វី?</h3>
+<div class="grid"><div class="card"><b>🛒 E-commerce / Delivery</b><br>App បញ្ជាទិញ ហាងកាហ្វេ ម្ហូប</div><div class="card"><b>🏦 ធនាគារ &amp; Fintech</b><br>Wallet, QR Pay</div><div class="card"><b>🏫 អប់រំ</b><br>App រៀន Quiz, LMS</div><div class="card"><b>🚗 សេវា</b><br>Booking, Taxi, Tracking</div><div class="card"><b>💬 Social &amp; Chat</b><br>Firebase realtime</div><div class="card"><b>🏢 ក្រុមហ៊ុនធំៗ</b><br>Google Pay, BMW, Alibaba Xianyu, Toyota infotainment</div></div>
+
+<figure class="fig"><svg viewBox="0 0 900 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="900" height="230" fill="#fff"/><text x="90" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">Framework</text><text x="230" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">ភាសា</text><text x="360" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">ក្រុមហ៊ុន</text><text x="520" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">ល្បឿន</text><text x="660" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">Cross-platform</text><text x="810" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">Native API</text><rect x="10" y="40" width="880" height="36" rx="8" fill="#02569b" fill-opacity=".08"/><text x="90" y="64" text-anchor="middle" font-size="14" font-weight="800" fill="#02569b">Flutter</text><text x="230" y="64" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">Dart</text><text x="360" y="64" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">Google</text><circle cx="480" cy="60" r="6" fill="#02569b"/><circle cx="498" cy="60" r="6" fill="#02569b"/><circle cx="516" cy="60" r="6" fill="#02569b"/><circle cx="534" cy="60" r="6" fill="#02569b"/><circle cx="552" cy="60" r="6" fill="#02569b"/><circle cx="625" cy="60" r="6" fill="#02569b"/><circle cx="643" cy="60" r="6" fill="#02569b"/><circle cx="661" cy="60" r="6" fill="#02569b"/><circle cx="679" cy="60" r="6" fill="#02569b"/><circle cx="697" cy="60" r="6" fill="#02569b"/><circle cx="770" cy="60" r="6" fill="#02569b"/><circle cx="788" cy="60" r="6" fill="#02569b"/><circle cx="806" cy="60" r="6" fill="#02569b"/><circle cx="824" cy="60" r="6" fill="#02569b"/><circle cx="842" cy="60" r="6" fill="#e2e8f0"/><rect x="10" y="82" width="880" height="36" rx="8" fill="#0ea5e9" fill-opacity=".08"/><text x="90" y="106" text-anchor="middle" font-size="14" font-weight="800" fill="#0ea5e9">React Native</text><text x="230" y="106" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">JS/TS</text><text x="360" y="106" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">Meta</text><circle cx="480" cy="102" r="6" fill="#0ea5e9"/><circle cx="498" cy="102" r="6" fill="#0ea5e9"/><circle cx="516" cy="102" r="6" fill="#0ea5e9"/><circle cx="534" cy="102" r="6" fill="#0ea5e9"/><circle cx="552" cy="102" r="6" fill="#e2e8f0"/><circle cx="625" cy="102" r="6" fill="#0ea5e9"/><circle cx="643" cy="102" r="6" fill="#0ea5e9"/><circle cx="661" cy="102" r="6" fill="#0ea5e9"/><circle cx="679" cy="102" r="6" fill="#0ea5e9"/><circle cx="697" cy="102" r="6" fill="#0ea5e9"/><circle cx="770" cy="102" r="6" fill="#0ea5e9"/><circle cx="788" cy="102" r="6" fill="#0ea5e9"/><circle cx="806" cy="102" r="6" fill="#0ea5e9"/><circle cx="824" cy="102" r="6" fill="#0ea5e9"/><circle cx="842" cy="102" r="6" fill="#e2e8f0"/><rect x="10" y="124" width="880" height="36" rx="8" fill="#7c3aed" fill-opacity=".08"/><text x="90" y="148" text-anchor="middle" font-size="14" font-weight="800" fill="#7c3aed">Kotlin (Android)</text><text x="230" y="148" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">Kotlin</text><text x="360" y="148" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">JetBrains/Google</text><circle cx="480" cy="144" r="6" fill="#7c3aed"/><circle cx="498" cy="144" r="6" fill="#7c3aed"/><circle cx="516" cy="144" r="6" fill="#7c3aed"/><circle cx="534" cy="144" r="6" fill="#7c3aed"/><circle cx="552" cy="144" r="6" fill="#7c3aed"/><circle cx="625" cy="144" r="6" fill="#7c3aed"/><circle cx="643" cy="144" r="6" fill="#7c3aed"/><circle cx="661" cy="144" r="6" fill="#e2e8f0"/><circle cx="679" cy="144" r="6" fill="#e2e8f0"/><circle cx="697" cy="144" r="6" fill="#e2e8f0"/><circle cx="770" cy="144" r="6" fill="#7c3aed"/><circle cx="788" cy="144" r="6" fill="#7c3aed"/><circle cx="806" cy="144" r="6" fill="#7c3aed"/><circle cx="824" cy="144" r="6" fill="#7c3aed"/><circle cx="842" cy="144" r="6" fill="#7c3aed"/><rect x="10" y="166" width="880" height="36" rx="8" fill="#ea580c" fill-opacity=".08"/><text x="90" y="190" text-anchor="middle" font-size="14" font-weight="800" fill="#ea580c">Swift (iOS)</text><text x="230" y="190" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">Swift</text><text x="360" y="190" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">Apple</text><circle cx="480" cy="186" r="6" fill="#ea580c"/><circle cx="498" cy="186" r="6" fill="#ea580c"/><circle cx="516" cy="186" r="6" fill="#ea580c"/><circle cx="534" cy="186" r="6" fill="#ea580c"/><circle cx="552" cy="186" r="6" fill="#ea580c"/><circle cx="625" cy="186" r="6" fill="#ea580c"/><circle cx="643" cy="186" r="6" fill="#ea580c"/><circle cx="661" cy="186" r="6" fill="#e2e8f0"/><circle cx="679" cy="186" r="6" fill="#e2e8f0"/><circle cx="697" cy="186" r="6" fill="#e2e8f0"/><circle cx="770" cy="186" r="6" fill="#ea580c"/><circle cx="788" cy="186" r="6" fill="#ea580c"/><circle cx="806" cy="186" r="6" fill="#ea580c"/><circle cx="824" cy="186" r="6" fill="#ea580c"/><circle cx="842" cy="186" r="6" fill="#ea580c"/></svg><figcaption>🖼️ ប្រៀបធៀប Framework ធ្វើ Mobile App (ពិន្ទុជាការវាយតម្លៃទូទៅ)</figcaption></figure>
+
+<div class="note">💡 <b>Native</b> (Kotlin/Swift) = Code ដាច់ពីគ្នាសម្រាប់ Android និង iOS · <b>Cross-platform</b> (Flutter/React Native) = Code មួយ → ទាំងពីរ សន្សំពេល ៤០–៦០%។ អ្នកដែលចេះ JavaScript/React អាចសាក React Native ក្រោយ។</div>
+
+</section>
+<section id="install">
+<h2>២. ដំឡើង Flutter &amp; ត្រៀម</h2>
+
+<ol class="steps">
+<li>ទាញយក <b>Flutter SDK</b> ពី <code class="i">flutter.dev</code> (ឬដំឡើងតាម VS Code → Command Palette → “Flutter: New Project” វានឹងស្នើទាញ SDK)។</li>
+<li>ដំឡើង <b>VS Code</b> + Extension <b>Flutter</b> និង <b>Dart</b>។</li>
+<li>ដំឡើង <b>Android Studio</b> → SDK Manager → Android SDK + បង្កើត <b>Emulator</b> (Device Manager)។</li>
+<li>iPhone App ត្រូវការ <b>Mac + Xcode</b> (ឬប្រើ Cloud build)។</li>
+<li>ពិនិត្យដោយ <code class="i">flutter doctor</code> ហើយធ្វើតាមអ្វីដែលវាប្រាប់ (✗)។</li>
+<li>មិនចង់ដំឡើង? សាក <b>DartPad</b> (dartpad.dev) រត់ Dart/Flutter ក្នុង Browser។</li>
+</ol>
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+flutter doctor                 # ពិនិត្យការដំឡើង
+flutter create kafe_app        # បង្កើត Project
+cd kafe_app
+flutter run                    # រត់លើ Emulator/ទូរស័ព្ទ (r = Hot reload, R = restart)
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>ឧទាហរណ៍លទ្ធផល</span></div><pre>Doctor summary (to see all details, run flutter doctor -v):
+[✓] Flutter (Channel stable)
+[✓] Android toolchain - develop for Android devices
+[✓] Chrome - develop for the web
+[✓] VS Code
+[✓] Connected device (2 available)
+• No issues found!</pre></div>
+
+<script type="text/x-code" data-lang="txt" data-label="រចនាសម្ព័ន្ធ Project">
+kafe_app/
+├── lib/
+│   └── main.dart        ← Code App របស់អ្នក
+├── android/  ios/  web/ ← Project native នីមួយៗ (កម្រប៉ះ)
+├── assets/              ← រូបភាព Font
+├── test/                ← Unit/Widget test
+└── pubspec.yaml         ← ឈ្មោះ App, Package, Assets
+</script>
+
+</section>
+<section id="elements">
+<h2>៣. ធាតុនីមួយៗរបស់ Flutter</h2>
+
+<figure class="fig"><svg viewBox="0 0 900 300" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="900" height="300" fill="#fff"/><rect x="250" y="15" width="400" height="50" rx="14" fill="#02569b"/><text x="450.0" y="46.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">📱 App របស់អ្នក (Dart)</text><rect x="250" y="75" width="400" height="50" rx="14" fill="#0175c2"/><text x="450.0" y="106.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Framework: Material · Cupertino · Widgets</text><rect x="250" y="135" width="400" height="50" rx="14" fill="#13b9fd"/><text x="450.0" y="166.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Engine (C++): Impeller/Skia · Dart VM · Text</text><rect x="250" y="195" width="400" height="50" rx="14" fill="#64748b"/><text x="450.0" y="226.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Embedder: Android · iOS · Web · Windows · macOS · Linux</text><rect x="40" y="255" width="125" height="38" rx="14" fill="#16a34a"/><text x="102.5" y="280.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">🤖 Android</text><rect x="180" y="255" width="125" height="38" rx="14" fill="#0f172a"/><text x="242.5" y="280.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">🍎 iOS</text><rect x="320" y="255" width="125" height="38" rx="14" fill="#ea580c"/><text x="382.5" y="280.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">🌐 Web</text><rect x="460" y="255" width="125" height="38" rx="14" fill="#0284c7"/><text x="522.5" y="280.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">🪟 Windows</text><rect x="600" y="255" width="125" height="38" rx="14" fill="#475569"/><text x="662.5" y="280.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">💻 macOS</text><rect x="740" y="255" width="125" height="38" rx="14" fill="#ca8a04"/><text x="802.5" y="280.0" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">🐧 Linux</text><text x="125" y="45" text-anchor="middle" font-size="16" font-weight="800" fill="#02569b">Code មួយ →</text><text x="780" y="45" text-anchor="middle" font-size="16" font-weight="800" fill="#ea580c">← Hot Reload ⚡</text></svg><figcaption>🖼️ ស្ថាបត្យកម្ម Flutter — Code មួយ ដំណើរការគ្រប់ Platform</figcaption></figure>
+
+<table><tr><th>ធាតុ</th><th>ន័យ</th><th>មេរៀន</th></tr><tr><td>🎯 Dart</td><td>ភាសាសរសេរ (Null safety, async)</td><td>១–៣</td></tr><tr><td>🧱 Widget</td><td>គ្រប់យ៉ាងលើអេក្រង់ជា Widget</td><td>៤–៥</td></tr><tr><td>📐 Layout</td><td>Row, Column, Stack, Expanded</td><td>៦</td></tr><tr><td>🔄 State</td><td>ទិន្នន័យប្តូរ → UI ប្តូរ (setState, Provider)</td><td>៧ · ១២</td></tr><tr><td>📜 List</td><td>ListView.builder</td><td>៨</td></tr><tr><td>📝 Form</td><td>TextField + Validation</td><td>៩</td></tr><tr><td>🧭 Navigation</td><td>ផ្លាស់ទីរវាងទំព័រ</td><td>១០</td></tr><tr><td>🎨 Theme &amp; Assets</td><td>Material 3, Dark mode, Font ខ្មែរ</td><td>១១</td></tr><tr><td>🌐 HTTP &amp; JSON</td><td>ទាញទិន្នន័យពី API</td><td>១៣</td></tr><tr><td>💾 Storage</td><td>shared_preferences, SQLite</td><td>១៤</td></tr><tr><td>🔥 Firebase</td><td>Login, Database, Notification</td><td>១៥</td></tr><tr><td>📷 Device</td><td>Camera, Location, Permission</td><td>១៦</td></tr><tr><td>🧪 Test</td><td>Unit / Widget test, Debug</td><td>១៧</td></tr><tr><td>🚀 Publish</td><td>APK/AAB, Play Store, App Store</td><td>១៨</td></tr></table>
+
+<figure class="fig"><svg viewBox="0 0 900 300" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="900" height="300" fill="#fff"/><line x1="450" y1="41" x2="450" y2="69" stroke="#94a3b8" stroke-width="2.5"/><line x1="450" y1="101" x2="250" y2="134" stroke="#94a3b8" stroke-width="2.5"/><line x1="450" y1="101" x2="620" y2="134" stroke="#94a3b8" stroke-width="2.5"/><line x1="250" y1="166" x2="250" y2="199" stroke="#94a3b8" stroke-width="2.5"/><line x1="620" y1="166" x2="470" y2="199" stroke="#94a3b8" stroke-width="2.5"/><line x1="620" y1="166" x2="620" y2="199" stroke="#94a3b8" stroke-width="2.5"/><line x1="620" y1="166" x2="790" y2="199" stroke="#94a3b8" stroke-width="2.5"/><line x1="790" y1="231" x2="790" y2="259" stroke="#94a3b8" stroke-width="2.5"/><rect x="378" y="9" width="144" height="32" rx="16" fill="#02569b"/><text x="450" y="30" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">MaterialApp</text><rect x="378" y="69" width="144" height="32" rx="16" fill="#0175c2"/><text x="450" y="90" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">Scaffold</text><rect x="178" y="134" width="144" height="32" rx="16" fill="#13b9fd"/><text x="250" y="155" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">AppBar</text><rect x="548" y="134" width="144" height="32" rx="16" fill="#13b9fd"/><text x="620" y="155" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">Column (body)</text><rect x="178" y="199" width="144" height="32" rx="16" fill="#16a34a"/><text x="250" y="220" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">Text 'Kafe'</text><rect x="398" y="199" width="144" height="32" rx="16" fill="#16a34a"/><text x="470" y="220" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">Image</text><rect x="548" y="199" width="144" height="32" rx="16" fill="#16a34a"/><text x="620" y="220" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">Text</text><rect x="718" y="199" width="144" height="32" rx="16" fill="#16a34a"/><text x="790" y="220" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">ElevatedButton</text><rect x="718" y="259" width="144" height="32" rx="16" fill="#65a30d"/><text x="790" y="280" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">Text 'Order'</text><text x="110" y="290" text-anchor="middle" font-size="15" font-weight="800" fill="#02569b">“Everything is a Widget”</text></svg><figcaption>🖼️ Widget tree — App ជាដើមឈើនៃ Widget</figcaption></figure>
+
+<div class="note">💡 Code Dart ក្នុងវគ្គនេះ បង្ហាញជាមួយ <b>លទ្ធផល</b> និង <b>ទូរស័ព្ទគំរូ 📱</b> ដែលបង្ហាញរូបរាង App។ ដើម្បីរត់ពិត សូមចម្លង Code ទៅ DartPad ឬ <code class='i'>lib/main.dart</code>។</div>
+
+</section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>Dart មូលដ្ឋាន៖ Variable, Type &amp; Null Safety</h2>
+
+<table><tr><th>Type</th><th>ឧទាហរណ៍</th><th>ចំណាំ</th></tr><tr><td>int / double</td><td><code class='i'>int qty = 2; double price = 2.5;</code></td><td>លេខគត់ / ទសភាគ</td></tr><tr><td>String</td><td><code class='i'>'Kafe $name'</code></td><td>Interpolation ដោយ $</td></tr><tr><td>bool</td><td><code class='i'>true / false</code></td><td></td></tr><tr><td>var / final / const</td><td><code class='i'>final now = DateTime.now();</code></td><td>final = កំណត់ម្តង (Runtime) · const = Compile-time</td></tr><tr><td>Nullable</td><td><code class='i'>String? note;</code></td><td>អាច null · ប្រើ <code class='i'>??</code> <code class='i'>?.</code></td></tr></table>
+
+<script type="text/x-code" data-lang="dart" data-label="main.dart">
+void main() {
+  String name = 'Iced Latte';
+  int qty = 2;
+  double price = 2.5;
+  const vat = 0.1;                 // ថេរ
+  final total = qty * price * (1 + vat);
+
+  print('ទំនិញ: $name x$qty');
+  print('សរុប: \$${total.toStringAsFixed(2)}');
+
+  String? note;                    // Null safety: អាច null
+  print(note ?? 'គ្មានចំណាំ');      // ?? = តម្លៃជំនួស
+  print(note?.length);             // ?. = បើ null មិនហៅ
+  note = 'តិចស្ករ';
+  print(note.length);              // Dart ដឹងថាឥឡូវមិន null
+}
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផល (Console)</span></div><pre>ទំនិញ: Iced Latte x2
+សរុប: $5.50
+គ្មានចំណាំ
+null
+7</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>void main()</code> — ចំណុចចាប់ផ្តើមកម្មវិធី Dart ទាំងអស់។</li><li><code class='i'>'$name'</code> — បញ្ចូល Variable ក្នុង String · <code class='i'>${expr}</code> សម្រាប់ Expression · <code class='i'>\$</code> = សញ្ញា $ ធម្មតា។</li><li><code class='i'>toStringAsFixed(2)</code> — ២ ខ្ទង់ក្រោយក្បៀស។</li><li><b>Null safety</b>៖ <code class='i'>String?</code> អាច null · <code class='i'>??</code> ផ្តល់តម្លៃជំនួស · <code class='i'>?.</code> ហៅបើមិន null — ការពារ App គាំងដោយ Null error។</li><li>“តិចស្ករ” មាន 7 code unit (UTF-16)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>បង្កើត Variable <code class='i'>double temp = 36.8;</code> ហើយបង្ហាញ “គ្រុន” បើ ≥ 37.5 បើមិនដូច្នោះ “ធម្មតា”។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="dart" data-label="answer.dart">
+void main() {
+  double temp = 36.8;
+  print(temp >= 37.5 ? 'គ្រុន' : 'ធម្មតា');   // ធម្មតា
+}
+</script>
+</details></div>
+
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>Dart៖ Function, List/Map &amp; Class</h2>
+
+<script type="text/x-code" data-lang="dart" data-label="main.dart">
+class MenuItem {
+  final String name;
+  final double price;
+  final bool hot;
+  const MenuItem(this.name, this.price, {this.hot = true});   // named parameter
+
+  String get label => '${hot ? '☕' : '🧊'} $name';
+}
+
+double totalOf(List<MenuItem> items) =>
+    items.fold(0, (sum, it) => sum + it.price);
+
+void main() {
+  final menu = [
+    const MenuItem('Americano', 2.0),
+    const MenuItem('Iced Latte', 2.5, hot: false),
+    const MenuItem('Mocha', 2.75),
+  ];
+  for (final m in menu) {
+    print('${m.label.padRight(14)} \$${m.price}');
+  }
+  final cheap = menu.where((m) => m.price < 2.6).map((m) => m.name).toList();
+  print('តម្លៃ < 2.6: $cheap');
+  print('សរុប: \$${totalOf(menu)}');
+
+  final stock = {'Americano': 10, 'Mocha': 0};               // Map
+  print('Mocha អស់? ${stock['Mocha'] == 0}');
+}
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផល (Console)</span></div><pre>☕ Americano    $2.0
+🧊 Iced Latte  $2.5
+☕ Mocha        $2.75
+តម្លៃ &lt; 2.6: [Americano, Iced Latte]
+សរុប: $7.25
+Mocha អស់? true</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>class MenuItem</code> — គំរូទិន្នន័យ (Model) · <code class='i'>final</code> = មិនប្តូរក្រោយបង្កើត។</li><li><code class='i'>{this.hot = true}</code> — Named parameter មានតម្លៃលំនាំដើម → ហៅ <code class='i'>hot: false</code>។</li><li><code class='i'>get label =&gt;</code> — Getter សរសេរខ្លីដោយ Arrow function។</li><li><code class='i'>fold</code> បូកសរុប · <code class='i'>where</code> ច្រោះ · <code class='i'>map</code> បំលែង · <code class='i'>toList()</code> ជា List — ដូច JavaScript។</li><li><code class='i'>{'key': value}</code> = Map (Dictionary)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>សរសេរ Function <code class='i'>discount(double price, {{double percent = 10}})</code> ត្រឡប់តម្លៃក្រោយបញ្ចុះ។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="dart" data-label="answer.dart">
+double discount(double price, {double percent = 10}) => price * (1 - percent / 100);
+
+void main() {
+  print(discount(5));               // 4.5
+  print(discount(5, percent: 20));  // 4.0
+}
+</script>
+</details></div>
+
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Async៖ Future, async/await &amp; Stream</h2>
+
+<p>App ត្រូវរង់ចាំ Internet, Database, File… ដោយ <b>មិនឲ្យអេក្រង់គាំង</b>។ Dart ប្រើ <b>Future</b> (លទ្ធផលមួយនៅពេលក្រោយ) និង <b>Stream</b> (លទ្ធផលជាបន្តបន្ទាប់)។</p>
+<script type="text/x-code" data-lang="dart" data-label="main.dart">
+Future<List<String>> fetchMenu() async {
+  await Future.delayed(const Duration(seconds: 1));   // ក្លែង Internet យឺត
+  return ['Americano', 'Latte'];
+}
+
+Stream<int> countdown(int from) async* {
+  for (var i = from; i > 0; i--) {
+    yield i;                                           // បញ្ចេញម្តងមួយៗ
+    await Future.delayed(const Duration(milliseconds: 300));
+  }
+}
+
+Future<void> main() async {
+  print('កំពុងទាញ Menu...');
+  try {
+    final menu = await fetchMenu();
+    print('បានទទួល: $menu');
+  } catch (e) {
+    print('Error: $e');
+  }
+  await for (final n in countdown(3)) {
+    print('ការកម្មង់រួចក្នុង $n...');
+  }
+  print('✅ រួចរាល់');
+}
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផល (Console)</span></div><pre>កំពុងទាញ Menu...
+បានទទួល: [Americano, Latte]
+ការកម្មង់រួចក្នុង 3...
+ការកម្មង់រួចក្នុង 2...
+ការកម្មង់រួចក្នុង 1...
+✅ រួចរាល់</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>Future&lt;T&gt;</code> + <code class='i'>async</code> — Function ដែលនឹងត្រឡប់តម្លៃនៅពេលក្រោយ។</li><li><code class='i'>await</code> — រង់ចាំលទ្ធផល ដោយមិនទប់ UI (Flutter នៅតែបង្ហាញ Loading បាន)។</li><li><code class='i'>try / catch</code> — ចាប់ Error ពេល Internet ដាច់។</li><li><code class='i'>async*</code> + <code class='i'>yield</code> = Stream · <code class='i'>await for</code> អានម្តងមួយៗ (ដូច Chat realtime, GPS)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>ហេតុអ្វីមិនគួរទាញ API ដោយមិនប្រើ async ក្នុង App?</p><details><summary>មើលចម្លើយ</summary><p>បើ Code រង់ចាំដោយ Block, UI នឹងគាំង (App Not Responding)។ async/await អនុញ្ញាតឲ្យ UI នៅតែរស់ ហើយបង្ហាញ Loading/Error ។</p></details></div>
+
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>App Flutter ដំបូង៖ MaterialApp, Scaffold &amp; Hot Reload</h2>
+
+<script type="text/x-code" data-lang="dart" data-label="main.dart">
+import 'package:flutter/material.dart';
+
+void main() => runApp(const KafeApp());
+
+class KafeApp extends StatelessWidget {
+  const KafeApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Kafe App',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(colorSchemeSeed: Colors.brown, useMaterial3: true),
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Kafe Angkor ☕')),
+        body: const Center(
+          child: Text('សួស្តី Flutter!', style: TextStyle(fontSize: 28)),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: const Icon(Icons.add_shopping_cart),
+        ),
+      ),
+    );
+  }
+}
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar" style="background:#795548">Kafe Angkor ☕</div><div class="ph-body"><div class="ph-center" style="font-size:22px">សួស្តី Flutter!</div><div class="ph-fab">🛒</div></div></div><figcaption>📱 លទ្ធផលលើ Emulator</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>runApp()</code> — បង្ហាញ Widget ដំបូងលើអេក្រង់។</li><li><code class='i'>StatelessWidget</code> + <code class='i'>build()</code> — ពិពណ៌នា UI · <code class='i'>const</code> ធ្វើឲ្យ Flutter មិនបាច់គូរឡើងវិញ (លឿន)។</li><li><code class='i'>MaterialApp</code> — Theme, Title, Route · <code class='i'>Scaffold</code> — គ្រោងទំព័រ៖ appBar, body, floatingActionButton, drawer, bottomNavigationBar។</li><li><code class='i'>colorSchemeSeed</code> — Material 3 បង្កើតពណ៌ទាំងអស់ពីពណ៌មួយ។</li><li>កែ Code ហើយ Save → <b>Hot Reload ⚡</b> ឃើញភ្លាមក្នុង &lt; 1 វិនាទី ដោយមិនបាត់ State។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>ប្តូរពណ៌ App ជាពណ៌បៃតង ហើយបន្ថែម <code class='i'>drawer: const Drawer()</code>។ តើឃើញអ្វីប្តូរ?</p><details><summary>មើលចម្លើយ</summary><p><code class='i'>colorSchemeSeed: Colors.green</code> → AppBar/FAB ពណ៌បៃតង · Drawer បន្ថែមប៊ូតុង ☰ នៅ AppBar ដោយស្វ័យប្រវត្តិ។</p></details></div>
+
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>Widgets មូលដ្ឋាន៖ Text, Image, Icon, Button, Container</h2>
+
+<table><tr><th>Widget</th><th>ប្រើ</th><th>ឧទាហរណ៍</th></tr><tr><td>Text</td><td>អក្សរ</td><td><code class='i'>Text('Hi', style: TextStyle(fontWeight: FontWeight.bold))</code></td></tr><tr><td>Image.asset / .network</td><td>រូបភាព</td><td><code class='i'>Image.network(url, fit: BoxFit.cover)</code></td></tr><tr><td>Icon</td><td>Material icons</td><td><code class='i'>Icon(Icons.favorite, color: Colors.red)</code></td></tr><tr><td>ElevatedButton / FilledButton / TextButton</td><td>ប៊ូតុង</td><td><code class='i'>FilledButton(onPressed: f, child: Text('Order'))</code></td></tr><tr><td>Container</td><td>ប្រអប់ (Padding, Color, Border, Radius)</td><td><code class='i'>BoxDecoration(borderRadius: ...)</code></td></tr><tr><td>Card / ListTile / Chip</td><td>Material components</td><td></td></tr></table>
+
+<script type="text/x-code" data-lang="dart" data-label="product_card.dart">
+Container(
+  margin: const EdgeInsets.all(16),
+  padding: const EdgeInsets.all(16),
+  decoration: BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(20),
+    boxShadow: const [BoxShadow(blurRadius: 12, color: Colors.black12)],
+  ),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      ClipRRect(
+        borderRadius: BorderRadius.circular(14),
+        child: Image.asset('assets/latte.jpg', height: 140, width: double.infinity, fit: BoxFit.cover),
+      ),
+      const SizedBox(height: 12),
+      const Text('Iced Latte', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+      const Row(children: [Icon(Icons.star, color: Colors.amber, size: 18), Text(' 4.8 · 1.2k ការកម្មង់')]),
+      const SizedBox(height: 12),
+      FilledButton.icon(
+        onPressed: () => debugPrint('Order!'),
+        icon: const Icon(Icons.add),
+        label: const Text('បន្ថែម \$2.50'),
+      ),
+    ],
+  ),
+)
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar" style="background:#795548">Menu</div><div class="ph-body"><div class="ph-card"><div class="ph-img" style="background:linear-gradient(135deg,#a1887f,#4e342e)">🧋</div><b style="font-size:17px">Iced Latte</b><div style="font-size:12.5px;color:#666"><span style="color:#f59e0b">★</span> 4.8 · 1.2k ការកម្មង់</div><span class="ph-btn">＋ បន្ថែម $2.50</span></div></div></div><figcaption>📱 Product card</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>margin</code> = ចន្លោះក្រៅ · <code class='i'>padding</code> = ចន្លោះក្នុង (EdgeInsets ដូច CSS)។</li><li><code class='i'>BoxDecoration</code> — ពណ៌ ជ្រុងមូល ស្រមោល។</li><li><code class='i'>ClipRRect</code> — កាត់រូបជ្រុងមូល · <code class='i'>BoxFit.cover</code> ពេញប្រអប់ដោយមិនខូចសមាមាត្រ។</li><li><code class='i'>SizedBox(height: 12)</code> — ចន្លោះទទេ · <code class='i'>FilledButton.icon</code> — ប៊ូតុងមាន Icon។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>ធ្វើឲ្យ Card ចុចបានទាំងមូល (Ripple effect) ប្រើ Widget អ្វី?</p><details><summary>មើលចម្លើយ</summary><p>រុំដោយ <b>InkWell</b> (ក្នុង <code class='i'>Material</code>/<code class='i'>Card</code>) ឬ <code class='i'>GestureDetector</code> (គ្មាន Ripple)៖ <code class='i'>InkWell(onTap: () {{...}}, child: ...)</code></p></details></div>
+
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Layout៖ Row, Column, Stack, Expanded &amp; Padding</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 250" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="250" fill="#fff"/><rect x="20" y="30" width="200" height="190" rx="18" fill="#f1f5f9" stroke="#0f172a" stroke-width="3"/><text x="120" y="22" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">Column ↓</text><rect x="60" y="50" width="120" height="45" rx="8" fill="#2563eb"/><rect x="60" y="105" width="120" height="45" rx="8" fill="#16a34a"/><rect x="60" y="160" width="120" height="45" rx="8" fill="#ea580c"/><rect x="255" y="30" width="200" height="190" rx="18" fill="#f1f5f9" stroke="#0f172a" stroke-width="3"/><text x="355" y="22" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">Row →</text><rect x="270" y="100" width="50" height="50" rx="8" fill="#2563eb"/><rect x="330" y="100" width="50" height="50" rx="8" fill="#16a34a"/><rect x="390" y="100" width="50" height="50" rx="8" fill="#ea580c"/><rect x="490" y="30" width="200" height="190" rx="18" fill="#f1f5f9" stroke="#0f172a" stroke-width="3"/><text x="590" y="22" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">Stack ⧉</text><rect x="510" y="50" width="160" height="150" rx="10" fill="#93c5fd"/><circle cx="590" cy="125" r="45" fill="#16a34a"/><rect x="620" y="60" width="44" height="24" rx="12" fill="#e11d48"/><rect x="725" y="30" width="200" height="190" rx="18" fill="#f1f5f9" stroke="#0f172a" stroke-width="3"/><text x="825" y="22" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">Expanded</text><rect x="740" y="100" width="40" height="50" rx="8" fill="#2563eb"/><rect x="785" y="100" width="110" height="50" rx="8" fill="#16a34a"/><text x="840" y="130" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">flex: 1</text><text x="470" y="245" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">mainAxisAlignment = តាមទិសមេ · crossAxisAlignment = តាមទិសទទឹង (ដូច CSS Flexbox)</text></svg><figcaption>🖼️ Layout widgets សំខាន់ៗ</figcaption></figure>
+
+<script type="text/x-code" data-lang="dart" data-label="profile_row.dart">
+Row(
+  children: [
+    const CircleAvatar(radius: 28, child: Text('D')),
+    const SizedBox(width: 12),
+    Expanded(                                     // យកចន្លោះដែលនៅសល់
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          Text('Dara', style: TextStyle(fontWeight: FontWeight.bold)),
+          Text('Gold member · 1,250 points', style: TextStyle(color: Colors.grey)),
+        ],
+      ),
+    ),
+    Stack(                                         // ដាក់ត្រួតគ្នា
+      clipBehavior: Clip.none,
+      children: [
+        const Icon(Icons.notifications, size: 30),
+        Positioned(right: -2, top: -2,
+          child: Container(padding: const EdgeInsets.all(4),
+            decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+            child: const Text('3', style: TextStyle(color: Colors.white, fontSize: 10)))),
+      ],
+    ),
+  ],
+)
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar" style="background:#02569b">Profile</div><div class="ph-body"><div class="ph-row"><span class="ph-av">D</span><div style="flex:1"><b>Dara</b><div style="font-size:12px;color:#777">Gold member · 1,250 points</div></div><span style="position:relative;font-size:24px">🔔<i class="ph-badge">3</i></span></div></div></div><figcaption>📱 Row + Expanded + Stack</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>Row</code> តម្រៀបផ្តេក · <code class='i'>Column</code> តម្រៀបបញ្ឈរ។</li><li><code class='i'>Expanded</code> — យកចន្លោះសល់ទាំងអស់ (ដូច CSS <code class='i'>flex:1</code>) → ឈ្មោះមិនរុញ Icon ចេញ។</li><li><code class='i'>Stack</code> + <code class='i'>Positioned</code> — ដាក់ Badge លេខ 3 លើ Icon (ដូច position:absolute)។</li><li>សាក mainAxisAlignment/crossAxisAlignment ផ្ទាល់ក្នុង <b>Layout Lab</b> ខាងក្រោម។</li><li>Error ពេញនិយម “RenderFlex overflowed” — អក្សរវែងពេក → ប្រើ Expanded ឬ <code class='i'>overflow: TextOverflow.ellipsis</code>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>ប៊ូតុង ៣ ចង់ចែកទទឹងស្មើគ្នាក្នុង Row ធ្វើយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>រុំប៊ូតុងនីមួយៗក្នុង <b>Expanded</b> (ឬ <code class='i'>Flexible</code>)៖ <code class='i'>Row(children: [Expanded(child: b1), Expanded(child: b2), Expanded(child: b3)])</code></p></details></div>
+
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>StatefulWidget &amp; setState</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="230" fill="#fff"/><rect x="20" y="30" width="260" height="90" rx="14" fill="#64748b"/><text x="150.0" y="69.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">StatelessWidget</text><text x="150.0" y="91.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">មិនប្តូរ: Text, Icon, Logo</text><rect x="330" y="30" width="260" height="90" rx="14" fill="#02569b"/><text x="460.0" y="69.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">StatefulWidget + State</text><text x="460.0" y="91.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ប្តូរបាន: Counter, Form, Like ❤</text><rect x="640" y="10" width="280" height="50" rx="14" fill="#16a34a"/><text x="780.0" y="41.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">① User ចុច (onPressed)</text><rect x="640" y="70" width="280" height="50" rx="14" fill="#ea580c"/><text x="780.0" y="101.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">② setState(() => count++)</text><rect x="640" y="130" width="280" height="50" rx="14" fill="#7c3aed"/><text x="780.0" y="161.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">③ build() ម្តងទៀត → UI ថ្មី</text><line x1="780" y1="62" x2="780" y2="68" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="780" y1="122" x2="780" y2="128" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><path d="M920 155 Q 935 90 922 35" fill="none" stroke="#475569" stroke-width="2.5" stroke-dasharray="5 4" marker-end="url(#ar)"/><text x="470" y="200" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">State = ទិន្នន័យដែលប្តូរ · UI = build(State)</text></svg><figcaption>🖼️ Stateless ទល់នឹង Stateful — ពេល setState Flutter build ម្តងទៀត</figcaption></figure>
+
+<script type="text/x-code" data-lang="dart" data-label="qty_picker.dart">
+class QtyPicker extends StatefulWidget {
+  const QtyPicker({super.key});
+  @override
+  State<QtyPicker> createState() => _QtyPickerState();
+}
+
+class _QtyPickerState extends State<QtyPicker> {
+  int qty = 1;                                   // State
+  static const price = 2.5;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        IconButton.filledTonal(
+          onPressed: qty > 1 ? () => setState(() => qty--) : null,   // null = disable
+          icon: const Icon(Icons.remove)),
+        Text('$qty', style: Theme.of(context).textTheme.headlineMedium),
+        IconButton.filledTonal(
+          onPressed: () => setState(() => qty++),
+          icon: const Icon(Icons.add)),
+      ]),
+      Text('សរុប \$${(qty * price).toStringAsFixed(2)}'),
+    ]);
+  }
+}
+</script>
+
+<div class="ph-live"><script type="text/x-code" data-lang="html" data-label="QtyPicker (ក្លែងក្នុង Browser) · ▶ ចុចសាក" data-demo>
+<style>body{font-family:sans-serif;text-align:center}button{width:44px;height:44px;border-radius:50%;border:0;background:#d7ccc8;font-size:22px}b{font-size:30px;margin:0 18px;vertical-align:middle}button:disabled{opacity:.35}</style>
+<button id="m" disabled>−</button><b id="q">1</b><button id="p">+</button><p id="t">សរុប $2.50</p>
+<script>let qty=1;const r=()=>{q.textContent=qty;t.textContent="សរុប $"+(qty*2.5).toFixed(2);m.disabled=qty<=1};p.onclick=()=>{qty++;r()};m.onclick=()=>{qty--;r()};<\/script>
+</script>
+</div>
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>StatefulWidget មាន ២ Class៖ Widget (មិនប្តូរ) + <code class='i'>State</code> (ផ្ទុកទិន្នន័យប្តូរ)។</li><li><code class='i'>setState(() =&gt; qty++)</code> — ប្តូរ State ហើយប្រាប់ Flutter ឲ្យ <code class='i'>build()</code> ម្តងទៀត។</li><li><code class='i'>onPressed: null</code> — ប៊ូតុង Disable ដោយស្វ័យប្រវត្តិ (កុំឲ្យ qty &lt; 1)។</li><li><code class='i'>Theme.of(context).textTheme</code> — យកទំហំអក្សរពី Theme (ស៊ីគ្នាទាំង App)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>បន្ថែមប៊ូតុង ❤ Favorite ដែលប្តូរ Icon រវាង favorite និង favorite_border ពេលចុច។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="dart" data-label="answer.dart">
+bool fav = false;
+
+IconButton(
+  onPressed: () => setState(() => fav = !fav),
+  icon: Icon(fav ? Icons.favorite : Icons.favorite_border, color: Colors.red),
+)
+</script>
+</details></div>
+
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>ListView &amp; Card (បញ្ជីទំនិញ)</h2>
+
+<script type="text/x-code" data-lang="dart" data-label="menu_list.dart">
+final items = List.generate(20, (i) => MenuItem('Coffee #${i + 1}', 1.5 + i * .25));
+
+ListView.separated(
+  padding: const EdgeInsets.all(12),
+  itemCount: items.length,
+  separatorBuilder: (_, __) => const SizedBox(height: 8),
+  itemBuilder: (context, i) {                 // សង់តែ Item ដែលកំពុងឃើញ → លឿន
+    final it = items[i];
+    return Card(
+      child: ListTile(
+        leading: CircleAvatar(child: Text('${i + 1}')),
+        title: Text(it.name),
+        subtitle: Text('\$${it.price.toStringAsFixed(2)}'),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: () => ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('បានជ្រើស ${it.name}'))),
+      ),
+    );
+  },
+)
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar" style="background:#795548">Menu (20)</div><div class="ph-body"><div class="ph-tile"><span class="ph-av">1</span><div style="flex:1"><b>Coffee #1</b><div style="font-size:12px;color:#777">$1.50</div></div>›</div><div class="ph-tile"><span class="ph-av">2</span><div style="flex:1"><b>Coffee #2</b><div style="font-size:12px;color:#777">$1.75</div></div>›</div><div class="ph-tile"><span class="ph-av">3</span><div style="flex:1"><b>Coffee #3</b><div style="font-size:12px;color:#777">$2.00</div></div>›</div><div class="ph-tile"><span class="ph-av">4</span><div style="flex:1"><b>Coffee #4</b><div style="font-size:12px;color:#777">$2.25</div></div>›</div><div class="ph-tile"><span class="ph-av">5</span><div style="flex:1"><b>Coffee #5</b><div style="font-size:12px;color:#777">$2.50</div></div>›</div><div class="ph-tile"><span class="ph-av">6</span><div style="flex:1"><b>Coffee #6</b><div style="font-size:12px;color:#777">$2.75</div></div>›</div></div></div><figcaption>📱 ListView រំកិលបាន</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>List.generate(20, ...)</code> — បង្កើតទិន្នន័យសាកល្បង 20។</li><li><code class='i'>ListView.separated</code>/<code class='i'>.builder</code> — សង់តែ Item ដែលលេចលើអេក្រង់ ទោះមាន 10,000 ក៏លឿន។</li><li><code class='i'>ListTile</code> — leading (ឆ្វេង), title, subtitle, trailing (ស្តាំ)។</li><li><code class='i'>SnackBar</code> — សារខ្លីខាងក្រោម។ ក្រុមទំនិញជា Grid ប្រើ <code class='i'>GridView.builder</code>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>បង្ហាញ Menu ជា Grid ២ ជួរឈរ។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="dart" data-label="answer.dart">
+GridView.builder(
+  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    crossAxisCount: 2, mainAxisSpacing: 8, crossAxisSpacing: 8, childAspectRatio: .8),
+  itemCount: items.length,
+  itemBuilder: (c, i) => ProductCard(item: items[i]),
+)
+</script>
+</details></div>
+
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Form, TextField &amp; Validation</h2>
+
+<script type="text/x-code" data-lang="dart" data-label="order_form.dart">
+final _form = GlobalKey<FormState>();
+final _phone = TextEditingController();
+
+Form(
+  key: _form,
+  child: Column(children: [
+    TextFormField(
+      decoration: const InputDecoration(labelText: 'ឈ្មោះ', prefixIcon: Icon(Icons.person)),
+      validator: (v) => (v == null || v.trim().isEmpty) ? 'សូមបញ្ចូលឈ្មោះ' : null,
+    ),
+    TextFormField(
+      controller: _phone,
+      keyboardType: TextInputType.phone,
+      decoration: const InputDecoration(labelText: 'លេខទូរស័ព្ទ', prefixText: '+855 '),
+      validator: (v) => RegExp(r'^[1-9]\d{7,8}$').hasMatch(v ?? '') ? null : 'លេខមិនត្រឹមត្រូវ',
+    ),
+    const SizedBox(height: 16),
+    FilledButton(
+      onPressed: () {
+        if (_form.currentState!.validate()) {
+          debugPrint('Order for +855 ${_phone.text}');
+        }
+      },
+      child: const Text('បញ្ជាទិញ'),
+    ),
+  ]),
+)
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar" style="background:#02569b">Checkout</div><div class="ph-body"><div class="ph-field">👤 ឈ្មោះ<br><span style="color:#b91c1c;font-size:12px">សូមបញ្ចូលឈ្មោះ</span></div><div class="ph-field">📞 +855 <b>12345678</b></div><span class="ph-btn" style="width:100%;text-align:center">បញ្ជាទិញ</span></div></div><figcaption>📱 Validation បង្ហាញ Error ក្រោមប្រអប់</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>GlobalKey&lt;FormState&gt;</code> — គ្រប់គ្រង Form ទាំងមូល · <code class='i'>validate()</code> ហៅ validator គ្រប់ Field។</li><li><code class='i'>validator</code> ត្រឡប់ <code class='i'>null</code> = ត្រឹមត្រូវ · String = សារ Error។</li><li><code class='i'>TextEditingController</code> — អាន/កំណត់អក្សរ (<code class='i'>_phone.text</code>) · ត្រូវ <code class='i'>dispose()</code> ពេលលែងប្រើ។</li><li><code class='i'>RegExp(r'^[1-9]\d{7,8}$')</code> — លេខកម្ពុជា ៨–៩ ខ្ទង់ (មិនចាប់ផ្តើមដោយ 0 ក្រោយ +855)។</li><li><code class='i'>keyboardType: phone</code> — បង្ហាញក្តារលេខ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>សរសេរ validator Email សាមញ្ញ។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="dart" data-label="answer.dart">
+validator: (v) => v != null && RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(v)
+    ? null : 'Email មិនត្រឹមត្រូវ',
+</script>
+</details></div>
+
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>Navigation &amp; Routes (go_router)</h2>
+
+<figure class="fig"><svg viewBox="0 0 900 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="900" height="230" fill="#fff"/><rect x="60" y="40" width="190" height="150" rx="14" fill="#64748b" stroke="#0f172a" stroke-width="2"/><text x="155" y="80" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Home</text><rect x="84" y="58" width="190" height="150" rx="14" fill="#0175c2" stroke="#0f172a" stroke-width="2"/><text x="179" y="98" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Menu</text><rect x="108" y="76" width="190" height="150" rx="14" fill="#02569b" stroke="#0f172a" stroke-width="2"/><text x="203" y="116" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Detail ☕</text><rect x="420" y="40" width="200" height="56" rx="14" fill="#16a34a"/><text x="520.0" y="62.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Navigator.push</text><text x="520.0" y="84.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ដាក់ទំព័រថ្មីពីលើ</text><rect x="420" y="120" width="200" height="56" rx="14" fill="#dc2626"/><text x="520.0" y="142.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Navigator.pop</text><text x="520.0" y="164.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ត្រឡប់ក្រោយ</text><rect x="660" y="70" width="220" height="70" rx="14" fill="#7c3aed"/><text x="770.0" y="99.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">go_router</text><text x="770.0" y="121.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">context.go('/menu/7')</text><text x="155" y="222" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Navigation = Stack នៃទំព័រ</text></svg><figcaption>🖼️ Navigation stack</figcaption></figure>
+
+<script type="text/x-code" data-lang="dart" data-label="navigation.dart">
+// 1) សាមញ្ញ: Navigator
+Navigator.push(context, MaterialPageRoute(builder: (_) => DetailPage(item: it)));
+Navigator.pop(context, 'added');            // ត្រឡប់ + ផ្ញើលទ្ធផល
+
+// 2) App ធំ: go_router (pubspec: go_router: ^14.0.0)
+final router = GoRouter(routes: [
+  GoRoute(path: '/', builder: (_, __) => const HomePage(), routes: [
+    GoRoute(path: 'menu/:id', builder: (_, s) => DetailPage(id: s.pathParameters['id']!)),
+    GoRoute(path: 'cart', builder: (_, __) => const CartPage()),
+  ]),
+]);
+
+MaterialApp.router(routerConfig: router);
+context.go('/menu/7');                        // ទៅ Detail ទំនិញ 7
+context.push('/cart');                        // ដាក់ពីលើ (មានប៊ូតុង Back)
+
+// 3) Bottom navigation (Material 3)
+NavigationBar(
+  selectedIndex: tab,
+  onDestinationSelected: (i) => setState(() => tab = i),
+  destinations: const [
+    NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
+    NavigationDestination(icon: Icon(Icons.receipt_long), label: 'Orders'),
+    NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
+  ],
+)
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar" style="background:#02569b">Kafe</div><div class="ph-body"><div class="ph-center" style="color:#777">Home</div><div class="ph-nav"><span class="on">🏠<br>Home</span><span>🧾<br>Orders</span><span>👤<br>Profile</span></div></div></div><figcaption>📱 NavigationBar ខាងក្រោម</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>Navigator.push</code> ដាក់ទំព័រថ្មីលើ Stack · <code class='i'>pop</code> ដកចេញ (ត្រឡប់ក្រោយ)។</li><li><b>go_router</b> — Route ជា URL (<code class='i'>/menu/:id</code>) ល្អសម្រាប់ Web, Deep link, Notification។</li><li><code class='i'>s.pathParameters['id']</code> — យក id ពី URL។</li><li><code class='i'>NavigationBar</code> — Tab ខាងក្រោម ៣–៥ ទំព័រ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>ពេលចុចទំនិញ ទៅ Detail ហើយពេលត្រឡប់មកវិញ ចង់ដឹងថាអ្នកប្រើបាន “បន្ថែម” ឬអត់។ ធ្វើយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="dart" data-label="answer.dart">
+final result = await Navigator.push(context, MaterialPageRoute(builder: (_) => DetailPage(item: it)));
+if (result == 'added') showSnackBar('✅ បានបន្ថែម');
+</script>
+</details></div>
+
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>Theme, Dark Mode, Assets &amp; Font ខ្មែរ</h2>
+
+<script type="text/x-code" data-lang="yaml" data-label="pubspec.yaml">
+# pubspec.yaml
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+  fonts:
+    - family: KantumruyPro
+      fonts:
+        - asset: assets/fonts/KantumruyPro-Regular.ttf
+        - asset: assets/fonts/KantumruyPro-Bold.ttf
+          weight: 700
+</script>
+
+<script type="text/x-code" data-lang="dart" data-label="theme.dart">
+MaterialApp(
+  theme: ThemeData(
+    useMaterial3: true,
+    colorSchemeSeed: const Color(0xFF795548),
+    fontFamily: 'KantumruyPro',
+  ),
+  darkTheme: ThemeData(
+    useMaterial3: true,
+    brightness: Brightness.dark,
+    colorSchemeSeed: const Color(0xFF795548),
+    fontFamily: 'KantumruyPro',
+  ),
+  themeMode: ThemeMode.system,                // តាមការកំណត់ទូរស័ព្ទ
+);
+
+// ប្រើពណ៌ពី Theme (កុំ hard-code)
+final cs = Theme.of(context).colorScheme;
+Container(color: cs.primaryContainer, child: Text('Hi', style: TextStyle(color: cs.onPrimaryContainer)));
+</script>
+
+<div class="ph-pair"><figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar" style="background:#795548">Kafe</div><div class="ph-body"><div class="ph-card"><b>ស្វាគមន៍</b><div style="font-size:12.5px;color:#666">Light mode</div><span class="ph-btn">បញ្ជាទិញ</span></div></div></div><figcaption>📱 Light</figcaption></figure>
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar" style="background:#3e2723">Kafe</div><div class="ph-body"><div class="ph-card dark"><b>ស្វាគមន៍</b><div style="font-size:12.5px;color:#bbb">Dark mode</div><span class="ph-btn" style="background:#d7ccc8;color:#3e2723">បញ្ជាទិញ</span></div></div></div><figcaption>📱 Dark</figcaption></figure>
+</div>
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>pubspec.yaml</code> — ប្រកាស Assets និង Font (Indentation សំខាន់ណាស់ក្នុង YAML)។</li><li><code class='i'>darkTheme</code> + <code class='i'>ThemeMode.system</code> — ប្តូរ Dark mode តាមទូរស័ព្ទដោយស្វ័យប្រវត្តិ។</li><li><code class='i'>Theme.of(context).colorScheme</code> — ប្រើពណ៌ពី Theme ដូច្នេះ Light/Dark ត្រឹមត្រូវ។</li><li>Font ខ្មែរ៖ Kantumruy Pro / Battambang / Noto Sans Khmer (ឥតគិតថ្លៃ Google Fonts)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>ហេតុអ្វីមិនគួរសរសេរ <code class='i'>color: Colors.white</code> ផ្ទាល់លើអក្សរ?</p><details><summary>មើលចម្លើយ</summary><p>ពេល Dark mode ផ្ទៃខាងក្រោយក៏ស → អក្សរបាត់។ ប្រើ <code class='i'>colorScheme.onSurface</code> ជំនួស។</p></details></div>
+
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>State Management៖ Provider (Cart)</h2>
+
+<p>ពេល State ត្រូវប្រើច្រើនទំព័រ (Cart, Login user) <code class="i">setState</code> មិនគ្រប់គ្រាន់។ <b>Provider</b> (ឬ Riverpod/Bloc) ចែករំលែក State ពេញ App។</p>
+<script type="text/x-code" data-lang="dart" data-label="cart_model.dart">
+// pubspec: provider: ^6.1.0
+class CartModel extends ChangeNotifier {
+  final Map<MenuItem, int> _items = {};
+  int get count => _items.values.fold(0, (a, b) => a + b);
+  double get total => _items.entries.fold(0, (s, e) => s + e.key.price * e.value);
+
+  void add(MenuItem it) {
+    _items[it] = (_items[it] ?? 0) + 1;
+    notifyListeners();                         // ប្រាប់ UI ឲ្យ build ឡើងវិញ
+  }
+  void clear() { _items.clear(); notifyListeners(); }
+}
+
+void main() => runApp(
+  ChangeNotifierProvider(create: (_) => CartModel(), child: const KafeApp()),
+);
+
+// ទំព័រណាក៏បាន:
+context.read<CartModel>().add(item);                 // ហៅ Function (មិន rebuild)
+final count = context.watch<CartModel>().count;      // ស្តាប់ការប្តូរ (rebuild)
+Badge(label: Text('$count'), child: const Icon(Icons.shopping_cart));
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>ChangeNotifier</code> — Class ផ្ទុក State · <code class='i'>notifyListeners()</code> ជូនដំណឹង UI។</li><li><code class='i'>ChangeNotifierProvider</code> នៅកំពូល Widget tree → គ្រប់ទំព័រខាងក្រោមប្រើបាន។</li><li><code class='i'>context.read</code> — ហៅ Function ពេលចុចប៊ូតុង · <code class='i'>context.watch</code> — ក្នុង build ដើម្បីអាន និង rebuild។</li><li>Getter <code class='i'>count</code>/<code class='i'>total</code> គណនាពី Map ដោយ fold។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>Badge នៅ AppBar មិនប្តូរលេខពេលបន្ថែមទំនិញ។ មូលហេតុអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>ប្រហែលប្រើ <code class='i'>context.read</code> ក្នុង build (មិនស្តាប់ការប្តូរ) ឬភ្លេច <code class='i'>notifyListeners()</code>។ ប្រើ <code class='i'>context.watch</code>។</p></details></div>
+
+</section>
+<section id="l13">
+<h2><span class="badge">មេរៀន ១៣</span>HTTP &amp; JSON (REST API)</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 220" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="220" fill="#fff"/><rect x="20" y="70" width="170" height="80" rx="14" fill="#02569b"/><text x="105.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">📱 Flutter UI</text><text x="105.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">FutureBuilder</text><rect x="250" y="70" width="170" height="80" rx="14" fill="#0891b2"/><text x="335.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Repository</text><text x="335.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">http.get()</text><rect x="480" y="70" width="170" height="80" rx="14" fill="#ea580c"/><text x="565.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🌐 REST API</text><text x="565.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">GET /menu</text><rect x="710" y="70" width="200" height="80" rx="14" fill="#16a34a"/><text x="810.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🗄️ Server + DB</text><text x="810.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Node.js · PostgreSQL</text><line x1="192" y1="100" x2="246" y2="100" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="219.0" y="92.0" text-anchor="middle" font-size="13" fill="#334155">request</text><line x1="422" y1="100" x2="476" y2="100" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="652" y1="100" x2="706" y2="100" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="706" y1="130" x2="652" y2="130" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="476" y1="130" x2="422" y2="130" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="449.0" y="122.0" text-anchor="middle" font-size="13" fill="#334155">JSON</text><line x1="246" y1="130" x2="192" y2="130" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="219.0" y="122.0" text-anchor="middle" font-size="13" fill="#334155">List<Item></text><text x="470" y="200" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">JSON → jsonDecode → Model (fromJson) → Widget</text></svg><figcaption>🖼️ លំហូរទិន្នន័យពី API ទៅ UI</figcaption></figure>
+
+<script type="text/x-code" data-lang="dart" data-label="api.dart">
+// pubspec: http: ^1.2.0
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class Product {
+  final int id; final String name; final double price;
+  Product({required this.id, required this.name, required this.price});
+  factory Product.fromJson(Map<String, dynamic> j) =>
+      Product(id: j['id'], name: j['name'], price: (j['price'] as num).toDouble());
+}
+
+Future<List<Product>> fetchProducts() async {
+  final res = await http.get(Uri.parse('https://api.example.com/products'))
+      .timeout(const Duration(seconds: 10));
+  if (res.statusCode != 200) throw Exception('HTTP ${res.statusCode}');
+  final List data = jsonDecode(res.body);
+  return data.map((e) => Product.fromJson(e)).toList();
+}
+
+// UI: Loading / Error / Data
+FutureBuilder<List<Product>>(
+  future: _future,                                  // បង្កើតក្នុង initState
+  builder: (context, snap) {
+    if (snap.connectionState == ConnectionState.waiting) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (snap.hasError) return Center(child: Text('⚠️ ${snap.error}'));
+    final list = snap.data!;
+    return ListView(children: [for (final p in list) ListTile(title: Text(p.name), trailing: Text('\$${p.price}'))]);
+  },
+)
+</script>
+
+<script type="text/x-code" data-lang="json" data-label="Response JSON">
+[
+  {"id": 1, "name": "Americano", "price": 2},
+  {"id": 2, "name": "Iced Latte", "price": 2.5}
+]
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>http.get(Uri.parse(url))</code> — ផ្ញើ Request · <code class='i'>.timeout</code> កុំរង់ចាំរហូត។</li><li><code class='i'>statusCode != 200</code> → throw Error ដើម្បីបង្ហាញសារ។</li><li><code class='i'>jsonDecode</code> → List/Map · <code class='i'>factory fromJson</code> បំលែងជា Model មាន Type។</li><li><code class='i'>(j['price'] as num).toDouble()</code> — JSON អាចផ្ញើ 2 (int) ឬ 2.5 (double)។</li><li><code class='i'>FutureBuilder</code> — បង្ហាញ ៣ ស្ថានភាព៖ Loading ⏳, Error ⚠️, Data ✅។ បង្កើត Future ក្នុង <code class='i'>initState</code> កុំក្នុង build (ការពារហៅ API ច្រើនដង)។</li><li>Server API អាចសរសេរដោយ <b>Node.js</b> + <b>PostgreSQL</b> (មានវគ្គក្នុង xCenBar)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៣</h4><p>Android បង្ហាញ Error “SocketException” ពេលហៅ <code class='i'>http://</code> (មិនមែន https)។ មូលហេតុ?</p><details><summary>មើលចម្លើយ</summary><p>Android/iOS បិទ Cleartext HTTP តាមលំនាំដើម → ប្រើ <b>HTTPS</b> (ល្អបំផុត) ឬកំណត់ network security config សម្រាប់ Dev ប៉ុណ្ណោះ។ ពិនិត្យ Permission INTERNET ក្នុង AndroidManifest ផង។</p></details></div>
+
+</section>
+<section id="l14">
+<h2><span class="badge">មេរៀន ១៤</span>Local Storage៖ shared_preferences &amp; SQLite</h2>
+
+<table><tr><th>Package</th><th>ប្រើសម្រាប់</th><th>ឧទាហរណ៍</th></tr><tr><td>shared_preferences</td><td>Key-value តូចៗ</td><td>Dark mode, ភាសា, Onboarding</td></tr><tr><td>sqflite / drift</td><td>SQLite Database</td><td>ប្រវត្តិការកម្មង់ Offline</td></tr><tr><td>hive / isar</td><td>NoSQL លឿន</td><td>Cache</td></tr><tr><td>flutter_secure_storage</td><td>ទិន្នន័យសម្ងាត់ (Keychain/Keystore)</td><td>Token, PIN</td></tr></table>
+
+<script type="text/x-code" data-lang="dart" data-label="storage.dart">
+// pubspec: shared_preferences: ^2.3.0 · sqflite: ^2.3.0
+final prefs = await SharedPreferences.getInstance();
+await prefs.setBool('darkMode', true);
+final dark = prefs.getBool('darkMode') ?? false;
+
+// SQLite
+final db = await openDatabase('kafe.db', version: 1, onCreate: (db, v) =>
+    db.execute('CREATE TABLE orders(id INTEGER PRIMARY KEY, item TEXT, qty INTEGER, created TEXT)'));
+
+await db.insert('orders', {'item': 'Latte', 'qty': 2, 'created': DateTime.now().toIso8601String()});
+final rows = await db.query('orders', orderBy: 'id DESC', limit: 20);
+for (final r in rows) debugPrint('${r['item']} x${r['qty']}');
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>SharedPreferences</code> — រក្សាការកំណត់តូចៗ នៅជាប់ក្រោយបិទ App។</li><li><code class='i'>openDatabase(..., onCreate)</code> — បង្កើត Table ពេលដំបូង (SQL ដូចវគ្គ SQL)។</li><li><code class='i'>insert</code>/<code class='i'>query</code> — ប្រើ Map ជំនួស SQL វែង ហើយការពារ SQL injection។</li><li>កុំរក្សា Password/Token ក្នុង shared_preferences (មិនអ៊ិនគ្រីប) → ប្រើ <code class='i'>flutter_secure_storage</code>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៤</h4><p>App ចង់បង្ហាញទំព័រណែនាំ (Onboarding) តែលើកដំបូងប៉ុណ្ណោះ។ ធ្វើយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="dart" data-label="answer.dart">
+final seen = prefs.getBool('seenIntro') ?? false;
+if (!seen) {
+  await prefs.setBool('seenIntro', true);
+  context.go('/intro');
+}
+</script>
+</details></div>
+
+</section>
+<section id="l15">
+<h2><span class="badge">មេរៀន ១៥</span>Firebase៖ Login, Firestore &amp; Notification</h2>
+
+<table><tr><th>សេវា Firebase</th><th>ធ្វើអ្វី</th></tr><tr><td>Authentication</td><td>Login Email, Google, Phone (OTP)</td></tr><tr><td>Cloud Firestore</td><td>Database Realtime (NoSQL)</td></tr><tr><td>Cloud Storage</td><td>Upload រូបភាព</td></tr><tr><td>Cloud Messaging (FCM)</td><td>Push Notification</td></tr><tr><td>Crashlytics / Analytics</td><td>តាមដាន Crash និងអ្នកប្រើ</td></tr></table>
+
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+dart pub global activate flutterfire_cli
+flutterfire configure            # ភ្ជាប់ Project Firebase
+flutter pub add firebase_core firebase_auth cloud_firestore
+</script>
+
+<script type="text/x-code" data-lang="dart" data-label="firebase.dart">
+await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+// Login
+final cred = await FirebaseAuth.instance
+    .signInWithEmailAndPassword(email: email, password: password);
+
+// បញ្ជូន Order ទៅ Firestore
+await FirebaseFirestore.instance.collection('orders').add({
+  'uid': cred.user!.uid,
+  'items': [{'name': 'Latte', 'qty': 2}],
+  'status': 'pending',
+  'createdAt': FieldValue.serverTimestamp(),
+});
+
+// Realtime: ស្តាប់ស្ថានភាព Order
+StreamBuilder<QuerySnapshot>(
+  stream: FirebaseFirestore.instance.collection('orders')
+      .where('uid', isEqualTo: uid).orderBy('createdAt', descending: true).snapshots(),
+  builder: (c, s) => !s.hasData ? const CircularProgressIndicator()
+      : ListView(children: s.data!.docs.map((d) => ListTile(title: Text(d['status']))).toList()),
+)
+</script>
+
+<script type="text/x-code" data-lang="txt" data-label="firestore.rules — សុវត្ថិភាព">
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+    match /orders/{id} {
+      allow read: if request.auth.uid == resource.data.uid;
+      allow create: if request.auth.uid == request.resource.data.uid;
+    }
+  }
+}
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>flutterfire configure</code> — បង្កើត File កំណត់ Firebase សម្រាប់ Android/iOS/Web។</li><li><code class='i'>signInWithEmailAndPassword</code> — Login · <code class='i'>user.uid</code> = លេខសម្គាល់អ្នកប្រើ។</li><li><code class='i'>collection('orders').add({...})</code> — បញ្ចូល Document · <code class='i'>serverTimestamp</code> ម៉ោងពី Server។</li><li><code class='i'>.snapshots()</code> + <code class='i'>StreamBuilder</code> — UI ប្តូរភ្លាមពេល Barista ប្តូរ Status (Realtime)។</li><li><b>Security Rules</b> — សំខាន់បំផុត៖ អ្នកប្រើម្នាក់ៗអានបានតែ Order ខ្លួនឯង។ កុំទុក Rules “allow read, write: if true”!</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៥</h4><p>ហេតុអ្វីមិនគួររក្សាតម្លៃទំនិញ (price) ដែល App ផ្ញើមកផ្ទាល់ ជាតម្លៃត្រូវបង់?</p><details><summary>មើលចម្លើយ</summary><p>អ្នកប្រើអាចកែ App/Request ផ្ញើតម្លៃ $0។ ត្រូវគណនាតម្លៃនៅ <b>Server</b> (Cloud Functions/Backend) ពីតារាងតម្លៃ — កុំទុកចិត្ត Client។</p></details></div>
+
+</section>
+<section id="l16">
+<h2><span class="badge">មេរៀន ១៦</span>មុខងារទូរស័ព្ទ៖ Camera, Location &amp; Permission</h2>
+
+<table><tr><th>Package</th><th>មុខងារ</th><th>Permission</th></tr><tr><td>image_picker</td><td>ថតរូប/ជ្រើសពី Gallery</td><td>Camera, Photos</td></tr><tr><td>geolocator</td><td>ទីតាំង GPS</td><td>Location</td></tr><tr><td>url_launcher</td><td>ហៅទូរស័ព្ទ, បើក Map/Telegram</td><td>—</td></tr><tr><td>mobile_scanner</td><td>ស្កេន QR (ឧ. KHQR)</td><td>Camera</td></tr><tr><td>local_auth</td><td>Fingerprint / Face ID</td><td>Biometric</td></tr></table>
+
+<script type="text/x-code" data-lang="dart" data-label="device.dart">
+// ថតរូប Profile
+final picker = ImagePicker();
+final XFile? photo = await picker.pickImage(source: ImageSource.camera, maxWidth: 1080, imageQuality: 85);
+if (photo != null) setState(() => avatar = File(photo.path));
+
+// ទីតាំង (ស្នើ Permission មុន)
+LocationPermission p = await Geolocator.checkPermission();
+if (p == LocationPermission.denied) p = await Geolocator.requestPermission();
+if (p == LocationPermission.deniedForever) {
+  await Geolocator.openAppSettings();          // ប្រាប់អ្នកប្រើបើកក្នុង Settings
+  return;
+}
+final pos = await Geolocator.getCurrentPosition();
+final km = Geolocator.distanceBetween(pos.latitude, pos.longitude, 11.5564, 104.9282) / 1000;
+debugPrint('ចម្ងាយទៅហាង ${km.toStringAsFixed(1)} km');
+
+// ហៅហាង
+launchUrl(Uri.parse('tel:+85512345678'));
+</script>
+
+<script type="text/x-code" data-lang="txt" data-label="Permission config">
+<!-- android/app/src/main/AndroidManifest.xml -->
+<uses-permission android:name="android.permission.CAMERA"/>
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
+<!-- ios/Runner/Info.plist -->
+<key>NSCameraUsageDescription</key><string>ថតរូប Profile</string>
+<key>NSLocationWhenInUseUsageDescription</key><string>គណនាចម្ងាយទៅហាង</string>
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>pickImage(... maxWidth: 1080, imageQuality: 85)</code> — បង្រួមរូបមុន Upload (សន្សំ Data)។</li><li>Permission ៣ ស្ថានភាព៖ granted / denied (សួរម្តងទៀតបាន) / deniedForever (ត្រូវទៅ Settings)។</li><li><code class='i'>distanceBetween</code> — ចម្ងាយ (ម៉ែត្រ) ទៅទីតាំងហាង (ភ្នំពេញ 11.5564, 104.9282)។</li><li>iOS ត្រូវសរសេរហេតុផលក្នុង Info.plist — បើមិនដូច្នោះ App Store បដិសេធ ឬ App គាំង។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៦</h4><p>គួរស្នើ Permission ទីតាំងនៅពេលណា?</p><details><summary>មើលចម្លើយ</summary><p>នៅពេលអ្នកប្រើចុចមុខងារដែលត្រូវការ (ឧ. “រកហាងជិតខ្ញុំ”) — មិនមែនពេលបើក App ភ្លាម — ហើយពន្យល់ហេតុផលមុន។ អ្នកប្រើយល់ព្រមច្រើនជាង។</p></details></div>
+
+</section>
+<section id="l17">
+<h2><span class="badge">មេរៀន ១៧</span>Testing, Debugging &amp; Performance</h2>
+
+<script type="text/x-code" data-lang="dart" data-label="cart_test.dart">
+// test/cart_test.dart — Unit test
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  test('cart total', () {
+    final cart = CartModel()
+      ..add(const MenuItem('Latte', 2.5))
+      ..add(const MenuItem('Latte', 2.5));
+    expect(cart.count, 2);
+    expect(cart.total, 5.0);
+  });
+
+  testWidgets('QtyPicker + button', (tester) async {      // Widget test
+    await tester.pumpWidget(const MaterialApp(home: Scaffold(body: QtyPicker())));
+    expect(find.text('1'), findsOneWidget);
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pump();
+    expect(find.text('2'), findsOneWidget);
+  });
+}
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>ឧទាហរណ៍លទ្ធផល</span></div><pre>$ flutter test
+00:03 +2: All tests passed!</pre></div>
+
+<table><tr><th>ឧបករណ៍</th><th>ប្រើ</th></tr><tr><td>Flutter DevTools</td><td>Widget inspector, Performance, Memory, Network</td></tr><tr><td>debugPrint / log</td><td>បោះពុម្ពពេល Debug</td></tr><tr><td>Breakpoint (VS Code)</td><td>ឈប់ Code មើល Variable</td></tr><tr><td>const widgets</td><td>កាត់បន្ថយការ Rebuild</td></tr><tr><td>Profile mode</td><td><code class='i'>flutter run --profile</code> វាស់ FPS (គោលដៅ 60/120)</td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>test()</code> — សាក Logic (Model) · <code class='i'>expect(actual, expected)</code>។</li><li><code class='i'>..add()</code> — Cascade៖ ហៅច្រើន Method លើ Object ដដែល។</li><li><code class='i'>testWidgets</code> + <code class='i'>pumpWidget</code> — សង់ UI ក្នុង Test · <code class='i'>tap</code> ចុច · <code class='i'>pump</code> build ឡើងវិញ · <code class='i'>find</code> រក Widget។</li><li>រៀនបន្ថែមក្នុងវគ្គ <b>Software Testing</b> (xCenBar)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៧</h4><p>Scroll List រំអិល (Jank)។ ពិនិត្យអ្វីមុន?</p><details><summary>មើលចម្លើយ</summary><p>① ប្រើ <code class='i'>ListView.builder</code> ② រូបធំពេក → <code class='i'>cacheWidth</code>/បង្រួម ③ ការងារធ្ងន់ក្នុង build → ផ្លាស់ទៅ initState/Isolate ④ ប្រើ const ⑤ វាស់ក្នុង Profile mode + DevTools។</p></details></div>
+
+</section>
+<section id="l18">
+<h2><span class="badge">មេរៀន ១៨</span>Build &amp; Publish៖ Play Store &amp; App Store</h2>
+
+<figure class="fig"><svg viewBox="0 0 980 160" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="980" height="160" fill="#fff"/><path d="M12 30h118l18 40-18 40h-118l18-40z" fill="#02569b"/><text x="80" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Code</text><text x="80" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">flutter run</text><path d="M151 30h118l18 40-18 40h-118l18-40z" fill="#0175c2"/><text x="219" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Test</text><text x="219" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">flutter test</text><path d="M290 30h118l18 40-18 40h-118l18-40z" fill="#0891b2"/><text x="358" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Icon + Name</text><text x="358" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">launcher icons</text><path d="M429 30h118l18 40-18 40h-118l18-40z" fill="#7c3aed"/><text x="497" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Sign</text><text x="497" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">keystore</text><path d="M568 30h118l18 40-18 40h-118l18-40z" fill="#ea580c"/><text x="636" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Build</text><text x="636" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">appbundle / ipa</text><path d="M707 30h118l18 40-18 40h-118l18-40z" fill="#16a34a"/><text x="775" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Store</text><text x="775" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">Play · App Store</text><path d="M846 30h118l18 40-18 40h-118l18-40z" fill="#ca8a04"/><text x="914" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Update</text><text x="914" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">version +1</text><text x="490" y="145" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">ដំណើរការ Publish App</text></svg><figcaption>🖼️ ពី Code ទៅ Store</figcaption></figure>
+
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+# ឈ្មោះ + Version (pubspec.yaml)  version: 1.0.0+1   → name 1.0.0, build 1
+
+dart run flutter_launcher_icons            # បង្កើត App icon គ្រប់ទំហំ
+keytool -genkey -v -keystore ~/kafe-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias kafe
+
+flutter build apk --release                # APK សាកផ្ញើមិត្ត
+flutter build appbundle --release          # AAB សម្រាប់ Google Play
+flutter build ipa --release                # iOS (ត្រូវ Mac + Apple Developer)
+</script>
+
+<table><tr><th>Store</th><th>ថ្លៃ</th><th>ត្រូវការ</th></tr><tr><td>Google Play</td><td>$25 (ម្តង)</td><td>AAB, Icon 512px, Screenshot, Privacy policy, Data safety form, សាកល្បង Closed testing</td></tr><tr><td>Apple App Store</td><td>$99/ឆ្នាំ</td><td>Mac + Xcode, Developer account, Review ~1–3 ថ្ងៃ</td></tr></table>
+
+<div class="warn">⚠️ រក្សាទុក <b>Keystore (.jks)</b> និង Password ឲ្យល្អ — បាត់ = មិនអាច Update App លើ Play Store បាន! កុំ Commit វាចូល GitHub។</div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>version: 1.0.0+1</code> — Version name + Build number (ត្រូវបង្កើនរាល់ Upload)។</li><li><code class='i'>keytool</code> — បង្កើតសោចុះហត្ថលេខា App (Sign)។</li><li><b>AAB</b> (Android App Bundle) — Google Play បង្កើត APK តូចៗសមនឹងទូរស័ព្ទនីមួយៗ។</li><li>Privacy policy ចាំបាច់ បើ App ប្រមូលទិន្នន័យ (Login, Location…)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៨</h4><p>Upload Version ថ្មីទៅ Play Store តែបដិសេធ “Version code 1 has already been used”។ កែយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>បង្កើន Build number ក្នុង pubspec៖ <code class='i'>version: 1.0.1+2</code> ហើយ Build ម្តងទៀត។</p></details></div>
+
+</section>
+<section id="cheat">
+<h2>📋 Cheat Sheet</h2>
+
+<table><tr><th>Command / Widget</th><th>ន័យ</th></tr><tr><td>flutter create · run · build · test · doctor · pub add</td><td>Commands សំខាន់</td></tr><tr><td>r / R / q</td><td>Hot reload / Hot restart / ចេញ</td></tr><tr><td>Scaffold · AppBar · NavigationBar · Drawer</td><td>គ្រោងទំព័រ</td></tr><tr><td>Row · Column · Stack · Expanded · Padding · SizedBox</td><td>Layout</td></tr><tr><td>Text · Image · Icon · FilledButton · Card · ListTile</td><td>Widget មូលដ្ឋាន</td></tr><tr><td>ListView.builder · GridView.builder</td><td>បញ្ជី</td></tr><tr><td>StatefulWidget · setState</td><td>State តូច</td></tr><tr><td>Provider (ChangeNotifier) · Riverpod · Bloc</td><td>State ធំ</td></tr><tr><td>Navigator.push/pop · go_router</td><td>Navigation</td></tr><tr><td>http · jsonDecode · FutureBuilder · StreamBuilder</td><td>Data</td></tr><tr><td>shared_preferences · sqflite · secure_storage</td><td>Storage</td></tr><tr><td>Firebase Auth · Firestore · FCM</td><td>Backend ឥតបាច់ Server</td></tr></table>
+
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងអាជីព៖ Kafe Order App</h2>
+
+<p>App បញ្ជាទិញកាហ្វេពេញលេញ ដោយប្រើមេរៀនទាំងអស់៖ <b>Menu (API) → Detail → Cart (Provider) → Checkout (Form) → Order history (Firestore realtime)</b> + Dark mode + Font ខ្មែរ។</p>
+<script type="text/x-code" data-lang="txt" data-label="Project structure">
+lib/
+├── main.dart                 ← MaterialApp.router + Theme + Provider
+├── models/menu_item.dart     ← fromJson / toJson
+├── data/menu_repository.dart ← http.get + cache (sqflite)
+├── state/cart_model.dart     ← ChangeNotifier
+├── pages/
+│   ├── home_page.dart        ← NavigationBar (Menu · Orders · Profile)
+│   ├── menu_page.dart        ← GridView + Search
+│   ├── detail_page.dart      ← Size, Sugar, Qty (StatefulWidget)
+│   ├── cart_page.dart        ← Badge + Total
+│   ├── checkout_page.dart    ← Form validation + KHQR/Cash
+│   └── orders_page.dart      ← StreamBuilder (Firestore)
+└── widgets/product_card.dart
+</script>
+
+<script type="text/x-code" data-lang="dart" data-label="main.dart + detail_page.dart">
+// lib/main.dart
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(ChangeNotifierProvider(create: (_) => CartModel(), child: const KafeApp()));
+}
+
+class KafeApp extends StatelessWidget {
+  const KafeApp({super.key});
+  @override
+  Widget build(BuildContext context) => MaterialApp.router(
+        title: 'Kafe Angkor',
+        theme: AppTheme.light, darkTheme: AppTheme.dark, themeMode: ThemeMode.system,
+        routerConfig: appRouter,
+      );
+}
+
+// lib/pages/detail_page.dart (ផ្នែកសំខាន់)
+FilledButton.icon(
+  icon: const Icon(Icons.add_shopping_cart),
+  label: Text('បន្ថែម \$${(item.price * qty).toStringAsFixed(2)}'),
+  onPressed: () {
+    for (var i = 0; i < qty; i++) { context.read<CartModel>().add(item); }
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('✅ បានបន្ថែមក្នុងកន្ត្រក')));
+    context.pop();
+  },
+)
+</script>
+
+<table><tr><th>ជំហាន</th><th>មេរៀន</th></tr><tr><td>Model + JSON + API</td><td>២ · ១៣</td></tr><tr><td>UI: Card, Grid, Layout</td><td>៥ · ៦ · ៨</td></tr><tr><td>Qty picker (State)</td><td>៧</td></tr><tr><td>Cart (Provider)</td><td>១២</td></tr><tr><td>Checkout form</td><td>៩</td></tr><tr><td>Navigation + Tabs</td><td>១០</td></tr><tr><td>Theme + Font ខ្មែរ</td><td>១១</td></tr><tr><td>Orders realtime + Login</td><td>១៥</td></tr><tr><td>Test + Publish</td><td>១៧ · ១៨</td></tr></table>
+
+</section>
+<section id="pro-app">
+<h2>💻 Flutter Playground Pro (App)</h2>
+
+<p><b>UI Builder</b>៖ ជ្រើស Widget (Text, Image, Card, ListTile, Button, TextField, Switch, Chips) ប្តូរពណ៌ Seed, Dark mode, NavigationBar, FAB → មើលលើទូរស័ព្ទ ហើយទទួលបាន <b>Code Flutter ពេញលេញ</b> ចម្លងទៅ DartPad រត់បាន។ <b>Layout Lab</b>៖ សាក Row/Column + mainAxisAlignment/crossAxisAlignment + Expanded មើលលទ្ធផលភ្លាម។</p>
+
+<div class="fb" id="fb">
+  <div class="itk-tabs fb-tabs"><button class="on" data-t="build">🧱 UI Builder</button><button data-t="lay">📐 Layout Lab</button></div>
+  <div class="fb-p on" data-t="build">
+    <div class="fb-grid">
+      <div class="fb-ctl">
+        <label>AppBar title <input id="b_title" value="Kafe Angkor"></label>
+        <label>Seed color <input type="color" id="b_seed" value="#795548"></label>
+        <label><input type="checkbox" id="b_dark"> Dark mode</label>
+        <label><input type="checkbox" id="b_nav" checked> NavigationBar</label>
+        <label><input type="checkbox" id="b_fab" checked> FloatingActionButton</label>
+        <div class="fb-add"><b>បន្ថែម Widget៖</b>
+          <button class="btn" data-w="text">Text</button><button class="btn" data-w="image">Image</button><button class="btn" data-w="card">Card</button>
+          <button class="btn" data-w="tile">ListTile</button><button class="btn" data-w="button">Button</button><button class="btn" data-w="field">TextField</button>
+          <button class="btn" data-w="switch">Switch</button><button class="btn" data-w="chips">Chips</button><button class="btn" data-w="space">SizedBox</button></div>
+        <div id="b_list" class="fb-list"></div>
+      </div>
+      <div class="fb-phone"><div class="ph big" id="b_ph"></div></div>
+    </div>
+    <pre class="vl-code" id="b_code"></pre>
+  </div>
+  <div class="fb-p" data-t="lay">
+    <div class="fb-row">
+      <label>Widget <select id="l_dir"><option value="col">Column</option><option value="row">Row</option></select></label>
+      <label>mainAxisAlignment <select id="l_main"><option>start</option><option>center</option><option>end</option><option>spaceBetween</option><option>spaceAround</option><option>spaceEvenly</option></select></label>
+      <label>crossAxisAlignment <select id="l_cross"><option>center</option><option>start</option><option>end</option><option>stretch</option></select></label>
+      <label>Children <input type="range" id="l_n" min="1" max="5" value="3"></label>
+      <label><input type="checkbox" id="l_exp"> Expanded លើទី ២</label>
+    </div>
+    <div class="fb-lay"><div id="l_box"></div></div>
+    <pre class="vl-code" id="l_code"></pre>
+  </div>
+</div>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  document.querySelectorAll(".fb-tabs button").forEach(b => b.onclick = () => document.querySelectorAll(".fb-tabs button,.fb-p").forEach(x => x.classList.toggle("on", x.dataset.t === b.dataset.t)));
+  let W = [{ t: "text", v: "សួស្តី 👋 ថ្ងៃនេះផឹកអ្វី?" }, { t: "image" }, { t: "tile", v: "Iced Latte" }, { t: "button", v: "បញ្ជាទិញ" }];
+  const DEF = { text: "Text ថ្មី", tile: "Americano", button: "ចុចខ្ញុំ", field: "ឈ្មោះ", switch: "ការជូនដំណឹង", card: "Card title" };
+  const esc = s => String(s).replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[m]);
+  const dq = s => String(s).replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/\$/g, "\\$");
+  function mix(hex, t, to) { const n = parseInt(hex.slice(1), 16), a = [n >> 16, n >> 8 & 255, n & 255], b = to === "w" ? [255, 255, 255] : [20, 20, 22]; return "rgb(" + a.map((v, i) => Math.round(v + (b[i] - v) * t)).join(",") + ")"; }
+  function render() {
+    const seed = $("b_seed").value, dark = $("b_dark").checked, title = $("b_title").value;
+    const bg = dark ? "#151517" : mix(seed, .94, "w"), fg = dark ? "#eee" : "#1c1b1f", prim = dark ? mix(seed, .45, "w") : seed, card = dark ? "#232326" : "#fff", cont = dark ? mix(seed, .65, "d") : mix(seed, .8, "w");
+    let h = `<div class="ph-notch"></div><div class="ph-bar" style="background:${dark ? "#232326" : cont};color:${fg}">${esc(title)}</div><div class="ph-body" style="background:${bg};color:${fg}">`;
+    W.forEach(w => {
+      if (w.t === "text") h += `<div style="font-size:17px;font-weight:600;margin:4px 2px 8px">${esc(w.v)}</div>`;
+      if (w.t === "image") h += `<div class="ph-img" style="background:linear-gradient(135deg,${mix(seed, .3, "w")},${seed})">☕</div>`;
+      if (w.t === "card") h += `<div class="ph-card" style="background:${card}"><b>${esc(w.v)}</b><div style="font-size:12px;opacity:.7">Card subtitle</div></div>`;
+      if (w.t === "tile") h += `<div class="ph-tile" style="background:${card}"><span class="ph-av" style="background:${cont};color:${dark ? "#fff" : seed}">☕</span><div style="flex:1"><b>${esc(w.v)}</b><div style="font-size:12px;opacity:.65">$2.50</div></div>›</div>`;
+      if (w.t === "button") h += `<span class="ph-btn" style="background:${prim};color:${dark ? "#111" : "#fff"};display:block;text-align:center;margin:8px 0">${esc(w.v)}</span>`;
+      if (w.t === "field") h += `<div class="ph-field" style="background:${card};border-color:${prim}"><small style="color:${prim}">${esc(w.v)}</small></div>`;
+      if (w.t === "switch") h += `<div class="ph-tile" style="background:${card}"><div style="flex:1">${esc(w.v)}</div><span class="ph-sw" style="background:${prim}"></span></div>`;
+      if (w.t === "chips") h += `<div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0">${["Hot", "Iced", "Frappe"].map((c, i) => `<span class="ph-chip" style="${i === 0 ? `background:${cont};` : ""}border-color:${prim}">${c}</span>`).join("")}</div>`;
+      if (w.t === "space") h += `<div style="height:16px"></div>`;
+    });
+    h += `</div>`;
+    if ($("b_fab").checked) h += `<div class="ph-fab" style="background:${cont};color:${fg};bottom:${$("b_nav").checked ? 70 : 18}px">＋</div>`;
+    if ($("b_nav").checked) h += `<div class="ph-nav" style="color:${fg};background:${dark ? "#1d1d20" : mix(seed, .9, "w")}"><span class="on" style="--pc:${cont}">🏠<br>Home</span><span>🧾<br>Orders</span><span>👤<br>Profile</span></div>`;
+    $("b_ph").innerHTML = h;
+    $("b_list").innerHTML = W.map((w, i) => `<div class="fb-item"><b>${w.t}</b>${w.v !== undefined ? `<input data-i="${i}" value="${esc(w.v)}">` : "<span></span>"}<button data-up="${i}" title="ឡើង">↑</button><button data-del="${i}" title="លុប">✕</button></div>`).join("");
+    const ind = "          ";
+    const kids = W.map(w => ind + ({
+      text: `Text('${dq(w.v)}', style: Theme.of(context).textTheme.titleMedium),`,
+      image: `ClipRRect(borderRadius: BorderRadius.circular(16), child: Image.asset('assets/coffee.jpg', height: 140, fit: BoxFit.cover)),`,
+      card: `Card(child: ListTile(title: Text('${dq(w.v)}'), subtitle: const Text('Card subtitle'))),`,
+      tile: `Card(child: ListTile(leading: const CircleAvatar(child: Icon(Icons.coffee)), title: Text('${dq(w.v)}'), subtitle: const Text('\\$2.50'), trailing: const Icon(Icons.chevron_right))),`,
+      button: `FilledButton(onPressed: () {}, child: Text('${dq(w.v)}')),`,
+      field: `TextField(decoration: InputDecoration(labelText: '${dq(w.v)}', border: const OutlineInputBorder())),`,
+      switch: `SwitchListTile(value: true, onChanged: (v) {}, title: Text('${dq(w.v)}')),`,
+      chips: `Wrap(spacing: 6, children: [for (final c in ['Hot', 'Iced', 'Frappe']) ChoiceChip(label: Text(c), selected: c == 'Hot')]),`,
+      space: `const SizedBox(height: 16),`,
+    })[w.t]).join("\n");
+    $("b_code").textContent = `import 'package:flutter/material.dart';
+
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(useMaterial3: true, colorSchemeSeed: const Color(0xFF${seed.slice(1).toUpperCase()})${dark ? ", brightness: Brightness.dark" : ""}),
+      home: Scaffold(
+        appBar: AppBar(title: Text('${dq(title)}')),
+        body: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+${kids}
+          ],
+        ),${$("b_fab").checked ? "\n        floatingActionButton: FloatingActionButton(onPressed: () {}, child: const Icon(Icons.add))," : ""}${$("b_nav").checked ? `
+        bottomNavigationBar: NavigationBar(selectedIndex: 0, destinations: const [
+          NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
+          NavigationDestination(icon: Icon(Icons.receipt_long), label: 'Orders'),
+          NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
+        ]),` : ""}
+      ),
+    );
+  }
+}`;
+  }
+  document.querySelectorAll("[data-w]").forEach(b => b.onclick = () => { W.push({ t: b.dataset.w, v: DEF[b.dataset.w] }); render(); });
+  $("b_list").addEventListener("input", e => { const i = e.target.dataset.i; if (i !== undefined) { W[i].v = e.target.value; const keep = e.target.selectionStart; render(); const n = $("b_list").querySelector(`[data-i="${i}"]`); n.focus(); n.setSelectionRange(keep, keep); } });
+  $("b_list").addEventListener("click", e => { const d = e.target.dataset; if (d.del !== undefined) { W.splice(+d.del, 1); render(); } if (d.up !== undefined && +d.up > 0) { const i = +d.up; [W[i - 1], W[i]] = [W[i], W[i - 1]]; render(); } });
+  ["b_title", "b_seed", "b_dark", "b_nav", "b_fab"].forEach(i => $(i).addEventListener("input", render));
+  render();
+  // ---------- Layout lab
+  const COL = ["#2563eb", "#16a34a", "#ea580c", "#7c3aed", "#db2777"];
+  const MAP = { start: "flex-start", center: "center", end: "flex-end", spaceBetween: "space-between", spaceAround: "space-around", spaceEvenly: "space-evenly", stretch: "stretch" };
+  function lay() {
+    const col = $("l_dir").value === "col", n = +$("l_n").value, exp = $("l_exp").checked && n >= 2, m = $("l_main").value, c = $("l_cross").value;
+    const box = $("l_box"); box.style.flexDirection = col ? "column" : "row"; box.style.justifyContent = MAP[m]; box.style.alignItems = MAP[c];
+    box.innerHTML = Array.from({ length: n }, (_, i) => { const s = 34 + (i % 3) * 14, grow = exp && i === 1; return `<div style="background:${COL[i]};${col ? `height:${s}px;width:${c === "stretch" ? "auto" : 40 + i * 18 + "px"}` : `width:${s}px;height:${c === "stretch" ? "auto" : 40 + i * 18 + "px"}`};${grow ? "flex:1" : ""}">${grow ? "Expanded" : i + 1}</div>`; }).join("");
+    const kids = Array.from({ length: n }, (_, i) => { const b = `Container(width: ${col ? 40 + i * 18 : 34 + (i % 3) * 14}, height: ${col ? 34 + (i % 3) * 14 : 40 + i * 18}, color: Colors.${["blue", "green", "orange", "purple", "pink"][i]})`; return "    " + (exp && i === 1 ? `Expanded(child: ${b.replace(col ? /height: \d+/ : /width: \d+/, "").replace("(, ", "(").replace(", ,", ",")}),` : b + ","); }).join("\n");
+    $("l_code").textContent = `${col ? "Column" : "Row"}(\n  mainAxisAlignment: MainAxisAlignment.${m},\n  crossAxisAlignment: CrossAxisAlignment.${c},\n  children: [\n${kids}\n  ],\n)\n\n// CSS ដូចគ្នា: display:flex; flex-direction:${col ? "column" : "row"}; justify-content:${MAP[m]}; align-items:${MAP[c]};`;
+  }
+  ["l_dir", "l_main", "l_cross", "l_n", "l_exp"].forEach(i => $(i).addEventListener("input", lay)); lay();
+})();
+</script>
+
+<h3>🏆 Quiz Flutter ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["Flutter ត្រូវបានបង្កើតដោយក្រុមហ៊ុន?", ["Apple", "Google", "Meta", "Microsoft"], 1], ["Flutter ប្រើភាសាអ្វី?", ["Kotlin", "Swift", "Dart", "Java"], 2], ["Flutter 1.0 ចេញឆ្នាំ?", ["2015", "2018", "2020", "2012"], 1], ["Dart បង្កើតដោយ?", ["Lars Bak &amp; Kasper Lund", "Chris Lattner", "Andy Rubin", "Steve Jobs"], 0], ["String? មានន័យថា?", ["String ធំ", "អាចជា null", "មិនអាចប្តូរ", "List of String"], 1], ["?? ប្រើសម្រាប់?", ["ចែក", "តម្លៃជំនួសពេល null", "ប្រៀបធៀប", "Comment"], 1], ["ក្នុង Flutter អ្វីៗទាំងអស់ជា?", ["Activity", "Widget", "View", "Fragment"], 1], ["Widget ណាតម្រៀបធាតុផ្តេក?", ["Column", "Row", "Stack", "ListView"], 1], ["យកចន្លោះដែលនៅសល់ប្រើ?", ["Padding", "Expanded", "Center", "Card"], 1], ["ដាក់ Widget ត្រួតគ្នា?", ["Stack", "Row", "Wrap", "Table"], 0], ["setState() ធ្វើអ្វី?", ["Save file", "ប្តូរ State ហើយ build UI ម្តងទៀត", "បិទ App", "ហៅ API"], 1], ["បញ្ជីវែង 1000 ធាតុគួរប្រើ?", ["Column", "ListView.builder", "Stack", "Row"], 1], ["ត្រឡប់ទំព័រមុន?", ["Navigator.pop", "Navigator.push", "runApp", "setState"], 0], ["File ប្រកាស Package/Assets?", ["main.dart", "pubspec.yaml", "build.gradle", "index.html"], 1], ["FutureBuilder បង្ហាញ?", ["Loading/Error/Data ពី Future", "Animation", "Font", "Theme"], 0], ["រក្សា Token សុវត្ថិភាពប្រើ?", ["shared_preferences", "flutter_secure_storage", "print", "Text file"], 1], ["Firebase សេវា Login?", ["Firestore", "Authentication", "Crashlytics", "Hosting"], 1], ["Hot Reload ធ្វើអ្វី?", ["ដំឡើង App ថ្មី", "ឃើញការកែភ្លាម មិនបាត់ State", "លុប Cache", "Publish"], 1], ["Google Play ត្រូវការ File ប្រភេទ?", ["IPA", "AAB", "EXE", "DMG"], 1], ["បាត់ Keystore (.jks) នឹង?", ["គ្មានបញ្ហា", "មិនអាច Update App បាន", "App លឿនជាង", "Free"], 1]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+
+<ol class="steps"><li><b>Flutter</b> (វគ្គនេះ) ✅</li><li>State management កម្រិតខ្ពស់៖ <b>Riverpod</b> / <b>Bloc</b> + Clean architecture</li>
+<li>Backend៖ <b>Node.js + PostgreSQL</b> ឬ Firebase (xCenBar មានវគ្គ)</li><li>Animation (Hero, AnimatedContainer, Rive/Lottie) + Accessibility</li>
+<li>Native ពេលត្រូវការ៖ <b>Kotlin</b> (Android) · <b>Swift</b> (iOS) · Platform channels</li><li>Publish App ផ្ទាល់ខ្លួន ១ លើ Play Store → Portfolio</li></ol>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="flutter"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

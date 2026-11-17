@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>វិស្វកម្មអគ្គិសនី</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#e67700; --accent2:#fab005; --accent-soft:#fff9db;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#ffd43b; --accent2:#ffe066; --accent-soft:#2b2006;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#ffd43b; --accent2:#ffe066; --accent-soft:#2b2006;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#1f1604,#e67700 55%,#1c7ed6);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/ele.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/ele.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>វិស្វកម្មអគ្គិសនី (Electrical Engineering)</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. វិស្វកម្មអគ្គិសនី — ប្រវត្តិ និងការប្រើ</a>
+<a href="#setup">២. ត្រៀមខ្លួន</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: បរិមាណមូលដ្ឋាន &amp; DC</a>
+<a href="#l2">មេរៀន ២: AC · RMS · Power factor</a>
+<a href="#l3">មេរៀន ៣: ប្រព័ន្ធ ៣ ហ្វាស</a>
+<a href="#l4">មេរៀន ៤: Transformer</a>
+<a href="#l5">មេរៀន ៥: ម៉ូទ័រ &amp; ម៉ាស៊ីនភ្លើង</a>
+<a href="#l6">មេរៀន ៦: ការផលិតភ្លើង — វារីអគ្គិសនី · Solar · កំដៅ</a>
+<a href="#l7">មេរៀន ៧: ការតម្លើងភ្លើងផ្ទះ — ខ្សែ &amp; Breaker</a>
+<a href="#l8">មេរៀន ៨: ការការពារ · Earthing · សុវត្ថិភាព</a>
+<a href="#l9">មេរៀន ៩: Solar PV សម្រាប់ផ្ទះ/រោងចក្រ</a>
+<a href="#l10">មេរៀន ១០: អេឡិចត្រូនិក · Sensor · Arduino</a>
+<a href="#l11">មេរៀន ១១: Automation — PLC · Control</a>
+<a href="#l12">មេរៀន ១២: ប្រសិទ្ធភាពថាមពល &amp; អាជីព</a>
+<a href="#cheat">📋 សង្ខេប (Cheat sheet)</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងចុងវគ្គ</a>
+<a href="#pro-app">💻 Engineering Lab (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>⚡ វិស្វកម្មអគ្គិសនី — ពីសៀគ្វីដល់បណ្តាញ</h2>
+  <p>DC/AC, <b>Power factor</b>, <b>៣ ហ្វាស</b>, Transformer, ម៉ូទ័រ &amp; VFD, ការផលិតភ្លើង, <b>តម្លើងភ្លើងផ្ទះ</b> (ខ្សែ MCB RCD), Earthing, <b>Solar PV</b>, Arduino, PLC, ប្រសិទ្ធភាពថាមពល — ឧទាហរណ៍គណនា (គ្មាន Code)។</p>
+  <p><span class="badge">📘 ១២ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">📊 ឧទាហរណ៍គណនា (គ្មាន Code)</span><span class="badge">🏗️ Engineering Lab</span></p>
+</section>
+<section id="intro">
+<h2>១. វិស្វកម្មអគ្គិសនី — ប្រវត្តិ និងការប្រើ</h2>
+
+<div class="note">💡 ឧទាហរណ៍ក្នុងវគ្គសម្រាប់ <b>សិក្សា</b>។ ការរចនា សាងសង់ ឬតម្លើងពិត ត្រូវធ្វើដោយ <b>វិស្វករមានអាជ្ញាប័ណ្ណ</b> តាមស្តង់ដារ និងច្បាប់ (ឧ. ច្បាប់ស្តីពីសំណង់ 2019 · លិខិតអនុញ្ញាតសាងសង់ · បទប្បញ្ញត្តិអគ្គិសនី EAC) — ពិនិត្យឯកសារផ្លូវការចុងក្រោយ។</div>
+<div class="warn">⚠️ អគ្គិសនី 220/380 V អាចសម្លាប់មនុស្ស។ កុំធ្វើការលើខ្សែមានចរន្ត · បិទ និងចាក់សោ Breaker (LOTO) · ការងារតម្លើងពិតត្រូវជាងភ្លើងមានជំនាញ/អាជ្ញាប័ណ្ណ។</div>
+
+<p><b>វិស្វកម្មអគ្គិសនី</b> = ផលិត បញ្ជូន ចែកចាយ និងប្រើប្រាស់ថាមពលអគ្គិសនី និងប្រព័ន្ធគ្រប់គ្រង។ វគ្គនេះ៖ DC/AC, Power factor, <b>ប្រព័ន្ធ ៣ ហ្វាស</b>, Transformer, ម៉ូទ័រ, ការផលិតភ្លើង (វារីអគ្គិសនី Solar), បណ្តាញ, <b>ការតម្លើងភ្លើងផ្ទះ</b> (ខ្សែ Breaker RCD ខ្សែដី), អេឡិចត្រូនិក/PLC និងប្រសិទ្ធភាពថាមពល។</p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#868e96"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#868e96">1800</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Volta battery</text><circle cx="200" cy="115" r="11" fill="#1c7ed6"/><text x="200" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#1c7ed6">1827</text><text x="200" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Ohm</text><circle cx="320" cy="115" r="11" fill="#7048e8"/><text x="320" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#7048e8">1831</text><text x="320" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Faraday</text><circle cx="440" cy="115" r="11" fill="#0ca678"/><text x="440" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#0ca678">1865</text><text x="440" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Maxwell</text><circle cx="560" cy="115" r="11" fill="#e8590c"/><text x="560" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#e8590c">1882</text><text x="560" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Edison Pearl St.</text><circle cx="680" cy="115" r="11" fill="#e03131"/><text x="680" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#e03131">1888</text><text x="680" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Tesla AC motor</text><circle cx="800" cy="115" r="11" fill="#d6336c"/><text x="800" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#d6336c">2001</text><text x="800" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">ច្បាប់អគ្គិសនី KH · EAC</text><circle cx="920" cy="115" r="11" fill="#495057"/><text x="920" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#495057">2018</text><text x="920" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Lower Sesan II</text></svg><figcaption>🖼️ ប្រវត្តិអគ្គិសនី</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>1800</td><td><b>Alessandro Volta</b></td><td>ថ្មអគ្គិសនីដំបូង (Voltaic pile)</td></tr><tr><td>1831</td><td><b>Michael Faraday</b></td><td>Electromagnetic induction — ម៉ាស៊ីនភ្លើង Transformer</td></tr><tr><td>1865</td><td><b>James Clerk Maxwell</b></td><td>សមីការអេឡិចត្រូម៉ាញេទិក</td></tr><tr><td>1882</td><td><b>Thomas Edison</b></td><td>Pearl Street Station — ប្រព័ន្ធ DC ពាណិជ្ជកម្ម</td></tr><tr><td>1888</td><td><b>Nikola Tesla</b> · Westinghouse</td><td>ម៉ូទ័រ AC ពហុហ្វាស → ប្រព័ន្ធ AC ពិភពលោក</td></tr><tr><td>2001</td><td>កម្ពុជា — ច្បាប់ស្តីពីអគ្គិសនី</td><td>បង្កើត <b>អាជ្ញាធរអគ្គិសនីកម្ពុជា (EAC)</b></td></tr><tr><td>2010s</td><td>កម្ពុជា — វារីអគ្គិសនី (ឧ. កំចាយ សេសានក្រោម ២) និង Solar</td><td>ពង្រីកការផ្គត់ផ្គង់ក្នុងស្រុក</td></tr></table>
+
+<h3>ប្រើសម្រាប់អ្វី?</h3>
+<div class="grid"><div class="card"><b>🏠 ផ្ទះ/អគារ</b><br>តម្លើងភ្លើង ម៉ាស៊ីនត្រជាក់</div><div class="card"><b>🏭 រោងចក្រ</b><br>ម៉ូទ័រ PLC</div><div class="card"><b>⚡ ថាមពល</b><br>Solar វារីអគ្គិសនី បណ្តាញ</div><div class="card"><b>💼 អាជីព</b><br>Electrical engineer · MEP · Solar · Maintenance</div></div>
+
+</section>
+<section id="setup">
+<h2>២. ត្រៀមខ្លួន</h2>
+<ol class='steps'><li>ម៉ាស៊ីនគិតលេខវិទ្យាសាស្ត្រ · សៀវភៅក្រឡាការ៉េ · បន្ទាត់។</li><li>ចំណេះគណិត (ពិជគណិត ត្រីកោណមាត្រ) និងរូបវិទ្យាមូលដ្ឋាន — មើលវគ្គ <b>Math for IT</b> បើត្រូវការ។</li><li>ឧទាហរណ៍គណនាក្នុងវគ្គ បង្ហាញតែ <b>លទ្ធផល</b> (គ្មាន Code)។</li><li>ហាត់ជាមួយ <b>Engineering Lab</b> ចុងវគ្គ។</li></ol></section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>បរិមាណមូលដ្ឋាន &amp; DC</h2>
+<table><tr><th>បរិមាណ</th><th>ខ្នាត</th><th>ន័យ</th></tr><tr><td>វ៉ុល V</td><td>Volt</td><td>សម្ពាធអគ្គិសនី</td></tr><tr><td>ចរន្ត I</td><td>Ampere</td><td>លំហូរ</td></tr><tr><td>Resistance R</td><td>Ohm Ω</td><td>ទប់</td></tr><tr><td>អានុភាព P</td><td>Watt</td><td>ល្បឿនប្រើថាមពល</td></tr><tr><td>ថាមពល E</td><td>kWh</td><td>ថាមពលសរុប</td></tr></table>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Parallel: R = 2.00 Ω · I = 6.0 A · P = 72 W
+  R4: I = 3.00 A
+  R6: I = 2.00 A
+  R12: I = 1.00 A
+Kirchhoff (KCL): 6.0 A = 6.0 A ✅</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Ohm (V=IR) · Kirchhoff៖ KCL (ចរន្តចូល = ចេញ) · KVL (វ៉ុលជុំរង្វង់ = 0)។</li><li>សាក <b>⚡ Ohm &amp; Circuits</b> ក្នុង Engineering Lab។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>ចរន្តចូលថ្នាំង 5 A ចេញផ្លូវមួយ 2 A។ ផ្លូវទីពីរ?</p><details><summary>មើលចម្លើយ</summary><p><b>3 A</b> (KCL)។</p></details></div>
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>AC · RMS · Power factor</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Vpeak = 325 V · S = 2.30 kVA · P = 1.84 kW · Q = 1.38 kVAR
+កែ pf ទៅ 0.95: I ថយពី 10 A ទៅ 8.42 A (16%)</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ប្រព័ន្ធកម្ពុជា៖ <b>230 V (ផ្ទះ) · 400 V (3 ហ្វាស) · 50 Hz</b> (ទូទៅ ~220/380 V)។</li><li><b>Power factor</b> ទាប (ម៉ូទ័រ) → ចរន្តច្រើន ខ្សែក្តៅ — កែដោយ Capacitor bank។</li><li>kW (ពិត) · kVA (ជាក់ស្តែង) · kVAR (Reactive)។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>ហេតុអ្វីរោងចក្រដំឡើង Capacitor bank?</p><details><summary>មើលចម្លើយ</summary><p>កែ <b>Power factor</b> → ចរន្តថយ ការបាត់បង់ថយ និងអាចជៀសការពិន័យ pf ទាប។</p></details></div>
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>ប្រព័ន្ធ ៣ ហ្វាស</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>P = √3 × VL × I × pf = 29.4 kW · VL = √3 × Vph → Vph = 231 V
+ម៉ូទ័រ 15 kW (η 0.9, pf 0.85) → I ≈ 28.3 A</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>៣ ហ្វាស បញ្ជូនថាមពលច្រើនជាងដោយខ្សែតិច · ម៉ូទ័ររលូន។</li><li>Star (Y)៖ VL = √3·Vph · Delta (Δ)៖ IL = √3·Iph។</li><li>ចែកបន្ទុកឲ្យស្មើរវាង L1, L2, L3។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>VL = 400 V តើ Vph (Star) ប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>400 ÷ √3 ≈ <b>230 V</b>។</p></details></div>
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Transformer</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Vs = Vp × Ns/Np = 400 V (Line) · I_primary = 6.6 A · I_secondary = 361 A</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Transformer ប្តូរវ៉ុលដោយ Induction (Faraday) — ដំណើរការតែ <b>AC</b>។</li><li>បញ្ជូនវ៉ុលខ្ពស់ → ចរន្តតិច → បាត់បង់ I²R តិច។</li><li>បណ្តាញកម្ពុជា (ទូទៅ)៖ បញ្ជូន 115/230 kV · ចែកចាយ 22 kV · ប្រើ 400/230 V។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>ហេតុអ្វីបញ្ជូនភ្លើងឆ្ងាយដោយវ៉ុលខ្ពស់?</p><details><summary>មើលចម្លើយ</summary><p>ចរន្ត <b>តិច</b> → ការបាត់បង់ I²R តិច ខ្សែតូច។</p></details></div>
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>ម៉ូទ័រ &amp; ម៉ាស៊ីនភ្លើង</h2>
+<table><tr><th>ប្រភេទ</th><th>ប្រើ</th></tr><tr><td>Induction motor (AC)</td><td>ម៉ាស៊ីនបូម កង្ហារ រោងចក្រ — ធន់ ថោក</td></tr><tr><td>BLDC/PMSM</td><td>ម៉ូតូ/ឡានអគ្គិសនី កង្ហារ Inverter</td></tr><tr><td>DC motor</td><td>ប្រដាប់ក្មេងលេង Robot</td></tr><tr><td>VFD (Inverter)</td><td>គ្រប់គ្រងល្បឿន — សន្សំភ្លើង</td></tr></table>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Synchronous speed = 120f/p = 1500 rpm · Rotor ≈ 1440 rpm (slip 4%)
+បូមទឹកល្បឿន 100% → អានុភាព ≈ 100% (Affinity law)
+បូមទឹកល្បឿន 80% → អានុភាព ≈ 51% (Affinity law)
+បូមទឹកល្បឿន 60% → អានុភាព ≈ 22% (Affinity law)</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>ហេតុអ្វី VFD សន្សំភ្លើងសម្រាប់ម៉ាស៊ីនបូម/កង្ហារ?</p><details><summary>មើលចម្លើយ</summary><p>អានុភាព ∝ ល្បឿន³ — បន្ថយល្បឿន 20% សន្សំ <b>~49%</b>។</p></details></div>
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>ការផលិតភ្លើង — វារីអគ្គិសនី · Solar · កំដៅ</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Hydro: P = ρgQHη = 10.4 MW
+ផលិតប្រចាំឆ្នាំ (Capacity factor 45%) ≈ 40.8 GWh
+Solar 1 MWp: ≈ 1,402 MWh/ឆ្នាំ</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>កម្ពុជា៖ វារីអគ្គិសនី (រដូវវស្សាច្រើន) · ធ្យូងថ្ម · Solar (កើនឡើងលឿន) · នាំចូល។</li><li>Solar ផលិតថ្ងៃ — ត្រូវ Storage/បណ្តាញ សម្រាប់យប់។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>ហេតុអ្វីវារីអគ្គិសនីផលិតតិចនៅរដូវប្រាំង?</p><details><summary>មើលចម្លើយ</summary><p>លំហូរទឹក <b>Q តិច</b> → P = ρgQHη តិច។</p></details></div>
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>ការតម្លើងភ្លើងផ្ទះ — ខ្សែ &amp; Breaker</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>ម៉ាស៊ីនត្រជាក់ 1.5HP I = 5.7 A (×1.25 = 7.1) → ខ្សែ ≥ 1.5 mm² · MCB 10 A
+ម៉ាស៊ីនកម្តៅទឹក      I = 15.2 A (×1.25 = 19.0) → ខ្សែ ≥ 2.5 mm² · MCB 20 A
+ព្រីប (Socket) បន្ទប់ I = 7.8 A (×1.25 = 9.8) → ខ្សែ ≥ 1.5 mm² · MCB 10 A</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li><b>Breaker ការពារខ្សែ</b> — MCB ≤ សមត្ថភាពខ្សែ។</li><li><b>RCD/RCBO 30 mA</b> ការពារមនុស្សពីឆក់ (Bathroom, ម៉ាស៊ីនកម្តៅទឹក)។</li><li><b>ខ្សែដី (Earth)</b> ភ្ជាប់តួដែកឧបករណ៍ · ពិនិត្យ Earth resistance។</li><li>ខ្សែតូចពេក → ក្តៅ → <b>ភ្លើងឆេះ</b>។</li></ol></div>
+<div class="note">💡 សមត្ថភាពខ្សែក្នុងតារាងជាឧទាហរណ៍ — ពិតប្រាកដអាស្រ័យលើស្តង់ដារ (IEC) វិធីដាក់ខ្សែ សីតុណ្ហភាព។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>ម៉ាស៊ីនកម្តៅទឹក 3500 W ភ្ជាប់ខ្សែ 1.5 mm² + MCB 32 A។ បញ្ហា?</p><details><summary>មើលចម្លើយ</summary><p>ខ្សែ <b>តូចពេក</b> ហើយ MCB ធំជាងសមត្ថភាពខ្សែ — ខ្សែក្តៅអាចឆេះមុន Breaker ដាច់។ ប្រើខ្សែ ≥ 2.5 mm² (ល្អជាង 4 mm² ពេលខ្សែវែង) + MCB 20 A + RCD 30 mA។</p></details></div>
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>ការការពារ · Earthing · សុវត្ថិភាព</h2>
+<table><tr><th>ឧបករណ៍</th><th>ការពារពី</th></tr><tr><td>Fuse / MCB</td><td>ចរន្តលើស · Short circuit</td></tr><tr><td>RCD (30 mA)</td><td>ឆក់មនុស្ស (Leakage)</td></tr><tr><td>SPD</td><td>រន្ទះ/វ៉ុលលោត</td></tr><tr><td>Earthing</td><td>តួដែកមានវ៉ុល</td></tr><tr><td>LOTO</td><td>នរណាម្នាក់បើកភ្លើងពេលកំពុងជួសជុល</td></tr></table>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>   1 mA → មានអារម្មណ៍
+  10 mA → ពិបាកដកដៃ
+  30 mA → កម្រិត RCD — ពិបាកដកដង្ហើម
+ 100 mA → បេះដូងអាចឈប់ (Fibrillation)
+V = 230 · ស្បែកសើម R ≈ 1000 Ω → I ≈ 230 mA ⚠️</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>ហេតុអ្វីបន្ទប់ទឹកត្រូវការ RCD 30 mA?</p><details><summary>មើលចម្លើយ</summary><p>ស្បែកសើម <b>Resistance ទាប</b> → ចរន្តឆក់ធំ — RCD ផ្តាច់ក្នុងមីលីវិនាទី។</p></details></div>
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Solar PV សម្រាប់ផ្ទះ/រោងចក្រ</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Solar ≈ 4.0 kWp → 8 panels · ផ្ទៃដំបូល ≈ 21 m²
+ថ្លៃប៉ាន់ $3,606 · សន្សំ ≈ $81/ខែ → Payback ≈ 3.7 ឆ្នាំ (ឧទាហរណ៍)</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>On-grid · Off-grid · Hybrid · ការភ្ជាប់បណ្តាញត្រូវគោរពបទប្បញ្ញត្តិ EAC/EDC។</li><li>Orientation ទៅទិសខាងត្បូង · មុំ ~10–15° · ជៀសស្រមោល។</li><li>សាក <b>☀️ Solar</b> ក្នុង Engineering Lab។</li></ol></div>
+<div class="note">💡 តម្លៃប្រព័ន្ធ និងថ្លៃភ្លើង ជាការសន្មត — សុំសម្រង់តម្លៃពីក្រុមហ៊ុនច្រើន។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>ហេតុអ្វីស្រមោលមែកឈើលើ Panel ១ ប៉ះពាល់ប្រព័ន្ធទាំងមូល?</p><details><summary>មើលចម្លើយ</summary><p>Panel តភ្ជាប់ <b>Series</b> — ចរន្តដើរតាម Panel ខ្សោយបំផុត (ប្រើ Optimizer/Micro-inverter កាត់បន្ថយ)។</p></details></div>
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>អេឡិចត្រូនិក · Sensor · Arduino</h2>
+<table><tr><th>គ្រឿង</th><th>តួនាទី</th></tr><tr><td>Diode/LED</td><td>ចរន្តមួយទិស · ពន្លឺ</td></tr><tr><td>Transistor/MOSFET</td><td>កុងតាក់ · ពង្រីក</td></tr><tr><td>Capacitor</td><td>ស្តុកថាមពល · ត្រង</td></tr><tr><td>Sensor</td><td>សីតុណ្ហភាព ពន្លឺ ចលនា ទឹក</td></tr><tr><td>Microcontroller</td><td>Arduino · ESP32 (IoT)</td></tr></table>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Resistor LED = (Vs − Vf)/I = 200 Ω → ប្រើ 220 Ω ជិតបំផុត
+Arduino ADC 10-bit: 512 → 2.50 V</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>LED ក្រហម (Vf 2 V, 15 mA) លើ 5 V ត្រូវ Resistor ប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>(5 − 2) ÷ 0.015 = <b>200 Ω</b> (ប្រើ 220 Ω)។</p></details></div>
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>Automation — PLC · Control</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="202.5" height="96" rx="14" fill="#1c7ed6"/><text x="121.25" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Sensor</text><text x="121.25" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Input</text><line x1="224.5" y1="82" x2="250.5" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="252.5" y="34" width="202.5" height="96" rx="14" fill="#7048e8"/><text x="353.75" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">PLC</text><text x="353.75" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Logic</text><line x1="457.0" y1="82" x2="483.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="485.0" y="34" width="202.5" height="96" rx="14" fill="#e8590c"/><text x="586.25" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Actuator</text><text x="586.25" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ម៉ូទ័រ វ៉ាល់</text><line x1="689.5" y1="82" x2="715.5" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="717.5" y="34" width="202.5" height="96" rx="14" fill="#2f9e44"/><text x="818.75" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">HMI/SCADA</text><text x="818.75" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">តាមដាន</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">ប្រព័ន្ធស្វ័យប្រវត្តិ</text></svg><figcaption>🖼️ Automation — PLC · Control</figcaption></figure>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>PLC (Dick Morley — Modicon 1968–69) — Ladder logic។</li><li>Control loop៖ Setpoint → Error → Controller (PID) → Process → Sensor។</li><li>ឧ. ធុងទឹក៖ Float sensor ទាប → បើកម៉ាស៊ីនបូម · ខ្ពស់ → បិទ។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>ធុងទឹកបូមស្វ័យប្រវត្តិ ត្រូវការ Sensor អ្វីខ្លះ?</p><details><summary>មើលចម្លើយ</summary><p><b>Level sensor</b> ទាប និងខ្ពស់ (ឬ Float switch) + ការការពាររត់ស្ងួត (Dry-run)។</p></details></div>
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>ប្រសិទ្ធភាពថាមពល &amp; អាជីព</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>ប្តូរ LED 40 ដើម → សន្សំ 240 kWh/ខែ ≈ $43/ខែ
+AC 22°C → សន្សំប្រហែល 0% ≈ 0 kWh/ខែ (ក្បួនប្រហាក់ប្រហែល ~6%/°C)
+AC 24°C → សន្សំប្រហែល 12% ≈ 43 kWh/ខែ (ក្បួនប្រហាក់ប្រហែល ~6%/°C)
+AC 26°C → សន្សំប្រហែល 24% ≈ 86 kWh/ខែ (ក្បួនប្រហាក់ប្រហែល ~6%/°C)</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Energy audit៖ វាស់ → រកការប្រើច្រើន → កែ → តាមដាន។</li><li>អាជីព៖ Electrical design (MEP) · Power/Grid · Solar · Maintenance · Automation · Electronics។</li><li>ជំនាញ៖ AutoCAD Electrical · ETAP/DIALux · PLC · ស្តង់ដារ IEC · សុវត្ថិភាព។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>ការកំណត់ AC ពី 22°C ទៅ 26°C អាចសន្សំប្រហែលប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>ប្រហែល <b>២០–២៥%</b> (ក្បួនប្រហាក់ប្រហែល ~6% ក្នុង 1°C)។</p></details></div>
+</section>
+<section id="cheat">
+<h2>📋 សង្ខេប (Cheat sheet)</h2>
+<table><tr><th>ពាក្យ / រូបមន្ត</th><th>ន័យ</th></tr><tr><td>V = IR · P = VI</td><td>Ohm · Power</td></tr><tr><td>KCL · KVL</td><td>Kirchhoff</td></tr><tr><td>P = VI·pf</td><td>AC ១ ហ្វាស</td></tr><tr><td>P = √3·VL·I·pf</td><td>៣ ហ្វាស</td></tr><tr><td>Vs/Vp = Ns/Np</td><td>Transformer</td></tr><tr><td>ns = 120f/p</td><td>ម៉ូទ័រ</td></tr><tr><td>RCD 30 mA</td><td>ការពារមនុស្ស</td></tr><tr><td>P ∝ n³</td><td>Pump/Fan + VFD</td></tr></table>
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងចុងវគ្គ</h2>
+<ol class='steps'><li>ប្លង់ភ្លើងផ្ទះ ២ បន្ទប់ + Load schedule។</li><li>ជ្រើសខ្សែ MCB RCD ខ្សែដី (ឧទាហរណ៍)។</li><li>Energy audit ផ្ទះអ្នក + អនុសាសន៍សន្សំ។</li><li>Solar sizing + Payback។</li><li>Arduino៖ ធុងទឹកស្វ័យប្រវត្តិ (Simulation លើ Tinkercad) + Report។</li></ol></section>
+<section id="pro-app">
+<h2>💻 Engineering Lab (App)</h2>
+
+<p><b>⚡ Ohm &amp; Circuits</b> (Series/Parallel, ថាមពលលើ Resistor) · <b>🏗️ Beam</b> (Reactions, Moment, Deflection) · <b>🔌 ភ្លើង kWh</b> (ថ្លៃភ្លើងផ្ទះ) · <b>☀️ Solar</b> (kWp, Panels, Battery) · <b>📏 ប្តូរខ្នាត</b> — ដំណើរការក្នុង Browser។</p>
+
+<div class="itk" id="en">
+<div class="itk-tabs"><button class="on" data-t="oh">⚡ Ohm &amp; Circuits</button><button data-t="bm">🏗️ Beam</button><button data-t="kw">🔌 ភ្លើង kWh</button><button data-t="so">☀️ Solar</button><button data-t="cv">📏 ប្តូរខ្នាត</button></div>
+
+<div class="itk-p on" data-p="oh">
+ <div class="itk-row"><label>វ៉ុល V<input id="oh_v" type="number" value="12" style="width:80px"></label><label>Resistors (Ω, បំបែកដោយ ,)<input id="oh_r" value="100, 220, 330" style="width:160px"></label><label>តភ្ជាប់<select id="oh_m"><option value="s">Series</option><option value="p">Parallel</option></select></label></div>
+ <div class="itk-out" id="oh_out"></div>
+</div>
+
+<div class="itk-p" data-p="bm">
+ <p class="vl-tip">ធ្នឹមទ្រទ្រង់សាមញ្ញ (Simply supported) មានបន្ទុកចំណុច P ត្រង់ចម្ងាយ a ពីទ្រនាប់ឆ្វេង។</p>
+ <div class="itk-row"><label>ប្រវែង L (m)<input id="bm_l" type="number" value="6" step="0.5" style="width:70px"></label><label>P (kN)<input id="bm_p" type="number" value="20" style="width:70px"></label><label>a (m)<input id="bm_a" type="number" value="2" step="0.5" style="width:70px"></label></div>
+ <div class="itk-row"><label>E (GPa)<select id="bm_e"><option value="200">Steel 200</option><option value="30">Concrete ≈30</option><option value="11">Wood ≈11</option></select></label><label>I (×10⁶ mm⁴)<input id="bm_i" type="number" value="80" style="width:80px"></label></div>
+ <div class="itk-out" id="bm_out"></div>
+</div>
+
+<div class="itk-p" data-p="kw">
+ <p class="vl-tip">បន្ថែមឧបករណ៍ — ថ្លៃភ្លើងពិតអាស្រ័យលើអត្រាពន្ធរបស់អ្នកផ្គត់ផ្គង់ (ពិនិត្យវិក្កយបត្រ EDC របស់អ្នក)។</p>
+ <div class="itk-row"><label>អត្រា (៛/kWh)<input id="kw_t" type="number" value="730" style="width:80px"></label><label>1 USD = (៛)<input id="kw_fx" type="number" value="4050" style="width:80px"></label></div>
+ <textarea id="kw_list" rows="6" style="width:100%;font-family:monospace">ម៉ាស៊ីនត្រជាក់ 1HP, 900, 8
+ទូទឹកកក, 150, 24
+កង្ហារ, 60, 10
+អំពូល LED x6, 60, 6
+ទូរទស្សន៍, 100, 4
+ឆ្នាំងបាយ, 700, 1</textarea>
+ <div class="itk-out" id="kw_out"></div>
+</div>
+
+<div class="itk-p" data-p="so">
+ <div class="itk-row"><label>ថាមពលប្រើ/ថ្ងៃ (kWh)<input id="so_e" type="number" value="8" step="0.5" style="width:80px"></label><label>Peak sun hours<input id="so_h" type="number" value="5" step="0.1" style="width:70px"></label><label>Panel (W)<input id="so_w" type="number" value="550" style="width:70px"></label></div>
+ <div class="itk-row"><label>ប្រសិទ្ធភាពប្រព័ន្ធ (%)<input id="so_eff" type="number" value="80" style="width:70px"></label><label>ថ្ងៃ Backup (Battery)<input id="so_d" type="number" value="1" step="0.5" style="width:70px"></label><label>DoD (%)<input id="so_dod" type="number" value="80" style="width:70px"></label></div>
+ <div class="itk-out" id="so_out"></div>
+</div>
+
+<div class="itk-p" data-p="cv">
+ <div class="itk-row"><label>តម្លៃ<input id="cv_x" type="number" value="1" style="width:100px"></label><label>ប្រភេទ<select id="cv_k"><option value="len">ប្រវែង</option><option value="mass">ម៉ាស</option><option value="force">កម្លាំង</option><option value="press">សម្ពាធ</option><option value="power">អានុភាព</option><option value="temp">សីតុណ្ហភាព</option></select></label></div>
+ <div class="itk-out" id="cv_out"></div>
+</div>
+</div>
+<script>
+(() => {
+const $ = id => document.getElementById(id), root = $("en"), v = id => +$(id).value || 0;
+root.querySelectorAll(".itk-tabs button").forEach(b => b.onclick = () => { root.querySelectorAll(".itk-tabs button").forEach(x => x.classList.toggle("on", x === b)); root.querySelectorAll(".itk-p").forEach(p => p.classList.toggle("on", p.dataset.p === b.dataset.t)); });
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const f = (x, d = 2) => Number.isFinite(x) ? x.toLocaleString("en-US", { maximumFractionDigits: d }) : "—";
+const card = (t, val, c = "#1c7ed6") => `<div style="flex:1;min-width:110px;background:#fff;border:1px solid #dee2e6;border-radius:12px;padding:10px;color:#0f172a"><div style="font-size:12px;color:#64748b">${t}</div><div style="font-size:18px;font-weight:800;color:${c}">${val}</div></div>`;
+const row = h => `<div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0">${h}</div>`;
+/* Ohm */
+function oh() { const V = v("oh_v"), R = $("oh_r").value.split(/[,\s]+/).map(Number).filter(x => x > 0); if (!R.length) return; const ser = $("oh_m").value === "s";
+  const Rt = ser ? R.reduce((a, b) => a + b, 0) : 1 / R.reduce((a, b) => a + 1 / b, 0), I = V / Rt;
+  const per = R.map(r => ser ? { r, i: I, v: I * r, p: I * I * r } : { r, i: V / r, v: V, p: V * V / r });
+  $("oh_out").innerHTML = row(card("R សរុប", f(Rt) + " Ω") + card("I សរុប", f(I * 1000, 1) + " mA", "#7048e8") + card("P សរុប", f(V * I, 3) + " W", "#e8590c"))
+  + `<div style="overflow-x:auto"><table><tr><th>R (Ω)</th><th>I (mA)</th><th>V (V)</th><th>P (W)</th></tr>${per.map(o => `<tr><td>${o.r}</td><td>${f(o.i * 1000, 2)}</td><td>${f(o.v, 2)}</td><td>${f(o.p, 3)}${o.p > .25 ? " ⚠️ &gt; ¼W" : ""}</td></tr>`).join("")}</table></div>V = I × R · P = V × I · ${ser ? "Series៖ I ដូចគ្នា V ចែកគ្នា" : "Parallel៖ V ដូចគ្នា I ចែកគ្នា"}`; }
+["oh_v", "oh_r"].forEach(id => $(id).oninput = oh); $("oh_m").onchange = oh;
+/* Beam */
+function bm() { const L = v("bm_l"), P = v("bm_p"), a = Math.min(Math.max(v("bm_a"), 0), L), b = L - a, E = v("bm_e") * 1e9, I = v("bm_i") * 1e6 * 1e-12;
+  const Ra = P * b / L, Rb = P * a / L, M = P * a * b / L;
+  let dmax = 0, xm = 0; for (let i = 0; i <= 400; i++) { const x = L * i / 400; const y = x <= a ? P * 1e3 * b * x * (L * L - b * b - x * x) / (6 * E * I * L) : P * 1e3 * a * (L - x) * (L * L - a * a - (L - x) ** 2) / (6 * E * I * L); if (y > dmax) { dmax = y; xm = x; } }
+  const W = 400, X = x => 30 + x / L * (W - 60);
+  $("bm_out").innerHTML = row(card("R ឆ្វេង", f(Ra) + " kN") + card("R ស្តាំ", f(Rb) + " kN") + card("M អតិបរមា", f(M) + " kN·m", "#e8590c") + card("Deflection អតិបរមា", f(dmax * 1000, 1) + " mm", dmax * 1000 > L * 1000 / 360 ? "#e03131" : "#2f9e44"))
+  + `<svg viewBox="0 0 ${W} 190" style="width:100%;max-width:${W}px;background:#fff;border-radius:10px"><rect x="30" y="40" width="${W - 60}" height="12" fill="#495057"/><polygon points="30,52 20,70 40,70" fill="#1c7ed6"/><circle cx="${W - 30}" cy="62" r="9" fill="#1c7ed6"/><line x1="${X(a)}" y1="5" x2="${X(a)}" y2="38" stroke="#e03131" stroke-width="3"/><polygon points="${X(a) - 6},30 ${X(a) + 6},30 ${X(a)},40" fill="#e03131"/><text x="${X(a) + 8}" y="18" font-size="12">P = ${f(P)} kN</text>
+  <polygon points="30,110 ${X(a)},${110 + 60} ${W - 30},110" fill="#fff4e6" stroke="#e8590c"/><text x="${X(a)}" y="186" font-size="12" text-anchor="middle">Bending moment · Mmax = ${f(M)} kN·m</text></svg>
+  <br>កម្រិត Deflection ទូទៅ L/360 = ${f(L * 1000 / 360, 1)} mm → ${dmax * 1000 > L * 1000 / 360 ? "🔴 ធ្នឹមទន់ពេក — បង្កើន I (ធ្នឹមខ្ពស់ជាង)" : "✅ ក្នុងកម្រិត"} · ⚠️ ឧទាហរណ៍សិក្សា — ការរចនាពិតត្រូវវិស្វករមានអាជ្ញាប័ណ្ណ និងស្តង់ដារ។`; }
+["bm_l", "bm_p", "bm_a", "bm_i"].forEach(id => $(id).oninput = bm); $("bm_e").onchange = bm;
+/* kWh */
+function kw() { const t = v("kw_t"), fx = v("kw_fx") || 4050; let tot = 0; const rows = $("kw_list").value.split(/\n/).map(l => l.split(",").map(s => s.trim())).filter(r => r.length >= 3 && +r[1] > 0).map(([n, w, h]) => { const k = +w * +h / 1000 * 30; tot += k; return [n, +w, +h, k]; });
+  rows.sort((a, b) => b[3] - a[3]);
+  $("kw_out").innerHTML = `<div style="overflow-x:auto"><table><tr><th>ឧបករណ៍</th><th>W</th><th>ម៉ោង/ថ្ងៃ</th><th>kWh/ខែ</th><th>៛/ខែ</th></tr>${rows.map(r => `<tr><td>${esc(r[0])}</td><td>${r[1]}</td><td>${r[2]}</td><td>${f(r[3], 1)}</td><td>${f(r[3] * t, 0)}</td></tr>`).join("")}</table></div>`
+  + row(card("kWh/ខែ", f(tot, 1)) + card("ថ្លៃ/ខែ", f(tot * t, 0) + " ៛", "#e8590c") + card("≈ USD", "$" + f(tot * t / fx, 2), "#2f9e44")) + `kWh = W × ម៉ោង ÷ 1000 · ${rows[0] ? `ប្រើច្រើនបំផុត៖ <b>${esc(rows[0][0])}</b> (${f(rows[0][3] / tot * 100, 0)}%)` : ""}`; }
+["kw_t", "kw_fx", "kw_list"].forEach(id => $(id).oninput = kw);
+/* Solar */
+function so() { const E = v("so_e"), H = v("so_h"), Wp = v("so_w"), eff = v("so_eff") / 100, d = v("so_d"), dod = v("so_dod") / 100;
+  const kwp = E / (H * eff), n = Math.ceil(kwp * 1000 / Wp), bat = E * d / dod;
+  $("so_out").innerHTML = row(card("ទំហំប្រព័ន្ធ", f(kwp, 2) + " kWp") + card("Panels", n + " × " + Wp + "W", "#e8590c") + card("Battery", f(bat, 1) + " kWh", "#7048e8") + card("ផលិត/ឆ្នាំ", f(n * Wp / 1000 * H * eff * 365, 0) + " kWh", "#2f9e44"))
+  + `kWp = kWh/ថ្ងៃ ÷ (Peak sun hours × ប្រសិទ្ធភាព) · Battery = kWh × ថ្ងៃ Backup ÷ DoD · ⚠️ ការតម្លើងពិត ត្រូវអ្នកជំនាញ និងគោរពបទប្បញ្ញត្តិថាមពល។`; }
+["so_e", "so_h", "so_w", "so_eff", "so_d", "so_dod"].forEach(id => $(id).oninput = so);
+/* Converter */
+const U = { len: [["m", 1], ["cm", .01], ["mm", .001], ["km", 1000], ["in", .0254], ["ft", .3048], ["ហត្ថ (ប្រហែល 0.5 m)", .5]], mass: [["kg", 1], ["g", .001], ["t (tonne)", 1000], ["lb", .45359237], ["oz", .028349523]],
+  force: [["N", 1], ["kN", 1000], ["kgf", 9.80665], ["lbf", 4.448222]], press: [["Pa", 1], ["kPa", 1000], ["MPa", 1e6], ["bar", 1e5], ["psi", 6894.757], ["atm", 101325]], power: [["W", 1], ["kW", 1000], ["HP (mechanical)", 745.7], ["BTU/h", .29307]] };
+function cv() { const x = v("cv_x"), k = $("cv_k").value;
+  if (k === "temp") { $("cv_out").innerHTML = `${x} °C = <b>${f(x * 9 / 5 + 32)} °F</b> = <b>${f(x + 273.15)} K</b><br>${x} °F = <b>${f((x - 32) * 5 / 9)} °C</b>`; return; }
+  const u = U[k]; $("cv_out").innerHTML = `<b>${x} ${u[0][0]}</b> =<br>` + u.slice(1).map(([n, s]) => `${f(x / s, 5)} ${n}`).join("<br>") + (k === "len" ? "<br><small>ហត្ថ ជាខ្នាតប្រពៃណី (ប្រហាក់ប្រហែល)</small>" : ""); }
+$("cv_x").oninput = cv; $("cv_k").onchange = cv;
+oh(); bm(); kw(); so(); cv();
+})();
+</script>
+
+<h3>🏆 Quiz ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["Volta battery?", ["1800", "1831", "1888", "1947"], 0], ["Induction?", ["Faraday", "Volta", "Edison", "Ohm"], 0], ["AC motor?", ["Tesla", "Edison", "Watt", "Euler"], 0], ["EAC ច្បាប់អគ្គិសនី?", ["2001", "2019", "1993", "2010"], 0], ["KCL 5A ចូល 2A ចេញ?", ["3 A", "7 A", "2.5 A", "10 A"], 0], ["ប្រេកង់កម្ពុជា?", ["50 Hz", "60 Hz", "100 Hz", "25 Hz"], 0], ["pf ទាប?", ["ចរន្តច្រើន", "ចរន្តតិច", "គ្មានផល", "វ៉ុលឡើង"], 0], ["កែ pf?", ["Capacitor bank", "Resistor", "Fuse", "LED"], 0], ["P 3 ហ្វាស?", ["√3·VL·I·pf", "VL·I", "3·V·I", "V²/R"], 0], ["400/√3?", ["≈230 V", "133 V", "693 V", "400 V"], 0], ["Transformer ដំណើរការ?", ["AC", "DC", "ទាំងពីរ", "គ្មាន"], 0], ["បញ្ជូនវ៉ុលខ្ពស់?", ["បាត់បង់តិច", "ថ្លៃ", "គ្រោះថ្នាក់តិច", "លឿន"], 0], ["120×50/4?", ["1500 rpm", "3000", "750", "1000"], 0], ["ល្បឿន 80% អានុភាព?", ["≈51%", "80%", "64%", "20%"], 0], ["MCB ការពារ?", ["ខ្សែ", "មនុស្សតែប៉ុណ្ណោះ", "រន្ទះ", "ទឹក"], 0], ["RCD?", ["30 mA", "30 A", "3 A", "300 A"], 0], ["Solar Series ស្រមោល?", ["ប៉ះពាល់ខ្សែទាំងមូល", "គ្មាន", "ល្អ", "ផលិតច្រើន"], 0], ["LED 5V 2V 15mA?", ["200 Ω", "330 Ω", "20 Ω", "2 kΩ"], 0], ["PLC ជាមួយ?", ["Modicon/Morley", "Tesla", "Ohm", "Volta"], 0], ["AC 26°C?", ["សន្សំ", "ខាត", "ដដែល", "ខូច"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+<ol class='steps'><li>មូលដ្ឋានវិស្វកម្ម ✅</li><li><b>វិស្វកម្មអគ្គិសនី</b> (វគ្គនេះ) ✅</li><li>C/C++ (Arduino) · IoT · Mobile App</li><li>មេកានិច (HVAC/ម៉ូទ័រ) · Cyber Security (ICS/SCADA)</li></ol></section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="ele"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន Firebase & Supabase Backend</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#f57c00; --accent2:#ffca28; --accent-soft:#fff4e0;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#ffb74d; --accent2:#ffca28; --accent-soft:#2b1d08;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#ffb74d; --accent2:#ffca28; --accent-soft:#2b1d08;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#1b2a1f,#e65100 50%,#3ecf8e);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/backend.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/backend.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Backend សម្រាប់ Mobile App៖ Firebase &amp; Supabase</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Backend ជាអ្វី? Firebase &amp; Supabase</a>
+<a href="#install">២. បង្កើត Project &amp; CLI</a>
+<a href="#elements">៣. ធាតុនីមួយៗរបស់ Backend</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Backend, REST API &amp; JSON</a>
+<a href="#l2">មេរៀន ២: ភ្ជាប់ Firebase ទៅ App (Flutter · RN · Android · iOS)</a>
+<a href="#l3">មេរៀន ៣: Firebase Authentication</a>
+<a href="#l4">មេរៀន ៤: Cloud Firestore៖ Collection, Document &amp; CRUD</a>
+<a href="#l5">មេរៀន ៥: Query, Realtime &amp; Pagination</a>
+<a href="#l6">មេរៀន ៦: Firestore Security Rules &amp; Emulator</a>
+<a href="#l7">មេរៀន ៧: Cloud Storage៖ Upload រូបភាព</a>
+<a href="#l8">មេរៀន ៨: Cloud Functions &amp; Push Notification (FCM)</a>
+<a href="#l9">មេរៀន ៩: Supabase៖ PostgreSQL Tables &amp; SQL</a>
+<a href="#l10">មេរៀន ១០: supabase-js &amp; supabase_flutter៖ CRUD</a>
+<a href="#l11">មេរៀន ១១: Supabase Auth &amp; Row Level Security (RLS)</a>
+<a href="#l12">មេរៀន ១២: Realtime, Storage &amp; Edge Functions (Supabase)</a>
+<a href="#l13">មេរៀន ១៣: Data Modeling &amp; ជ្រើស Firebase ឬ Supabase</a>
+<a href="#l14">មេរៀន ១៤: Security, Testing &amp; Production Checklist</a>
+<a href="#cheat">📋 Cheat Sheet</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងអាជីព៖ Kafe Backend ពេញលេញ</a>
+<a href="#pro-app">💻 Backend Lab Pro (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🔥⚡ Firebase &amp; Supabase — Login, Database, Realtime, Push</h2>
+  <p>Backend សម្រាប់ App Flutter/React Native/Kotlin/Swift៖ <b>REST/JSON, Firebase Auth, Firestore, Security Rules, Storage, Cloud Functions, FCM Push</b> និង <b>Supabase PostgreSQL, RLS, Realtime, Edge Functions</b> — SQL រត់ពិតលើ PostgreSQL 16។</p>
+  <p><span class="badge">📘 ១៤ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">💻 Code មានពណ៌ + លទ្ធផល</span><span class="badge">🔥 Backend Lab Pro</span></p>
+</section>
+<section id="intro">
+<h2>១. Backend ជាអ្វី? Firebase &amp; Supabase</h2>
+
+<p>App ស្ទើរតែទាំងអស់ត្រូវការ <b>Backend</b>៖ កន្លែងរក្សា <b>គណនីអ្នកប្រើ</b>, <b>ទិន្នន័យ</b> (Menu, Order), <b>រូបភាព</b> និង <b>Code ដែលរត់លើ Server</b>។ ជំនួសឲ្យការសរសេរ Server ខ្លួនឯង យើងអាចប្រើ <b>BaaS (Backend-as-a-Service)</b> ដូចជា <b>Firebase</b> និង <b>Supabase</b> ដែលភ្ជាប់បានជាមួយ Flutter, React Native, Kotlin និង Swift (វគ្គមុនៗ)។ <button class="btn say" data-say="Firebase and Supabase">🔊 អានពាក្យ</button></p>
+<figure class="fig"><svg viewBox="0 0 940 300" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="300" fill="#fff"/><rect x="20" y="95" width="190" height="110" rx="14" fill="#0ea5e9"/><text x="115.0" y="144.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">📱 App</text><text x="115.0" y="166.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Flutter · RN · Kotlin · Swift</text><rect x="330" y="20" width="270" height="56" rx="14" fill="#f59e0b"/><text x="465.0" y="42.0" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">🔐 Auth</text><text x="465.0" y="64.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Email · Google · Phone</text><rect x="330" y="86" width="270" height="56" rx="14" fill="#ea580c"/><text x="465.0" y="108.0" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">🗄️ Database</text><text x="465.0" y="130.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Firestore / Postgres</text><rect x="330" y="152" width="270" height="56" rx="14" fill="#16a34a"/><text x="465.0" y="174.0" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">🖼️ Storage</text><text x="465.0" y="196.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">រូប · វីដេអូ · PDF</text><rect x="330" y="218" width="270" height="56" rx="14" fill="#7c3aed"/><text x="465.0" y="240.0" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">⚙️ Functions</text><text x="465.0" y="262.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Code លើ Server</text><line x1="212" y1="150" x2="326" y2="48" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="212" y1="150" x2="326" y2="114" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="212" y1="150" x2="326" y2="180" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="212" y1="150" x2="326" y2="246" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="690" y="70" width="230" height="80" rx="14" fill="#0f172a"/><text x="805.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🔔 Push (FCM)</text><text x="805.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ផ្ញើ Notification</text><rect x="690" y="170" width="230" height="80" rx="14" fill="#64748b"/><text x="805.0" y="204.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">⚡ Realtime</text><text x="805.0" y="226.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Update ភ្លាមគ្រប់ទូរស័ព្ទ</text><line x1="602" y1="246" x2="686" y2="210" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="602" y1="246" x2="686" y2="110" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="470" y="296" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">BaaS = Backend-as-a-Service៖ មិនបាច់សរសេរ Server ខ្លួនឯង</text></svg><figcaption>🖼️ Backend-as-a-Service៖ សេវាសំខាន់ៗដែល App ប្រើ</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>ព្រឹត្តិការណ៍</th></tr><tr><td>1986</td><td><b>Michael Stonebraker</b> (UC Berkeley) ចាប់ផ្តើមគម្រោង <b>Postgres</b> → ក្រោយមក <b>PostgreSQL</b></td></tr><tr><td>2011</td><td><b>James Tamplin</b> &amp; <b>Andrew Lee</b> បង្កើត <b>Firebase</b> (Realtime Database)</td></tr><tr><td>2014</td><td><b>Google ទិញ Firebase</b> → បន្ថែម Auth, Hosting, Storage, Cloud Functions, FCM</td></tr><tr><td>2017</td><td><b>Cloud Firestore</b> (NoSQL Document DB ជំនាន់ថ្មី) — GA ឆ្នាំ 2019</td></tr><tr><td>2020</td><td><b>Paul Copplestone</b> &amp; <b>Ant Wilson</b> បង្កើត <b>Supabase</b> — "Open source Firebase alternative" លើ PostgreSQL</td></tr><tr><td>2024</td><td>Supabase GA · Firebase Data Connect (PostgreSQL) — ទាំងពីរកាន់តែជិតគ្នា</td></tr></table>
+
+<table><tr><th></th><th>🔥 Firebase</th><th>⚡ Supabase</th></tr><tr><td>ម្ចាស់</td><td>Google</td><td>Supabase Inc. (Open source)</td></tr><tr><td>Database</td><td>Firestore — NoSQL (Document)</td><td>PostgreSQL — SQL (តារាង)</td></tr><tr><td>សុវត្ថិភាព</td><td>Security Rules</td><td>Row Level Security (RLS)</td></tr><tr><td>Server code</td><td>Cloud Functions (Node.js)</td><td>Edge Functions (Deno/TypeScript)</td></tr><tr><td>Push</td><td>FCM (ល្អបំផុត)</td><td>ប្រើ FCM / Expo push</td></tr><tr><td>Self-host</td><td>មិនបាន</td><td>បាន (Docker)</td></tr><tr><td>ល្អសម្រាប់</td><td>Realtime chat, App លឿន, Offline</td><td>ទិន្នន័យមានទំនាក់ទំនង (Order, Report, Shop)</td></tr></table>
+
+<div class="grid"><div class="card"><b>💬 Chat / Social</b><br>Realtime + Push</div><div class="card"><b>🛒 Shop / Delivery</b><br>Order, Payment status</div><div class="card"><b>🏫 School App</b><br>Login, ពិន្ទុ, ឯកសារ</div><div class="card"><b>📊 Dashboard</b><br>SQL Report (Supabase)</div></div>
+
+</section>
+<section id="install">
+<h2>២. បង្កើត Project &amp; CLI</h2>
+
+<h3>🔥 Firebase</h3>
+<ol class="steps"><li>ចូល <b>console.firebase.google.com</b> → <b>Add project</b> → ឈ្មោះ <code class='i'>kafe-angkor</code>។</li>
+<li>Build → <b>Authentication</b> (Enable Email/Password, Google) · <b>Firestore Database</b> (ជ្រើសតំបន់ ឧ. <code class='i'>asia-southeast1</code> សិង្ហបុរី — ជិតកម្ពុជា)។</li>
+<li>ដំឡើង CLI ហើយភ្ជាប់ App។</li></ol>
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+npm install -g firebase-tools
+firebase login
+firebase init firestore functions storage emulators   # បង្កើត firebase.json, firestore.rules ...
+firebase emulators:start                             # Firebase ក្លែងលើកុំព្យូទ័រ (ឥតគិតថ្លៃ)
+
+# Flutter
+dart pub global activate flutterfire_cli
+flutterfire configure                                # បង្កើត lib/firebase_options.dart
+</script>
+
+<h3>⚡ Supabase</h3>
+<ol class="steps"><li>ចូល <b>supabase.com/dashboard</b> → <b>New project</b> → ដាក់ Password Database · Region <b>Southeast Asia (Singapore)</b>។</li>
+<li>Project Settings → <b>API</b>៖ ចម្លង <b>Project URL</b> និង <b>anon (publishable) key</b>។</li>
+<li>ប្រើ <b>SQL Editor</b> ឬ <b>Table Editor</b> បង្កើតតារាង។</li></ol>
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+npm install supabase --save-dev
+npx supabase init
+npx supabase start          # Supabase ពេញលេញលើកុំព្យូទ័រ (ត្រូវការ Docker)
+npx supabase migration new create_menu
+npx supabase db push        # Upload migration ទៅ Cloud
+</script>
+
+<div class="note">💡 SQL ក្នុងវគ្គនេះ ខ្ញុំរត់ពិតលើ <b>PostgreSQL 16</b> (Database ដូចក្នុង Supabase) ហើយក្លែង <code class='i'>auth.uid()</code> ដូច Supabase។ Code Firebase មិនអាចរត់ទីនេះបានទេ → ប្រើ <b>Backend Lab Pro</b> នៅខាងចុង ដើម្បីសាក Query, Rules និង Realtime។</div>
+
+</section>
+<section id="elements">
+<h2>៣. ធាតុនីមួយៗរបស់ Backend</h2>
+
+<table><tr><th>ធាតុ</th><th>Firebase</th><th>Supabase</th><th>មេរៀន</th></tr><tr><td>Auth (គណនី)</td><td>Firebase Auth</td><td>Supabase Auth (GoTrue)</td><td>៣ · ១១</td></tr><tr><td>Database</td><td>Cloud Firestore</td><td>PostgreSQL</td><td>៤ · ៥ · ៩ · ១០</td></tr><tr><td>សុវត្ថិភាព</td><td>Security Rules</td><td>RLS Policies</td><td>៦ · ១១</td></tr><tr><td>File</td><td>Cloud Storage</td><td>Supabase Storage</td><td>៧ · ១២</td></tr><tr><td>Server code</td><td>Cloud Functions</td><td>Edge Functions</td><td>៨ · ១២</td></tr><tr><td>Push</td><td>FCM</td><td>FCM / Expo</td><td>៨</td></tr><tr><td>Realtime</td><td>onSnapshot</td><td>Realtime channels</td><td>៥ · ១២</td></tr><tr><td>សាកលើកុំព្យូទ័រ</td><td>Emulator Suite</td><td>supabase start</td><td>៦ · ១៤</td></tr></table>
+
+<table><tr><th>ពាក្យ</th><th>អត្ថន័យ</th></tr><tr><td>Client SDK</td><td>Library ក្នុង App (firebase, supabase-js, supabase_flutter)</td></tr><tr><td>API key / anon key</td><td>Key សាធារណៈ (ដាក់ក្នុង App បាន) — សុវត្ថិភាពពឹងលើ Rules/RLS</td></tr><tr><td>UID</td><td>លេខសម្គាល់អ្នកប្រើម្នាក់ៗ</td></tr><tr><td>JWT</td><td>Token ដែលបញ្ជាក់ថាអ្នកណា Login (ផ្ញើជាមួយរាល់ Request)</td></tr><tr><td>Admin SDK / service_role</td><td>Key មានសិទ្ធិពេញ — ដាក់តែលើ Server ⚠️</td></tr></table>
+
+</section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>Backend, REST API &amp; JSON</h2>
+
+<p>App និយាយជាមួយ Backend តាម <b>HTTP</b>៖ ផ្ញើ <b>Request</b> (GET/POST/PATCH/DELETE) ហើយទទួល <b>Response</b> ជា <b>JSON</b>។ Code ខាងក្រោមបង្កើត Server តូចមួយ ហើយហៅវាពិតៗដោយ Node.js៖</p>
+<script type="text/x-code" data-lang="js" data-label="server.mjs">
+import http from "node:http";
+
+const menu = [{ id: 1, name: "Latte", price: 2.5 }, { id: 2, name: "Mocha", price: 2.75 }];
+const orders = [];
+
+const server = http.createServer(async (req, res) => {
+  const send = (code, data) => { res.writeHead(code, { "Content-Type": "application/json" }); res.end(JSON.stringify(data)); };
+  if (req.method === "GET" && req.url === "/menu") return send(200, menu);
+  if (req.method === "POST" && req.url === "/orders") {
+    let body = ""; for await (const c of req) body += c;
+    const { itemId, qty } = JSON.parse(body);
+    const item = menu.find(m => m.id === itemId);
+    if (!item || qty < 1) return send(400, { error: "ទិន្នន័យមិនត្រឹមត្រូវ" });
+    const order = { id: orders.length + 1, item: item.name, qty, total: item.price * qty, status: "pending" };
+    orders.push(order);
+    return send(201, order);
+  }
+  send(404, { error: "Not found" });
+});
+
+server.listen(3000, async () => {
+  const base = "http://localhost:3000";
+  const r1 = await fetch(base + "/menu");
+  console.log("GET /menu →", r1.status, await r1.json());
+
+  const r2 = await fetch(base + "/orders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ itemId: 1, qty: 2 }) });
+  console.log("POST /orders →", r2.status, await r2.json());
+
+  const r3 = await fetch(base + "/orders", { method: "POST", body: JSON.stringify({ itemId: 9, qty: 1 }) });
+  console.log("POST bad →", r3.status, await r3.json());
+  server.close();
+});
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Node.js</span></div><pre>GET /menu → 200 [
+  { id: 1, name: &#x27;Latte&#x27;, price: 2.5 },
+  { id: 2, name: &#x27;Mocha&#x27;, price: 2.75 }
+]
+POST /orders → 201 { id: 1, item: &#x27;Latte&#x27;, qty: 2, total: 5, status: &#x27;pending&#x27; }
+POST bad → 400 { error: &#x27;ទិន្នន័យមិនត្រឹមត្រូវ&#x27; }</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>http.createServer</code> — Server ទទួល Request · <code class='i'>req.method</code> + <code class='i'>req.url</code> = ផ្លូវ (Route)។</li><li><b>Status code</b>៖ 200 OK · 201 Created · 400 ទិន្នន័យខុស · 401 មិនទាន់ Login · 403 គ្មានសិទ្ធិ · 404 រកមិនឃើញ · 500 Server error។</li><li><code class='i'>JSON.stringify / JSON.parse</code> — Object ↔ អក្សរ JSON ដែលធ្វើដំណើរលើ Network។</li><li>Server <b>ត្រួតពិនិត្យ</b> ទិន្នន័យ (item មាន, qty ≥ 1) និង <b>គណនាតម្លៃខ្លួនឯង</b> — កុំជឿតម្លៃពី App។</li><li>Firebase/Supabase ធ្វើការងារ Server ទាំងនេះជំនួសយើង + Auth + Realtime + Scale។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>បន្ថែម Route <code class='i'>GET /orders</code> ត្រឡប់ Order ទាំងអស់។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="js" data-label="answer.mjs">
+if (req.method === "GET" && req.url === "/orders") return send(200, orders);
+</script>
+</details></div>
+
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>ភ្ជាប់ Firebase ទៅ App (Flutter · RN · Android · iOS)</h2>
+
+<table><tr><th>Platform</th><th>Package / ឯកសារ</th><th>ចាប់ផ្តើម</th></tr><tr><td>Flutter</td><td><code class='i'>firebase_core</code> + <code class='i'>flutterfire configure</code></td><td><code class='i'>await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)</code></td></tr><tr><td>React Native (Expo)</td><td><code class='i'>firebase</code> (JS SDK) ឬ <code class='i'>@react-native-firebase/app</code></td><td><code class='i'>initializeApp(config)</code></td></tr><tr><td>Android (Kotlin)</td><td><code class='i'>google-services.json</code> ក្នុង <code class='i'>app/</code> + Firebase BoM</td><td>Plugin <code class='i'>com.google.gms.google-services</code></td></tr><tr><td>iOS (Swift)</td><td><code class='i'>GoogleService-Info.plist</code> + Swift Package <code class='i'>firebase-ios-sdk</code></td><td><code class='i'>FirebaseApp.configure()</code></td></tr></table>
+
+<script type="text/x-code" data-lang="dart" data-label="main.dart">
+// pubspec.yaml: firebase_core, firebase_auth, cloud_firestore
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(const KafeApp());
+}
+</script>
+
+<script type="text/x-code" data-lang="js" data-label="lib/firebase.js">
+// lib/firebase.js — React Native / Web (Firebase JS SDK v9+ modular)
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
+
+const firebaseConfig = {
+  apiKey: process.env.EXPO_PUBLIC_FB_API_KEY,
+  authDomain: "kafe-angkor.firebaseapp.com",
+  projectId: "kafe-angkor",
+  storageBucket: "kafe-angkor.firebasestorage.app",
+  appId: process.env.EXPO_PUBLIC_FB_APP_ID,
+};
+
+export const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const storage = getStorage(app);
+</script>
+
+<script type="text/x-code" data-lang="swift" data-label="KafeApp.swift">
+import SwiftUI
+import FirebaseCore
+
+class AppDelegate: NSObject, UIApplicationDelegate {
+  func application(_ application: UIApplication,
+                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+    FirebaseApp.configure()
+    return true
+  }
+}
+
+@main struct KafeApp: App {
+  @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+  var body: some Scene { WindowGroup { RootView() } }
+}
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>flutterfire configure</code> — ចុះឈ្មោះ App Android/iOS/Web ហើយបង្កើត <code class='i'>firebase_options.dart</code> ស្វ័យប្រវត្តិ។</li><li><code class='i'>WidgetsFlutterBinding.ensureInitialized()</code> — ត្រូវហៅមុន await ក្នុង main។</li><li>JS SDK <b>modular</b> (v9+)៖ import តែ Function ដែលប្រើ → App តូច។</li><li><code class='i'>apiKey</code> របស់ Firebase មិនមែនជាពាក្យសម្ងាត់ — វាគ្រាន់តែកំណត់ Project។ សុវត្ថិភាពពិតគឺ <b>Security Rules</b> (មេរៀន ៦) + <b>App Check</b>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>ឯកសារ config Firebase សម្រាប់ Android និង iOS ឈ្មោះអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>Android៖ <b>google-services.json</b> · iOS៖ <b>GoogleService-Info.plist</b> (FlutterFire បង្កើតឲ្យទាំងពីរ)។</p></details></div>
+
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Firebase Authentication</h2>
+
+<script type="text/x-code" data-lang="js" data-label="auth.js">
+import { auth } from "./firebase";
+import {
+  createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,
+  onAuthStateChanged, sendPasswordResetEmail, updateProfile,
+} from "firebase/auth";
+
+export async function register(name, email, password) {
+  const { user } = await createUserWithEmailAndPassword(auth, email, password);
+  await updateProfile(user, { displayName: name });
+  return user.uid;
+}
+
+export async function login(email, password) {
+  try {
+    const { user } = await signInWithEmailAndPassword(auth, email, password);
+    return user;
+  } catch (e) {
+    const msg = {
+      "auth/invalid-credential": "Email ឬ Password ខុស",
+      "auth/too-many-requests": "ព្យាយាមច្រើនពេក សូមរង់ចាំ",
+    }[e.code] ?? e.message;
+    throw new Error(msg);
+  }
+}
+
+// ស្តាប់ស្ថានភាព Login (រត់ពេលបើក App និងពេល Login/Logout)
+onAuthStateChanged(auth, (user) => {
+  if (user) console.log("✅ Login:", user.uid, user.email);
+  else console.log("👋 Logged out");
+});
+
+export const logout = () => signOut(auth);
+export const resetPassword = (email) => sendPasswordResetEmail(auth, email);
+</script>
+
+<script type="text/x-code" data-lang="dart" data-label="auth_gate.dart">
+final auth = FirebaseAuth.instance;
+
+// Register / Login
+await auth.createUserWithEmailAndPassword(email: email, password: pw);
+await auth.signInWithEmailAndPassword(email: email, password: pw);
+
+// ប្តូរអេក្រង់តាមស្ថានភាព Login
+StreamBuilder<User?>(
+  stream: auth.authStateChanges(),
+  builder: (context, snap) {
+    if (snap.connectionState == ConnectionState.waiting) return const CircularProgressIndicator();
+    return snap.hasData ? const HomePage() : const LoginPage();
+  },
+)
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar" style="background:#f57c00">Kafe Angkor</div><div class="ph-body"><div style="text-align:center;font-size:40px;margin:14px 0">☕</div><div class="ph-field">dara@kafe.kh</div><div class="ph-field">••••••••</div><span class="ph-btn" style="display:block;text-align:center;background:#f57c00">ចូលគណនី</span><div style="text-align:center;margin-top:10px;font-size:13px">ឬ <b>G</b> ចូលដោយ Google</div></div></div><figcaption>📱 អេក្រង់ Login</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>createUserWithEmailAndPassword</code> — បង្កើតគណនី (Password ≥ 6 តួ) · Firebase រក្សា Password ដោយ Hash។</li><li><code class='i'>e.code</code> — ប្តូរ Error ជាភាសាខ្មែរ ងាយយល់សម្រាប់អ្នកប្រើ។</li><li><code class='i'>onAuthStateChanged</code> / <code class='i'>authStateChanges()</code> — ស្តាប់ Login · Firebase ចងចាំ Login ដោយស្វ័យប្រវត្តិ។</li><li>Google / Apple sign-in៖ បើកក្នុង Console + package <code class='i'>google_sign_in</code> / <code class='i'>sign_in_with_apple</code> (App iOS ដែលមាន Social login ត្រូវមាន Sign in with Apple)។</li><li>Phone (OTP SMS) ក៏មាន — ល្អសម្រាប់កម្ពុជា ប៉ុន្តែ SMS មានថ្លៃ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>អ្នកប្រើភ្លេច Password។ ប្រើ Function អ្វី?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="js" data-label="answer.js">
+await sendPasswordResetEmail(auth, "dara@kafe.kh");  // ផ្ញើ Link កំណត់ថ្មីទៅ Email
+</script>
+</details></div>
+
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Cloud Firestore៖ Collection, Document &amp; CRUD</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 290" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="290" fill="#fff"/><rect x="20" y="110" width="170" height="70" rx="14" fill="#ea580c"/><text x="105.0" y="139.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">📁 menu</text><text x="105.0" y="161.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Collection</text><rect x="250" y="30" width="200" height="70" rx="14" fill="#f59e0b"/><text x="350.0" y="59.0" text-anchor="middle" font-size="17" font-weight="700" fill="#111">📄 latte</text><text x="350.0" y="81.0" text-anchor="middle" font-size="13" fill="#111" opacity=".92">Document</text><rect x="250" y="190" width="200" height="70" rx="14" fill="#f59e0b"/><text x="350.0" y="219.0" text-anchor="middle" font-size="17" font-weight="700" fill="#111">📄 mocha</text><text x="350.0" y="241.0" text-anchor="middle" font-size="13" fill="#111" opacity=".92">Document</text><line x1="192" y1="145" x2="246" y2="65" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="192" y1="145" x2="246" y2="225" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="510" y="20" width="200" height="120" rx="12" fill="#fff7ed" stroke="#f59e0b" stroke-width="2"/><text x="525" y="48" text-anchor="start" font-size="14" font-weight="600" fill="#7c2d12">name: "Latte"</text><text x="525" y="74" text-anchor="start" font-size="14" font-weight="600" fill="#7c2d12">price: 2.5</text><text x="525" y="100" text-anchor="start" font-size="14" font-weight="600" fill="#7c2d12">hot: false</text><text x="525" y="126" text-anchor="start" font-size="14" font-weight="600" fill="#7c2d12">tags: ["milk"]</text><line x1="452" y1="65" x2="506" y2="65" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="479.0" y="57.0" text-anchor="middle" font-size="13" fill="#334155">Fields</text><rect x="750" y="40" width="170" height="70" rx="14" fill="#ea580c"/><text x="835.0" y="69.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">📁 reviews</text><text x="835.0" y="91.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Sub-collection</text><line x1="712" y1="75" x2="746" y2="75" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="470" y="285" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">menu/latte/reviews/r1 — Collection → Document → Collection → Document …</text></svg><figcaption>🖼️ Firestore៖ Collection → Document → Field (+ Sub-collection)</figcaption></figure>
+
+<script type="text/x-code" data-lang="js" data-label="crud.js">
+import { db, auth } from "./firebase";
+import {
+  collection, doc, addDoc, setDoc, getDoc, getDocs, updateDoc, deleteDoc,
+  serverTimestamp, increment, arrayUnion,
+} from "firebase/firestore";
+
+// CREATE — id ស្វ័យប្រវត្តិ
+const ref = await addDoc(collection(db, "orders"), {
+  uid: auth.currentUser.uid,
+  items: [{ id: "latte", name: "Latte", qty: 2, price: 2.5 }],
+  total: 5,
+  status: "pending",
+  createdAt: serverTimestamp(),          // ម៉ោង Server (មិនមែនម៉ោងទូរស័ព្ទ)
+});
+console.log("Order id:", ref.id);
+
+// CREATE/REPLACE — កំណត់ id ខ្លួនឯង
+await setDoc(doc(db, "menu", "latte"), { name: "Latte", price: 2.5, hot: false, stock: 20 });
+
+// READ មួយ
+const snap = await getDoc(doc(db, "menu", "latte"));
+if (snap.exists()) console.log(snap.id, snap.data());
+
+// READ ទាំងអស់
+const all = await getDocs(collection(db, "menu"));
+all.forEach((d) => console.log(d.id, d.data().name));
+
+// UPDATE ខ្លះៗ
+await updateDoc(doc(db, "menu", "latte"), {
+  price: 2.75,
+  stock: increment(-1),                  // បន្ថយ ១ ដោយសុវត្ថិភាព (Atomic)
+  tags: arrayUnion("best-seller"),
+});
+
+// DELETE
+await deleteDoc(doc(db, "menu", "latte"));
+</script>
+
+<script type="text/x-code" data-lang="dart" data-label="crud.dart">
+final db = FirebaseFirestore.instance;
+
+await db.collection('orders').add({'uid': uid, 'total': 5, 'status': 'pending', 'createdAt': FieldValue.serverTimestamp()});
+final snap = await db.doc('menu/latte').get();
+print(snap.data()?['name']);
+await db.doc('menu/latte').update({'stock': FieldValue.increment(-1)});
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Collection</b> = ថត · <b>Document</b> = ឯកសារ JSON (≤ 1 MiB) · Path <code class='i'>menu/latte</code>។</li><li><code class='i'>addDoc</code> id ស្វ័យប្រវត្តិ · <code class='i'>setDoc</code> កំណត់ id (Replace ទាំងមូល ឬ <code class='i'>{ merge: true }</code>)។</li><li><code class='i'>updateDoc</code> — ប្តូរតែ Field ខ្លះ · <code class='i'>increment</code>, <code class='i'>arrayUnion</code> — Atomic (អ្នកប្រើ ២ នាក់កែព្រមគ្នាមិនបាត់ទិន្នន័យ)។</li><li><code class='i'>serverTimestamp()</code> — ម៉ោងពី Server (ទូរស័ព្ទអាចកំណត់ម៉ោងខុស)។</li><li>Firestore គិតលុយតាម <b>ចំនួន Read/Write/Delete</b> — <code class='i'>getDocs</code> 100 Document = 100 Reads។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>ប្តូរ Status Order <code class='i'>o7</code> ទៅ <code class='i'>"ready"</code>។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="js" data-label="answer.js">
+await updateDoc(doc(db, "orders", "o7"), { status: "ready", readyAt: serverTimestamp() });
+</script>
+</details></div>
+
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>Query, Realtime &amp; Pagination</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="230" fill="#fff"/><rect x="20" y="30" width="200" height="70" rx="14" fill="#0ea5e9"/><text x="120.0" y="59.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">📱 អតិថិជន</text><text x="120.0" y="81.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">subscribe orders/o7</text><rect x="20" y="130" width="200" height="70" rx="14" fill="#16a34a"/><text x="120.0" y="159.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🧑‍🍳 Barista App</text><text x="120.0" y="181.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">update status=ready</text><rect x="360" y="70" width="220" height="90" rx="14" fill="#ea580c"/><text x="470.0" y="109.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🗄️ Database</text><text x="470.0" y="131.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Realtime / WebSocket</text><rect x="720" y="70" width="200" height="90" rx="14" fill="#7c3aed"/><text x="820.0" y="109.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">⚙️ Function</text><text x="820.0" y="131.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ផ្ញើ Push FCM</text><line x1="222" y1="165" x2="356" y2="130" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="289.0" y="139.5" text-anchor="middle" font-size="13" fill="#334155">write</text><line x1="356" y1="100" x2="222" y2="65" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="289.0" y="74.5" text-anchor="middle" font-size="13" fill="#334155">push ភ្លាម (&lt;1s)</text><line x1="582" y1="115" x2="716" y2="115" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="649.0" y="107.0" text-anchor="middle" font-size="13" fill="#334155">trigger</text><text x="470" y="222" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Realtime៖ មិនបាច់ Refresh · Server រុញទិន្នន័យថ្មីមកឯង</text></svg><figcaption>🖼️ Realtime៖ Database រុញទិន្នន័យថ្មីមក App ភ្លាមៗ</figcaption></figure>
+
+<script type="text/x-code" data-lang="js" data-label="orders.js">
+import { collection, query, where, orderBy, limit, startAfter, getDocs, onSnapshot } from "firebase/firestore";
+
+// Query: Order របស់ខ្ញុំ ថ្មីបំផុត ១០
+const q = query(
+  collection(db, "orders"),
+  where("uid", "==", auth.currentUser.uid),
+  where("status", "in", ["pending", "brewing", "ready"]),
+  orderBy("createdAt", "desc"),
+  limit(10),
+);
+
+// Realtime: រត់ម្តង ហើយរាល់ពេលទិន្នន័យប្តូរ
+const unsubscribe = onSnapshot(q, (snap) => {
+  const orders = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  render(orders);
+  snap.docChanges().forEach((c) => {
+    if (c.type === "modified" && c.doc.data().status === "ready") toast("☕ Order រួចរាល់!");
+  });
+}, (err) => console.error(err));
+// ពេលចាកចេញពីអេក្រង់៖ unsubscribe();
+
+// Pagination (Infinite scroll) ដោយ Cursor
+let last = null;
+async function loadMore() {
+  const parts = [collection(db, "menu"), orderBy("name"), limit(20)];
+  if (last) parts.push(startAfter(last));
+  const snap = await getDocs(query(...parts));
+  last = snap.docs.at(-1) ?? last;
+  return snap.docs.map((d) => d.data());
+}
+</script>
+
+<script type="text/x-code" data-lang="dart" data-label="orders_page.dart">
+StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+  stream: FirebaseFirestore.instance
+      .collection('orders')
+      .where('uid', isEqualTo: uid)
+      .orderBy('createdAt', descending: true)
+      .limit(10)
+      .snapshots(),                          // Realtime
+  builder: (context, snap) {
+    if (!snap.hasData) return const CircularProgressIndicator();
+    final docs = snap.data!.docs;
+    return ListView(children: [for (final d in docs) ListTile(title: Text('#${d.id}'), trailing: Text(d['status']))]);
+  },
+)
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar" style="background:#f57c00">Orders</div><div class="ph-body"><div class="ph-tile"><div style="flex:1"><b>#o7</b> Latte ×2</div><span style="color:#2f9e44">✅ ready</span></div><div class="ph-tile"><div style="flex:1"><b>#o6</b> Mocha</div><span style="color:#f08c00">☕ brewing</span></div><div class="ph-tile"><div style="flex:1"><b>#o5</b> Tea</div>⏳ pending</div><div style="margin-top:10px;background:#212529;color:#fff;border-radius:10px;padding:8px 12px;font-size:13px">☕ Order #o7 រួចរាល់!</div></div></div><figcaption>📱 Order Status ប្តូរភ្លាម (Realtime)</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>where</code> តម្រង (<code class='i'>==, !=, &lt;, &gt;=, in, array-contains</code>) · <code class='i'>orderBy</code> តម្រៀប · <code class='i'>limit</code> ចំនួន។</li><li>Query ច្រើនលក្ខខណ្ឌ (where + orderBy Field ផ្សេង) ត្រូវការ <b>Composite index</b> — Error នឹងផ្តល់ Link បង្កើតវា។</li><li><code class='i'>onSnapshot</code> / <code class='i'>.snapshots()</code> — Realtime · <code class='i'>docChanges()</code> ដឹងថា added/modified/removed។</li><li>កុំភ្លេច <code class='i'>unsubscribe()</code> ពេលចាកចេញ (ការពារ Read លើស និង Memory leak)។</li><li>Pagination ដោយ <code class='i'>startAfter(lastDoc)</code> — លឿន និងសន្សំ Read ជាង offset។</li><li>Firestore រក្សា Cache <b>Offline</b> ស្វ័យប្រវត្តិលើ Mobile — App នៅតែដើរពេលអត់ Internet។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>រក Menu ដែលតម្លៃ ≤ $2.5 តម្រៀបពីថោក។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="js" data-label="answer.js">
+query(collection(db, "menu"), where("price", "<=", 2.5), orderBy("price"))
+</script>
+</details></div>
+
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Firestore Security Rules &amp; Emulator</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="230" fill="#fff"/><rect x="20" y="70" width="200" height="90" rx="14" fill="#0ea5e9"/><text x="120.0" y="109.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">📱 Request</text><text x="120.0" y="131.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">uid=u1 · read orders/o7</text><rect x="300" y="50" width="300" height="130" rx="14" fill="#7c3aed"/><text x="450.0" y="109.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🛡️ Security Rules / RLS</text><text x="450.0" y="131.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">resource.data.uid == request.auth.uid</text><rect x="690" y="30" width="230" height="70" rx="14" fill="#16a34a"/><text x="805.0" y="59.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">✅ ALLOW</text><text x="805.0" y="81.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ផ្តល់ទិន្នន័យ</text><rect x="690" y="130" width="230" height="70" rx="14" fill="#dc2626"/><text x="805.0" y="159.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">⛔ DENY</text><text x="805.0" y="181.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">permission-denied</text><line x1="222" y1="115" x2="296" y2="115" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="602" y1="100" x2="686" y2="65" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="644.0" y="74.5" text-anchor="middle" font-size="13" fill="#334155">true</text><line x1="602" y1="130" x2="686" y2="165" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="644.0" y="139.5" text-anchor="middle" font-size="13" fill="#334155">false</text><text x="470" y="222" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">ច្បាប់រត់លើ Server — App ពិត ឬ App ក្លែង មិនអាចរំលងបាន</text></svg><figcaption>🖼️ Rules ពិនិត្យរាល់ Request មុនពេលអាន/សរសេរ</figcaption></figure>
+
+<script type="text/x-code" data-lang="js" data-label="firestore.rules">
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function isAdmin()  { return signedIn() && request.auth.token.admin == true; }
+    function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+
+    // Menu: អ្នកណាក៏អានបាន · តែ Admin កែបាន
+    match /menu/{itemId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Users: ម្ចាស់អាន/កែរបស់ខ្លួន
+    match /users/{uid} {
+      allow read, update: if isOwner(uid);
+      allow create: if isOwner(uid) && request.resource.data.keys().hasOnly(['name', 'phone', 'fcmToken']);
+    }
+
+    // Orders: ម្ចាស់អានបាន · បង្កើតបានតែក្នុងឈ្មោះខ្លួនឯង · Status ប្តូរបានតែ Admin
+    match /orders/{orderId} {
+      allow read: if isOwner(resource.data.uid) || isAdmin();
+      allow create: if isOwner(request.resource.data.uid)
+                    && request.resource.data.status == 'pending'
+                    && request.resource.data.total is number
+                    && request.resource.data.total > 0;
+      allow update: if isAdmin();
+      allow delete: if false;
+    }
+  }
+}
+</script>
+
+<script type="text/x-code" data-lang="js" data-label="rules.test.mjs">
+// test/rules.test.mjs — រត់ជាមួយ: firebase emulators:exec "node --test"
+import { initializeTestEnvironment, assertSucceeds, assertFails } from "@firebase/rules-unit-testing";
+import { readFileSync } from "node:fs";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import test from "node:test";
+
+const env = await initializeTestEnvironment({
+  projectId: "kafe-test",
+  firestore: { rules: readFileSync("firestore.rules", "utf8") },
+});
+
+await env.withSecurityRulesDisabled(async (ctx) => {
+  await setDoc(doc(ctx.firestore(), "orders/o1"), { uid: "dara", total: 5, status: "pending" });
+});
+
+test("ម្ចាស់អាន Order ខ្លួនបាន", async () => {
+  await assertSucceeds(getDoc(doc(env.authenticatedContext("dara").firestore(), "orders/o1")));
+});
+test("អ្នកផ្សេងអានមិនបាន", async () => {
+  await assertFails(getDoc(doc(env.authenticatedContext("sokha").firestore(), "orders/o1")));
+});
+test("មិន Login បង្កើត Order មិនបាន", async () => {
+  await assertFails(setDoc(doc(env.unauthenticatedContext().firestore(), "orders/x"), { uid: "x", total: 1, status: "pending" }));
+});
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>match /orders/{orderId}</code> — ច្បាប់សម្រាប់ Document ក្នុង Collection · <code class='i'>{orderId}</code> = Wildcard។</li><li><code class='i'>request.auth</code> = អ្នកណាផ្ញើ (null បើមិន Login) · <code class='i'>resource.data</code> = ទិន្នន័យដែលមានស្រាប់ · <code class='i'>request.resource.data</code> = ទិន្នន័យថ្មីដែលកំពុងសរសេរ។</li><li><b>Validation</b> នៅក្នុង Rules៖ <code class='i'>total is number &amp;&amp; total &gt; 0</code>, <code class='i'>keys().hasOnly([...])</code>។</li><li>Rules <b>មិនមែនជា Filter</b>៖ Query ត្រូវមាន <code class='i'>where('uid','==',uid)</code> ដែលត្រូវនឹងច្បាប់ ទើបអនុញ្ញាត។</li><li><code class='i'>request.auth.token.admin</code> — Custom claim កំណត់ពី Admin SDK (មេរៀន ៨)។</li><li>⚠️ Test mode (<code class='i'>allow read, write: if true</code>) = អ្នកណាក៏លុប Database បាន! ប្តូរមុន Launch ជានិច្ច។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>សរសេរច្បាប់ឲ្យ Review (<code class='i'>menu/{id}/reviews/{rid}</code>) អានបានគ្រប់គ្នា ហើយបង្កើតបានតែអ្នក Login ដែល stars ចន្លោះ 1–5។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="js" data-label="answer.rules">
+match /menu/{id}/reviews/{rid} {
+  allow read: if true;
+  allow create: if request.auth != null
+                && request.resource.data.uid == request.auth.uid
+                && request.resource.data.stars is int
+                && request.resource.data.stars >= 1 && request.resource.data.stars <= 5;
+}
+</script>
+</details></div>
+
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Cloud Storage៖ Upload រូបភាព</h2>
+
+<script type="text/x-code" data-lang="js" data-label="upload.js">
+import { storage, auth } from "./firebase";
+import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
+
+export async function uploadAvatar(localUri, onProgress) {
+  const blob = await (await fetch(localUri)).blob();               // រូបពី Camera/Gallery (expo-image-picker)
+  const path = `avatars/${auth.currentUser.uid}/${Date.now()}.jpg`;
+  const task = uploadBytesResumable(ref(storage, path), blob, { contentType: "image/jpeg" });
+
+  return new Promise((resolve, reject) => {
+    task.on("state_changed",
+      (s) => onProgress(Math.round((s.bytesTransferred / s.totalBytes) * 100)),
+      reject,
+      async () => resolve(await getDownloadURL(task.snapshot.ref)));  // URL ដាក់ក្នុង Firestore
+  });
+}
+</script>
+
+<script type="text/x-code" data-lang="js" data-label="storage.rules">
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /avatars/{uid}/{file} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == uid
+                   && request.resource.size < 2 * 1024 * 1024          // < 2 MB
+                   && request.resource.contentType.matches('image/.*');
+    }
+  }
+}
+</script>
+
+<script type="text/x-code" data-lang="dart" data-label="upload.dart">
+final file = File(picked.path);
+final ref = FirebaseStorage.instance.ref('avatars/$uid/${DateTime.now().millisecondsSinceEpoch}.jpg');
+final task = ref.putFile(file, SettableMetadata(contentType: 'image/jpeg'));
+task.snapshotEvents.listen((s) => setState(() => progress = s.bytesTransferred / s.totalBytes));
+final url = await (await task).ref.getDownloadURL();
+await FirebaseFirestore.instance.doc('users/$uid').update({'photoUrl': url});
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar" style="background:#f57c00">Profile</div><div class="ph-body"><div style="text-align:center;margin:16px 0"><div style="width:90px;height:90px;border-radius:50%;margin:auto;background:linear-gradient(135deg,#ffb74d,#f57c00);display:grid;place-items:center;font-size:40px">🙂</div><div style="margin:12px 0 6px">កំពុង Upload… 68%</div><div style="height:8px;background:#eee;border-radius:9px"><div style="width:68%;height:100%;background:#f57c00;border-radius:9px"></div></div></div></div></div><figcaption>📱 Upload Avatar + Progress</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Storage</b> រក្សា File ធំ (រូប/វីដេអូ) · <b>Firestore</b> រក្សាតែ <b>URL</b> របស់ File។</li><li>Path <code class='i'>avatars/{uid}/...</code> — ងាយសរសេរច្បាប់ "ម្ចាស់ប៉ុណ្ណោះ"។</li><li><code class='i'>uploadBytesResumable</code> — បង្ហាញ % · បន្តបានពេល Network ដាច់។</li><li>Rules ពិនិត្យ <b>ទំហំ</b> និង <b>ប្រភេទ File</b> — ការពារអ្នក Upload File ធំ/មេរោគ។</li><li>បង្រួមរូបមុន Upload (quality 0.7, ទទឹង ≤ 1080px) — សន្សំលុយ និងលឿន។</li><li>ចំណាំ៖ Project ថ្មីត្រូវប្តូរទៅ <b>Blaze plan</b> (Pay-as-you-go មានកម្រិតឥតគិតថ្លៃ) ដើម្បីប្រើ Cloud Storage។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>លុប Avatar ចាស់ពេលដាក់ថ្មី?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="js" data-label="answer.js">
+await deleteObject(ref(storage, oldPath));  // រក្សា path ចាស់ក្នុង users/{uid}
+</script>
+</details></div>
+
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Cloud Functions &amp; Push Notification (FCM)</h2>
+
+<script type="text/x-code" data-lang="ts" data-label="functions/src/index.ts">
+// functions/src/index.ts — firebase deploy --only functions
+import { onCall, HttpsError } from "firebase-functions/v2/https";
+import { onDocumentUpdated } from "firebase-functions/v2/firestore";
+import { setGlobalOptions } from "firebase-functions/v2";
+import { initializeApp } from "firebase-admin/app";
+import { getFirestore, FieldValue } from "firebase-admin/firestore";
+import { getMessaging } from "firebase-admin/messaging";
+
+initializeApp();
+setGlobalOptions({ region: "asia-southeast1" });
+const db = getFirestore();
+
+// 1) Callable: បង្កើត Order — Server គណនាតម្លៃ (កុំជឿ App)
+export const placeOrder = onCall(async (req) => {
+  if (!req.auth) throw new HttpsError("unauthenticated", "សូម Login");
+  const items = req.data.items as { id: string; qty: number }[];
+  if (!Array.isArray(items) || items.length === 0) throw new HttpsError("invalid-argument", "កន្ត្រកទទេ");
+
+  let total = 0;
+  for (const it of items) {
+    const m = await db.doc(`menu/${it.id}`).get();
+    if (!m.exists || it.qty < 1) throw new HttpsError("invalid-argument", `ទំនិញ ${it.id} មិនត្រឹមត្រូវ`);
+    total += m.get("price") * it.qty;
+  }
+  const ref = await db.collection("orders").add({
+    uid: req.auth.uid, items, total: Math.round(total * 100) / 100,
+    status: "pending", createdAt: FieldValue.serverTimestamp(),
+  });
+  return { id: ref.id, total };
+});
+
+// 2) Trigger: ពេល Status ប្តូរទៅ ready → ផ្ញើ Push
+export const notifyReady = onDocumentUpdated("orders/{id}", async (event) => {
+  const before = event.data?.before.data();
+  const after = event.data?.after.data();
+  if (!before || !after || before.status === after.status || after.status !== "ready") return;
+
+  const user = await db.doc(`users/${after.uid}`).get();
+  const token = user.get("fcmToken");
+  if (!token) return;
+  await getMessaging().send({
+    token,
+    notification: { title: "☕ Kafe Angkor", body: `Order #${event.params.id} រួចរាល់ហើយ!` },
+    data: { orderId: event.params.id },
+  });
+});
+</script>
+
+<script type="text/x-code" data-lang="dart" data-label="push.dart">
+// App: ស្នើ Permission + រក្សា FCM token
+final fcm = FirebaseMessaging.instance;
+await fcm.requestPermission();
+final token = await fcm.getToken();
+await FirebaseFirestore.instance.doc('users/$uid').set({'fcmToken': token}, SetOptions(merge: true));
+
+// ហៅ Callable function
+final res = await FirebaseFunctions.instanceFor(region: 'asia-southeast1')
+    .httpsCallable('placeOrder')
+    .call({'items': [{'id': 'latte', 'qty': 2}]});
+print(res.data['total']);   // 5.0
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar ios" style="color:#111"></div><div class="ph-body"><div style="background:rgba(255,255,255,.95);border-radius:16px;padding:10px 12px;box-shadow:0 6px 20px rgba(0,0,0,.15);margin-top:8px"><div style="font-size:12px;color:#888">☕ KAFE ANGKOR · ឥឡូវ</div><b>☕ Kafe Angkor</b><div>Order #o7 រួចរាល់ហើយ!</div></div></div></div><figcaption>📱 Push Notification លើ Lock screen</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Cloud Functions</b> — Code Node.js/TypeScript រត់លើ Server របស់ Google (ត្រូវការ Blaze plan)។</li><li><code class='i'>onCall</code> — App ហៅដូច Function ធម្មតា · <code class='i'>req.auth</code> ដឹងអ្នកណាហៅ · <code class='i'>HttpsError</code> ត្រឡប់ Error ច្បាស់។</li><li><code class='i'>onDocumentUpdated</code> — Trigger ពេល Document ប្តូរ · ពិនិត្យ before/after ការពារការផ្ញើស្ទួន។</li><li><b>Admin SDK</b> រំលង Security Rules → ដាក់តែលើ Server ប៉ុណ្ណោះ។</li><li><b>FCM</b>៖ App ស្នើ Permission → ទទួល <b>token</b> → រក្សាក្នុង users → Function ផ្ញើតាម token។ iOS ត្រូវភ្ជាប់ <b>APNs key</b> ក្នុង Firebase Console។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>ហេតុអ្វីគណនា total ក្នុង Function ជំនួសឲ្យ App?</p><details><summary>មើលចម្លើយ</summary><p>App អាចត្រូវគេកែ (Hack) ផ្ញើ total = 0.01។ Server អានតម្លៃពី Database ខ្លួនឯង ទើបត្រឹមត្រូវ និងសុវត្ថិភាព។</p></details></div>
+
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Supabase៖ PostgreSQL Tables &amp; SQL</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 270" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="270" fill="#fff"/><text x="230" y="30" text-anchor="middle" font-size="16" font-weight="800" fill="#16a34a">Supabase = PostgreSQL (SQL · តារាង)</text><rect x="30" y="45" width="400" height="180" rx="10" fill="#f0fdf4" stroke="#16a34a"/><line x1="30" y1="80" x2="430" y2="80" stroke="#bbf7d0"/><line x1="30" y1="116" x2="430" y2="116" stroke="#bbf7d0"/><line x1="30" y1="152" x2="430" y2="152" stroke="#bbf7d0"/><line x1="30" y1="188" x2="430" y2="188" stroke="#bbf7d0"/><text x="70" y="70" text-anchor="middle" font-size="14" font-weight="700" fill="#14532d">id</text><text x="190" y="70" text-anchor="middle" font-size="14" font-weight="700" fill="#14532d">name</text><text x="330" y="70" text-anchor="middle" font-size="14" font-weight="700" fill="#14532d">price</text><text x="70" y="104" text-anchor="middle" font-size="14" font-weight="400" fill="#334155">1</text><text x="190" y="104" text-anchor="middle" font-size="14" font-weight="400" fill="#334155">Americano</text><text x="330" y="104" text-anchor="middle" font-size="14" font-weight="400" fill="#334155">2.00</text><text x="70" y="140" text-anchor="middle" font-size="14" font-weight="400" fill="#334155">2</text><text x="190" y="140" text-anchor="middle" font-size="14" font-weight="400" fill="#334155">Latte</text><text x="330" y="140" text-anchor="middle" font-size="14" font-weight="400" fill="#334155">2.50</text><text x="70" y="176" text-anchor="middle" font-size="14" font-weight="400" fill="#334155">3</text><text x="190" y="176" text-anchor="middle" font-size="14" font-weight="400" fill="#334155">Mocha</text><text x="330" y="176" text-anchor="middle" font-size="14" font-weight="400" fill="#334155">2.75</text><text x="70" y="212" text-anchor="middle" font-size="14" font-weight="400" fill="#334155">4</text><text x="190" y="212" text-anchor="middle" font-size="14" font-weight="400" fill="#334155">Tea</text><text x="330" y="212" text-anchor="middle" font-size="14" font-weight="400" fill="#334155">1.50</text><text x="700" y="30" text-anchor="middle" font-size="16" font-weight="800" fill="#ea580c">Firebase Firestore (NoSQL · Document)</text><rect x="510" y="45" width="400" height="180" rx="10" fill="#fff7ed" stroke="#ea580c"/><text x="530" y="78" text-anchor="start" font-size="14" font-weight="400" fill="#7c2d12">menu/latte {</text><text x="530" y="104" text-anchor="start" font-size="14" font-weight="400" fill="#7c2d12">  name: "Latte", price: 2.5,</text><text x="530" y="130" text-anchor="start" font-size="14" font-weight="400" fill="#7c2d12">  sizes: ["S","M","L"],</text><text x="530" y="156" text-anchor="start" font-size="14" font-weight="400" fill="#7c2d12">  shop: { city: "Phnom Penh" }</text><text x="530" y="182" text-anchor="start" font-size="14" font-weight="400" fill="#7c2d12">}</text><text x="530" y="208" text-anchor="start" font-size="14" font-weight="400" fill="#7c2d12">menu/mocha { … field ខុសគ្នាក៏បាន }</text><text x="470" y="258" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">SQL = Schema ច្បាស់ · JOIN · Transaction   |   NoSQL = បត់បែន · Realtime ងាយ · Scale ស្វ័យប្រវត្តិ</text></svg><figcaption>🖼️ SQL (តារាង) vs NoSQL (Document)</figcaption></figure>
+
+<p>Supabase ប្រើ <b>PostgreSQL</b> ពិតប្រាកដ។ SQL ខាងក្រោម <b>រត់ពិត</b> លើ PostgreSQL 16៖</p>
+<script type="text/x-code" data-lang="sql" data-label="migrations/001_kafe.sql">
+CREATE TABLE menu (
+  id         bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name       text NOT NULL UNIQUE,
+  price      numeric(6,2) NOT NULL CHECK (price > 0),
+  hot        boolean NOT NULL DEFAULT true,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE orders (
+  id         bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id    uuid NOT NULL REFERENCES auth.users(id) DEFAULT auth.uid(),
+  status     text NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','brewing','ready','done')),
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE order_items (
+  order_id bigint REFERENCES orders(id) ON DELETE CASCADE,
+  menu_id  bigint REFERENCES menu(id),
+  qty      int NOT NULL CHECK (qty > 0),
+  PRIMARY KEY (order_id, menu_id)
+);
+
+INSERT INTO menu (name, price, hot) VALUES
+  ('Americano', 2.00, true), ('Iced Latte', 2.50, false), ('Mocha', 2.75, true), ('Green Tea', 1.50, false);
+
+SELECT id, name, price, hot FROM menu WHERE price <= 2.5 ORDER BY price;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16</span></div><pre> id |    name    | price | hot 
+----+------------+-------+-----
+  4 | Green Tea  |  1.50 | f
+  1 | Americano  |  2.00 | t
+  2 | Iced Latte |  2.50 | f
+(3 rows)</pre></div>
+
+<script type="text/x-code" data-lang="sql" data-label="SQL Editor">
+INSERT INTO orders (user_id, status) VALUES ('11111111-1111-1111-1111-111111111111', 'pending'), ('22222222-2222-2222-2222-222222222222', 'ready');
+INSERT INTO order_items VALUES (1, 2, 2), (1, 3, 1), (2, 1, 1);
+
+-- JOIN: Order + ទំនិញ + សរុប
+SELECT o.id AS order_id, u.email, o.status,
+       string_agg(m.name || ' x' || i.qty, ', ') AS items,
+       sum(m.price * i.qty) AS total
+FROM orders o
+JOIN auth.users u ON u.id = o.user_id
+JOIN order_items i ON i.order_id = o.id
+JOIN menu m ON m.id = i.menu_id
+GROUP BY o.id, u.email, o.status
+ORDER BY o.id;
+
+-- expect error: Constraint ការពារទិន្នន័យខុស
+INSERT INTO menu (name, price) VALUES ('Free Coffee', 0);
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16</span></div><pre> order_id |     email     | status  |          items          | total 
+----------+---------------+---------+-------------------------+-------
+        1 | dara@kafe.kh  | pending | Iced Latte x2, Mocha x1 |  7.75
+        2 | sokha@kafe.kh | ready   | Americano x1            |  2.00
+(2 rows)
+
+ERROR:  new row for relation &quot;menu&quot; violates check constraint &quot;menu_price_check&quot;
+DETAIL:  Failing row contains (5, Free Coffee, 0.00, t, 2026-11-14 12:20:13.123945+00).</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>GENERATED ALWAYS AS IDENTITY</code> — id កើនស្វ័យប្រវត្តិ · <code class='i'>PRIMARY KEY</code> មិនស្ទួន។</li><li><code class='i'>REFERENCES</code> (Foreign key) — ភ្ជាប់តារាង · <code class='i'>ON DELETE CASCADE</code> លុប Order → លុប items ដែរ។</li><li><code class='i'>CHECK</code>, <code class='i'>NOT NULL</code>, <code class='i'>UNIQUE</code> — Database ខ្លួនឯងការពារទិន្នន័យខុស (ឃើញ Error ពិតខាងលើ)។</li><li><code class='i'>DEFAULT auth.uid()</code> — Supabase ដាក់ id អ្នក Login ស្វ័យប្រវត្តិ។</li><li><b>JOIN</b> + <code class='i'>GROUP BY</code> + <code class='i'>sum()</code> — Report ដែល Firestore ធ្វើពិបាក (មើលវគ្គ SQL/PostgreSQL)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>សរសេរ SQL រកចំណូលសរុបតាម Status។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="sql" data-label="answer.sql">
+SELECT o.status, sum(m.price * i.qty) AS revenue
+FROM orders o JOIN order_items i ON i.order_id = o.id JOIN menu m ON m.id = i.menu_id
+GROUP BY o.status;
+</script>
+</details></div>
+
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>supabase-js &amp; supabase_flutter៖ CRUD</h2>
+
+<script type="text/x-code" data-lang="js" data-label="supabase.js">
+// npm i @supabase/supabase-js
+import { createClient } from "@supabase/supabase-js";
+export const supabase = createClient(process.env.EXPO_PUBLIC_SUPABASE_URL, process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY);
+
+// READ + Filter + Sort + Page
+const { data: menu, error } = await supabase
+  .from("menu")
+  .select("id, name, price")
+  .lte("price", 2.5)
+  .order("price", { ascending: true })
+  .range(0, 9);                                   // ១០ ជួរដំបូង
+if (error) throw error;
+
+// JOIN តាម Foreign key (Nested select)
+const { data: orders } = await supabase
+  .from("orders")
+  .select("id, status, order_items ( qty, menu ( name, price ) )")
+  .order("created_at", { ascending: false });
+
+// INSERT + ត្រឡប់ជួរថ្មី
+const { data: order } = await supabase.from("orders").insert({}).select().single();
+await supabase.from("order_items").insert([{ order_id: order.id, menu_id: 2, qty: 2 }]);
+
+// UPDATE / DELETE
+await supabase.from("orders").update({ status: "done" }).eq("id", order.id);
+await supabase.from("menu").delete().eq("name", "Green Tea");
+
+// ហៅ SQL Function (RPC)
+const { data: total } = await supabase.rpc("order_total", { oid: order.id });
+</script>
+
+<script type="text/x-code" data-lang="dart" data-label="supabase.dart">
+// pubspec: supabase_flutter
+await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);
+final sb = Supabase.instance.client;
+
+final menu = await sb.from('menu').select('id, name, price').lte('price', 2.5).order('price');
+final orders = await sb.from('orders').select('id, status, order_items(qty, menu(name, price))');
+await sb.from('orders').update({'status': 'done'}).eq('id', 7);
+</script>
+
+<script type="text/x-code" data-lang="sql" data-label="SQL Function">
+-- Function ដែល .rpc("order_total") ហៅ
+CREATE FUNCTION order_total(oid bigint) RETURNS numeric
+LANGUAGE sql STABLE AS $$
+  SELECT coalesce(sum(m.price * i.qty), 0)
+  FROM order_items i JOIN menu m ON m.id = i.menu_id
+  WHERE i.order_id = oid
+$$;
+
+SELECT order_total(1) AS order_1, order_total(2) AS order_2;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16</span></div><pre> order_1 | order_2 
+---------+---------
+    7.75 |    2.00
+(1 row)</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>.from("menu").select(...)</code> — Supabase បំលែងទៅ SQL (តាម <b>PostgREST</b>) ហើយត្រឡប់ JSON។</li><li>Filter៖ <code class='i'>eq, neq, lt, lte, gt, gte, like, ilike, in, is</code> · <code class='i'>order</code> · <code class='i'>range(from, to)</code> = Pagination។</li><li>Nested select <code class='i'>order_items ( qty, menu ( name ) )</code> — JOIN ស្វ័យប្រវត្តិតាម Foreign key។</li><li>រាល់ការហៅត្រឡប់ <code class='i'>{ data, error }</code> — ពិនិត្យ error ជានិច្ច។</li><li><code class='i'>.rpc()</code> — ហៅ SQL Function (Logic ស្មុគស្មាញ, Transaction)។</li><li>បង្កើត Type TypeScript ស្វ័យប្រវត្តិ៖ <code class='i'>npx supabase gen types typescript</code>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>ស្វែងរក Menu ដែលឈ្មោះមានពាក្យ "latte" (មិនខ្វល់អក្សរធំតូច)។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="js" data-label="answer.js">
+await supabase.from("menu").select().ilike("name", "%latte%");
+</script>
+</details></div>
+
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>Supabase Auth &amp; Row Level Security (RLS)</h2>
+
+<script type="text/x-code" data-lang="js" data-label="auth.js">
+// Auth
+await supabase.auth.signUp({ email: "dara@kafe.kh", password: "secret123" });
+await supabase.auth.signInWithPassword({ email: "dara@kafe.kh", password: "secret123" });
+await supabase.auth.signInWithOAuth({ provider: "google" });
+await supabase.auth.signInWithOtp({ phone: "+85512345678" });     // SMS OTP
+
+const { data: { user } } = await supabase.auth.getUser();
+supabase.auth.onAuthStateChange((event, session) => console.log(event, session?.user.id));
+await supabase.auth.signOut();
+</script>
+
+<p>RLS ខាងក្រោម <b>រត់ពិត</b>។ យើងក្លែង Login ដោយ <code class='i'>SET ROLE authenticated</code> + JWT <code class='i'>sub</code> — Supabase ធ្វើដូចនេះស្វ័យប្រវត្តិពី Token របស់អ្នកប្រើ៖</p>
+<script type="text/x-code" data-lang="sql" data-label="RLS policies">
+ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+ALTER TABLE menu   ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "menu: អ្នកណាក៏អានបាន" ON menu FOR SELECT USING (true);
+
+CREATE POLICY "orders: មើលតែរបស់ខ្លួន" ON orders FOR SELECT
+  TO authenticated USING (user_id = auth.uid());
+
+CREATE POLICY "orders: បង្កើតក្នុងឈ្មោះខ្លួន" ON orders FOR INSERT
+  TO authenticated WITH CHECK (user_id = auth.uid() AND status = 'pending');
+
+-- 👤 ក្លែង Dara Login
+SET ROLE authenticated;
+SET request.jwt.claim.sub = '11111111-1111-1111-1111-111111111111';
+SELECT id, status, user_id = auth.uid() AS mine FROM orders;   -- ឃើញតែ Order ខ្លួន
+
+-- expect error: Dara ព្យាយាមបង្កើត Order ក្នុងឈ្មោះ Sokha
+INSERT INTO orders (user_id) VALUES ('22222222-2222-2222-2222-222222222222');
+
+INSERT INTO orders DEFAULT VALUES RETURNING id, status;   -- ✅ ក្នុងឈ្មោះខ្លួន
+RESET ROLE;
+
+-- 👻 អ្នកមិន Login (anon)
+SET ROLE anon;
+SELECT count(*) AS anon_sees_orders FROM orders;
+SELECT count(*) AS anon_sees_menu FROM menu;
+RESET ROLE;
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16</span></div><pre>NOTICE:  identifier &quot;orders: បង្កើតក្នុងឈ្មោះខ្លួន&quot; will be truncated to &quot;orders: បង្កើតក្នុងឈ្មោះខ្&quot;
+ id | status  | mine 
+----+---------+------
+  1 | pending | t
+(1 row)
+
+ERROR:  new row violates row-level security policy for table &quot;orders&quot;
+ id | status  
+----+---------
+  4 | pending
+(1 row)
+
+ anon_sees_orders 
+------------------
+                0
+(1 row)
+
+ anon_sees_menu 
+----------------
+              4
+(1 row)</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>ENABLE ROW LEVEL SECURITY</code> — បិទការចូលទាំងអស់ លុះត្រាមាន Policy អនុញ្ញាត។</li><li><code class='i'>USING (...)</code> — ជួរណាដែល <b>អាន/កែ/លុប</b> បាន · <code class='i'>WITH CHECK (...)</code> — ទិន្នន័យថ្មីដែល <b>សរសេរ</b> ត្រូវត្រឹមត្រូវ។</li><li><code class='i'>auth.uid()</code> — id អ្នក Login ពី JWT · <code class='i'>TO authenticated / anon</code> — តួនាទី។</li><li>លទ្ធផលពិតខាងលើ៖ Dara ឃើញតែ Order ១ របស់ខ្លួន · បង្កើតក្នុងឈ្មោះ Sokha ត្រូវ <b>បដិសេធ</b> · anon ឃើញ Order 0 តែឃើញ Menu 4។</li><li>⚠️ តារាងគ្មាន RLS ក្នុង schema public = អ្នកមាន anon key អាន/លុបបានទាំងអស់! Supabase Dashboard នឹងព្រមាន។</li><li><code class='i'>service_role</code> key រំលង RLS — ដាក់តែលើ Server/Edge Function។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>សរសេរ Policy ឲ្យអ្នកប្រើលុប Order ខ្លួនបាន តែពេល status = 'pending'។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="sql" data-label="answer.sql">
+CREATE POLICY "orders: លុបពេល pending" ON orders FOR DELETE
+  TO authenticated USING (user_id = auth.uid() AND status = 'pending');
+</script>
+</details></div>
+
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>Realtime, Storage &amp; Edge Functions (Supabase)</h2>
+
+<script type="text/x-code" data-lang="js" data-label="realtime-storage.js">
+// 1) Realtime: ស្តាប់ Order ខ្លួនប្តូរ (SQL: alter publication supabase_realtime add table orders;)
+const channel = supabase
+  .channel("my-orders")
+  .on("postgres_changes",
+      { event: "UPDATE", schema: "public", table: "orders", filter: `user_id=eq.${user.id}` },
+      (payload) => {
+        if (payload.new.status === "ready") toast(`☕ Order #${payload.new.id} រួចរាល់!`);
+      })
+  .subscribe();
+// ចាកចេញ: supabase.removeChannel(channel);
+
+// 2) Storage: Upload avatar (Bucket "avatars")
+const path = `${user.id}/avatar.jpg`;
+await supabase.storage.from("avatars").upload(path, file, { upsert: true, contentType: "image/jpeg" });
+const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
+
+// 3) ហៅ Edge Function
+const { data, error } = await supabase.functions.invoke("place-order", { body: { items: [{ menu_id: 2, qty: 2 }] } });
+</script>
+
+<script type="text/x-code" data-lang="sql" data-label="storage policy">
+-- Storage policy: Upload បានតែក្នុង Folder ឈ្មោះ uid ខ្លួន
+CREATE POLICY "avatar: own folder" ON storage.objects FOR INSERT TO authenticated
+  WITH CHECK (bucket_id = 'avatars' AND (storage.foldername(name))[1] = auth.uid()::text);
+</script>
+
+<script type="text/x-code" data-lang="ts" data-label="supabase/functions/place-order/index.ts">
+// supabase/functions/place-order/index.ts — npx supabase functions deploy place-order
+import { createClient } from "npm:@supabase/supabase-js@2";
+
+Deno.serve(async (req) => {
+  // Client ក្នុងឈ្មោះអ្នកប្រើ (RLS នៅតែអនុវត្ត)
+  const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!, {
+    global: { headers: { Authorization: req.headers.get("Authorization")! } },
+  });
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return new Response(JSON.stringify({ error: "សូម Login" }), { status: 401 });
+
+  const { items } = await req.json() as { items: { menu_id: number; qty: number }[] };
+  const { data: order, error } = await supabase.from("orders").insert({}).select().single();
+  if (error) return new Response(JSON.stringify({ error: error.message }), { status: 400 });
+  await supabase.from("order_items").insert(items.map((i) => ({ ...i, order_id: order.id })));
+  const { data: total } = await supabase.rpc("order_total", { oid: order.id });
+
+  return new Response(JSON.stringify({ id: order.id, total }), { headers: { "Content-Type": "application/json" } });
+});
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Realtime</b>៖ បន្ថែមតារាងទៅ Publication <code class='i'>supabase_realtime</code> · <code class='i'>postgres_changes</code> + <code class='i'>filter</code> · RLS នៅតែអនុវត្ត។</li><li><b>Storage</b> = Bucket + Folder · Policy លើ <code class='i'>storage.objects</code> · Public bucket ប្រើ <code class='i'>getPublicUrl</code>, Private ប្រើ <code class='i'>createSignedUrl</code>។</li><li><b>Edge Functions</b> = TypeScript លើ <b>Deno</b> រត់ជិតអ្នកប្រើ · <code class='i'>Deno.serve</code> ទទួល Request។</li><li>ផ្ញើ Header <code class='i'>Authorization</code> បន្ត → Function ធ្វើការក្នុងឈ្មោះអ្នកប្រើ (RLS ការពារ)។</li><li>Push notification៖ Edge Function ហៅ FCM HTTP v1 / Expo Push API ពេល Database Webhook ប្រាប់ថា status = ready។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>Realtime ស្តាប់គ្រប់ Order ថ្មី (INSERT) សម្រាប់ Barista?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="js" data-label="answer.js">
+supabase.channel("barista").on("postgres_changes", { event: "INSERT", schema: "public", table: "orders" }, (p) => addToQueue(p.new)).subscribe();
+</script>
+</details></div>
+
+</section>
+<section id="l13">
+<h2><span class="badge">មេរៀន ១៣</span>Data Modeling &amp; ជ្រើស Firebase ឬ Supabase</h2>
+
+<p>Firestore គិតលុយតាម <b>Document reads</b> · Supabase គិតតាម <b>ទំហំ Database/Bandwidth</b>។ ការរៀបចំទិន្នន័យត្រឹមត្រូវ សន្សំលុយបានច្រើន។ គណនាពិតដោយ Node.js៖</p>
+<script type="text/x-code" data-lang="js" data-label="cost.mjs">
+// អេក្រង់ "Order history" បង្ហាញ 20 Orders · នីមួយៗមាន 3 items
+const users = 5000, opensPerDay = 4, ordersShown = 20, itemsPerOrder = 3;
+
+// A) Normalized (ដូច SQL): អាន order + អាន menu item ម្តងមួយៗ
+const readsA = users * opensPerDay * (ordersShown + ordersShown * itemsPerOrder);
+// B) Denormalized: ចម្លង name/price ចូលក្នុង order.items (អាន order តែមួយ)
+const readsB = users * opensPerDay * ordersShown;
+// C) B + Cache/Offline + Pagination (បើកលើកក្រោយអានតែ Order ថ្មី ~ 2)
+const readsC = users * (ordersShown + (opensPerDay - 1) * 2);
+
+const free = 50_000;   // Firestore Spark: 50,000 reads/ថ្ងៃ (ពិនិត្យតម្លៃថ្មីលើ firebase.google.com/pricing)
+for (const [name, r] of [["A normalized", readsA], ["B denormalized", readsB], ["C + cache", readsC]]) {
+  console.log(name.padEnd(15), r.toLocaleString("en").padStart(9), "reads/ថ្ងៃ", (r / free).toFixed(1) + "× free");
+}
+console.log("សន្សំ A→C:", Math.round((1 - readsC / readsA) * 100) + "%");
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Node.js</span></div><pre>A normalized    1,600,000 reads/ថ្ងៃ 32.0× free
+B denormalized    400,000 reads/ថ្ងៃ 8.0× free
+C + cache         130,000 reads/ថ្ងៃ 2.6× free
+សន្សំ A→C: 92%</pre></div>
+
+<table><tr><th>សំណួរ</th><th>ជ្រើស 🔥 Firebase</th><th>ជ្រើស ⚡ Supabase</th></tr><tr><td>ទិន្នន័យ</td><td>Document ឯករាជ្យ, Chat, Feed</td><td>មានទំនាក់ទំនងច្រើន (Order–Item–Menu–Shop)</td></tr><tr><td>Report / Search</td><td>ពិបាក (ត្រូវ Export ទៅ BigQuery/Algolia)</td><td>SQL, JOIN, Full-text ងាយ</td></tr><tr><td>Offline</td><td>ល្អណាស់ (Built-in)</td><td>ត្រូវបន្ថែម (PowerSync, local DB)</td></tr><tr><td>Push</td><td>FCM ស្រាប់</td><td>ភ្ជាប់ FCM/Expo ខ្លួនឯង</td></tr><tr><td>តម្លៃ</td><td>តាម Read/Write — ប្រយ័ត្ន Loop</td><td>តាម Plan + ទំហំ — ទស្សន៍ទាយងាយ</td></tr><tr><td>Lock-in</td><td>Google តែម្នាក់</td><td>Open source, Self-host បាន</td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Normalize</b> (SQL)៖ ទិន្នន័យនៅកន្លែងតែមួយ · <b>Denormalize</b> (NoSQL)៖ ចម្លងទិន្នន័យដែលបង្ហាញជាមួយគ្នាចូល Document តែមួយ។</li><li>Firestore៖ រចនាតាម <b>អេក្រង់</b> (Query អ្វីដែលបង្ហាញ) · Supabase៖ រចនាតាម <b>ទិន្នន័យ</b> ហើយ JOIN។</li><li>Cache + Pagination + <code class='i'>limit</code> កាត់ថ្លៃ ៨០%+ (ឃើញពិតខាងលើ)។</li><li>ប្រើទាំងពីរក៏បាន៖ ឧ. Supabase (Order, Report) + Firebase (FCM push, Analytics, Crashlytics)។</li><li>តម្លៃ/កម្រិតឥតគិតថ្លៃ អាចប្តូរ — ពិនិត្យទំព័រ Pricing ផ្លូវការមុនសម្រេចចិត្ត។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៣</h4><p>App Chat ១០០,០០០ សារ/ថ្ងៃ Offline សំខាន់ · App Shop មាន Report ចំណូលប្រចាំខែ។ ជ្រើសអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>Chat → <b>Firebase</b> (Realtime + Offline + FCM) · Shop Report → <b>Supabase</b> (SQL JOIN/GROUP BY)។</p></details></div>
+
+</section>
+<section id="l14">
+<h2><span class="badge">មេរៀន ១៤</span>Security, Testing &amp; Production Checklist</h2>
+
+<script type="text/x-code" data-lang="sql" data-label="Security check">
+-- ✅ ពិនិត្យ៖ តារាងណាក្នុង public មិនទាន់បើក RLS? (ត្រូវតែទទេ មុន Launch)
+SELECT tablename, rowsecurity FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename;
+
+ALTER TABLE order_items ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "items: តាម order ខ្លួន" ON order_items FOR SELECT TO authenticated
+  USING (EXISTS (SELECT 1 FROM orders o WHERE o.id = order_id AND o.user_id = auth.uid()));
+
+SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND NOT rowsecurity;
+-- Index សម្រាប់ Query ញឹកញាប់ (Policy ក៏ប្រើ user_id)
+CREATE INDEX orders_user_id_idx ON orders (user_id, created_at DESC);
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · PostgreSQL 16</span></div><pre>  tablename  | rowsecurity 
+-------------+-------------
+ menu        | t
+ order_items | f
+ orders      | t
+(3 rows)
+
+ tablename 
+-----------
+(0 rows)</pre></div>
+
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+# Firebase: សាកទាំងអស់លើកុំព្យូទ័រ (Auth, Firestore, Functions, Storage)
+firebase emulators:start --import=./seed --export-on-exit
+firebase deploy --only firestore:rules,storage,functions
+
+# Supabase: Local + Migration + Test
+npx supabase start
+npx supabase db reset            # រត់ migrations + seed.sql ថ្មី
+npx supabase test db             # pgTAP tests (RLS, functions)
+npx supabase db push             # Deploy ទៅ Production
+</script>
+
+<table><tr><th>✅ Checklist មុន Launch</th><th>Firebase</th><th>Supabase</th></tr>
+<tr><td>ច្បាប់សុវត្ថិភាព</td><td>បិទ Test mode · Rules + Unit test</td><td>RLS គ្រប់តារាង · Security Advisor</td></tr>
+<tr><td>ការពារ App ក្លែង</td><td><b>App Check</b> (Play Integrity / App Attest)</td><td>Captcha (Auth) · Rate limit</td></tr>
+<tr><td>Key សម្ងាត់</td><td>Admin SDK តែលើ Functions</td><td>service_role តែលើ Server/Edge</td></tr>
+<tr><td>Backup</td><td>Scheduled export / PITR</td><td>Daily backup (Pro) / pg_dump</td></tr>
+<tr><td>លុយ</td><td>Budget alert ក្នុង Google Cloud</td><td>Spend cap · Usage page</td></tr>
+<tr><td>Monitoring</td><td>Crashlytics · Performance</td><td>Logs · Reports</td></tr>
+<tr><td>ច្បាប់ App Store</td><td colspan="2">Privacy policy · មុខងារ <b>លុបគណនី</b> ក្នុង App</td></tr></table>
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>Query <code class='i'>pg_tables.rowsecurity</code> — រកតារាងដែលភ្លេចបើក RLS (លទ្ធផលពិតខាងលើ៖ order_items ត្រូវបានបិទ → បើកហើយ)។</li><li>Policy ដែលប្រើ <code class='i'>EXISTS (...)</code> — ការពារតារាងកូនតាមម្ចាស់តារាងមេ។</li><li><b>Index</b> លើ Column ដែល Filter/Policy ប្រើ → លឿនពេលទិន្នន័យច្រើន។</li><li><b>Emulator / supabase start</b> — Develop និង Test ឥតគិតថ្លៃ មិនប៉ះ Production។</li><li><b>App Check</b> — Firebase ទទួលតែ Request ពី App ពិតរបស់អ្នក។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៤</h4><p>មិត្តភក្តិនិយាយថា "ដាក់ anon key ក្នុង App គ្រោះថ្នាក់"។ ត្រូវឬខុស?</p><details><summary>មើលចម្លើយ</summary><p><b>មិនត្រូវទាំងស្រុង</b>៖ anon/publishable key ត្រូវបានរចនាឲ្យនៅក្នុង App — សុវត្ថិភាពពឹងលើ <b>RLS</b>។ គ្រោះថ្នាក់ពិតគឺ <b>service_role</b> key ឬតារាងគ្មាន RLS។</p></details></div>
+
+</section>
+<section id="cheat">
+<h2>📋 Cheat Sheet</h2>
+
+<table><tr><th>ការងារ</th><th>🔥 Firebase (JS)</th><th>⚡ Supabase (JS)</th></tr><tr><td>Login</td><td>signInWithEmailAndPassword(auth, e, p)</td><td>supabase.auth.signInWithPassword({ email, password })</td></tr><tr><td>Insert</td><td>addDoc(collection(db,'orders'), data)</td><td>from('orders').insert(data)</td></tr><tr><td>Read</td><td>getDocs(query(col, where(...)))</td><td>from('menu').select().eq(...)</td></tr><tr><td>Update</td><td>updateDoc(doc(db,'orders',id), data)</td><td>from('orders').update(data).eq('id', id)</td></tr><tr><td>Delete</td><td>deleteDoc(doc(db,'menu',id))</td><td>from('menu').delete().eq('id', id)</td></tr><tr><td>Realtime</td><td>onSnapshot(q, cb)</td><td>channel().on('postgres_changes', …)</td></tr><tr><td>Upload</td><td>uploadBytes(ref(storage, p), blob)</td><td>storage.from(b).upload(p, file)</td></tr><tr><td>Server code</td><td>onCall / onDocumentUpdated</td><td>Deno.serve (Edge Function)</td></tr><tr><td>សុវត្ថិភាព</td><td>firestore.rules</td><td>RLS: CREATE POLICY …</td></tr></table>
+
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងអាជីព៖ Kafe Backend ពេញលេញ</h2>
+
+<p>Backend សម្រាប់ App <b>Kafe Order</b> (វគ្គ Flutter/RN/Kotlin/Swift)៖ <b>Login → Menu → Order (Server គណនាតម្លៃ) → Barista ប្តូរ Status (Realtime) → Push 🔔 → Report ចំណូល (SQL)</b>។ ជ្រើសផ្លូវមួយ៖</p>
+<script type="text/x-code" data-lang="txt" data-label="Project structure">
+🔥 Firebase                              ⚡ Supabase
+kafe-backend/                            kafe-backend/
+├── firebase.json                        ├── supabase/
+├── firestore.rules      ← មេរៀន ៦        │   ├── migrations/
+├── firestore.indexes.json               │   │   ├── 001_tables.sql   ← មេរៀន ៩
+├── storage.rules        ← មេរៀន ៧        │   │   ├── 002_rls.sql      ← មេរៀន ១១
+├── functions/src/index.ts               │   │   └── 003_report.sql
+│   ├── placeOrder (callable)            │   ├── functions/place-order/ ← មេរៀន ១២
+│   ├── notifyReady (trigger → FCM)      │   └── seed.sql
+│   └── setAdmin (custom claim)          └── tests/rls.test.sql
+└── test/rules.test.mjs
+</script>
+
+<script type="text/x-code" data-lang="ts" data-label="functions/src/admin.ts">
+// Firebase: កំណត់ Barista ជា Admin (Custom claim) — រត់ម្តងពី Server/Script
+import { getAuth } from "firebase-admin/auth";
+export const setAdmin = onCall(async (req) => {
+  if (req.auth?.token.admin !== true) throw new HttpsError("permission-denied", "តែ Admin");
+  const user = await getAuth().getUserByEmail(req.data.email);
+  await getAuth().setCustomUserClaims(user.uid, { admin: true });
+  return { ok: true };
+});
+</script>
+
+<script type="text/x-code" data-lang="sql" data-label="003_report.sql">
+-- Supabase: Report ចំណូលប្រចាំថ្ងៃ (View) — មើលតែ Admin
+CREATE VIEW daily_revenue WITH (security_invoker = true) AS
+SELECT date_trunc('day', o.created_at)::date AS day,
+       count(DISTINCT o.id) AS orders,
+       sum(m.price * i.qty) AS revenue
+FROM orders o
+JOIN order_items i ON i.order_id = o.id
+JOIN menu m ON m.id = i.menu_id
+WHERE o.status IN ('ready', 'done')
+GROUP BY 1 ORDER BY 1 DESC;
+</script>
+
+<table><tr><th>ជំហាន</th><th>មេរៀន</th></tr><tr><td>REST/JSON មូលដ្ឋាន</td><td>១</td></tr><tr><td>ភ្ជាប់ App</td><td>២</td></tr><tr><td>Login</td><td>៣ · ១១</td></tr><tr><td>Menu/Order CRUD</td><td>៤ · ៩ · ១០</td></tr><tr><td>Order history Realtime</td><td>៥ · ១២</td></tr><tr><td>សុវត្ថិភាព</td><td>៦ · ១១ · ១៤</td></tr><tr><td>Avatar</td><td>៧ · ១២</td></tr><tr><td>Server តម្លៃ + Push</td><td>៨ · ១២</td></tr><tr><td>រចនាទិន្នន័យ + ថ្លៃ</td><td>១៣</td></tr></table>
+
+</section>
+<section id="pro-app">
+<h2>💻 Backend Lab Pro (App)</h2>
+
+<p><b>Database Lab</b>៖ បង្កើត Query (where/orderBy/limit) លើទិន្នន័យ Kafe មើលលទ្ធផល + ចំនួន Reads ហើយទទួល Code <b>Firebase JS · Flutter · Supabase JS · SQL</b>។ <b>Rules &amp; RLS</b>៖ ជ្រើសអ្នកប្រើ/សកម្មភាព → មើល ALLOW/DENY និងបន្ទាត់ច្បាប់ដែលសម្រេច។ <b>Realtime</b>៖ ទូរស័ព្ទ ២ ឆ្លើយឆ្លងគ្នាភ្លាមៗ + Push។ <b>Quota</b>៖ គណនា Reads/Writes ធៀបកម្រិតឥតគិតថ្លៃ។</p>
+
+<div class="itk" id="bl">
+<div class="itk-tabs"><button class="on" data-t="q">🗄️ Database Lab</button><button data-t="r">🛡️ Rules &amp; RLS</button><button data-t="rt">⚡ Realtime</button><button data-t="c">📊 Quota</button></div>
+
+<div class="itk-p on" data-p="q">
+ <div class="itk-row">
+  <label>Collection / Table<select id="bl_col"><option>menu</option><option>orders</option><option>users</option></select></label>
+  <label>where<select id="bl_f"></select></label>
+  <label>op<select id="bl_op"><option>==</option><option>!=</option><option>&lt;</option><option>&lt;=</option><option>&gt;</option><option>&gt;=</option><option>array-contains</option></select></label>
+  <label>value<input id="bl_v" size="10" placeholder="(ទទេ = គ្មាន)"></label>
+  <label>orderBy<select id="bl_ob"></select></label>
+  <label>dir<select id="bl_dir"><option>asc</option><option>desc</option></select></label>
+  <label>limit<input id="bl_lim" type="number" value="10" min="1" max="50" style="width:70px"></label>
+ </div>
+ <div class="itk-out" id="bl_res"></div>
+ <div class="itk-tabs" id="bl_ct" style="margin-top:10px;border-radius:10px"><button class="on" data-c="fs">Firebase JS</button><button data-c="fl">Flutter (Firestore)</button><button data-c="sb">Supabase JS</button><button data-c="sql">SQL</button></div>
+ <pre class="itk-out" id="bl_code" style="white-space:pre-wrap;font:13px/1.55 'JetBrains Mono',monospace;margin-top:0;color:var(--text);opacity:1"></pre>
+ <details style="margin-top:8px"><summary>➕ បន្ថែម Document ទៅ menu</summary>
+  <div class="itk-row" style="margin-top:8px"><label>name<input id="bl_nn" value="Matcha Latte"></label><label>price<input id="bl_np" type="number" step="0.25" value="2.75" style="width:80px"></label><label>hot<select id="bl_nh"><option>false</option><option>true</option></select></label><button class="btn" id="bl_add">addDoc()</button></div>
+ </details>
+</div>
+
+<div class="itk-p" data-p="r">
+ <div class="itk-row">
+  <label>👤 អ្នកប្រើ<select id="rl_u"><option value="">👻 មិន Login (anon)</option><option value="u1">Dara (u1)</option><option value="u2">Sokha (u2)</option><option value="admin">Admin (claim admin)</option></select></label>
+  <label>សកម្មភាព<select id="rl_a"><option>read</option><option>create</option><option>update</option><option>delete</option></select></label>
+  <label>Document<select id="rl_d"><option value="menu/latte">menu/latte</option><option value="orders/o1">orders/o1 (uid: u1)</option><option value="orders/o2">orders/o2 (uid: u2)</option><option value="users/u1">users/u1</option></select></label>
+  <label id="rl_tw">total ថ្មី (create)<input id="rl_t" type="number" value="5" step="0.5" style="width:80px"></label>
+ </div>
+ <div id="rl_v" style="font-size:28px;font-weight:800;margin:6px 0"></div>
+ <div class="itk-out" id="rl_why"></div>
+ <div class="fb-grid" style="grid-template-columns:1fr 1fr;margin-top:10px">
+  <pre class="itk-out" id="rl_rules" style="white-space:pre;overflow:auto;font:12.5px/1.6 'JetBrains Mono',monospace;color:var(--text);opacity:1"></pre>
+  <pre class="itk-out" id="rl_sql" style="white-space:pre;overflow:auto;font:12.5px/1.6 'JetBrains Mono',monospace;color:var(--text);opacity:1"></pre>
+ </div>
+</div>
+
+<div class="itk-p" data-p="rt">
+ <p style="margin-top:0">ទូរស័ព្ទ ២ ភ្ជាប់ Database តែមួយ៖ អតិថិជនបញ្ជាទិញ → Barista ឃើញភ្លាម → ប្តូរ Status → អតិថិជនឃើញភ្លាម + Push 🔔</p>
+ <div style="display:flex;flex-wrap:wrap;gap:18px;justify-content:center">
+  <div class="ph" style="position:relative"><div class="ph-notch"></div><div class="ph-bar" style="background:#f57c00">📱 អតិថិជន</div><div class="ph-body" id="rt_c"></div></div>
+  <div class="ph" style="position:relative"><div class="ph-notch"></div><div class="ph-bar" style="background:#2f9e44">🧑‍🍳 Barista</div><div class="ph-body" id="rt_b"></div></div>
+ </div>
+ <div class="itk-out" id="rt_log" style="max-height:180px;overflow:auto;font:12.5px/1.6 'JetBrains Mono',monospace;color:var(--text);opacity:1"></div>
+</div>
+
+<div class="itk-p" data-p="c">
+ <div class="itk-row">
+  <label>អ្នកប្រើសកម្ម/ថ្ងៃ (DAU)<input id="q_dau" type="number" value="2000" step="100"></label>
+  <label>បើក App/ថ្ងៃ<input id="q_open" type="number" value="4"></label>
+  <label>Docs អាន/ការបើក<input id="q_read" type="number" value="25"></label>
+  <label>Write/អ្នក/ថ្ងៃ<input id="q_wr" type="number" value="3"></label>
+  <label>Cache + Pagination<select id="q_cache"><option value="1">គ្មាន</option><option value="0.3" selected>មាន (−70%)</option></select></label>
+ </div>
+ <div class="itk-out" id="q_out"></div>
+ <p style="font-size:13px;color:var(--muted)">កម្រិតឥតគិតថ្លៃ (គំរូ — អាចប្តូរ សូមពិនិត្យ Pricing ផ្លូវការ)៖ Firestore Spark 50,000 reads · 20,000 writes ក្នុងមួយថ្ងៃ · Supabase Free 50,000 MAU · DB 500 MB។</p>
+</div>
+</div>
+<script>
+(()=>{
+const $=id=>document.getElementById(id), R=document.getElementById("bl");
+R.querySelectorAll(":scope>.itk-tabs button").forEach(b=>b.onclick=()=>{R.querySelectorAll(":scope>.itk-tabs button").forEach(x=>x.classList.toggle("on",x===b));R.querySelectorAll(":scope>.itk-p").forEach(p=>p.classList.toggle("on",p.dataset.p===b.dataset.t))});
+const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+/* ---------- Database Lab ---------- */
+const DB={menu:[{id:"americano",name:"Americano",price:2,hot:true,tags:["coffee"]},{id:"latte",name:"Iced Latte",price:2.5,hot:false,tags:["coffee","milk"]},{id:"mocha",name:"Mocha",price:2.75,hot:true,tags:["coffee","chocolate"]},{id:"tea",name:"Green Tea",price:1.5,hot:false,tags:["tea"]},{id:"croissant",name:"Croissant",price:1.75,hot:true,tags:["bakery"]}],
+orders:[{id:"o1",uid:"u1",total:5,status:"ready",items:2},{id:"o2",uid:"u2",total:2.75,status:"pending",items:1},{id:"o3",uid:"u1",total:7.75,status:"brewing",items:3},{id:"o4",uid:"u2",total:1.5,status:"done",items:1}],
+users:[{id:"u1",name:"Dara",phone:"012345678",points:120},{id:"u2",name:"Sokha",phone:"098765432",points:40}]};
+let ct="fs";
+function fields(){const c=$("bl_col").value,ks=new Set();DB[c].forEach(d=>Object.keys(d).forEach(k=>k!=="id"&&ks.add(k)));const o=[...ks].map(k=>`<option>${k}</option>`).join("");$("bl_f").innerHTML=o;$("bl_ob").innerHTML='<option value="">(គ្មាន)</option>'+o;}
+function val(v){if(v==="true")return true;if(v==="false")return false;if(v!==""&&!isNaN(+v))return +v;return v;}
+const lit=v=>typeof v==="string"?`"${v}"`:String(v), sq=v=>typeof v==="string"?`'${v}'`:String(v);
+function runQ(){
+ const c=$("bl_col").value,f=$("bl_f").value,op=$("bl_op").value,raw=$("bl_v").value.trim(),ob=$("bl_ob").value,dir=$("bl_dir").value,lim=Math.max(1,+$("bl_lim").value||10);
+ const v=val(raw),has=raw!=="";
+ const test=d=>{if(!has)return true;const x=d[f];switch(op){case"==":return x===v;case"!=":return x!==v;case"<":return x<v;case"<=":return x<=v;case">":return x>v;case">=":return x>=v;case"array-contains":return Array.isArray(x)&&x.includes(v);}};
+ let rows=DB[c].filter(test);
+ if(ob)rows.sort((a,b)=>(a[ob]>b[ob]?1:a[ob]<b[ob]?-1:0)*(dir==="desc"?-1:1));
+ const total=rows.length;rows=rows.slice(0,lim);
+ $("bl_res").innerHTML=`<b>${rows.length}</b> document · <b>${rows.length||1}</b> reads 💰`+(total>rows.length?` (limit កាត់ ${total-rows.length})`:"")+"<br>"+(rows.map(d=>`📄 <b>${esc(c)}/${esc(d.id)}</b> <code>${esc(JSON.stringify(Object.fromEntries(Object.entries(d).filter(([k])=>k!=="id"))))}</code>`).join("<br>")||"— គ្មានលទ្ធផល —");
+ const W={"==":"eq","!=":"neq","<":"lt","<=":"lte",">":"gt",">=":"gte","array-contains":"contains"};
+ const FL={"==":"isEqualTo","!=":"isNotEqualTo","<":"isLessThan","<=":"isLessThanOrEqualTo",">":"isGreaterThan",">=":"isGreaterThanOrEqualTo","array-contains":"arrayContains"};
+ let code;
+ if(ct==="fs"){const p=[`collection(db, "${c}")`];if(has)p.push(`where("${f}", "${op}", ${lit(v)})`);if(ob)p.push(`orderBy("${ob}"${dir==="desc"?', "desc"':""})`);p.push(`limit(${lim})`);
+  code=`import { collection, query, where, orderBy, limit, getDocs } from "firebase/firestore";\n\nconst q = query(\n  ${p.join(",\n  ")}\n);\nconst snap = await getDocs(q);\nconst rows = snap.docs.map((d) => ({ id: d.id, ...d.data() }));\n// Realtime: onSnapshot(q, (snap) => ...)`;}
+ else if(ct==="fl"){let s=`FirebaseFirestore.instance\n    .collection('${c}')`;if(has)s+=`\n    .where('${f}', ${FL[op]}: ${typeof v==="string"?`'${v}'`:v})`;if(ob)s+=`\n    .orderBy('${ob}'${dir==="desc"?", descending: true":""})`;s+=`\n    .limit(${lim})`;code=`final snap = await ${s}\n    .get();          // ឬ .snapshots() សម្រាប់ Realtime\nfor (final d in snap.docs) {\n  print('\${d.id}: \${d.data()}');\n}`;}
+ else if(ct==="sb"){let s=`await supabase\n  .from("${c}")\n  .select("*")`;if(has)s+=op==="array-contains"?`\n  .contains("${f}", [${lit(v)}])`:`\n  .${W[op]}("${f}", ${lit(v)})`;if(ob)s+=`\n  .order("${ob}", { ascending: ${dir==="asc"} })`;s+=`\n  .limit(${lim})`;code=`const { data, error } = ${s};\nif (error) throw error;`;}
+ else {let s=`SELECT *\nFROM ${c}`;if(has)s+=op==="array-contains"?`\nWHERE ${sq(v)} = ANY(${f})`:`\nWHERE ${f} ${op==="=="?"=":op==="!="?"<>":op} ${sq(v)}`;if(ob)s+=`\nORDER BY ${ob} ${dir.toUpperCase()}`;s+=`\nLIMIT ${lim};`;code=s;}
+ $("bl_code").textContent=code;
+}
+["bl_f","bl_op","bl_v","bl_ob","bl_dir","bl_lim"].forEach(i=>$(i).oninput=runQ);
+$("bl_col").onchange=()=>{fields();$("bl_v").value="";runQ()};
+$("bl_ct").querySelectorAll("button").forEach(b=>b.onclick=()=>{ct=b.dataset.c;$("bl_ct").querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));runQ()});
+$("bl_add").onclick=()=>{const n=$("bl_nn").value.trim()||"Item";DB.menu.push({id:n.toLowerCase().replace(/\s+/g,"-")+"-"+(DB.menu.length+1),name:n,price:+$("bl_np").value||1,hot:$("bl_nh").value==="true",tags:["new"]});$("bl_col").value="menu";fields();runQ();};
+fields();$("bl_f").value="price";$("bl_op").value="<=";$("bl_v").value="2.5";$("bl_ob").value="price";runQ();
+
+/* ---------- Rules & RLS ---------- */
+const RULES=["match /menu/{id} {","  allow read: if true;","  allow write: if isAdmin();","}","match /orders/{id} {","  allow read: if isOwner(resource.data.uid) || isAdmin();","  allow create: if isOwner(request.resource.data.uid)","             && request.resource.data.total > 0;","  allow update: if isAdmin();","  allow delete: if false;","}","match /users/{uid} {","  allow read, update: if isOwner(uid);","  allow create: if isOwner(uid);","}"];
+const SQLR=["-- Supabase RLS ដែលស្មើគ្នា","CREATE POLICY menu_read ON menu FOR SELECT USING (true);","CREATE POLICY menu_admin ON menu FOR ALL","  USING (is_admin());","CREATE POLICY orders_read ON orders FOR SELECT","  USING (uid = auth.uid() OR is_admin());","CREATE POLICY orders_insert ON orders FOR INSERT","  WITH CHECK (uid = auth.uid() AND total > 0);","CREATE POLICY orders_update ON orders FOR UPDATE","  USING (is_admin());","-- (គ្មាន Policy DELETE = លុបមិនបាន)","CREATE POLICY users_own ON users FOR SELECT","  USING (id = auth.uid());"];
+const OWN={"orders/o1":"u1","orders/o2":"u2"};
+function rules(){
+ const u=$("rl_u").value,a=$("rl_a").value,d=$("rl_d").value,t=+$("rl_t").value,[col,id]=d.split("/");
+ $("rl_tw").style.display=a==="create"&&col==="orders"?"":"none";
+ const admin=u==="admin",signed=!!u;let ok=false,line=-1,sqll=-1,why="";
+ const who=u?(admin?"Admin":u==="u1"?"Dara (u1)":"Sokha (u2)"):"anon (request.auth == null)";
+ if(col==="menu"){if(a==="read"){ok=true;line=1;sqll=1;why="Menu អានបានគ្រប់គ្នា";}else{ok=admin;line=2;sqll=2;why=admin?"isAdmin() = true":"isAdmin() = false → តែ Admin ទេដែលកែ Menu បាន";}}
+ else if(col==="orders"){const owner=OWN[d];
+  if(a==="read"){ok=admin||u===owner;line=5;sqll=4;why=`resource.data.uid = "${owner}" · request.auth.uid = ${u?'"'+u+'"':"null"} → ${ok?"ត្រូវ":"មិនត្រូវ"}`;}
+  else if(a==="create"){const mine=signed&&!admin?u:"u1";ok=signed&&t>0;line=6;sqll=6;why=!signed?"មិន Login → isOwner() = false":t>0?`បង្កើតក្នុងឈ្មោះ ${mine} · total = ${t} > 0 ✓`:`total = ${t} → មិនឆ្លង Validation (ត្រូវ > 0)`;}
+  else if(a==="update"){ok=admin;line=8;sqll=8;why=admin?"Admin ប្តូរ Status បាន":"តែ Admin (Barista) ទេដែលប្តូរ Status បាន — អតិថិជនមិនអាចប្តូរ total ឬ status ខ្លួនឯង";}
+  else{ok=false;line=9;sqll=10;why="allow delete: if false → Order មិនអាចលុប (រក្សាប្រវត្តិ)";}}
+ else{if(a==="delete"){ok=false;line=-1;sqll=-1;why="គ្មាន allow delete → បដិសេធ (លំនាំដើម = DENY)";}
+  else{ok=u==="u1";line=a==="create"?13:12;sqll=11;why=`isOwner("u1") — ${ok?"ម្ចាស់គណនី":"មិនមែនម្ចាស់"}`;}}
+ $("rl_v").innerHTML=ok?'<span style="color:#2f9e44">✅ ALLOW</span>':'<span style="color:#e03131">⛔ DENY</span> <span style="font-size:15px;color:var(--muted)">permission-denied / RLS violation</span>';
+ $("rl_why").innerHTML=`👤 <b>${who}</b> · <b>${a}</b> <code>${d}</code><br>🧠 ${esc(why)}`;
+ $("rl_rules").innerHTML="// firestore.rules\n"+RULES.map((l,i)=>i===line?`<mark style="background:${ok?"#d3f9d8":"#ffe3e3"};color:#111">${esc(l)}</mark>`:esc(l)).join("\n");
+ $("rl_sql").innerHTML=SQLR.map((l,i)=>i===sqll||i===sqll+1&&SQLR[i].startsWith("  ")?`<mark style="background:${ok?"#d3f9d8":"#ffe3e3"};color:#111">${esc(l)}</mark>`:esc(l)).join("\n");
+}
+["rl_u","rl_a","rl_d","rl_t"].forEach(i=>$(i).oninput=rules);rules();
+
+/* ---------- Realtime ---------- */
+const OR=[];let seq=7;const t0=Date.now();
+const log=m=>{const s=((Date.now()-t0)/1000).toFixed(2).padStart(6);$("rt_log").innerHTML=`<div>[${s}s] ${m}</div>`+$("rt_log").innerHTML;};
+const ST={pending:"⏳ pending",brewing:"☕ brewing",ready:"✅ ready",done:"🎉 done"};
+function rtRender(){
+ $("rt_c").innerHTML=`<div class="ph-row" style="gap:6px;flex-wrap:wrap">${["Latte","Mocha","Tea"].map(n=>`<button class="ph-btn" data-o="${n}" style="border:0;cursor:pointer;background:#f57c00">＋ ${n}</button>`).join("")}</div>`+OR.map(o=>`<div class="ph-tile"><div style="flex:1"><b>#o${o.id}</b> ${o.item}</div>${ST[o.status]}</div>`).join("")+(OR.length?"":'<div style="color:#888;margin-top:12px;text-align:center">ចុចបញ្ជាទិញ ☝️</div>')+'<div id="rt_toast"></div>';
+ $("rt_b").innerHTML=OR.filter(o=>o.status!=="done").map(o=>`<div class="ph-card" style="padding:8px"><b>#o${o.id}</b> ${o.item} · ${ST[o.status]}<div style="display:flex;gap:4px;margin-top:6px">${o.status==="pending"?`<button class="ph-btn" data-s="brewing" data-i="${o.id}" style="border:0;cursor:pointer">ចាប់ផ្តើម</button>`:o.status==="brewing"?`<button class="ph-btn" data-s="ready" data-i="${o.id}" style="border:0;cursor:pointer;background:#2f9e44">រួចរាល់</button>`:`<button class="ph-btn" data-s="done" data-i="${o.id}" style="border:0;cursor:pointer;background:#495057">ប្រគល់</button>`}</div></div>`).join("")||'<div style="color:#888;margin-top:12px;text-align:center">រង់ចាំ Order…</div>';
+ $("rt_c").querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{const o={id:seq++,item:b.dataset.o,status:"pending"};log(`📱 addDoc(orders) → #o${o.id} ${o.item}`);setTimeout(()=>{OR.unshift(o);log(`⚡ onSnapshot → Barista ឃើញ #o${o.id} (added)`);rtRender();},180);});
+ $("rt_b").querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{const o=OR.find(x=>x.id==b.dataset.i);log(`🧑‍🍳 updateDoc(orders/o${o.id}, {status: "${b.dataset.s}"})`);setTimeout(()=>{o.status=b.dataset.s;log(`⚡ onSnapshot → អតិថិជនឃើញ #o${o.id} = ${b.dataset.s} (modified)`);rtRender();if(o.status==="ready"){log(`⚙️ Cloud Function notifyReady → FCM 🔔`);$("rt_toast").innerHTML=`<div style="margin-top:10px;background:#212529;color:#fff;border-radius:10px;padding:8px 12px;font-size:13px">🔔 Order #o${o.id} រួចរាល់ហើយ!</div>`;}},180);});
+}
+rtRender();log("🔌 subscribe: onSnapshot(query(orders, where('uid','==',uid)))");
+
+/* ---------- Quota ---------- */
+function quota(){
+ const dau=+$("q_dau").value||0,op=+$("q_open").value||0,rd=+$("q_read").value||0,wr=+$("q_wr").value||0,k=+$("q_cache").value;
+ const reads=Math.round(dau*op*rd*k),writes=dau*wr,mau=Math.round(dau*3);
+ const bar=(n,lim,label)=>{const p=n/lim,c=p<.7?"#2f9e44":p<1?"#f08c00":"#e03131";return `<div style="margin:8px 0"><b>${label}</b> ${n.toLocaleString("en")} / ${lim.toLocaleString("en")} (${Math.round(p*100)}%)<div class="itk-meter"><i style="display:block;height:100%;width:${Math.min(100,p*100)}%;background:${c}"></i></div></div>`;};
+ $("q_out").innerHTML=bar(reads,50000,"🔥 Firestore reads/ថ្ងៃ")+bar(writes,20000,"🔥 Firestore writes/ថ្ងៃ")+bar(mau,50000,"⚡ Supabase MAU (≈ DAU×3)")+(reads>50000?`<div>💡 លើសកម្រិតឥតគិតថ្លៃ ${(reads/50000).toFixed(1)}× — ប្រើ Cache/Pagination, Denormalize, ឬ <b>limit</b> ឲ្យតូច</div>`:"<div>✅ ស្ថិតក្នុងកម្រិតឥតគិតថ្លៃ</div>");
+}
+["q_dau","q_open","q_read","q_wr","q_cache"].forEach(i=>$(i).oninput=quota);quota();
+})();
+</script>
+
+<h3>🏆 Quiz Firebase &amp; Supabase ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["Firebase ត្រូវបានទិញដោយក្រុមហ៊ុនណា ឆ្នាំ 2014?", ["Microsoft", "Google", "Meta", "Amazon"], 1], ["Supabase ប្រើ Database អ្វី?", ["MongoDB", "MySQL", "PostgreSQL", "Firestore"], 2], ["BaaS មានន័យថា?", ["Backend-as-a-Service", "Build-and-Ship", "Basic App Server", "Bank-as-a-Service"], 0], ["Status code 201 មានន័យថា?", ["Not found", "Created", "Unauthorized", "Server error"], 1], ["Firestore រក្សាទិន្នន័យជា?", ["តារាង (Rows)", "Collection → Document", "File Excel", "Graph"], 1], ["បង្កើត Document id ស្វ័យប្រវត្តិ ប្រើ?", ["setDoc", "addDoc", "getDoc", "updateDoc"], 1], ["ស្តាប់ទិន្នន័យ Realtime ក្នុង Firestore ប្រើ?", ["getDocs", "onSnapshot", "fetch", "deleteDoc"], 1], ["បន្ថយ stock ដោយសុវត្ថិភាព (Atomic) ប្រើ?", ["stock - 1", "increment(-1)", "Math.min", "arrayUnion"], 1], ["ក្នុង Rules, request.auth == null មានន័យថា?", ["Admin", "មិនទាន់ Login", "Error", "Offline"], 1], ["resource.data ក្នុង Rules គឺ?", ["ទិន្នន័យថ្មី", "ទិន្នន័យដែលមានស្រាប់", "Token", "File"], 1], ["ហេតុអ្វីគណនា total លើ Server?", ["លឿនជាង", "App អាចត្រូវគេកែតម្លៃ", "ស្អាតជាង", "មិនត្រូវការ"], 1], ["Push notification របស់ Firebase ហៅថា?", ["FCM", "APNs", "SMS", "Webhook"], 0], ["Supabase ការពារទិន្នន័យដោយ?", ["Security Rules", "Row Level Security (RLS)", "CSS", "Firewall តែប៉ុណ្ណោះ"], 1], ["ក្នុង Policy, WITH CHECK ពិនិត្យ?", ["ជួរដែលអាន", "ទិន្នន័យថ្មីដែលសរសេរ", "Index", "Backup"], 1], ["auth.uid() ត្រឡប់?", ["Email", "id អ្នក Login", "Password", "Table name"], 1], ["Key ណាមិនត្រូវដាក់ក្នុង App?", ["anon key", "Firebase apiKey", "service_role key", "Project URL"], 2], ["Supabase Edge Functions រត់លើ?", ["Deno", "Python", "PHP", "Java"], 0], ["supabase.from('menu').select().range(0, 9) ធ្វើអ្វី?", ["លុប ១០ ជួរ", "យក ១០ ជួរដំបូង", "តម្រៀប", "Join"], 1], ["Denormalize ក្នុង Firestore ជួយ?", ["បង្កើន Read", "កាត់ចំនួន Read/ថ្លៃ", "លុប Index", "បិទ Realtime"], 1], ["សាក Firebase លើកុំព្យូទ័រ ឥតគិតថ្លៃ ប្រើ?", ["Emulator Suite", "Play Console", "Xcode", "Expo Go"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+
+<ol class="steps"><li><b>Firebase &amp; Supabase</b> (វគ្គនេះ) ✅</li><li>ភ្ជាប់ទៅ App ពិត៖ វគ្គ <b>Flutter · React Native · Kotlin · Swift</b></li>
+<li>SQL កម្រិតខ្ពស់៖ វគ្គ <b>PostgreSQL + Prisma</b> · Index, Transaction, pgTAP</li><li>Backend ផ្ទាល់ខ្លួន៖ វគ្គ <b>Node.js</b> + <b>Docker &amp; CI/CD</b> · <b>Website Security</b></li>
+<li>Payment (KHQR/Bakong, ABA PayWay) តាម Server/Function · Analytics &amp; Crashlytics</li></ol>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="backend"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

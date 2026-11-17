@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI កម្រិតមធ្យម — Deep Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#5f3dc4; --accent2:#845ef7; --accent-soft:#f3f0ff;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#b197fc; --accent2:#d0bfff; --accent-soft:#1a1233;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#b197fc; --accent2:#d0bfff; --accent-soft:#1a1233;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#120b26,#5f3dc4 50%,#15aabf);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/ai2.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/ai2.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>AI កម្រិតមធ្យម៖ Deep Learning</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Deep learning — អ្នកណាបង្កើត?</a>
+<a href="#setup">២. ត្រៀមខ្លួន</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Neuron &amp; Activation functions</a>
+<a href="#l2">មេរៀន ២: Neural network &amp; Forward pass</a>
+<a href="#l3">មេរៀន ៣: Loss · Gradient descent · Backpropagation</a>
+<a href="#l4">មេរៀន ៤: Optimizers · Batch · Epoch</a>
+<a href="#l5">មេរៀន ៥: ការពារ Overfitting — Dropout · Regularization · Augmentation</a>
+<a href="#l6">មេរៀន ៦: CNN — Convolution សម្រាប់រូបភាព</a>
+<a href="#l7">មេរៀន ៧: Train CNN/MLP — PyTorch &amp; ឧទាហរណ៍ពិត</a>
+<a href="#l8">មេរៀន ៨: Transfer learning</a>
+<a href="#l9">មេរៀន ៩: Sequences — RNN · LSTM</a>
+<a href="#l10">មេរៀន ១០: Embeddings — ពាក្យជាវ៉ិចទ័រ</a>
+<a href="#l11">មេរៀន ១១: Attention &amp; Transformer</a>
+<a href="#l12">មេរៀន ១២: Generative models &amp; Hardware</a>
+<a href="#cheat">📋 សង្ខេប (Cheat sheet)</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងចុងវគ្គ</a>
+<a href="#pro-app">💻 AI Lab (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🧠 AI កម្រិតមធ្យម (២/៣) — Deep Learning</h2>
+  <p>Neuron &amp; Activation, <b>Backpropagation</b> (XOR ពីសូន្យ), Optimizers (Adam), Dropout, <b>CNN</b>, PyTorch, <b>Transfer learning</b>, RNN/LSTM, <b>Embeddings</b>, <b>Attention &amp; Transformer</b>, GAN/Diffusion — NumPy រត់ពិត។</p>
+  <p><span class="badge">📘 ១២ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">💻 Code មានពណ៌ + លទ្ធផល</span><span class="badge">🧠 AI Lab</span></p>
+</section>
+<section id="intro">
+<h2>១. Deep learning — អ្នកណាបង្កើត?</h2>
+
+<div class="note">💡 AI មានដែនកំណត់៖ អាចខុស (Hallucination) មាន Bias ពីទិន្នន័យ និងប៉ះពាល់ឯកជនភាព។ ប្រើ AI ដោយ <b>ទទួលខុសត្រូវ</b> — ពិនិត្យការពិត កុំបញ្ចូលទិន្នន័យសម្ងាត់ និងគោរពច្បាប់ និងសិទ្ធិអ្នកនិពន្ធ។</div>
+
+<p><b>Deep learning</b> = Machine learning ដោយ <b>Neural networks ច្រើនស្រទាប់</b> ដែលរៀនលក្ខណៈដោយខ្លួនឯងពីរូបភាព សំឡេង និងអក្សរ។ វគ្គនេះកសាង Neuron, Backpropagation, Optimizers, <b>CNN</b> (រូបភាព), <b>RNN/LSTM</b>, <b>Embeddings</b> និង <b>Attention/Transformer</b> — Code ដោយ NumPy រត់ពិត (ងាយយល់ពីខាងក្នុង) និងឧទាហរណ៍ PyTorch។</p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#868e96"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#868e96">1943</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">McCulloch–Pitts</text><circle cx="200" cy="115" r="11" fill="#1c7ed6"/><text x="200" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#1c7ed6">1958</text><text x="200" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Perceptron</text><circle cx="320" cy="115" r="11" fill="#7048e8"/><text x="320" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#7048e8">1986</text><text x="320" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Backprop</text><circle cx="440" cy="115" r="11" fill="#0ca678"/><text x="440" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#0ca678">1997</text><text x="440" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">LSTM</text><circle cx="560" cy="115" r="11" fill="#e8590c"/><text x="560" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#e8590c">1998</text><text x="560" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">LeNet-5</text><circle cx="680" cy="115" r="11" fill="#e03131"/><text x="680" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#e03131">2012</text><text x="680" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">AlexNet</text><circle cx="800" cy="115" r="11" fill="#d6336c"/><text x="800" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#d6336c">2015</text><text x="800" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">ResNet</text><circle cx="920" cy="115" r="11" fill="#495057"/><text x="920" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#495057">2017</text><text x="920" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Transformer</text></svg><figcaption>🖼️ ប្រវត្តិ Neural networks</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>1943</td><td><b>Warren McCulloch &amp; Walter Pitts</b></td><td>គំរូ Neuron សិប្បនិម្មិតដំបូង</td></tr><tr><td>1958</td><td><b>Frank Rosenblatt</b></td><td>Perceptron</td></tr><tr><td>1986</td><td><b>Rumelhart, Hinton &amp; Williams</b></td><td>Backpropagation</td></tr><tr><td>1997</td><td><b>Sepp Hochreiter &amp; Jürgen Schmidhuber</b></td><td>LSTM</td></tr><tr><td>1998</td><td><b>Yann LeCun</b></td><td>LeNet-5 — CNN អានលេខសរសេរដៃ (មូលប្បទានបត្រ)</td></tr><tr><td>2009 · 2012</td><td><b>Fei-Fei Li</b> (ImageNet) · AlexNet</td><td>ទិន្នន័យធំ + GPU → Deep learning boom</td></tr><tr><td>2015 · 2017</td><td><b>Kaiming He et al.</b> (ResNet) · <b>Vaswani et al.</b></td><td>Network ជ្រៅ ១៥២ ស្រទាប់ · Transformer</td></tr></table>
+
+<h3>ប្រើសម្រាប់អ្វី?</h3>
+<div class="grid"><div class="card"><b>🖼️ Computer vision</b><br>ស្គាល់មុខ · ស្គាល់ជំងឺដំណាំ · រថយន្តបើកខ្លួនឯង</div><div class="card"><b>🗣️ Speech</b><br>សំឡេង → អក្សរ</div><div class="card"><b>🌐 បកប្រែ</b><br>ខ្មែរ ↔ អង់គ្លេស</div><div class="card"><b>🧬 វិទ្យាសាស្ត្រ</b><br>AlphaFold — រចនាសម្ព័ន្ធប្រូតេអ៊ីន</div></div>
+
+</section>
+<section id="setup">
+<h2>២. ត្រៀមខ្លួន</h2>
+<ol class='steps'><li>Python 3 + <code class='i'>pip install numpy torch</code> (ឬប្រើ Google Colab ឥតគិតថ្លៃ — មិនបាច់ដំឡើង)។</li><li>Code ក្នុងវគ្គ <b>រត់ពិត</b> ហើយបង្ហាញលទ្ធផលពិត (ទិន្នន័យគំរូ/ក្លែង ដែលមាន Seed ថេរ)។</li><li>ហាត់អន្តរកម្មក្នុង <b>AI Lab</b> នៅចុងវគ្គ (Classifier · Neural net · K-means · Temperature · RAG · Prompt builder)។</li></ol><div class="note">💡 Sandbox របស់វគ្គនេះមិនមាន PyTorch — Code ដែលរត់បង្ហាញលទ្ធផល ប្រើ <b>NumPy</b>។ ប្រអប់ «PyTorch» ជាឧទាហរណ៍សម្រាប់រត់លើ Colab/កុំព្យូទ័រអ្នក។</div>
+</section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>Neuron &amp; Activation functions</h2>
+<figure class="fig"><svg viewBox="0 0 940 300" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="300" fill="#fff"/><line x1="120" y1="145" x2="820" y2="145" stroke="#ced4da" stroke-width="1.2"/><circle cx="120" cy="145" r="15" fill="#1c7ed6"/><text x="120.0" y="270" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">x₁…xₙ</text><circle cx="820" cy="145" r="15" fill="#7048e8"/><text x="820.0" y="270" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">y = f(w·x + b)</text><text x="470.0" y="292" text-anchor="middle" font-size="13.5" font-weight="700" fill="#0f172a">Neuron ១ = បូកតម្លៃ × Weight + Bias → Activation</text></svg><figcaption>🖼️ Neuron &amp; Activation functions</figcaption></figure>
+<table><tr><th>Activation</th><th>ប្រើ</th></tr><tr><td>ReLU</td><td>Hidden layers (ពេញនិយមបំផុត)</td></tr><tr><td>Sigmoid</td><td>Output 0–1 (Binary)</td></tr><tr><td>Softmax</td><td>Output ច្រើនថ្នាក់ (បូក = 1)</td></tr><tr><td>Tanh</td><td>RNN ចាស់ · −1…1</td></tr></table>
+<script type="text/x-code" data-lang="py" data-label="neuron.py">
+import numpy as np
+z = np.array([-3, -1, 0, 1, 3.])
+print("z        ", z); print("Sigmoid  ", (1 / (1 + np.exp(-z))).round(3)); print("Tanh     ", np.tanh(z).round(3)); print("ReLU     ", np.maximum(0, z))
+x = np.array([0.8, 0.2]); w = np.array([1.5, -2.0]); b = 0.1
+print("Neuron: z = w·x + b =", w @ x + b, "→ sigmoid =", round(1 / (1 + np.exp(-(w @ x + b))), 3))
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>z         [-3. -1.  0.  1.  3.]
+Sigmoid   [0.047 0.269 0.5   0.731 0.953]
+Tanh      [-0.995 -0.762  0.     0.762  0.995]
+ReLU      [0. 0. 0. 1. 3.]
+Neuron: z = w·x + b = 0.9000000000000001 → sigmoid = 0.711</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>ហេតុអ្វីត្រូវការ Activation ដែលមិនមែនបន្ទាត់ត្រង់ (Non-linear)?</p><details><summary>មើលចម្លើយ</summary><p>បើគ្មាន Network ច្រើនស្រទាប់ ស្មើបន្ទាត់ត្រង់មួយ — មិនអាចរៀនរូបរាងស្មុគស្មាញ (ឧ. XOR)។</p></details></div>
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>Neural network &amp; Forward pass</h2>
+<figure class="fig"><svg viewBox="0 0 940 300" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="300" fill="#fff"/><line x1="120" y1="92" x2="470" y2="66" stroke="#ced4da" stroke-width="1.2"/><line x1="120" y1="92" x2="470" y2="119" stroke="#ced4da" stroke-width="1.2"/><line x1="120" y1="92" x2="470" y2="171" stroke="#ced4da" stroke-width="1.2"/><line x1="120" y1="92" x2="470" y2="224" stroke="#ced4da" stroke-width="1.2"/><line x1="120" y1="198" x2="470" y2="66" stroke="#ced4da" stroke-width="1.2"/><line x1="120" y1="198" x2="470" y2="119" stroke="#ced4da" stroke-width="1.2"/><line x1="120" y1="198" x2="470" y2="171" stroke="#ced4da" stroke-width="1.2"/><line x1="120" y1="198" x2="470" y2="224" stroke="#ced4da" stroke-width="1.2"/><line x1="470" y1="66" x2="820" y2="145" stroke="#ced4da" stroke-width="1.2"/><line x1="470" y1="119" x2="820" y2="145" stroke="#ced4da" stroke-width="1.2"/><line x1="470" y1="171" x2="820" y2="145" stroke="#ced4da" stroke-width="1.2"/><line x1="470" y1="224" x2="820" y2="145" stroke="#ced4da" stroke-width="1.2"/><circle cx="120" cy="92" r="15" fill="#1c7ed6"/><circle cx="120" cy="198" r="15" fill="#1c7ed6"/><text x="120.0" y="270" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">Input (2)</text><circle cx="470" cy="66" r="15" fill="#7048e8"/><circle cx="470" cy="119" r="15" fill="#7048e8"/><circle cx="470" cy="171" r="15" fill="#7048e8"/><circle cx="470" cy="224" r="15" fill="#7048e8"/><text x="470.0" y="270" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">Hidden (4, ReLU)</text><circle cx="820" cy="145" r="15" fill="#7048e8"/><text x="820.0" y="270" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">Output (Sigmoid)</text><text x="470.0" y="292" text-anchor="middle" font-size="13.5" font-weight="700" fill="#0f172a">MLP តូច៖ 2 → 4 → 1 · Parameters = 2×4+4 + 4×1+1 = 17</text></svg><figcaption>🖼️ Neural network &amp; Forward pass</figcaption></figure>
+<script type="text/x-code" data-lang="py" data-label="forward.py">
+import numpy as np
+rng = np.random.default_rng(0)
+W1, b1 = rng.normal(0, 1, (2, 4)), np.zeros(4); W2, b2 = rng.normal(0, 1, (4, 1)), np.zeros(1)
+X = np.array([[0, 0], [0, 1], [1, 0], [1, 1.]])
+H = np.maximum(0, X @ W1 + b1); out = 1 / (1 + np.exp(-(H @ W2 + b2)))
+print("Hidden activations:\n", H.round(2)); print("Output (មុន Train):", out.ravel().round(3)); print("Parameters:", W1.size + b1.size + W2.size + b2.size)
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>Hidden activations:
+ [[0.   0.   0.   0.  ]
+ [0.   0.36 1.3  0.95]
+ [0.13 0.   0.64 0.1 ]
+ [0.   0.23 1.94 1.05]]
+Output (មុន Train): [0.5   0.226 0.381 0.189]
+Parameters: 17</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>Network 784 → 128 → 10 មាន Parameters ប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>784×128 + 128 + 128×10 + 10 = <b>101,770</b>។</p></details></div>
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Loss · Gradient descent · Backpropagation</h2>
+<script type="text/x-code" data-lang="py" data-label="backprop_xor.py">
+import numpy as np
+rng = np.random.default_rng(1)
+X = np.array([[0, 0], [0, 1], [1, 0], [1, 1.]]); y = np.array([[0], [1], [1], [0.]])     # XOR
+W1, b1 = rng.normal(0, 1, (2, 8)), np.zeros(8); W2, b2 = rng.normal(0, 1, (8, 1)), np.zeros(1); lr = 0.5
+for epoch in range(3001):
+    h = np.tanh(X @ W1 + b1); p = 1 / (1 + np.exp(-(h @ W2 + b2)))
+    loss = -np.mean(y * np.log(p) + (1 - y) * np.log(1 - p))
+    dz2 = (p - y) / 4; dW2 = h.T @ dz2; dh = dz2 @ W2.T * (1 - h ** 2); dW1 = X.T @ dh       # Backprop (chain rule)
+    W2 -= lr * dW2; b2 -= lr * dz2.sum(0); W1 -= lr * dW1; b1 -= lr * dh.sum(0)
+    if epoch in (0, 500, 1000, 3000): print(f"epoch {epoch:4d} loss {loss:.4f} → predictions {p.ravel().round(2)}")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>epoch    0 loss 0.7219 → predictions [0.5  0.45 0.39 0.36]
+epoch  500 loss 0.0084 → predictions [0.   0.99 0.99 0.01]
+epoch 1000 loss 0.0031 → predictions [0. 1. 1. 0.]
+epoch 3000 loss 0.0008 → predictions [0. 1. 1. 0.]</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li><b>Loss</b> វាស់កំហុស (Cross-entropy សម្រាប់ Classification · MSE សម្រាប់ Regression)។</li><li><b>Backprop</b> គណនា Gradient ដោយ Chain rule ពីក្រោយទៅមុខ។</li><li><b>Gradient descent</b>៖ w ← w − lr × gradient។</li><li>សាក <b>🧠 Neural net</b> ក្នុង AI Lab — Train XOR ដោយផ្ទាល់។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>Learning rate ធំពេក នាំឲ្យមានអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>Loss <b>លោត/មិនចុះ (Diverge)</b> — តូចពេក យឺត។</p></details></div>
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Optimizers · Batch · Epoch</h2>
+<table><tr><th>ពាក្យ</th><th>ន័យ</th></tr><tr><td>Epoch</td><td>ឆ្លងកាត់ទិន្នន័យ Train ទាំងអស់ ១ ដង</td></tr><tr><td>Batch size</td><td>ចំនួនគំរូក្នុង Update ១ (ឧ. 32)</td></tr><tr><td>SGD</td><td>Gradient descent តាម Mini-batch</td></tr><tr><td>Momentum</td><td>រក្សាល្បឿនទិស</td></tr><tr><td>Adam (Kingma &amp; Ba 2014)</td><td>Learning rate សម្របខ្លួន — Default ពេញនិយម</td></tr><tr><td>LR schedule</td><td>បន្ថយ lr តាមពេល</td></tr></table>
+<script type="text/x-code" data-lang="py" data-label="lr.py">
+import numpy as np
+f = lambda w: (w - 3) ** 2; g = lambda w: 2 * (w - 3)
+for lr in (0.01, 0.1, 0.9, 1.1):
+    w = 0.0
+    for _ in range(20): w -= lr * g(w)
+    print(f"lr={lr:<4} → w = {w:8.3f} · loss = {f(w):.4g}{'  ⚠️ diverge' if abs(w) > 10 else ''}")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>lr=0.01 → w =    0.997 · loss = 4.011
+lr=0.1  → w =    2.965 · loss = 0.001196
+lr=0.9  → w =    2.965 · loss = 0.001196
+lr=1.1  → w = -112.013 · loss = 1.323e+04  ⚠️ diverge</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>ទិន្នន័យ 10,000 · Batch 100។ Epoch ១ មាន Update ប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>10,000 ÷ 100 = <b>100 updates</b>។</p></details></div>
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>ការពារ Overfitting — Dropout · Regularization · Augmentation</h2>
+<figure class="fig"><svg viewBox="0 0 940 280" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="280" fill="#fff"/><line x1="70" y1="240.0" x2="910" y2="240.0" stroke="#eef1f5"/><text x="64" y="244.0" text-anchor="end" font-size="11" font-weight="400" fill="#94a3b8">0</text><line x1="70" y1="190.0" x2="910" y2="190.0" stroke="#eef1f5"/><text x="64" y="194.0" text-anchor="end" font-size="11" font-weight="400" fill="#94a3b8">0</text><line x1="70" y1="140.0" x2="910" y2="140.0" stroke="#eef1f5"/><text x="64" y="144.0" text-anchor="end" font-size="11" font-weight="400" fill="#94a3b8">1</text><line x1="70" y1="90.0" x2="910" y2="90.0" stroke="#eef1f5"/><text x="64" y="94.00000000000001" text-anchor="end" font-size="11" font-weight="400" fill="#94a3b8">1</text><line x1="70" y1="40.0" x2="910" y2="40.0" stroke="#eef1f5"/><text x="64" y="44.0" text-anchor="end" font-size="11" font-weight="400" fill="#94a3b8">1</text><text x="70.0" y="264" text-anchor="middle" font-size="11.5" font-weight="400" fill="#64748b">1</text><text x="190.0" y="264" text-anchor="middle" font-size="11.5" font-weight="400" fill="#64748b">2</text><text x="310.0" y="264" text-anchor="middle" font-size="11.5" font-weight="400" fill="#64748b">3</text><text x="430.0" y="264" text-anchor="middle" font-size="11.5" font-weight="400" fill="#64748b">4</text><text x="550.0" y="264" text-anchor="middle" font-size="11.5" font-weight="400" fill="#64748b">5</text><text x="670.0" y="264" text-anchor="middle" font-size="11.5" font-weight="400" fill="#64748b">6</text><text x="790.0" y="264" text-anchor="middle" font-size="11.5" font-weight="400" fill="#64748b">7</text><text x="910.0" y="264" text-anchor="middle" font-size="11.5" font-weight="400" fill="#64748b">8</text><polyline points="70.0,63.6 190.0,134.2 310.0,169.5 430.0,187.1 550.0,201.2 670.0,211.8 790.0,218.8 910.0,224.1" fill="none" stroke="#1c7ed6" stroke-width="3"/><rect x="80" y="12" width="16" height="4" fill="#1c7ed6"/><text x="102" y="18" text-anchor="start" font-size="12.5" font-weight="700" fill="#1c7ed6">Train loss</text><polyline points="70.0,54.8 190.0,116.5 310.0,151.8 430.0,165.9 550.0,169.5 670.0,164.2 790.0,151.8 910.0,137.7" fill="none" stroke="#e03131" stroke-width="3"/><rect x="270" y="12" width="16" height="4" fill="#e03131"/><text x="292" y="18" text-anchor="start" font-size="12.5" font-weight="700" fill="#e03131">Validation loss</text><circle cx="550.0" cy="169.5" r="6" fill="#e03131"/><text x="550.0" y="157.45326278659613" text-anchor="middle" font-size="12.5" font-weight="700" fill="#e03131">Stop</text><text x="470.0" y="278" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">Early stopping៖ ឈប់នៅ Epoch ៥</text></svg><figcaption>🖼️ ការពារ Overfitting — Dropout · Regularization · Augmentation</figcaption></figure>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li><b>Dropout</b> (Srivastava et al. 2014)៖ បិទ Neuron ចៃដន្យពេល Train។</li><li><b>Weight decay (L2)</b> · <b>Early stopping</b> (ឈប់ពេល Validation loss ឡើង)។</li><li><b>Data augmentation</b>៖ បង្វិល ច្រឹប ប្តូរពន្លឺរូបភាព។</li><li><b>Batch normalization</b> — Train លឿន និងស្ថិរភាព។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>Validation loss ចាប់ផ្តើមឡើង ខណៈ Train loss នៅចុះ។ ធ្វើអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Early stopping</b> / បន្ថែម Dropout · Augmentation — Model ចាប់ផ្តើម Overfit។</p></details></div>
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>CNN — Convolution សម្រាប់រូបភាព</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="125.0" height="96" rx="14" fill="#868e96"/><text x="82.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Image</text><text x="82.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">28×28</text><line x1="147.0" y1="82" x2="173.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="175.0" y="34" width="125.0" height="96" rx="14" fill="#1c7ed6"/><text x="237.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Conv + ReLU</text><text x="237.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Edges</text><line x1="302.0" y1="82" x2="328.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="330.0" y="34" width="125.0" height="96" rx="14" fill="#7048e8"/><text x="392.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Pool</text><text x="392.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">តូចជាង</text><line x1="457.0" y1="82" x2="483.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="485.0" y="34" width="125.0" height="96" rx="14" fill="#0ca678"/><text x="547.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Conv</text><text x="547.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Shapes</text><line x1="612.0" y1="82" x2="638.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="640.0" y="34" width="125.0" height="96" rx="14" fill="#e8590c"/><text x="702.5" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Dense</text><line x1="767.0" y1="82" x2="793.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="795.0" y="34" width="125.0" height="96" rx="14" fill="#2f9e44"/><text x="857.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Softmax</text><text x="857.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">0…9</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">CNN (ដូច LeNet)</text></svg><figcaption>🖼️ CNN — Convolution សម្រាប់រូបភាព</figcaption></figure>
+<script type="text/x-code" data-lang="py" data-label="conv.py">
+import numpy as np
+img = np.zeros((7, 7)); img[:, 3:] = 1            # រូប: ឆ្វេងខ្មៅ ស្តាំស
+k = np.array([[-1, 0, 1], [-1, 0, 1], [-1, 0, 1]])   # Vertical edge filter (Sobel-like)
+out = np.array([[np.sum(img[i:i+3, j:j+3] * k) for j in range(5)] for i in range(5)])
+print("Image:\n", img.astype(int)); print("Feature map (edge = 3):\n", out.astype(int))
+pool = out.reshape(5, 5)[:4, :4].reshape(2, 2, 2, 2).max(axis=(1, 3)); print("Max-pool 2×2:\n", pool.astype(int))
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>Image:
+ [[0 0 0 1 1 1 1]
+ [0 0 0 1 1 1 1]
+ [0 0 0 1 1 1 1]
+ [0 0 0 1 1 1 1]
+ [0 0 0 1 1 1 1]
+ [0 0 0 1 1 1 1]
+ [0 0 0 1 1 1 1]]
+Feature map (edge = 3):
+ [[0 3 3 0 0]
+ [0 3 3 0 0]
+ [0 3 3 0 0]
+ [0 3 3 0 0]
+ [0 3 3 0 0]]
+Max-pool 2×2:
+ [[3 3]
+ [3 3]]</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>ហេតុអ្វី CNN ល្អសម្រាប់រូបភាព ជាង Dense network?</p><details><summary>មើលចម្លើយ</summary><p>Filter តូចប្រើឡើងវិញគ្រប់ទីតាំង (Weight sharing) → Parameter តិច ហើយរៀនលក្ខណៈក្នុងតំបន់ (គែម រាង)។</p></details></div>
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Train CNN/MLP — PyTorch &amp; ឧទាហរណ៍ពិត</h2>
+<script type="text/x-code" data-lang="py" data-label="PyTorch — រត់លើ Colab (មិនរត់ក្នុងទំព័រនេះ)">
+import torch, torch.nn as nn
+from torchvision import datasets, transforms
+train = torch.utils.data.DataLoader(datasets.MNIST(".", train=True, download=True, transform=transforms.ToTensor()), batch_size=64, shuffle=True)
+model = nn.Sequential(nn.Conv2d(1, 16, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
+                      nn.Conv2d(16, 32, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
+                      nn.Flatten(), nn.Linear(32 * 7 * 7, 10))
+opt = torch.optim.Adam(model.parameters(), lr=1e-3); loss_fn = nn.CrossEntropyLoss()
+for epoch in range(2):
+    for x, y in train:
+        opt.zero_grad(); loss = loss_fn(model(x), y); loss.backward(); opt.step()
+    print(epoch, loss.item())
+</script>
+<script type="text/x-code" data-lang="py" data-label="digits_mlp.py">
+from sklearn.datasets import load_digits
+from sklearn.neural_network import MLPClassifier
+from sklearn.model_selection import train_test_split
+X, y = load_digits(return_X_y=True); X = X / 16
+X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.25, random_state=0)
+m = MLPClassifier(hidden_layer_sizes=(64,), max_iter=400, random_state=0).fit(X_tr, y_tr)
+print("MLP លើរូបលេខ 8×8: test accuracy =", round(m.score(X_te, y_te), 3), "· epochs =", m.n_iter_)
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>MLP លើរូបលេខ 8×8: test accuracy = 0.973 · epochs = 325</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>ក្នុង PyTorch ហេតុអ្វីត្រូវ opt.zero_grad() រាល់ Batch?</p><details><summary>មើលចម្លើយ</summary><p>Gradient <b>បូកបន្ត</b> ជា Default — ត្រូវសម្អាតមុនគណនាថ្មី។</p></details></div>
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Transfer learning</h2>
+<script type="text/x-code" data-lang="py" data-label="PyTorch — Fine-tune ResNet18">
+import torchvision
+m = torchvision.models.resnet18(weights="IMAGENET1K_V1")
+for p in m.parameters(): p.requires_grad = False      # Freeze
+m.fc = torch.nn.Linear(m.fc.in_features, 4)            # 4 ជំងឺស្រូវ
+</script>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>យក Model ដែល Train លើ ImageNet រួច (ResNet, EfficientNet) → ប្តូរតែស្រទាប់ចុងក្រោយ។</li><li>ត្រូវការទិន្នន័យតិច (រាប់រយរូប) និងពេលតិច។</li><li>ឧ. កសិករកម្ពុជា៖ ស្គាល់ជំងឺស្លឹកស្រូវ ៤ ប្រភេទ ពីរូបថតទូរស័ព្ទ។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>មានរូប ៣០០ ប៉ុណ្ណោះ។ គួរ Train CNN ពីសូន្យ ឬ Transfer learning?</p><details><summary>មើលចម្លើយ</summary><p><b>Transfer learning</b> — ប្រើចំណេះពី ImageNet ហើយ Fine-tune។</p></details></div>
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Sequences — RNN · LSTM</h2>
+<script type="text/x-code" data-lang="py" data-label="rnn.py">
+import numpy as np
+rng = np.random.default_rng(0); Wx, Wh = rng.normal(0, .5, (3, 4)), rng.normal(0, .5, (4, 4))
+h = np.zeros(4)
+for t, x in enumerate(np.eye(3)):                 # 3 ពាក្យ one-hot
+    h = np.tanh(x @ Wx + h @ Wh); print(f"t={t} hidden state = {h.round(3)}")
+print("Gradient ឆ្លង 50 ជំហាន (×0.5 រាល់ជំហាន) =", 0.5 ** 50, "← Vanishing")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>t=0 hidden state = [ 0.063 -0.066  0.31   0.052]
+t=1 hidden state = [-0.309  0.379  0.444  0.419]
+t=2 hidden state = [ 0.065 -0.324 -0.332  0.213]
+Gradient ឆ្លង 50 ជំហាន (×0.5 រាល់ជំហាន) = 8.881784197001252e-16 ← Vanishing</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>RNN អានជាលំដាប់ (ពាក្យ ១ រួចពាក្យ ២…) រក្សា Hidden state។</li><li>បញ្ហា Vanishing gradient → <b>LSTM</b> (1997) មាន Gates ចាំ/ភ្លេច។</li><li>ប្រើ៖ ទាយ Time series · Speech · បកប្រែ (មុន Transformer)។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>ហេតុអ្វី Transformer ជំនួស RNN ក្នុង NLP?</p><details><summary>មើលចម្លើយ</summary><p>Attention មើលពាក្យទាំងអស់ <b>ស្របគ្នា (Parallel)</b> — លឿនលើ GPU និងចាំទំនាក់ទំនងឆ្ងាយបានល្អ។</p></details></div>
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>Embeddings — ពាក្យជាវ៉ិចទ័រ</h2>
+<script type="text/x-code" data-lang="py" data-label="embed.py">
+import numpy as np
+E = {"king": [.9, .8, .1], "queen": [.9, .1, .8], "man": [.1, .9, .1], "woman": [.1, .1, .9], "rice": [-.6, .2, .2], "bread": [-.6, .25, .25]}
+E = {k: np.array(v) for k, v in E.items()}; cos = lambda a, b: a @ b / np.linalg.norm(a) / np.linalg.norm(b)
+print("cos(rice, bread) =", round(cos(E["rice"], E["bread"]), 3), "· cos(rice, king) =", round(cos(E["rice"], E["king"]), 3))
+v = E["king"] - E["man"] + E["woman"]; best = max((w for w in E if w not in ("king", "man", "woman")), key=lambda w: cos(v, E[w]))
+print("king − man + woman ≈", best)
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>cos(rice, bread) = 0.996 · cos(rice, king) = -0.449
+king − man + woman ≈ queen</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Embedding = វ៉ិចទ័រលេខ ដែលពាក្យន័យជិតគ្នា នៅជិតគ្នា (Word2vec — Mikolov 2013)។</li><li>LLM ប្រើ Embeddings រាប់ពាន់វិមាត្រ · RAG ប្រើ Embeddings ស្វែងរកឯកសារ (វគ្គ ៣)។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>Cosine similarity = 1 មានន័យថាអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>វ៉ិចទ័រមាន <b>ទិសដូចគ្នា</b> — ន័យស្រដៀងគ្នាខ្លាំង។</p></details></div>
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>Attention &amp; Transformer</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="125.0" height="96" rx="14" fill="#868e96"/><text x="82.5" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Tokens</text><line x1="147.0" y1="82" x2="173.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="175.0" y="34" width="125.0" height="96" rx="14" fill="#1c7ed6"/><text x="237.5" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Embedding + Position</text><line x1="302.0" y1="82" x2="328.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="330.0" y="34" width="125.0" height="96" rx="14" fill="#7048e8"/><text x="392.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Self-attention</text><text x="392.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Q·K·V</text><line x1="457.0" y1="82" x2="483.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="485.0" y="34" width="125.0" height="96" rx="14" fill="#0ca678"/><text x="547.5" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Feed-forward</text><line x1="612.0" y1="82" x2="638.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="640.0" y="34" width="125.0" height="96" rx="14" fill="#e8590c"/><text x="702.5" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">× N layers</text><line x1="767.0" y1="82" x2="793.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="795.0" y="34" width="125.0" height="96" rx="14" fill="#2f9e44"/><text x="857.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Next token</text><text x="857.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Softmax</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Transformer (Decoder) — មូលដ្ឋាន LLM</text></svg><figcaption>🖼️ Attention &amp; Transformer</figcaption></figure>
+<script type="text/x-code" data-lang="py" data-label="attention.py">
+import numpy as np
+tokens = ["ខ្ញុំ", "ញ៉ាំ", "បាយ"]; rng = np.random.default_rng(2); X = rng.normal(0, 1, (3, 4))
+Wq, Wk, Wv = (rng.normal(0, 1, (4, 4)) for _ in range(3)); Q, K, V = X @ Wq, X @ Wk, X @ Wv
+S = Q @ K.T / np.sqrt(4); S = np.where(np.triu(np.ones((3, 3)), 1) == 1, -1e9, S)       # causal mask
+A = np.exp(S - S.max(1, keepdims=True)); A /= A.sum(1, keepdims=True)
+for t, row in zip(tokens, A): print(f"{t:6s} attends → " + "  ".join(f"{w}:{p:.2f}" for w, p in zip(tokens, row)))
+print("Output shape:", (A @ V).shape)
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>ខ្ញុំ  attends → ខ្ញុំ:1.00  ញ៉ាំ:0.00  បាយ:0.00
+ញ៉ាំ   attends → ខ្ញុំ:0.71  ញ៉ាំ:0.29  បាយ:0.00
+បាយ    attends → ខ្ញុំ:0.71  ញ៉ាំ:0.12  បាយ:0.17
+Output shape: (3, 4)</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Attention(Q,K,V) = softmax(QKᵀ/√d)·V — ពាក្យនីមួយៗ «មើល» ពាក្យផ្សេងៗ ហើយយកព័ត៌មានតាមទម្ងន់។</li><li><b>Causal mask</b>៖ LLM មើលតែពាក្យមុន (មិនមើលអនាគត)។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>ហេតុអ្វីចែកនឹង √d?</p><details><summary>មើលចម្លើយ</summary><p>កុំឲ្យ Dot product ធំពេក ធ្វើឲ្យ Softmax ឆ្អែត (Gradient តូច)។</p></details></div>
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>Generative models &amp; Hardware</h2>
+<table><tr><th>Model</th><th>ធ្វើអ្វី</th><th>ឧទាហរណ៍</th></tr><tr><td>Autoencoder / VAE</td><td>បង្ហាប់ និងបង្កើតឡើងវិញ</td><td>កាត់ Noise</td></tr><tr><td>GAN (Goodfellow 2014)</td><td>Generator vs Discriminator</td><td>មុខមនុស្សក្លែង</td></tr><tr><td>Diffusion</td><td>បន្ថយ Noise បន្តិចម្តងៗ</td><td>បង្កើតរូបពីអក្សរ</td></tr><tr><td>LLM (Transformer)</td><td>ទាយ Token បន្ទាប់</td><td>Claude · GPT · Gemini</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>GPU/TPU គណនា Matrix ស្របគ្នា — ហេតុផលដែល Deep learning រីកចម្រើនក្រោយ 2012។</li><li>Model ធំ = ថ្លៃ Train និងថាមពល — Model តូច (Quantized) រត់លើទូរស័ព្ទបាន។</li></ol></div>
+<div class="warn">⚠️ Deepfake ពីមនុស្សពិតដោយគ្មានការយល់ព្រម អាចខុសច្បាប់ និងបង្កគ្រោះថ្នាក់ — ប្រើ Generative AI ដោយទទួលខុសត្រូវ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>GAN មាន Network ២ អ្វីខ្លះ?</p><details><summary>មើលចម្លើយ</summary><p><b>Generator</b> (បង្កើត) និង <b>Discriminator</b> (បែងចែកពិត/ក្លែង)។</p></details></div>
+</section>
+<section id="cheat">
+<h2>📋 សង្ខេប (Cheat sheet)</h2>
+<table><tr><th>ពាក្យ / រូបមន្ត</th><th>ន័យ</th></tr><tr><td>Neuron</td><td>f(w·x + b)</td></tr><tr><td>ReLU / Softmax</td><td>Hidden / Output ច្រើនថ្នាក់</td></tr><tr><td>Backprop</td><td>Chain rule → Gradient</td></tr><tr><td>Adam</td><td>Optimizer Default</td></tr><tr><td>Dropout · Early stop</td><td>ការពារ Overfit</td></tr><tr><td>CNN</td><td>រូបភាព</td></tr><tr><td>LSTM</td><td>Sequence</td></tr><tr><td>Attention</td><td>softmax(QKᵀ/√d)V</td></tr></table>
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងចុងវគ្គ</h2>
+<ol class='steps'><li>ជ្រើស Dataset រូបភាពតូច (ឧ. ស្លឹកឈើ ផ្លែឈើ ឬ MNIST)។</li><li>Baseline MLP → CNN → Transfer learning (ResNet18) លើ Colab។</li><li>ប្រៀបធៀប Accuracy · Confusion matrix · ពេល Train។</li><li>Augmentation + Early stopping។</li><li>Demo៖ Upload រូប → ទាយ (Gradio/Streamlit) + Report ដែនកំណត់។</li></ol></section>
+<section id="pro-app">
+<h2>💻 AI Lab (App)</h2>
+
+<p><b>🎯 Classifier</b> (ចុចដាក់ចំណុច → KNN/Logistic regression) · <b>🧠 Neural net</b> (Train MLP លើ XOR/Circle/Spiral) · <b>🔵 K-means</b> · <b>🌡️ Temperature</b> (Token បន្ទាប់) · <b>📚 RAG</b> (ស្វែងរក + Prompt) · <b>✍️ Prompt builder</b> — ទាំងអស់ដំណើរការក្នុង Browser។</p>
+
+<div class="itk" id="ail">
+<div class="itk-tabs"><button class="on" data-t="cl">🎯 Classifier</button><button data-t="nn">🧠 Neural net</button><button data-t="km">🔵 K-means</button><button data-t="tp">🌡️ Temperature</button><button data-t="rag">📚 RAG</button><button data-t="pb">✍️ Prompt builder</button></div>
+
+<div class="itk-p on" data-p="cl">
+ <p class="vl-tip">ចុចលើផ្ទាំង ដើម្បីដាក់ចំណុច (ជ្រើសថ្នាក់ខាងក្រោម) រួចមើល <b>Decision boundary</b>។</p>
+ <div class="itk-row"><label>ថ្នាក់<select id="cl_c"><option value="0">🔵 A</option><option value="1">🟠 B</option></select></label><label>Model<select id="cl_m"><option value="knn">KNN</option><option value="lr">Logistic regression</option></select></label><label>k<input id="cl_k" type="number" value="3" min="1" max="15" style="width:60px"></label><button class="btn" id="cl_demo">🎲 គំរូ</button><button class="btn" id="cl_clr">🗑 សម្អាត</button></div>
+ <canvas id="cl_cv" width="320" height="320" style="width:100%;max-width:320px;border-radius:12px;border:1px solid #dee2e6;touch-action:manipulation;background:#fff"></canvas>
+ <div class="itk-out" id="cl_out"></div>
+</div>
+
+<div class="itk-p" data-p="nn">
+ <div class="itk-row"><label>Dataset<select id="nn_d"><option value="xor">XOR</option><option value="circle">Circle</option><option value="spiral">Spiral</option></select></label><label>Hidden neurons<input id="nn_h" type="number" value="8" min="1" max="32" style="width:60px"></label><label>Learning rate<select id="nn_lr"><option>0.01</option><option selected>0.03</option><option>0.1</option><option>0.3</option></select></label></div>
+ <div class="itk-row"><button class="btn" id="nn_go">▶ Train 300 epochs</button><button class="btn" id="nn_rs">↺ Reset</button></div>
+ <canvas id="nn_cv" width="320" height="320" style="width:100%;max-width:320px;border-radius:12px;border:1px solid #dee2e6;background:#fff"></canvas>
+ <div class="itk-out" id="nn_out"></div>
+</div>
+
+<div class="itk-p" data-p="km">
+ <div class="itk-row"><label>k<input id="km_k" type="number" value="3" min="1" max="6" style="width:60px"></label><button class="btn" id="km_new">🎲 ទិន្នន័យថ្មី</button><button class="btn" id="km_step">⏭ 1 ជំហាន</button><button class="btn" id="km_run">▶ រហូតដល់ស្ថិតស្ថេរ</button></div>
+ <canvas id="km_cv" width="320" height="320" style="width:100%;max-width:320px;border-radius:12px;border:1px solid #dee2e6;background:#fff"></canvas>
+ <div class="itk-out" id="km_out"></div>
+</div>
+
+<div class="itk-p" data-p="tp">
+ <p class="vl-tip">LLM ទស្សន៍ទាយ <b>Token បន្ទាប់</b> ពី Probability។ Prompt៖ <i>«រាជធានីរបស់កម្ពុជាគឺ …»</i> — Temperature ទាប = ជាប់លាប់ · ខ្ពស់ = ច្នៃប្រឌិត/ចៃដន្យ។</p>
+ <div class="itk-row"><label>Temperature <b id="tp_v">0.7</b><input id="tp_t" type="range" min="0.05" max="2" step="0.05" value="0.7" style="width:180px"></label><label>Top-p<select id="tp_p"><option value="1">1.0</option><option value="0.9">0.9</option><option value="0.5">0.5</option></select></label><button class="btn" id="tp_s">🎲 Sample ១០ ដង</button></div>
+ <div class="itk-out" id="tp_out"></div>
+</div>
+
+<div class="itk-p" data-p="rag">
+ <p class="vl-tip"><b>RAG</b> = ស្វែងរកឯកសារពាក់ព័ន្ធមុន រួចដាក់ក្នុង Prompt ដើម្បីឲ្យ LLM ឆ្លើយផ្អែកលើការពិត។ ឯកសារគំរូ ៨ (TF-IDF + Cosine similarity)។</p>
+ <div class="itk-row"><label>សំណួរ<input id="rag_q" value="How many HSK levels are there?" style="width:260px"></label><button class="btn" id="rag_go">🔍 ស្វែងរក</button></div>
+ <div class="itk-out" id="rag_out"></div>
+</div>
+
+<div class="itk-p" data-p="pb">
+ <div class="itk-row"><label>Role<input id="pb_role" value="គ្រូបង្រៀន Excel ដែលពន្យល់សាមញ្ញ" style="width:260px"></label></div>
+ <div class="itk-row"><label>Task<input id="pb_task" value="ពន្យល់រូបមន្ត XLOOKUP" style="width:260px"></label></div>
+ <div class="itk-row"><label>Context<input id="pb_ctx" value="សិស្សថ្នាក់ទី១២ ទើបចាប់ផ្តើម Excel" style="width:260px"></label></div>
+ <div class="itk-row"><label>Format<input id="pb_fmt" value="ជំហាន ១–៥ + ឧទាហរណ៍តារាង ១" style="width:260px"></label></div>
+ <div class="itk-row"><label>Constraints<input id="pb_con" value="ជាភាសាខ្មែរ · មិនលើស ២០០ ពាក្យ" style="width:260px"></label></div>
+ <div class="itk-row"><label>Example<input id="pb_ex" value="" placeholder="(ស្រេចចិត្ត) ឧទាហរណ៍ចម្លើយល្អ" style="width:260px"></label></div>
+ <div class="itk-out" id="pb_out"></div>
+</div>
+</div>
+<script>
+(() => {
+const $ = id => document.getElementById(id), root = $("ail");
+root.querySelectorAll(".itk-tabs button").forEach(b => b.onclick = () => { root.querySelectorAll(".itk-tabs button").forEach(x => x.classList.toggle("on", x === b)); root.querySelectorAll(".itk-p").forEach(p => p.classList.toggle("on", p.dataset.p === b.dataset.t)); });
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647; const gauss = () => Math.sqrt(-2 * Math.log(rnd() + 1e-9)) * Math.cos(2 * Math.PI * rnd());
+const COL = ["#1c7ed6", "#e8590c", "#2f9e44", "#7048e8", "#d6336c", "#0ca678"], BG = [[28, 126, 214], [232, 89, 12]];
+function paintBoundary(cv, f) { const c = cv.getContext("2d"), N = 40, s = cv.width / N; for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) { const p = f((i + .5) / N, (j + .5) / N), a = BG[0], b = BG[1]; c.fillStyle = `rgba(${a[0] * (1 - p) + b[0] * p},${a[1] * (1 - p) + b[1] * p},${a[2] * (1 - p) + b[2] * p},.28)`; c.fillRect(i * s, j * s, s, s); } }
+function dots(cv, P) { const c = cv.getContext("2d"); P.forEach(p => { c.beginPath(); c.arc(p[0] * cv.width, p[1] * cv.height, 5.5, 0, 7); c.fillStyle = COL[p[2]]; c.fill(); c.strokeStyle = "#fff"; c.lineWidth = 1.5; c.stroke(); }); }
+/* ---------- classifier ---------- */
+let CP = [];
+function clDemo() { CP = []; for (let i = 0; i < 18; i++) { CP.push([.3 + gauss() * .1, .35 + gauss() * .1, 0]); CP.push([.68 + gauss() * .1, .65 + gauss() * .1, 1]); } CP = CP.map(p => [Math.min(.97, Math.max(.03, p[0])), Math.min(.97, Math.max(.03, p[1])), p[2]]); cl(); }
+function knn(x, y, k) { const d = CP.map(p => [(p[0] - x) ** 2 + (p[1] - y) ** 2, p[2]]).sort((a, b) => a[0] - b[0]).slice(0, k); return d.reduce((s, e) => s + e[1], 0) / d.length; }
+function logreg() { let w = [0, 0, 0]; for (let e = 0; e < 600; e++) { const g = [0, 0, 0]; CP.forEach(([x, y, t]) => { const p = 1 / (1 + Math.exp(-(w[0] + w[1] * x + w[2] * y))); g[0] += p - t; g[1] += (p - t) * x; g[2] += (p - t) * y; }); w = w.map((v, i) => v - 2 * g[i] / CP.length); } return (x, y) => 1 / (1 + Math.exp(-(w[0] + w[1] * x + w[2] * y))); }
+function cl() { const cv = $("cl_cv"), c = cv.getContext("2d"); c.clearRect(0, 0, cv.width, cv.height);
+  const has = new Set(CP.map(p => p[2])); if (has.size < 2) { dots(cv, CP); $("cl_out").textContent = "ដាក់ចំណុចទាំង ២ ថ្នាក់ (A និង B)"; return; }
+  const m = $("cl_m").value, k = Math.max(1, Math.min(CP.length, +$("cl_k").value || 3)), f = m === "knn" ? (x, y) => knn(x, y, k) : logreg(); paintBoundary(cv, f); dots(cv, CP);
+  const acc = CP.filter(p => (f(p[0], p[1]) >= .5 ? 1 : 0) === p[2]).length / CP.length;
+  $("cl_out").innerHTML = `ចំណុច ${CP.length} · Training accuracy <b>${(acc * 100).toFixed(0)}%</b> · ${m === "knn" ? `KNN (k=${k}) — k តូច = Boundary រញ៉េរញ៉ៃ (Overfit) · k ធំ = រលោង` : "Logistic regression — Boundary ជាបន្ទាត់ត្រង់ (Linear)"}`; }
+$("cl_cv").addEventListener("click", e => { const r = e.target.getBoundingClientRect(); CP.push([(e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height, +$("cl_c").value]); cl(); });
+["cl_m", "cl_k"].forEach(id => $(id).onchange = cl); $("cl_demo").onclick = clDemo; $("cl_clr").onclick = () => { CP = []; cl(); };
+/* ---------- neural net (1 hidden layer, tanh → sigmoid) ---------- */
+let ND = [], NET = null, EP = 0;
+function nnData() { seed = 5; const d = $("nn_d").value; ND = [];
+  if (d === "xor") for (let i = 0; i < 160; i++) { const x = rnd(), y = rnd(); ND.push([x, y, (x > .5) !== (y > .5) ? 1 : 0]); }
+  else if (d === "circle") for (let i = 0; i < 180; i++) { const x = rnd(), y = rnd(); ND.push([x, y, Math.hypot(x - .5, y - .5) < .28 ? 1 : 0]); }
+  else for (let c = 0; c < 2; c++) for (let i = 0; i < 90; i++) { const r = i / 90 * .45, t = i / 90 * 3.2 * Math.PI + c * Math.PI; ND.push([.5 + r * Math.cos(t) + gauss() * .015, .5 + r * Math.sin(t) + gauss() * .015, c]); } }
+function nnInit() { const H = Math.max(1, Math.min(32, +$("nn_h").value || 8)); seed = 3; NET = { H, W1: Array.from({ length: H }, () => [gauss() * 1.5, gauss() * 1.5]), b1: Array(H).fill(0).map(() => gauss() * .5), W2: Array(H).fill(0).map(() => gauss() * .5), b2: 0 }; EP = 0; }
+const fw = (x, y) => { const xi = [(x - .5) * 4, (y - .5) * 4], h = NET.W1.map((w, j) => Math.tanh(w[0] * xi[0] + w[1] * xi[1] + NET.b1[j])); const o = 1 / (1 + Math.exp(-(h.reduce((s, v, j) => s + v * NET.W2[j], 0) + NET.b2))); return { xi, h, o }; };
+function nnTrain(n) { const lr = +$("nn_lr").value; for (let e = 0; e < n; e++) { for (const [x, y, t] of ND) { const { xi, h, o } = fw(x, y), d = o - t;
+  for (let j = 0; j < NET.H; j++) { const dh = d * NET.W2[j] * (1 - h[j] * h[j]); NET.W2[j] -= lr * d * h[j]; NET.W1[j][0] -= lr * dh * xi[0]; NET.W1[j][1] -= lr * dh * xi[1]; NET.b1[j] -= lr * dh; } NET.b2 -= lr * d; } EP++; } }
+function nnDraw() { const cv = $("nn_cv"), c = cv.getContext("2d"); c.clearRect(0, 0, cv.width, cv.height); paintBoundary(cv, (x, y) => fw(x, y).o); dots(cv, ND);
+  let loss = 0, ok = 0; ND.forEach(([x, y, t]) => { const o = Math.min(1 - 1e-7, Math.max(1e-7, fw(x, y).o)); loss -= t * Math.log(o) + (1 - t) * Math.log(1 - o); ok += (o >= .5) === (t === 1); });
+  $("nn_out").innerHTML = `Epoch <b>${EP}</b> · Loss (cross-entropy) <b>${(loss / ND.length).toFixed(3)}</b> · Accuracy <b>${(ok / ND.length * 100).toFixed(0)}%</b> · Parameters ${NET.H * 4 + 1}<br>💡 Spiral ពិបាក — សាក Hidden neurons ច្រើន + Train ច្រើនដង។ Neuron ១ = Boundary ត្រង់ (ដូច Logistic regression)។${EP && loss / ND.length > .69 ? '<br>⚠️ Loss មិនចុះ — Learning rate ធំពេក? សាក 0.03 រួច Reset' : ''}`; }
+const nnReset = () => { nnData(); nnInit(); nnDraw(); };
+$("nn_go").onclick = () => { nnTrain(300); nnDraw(); }; $("nn_rs").onclick = nnReset; ["nn_d", "nn_h", "nn_lr"].forEach(id => $(id).onchange = nnReset);
+/* ---------- k-means ---------- */
+let KP = [], KC = [], KA = [], KI = 0;
+function kmNew() { KP = []; const cs = [[.25, .3], [.72, .28], [.5, .72], [.2, .75], [.8, .75]]; cs.forEach(c => { for (let i = 0; i < 30; i++) KP.push([Math.min(.97, Math.max(.03, c[0] + gauss() * .07)), Math.min(.97, Math.max(.03, c[1] + gauss() * .07))]); });
+  const k = Math.max(1, Math.min(6, +$("km_k").value || 3)); KC = Array.from({ length: k }, () => KP[Math.floor(rnd() * KP.length)].slice()); KA = KP.map(() => -1); KI = 0; kmDraw(); }
+function kmStep() { let ch = 0; KA = KP.map((p, i) => { let b = 0, bd = 9; KC.forEach((c, j) => { const d = (p[0] - c[0]) ** 2 + (p[1] - c[1]) ** 2; if (d < bd) { bd = d; b = j; } }); if (b !== KA[i]) ch++; return b; });
+  KC = KC.map((c, j) => { const m = KP.filter((_, i) => KA[i] === j); return m.length ? [m.reduce((s, p) => s + p[0], 0) / m.length, m.reduce((s, p) => s + p[1], 0) / m.length] : c; }); KI++; return ch; }
+function kmDraw() { const cv = $("km_cv"), c = cv.getContext("2d"); c.clearRect(0, 0, cv.width, cv.height); KP.forEach((p, i) => { c.beginPath(); c.arc(p[0] * 320, p[1] * 320, 4.5, 0, 7); c.fillStyle = KA[i] < 0 ? "#adb5bd" : COL[KA[i]]; c.fill(); });
+  KC.forEach((p, j) => { c.save(); c.translate(p[0] * 320, p[1] * 320); c.rotate(.785); c.fillStyle = COL[j]; c.strokeStyle = "#0f172a"; c.lineWidth = 2; c.fillRect(-8, -8, 16, 16); c.strokeRect(-8, -8, 16, 16); c.restore(); });
+  const inertia = KA[0] < 0 ? 0 : KP.reduce((s, p, i) => s + (p[0] - KC[KA[i]][0]) ** 2 + (p[1] - KC[KA[i]][1]) ** 2, 0);
+  $("km_out").innerHTML = `Iteration <b>${KI}</b> · k = ${KC.length} · Inertia ${inertia.toFixed(3)} — ① ចាត់ចំណុចទៅ Centroid ជិតបំផុត ② ផ្លាស់ Centroid ទៅមធ្យម · ទិន្នន័យពិតមាន ៥ ក្រុម — សាក k ផ្សេងៗ (Elbow method)`; }
+$("km_new").onclick = kmNew; $("km_k").onchange = kmNew; $("km_step").onclick = () => { kmStep(); kmDraw(); }; $("km_run").onclick = () => { for (let i = 0; i < 50 && kmStep() > 0; i++); kmDraw(); };
+/* ---------- temperature ---------- */
+const TOK = [["ភ្នំពេញ", 6.2], ["ក្រុងភ្នំពេញ", 4.6], ["Phnom Penh", 4.1], ["សៀមរាប", 1.9], ["បាត់ដំបង", 1.3], ["អង្គរវត្ត", .9], ["ស្អាតណាស់", .6], ["ឆ្មា", -1.5]];
+function probs() { const T = +$("tp_t").value, z = TOK.map(t => t[1] / T), m = Math.max(...z), e = z.map(v => Math.exp(v - m)), s = e.reduce((a, b) => a + b, 0); let p = e.map(v => v / s);
+  const tp = +$("tp_p").value; if (tp < 1) { const ord = p.map((v, i) => [v, i]).sort((a, b) => b[0] - a[0]); let c = 0; const keep = new Set(); for (const [v, i] of ord) { keep.add(i); c += v; if (c >= tp) break; } p = p.map((v, i) => keep.has(i) ? v : 0); const s2 = p.reduce((a, b) => a + b, 0); p = p.map(v => v / s2); } return p; }
+function tp(sample) { $("tp_v").textContent = (+$("tp_t").value).toFixed(2); const p = probs(); let smp = "";
+  if (sample) { const out = []; for (let k = 0; k < 10; k++) { let r = Math.random(), i = 0; while (i < p.length - 1 && (r -= p[i]) > 0) i++; out.push(TOK[i][0]); } smp = `<br>🎲 Sample: ${out.map(t => `<code>${esc(t)}</code>`).join(" ")}`; }
+  $("tp_out").innerHTML = TOK.map((t, i) => `<div style="display:flex;align-items:center;gap:8px;margin:3px 0"><span style="width:110px">${esc(t[0])}</span><span style="flex:1;background:#e9ecef;border-radius:6px;height:16px"><span style="display:block;height:16px;border-radius:6px;background:#7048e8;width:${(p[i] * 100).toFixed(1)}%"></span></span><b style="width:56px;text-align:right">${(p[i] * 100).toFixed(1)}%</b></div>`).join("") + smp; }
+$("tp_t").oninput = () => tp(false); $("tp_p").onchange = () => tp(false); $("tp_s").onclick = () => tp(true);
+/* ---------- RAG ---------- */
+const DOCS = [["HSK", "The new HSK 3.0 has 9 levels grouped into elementary (1-3), intermediate (4-6) and advanced (7-9). xCenBar has courses for HSK 1 to 9."],
+ ["CEFR", "CEFR describes language ability in 6 levels: A1, A2, B1, B2, C1 and C2. English and French courses follow CEFR."],
+ ["Angkor Wat", "Angkor Wat in Siem Reap was built in the early 12th century under King Suryavarman II and is a UNESCO World Heritage site."],
+ ["KHQR", "KHQR is Cambodia's national QR payment standard by the National Bank of Cambodia, connected to the Bakong system."],
+ ["Python", "Python was created by Guido van Rossum and first released in 1991. It is popular for data analysis and AI."],
+ ["Transformer", "The Transformer architecture was introduced in the 2017 paper Attention Is All You Need. It powers modern large language models."],
+ ["Power BI", "Power BI is Microsoft's business intelligence tool for dashboards. It uses Power Query for cleaning and DAX for measures."],
+ ["Backup", "The 3-2-1 backup rule: keep 3 copies of data, on 2 different media, with 1 copy offsite to protect against ransomware."]];
+const tok = s => s.toLowerCase().match(/[a-z0-9]+/g) || []; const STOP = new Set("the a an is are of in to and for by on with how many what who was it its has have do does".split(" "));
+const DF = {}; DOCS.forEach(d => new Set(tok(d[0] + " " + d[1]).filter(w => !STOP.has(w))).forEach(w => DF[w] = (DF[w] || 0) + 1));
+const vec = s => { const v = {}; tok(s).filter(w => !STOP.has(w)).forEach(w => v[w] = (v[w] || 0) + 1); for (const w in v) v[w] *= Math.log((DOCS.length + 1) / ((DF[w] || 0) + 1)) + 1; return v; };
+const cos = (a, b) => { let d = 0, na = 0, nb = 0; for (const w in a) { na += a[w] ** 2; if (b[w]) d += a[w] * b[w]; } for (const w in b) nb += b[w] ** 2; return d / (Math.sqrt(na * nb) || 1); };
+function rag() { const qv = vec($("rag_q").value), r = DOCS.map(d => [cos(qv, vec(d[0] + " " + d[1])), d]).sort((a, b) => b[0] - a[0]); const top = r.slice(0, 2).filter(x => x[0] > 0);
+  $("rag_out").innerHTML = `<b>Retrieval (Cosine similarity)</b>${r.slice(0, 4).map(([s, d]) => `<div>${s.toFixed(3)} · <b>${esc(d[0])}</b> — ${esc(d[1].slice(0, 70))}…</div>`).join("")}
+  <br><b>Prompt ដែលផ្ញើទៅ LLM</b><pre style="white-space:pre-wrap;background:#0f172a;color:#e2e8f0;padding:10px;border-radius:10px;font-size:12.5px">${esc(`Answer ONLY from the context. If the answer is not in the context, say "I don't know".\n\nContext:\n${top.map((t, i) => `[${i + 1}] ${t[1][1]}`).join("\n") || "(no relevant document)"}\n\nQuestion: ${$("rag_q").value}`)}</pre>${top.length ? "" : "⚠️ គ្មានឯកសារពាក់ព័ន្ធ → LLM គួរឆ្លើយ «មិនដឹង» ជាជាងប្រឌិត (Hallucination)"}`; }
+$("rag_go").onclick = rag; $("rag_q").onkeydown = e => { if (e.key === "Enter") rag(); };
+/* ---------- prompt builder ---------- */
+function pb() { const g = id => $(id).value.trim(), parts = [["Role", g("pb_role"), "អ្នកគឺជា "], ["Task", g("pb_task"), "ភារកិច្ច៖ "], ["Context", g("pb_ctx"), "បរិបទ៖ "], ["Format", g("pb_fmt"), "ទម្រង់ចម្លើយ៖ "], ["Constraints", g("pb_con"), "លក្ខខណ្ឌ៖ "], ["Example", g("pb_ex"), "ឧទាហរណ៍៖ "]];
+  const score = parts.filter(p => p[1]).length, prompt = parts.filter(p => p[1]).map(p => p[2] + p[1]).join("\n");
+  $("pb_out").innerHTML = `<pre style="white-space:pre-wrap;background:#0f172a;color:#e2e8f0;padding:10px;border-radius:10px;font-size:13px">${esc(prompt)}</pre>
+  ពិន្ទុ Prompt <b>${score}/6</b> ${"⭐".repeat(score)}<br>${parts.map(p => (p[1] ? "✅ " : "⬜ ") + p[0]).join(" · ")}<br>${score < 4 ? "💡 បន្ថែម Context និង Format — Prompt កាន់តែច្បាស់ ចម្លើយកាន់តែល្អ" : "👍 Prompt ច្បាស់ល្អ — សាកវាជាមួយ Claude ហើយកែលម្អបន្ត (Iterate)"}`; }
+root.querySelectorAll("[id^=pb_]").forEach(i => { if (i.tagName === "INPUT") i.oninput = pb; });
+clDemo(); nnReset(); kmNew(); tp(false); rag(); pb();
+})();
+</script>
+
+<h3>🏆 Quiz ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["Perceptron ដោយ?", ["Rosenblatt", "LeCun", "Hinton", "Turing"], 0], ["Backprop 1986?", ["Rumelhart, Hinton, Williams", "Vaswani", "Goodfellow", "Kelly"], 0], ["LSTM ឆ្នាំ?", ["1986", "1997", "2012", "2017"], 1], ["LeNet ដោយ?", ["LeCun", "Li", "He", "Ng"], 0], ["Hidden activation ពេញនិយម?", ["ReLU", "Step", "Linear", "Sin"], 0], ["Output ច្រើនថ្នាក់?", ["Softmax", "ReLU", "Tanh", "None"], 0], ["Params 784→128→10?", ["101,770", "100,480", "912", "1,280"], 0], ["Gradient descent: w ←", ["w − lr×grad", "w + grad", "w × lr", "0"], 0], ["lr ធំពេក?", ["Diverge", "យឺត", "ល្អជានិច្ច", "Overfit តែប៉ុណ្ណោះ"], 0], ["10,000 / batch 100 = updates?", ["10", "100", "1,000", "10,000"], 1], ["Adam ដោយ?", ["Kingma & Ba", "Fisher", "Breiman", "Hinton"], 0], ["Dropout?", ["បិទ Neuron ចៃដន្យ", "លុបទិន្នន័យ", "បន្ថែម Layer", "Save"], 0], ["Validation loss ឡើង?", ["Early stopping", "បន្ថែម Epoch", "lr ធំ", "លុប Test"], 0], ["CNN សម្រាប់?", ["រូបភាព", "តារាងតែប៉ុណ្ណោះ", "Excel", "SQL"], 0], ["ទិន្នន័យតិច?", ["Transfer learning", "Train ពីសូន្យ", "Bigger lr", "No test"], 0], ["zero_grad?", ["Gradient បូកបន្ត", "លឿន", "Save", "Plot"], 0], ["Word2vec ឆ្នាំ?", ["2013", "1997", "2020", "1958"], 0], ["Attention ចែក?", ["√d", "d²", "2", "π"], 0], ["Causal mask?", ["មិនមើលអនាគត", "មើលទាំងអស់", "Dropout", "Pool"], 0], ["GAN ដោយ?", ["Goodfellow", "Hochreiter", "Pitts", "Kindervag"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+<ol class='steps'><li>AI កម្រិតដំបូង — ML ✅</li><li><b>AI កម្រិតមធ្យម — Deep learning</b> (វគ្គនេះ) ✅</li><li><b>AI កម្រិតខ្ពស់ — LLM &amp; Prompt</b></li><li>សៀវភៅ៖ <i>Deep Learning</i> (Goodfellow, Bengio, Courville) · វគ្គ fast.ai</li></ol></section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="ai2"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

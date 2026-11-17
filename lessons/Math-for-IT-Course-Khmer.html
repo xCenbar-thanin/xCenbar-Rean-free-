@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន គណិតវិទ្យាសម្រាប់ IT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#7048e8; --accent2:#f08c00; --accent-soft:#f1ecff;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#b197fc; --accent2:#ffa94d; --accent-soft:#221a3d;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#b197fc; --accent2:#ffa94d; --accent-soft:#221a3d;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#5f3dc4,#ae3ec9 55%,#f08c00);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/mathit.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/mathit.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>គណិតវិទ្យាសម្រាប់ IT (Math for IT) ពីដើមដល់កម្រិតអាជីព</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. គណិតវិទ្យាសម្រាប់ IT ជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#install">២. ត្រៀមឧបករណ៍</a>
+<a href="#elements">៣. ធាតុនីមួយៗនៃ Math for IT</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: ប្រព័ន្ធលេខ &amp; គណិត Binary</a>
+<a href="#l2">មេរៀន ២: ប្រមាណវិធីក្នុង Code៖ Integer, Float, Rounding</a>
+<a href="#l3">មេរៀន ៣: ភាគរយ, សមាមាត្រ &amp; បំលែងឯកតា</a>
+<a href="#l4">មេរៀន ៤: ស្វ័យគុណ &amp; លោការីត (Exponent · Log₂)</a>
+<a href="#l5">មេរៀន ៥: Set (សំណុំ) → SQL &amp; Permission</a>
+<a href="#l6">មេរៀន ៦: Logic &amp; Boolean Algebra</a>
+<a href="#l7">មេរៀន ៧: Bitwise Operations៖ Mask, Subnet, chmod</a>
+<a href="#l8">មេរៀន ៨: Function &amp; ក្រាហ្វ (y = mx + b)</a>
+<a href="#l9">មេរៀន ៩: Sequence &amp; Series (លំដាប់ &amp; ផលបូក)</a>
+<a href="#l10">មេរៀន ១០: ការរាប់ (Combinatorics)៖ Password, PIN</a>
+<a href="#l11">មេរៀន ១១: ប្រូបាប៊ីលីតេ (Probability)</a>
+<a href="#l12">មេរៀន ១២: ស្ថិតិ (Statistics) សម្រាប់ Data</a>
+<a href="#l13">មេរៀន ១៣: Matrix &amp; Vector (រូបភាព · AI · Game)</a>
+<a href="#l14">មេរៀន ១៤: Graph Theory៖ Network &amp; ផ្លូវខ្លីបំផុត</a>
+<a href="#l15">មេរៀន ១៥: Big-O, Recursion &amp; Algorithm</a>
+<a href="#l16">មេរៀន ១៦: Modular Arithmetic, Prime &amp; Cryptography</a>
+<a href="#cheat">📋 Cheat Sheet រូបមន្ត</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងអាជីព៖ Data Report ពិន្ទុសិស្ស</a>
+<a href="#pro-app">💻 Math Toolkit Pro (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>∑ គណិតវិទ្យាសម្រាប់ IT — Math for IT</h2>
+  <p>សម្រាប់អ្នករៀន IT ដែល <b>មិនពូកែគណិត</b>៖ Binary, ភាគរយ, Log, <b>Set</b>, <b>Logic</b>, <b>Bitwise</b>, Function, Sequence, Counting, <b>Probability</b>, <b>Statistics</b>, Matrix, <b>Graph</b>, <b>Big-O</b> និង <b>Cryptography</b> — ពន្យល់ដោយរូបភាព ឧទាហរណ៍ជីវិតពិត ហើយឲ្យ Python គណនាជំនួស។</p>
+  <p><span class="badge">📘 ១៦ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់ ១៣</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">💻 Code + លទ្ធផលពិត</span><span class="badge">🧮 Math Toolkit Pro</span></p>
+</section>
+<section id="intro">
+<h2>១. គណិតវិទ្យាសម្រាប់ IT ជាអ្វី? អ្នកណាបង្កើត?</h2>
+
+<p><b>Math for IT</b> (ឬ <b>Discrete Mathematics</b> — គណិតវិទ្យាដាច់) គឺជាផ្នែកគណិតដែលកុំព្យូទ័រប្រើពិតប្រាកដ៖ <b>លេខ Binary, Logic, Set, Bitwise, Counting, Probability, Statistics, Matrix, Graph, Big-O និង Cryptography</b>។ អ្នកមិនចាំបាច់ពូកែ Calculus ទេ — គ្រាន់តែយល់ <b>គំនិត</b> ហើយឲ្យ <b>Code គណនាជំនួស</b>! <button class="btn say" data-say="Discrete Mathematics">🔊 អានពាក្យ</button></p>
+<div class="note">💡 វគ្គនេះសរសេរសម្រាប់ <b>អ្នកដែលខ្លាចគណិត</b>៖ គ្រប់មេរៀនចាប់ផ្តើមពីឧទាហរណ៍ជីវិតពិត → រូបភាព → រូបមន្តខ្លី → Python គណនាឲ្យ → លំហាត់។</div>
+
+<h3>👤 អ្នកណាបង្កើត?</h3>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#7c3aed"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#7c3aed">628</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Brahmagupta · លេខ 0</text><circle cx="185" cy="115" r="11" fill="#db2777"/><text x="185" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#db2777">683</text><text x="185" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">សិលាចារឹកសំបូរ (0)</text><circle cx="290" cy="115" r="11" fill="#2563eb"/><text x="290" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#2563eb">~820</text><text x="290" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Al-Khwarizmi · Algorithm</text><circle cx="395" cy="115" r="11" fill="#0891b2"/><text x="395" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#0891b2">1654</text><text x="395" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Pascal &amp; Fermat · Probability</text><circle cx="500" cy="115" r="11" fill="#059669"/><text x="500" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#059669">1703</text><text x="500" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Leibniz · Binary</text><circle cx="605" cy="115" r="11" fill="#65a30d"/><text x="605" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#65a30d">1736</text><text x="605" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Euler · Graph</text><circle cx="710" cy="115" r="11" fill="#ca8a04"/><text x="710" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#ca8a04">1847</text><text x="710" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Boole · Logic</text><circle cx="815" cy="115" r="11" fill="#ea580c"/><text x="815" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#ea580c">1937</text><text x="815" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Shannon · Circuits</text><circle cx="920" cy="115" r="11" fill="#dc2626"/><text x="920" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#dc2626">1977</text><text x="920" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">RSA · Crypto</text></svg><figcaption>🖼️ អ្នកគណិតវិទ្យាដែលធ្វើឲ្យកុំព្យូទ័រអាចកើតមាន</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត</th><th>ស្នាដៃ</th><th>IT ប្រើនៅណា</th></tr><tr><td>628</td><td><b>Brahmagupta</b> 🇮🇳</td><td>ច្បាប់គណនាជាមួយលេខ <b>0</b></td><td>គ្រប់ការគណនា</td></tr><tr><td>683</td><td>🇰🇭 <b>សិលាចារឹកសំបូរ (K-127)</b> ខេត្តក្រចេះ</td><td>ភស្តុតាងចាស់បំផុតមួយនៃ <b>លេខ 0 ជាតួលេខ</b> (ឆ្នាំ 605 មហាសករាជ)</td><td>ប្រព័ន្ធលេខតាមទីតាំង</td></tr><tr><td>~820</td><td><b>Muhammad al-Khwarizmi</b></td><td>Algebra · ពាក្យ <b>Algorithm</b> មកពីឈ្មោះគាត់</td><td>Programming</td></tr><tr><td>1654</td><td><b>Blaise Pascal &amp; Pierre de Fermat</b></td><td>ទ្រឹស្តីប្រូបាប៊ីលីតេ</td><td>AI, Game, Security</td></tr><tr><td>1703</td><td><b>Gottfried Leibniz</b></td><td>ប្រព័ន្ធ <b>Binary</b> (0, 1)</td><td>Hardware ទាំងអស់</td></tr><tr><td>1736</td><td><b>Leonhard Euler</b></td><td><b>Graph theory</b> (ស្ពាន Königsberg)</td><td>Network, Google Maps, Social</td></tr><tr><td>1801</td><td><b>Carl Friedrich Gauss</b></td><td><b>Modular arithmetic</b></td><td>Hash, Cryptography</td></tr><tr><td>1847</td><td><b>George Boole</b></td><td><b>Boolean algebra</b> (True/False)</td><td>if, Logic gate, Search</td></tr><tr><td>1874</td><td><b>Georg Cantor</b></td><td><b>Set theory</b></td><td>Database, SQL</td></tr><tr><td>1937–48</td><td><b>Claude Shannon</b></td><td>Boolean → សៀគ្វីអគ្គិសនី · ទ្រឹស្តីព័ត៌មាន (ពាក្យ <b>bit</b>)</td><td>CPU, Compression, Network</td></tr><tr><td>1959</td><td><b>Edsger Dijkstra</b></td><td>Algorithm ផ្លូវខ្លីបំផុត</td><td>GPS, Routing</td></tr><tr><td>1977</td><td><b>Rivest, Shamir &amp; Adleman</b></td><td><b>RSA</b> Encryption</td><td>HTTPS, Banking</td></tr></table>
+
+<h3>🎯 គេប្រើគណិតក្នុង IT ធ្វើអ្វី?</h3>
+<div class="grid"><div class="card"><b>🖥️ Hardware</b><br>Binary + Boolean logic → CPU</div><div class="card"><b>🌐 Network</b><br>Bitwise → Subnet · Graph → Routing</div><div class="card"><b>🗄️ Database</b><br>Set → SQL JOIN/UNION</div><div class="card"><b>🔐 Security</b><br>Modular, Prime, Probability → Password &amp; Encryption</div><div class="card"><b>📊 Data &amp; AI</b><br>Statistics, Matrix, Probability</div><div class="card"><b>⚡ Performance</b><br>Big-O, Log → កម្មវិធីលឿន</div><div class="card"><b>🎮 Game &amp; Graphic</b><br>Matrix, Vector, Trigonometry</div><div class="card"><b>💰 Business</b><br>Percentage, Function → ថ្លៃ Cloud</div></div>
+
+</section>
+<section id="install">
+<h2>២. ត្រៀមឧបករណ៍</h2>
+
+<ol class="steps"><li>ដំឡើង <b>Python 3</b> (python.org — ធីក Add to PATH) និង <b>VS Code</b>។</li>
+<li>បើក Terminal ហើយវាយ <code class="i">python</code> ដើម្បីប្រើ Python ជា <b>ម៉ាស៊ីនគិតលេខ</b> ផ្ទាល់។</li>
+<li>ឬប្រើ Online៖ Google Colab, Programiz (មិនបាច់ដំឡើង)។</li></ol>
+<script type="text/x-code" data-lang="py" data-label="calculator.py">
+print(2 + 3 * 4)        # លំដាប់ប្រមាណវិធី: * មុន + → 14
+print((2 + 3) * 4)      # វង់ក្រចកមុន → 20
+print(2 ** 10)          # ស្វ័យគុណ 2^10 = 1024
+print(17 / 5, 17 // 5, 17 % 5)   # ចែក, ចែកយកគត់, សំណល់
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>14
+20
+1024
+3.4 3 2</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>**</code> = ស្វ័យគុណ (Power) · <code class='i'>/</code> = ចែកមានក្បៀស · <code class='i'>//</code> = ចែកយកគត់ · <code class='i'>%</code> = សំណល់ (Modulo)។</li><li>លំដាប់៖ <b>( )</b> → <b>**</b> → <b>* / // %</b> → <b>+ −</b> (ដូចគណិតនៅសាលា)។</li></ol></div>
+
+</section>
+<section id="elements">
+<h2>៣. ធាតុនីមួយៗនៃ Math for IT</h2>
+
+<table><tr><th>ធាតុ</th><th>សំណួរដែលវាឆ្លើយ</th><th>ឧទាហរណ៍ IT</th><th>មេរៀន</th></tr><tr><td>🔢 Number systems</td><td>កុំព្យូទ័ររាប់យ៉ាងម៉េច?</td><td>Binary, Hex, ពណ៌ #FF0000</td><td>១ · ២</td></tr><tr><td>➗ Arithmetic &amp; %</td><td>គណនាឲ្យត្រូវ?</td><td>ពន្ធ, បញ្ចុះតម្លៃ, Float error</td><td>២ · ៣</td></tr><tr><td>📈 Exponent &amp; Log</td><td>កើនលឿនប៉ុណ្ណា?</td><td>2ⁿ, ចំនួន bit, Binary search</td><td>៤</td></tr><tr><td>🔵 Sets</td><td>ក្រុមណាជាន់គ្នា?</td><td>SQL JOIN, Permission</td><td>៥</td></tr><tr><td>✅ Logic</td><td>ពិត ឬមិនពិត?</td><td>if/else, Logic gate</td><td>៦</td></tr><tr><td>🎛️ Bitwise</td><td>បិទបើក bit?</td><td>Subnet mask, chmod</td><td>៧</td></tr><tr><td>📉 Functions</td><td>x ប្តូរ y ប្តូរយ៉ាងម៉េច?</td><td>ថ្លៃ Cloud, Graph</td><td>៨</td></tr><tr><td>🔁 Sequences</td><td>លំនាំបន្តបន្ទាប់?</td><td>Loop, ការប្រាក់</td><td>៩</td></tr><tr><td>🧮 Counting</td><td>មានប៉ុន្មានជម្រើស?</td><td>Password, PIN</td><td>១០</td></tr><tr><td>🎲 Probability</td><td>ឱកាសប៉ុន្មាន?</td><td>Spam filter, Hash collision</td><td>១១</td></tr><tr><td>📊 Statistics</td><td>ទិន្នន័យប្រាប់អ្វី?</td><td>Dashboard, AI</td><td>១២</td></tr><tr><td>🔲 Matrix &amp; Vector</td><td>ទិន្នន័យជាតារាង?</td><td>រូបភាព, AI, Game</td><td>១៣</td></tr><tr><td>🕸️ Graph</td><td>អ្វីភ្ជាប់អ្វី?</td><td>Network, Map, Social</td><td>១៤</td></tr><tr><td>⏱️ Big-O &amp; Recursion</td><td>Code លឿនឬយឺត?</td><td>Search, Sort</td><td>១៥</td></tr><tr><td>🔐 Modular &amp; Crypto</td><td>ការពារទិន្នន័យ?</td><td>Hash, RSA, HTTPS</td><td>១៦</td></tr></table>
+
+</section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>ប្រព័ន្ធលេខ &amp; គណិត Binary</h2>
+
+<p>ប្រព័ន្ធលេខតាមទីតាំង៖ តម្លៃនៃខ្ទង់ = <b>ខ្ទង់ × គោល<sup>ទីតាំង</sup></b>។ ឧ. 345₁₀ = 3×10² + 4×10¹ + 5×10⁰ · 1101₂ = 1×2³ + 1×2² + 0×2¹ + 1×2⁰ = 13។</p>
+<figure class="fig"><svg viewBox="0 0 760 232" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="760" height="230" fill="#fff"/><text x="380" y="28" text-anchor="middle" font-size="18" font-weight="700" fill="#0f172a">13 + 7 = 20 ក្នុង Binary</text><text x="260" y="62" text-anchor="middle" font-size="15" font-weight="700" fill="#dc2626"></text><text x="260" y="100" text-anchor="middle" font-size="30" font-weight="700" fill="#2563eb">0</text><text x="260" y="140" text-anchor="middle" font-size="30" font-weight="700" fill="#7c3aed">0</text><text x="260" y="200" text-anchor="middle" font-size="30" font-weight="800" fill="#059669">1</text><text x="320" y="62" text-anchor="middle" font-size="15" font-weight="700" fill="#dc2626">1</text><text x="320" y="100" text-anchor="middle" font-size="30" font-weight="700" fill="#2563eb">1</text><text x="320" y="140" text-anchor="middle" font-size="30" font-weight="700" fill="#7c3aed">0</text><text x="320" y="200" text-anchor="middle" font-size="30" font-weight="800" fill="#059669">0</text><text x="380" y="62" text-anchor="middle" font-size="15" font-weight="700" fill="#dc2626">1</text><text x="380" y="100" text-anchor="middle" font-size="30" font-weight="700" fill="#2563eb">1</text><text x="380" y="140" text-anchor="middle" font-size="30" font-weight="700" fill="#7c3aed">1</text><text x="380" y="200" text-anchor="middle" font-size="30" font-weight="800" fill="#059669">1</text><text x="440" y="62" text-anchor="middle" font-size="15" font-weight="700" fill="#dc2626">1</text><text x="440" y="100" text-anchor="middle" font-size="30" font-weight="700" fill="#2563eb">0</text><text x="440" y="140" text-anchor="middle" font-size="30" font-weight="700" fill="#7c3aed">1</text><text x="440" y="200" text-anchor="middle" font-size="30" font-weight="800" fill="#059669">0</text><text x="500" y="62" text-anchor="middle" font-size="15" font-weight="700" fill="#dc2626">1</text><text x="500" y="100" text-anchor="middle" font-size="30" font-weight="700" fill="#2563eb">1</text><text x="500" y="140" text-anchor="middle" font-size="30" font-weight="700" fill="#7c3aed">1</text><text x="500" y="200" text-anchor="middle" font-size="30" font-weight="800" fill="#059669">0</text><line x1="220" y1="158" x2="540" y2="158" stroke="#0f172a" stroke-width="3"/><text x="200" y="140" text-anchor="middle" font-size="30" font-weight="700" fill="#0f172a">+</text><text x="600" y="100" text-anchor="middle" font-size="18" font-weight="400" fill="#2563eb">= 13</text><text x="600" y="140" text-anchor="middle" font-size="18" font-weight="400" fill="#7c3aed">= 7</text><text x="605" y="200" text-anchor="middle" font-size="18" font-weight="700" fill="#059669">= 20</text><text x="130" y="62" text-anchor="middle" font-size="13" font-weight="600" fill="#dc2626">Carry (យកទៅ) →</text><text x="380" y="224" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">ច្បាប់៖ 0+0=0 · 0+1=1 · 1+1=10 (សរសេរ 0 យក 1) · 1+1+1=11</text></svg><figcaption>🖼️ បូក Binary ដូចបូក Decimal ដែរ តែ 1+1 = 10</figcaption></figure>
+
+<h3>លេខអវិជ្ជមាន៖ Two's Complement</h3>
+<p>CPU រក្សា −5 ក្នុង 8 bits ដោយ៖ ① សរសេរ 5 = <code class="i">00000101</code> ② បញ្ច្រាស bit = <code class="i">11111010</code> ③ បូក 1 = <code class="i">11111011</code>។ ដូច្នេះ 8 bits រក្សាបាន −128 ដល់ +127។</p>
+<script type="text/x-code" data-lang="py" data-label="binary_math.py">
+a, b = 0b01101, 0b00111          # 13 និង 7 សរសេរជា Binary
+print(a, b, "→ sum =", a + b, "=", bin(a + b))
+
+def twos(n, bits=8):              # Two's complement
+    return format(n & (2**bits - 1), f"0{bits}b")
+
+for n in [5, -5, 127, -128, -1]:
+    print(f"{n:>5} → {twos(n)}")
+
+# Overflow: 8-bit unsigned លើស 255 វិលទៅ 0
+x = 250
+for _ in range(3):
+    x = (x + 3) % 256
+    print("8-bit counter:", x)
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>13 7 → sum = 20 = 0b10100
+    5 → 00000101
+   -5 → 11111011
+  127 → 01111111
+ -128 → 10000000
+   -1 → 11111111
+8-bit counter: 253
+8-bit counter: 0
+8-bit counter: 3</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>0b01101</code> — សរសេរលេខ Binary ផ្ទាល់ក្នុង Python។</li><li><code class='i'>n &amp; (2**bits - 1)</code> — យកតែ 8 bits ចុងក្រោយ (Mask) ធ្វើឲ្យលេខអវិជ្ជមានបង្ហាញជា Two's complement។</li><li><code class='i'>format(..., '08b')</code> — បង្ហាញ Binary 8 ខ្ទង់។</li><li><code class='i'>% 256</code> — ក្លែង Overflow៖ Counter 8-bit លើស 255 វិលទៅ 0 (ដូចកុងទ័រម៉ូតូ)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>① 1011₂ + 0110₂ = ? ② សរសេរ −3 ជា 8-bit Two's complement ③ Hex <code class='i'>2F</code> = Decimal ប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>① 11 + 6 = 17 = <b>10001₂</b> ② 3 = 00000011 → 11111100 → <b>11111101</b> ③ 2×16 + 15 = <b>47</b></p></details></div>
+
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>ប្រមាណវិធីក្នុង Code៖ Integer, Float, Rounding</h2>
+
+<table><tr><th>ប្រមាណវិធី</th><th>Python</th><th>លទ្ធផល</th><th>ប្រើពេល</th></tr><tr><td>បូក ដក គុណ</td><td><code class='i'>7+2, 7-2, 7*2</code></td><td>9, 5, 14</td><td>គណនាទូទៅ</td></tr><tr><td>ចែក</td><td><code class='i'>7/2</code></td><td>3.5</td><td>មធ្យមភាគ</td></tr><tr><td>ចែកយកគត់</td><td><code class='i'>7//2</code></td><td>3</td><td>ចំនួនទំព័រ, Index</td></tr><tr><td>សំណល់</td><td><code class='i'>7%2</code></td><td>1</td><td>គូ/សេស, វិលជុំ</td></tr><tr><td>ស្វ័យគុណ</td><td><code class='i'>2**8</code></td><td>256</td><td>bits</td></tr><tr><td>តម្លៃដាច់ខាត</td><td><code class='i'>abs(-4)</code></td><td>4</td><td>ចម្ងាយ</td></tr><tr><td>បង្គត់</td><td><code class='i'>round(2.675, 2)</code></td><td>2.67 (!)</td><td>លុយ — ត្រូវប្រយ័ត្ន</td></tr></table>
+
+<div class="warn">⚠️ កុំព្យូទ័ររក្សា <b>Float</b> ជា Binary ដូច្នេះ <code class='i'>0.1 + 0.2</code> មិនស្មើ <code class='i'>0.3</code> ពិតប្រាកដ! សម្រាប់ <b>លុយ</b> ប្រើ <code class='i'>Decimal</code> ឬគិតជា <b>សេន/រៀល (Integer)</b>។</div>
+
+<script type="text/x-code" data-lang="py" data-label="arithmetic.py">
+from decimal import Decimal
+import math
+
+print(0.1 + 0.2)                       # Float error
+print(0.1 + 0.2 == 0.3)
+print(math.isclose(0.1 + 0.2, 0.3))    # ប្រៀបធៀប Float ឲ្យត្រូវ
+print(Decimal("0.1") + Decimal("0.2")) # សម្រាប់លុយ
+
+# ចំនួនទំព័រ: សិស្ស 53 នាក់ បង្ហាញ 10 នាក់/ទំព័រ
+students, per_page = 53, 10
+pages = math.ceil(students / per_page)   # បង្គត់ឡើង
+print("ទំព័រ:", pages, "| ទំព័រចុងមាន:", students % per_page, "នាក់")
+
+# បង្គត់លុយ
+price_riel = 12345
+print("បង្គត់ទៅ 100 រៀល:", round(price_riel, -2))
+print("floor/ceil:", math.floor(4.7), math.ceil(4.1))
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>0.30000000000000004
+False
+True
+0.3
+ទំព័រ: 6 | ទំព័រចុងមាន: 3 នាក់
+បង្គត់ទៅ 100 រៀល: 12300
+floor/ceil: 4 5</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>math.isclose(a, b)</code> — ប្រៀបធៀប Float ដោយអនុញ្ញាតខុសតិចតួច ជំនួស <code class='i'>==</code>។</li><li><code class='i'>Decimal('0.1')</code> — គណនាលេខទសភាគជាក់លាក់ (ធនាគារប្រើ)។</li><li><code class='i'>math.ceil()</code> បង្គត់ឡើង (53/10 = 5.3 → 6 ទំព័រ) · <code class='i'>math.floor()</code> បង្គត់ចុះ។</li><li><code class='i'>round(x, -2)</code> — បង្គត់ទៅខ្ទង់រយ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>ឯកសារ 1,250 ជួរ Export ជា File ៣០០ ជួរ/File។ ត្រូវការប៉ុន្មាន File? File ចុងក្រោយមានប៉ុន្មានជួរ?</p><details><summary>មើលចម្លើយ</summary><p><code class='i'>math.ceil(1250/300)</code> = <b>5 File</b> · <code class='i'>1250 % 300</code> = <b>50 ជួរ</b></p></details></div>
+
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>ភាគរយ, សមាមាត្រ &amp; បំលែងឯកតា</h2>
+
+<div class="grid"><div class="card"><b>ភាគរយ</b><br>x% នៃ A = A × x / 100</div><div class="card"><b>កើន/ថយ %</b><br>(ថ្មី − ចាស់) / ចាស់ × 100</div><div class="card"><b>សមាមាត្រ</b><br>16:9 → 1920×1080</div><div class="card"><b>អត្រា</b><br>ល្បឿន = ទំហំ ÷ ពេល</div></div>
+
+<script type="text/x-code" data-lang="py" data-label="percent.py">
+# 1) បញ្ចុះតម្លៃ + VAT
+price = 850            # Laptop $
+discount = 0.15        # 15%
+vat = 0.10             # VAT 10%
+after = price * (1 - discount)
+total = after * (1 + vat)
+print(f"បន្ទាប់បញ្ចុះ: ${after:.2f} → រួម VAT: ${total:.2f}")
+
+# 2) ភាគរយកើន: អ្នកប្រើ App ពី 1,200 → 1,500
+old, new = 1200, 1500
+print(f"កើន {(new - old) / old * 100:.1f}%")
+
+# 3) Disk usage
+used, total_gb = 380, 512
+print(f"Disk ប្រើ {used / total_gb:.0%}")
+
+# 4) Aspect ratio 16:9 — ទទឹង 1280 → កម្ពស់?
+w = 1280
+print("កម្ពស់ 16:9 =", w * 9 // 16)
+
+# 5) Uptime 99.9% = Down ប៉ុន្មាននាទី/ខែ?
+minutes = 30 * 24 * 60
+print(f"99.9% uptime → down ≈ {minutes * 0.001:.0f} នាទី/ខែ")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>បន្ទាប់បញ្ចុះ: $722.50 → រួម VAT: $794.75
+កើន 25.0%
+Disk ប្រើ 74%
+កម្ពស់ 16:9 = 720
+99.9% uptime → down ≈ 43 នាទី/ខែ</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>price * (1 - discount)</code> — បញ្ចុះ 15% = បង់ 85%។</li><li><code class='i'>{x:.2f}</code> — 2 ខ្ទង់ក្រោយក្បៀស · <code class='i'>{x:.0%}</code> — បង្ហាញជាភាគរយស្រាប់។</li><li><code class='i'>w * 9 // 16</code> — សមាមាត្រ 16:9 → 720។</li><li>Uptime 99.9% (SLA) = អាចដាច់ 0.1% នៃពេល ≈ 43 នាទី/ខែ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>RAM 16 GB ប្រើ 13.6 GB។ ប្រើប៉ុន្មានភាគរយ? បើលើស 80% គួរព្រមាន — តើត្រូវព្រមានទេ?</p><details><summary>មើលចម្លើយ</summary><p>13.6 / 16 = <b>85%</b> → ✅ ត្រូវព្រមាន។ Code៖ <code class='i'>if used/total > 0.8: print('⚠️ RAM ជិតពេញ')</code></p></details></div>
+
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>ស្វ័យគុណ &amp; លោការីត (Exponent · Log₂)</h2>
+
+<p><b>2ⁿ</b> ឆ្លើយ “n bits រក្សាបានប៉ុន្មានតម្លៃ?” · <b>log₂(N)</b> ឆ្លើយផ្ទុយ “ត្រូវការប៉ុន្មាន bits ដើម្បីរក្សា N តម្លៃ?” និង “ចែកពាក់កណ្តាលប៉ុន្មានដងទើបនៅ 1?”</p>
+<table><tr><th>n bits</th><th>2ⁿ</th><th>ឧទាហរណ៍</th></tr><tr><td>1</td><td>2</td><td>On/Off</td></tr><tr><td>8</td><td>256</td><td>1 Byte · ពណ៌មួយ Channel</td></tr><tr><td>10</td><td>1,024</td><td>1 KiB</td></tr><tr><td>16</td><td>65,536</td><td>Port 0–65535</td></tr><tr><td>24</td><td>16.7 លាន</td><td>ពណ៌ RGB</td></tr><tr><td>32</td><td>4.29 ពាន់លាន</td><td>IPv4 address</td></tr><tr><td>128</td><td>3.4×10³⁸</td><td>IPv6 address</td></tr></table>
+
+<script type="text/x-code" data-lang="py" data-label="power_log.py">
+import math
+
+print("IPv4 addresses:", f"{2**32:,}")
+print("IPv6 addresses:", f"{2**128:.2e}")
+
+# ត្រូវការប៉ុន្មាន bits សម្រាប់ N តម្លៃ?
+for n in [2, 10, 100, 1000, 1_000_000]:
+    print(f"{n:>9,} តម្លៃ → {math.ceil(math.log2(n)):>2} bits")
+
+# Binary search: ស្វែងរកក្នុង 1 លាន ឈ្មោះ ត្រូវប៉ុន្មានជំហាន?
+print("1 លាន →", math.ceil(math.log2(1_000_000)), "ជំហាន (ប្រៀបនឹង 1,000,000 ជំហានបើរកម្តងមួយៗ)")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>IPv4 addresses: 4,294,967,296
+IPv6 addresses: 3.40e+38
+        2 តម្លៃ →  1 bits
+       10 តម្លៃ →  4 bits
+      100 តម្លៃ →  7 bits
+    1,000 តម្លៃ → 10 bits
+1,000,000 តម្លៃ → 20 bits
+1 លាន → 20 ជំហាន (ប្រៀបនឹង 1,000,000 ជំហានបើរកម្តងមួយៗ)</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>2**32</code> — 2 ស្វ័យគុណ 32 · <code class='i'>{x:,}</code> ដាក់ក្បៀសខ្ទង់ពាន់ · <code class='i'>:.2e</code> = Scientific notation។</li><li><code class='i'>math.log2(n)</code> — តើ 2 ស្វ័យគុណប៉ុន្មាន = n · <code class='i'>math.ceil</code> បង្គត់ឡើង ព្រោះ bit ត្រូវតែជាចំនួនគត់។</li><li>Binary search ចែកពាក់កណ្តាលរាល់ជំហាន → log₂(1,000,000) ≈ 20 ជំហានប៉ុណ្ណោះ!</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>សាលាមានសិស្ស 3,000 នាក់។ អត្តលេខ Binary ត្រូវការយ៉ាងតិចប៉ុន្មាន bits?</p><details><summary>មើលចម្លើយ</summary><p>2¹¹ = 2,048 &lt; 3,000 ≤ 2¹² = 4,096 → <b>12 bits</b> (<code class='i'>math.ceil(math.log2(3000))</code>)</p></details></div>
+
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>Set (សំណុំ) → SQL &amp; Permission</h2>
+
+<figure class="fig"><svg viewBox="0 0 760 280" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="760" height="280" fill="#fff"/><circle cx="300" cy="140" r="110" fill="#2563eb" fill-opacity=".35" stroke="#2563eb" stroke-width="3"/><circle cx="460" cy="140" r="110" fill="#db2777" fill-opacity=".35" stroke="#db2777" stroke-width="3"/><text x="250" y="40" text-anchor="middle" font-size="15" font-weight="700" fill="#1d4ed8">A = រៀន Python</text><text x="510" y="40" text-anchor="middle" font-size="15" font-weight="700" fill="#be185d">B = រៀន Excel</text><text x="245" y="140" text-anchor="middle" font-size="15" font-weight="400" fill="#0f172a">Dara</text><text x="245" y="165" text-anchor="middle" font-size="15" font-weight="400" fill="#0f172a">Lina</text><text x="380" y="140" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">Sokha</text><text x="380" y="165" text-anchor="middle" font-size="13" font-weight="700" fill="#6d28d9">A ∩ B</text><text x="515" y="140" text-anchor="middle" font-size="15" font-weight="400" fill="#0f172a">Vanna</text><text x="380" y="270" text-anchor="middle" font-size="14" font-weight="600" fill="#334155">A ∪ B = {Dara, Lina, Sokha, Vanna} · A ∩ B = {Sokha} · A − B = {Dara, Lina}</text></svg><figcaption>🖼️ Venn diagram៖ សិស្សរៀន Python និង Excel</figcaption></figure>
+
+<table><tr><th>ប្រមាណវិធី</th><th>សញ្ញា</th><th>Python</th><th>SQL</th></tr><tr><td>Union (រួម)</td><td>A ∪ B</td><td><code class='i'>A | B</code></td><td>UNION</td></tr><tr><td>Intersection (ប្រសព្វ)</td><td>A ∩ B</td><td><code class='i'>A &amp; B</code></td><td>INNER JOIN / INTERSECT</td></tr><tr><td>Difference (ដក)</td><td>A − B</td><td><code class='i'>A - B</code></td><td>EXCEPT / LEFT JOIN ... IS NULL</td></tr><tr><td>Symmetric diff</td><td>A △ B</td><td><code class='i'>A ^ B</code></td><td>—</td></tr><tr><td>Subset</td><td>A ⊆ B</td><td><code class='i'>A &lt;= B</code></td><td>—</td></tr></table>
+
+<script type="text/x-code" data-lang="py" data-label="sets.py">
+python = {"Dara", "Lina", "Sokha"}
+excel  = {"Sokha", "Vanna"}
+
+print("រៀនទាំងពីរ   :", python & excel)
+print("រៀនយ៉ាងហោច1 :", sorted(python | excel))
+print("តែ Python    :", sorted(python - excel))
+print("រៀនតែមួយ     :", sorted(python ^ excel))
+
+# Permission: User ត្រូវមានសិទ្ធិគ្រប់ដែល Page ទាមទារ?
+need = {"read", "write"}
+user = {"read", "write", "delete"}
+print("អាចចូល?", need <= user)
+
+# លុបទិន្នន័យស្ទួន
+emails = ["a@x.com", "b@x.com", "a@x.com"]
+print("Unique:", len(set(emails)))
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>រៀនទាំងពីរ   : {&#x27;Sokha&#x27;}
+រៀនយ៉ាងហោច1 : [&#x27;Dara&#x27;, &#x27;Lina&#x27;, &#x27;Sokha&#x27;, &#x27;Vanna&#x27;]
+តែ Python    : [&#x27;Dara&#x27;, &#x27;Lina&#x27;]
+រៀនតែមួយ     : [&#x27;Dara&#x27;, &#x27;Lina&#x27;, &#x27;Vanna&#x27;]
+អាចចូល? True
+Unique: 2</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>{...}</code> បង្កើត Set — គ្មានធាតុស្ទួន គ្មានលំដាប់។</li><li><code class='i'>&amp;</code> = ប្រសព្វ · <code class='i'>|</code> = រួម · <code class='i'>-</code> = ដក · <code class='i'>^</code> = មានតែម្ខាង។</li><li><code class='i'>need &lt;= user</code> — Subset៖ សិទ្ធិដែលត្រូវការ ស្ថិតក្នុងសិទ្ធិអ្នកប្រើទាំងអស់?</li><li><code class='i'>set(list)</code> — លុបធាតុស្ទួនភ្លាមៗ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>A = {1,2,3,4}, B = {3,4,5}។ រក A∪B, A∩B, A−B, B−A។</p><details><summary>មើលចម្លើយ</summary><p>A∪B = {1,2,3,4,5} · A∩B = {3,4} · A−B = {1,2} · B−A = {5}</p></details></div>
+
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Logic &amp; Boolean Algebra</h2>
+
+<figure class="fig"><svg viewBox="0 0 980 195" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="980" height="200" fill="#fff"/><path d="M90 40h40a40 40 0 0 1 0 80h-40z" fill="#2563eb"/><line x1="50" y1="60" x2="94" y2="60" stroke="#334155" stroke-width="3"/><line x1="50" y1="100" x2="94" y2="100" stroke="#334155" stroke-width="3"/><line x1="180" y1="80" x2="220" y2="80" stroke="#334155" stroke-width="3"/><text x="130" y="86" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">AND</text><text x="135" y="150" text-anchor="middle" font-size="18" font-weight="700" fill="#2563eb">A·B</text><text x="135" y="175" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">1 តែពេលទាំងពីរ = 1</text><path d="M325 40q60 0 95 40q-35 40-95 40q22-40 0-80z" fill="#059669"/><line x1="290" y1="60" x2="334" y2="60" stroke="#334155" stroke-width="3"/><line x1="290" y1="100" x2="334" y2="100" stroke="#334155" stroke-width="3"/><line x1="420" y1="80" x2="460" y2="80" stroke="#334155" stroke-width="3"/><text x="370" y="86" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">OR</text><text x="375" y="150" text-anchor="middle" font-size="18" font-weight="700" fill="#059669">A+B</text><text x="375" y="175" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">1 បើយ៉ាងហោចណាស់មួយ = 1</text><path d="M575 40l70 40-70 40z" fill="#dc2626"/><circle cx="653" cy="80" r="8" fill="#fff" stroke="#dc2626" stroke-width="4"/><line x1="530" y1="80" x2="574" y2="80" stroke="#334155" stroke-width="3"/><line x1="660" y1="80" x2="700" y2="80" stroke="#334155" stroke-width="3"/><text x="610" y="86" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">NOT</text><text x="615" y="150" text-anchor="middle" font-size="18" font-weight="700" fill="#dc2626">¬A</text><text x="615" y="175" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">បញ្ច្រាស</text><path d="M812 40q60 0 95 40q-35 40-95 40q22-40 0-80z" fill="#7c3aed"/><path d="M800 40q22 40 0 80" fill="none" stroke="#7c3aed" stroke-width="4"/><line x1="770" y1="60" x2="814" y2="60" stroke="#334155" stroke-width="3"/><line x1="770" y1="100" x2="814" y2="100" stroke="#334155" stroke-width="3"/><line x1="900" y1="80" x2="940" y2="80" stroke="#334155" stroke-width="3"/><text x="850" y="86" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">XOR</text><text x="855" y="150" text-anchor="middle" font-size="18" font-weight="700" fill="#7c3aed">A⊕B</text><text x="855" y="175" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">1 ពេលខុសគ្នា</text></svg><figcaption>🖼️ Logic gates — គ្រឹះនៃ CPU (មាន Transistor រាប់ពាន់លាន)</figcaption></figure>
+
+<table><tr><th>A</th><th>B</th><th>A AND B</th><th>A OR B</th><th>NOT A</th><th>A XOR B</th></tr><tr><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td></tr><tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td></tr><tr><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td></tr><tr><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td></tr></table>
+
+<div class="note">💡 <b>ច្បាប់ De Morgan</b>៖ <code class='i'>not (A and B) == (not A) or (not B)</code> · <code class='i'>not (A or B) == (not A) and (not B)</code> — ប្រើសម្រួល if ស្មុគស្មាញ។</div>
+
+<script type="text/x-code" data-lang="py" data-label="logic.py">
+from itertools import product
+
+print(" A  B | AND OR XOR")
+for a, b in product([0, 1], repeat=2):
+    print(f" {a}  {b} |  {a & b}   {a | b}   {a ^ b}")
+
+# De Morgan: ពិនិត្យគ្រប់ករណី
+ok = all((not (a and b)) == ((not a) or (not b)) for a, b in product([False, True], repeat=2))
+print("De Morgan ត្រឹមត្រូវ?", ok)
+
+# Logic ក្នុងកម្មវិធីពិត: អាចប្រឡងបាន?
+def can_take_exam(attendance, paid, banned):
+    return attendance >= 0.8 and paid and not banned
+
+print(can_take_exam(0.85, True, False), can_take_exam(0.95, False, False))
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre> A  B | AND OR XOR
+ 0  0 |  0   0   0
+ 0  1 |  0   1   1
+ 1  0 |  0   1   1
+ 1  1 |  1   1   0
+De Morgan ត្រឹមត្រូវ? True
+True False</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>product([0,1], repeat=2)</code> — បង្កើតគ្រប់គូ (0,0) (0,1) (1,0) (1,1) = Truth table។</li><li><code class='i'>&amp; | ^</code> លើលេខ 0/1 = AND OR XOR · <code class='i'>and or not</code> លើ True/False។</li><li><code class='i'>all(...)</code> — True ពេលគ្រប់ករណីពិត → ផ្ទៀងផ្ទាត់ច្បាប់ De Morgan។</li><li><code class='i'>can_take_exam</code> — លក្ខខណ្ឌ ៣ ភ្ជាប់ដោយ and/not ដូច Logic gate។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>សរសេរ Logic៖ Alarm រោទ៍ ពេល (ទ្វារបើក <b>ឬ</b> បង្អួចបើក) <b>និង</b> ប្រព័ន្ធបើក (armed)។ សាកករណី ទ្វារបើក, បង្អួចបិទ, armed=False។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="py" data-label="answer.py">
+def alarm(door, window, armed):
+    return (door or window) and armed
+
+print(alarm(True, False, False))   # មិនរោទ៍ ព្រោះមិន armed
+print(alarm(False, True, True))
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>False
+True</pre></div>
+</details></div>
+
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Bitwise Operations៖ Mask, Subnet, chmod</h2>
+
+<figure class="fig"><svg viewBox="0 0 980 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="980" height="230" fill="#fff"/><text x="20" y="56" text-anchor="start" font-size="14" font-weight="700" fill="#2563eb">IP  192.168.1.77</text><rect x="210" y="36" width="20" height="30" rx="4" fill="#2563eb"/><text x="220" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="233" y="36" width="20" height="30" rx="4" fill="#2563eb"/><text x="243" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="256" y="36" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="266" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="279" y="36" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="289" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="302" y="36" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="312" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="325" y="36" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="335" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="348" y="36" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="358" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="371" y="36" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="381" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="402" y="36" width="20" height="30" rx="4" fill="#2563eb"/><text x="412" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="425" y="36" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="435" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="448" y="36" width="20" height="30" rx="4" fill="#2563eb"/><text x="458" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="471" y="36" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="481" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="494" y="36" width="20" height="30" rx="4" fill="#2563eb"/><text x="504" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="517" y="36" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="527" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="540" y="36" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="550" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="563" y="36" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="573" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="594" y="36" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="604" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="617" y="36" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="627" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="640" y="36" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="650" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="663" y="36" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="673" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="686" y="36" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="696" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="709" y="36" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="719" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="732" y="36" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="742" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="755" y="36" width="20" height="30" rx="4" fill="#2563eb"/><text x="765" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="786" y="36" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="796" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="809" y="36" width="20" height="30" rx="4" fill="#2563eb"/><text x="819" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="832" y="36" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="842" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="855" y="36" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="865" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="878" y="36" width="20" height="30" rx="4" fill="#2563eb"/><text x="888" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="901" y="36" width="20" height="30" rx="4" fill="#2563eb"/><text x="911" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="924" y="36" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="934" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="947" y="36" width="20" height="30" rx="4" fill="#2563eb"/><text x="957" y="57" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><text x="20" y="118" text-anchor="start" font-size="14" font-weight="700" fill="#7c3aed">Mask 255.255.255.0</text><rect x="210" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="220" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="233" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="243" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="256" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="266" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="279" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="289" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="302" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="312" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="325" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="335" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="348" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="358" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="371" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="381" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="402" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="412" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="425" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="435" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="448" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="458" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="471" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="481" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="494" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="504" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="517" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="527" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="540" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="550" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="563" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="573" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="594" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="604" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="617" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="627" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="640" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="650" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="663" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="673" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="686" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="696" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="709" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="719" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="732" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="742" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="755" y="98" width="20" height="30" rx="4" fill="#7c3aed"/><text x="765" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="786" y="98" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="796" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="809" y="98" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="819" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="832" y="98" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="842" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="855" y="98" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="865" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="878" y="98" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="888" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="901" y="98" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="911" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="924" y="98" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="934" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="947" y="98" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="957" y="119" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><text x="20" y="180" text-anchor="start" font-size="14" font-weight="700" fill="#059669">AND = Network</text><rect x="210" y="160" width="20" height="30" rx="4" fill="#059669"/><text x="220" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="233" y="160" width="20" height="30" rx="4" fill="#059669"/><text x="243" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="256" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="266" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="279" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="289" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="302" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="312" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="325" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="335" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="348" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="358" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="371" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="381" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="402" y="160" width="20" height="30" rx="4" fill="#059669"/><text x="412" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="425" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="435" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="448" y="160" width="20" height="30" rx="4" fill="#059669"/><text x="458" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="471" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="481" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="494" y="160" width="20" height="30" rx="4" fill="#059669"/><text x="504" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="517" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="527" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="540" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="550" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="563" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="573" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="594" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="604" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="617" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="627" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="640" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="650" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="663" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="673" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="686" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="696" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="709" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="719" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="732" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="742" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="755" y="160" width="20" height="30" rx="4" fill="#059669"/><text x="765" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text><rect x="786" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="796" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="809" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="819" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="832" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="842" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="855" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="865" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="878" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="888" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="901" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="911" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="924" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="934" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><rect x="947" y="160" width="20" height="30" rx="4" fill="#e2e8f0"/><text x="957" y="181" text-anchor="middle" font-size="13" font-weight="700" fill="#64748b">0</text><text x="490" y="222" text-anchor="middle" font-size="14" font-weight="600" fill="#334155">IP AND Mask → 192.168.1.0 (បណ្តាញ) — Router ប្រើ Bitwise AND រាល់ Packet</text></svg><figcaption>🖼️ Bitwise AND រវាង IP និង Subnet mask</figcaption></figure>
+
+<table><tr><th>Operator</th><th>ន័យ</th><th>ឧទាហរណ៍ (8 bits)</th></tr><tr><td><code class='i'>&amp;</code> AND</td><td>យក bit ដែលទាំងពីរ 1 (ច្រោះ/Mask)</td><td>1100 &amp; 1010 = 1000</td></tr><tr><td><code class='i'>|</code> OR</td><td>បើក bit</td><td>1100 | 0011 = 1111</td></tr><tr><td><code class='i'>^</code> XOR</td><td>បញ្ច្រាស bit ជាក់លាក់</td><td>1100 ^ 0110 = 1010</td></tr><tr><td><code class='i'>~</code> NOT</td><td>បញ្ច្រាសទាំងអស់</td><td>~00001111 = 11110000</td></tr><tr><td><code class='i'>&lt;&lt;</code> / <code class='i'>&gt;&gt;</code></td><td>រំកិល = ×2 / ÷2</td><td>3 &lt;&lt; 2 = 12</td></tr></table>
+
+<script type="text/x-code" data-lang="py" data-label="bitwise.py">
+ip   = [192, 168, 1, 77]
+mask = [255, 255, 255, 0]
+network = [a & m for a, m in zip(ip, mask)]
+print("Network:", ".".join(map(str, network)))
+
+# Linux permission: rwx = 4+2+1
+R, W, X = 4, 2, 1
+owner = R | W | X          # 7
+group = R | X              # 5
+other = R                  # 4
+print("chmod", f"{owner}{group}{other}")
+print("Group អាចសរសេរ?", bool(group & W))
+
+# Feature flags ក្នុង 1 byte
+DARK, SOUND, NOTIFY = 0b001, 0b010, 0b100
+settings = DARK | NOTIFY
+print("settings =", format(settings, "03b"), "| Sound?", bool(settings & SOUND))
+settings ^= DARK           # toggle Dark mode
+print("បន្ទាប់ toggle:", format(settings, "03b"))
+print("3 << 2 =", 3 << 2, "| 40 >> 1 =", 40 >> 1)
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>Network: 192.168.1.0
+chmod 754
+Group អាចសរសេរ? False
+settings = 101 | Sound? False
+បន្ទាប់ toggle: 100
+3 &lt;&lt; 2 = 12 | 40 &gt;&gt; 1 = 20</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>a &amp; m</code> លើ Octet នីមួយៗ — Router គណនា Network address ដូចនេះ។</li><li><code class='i'>R | W | X</code> = 4|2|1 = 7 → <code class='i'>chmod 755</code> = owner rwx, group r-x, other r-x។</li><li><code class='i'>group &amp; W</code> — ពិនិត្យថា bit Write បើកឬអត់។</li><li><code class='i'>^=</code> — XOR បិទ/បើក (toggle) bit · <code class='i'>&lt;&lt;</code> រំកិលឆ្វេង = គុណ 2។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>① <code class='i'>chmod 640</code> មានន័យអ្វី? ② IP 10.20.30.40 Mask 255.255.0.0 → Network?</p><details><summary>មើលចម្លើយ</summary><p>① Owner rw- (6), Group r-- (4), Other --- (0) ② <b>10.20.0.0</b></p></details></div>
+
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Function &amp; ក្រាហ្វ (y = mx + b)</h2>
+
+<p><b>Function</b> = ម៉ាស៊ីនទទួល <b>x</b> ផ្តល់ <b>y</b>។ <b>Linear</b> y = mx + b៖ m = ល្បឿនកើន (Slope), b = ចំណុចចាប់ផ្តើម។</p>
+<figure class="fig"><svg viewBox="0 0 700 335" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="700" height="330" fill="#fff"/><line x1="70" y1="290" x2="70" y2="40" stroke="#eef2f7"/><text x="70" y="310" text-anchor="middle" font-size="12" font-weight="400" fill="#334155">0</text><line x1="125" y1="290" x2="125" y2="40" stroke="#eef2f7"/><text x="125" y="310" text-anchor="middle" font-size="12" font-weight="400" fill="#334155">1</text><line x1="180" y1="290" x2="180" y2="40" stroke="#eef2f7"/><text x="180" y="310" text-anchor="middle" font-size="12" font-weight="400" fill="#334155">2</text><line x1="235" y1="290" x2="235" y2="40" stroke="#eef2f7"/><text x="235" y="310" text-anchor="middle" font-size="12" font-weight="400" fill="#334155">3</text><line x1="290" y1="290" x2="290" y2="40" stroke="#eef2f7"/><text x="290" y="310" text-anchor="middle" font-size="12" font-weight="400" fill="#334155">4</text><line x1="345" y1="290" x2="345" y2="40" stroke="#eef2f7"/><text x="345" y="310" text-anchor="middle" font-size="12" font-weight="400" fill="#334155">5</text><line x1="400" y1="290" x2="400" y2="40" stroke="#eef2f7"/><text x="400" y="310" text-anchor="middle" font-size="12" font-weight="400" fill="#334155">6</text><line x1="455" y1="290" x2="455" y2="40" stroke="#eef2f7"/><text x="455" y="310" text-anchor="middle" font-size="12" font-weight="400" fill="#334155">7</text><line x1="510" y1="290" x2="510" y2="40" stroke="#eef2f7"/><text x="510" y="310" text-anchor="middle" font-size="12" font-weight="400" fill="#334155">8</text><line x1="565" y1="290" x2="565" y2="40" stroke="#eef2f7"/><text x="565" y="310" text-anchor="middle" font-size="12" font-weight="400" fill="#334155">9</text><line x1="620" y1="290" x2="620" y2="40" stroke="#eef2f7"/><text x="620" y="310" text-anchor="middle" font-size="12" font-weight="400" fill="#334155">10</text><line x1="70" y1="290.0" x2="620" y2="290.0" stroke="#eef2f7"/><text x="58" y="294.0" text-anchor="end" font-size="11" font-weight="400" fill="#334155">$0</text><line x1="70" y1="246.0" x2="620" y2="246.0" stroke="#eef2f7"/><text x="58" y="250.0" text-anchor="end" font-size="11" font-weight="400" fill="#334155">$20</text><line x1="70" y1="202.0" x2="620" y2="202.0" stroke="#eef2f7"/><text x="58" y="206.0" text-anchor="end" font-size="11" font-weight="400" fill="#334155">$40</text><line x1="70" y1="158.0" x2="620" y2="158.0" stroke="#eef2f7"/><text x="58" y="162.0" text-anchor="end" font-size="11" font-weight="400" fill="#334155">$60</text><line x1="70" y1="114.0" x2="620" y2="114.0" stroke="#eef2f7"/><text x="58" y="118.0" text-anchor="end" font-size="11" font-weight="400" fill="#334155">$80</text><line x1="70" y1="69.99999999999997" x2="620" y2="69.99999999999997" stroke="#eef2f7"/><text x="58" y="73.99999999999997" text-anchor="end" font-size="11" font-weight="400" fill="#334155">$100</text><line x1="70" y1="26.0" x2="620" y2="26.0" stroke="#eef2f7"/><text x="58" y="30.0" text-anchor="end" font-size="11" font-weight="400" fill="#334155">$120</text><line x1="70" y1="290" x2="630" y2="290" stroke="#334155" stroke-width="2"/><line x1="70" y1="290" x2="70" y2="30" stroke="#334155" stroke-width="2"/><line x1="70" y1="279.0" x2="620" y2="58.99999999999997" stroke="#2563eb" stroke-width="4"/><line x1="70" y1="224.0" x2="620" y2="91.99999999999997" stroke="#ea580c" stroke-width="4"/><circle cx="413.75" cy="141.5" r="7" fill="#dc2626"/><text x="423.75" y="129.5" text-anchor="start" font-size="13" font-weight="700" fill="#dc2626">ចំណុចប្រសព្វ x≈6.25</text><text x="160" y="40" text-anchor="middle" font-size="14" font-weight="700" fill="#2563eb">Plan A: y = 10x + 5</text><text x="160" y="62" text-anchor="middle" font-size="14" font-weight="700" fill="#ea580c">Plan B: y = 6x + 30</text><text x="380" y="326" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">x = ខែ · y = ថ្លៃ Cloud ($)</text></svg><figcaption>🖼️ ប្រៀបធៀបគម្រោង Cloud ពីរ — ចំណុចប្រសព្វប្រាប់ពេលណាគម្រោង B ថោកជាង</figcaption></figure>
+
+<script type="text/x-code" data-lang="py" data-label="functions.py">
+def plan_a(months): return 10 * months + 5     # $10/ខែ + $5 setup
+def plan_b(months): return 6 * months + 30     # $6/ខែ + $30 setup
+
+for m in [1, 3, 6, 7, 12]:
+    a, b = plan_a(m), plan_b(m)
+    print(f"{m:>2} ខែ: A=${a:<4} B=${b:<4} → {'A' if a < b else 'B' if b < a else 'ស្មើ'}")
+
+# ដោះស្រាយ 10x + 5 = 6x + 30  →  x = (30 - 5) / (10 - 6)
+print("ចំណុចប្រសព្វ x =", (30 - 5) / (10 - 6), "ខែ")
+
+# Function មិនមែន Linear: ទំហំ File រូបភាព = w * h * 3 bytes
+def image_mb(w, h): return w * h * 3 / 1_000_000
+print("Full HD:", image_mb(1920, 1080), "MB · 4K:", image_mb(3840, 2160), "MB (មិនទាន់ compress)")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre> 1 ខែ: A=$15   B=$36   → A
+ 3 ខែ: A=$35   B=$48   → A
+ 6 ខែ: A=$65   B=$66   → A
+ 7 ខែ: A=$75   B=$72   → B
+12 ខែ: A=$125  B=$102  → B
+ចំណុចប្រសព្វ x = 6.25 ខែ
+Full HD: 6.2208 MB · 4K: 24.8832 MB (មិនទាន់ compress)</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>def plan_a(months): return ...</code> — Function ក្នុង Code ដូច f(x) ក្នុងគណិត។</li><li>ដោះស្រាយសមីការ៖ ផ្លាស់ x ទៅម្ខាង លេខទៅម្ខាង → x = 25/4 = 6.25 ខែ។</li><li><code class='i'>image_mb</code> — w×h pixel × 3 bytes (R,G,B) — ទ្វេទទឹង+កម្ពស់ → ទំហំ ×4 (មិនមែន Linear)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>Hosting A៖ $3/ខែ + $0 setup · Hosting B៖ $2/ខែ + $15 setup។ ក្រោយប៉ុន្មានខែ B ថោកជាង?</p><details><summary>មើលចម្លើយ</summary><p>3x = 2x + 15 → x = 15 → ចាប់ពីខែទី <b>16</b> B ថោកជាង (ខែ 15 ស្មើ $45)។</p></details></div>
+
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Sequence &amp; Series (លំដាប់ &amp; ផលបូក)</h2>
+
+<div class="grid"><div class="card"><b>Arithmetic</b><br>បន្ថែមចំនួនថេរ៖ 2, 5, 8, 11… (d=3) · aₙ = a₁ + (n−1)d</div><div class="card"><b>Geometric</b><br>គុណចំនួនថេរ៖ 1, 2, 4, 8… (r=2) · aₙ = a₁·rⁿ⁻¹</div><div class="card"><b>ផលបូក 1..n</b><br>n(n+1)/2 — Gauss ដោះស្រាយពេលនៅក្មេង</div><div class="card"><b>Fibonacci</b><br>1, 1, 2, 3, 5, 8… aₙ = aₙ₋₁ + aₙ₋₂</div></div>
+
+<script type="text/x-code" data-lang="py" data-label="sequences.py">
+# Arithmetic: ប្រាក់សន្សំ $20 កើន $5 រៀងរាល់ខែ
+saving = [20 + 5 * i for i in range(12)]
+print("ខែទី 12 សន្សំ:", saving[-1], "| សរុបមួយឆ្នាំ:", sum(saving))
+
+# Gauss: 1 + 2 + ... + 100
+n = 100
+print("loop:", sum(range(1, n + 1)), "| រូបមន្ត:", n * (n + 1) // 2)
+
+# Geometric: ទិន្នន័យកើន 2 ដង/ឆ្នាំ
+data_tb = [1 * 2 ** y for y in range(6)]
+print("TB ក្នុង 5 ឆ្នាំ:", data_tb)
+
+# ការប្រាក់សមាសធាតុ: $1000, 5%/ឆ្នាំ, 10 ឆ្នាំ
+print(f"ការប្រាក់: ${1000 * 1.05 ** 10:,.2f}")
+
+# Exponential backoff (Retry ពេល Network ខូច)
+print("Retry delays:", [min(2 ** k, 30) for k in range(7)], "វិនាទី")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>ខែទី 12 សន្សំ: 75 | សរុបមួយឆ្នាំ: 570
+loop: 5050 | រូបមន្ត: 5050
+TB ក្នុង 5 ឆ្នាំ: [1, 2, 4, 8, 16, 32]
+ការប្រាក់: $1,628.89
+Retry delays: [1, 2, 4, 8, 16, 30, 30] វិនាទី</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>[20 + 5*i for i in range(12)]</code> — List comprehension បង្កើតលំដាប់ Arithmetic 12 ខែ។</li><li>Loop បូក 100 ដង ទល់នឹងរូបមន្ត n(n+1)/2 ដែលគណនាតែម្តង — រូបមន្តលឿនជាង!</li><li><code class='i'>2 ** y</code> — Geometric កើនទ្វេ · <code class='i'>1.05 ** 10</code> — ការប្រាក់ 5% រយៈពេល 10 ឆ្នាំ។</li><li><b>Exponential backoff</b>៖ App ពិតសាកម្តងទៀត 1, 2, 4, 8… វិនាទី ដើម្បីកុំឲ្យ Server ពេញ (កំណត់អតិបរមា 30)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>Website មានអ្នកចូល 500 នាក់ ហើយកើន 10% រៀងរាល់ខែ។ ក្រោយ 12 ខែ មានប៉ុន្មាននាក់?</p><details><summary>មើលចម្លើយ</summary><p>500 × 1.1¹² ≈ <b>1,569 នាក់</b> (<code class='i'>round(500 * 1.1**12)</code>)</p></details></div>
+
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>ការរាប់ (Combinatorics)៖ Password, PIN</h2>
+
+<figure class="fig"><svg viewBox="0 0 700 272" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="700" height="270" fill="#fff"/><rect x="324.0" y="28" width="52" height="28" rx="8" fill="#ede9fe"/><text x="350.0" y="48" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">1</text><rect x="289.0" y="62" width="52" height="28" rx="8" fill="#ede9fe"/><text x="315.0" y="82" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">1</text><rect x="359.0" y="62" width="52" height="28" rx="8" fill="#ede9fe"/><text x="385.0" y="82" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">1</text><rect x="254.0" y="96" width="52" height="28" rx="8" fill="#ede9fe"/><text x="280.0" y="116" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">1</text><rect x="324.0" y="96" width="52" height="28" rx="8" fill="#ede9fe"/><text x="350.0" y="116" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">2</text><rect x="394.0" y="96" width="52" height="28" rx="8" fill="#ede9fe"/><text x="420.0" y="116" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">1</text><rect x="219.0" y="130" width="52" height="28" rx="8" fill="#ede9fe"/><text x="245.0" y="150" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">1</text><rect x="289.0" y="130" width="52" height="28" rx="8" fill="#ede9fe"/><text x="315.0" y="150" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">3</text><rect x="359.0" y="130" width="52" height="28" rx="8" fill="#ede9fe"/><text x="385.0" y="150" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">3</text><rect x="429.0" y="130" width="52" height="28" rx="8" fill="#ede9fe"/><text x="455.0" y="150" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">1</text><rect x="184.0" y="164" width="52" height="28" rx="8" fill="#ede9fe"/><text x="210.0" y="184" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">1</text><rect x="254.0" y="164" width="52" height="28" rx="8" fill="#ede9fe"/><text x="280.0" y="184" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">4</text><rect x="324.0" y="164" width="52" height="28" rx="8" fill="#ede9fe"/><text x="350.0" y="184" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">6</text><rect x="394.0" y="164" width="52" height="28" rx="8" fill="#ede9fe"/><text x="420.0" y="184" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">4</text><rect x="464.0" y="164" width="52" height="28" rx="8" fill="#ede9fe"/><text x="490.0" y="184" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">1</text><rect x="149.0" y="198" width="52" height="28" rx="8" fill="#ede9fe"/><text x="175.0" y="218" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">1</text><rect x="219.0" y="198" width="52" height="28" rx="8" fill="#ede9fe"/><text x="245.0" y="218" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">5</text><rect x="289.0" y="198" width="52" height="28" rx="8" fill="#ede9fe"/><text x="315.0" y="218" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">10</text><rect x="359.0" y="198" width="52" height="28" rx="8" fill="#ede9fe"/><text x="385.0" y="218" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">10</text><rect x="429.0" y="198" width="52" height="28" rx="8" fill="#ede9fe"/><text x="455.0" y="218" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">5</text><rect x="499.0" y="198" width="52" height="28" rx="8" fill="#ede9fe"/><text x="525.0" y="218" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">1</text><rect x="114.0" y="232" width="52" height="28" rx="8" fill="#ede9fe"/><text x="140.0" y="252" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">1</text><rect x="184.0" y="232" width="52" height="28" rx="8" fill="#ede9fe"/><text x="210.0" y="252" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">6</text><rect x="254.0" y="232" width="52" height="28" rx="8" fill="#7c3aed"/><text x="280.0" y="252" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">15</text><rect x="324.0" y="232" width="52" height="28" rx="8" fill="#ede9fe"/><text x="350.0" y="252" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">20</text><rect x="394.0" y="232" width="52" height="28" rx="8" fill="#ede9fe"/><text x="420.0" y="252" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">15</text><rect x="464.0" y="232" width="52" height="28" rx="8" fill="#ede9fe"/><text x="490.0" y="252" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">6</text><rect x="534.0" y="232" width="52" height="28" rx="8" fill="#ede9fe"/><text x="560.0" y="252" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">1</text><text x="350" y="266" text-anchor="middle" font-size="14" font-weight="600" fill="#334155">ត្រីកោណ Pascal · C(6,2) = 15 = ជ្រើស 2 ពី 6</text></svg><figcaption>🖼️ ត្រីកោណ Pascal — ចំនួនវិធីជ្រើស</figcaption></figure>
+
+<table><tr><th>ច្បាប់</th><th>រូបមន្ត</th><th>ឧទាហរណ៍</th></tr><tr><td>គុណ (Product rule)</td><td>n₁ × n₂ × …</td><td>PIN 4 ខ្ទង់ = 10⁴ = 10,000</td></tr><tr><td>Permutation (លំដាប់សំខាន់)</td><td>P(n,r) = n!/(n−r)!</td><td>ជ្រើសប្រធាន + អនុ ពី 10 នាក់ = 90</td></tr><tr><td>Combination (លំដាប់មិនសំខាន់)</td><td>C(n,r) = n!/(r!(n−r)!)</td><td>ជ្រើស 3 នាក់ពី 10 = 120</td></tr><tr><td>Factorial</td><td>n! = 1×2×…×n</td><td>តម្រៀប 5 សៀវភៅ = 120</td></tr></table>
+
+<script type="text/x-code" data-lang="py" data-label="counting.py">
+import math
+
+print("PIN 4 ខ្ទង់:", f"{10**4:,}")
+print("PIN 6 ខ្ទង់:", f"{10**6:,}")
+
+# Password: អក្សរតូច+ធំ+លេខ+សញ្ញា = 26+26+10+32 = 94 តួ
+for length in [6, 8, 12, 16]:
+    combos = 94 ** length
+    years = combos / 1e10 / 3600 / 24 / 365      # ទាយ 10 ពាន់លានដង/វិនាទី
+    print(f"{length:>2} តួ: {combos:.2e} ជម្រើស → ≈ {years:,.1f} ឆ្នាំ")
+
+print("P(10,2) =", math.perm(10, 2), "| C(10,3) =", math.comb(10, 3), "| 5! =", math.factorial(5))
+# Entropy (bits) = log2(ជម្រើស)
+print("Entropy 12 តួ:", round(12 * math.log2(94), 1), "bits")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>PIN 4 ខ្ទង់: 10,000
+PIN 6 ខ្ទង់: 1,000,000
+ 6 តួ: 6.90e+11 ជម្រើស → ≈ 0.0 ឆ្នាំ
+ 8 តួ: 6.10e+15 ជម្រើស → ≈ 0.0 ឆ្នាំ
+12 តួ: 4.76e+23 ជម្រើស → ≈ 1,509,133.4 ឆ្នាំ
+16 តួ: 3.72e+31 ជម្រើស → ≈ 117,825,434,688,641.8 ឆ្នាំ
+P(10,2) = 90 | C(10,3) = 120 | 5! = 120
+Entropy 12 តួ: 78.7 bits</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>94 ** length</code> — គ្រប់ទីតាំងមាន 94 ជម្រើស → គុណគ្នា (Product rule)។</li><li>ចែកនឹងល្បឿនទាយ → វិនាទី → ម៉ោង → ថ្ងៃ → ឆ្នាំ។ មើល៖ ប្រវែងសំខាន់ជាងភាពស្មុគស្មាញ!</li><li><code class='i'>math.perm</code>, <code class='i'>math.comb</code>, <code class='i'>math.factorial</code> — Function ស្រាប់។</li><li><b>Entropy</b> = log₂(ជម្រើស) = កម្លាំង Password ជា bits (≥ 60 bits = ខ្លាំង)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>License plate មាន 2 អក្សរ (A–Z) + 4 លេខ។ មានប៉ុន្មានស្លាក?</p><details><summary>មើលចម្លើយ</summary><p>26 × 26 × 10⁴ = <b>6,760,000</b></p></details></div>
+
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>ប្រូបាប៊ីលីតេ (Probability)</h2>
+
+<p>P(ព្រឹត្តិការណ៍) = <b>ករណីអំណោយផល ÷ ករណីទាំងអស់</b> (0 ដល់ 1)។ ឯករាជ្យ៖ P(A និង B) = P(A)×P(B)។ មិនកើត៖ 1 − P(A)។</p>
+<script type="text/x-code" data-lang="py" data-label="probability.py">
+import random, math
+random.seed(42)                       # ឲ្យលទ្ធផលដដែលរាល់ពេល
+
+# 1) ទ្រឹស្តី vs ក្លែងធ្វើ (Simulation): គប់គ្រាប់ឡុកឡាក់បាន 6
+trials = 60_000
+sixes = sum(random.randint(1, 6) == 6 for _ in range(trials))
+print(f"ទ្រឹស្តី {1/6:.4f} | Simulation {sixes/trials:.4f}")
+
+# 2) Server ពីរ (uptime 99% ម្នាក់) — យ៉ាងហោចមួយដំណើរការ
+p_down = 0.01
+print(f"Uptime ពេលមាន Backup: {1 - p_down**2:.4%}")
+
+# 3) Birthday paradox → Hash collision
+def p_same(n, days=365):
+    p_unique = math.prod((days - i) / days for i in range(n))
+    return 1 - p_unique
+for n in [10, 23, 50]:
+    print(f"{n} នាក់ → ឱកាសខួបកំណើតដូចគ្នា {p_same(n):.1%}")
+
+# 4) ទាយ OTP 6 ខ្ទង់ 3 ដង
+print(f"ទាយ OTP ត្រូវ: {3/10**6:.6%}")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>ទ្រឹស្តី 0.1667 | Simulation 0.1684
+Uptime ពេលមាន Backup: 99.9900%
+10 នាក់ → ឱកាសខួបកំណើតដូចគ្នា 11.7%
+23 នាក់ → ឱកាសខួបកំណើតដូចគ្នា 50.7%
+50 នាក់ → ឱកាសខួបកំណើតដូចគ្នា 97.0%
+ទាយ OTP ត្រូវ: 0.000300%</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>random.seed(42)</code> — ធ្វើឲ្យលេខចៃដន្យដដែល ដើម្បីងាយផ្ទៀងផ្ទាត់។</li><li>Simulation៖ សាក 60,000 ដង រាប់ — លទ្ធផលជិត 1/6 (ច្បាប់ចំនួនធំ)។</li><li>Server ពីរដាច់ក្នុងពេលតែមួយ = 0.01 × 0.01 → Uptime 99.99% — ហេតុនេះហើយ Cloud ប្រើ Redundancy។</li><li><code class='i'>math.prod</code> — គុណគ្រប់ធាតុ · Birthday paradox ពន្យល់ថាហេតុអ្វី Hash ខ្លីងាយ Collision។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>Spam filter ត្រឹមត្រូវ 98%។ ក្នុង Email 500 តើប្រហែលប៉ុន្មាន Email ដែលចាត់ខុស?</p><details><summary>មើលចម្លើយ</summary><p>500 × 0.02 = <b>10 Email</b></p></details></div>
+
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>ស្ថិតិ (Statistics) សម្រាប់ Data</h2>
+
+<figure class="fig"><svg viewBox="0 0 700 300" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="700" height="300" fill="#fff"/><line x1="60" y1="250" x2="660" y2="250" stroke="#334155" stroke-width="2"/><rect x="70" y="205" width="86" height="45" rx="6" fill="#2563eb"/><text x="113" y="200" text-anchor="middle" font-size="14" font-weight="700" fill="#1d4ed8">1</text><text x="113" y="270" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">40–50</text><rect x="168" y="205" width="86" height="45" rx="6" fill="#2563eb"/><text x="211" y="200" text-anchor="middle" font-size="14" font-weight="700" fill="#1d4ed8">1</text><text x="211" y="270" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">50–60</text><rect x="266" y="160" width="86" height="90" rx="6" fill="#2563eb"/><text x="309" y="155" text-anchor="middle" font-size="14" font-weight="700" fill="#1d4ed8">2</text><text x="309" y="270" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">60–70</text><rect x="364" y="25" width="86" height="225" rx="6" fill="#2563eb"/><text x="407" y="20" text-anchor="middle" font-size="14" font-weight="700" fill="#1d4ed8">5</text><text x="407" y="270" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">70–80</text><rect x="462" y="70" width="86" height="180" rx="6" fill="#2563eb"/><text x="505" y="65" text-anchor="middle" font-size="14" font-weight="700" fill="#1d4ed8">4</text><text x="505" y="270" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">80–90</text><rect x="560" y="160" width="86" height="90" rx="6" fill="#2563eb"/><text x="603" y="155" text-anchor="middle" font-size="14" font-weight="700" fill="#1d4ed8">2</text><text x="603" y="270" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">90–100</text><line x1="410" y1="40" x2="410" y2="250" stroke="#dc2626" stroke-width="3" stroke-dasharray="7 5"/><text x="416.3866666666667" y="36" text-anchor="start" font-size="14" font-weight="700" fill="#dc2626">Mean = 74.7</text><text x="360" y="294" text-anchor="middle" font-size="14" font-weight="600" fill="#334155">Histogram ពិន្ទុសិស្ស ១៥ នាក់</text></svg><figcaption>🖼️ Histogram + Mean — មើលការចែកចាយទិន្នន័យ</figcaption></figure>
+
+<table><tr><th>រង្វាស់</th><th>ន័យ</th><th>ប្រើពេល</th></tr><tr><td>Mean (មធ្យម)</td><td>ផលបូក ÷ ចំនួន</td><td>ទិន្នន័យស្មើៗ</td></tr><tr><td>Median (មេដ្យាន)</td><td>តម្លៃកណ្តាលពេលតម្រៀប</td><td>មានតម្លៃលោត (ប្រាក់ខែ)</td></tr><tr><td>Mode</td><td>តម្លៃញឹកញាប់បំផុត</td><td>ទំហំអាវលក់ដាច់</td></tr><tr><td>Range</td><td>Max − Min</td><td>ទំហំគម្លាត</td></tr><tr><td>Std deviation (σ)</td><td>ការរាយប៉ាយពីមធ្យម</td><td>Quality, Anomaly</td></tr></table>
+
+<script type="text/x-code" data-lang="py" data-label="stats.py">
+import statistics as st
+
+scores = [45, 58, 62, 67, 70, 71, 74, 75, 78, 80, 82, 85, 88, 91, 95]
+print("Mean  :", round(st.mean(scores), 2))
+print("Median:", st.median(scores))
+print("Stdev :", round(st.stdev(scores), 2))
+print("Range :", max(scores) - min(scores))
+
+# Median vs Mean ពេលមានតម្លៃលោត
+salaries = [400, 450, 500, 520, 600, 5000]   # $ — CEO ម្នាក់
+print("Mean salary:", round(st.mean(salaries)), "| Median:", st.median(salaries))
+
+# Anomaly detection: Response time លើស Mean + 2σ
+ms = [120, 130, 125, 118, 140, 122, 900, 128]
+m, s = st.mean(ms), st.stdev(ms)
+print("Anomaly:", [x for x in ms if x > m + 2 * s], "ms")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>Mean  : 74.73
+Median: 75
+Stdev : 13.29
+Range : 50
+Mean salary: 1245 | Median: 510.0
+Anomaly: [900] ms</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>import statistics as st</code> — Module ស្ថិតិស្រាប់។</li><li>Mean ងាយរងឥទ្ធិពលតម្លៃលោត ($5000) — Median បង្ហាញ “ធម្មតា” ប្រសើរជាង។</li><li><code class='i'>stdev</code> — σ តូច = ទិន្នន័យជិតគ្នា · σ ធំ = រាយប៉ាយ។</li><li>តម្លៃលើស Mean + 2σ = ខុសប្លែក (Anomaly) → ប្រើក្នុង Monitoring Server។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>រក Mean, Median, Mode នៃ [3, 7, 7, 2, 9, 7, 5]។</p><details><summary>មើលចម្លើយ</summary><p>Mean = 40/7 ≈ <b>5.71</b> · តម្រៀប 2,3,5,<b>7</b>,7,7,9 → Median = <b>7</b> · Mode = <b>7</b></p></details></div>
+
+</section>
+<section id="l13">
+<h2><span class="badge">មេរៀន ១៣</span>Matrix &amp; Vector (រូបភាព · AI · Game)</h2>
+
+<figure class="fig"><svg viewBox="0 0 820 300" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="820" height="300" fill="#fff"/><rect x="30" y="20" width="30" height="30" fill="#f1f5f9"/><rect x="420" y="20" width="44" height="30" rx="4" fill="#f8fafc"/><text x="442" y="41" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="62" y="20" width="30" height="30" fill="#f1f5f9"/><rect x="466" y="20" width="44" height="30" rx="4" fill="#f8fafc"/><text x="488" y="41" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="94" y="20" width="30" height="30" fill="#111827"/><rect x="512" y="20" width="44" height="30" rx="4" fill="#dbeafe"/><text x="534" y="41" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="126" y="20" width="30" height="30" fill="#111827"/><rect x="558" y="20" width="44" height="30" rx="4" fill="#dbeafe"/><text x="580" y="41" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="158" y="20" width="30" height="30" fill="#111827"/><rect x="604" y="20" width="44" height="30" rx="4" fill="#dbeafe"/><text x="626" y="41" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="190" y="20" width="30" height="30" fill="#111827"/><rect x="650" y="20" width="44" height="30" rx="4" fill="#dbeafe"/><text x="672" y="41" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="222" y="20" width="30" height="30" fill="#f1f5f9"/><rect x="696" y="20" width="44" height="30" rx="4" fill="#f8fafc"/><text x="718" y="41" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="254" y="20" width="30" height="30" fill="#f1f5f9"/><rect x="742" y="20" width="44" height="30" rx="4" fill="#f8fafc"/><text x="764" y="41" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="30" y="52" width="30" height="30" fill="#f1f5f9"/><rect x="420" y="52" width="44" height="30" rx="4" fill="#f8fafc"/><text x="442" y="73" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="62" y="52" width="30" height="30" fill="#111827"/><rect x="466" y="52" width="44" height="30" rx="4" fill="#dbeafe"/><text x="488" y="73" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="94" y="52" width="30" height="30" fill="#f1f5f9"/><rect x="512" y="52" width="44" height="30" rx="4" fill="#f8fafc"/><text x="534" y="73" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="126" y="52" width="30" height="30" fill="#f1f5f9"/><rect x="558" y="52" width="44" height="30" rx="4" fill="#f8fafc"/><text x="580" y="73" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="158" y="52" width="30" height="30" fill="#f1f5f9"/><rect x="604" y="52" width="44" height="30" rx="4" fill="#f8fafc"/><text x="626" y="73" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="190" y="52" width="30" height="30" fill="#f1f5f9"/><rect x="650" y="52" width="44" height="30" rx="4" fill="#f8fafc"/><text x="672" y="73" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="222" y="52" width="30" height="30" fill="#111827"/><rect x="696" y="52" width="44" height="30" rx="4" fill="#dbeafe"/><text x="718" y="73" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="254" y="52" width="30" height="30" fill="#f1f5f9"/><rect x="742" y="52" width="44" height="30" rx="4" fill="#f8fafc"/><text x="764" y="73" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="30" y="84" width="30" height="30" fill="#111827"/><rect x="420" y="84" width="44" height="30" rx="4" fill="#dbeafe"/><text x="442" y="105" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="62" y="84" width="30" height="30" fill="#f1f5f9"/><rect x="466" y="84" width="44" height="30" rx="4" fill="#f8fafc"/><text x="488" y="105" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="94" y="84" width="30" height="30" fill="#111827"/><rect x="512" y="84" width="44" height="30" rx="4" fill="#dbeafe"/><text x="534" y="105" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="126" y="84" width="30" height="30" fill="#f1f5f9"/><rect x="558" y="84" width="44" height="30" rx="4" fill="#f8fafc"/><text x="580" y="105" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="158" y="84" width="30" height="30" fill="#f1f5f9"/><rect x="604" y="84" width="44" height="30" rx="4" fill="#f8fafc"/><text x="626" y="105" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="190" y="84" width="30" height="30" fill="#111827"/><rect x="650" y="84" width="44" height="30" rx="4" fill="#dbeafe"/><text x="672" y="105" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="222" y="84" width="30" height="30" fill="#f1f5f9"/><rect x="696" y="84" width="44" height="30" rx="4" fill="#f8fafc"/><text x="718" y="105" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="254" y="84" width="30" height="30" fill="#111827"/><rect x="742" y="84" width="44" height="30" rx="4" fill="#dbeafe"/><text x="764" y="105" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="30" y="116" width="30" height="30" fill="#111827"/><rect x="420" y="116" width="44" height="30" rx="4" fill="#dbeafe"/><text x="442" y="137" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="62" y="116" width="30" height="30" fill="#f1f5f9"/><rect x="466" y="116" width="44" height="30" rx="4" fill="#f8fafc"/><text x="488" y="137" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="94" y="116" width="30" height="30" fill="#f1f5f9"/><rect x="512" y="116" width="44" height="30" rx="4" fill="#f8fafc"/><text x="534" y="137" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="126" y="116" width="30" height="30" fill="#f1f5f9"/><rect x="558" y="116" width="44" height="30" rx="4" fill="#f8fafc"/><text x="580" y="137" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="158" y="116" width="30" height="30" fill="#f1f5f9"/><rect x="604" y="116" width="44" height="30" rx="4" fill="#f8fafc"/><text x="626" y="137" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="190" y="116" width="30" height="30" fill="#f1f5f9"/><rect x="650" y="116" width="44" height="30" rx="4" fill="#f8fafc"/><text x="672" y="137" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="222" y="116" width="30" height="30" fill="#f1f5f9"/><rect x="696" y="116" width="44" height="30" rx="4" fill="#f8fafc"/><text x="718" y="137" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="254" y="116" width="30" height="30" fill="#111827"/><rect x="742" y="116" width="44" height="30" rx="4" fill="#dbeafe"/><text x="764" y="137" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="30" y="148" width="30" height="30" fill="#111827"/><rect x="420" y="148" width="44" height="30" rx="4" fill="#dbeafe"/><text x="442" y="169" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="62" y="148" width="30" height="30" fill="#f1f5f9"/><rect x="466" y="148" width="44" height="30" rx="4" fill="#f8fafc"/><text x="488" y="169" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="94" y="148" width="30" height="30" fill="#111827"/><rect x="512" y="148" width="44" height="30" rx="4" fill="#dbeafe"/><text x="534" y="169" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="126" y="148" width="30" height="30" fill="#f1f5f9"/><rect x="558" y="148" width="44" height="30" rx="4" fill="#f8fafc"/><text x="580" y="169" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="158" y="148" width="30" height="30" fill="#f1f5f9"/><rect x="604" y="148" width="44" height="30" rx="4" fill="#f8fafc"/><text x="626" y="169" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="190" y="148" width="30" height="30" fill="#111827"/><rect x="650" y="148" width="44" height="30" rx="4" fill="#dbeafe"/><text x="672" y="169" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="222" y="148" width="30" height="30" fill="#f1f5f9"/><rect x="696" y="148" width="44" height="30" rx="4" fill="#f8fafc"/><text x="718" y="169" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="254" y="148" width="30" height="30" fill="#111827"/><rect x="742" y="148" width="44" height="30" rx="4" fill="#dbeafe"/><text x="764" y="169" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="30" y="180" width="30" height="30" fill="#111827"/><rect x="420" y="180" width="44" height="30" rx="4" fill="#dbeafe"/><text x="442" y="201" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="62" y="180" width="30" height="30" fill="#f1f5f9"/><rect x="466" y="180" width="44" height="30" rx="4" fill="#f8fafc"/><text x="488" y="201" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="94" y="180" width="30" height="30" fill="#f1f5f9"/><rect x="512" y="180" width="44" height="30" rx="4" fill="#f8fafc"/><text x="534" y="201" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="126" y="180" width="30" height="30" fill="#111827"/><rect x="558" y="180" width="44" height="30" rx="4" fill="#dbeafe"/><text x="580" y="201" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="158" y="180" width="30" height="30" fill="#111827"/><rect x="604" y="180" width="44" height="30" rx="4" fill="#dbeafe"/><text x="626" y="201" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="190" y="180" width="30" height="30" fill="#f1f5f9"/><rect x="650" y="180" width="44" height="30" rx="4" fill="#f8fafc"/><text x="672" y="201" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="222" y="180" width="30" height="30" fill="#f1f5f9"/><rect x="696" y="180" width="44" height="30" rx="4" fill="#f8fafc"/><text x="718" y="201" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="254" y="180" width="30" height="30" fill="#111827"/><rect x="742" y="180" width="44" height="30" rx="4" fill="#dbeafe"/><text x="764" y="201" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="30" y="212" width="30" height="30" fill="#f1f5f9"/><rect x="420" y="212" width="44" height="30" rx="4" fill="#f8fafc"/><text x="442" y="233" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="62" y="212" width="30" height="30" fill="#111827"/><rect x="466" y="212" width="44" height="30" rx="4" fill="#dbeafe"/><text x="488" y="233" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="94" y="212" width="30" height="30" fill="#f1f5f9"/><rect x="512" y="212" width="44" height="30" rx="4" fill="#f8fafc"/><text x="534" y="233" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="126" y="212" width="30" height="30" fill="#f1f5f9"/><rect x="558" y="212" width="44" height="30" rx="4" fill="#f8fafc"/><text x="580" y="233" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="158" y="212" width="30" height="30" fill="#f1f5f9"/><rect x="604" y="212" width="44" height="30" rx="4" fill="#f8fafc"/><text x="626" y="233" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="190" y="212" width="30" height="30" fill="#f1f5f9"/><rect x="650" y="212" width="44" height="30" rx="4" fill="#f8fafc"/><text x="672" y="233" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="222" y="212" width="30" height="30" fill="#111827"/><rect x="696" y="212" width="44" height="30" rx="4" fill="#dbeafe"/><text x="718" y="233" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="254" y="212" width="30" height="30" fill="#f1f5f9"/><rect x="742" y="212" width="44" height="30" rx="4" fill="#f8fafc"/><text x="764" y="233" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="30" y="244" width="30" height="30" fill="#f1f5f9"/><rect x="420" y="244" width="44" height="30" rx="4" fill="#f8fafc"/><text x="442" y="265" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="62" y="244" width="30" height="30" fill="#f1f5f9"/><rect x="466" y="244" width="44" height="30" rx="4" fill="#f8fafc"/><text x="488" y="265" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="94" y="244" width="30" height="30" fill="#111827"/><rect x="512" y="244" width="44" height="30" rx="4" fill="#dbeafe"/><text x="534" y="265" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="126" y="244" width="30" height="30" fill="#111827"/><rect x="558" y="244" width="44" height="30" rx="4" fill="#dbeafe"/><text x="580" y="265" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="158" y="244" width="30" height="30" fill="#111827"/><rect x="604" y="244" width="44" height="30" rx="4" fill="#dbeafe"/><text x="626" y="265" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="190" y="244" width="30" height="30" fill="#111827"/><rect x="650" y="244" width="44" height="30" rx="4" fill="#dbeafe"/><text x="672" y="265" text-anchor="middle" font-size="12" font-weight="600" fill="#1e3a8a">255</text><rect x="222" y="244" width="30" height="30" fill="#f1f5f9"/><rect x="696" y="244" width="44" height="30" rx="4" fill="#f8fafc"/><text x="718" y="265" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><rect x="254" y="244" width="30" height="30" fill="#f1f5f9"/><rect x="742" y="244" width="44" height="30" rx="4" fill="#f8fafc"/><text x="764" y="265" text-anchor="middle" font-size="12" font-weight="600" fill="#94a3b8">0</text><line x1="296" y1="150" x2="410" y2="150" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="353.0" y="142.0" text-anchor="middle" font-size="13" fill="#334155">=</text><text x="160" y="292" text-anchor="middle" font-size="14" font-weight="600" fill="#334155">រូបភាព 8×8</text><text x="604" y="292" text-anchor="middle" font-size="14" font-weight="600" fill="#334155">Matrix 8×8 (តម្លៃពន្លឺ 0–255)</text></svg><figcaption>🖼️ រូបភាព = Matrix នៃលេខពន្លឺ</figcaption></figure>
+
+<p><b>Vector</b> = បញ្ជីលេខ (ឧ. ទីតាំង [x, y]) · <b>Matrix</b> = តារាងលេខ (Rows × Columns)។ Excel Sheet, រូបភាព, Neural network ទាំងអស់ជា Matrix។</p>
+<script type="text/x-code" data-lang="py" data-label="matrix.py">
+# Matrix ជា List of lists (មិនបាច់ Library)
+A = [[1, 2],
+     [3, 4]]
+B = [[5, 6],
+     [7, 8]]
+
+def matmul(X, Y):
+    return [[sum(X[i][k] * Y[k][j] for k in range(len(Y))) for j in range(len(Y[0]))] for i in range(len(X))]
+
+print("A + B =", [[A[i][j] + B[i][j] for j in range(2)] for i in range(2)])
+print("A × B =", matmul(A, B))
+
+# ប្រែពណ៌រូបភាព (Invert) = 255 - pixel
+img = [[0, 128, 255], [64, 200, 30]]
+print("Invert:", [[255 - p for p in row] for row in img])
+
+# Game: បង្វិលចំណុច 90° ដោយ Rotation matrix
+R = [[0, -1],
+     [1,  0]]
+point = [[3], [1]]
+print("(3,1) បង្វិល 90° →", [r[0] for r in matmul(R, point)])
+
+# Dot product: ស្វែងរកភាពស្រដៀង (Recommendation)
+dara, sokha = [5, 1, 4], [4, 0, 5]     # ពិន្ទុចូលចិត្ត: Code, Sport, Music
+print("Similarity:", sum(a * b for a, b in zip(dara, sokha)))
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>A + B = [[6, 8], [10, 12]]
+A × B = [[19, 22], [43, 50]]
+Invert: [[255, 127, 0], [191, 55, 225]]
+(3,1) បង្វិល 90° → [-1, 3]
+Similarity: 40</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>A[i][j]</code> — ជួរ i ជួរឈរ j។ បូក Matrix = បូកធាតុទីតាំងដូចគ្នា។</li><li><code class='i'>matmul</code>៖ ធាតុ (i,j) = ផលបូក Row i នៃ X × Column j នៃ Y — AI គណនាដូចនេះរាប់ពាន់លានដង (ហេតុនេះត្រូវការ GPU)។</li><li><code class='i'>255 - p</code> — ធ្វើលើគ្រប់ Pixel = Filter Invert។</li><li>Rotation matrix [[0,−1],[1,0]] បង្វិល 90° · Dot product ធំ = ចំណង់ចំណូលចិត្តស្រដៀង។</li><li>ក្នុងការងារពិតប្រើ Library <b>NumPy</b>៖ <code class='i'>A @ B</code>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៣</h4><p>គណនា [[2,0],[0,2]] × [[3],[4]]។ Matrix នេះធ្វើអ្វីលើចំណុច?</p><details><summary>មើលចម្លើយ</summary><p>= [[6],[8]] → <b>ពង្រីក (Scale) ×2</b></p></details></div>
+
+</section>
+<section id="l14">
+<h2><span class="badge">មេរៀន ១៤</span>Graph Theory៖ Network &amp; ផ្លូវខ្លីបំផុត</h2>
+
+<figure class="fig"><svg viewBox="0 0 710 310" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="710" height="310" fill="#fff"/><line x1="90" y1="150" x2="260" y2="60" stroke="#cbd5e1" stroke-width="3"/><rect x="162.0" y="93.0" width="26" height="22" rx="6" fill="#fff" stroke="#94a3b8"/><text x="175.0" y="109.0" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">4</text><line x1="90" y1="150" x2="260" y2="240" stroke="#059669" stroke-width="6"/><rect x="162.0" y="183.0" width="26" height="22" rx="6" fill="#fff" stroke="#94a3b8"/><text x="175.0" y="199.0" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">2</text><line x1="260" y1="60" x2="260" y2="240" stroke="#059669" stroke-width="6"/><rect x="247.0" y="138.0" width="26" height="22" rx="6" fill="#fff" stroke="#94a3b8"/><text x="260.0" y="154.0" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">1</text><line x1="260" y1="60" x2="450" y2="60" stroke="#059669" stroke-width="6"/><rect x="342.0" y="48.0" width="26" height="22" rx="6" fill="#fff" stroke="#94a3b8"/><text x="355.0" y="64.0" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">5</text><line x1="260" y1="240" x2="450" y2="240" stroke="#cbd5e1" stroke-width="3"/><rect x="342.0" y="228.0" width="26" height="22" rx="6" fill="#fff" stroke="#94a3b8"/><text x="355.0" y="244.0" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">8</text><line x1="260" y1="240" x2="450" y2="60" stroke="#cbd5e1" stroke-width="3"/><rect x="342.0" y="138.0" width="26" height="22" rx="6" fill="#fff" stroke="#94a3b8"/><text x="355.0" y="154.0" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">8</text><line x1="450" y1="60" x2="450" y2="240" stroke="#059669" stroke-width="6"/><rect x="437.0" y="138.0" width="26" height="22" rx="6" fill="#fff" stroke="#94a3b8"/><text x="450.0" y="154.0" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">2</text><line x1="450" y1="60" x2="620" y2="150" stroke="#cbd5e1" stroke-width="3"/><rect x="522.0" y="93.0" width="26" height="22" rx="6" fill="#fff" stroke="#94a3b8"/><text x="535.0" y="109.0" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">6</text><line x1="450" y1="240" x2="620" y2="150" stroke="#059669" stroke-width="6"/><rect x="522.0" y="183.0" width="26" height="22" rx="6" fill="#fff" stroke="#94a3b8"/><text x="535.0" y="199.0" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">3</text><circle cx="90" cy="150" r="26" fill="#2563eb"/><text x="90" y="156" text-anchor="middle" font-size="18" font-weight="800" fill="#fff">A</text><circle cx="260" cy="60" r="26" fill="#7c3aed"/><text x="260" y="66" text-anchor="middle" font-size="18" font-weight="800" fill="#fff">B</text><circle cx="260" cy="240" r="26" fill="#7c3aed"/><text x="260" y="246" text-anchor="middle" font-size="18" font-weight="800" fill="#fff">C</text><circle cx="450" cy="60" r="26" fill="#7c3aed"/><text x="450" y="66" text-anchor="middle" font-size="18" font-weight="800" fill="#fff">D</text><circle cx="450" cy="240" r="26" fill="#7c3aed"/><text x="450" y="246" text-anchor="middle" font-size="18" font-weight="800" fill="#fff">E</text><circle cx="620" cy="150" r="26" fill="#2563eb"/><text x="620" y="156" text-anchor="middle" font-size="18" font-weight="800" fill="#fff">F</text><text x="355" y="300" text-anchor="middle" font-size="14" font-weight="700" fill="#059669">ផ្លូវខ្លីបំផុត A→F = A→C→B→D→E→F = 2+1+5+2+3 = 13 (Dijkstra)</text></svg><figcaption>🖼️ Graph មាន Node (ចំណុច) និង Edge (ខ្សែ) មានទម្ងន់ — Dijkstra រកផ្លូវខ្លីបំផុត</figcaption></figure>
+
+<div class="grid"><div class="card"><b>Node / Vertex</b><br>Router, មនុស្ស, ទីក្រុង</div><div class="card"><b>Edge</b><br>ខ្សែភ្ជាប់, មិត្តភាព, ផ្លូវ</div><div class="card"><b>Weight</b><br>ចម្ងាយ, ពេល, ថ្លៃ</div><div class="card"><b>ប្រើក្នុង</b><br>Google Maps, Network routing (OSPF), Facebook friends, Grab</div></div>
+
+<script type="text/x-code" data-lang="py" data-label="dijkstra.py">
+import heapq
+
+graph = {
+    "A": {"B": 4, "C": 2},
+    "B": {"A": 4, "C": 1, "D": 5},
+    "C": {"A": 2, "B": 1, "D": 8, "E": 8},
+    "D": {"B": 5, "C": 8, "E": 2, "F": 6},
+    "E": {"C": 8, "D": 2, "F": 3},
+    "F": {"D": 6, "E": 3},
+}
+
+def dijkstra(g, start, goal):
+    queue = [(0, start, [start])]          # (ចម្ងាយ, node, ផ្លូវ)
+    seen = set()
+    while queue:
+        dist, node, path = heapq.heappop(queue)   # យក node ជិតបំផុតមុន
+        if node == goal:
+            return dist, path
+        if node in seen:
+            continue
+        seen.add(node)
+        for nxt, w in g[node].items():
+            if nxt not in seen:
+                heapq.heappush(queue, (dist + w, nxt, path + [nxt]))
+
+d, p = dijkstra(graph, "A", "F")
+print("ផ្លូវ:", " → ".join(p), "| ចម្ងាយ:", d)
+print("Degree (ចំនួនភ្ជាប់):", {n: len(e) for n, e in graph.items()})
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>ផ្លូវ: A → C → B → D → E → F | ចម្ងាយ: 13
+Degree (ចំនួនភ្ជាប់): {&#x27;A&#x27;: 2, &#x27;B&#x27;: 3, &#x27;C&#x27;: 4, &#x27;D&#x27;: 4, &#x27;E&#x27;: 3, &#x27;F&#x27;: 2}</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>graph</code> — Dictionary៖ Node → {Node ជាប់: ទម្ងន់} (Adjacency list)។</li><li><code class='i'>heapq</code> — Priority queue ដែលតែងតែផ្តល់ធាតុតូចបំផុត → Node ជិតបំផុតត្រូវពិនិត្យមុន។</li><li><code class='i'>seen</code> — ចងចាំ Node ដែលដឹងផ្លូវខ្លីបំផុតហើយ កុំឲ្យពិនិត្យម្តងទៀត។</li><li>ពេលដល់ <code class='i'>goal</code> → ចម្ងាយដែលទទួលបានគឺខ្លីបំផុតជានិច្ច (ទម្ងន់មិនអវិជ្ជមាន)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៤</h4><p>ក្នុងរូបភាពខាងលើ បើ Edge C–E ចុះមក 1 តើផ្លូវខ្លីបំផុត A→F ប្តូរទៅជាអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>A→C→E→F = 2 + 1 + 3 = <b>6</b> (ប្តូរទម្ងន់ C–E ពី 8 ទៅ 1 ក្នុង graph ហើយរត់ម្តងទៀត)</p></details></div>
+
+</section>
+<section id="l15">
+<h2><span class="badge">មេរៀន ១៥</span>Big-O, Recursion &amp; Algorithm</h2>
+
+<figure class="fig"><svg viewBox="0 0 720 340" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="720" height="340" fill="#fff"/><line x1="70" y1="300" x2="670" y2="300" stroke="#334155" stroke-width="2"/><line x1="70" y1="300" x2="70" y2="40" stroke="#334155" stroke-width="2"/><polyline points="76.0,297.4 82.0,297.4 88.0,297.4 94.0,297.4 100.0,297.4 106.0,297.4 112.0,297.4 118.0,297.4 124.0,297.4 130.0,297.4 136.0,297.4 142.0,297.4 148.0,297.4 154.0,297.4 160.0,297.4 166.0,297.4 172.0,297.4 178.0,297.4 184.0,297.4 190.0,297.4 196.0,297.4 202.0,297.4 208.0,297.4 214.0,297.4 220.0,297.4 226.0,297.4 232.0,297.4 238.0,297.4 244.0,297.4 250.0,297.4 256.0,297.4 262.0,297.4 268.0,297.4 274.0,297.4 280.0,297.4 286.0,297.4 292.0,297.4 298.0,297.4 304.0,297.4 310.0,297.4 316.0,297.4 322.0,297.4 328.0,297.4 334.0,297.4 340.0,297.4 346.0,297.4 352.0,297.4 358.0,297.4 364.0,297.4 370.0,297.4 376.0,297.4 382.0,297.4 388.0,297.4 394.0,297.4 400.0,297.4 406.0,297.4 412.0,297.4 418.0,297.4 424.0,297.4 430.0,297.4 436.0,297.4 442.0,297.4 448.0,297.4 454.0,297.4 460.0,297.4 466.0,297.4 472.0,297.4 478.0,297.4 484.0,297.4 490.0,297.4 496.0,297.4 502.0,297.4 508.0,297.4 514.0,297.4 520.0,297.4 526.0,297.4 532.0,297.4 538.0,297.4 544.0,297.4 550.0,297.4 556.0,297.4 562.0,297.4 568.0,297.4 574.0,297.4 580.0,297.4 586.0,297.4 592.0,297.4 598.0,297.4 604.0,297.4 610.0,297.4 616.0,297.4 622.0,297.4 628.0,297.4 634.0,297.4 640.0,297.4 646.0,297.4 652.0,297.4 658.0,297.4 664.0,297.4 670.0,297.4" fill="none" stroke="#059669" stroke-width="3.5"/><rect x="550" y="40" width="14" height="14" rx="3" fill="#059669"/><text x="570" y="52" text-anchor="start" font-size="13.5" font-weight="700" fill="#059669">O(1)</text><polyline points="76.0,299.3 82.0,298.7 88.0,298.2 94.0,297.8 100.0,297.4 106.0,297.0 112.0,296.7 118.0,296.4 124.0,296.1 130.0,295.9 136.0,295.6 142.0,295.4 148.0,295.2 154.0,295.0 160.0,294.8 166.0,294.6 172.0,294.4 178.0,294.3 184.0,294.1 190.0,294.0 196.0,293.8 202.0,293.7 208.0,293.5 214.0,293.4 220.0,293.3 226.0,293.2 232.0,293.0 238.0,292.9 244.0,292.8 250.0,292.7 256.0,292.6 262.0,292.5 268.0,292.4 274.0,292.3 280.0,292.2 286.0,292.1 292.0,292.0 298.0,291.9 304.0,291.8 310.0,291.8 316.0,291.7 322.0,291.6 328.0,291.5 334.0,291.4 340.0,291.4 346.0,291.3 352.0,291.2 358.0,291.1 364.0,291.1 370.0,291.0 376.0,290.9 382.0,290.9 388.0,290.8 394.0,290.7 400.0,290.7 406.0,290.6 412.0,290.6 418.0,290.5 424.0,290.4 430.0,290.4 436.0,290.3 442.0,290.3 448.0,290.2 454.0,290.2 460.0,290.1 466.0,290.0 472.0,290.0 478.0,289.9 484.0,289.9 490.0,289.8 496.0,289.8 502.0,289.7 508.0,289.7 514.0,289.6 520.0,289.6 526.0,289.6 532.0,289.5 538.0,289.5 544.0,289.4 550.0,289.4 556.0,289.3 562.0,289.3 568.0,289.2 574.0,289.2 580.0,289.2 586.0,289.1 592.0,289.1 598.0,289.0 604.0,289.0 610.0,289.0 616.0,288.9 622.0,288.9 628.0,288.8 634.0,288.8 640.0,288.8 646.0,288.7 652.0,288.7 658.0,288.7 664.0,288.6 670.0,288.6" fill="none" stroke="#0891b2" stroke-width="3.5"/><rect x="550" y="64" width="14" height="14" rx="3" fill="#0891b2"/><text x="570" y="76" text-anchor="start" font-size="13.5" font-weight="700" fill="#0891b2">O(log n)</text><polyline points="76.0,296.9 82.0,296.4 88.0,295.8 94.0,295.3 100.0,294.8 106.0,294.3 112.0,293.8 118.0,293.2 124.0,292.7 130.0,292.2 136.0,291.7 142.0,291.2 148.0,290.6 154.0,290.1 160.0,289.6 166.0,289.1 172.0,288.6 178.0,288.0 184.0,287.5 190.0,287.0 196.0,286.5 202.0,286.0 208.0,285.4 214.0,284.9 220.0,284.4 226.0,283.9 232.0,283.4 238.0,282.8 244.0,282.3 250.0,281.8 256.0,281.3 262.0,280.8 268.0,280.2 274.0,279.7 280.0,279.2 286.0,278.7 292.0,278.2 298.0,277.6 304.0,277.1 310.0,276.6 316.0,276.1 322.0,275.6 328.0,275.0 334.0,274.5 340.0,274.0 346.0,273.5 352.0,273.0 358.0,272.4 364.0,271.9 370.0,271.4 376.0,270.9 382.0,270.4 388.0,269.8 394.0,269.3 400.0,268.8 406.0,268.3 412.0,267.8 418.0,267.2 424.0,266.7 430.0,266.2 436.0,265.7 442.0,265.2 448.0,264.6 454.0,264.1 460.0,263.6 466.0,263.1 472.0,262.6 478.0,262.0 484.0,261.5 490.0,261.0 496.0,260.5 502.0,260.0 508.0,259.4 514.0,258.9 520.0,258.4 526.0,257.9 532.0,257.4 538.0,256.8 544.0,256.3 550.0,255.8 556.0,255.3 562.0,254.8 568.0,254.2 574.0,253.7 580.0,253.2 586.0,252.7 592.0,252.2 598.0,251.6 604.0,251.1 610.0,250.6 616.0,250.1 622.0,249.6 628.0,249.0 634.0,248.5 640.0,248.0 646.0,247.5 652.0,247.0 658.0,246.4 664.0,245.9 670.0,245.4" fill="none" stroke="#2563eb" stroke-width="3.5"/><rect x="550" y="88" width="14" height="14" rx="3" fill="#2563eb"/><text x="570" y="100" text-anchor="start" font-size="13.5" font-weight="700" fill="#2563eb">O(n)</text><polyline points="76.0,299.2 82.0,298.2 88.0,297.2 94.0,296.0 100.0,294.8 106.0,293.5 112.0,292.1 118.0,290.7 124.0,289.2 130.0,287.6 136.0,286.0 142.0,284.4 148.0,282.7 154.0,281.0 160.0,279.2 166.0,277.4 172.0,275.5 178.0,273.7 184.0,271.8 190.0,269.8 196.0,267.8 202.0,265.8 208.0,263.8 214.0,261.8 220.0,259.7 226.0,257.6 232.0,255.4 238.0,253.3 244.0,251.1 250.0,248.9 256.0,246.7 262.0,244.4 268.0,242.2 274.0,239.9 280.0,237.6 286.0,235.3 292.0,232.9 298.0,230.6 304.0,228.2 310.0,225.8 316.0,223.4 322.0,221.0 328.0,218.6 334.0,216.1 340.0,213.6 346.0,211.1 352.0,208.6 358.0,206.1 364.0,203.6 370.0,201.1 376.0,198.5 382.0,195.9 388.0,193.4 394.0,190.8 400.0,188.1 406.0,185.5 412.0,182.9 418.0,180.3 424.0,177.6 430.0,174.9 436.0,172.2 442.0,169.6 448.0,166.9 454.0,164.1 460.0,161.4 466.0,158.7 472.0,155.9 478.0,153.2 484.0,150.4 490.0,147.6 496.0,144.8 502.0,142.0 508.0,139.2 514.0,136.4 520.0,133.6 526.0,130.8 532.0,127.9 538.0,125.1 544.0,122.2 550.0,119.3 556.0,116.5 562.0,113.6 568.0,110.7 574.0,107.8 580.0,104.8 586.0,101.9 592.0,99.0 598.0,96.1 604.0,93.1 610.0,90.2 616.0,87.2 622.0,84.2 628.0,81.2 634.0,78.3 640.0,75.3 646.0,72.3 652.0,69.2 658.0,66.2 664.0,63.2 670.0,60.2" fill="none" stroke="#7c3aed" stroke-width="3.5"/><rect x="550" y="112" width="14" height="14" rx="3" fill="#7c3aed"/><text x="570" y="124" text-anchor="start" font-size="13.5" font-weight="700" fill="#7c3aed">O(n log n)</text><polyline points="76.0,296.3 82.0,294.9 88.0,293.3 94.0,291.6 100.0,289.6 106.0,287.4 112.0,285.0 118.0,282.4 124.0,279.6 130.0,276.6 136.0,273.4 142.0,269.9 148.0,266.3 154.0,262.5 160.0,258.4 166.0,254.1 172.0,249.7 178.0,245.0 184.0,240.1 190.0,235.0 196.0,229.7 202.0,224.2 208.0,218.5 214.0,212.5 220.0,206.4 226.0,200.1 232.0,193.5 238.0,186.7 244.0,179.8 250.0,172.6 256.0,165.2 262.0,157.6 268.0,149.8 274.0,141.8 280.0,133.6 286.0,125.2 292.0,116.5 298.0,107.7 304.0,98.7 310.0,89.4 316.0,79.9 322.0,70.3 328.0,60.4 334.0,50.3 340.0,40.0 346.0,40.0 352.0,40.0 358.0,40.0 364.0,40.0 370.0,40.0 376.0,40.0 382.0,40.0 388.0,40.0 394.0,40.0 400.0,40.0 406.0,40.0 412.0,40.0 418.0,40.0 424.0,40.0 430.0,40.0 436.0,40.0 442.0,40.0 448.0,40.0 454.0,40.0 460.0,40.0 466.0,40.0 472.0,40.0 478.0,40.0 484.0,40.0 490.0,40.0 496.0,40.0 502.0,40.0 508.0,40.0 514.0,40.0 520.0,40.0 526.0,40.0 532.0,40.0 538.0,40.0 544.0,40.0 550.0,40.0 556.0,40.0 562.0,40.0 568.0,40.0 574.0,40.0 580.0,40.0 586.0,40.0 592.0,40.0 598.0,40.0 604.0,40.0 610.0,40.0 616.0,40.0 622.0,40.0 628.0,40.0 634.0,40.0 640.0,40.0 646.0,40.0 652.0,40.0 658.0,40.0 664.0,40.0 670.0,40.0" fill="none" stroke="#ea580c" stroke-width="3.5"/><rect x="550" y="136" width="14" height="14" rx="3" fill="#ea580c"/><text x="570" y="148" text-anchor="start" font-size="13.5" font-weight="700" fill="#ea580c">O(n²)</text><polyline points="76.0,294.0 82.0,293.1 88.0,292.1 94.0,290.9 100.0,289.6 106.0,288.1 112.0,286.3 118.0,284.2 124.0,281.9 130.0,279.2 136.0,276.1 142.0,272.6 148.0,268.5 154.0,263.8 160.0,258.4 166.0,252.2 172.0,245.1 178.0,236.9 184.0,227.6 190.0,216.8 196.0,204.4 202.0,190.2 208.0,173.9 214.0,155.1 220.0,133.6 226.0,108.9 232.0,80.4 238.0,47.8 244.0,40.0 250.0,40.0 256.0,40.0 262.0,40.0 268.0,40.0 274.0,40.0 280.0,40.0 286.0,40.0 292.0,40.0 298.0,40.0 304.0,40.0 310.0,40.0 316.0,40.0 322.0,40.0 328.0,40.0 334.0,40.0 340.0,40.0 346.0,40.0 352.0,40.0 358.0,40.0 364.0,40.0 370.0,40.0 376.0,40.0 382.0,40.0 388.0,40.0 394.0,40.0 400.0,40.0 406.0,40.0 412.0,40.0 418.0,40.0 424.0,40.0 430.0,40.0 436.0,40.0 442.0,40.0 448.0,40.0 454.0,40.0 460.0,40.0 466.0,40.0 472.0,40.0 478.0,40.0 484.0,40.0 490.0,40.0 496.0,40.0 502.0,40.0 508.0,40.0 514.0,40.0 520.0,40.0 526.0,40.0 532.0,40.0 538.0,40.0 544.0,40.0 550.0,40.0 556.0,40.0 562.0,40.0 568.0,40.0 574.0,40.0 580.0,40.0 586.0,40.0 592.0,40.0 598.0,40.0 604.0,40.0 610.0,40.0 616.0,40.0 622.0,40.0 628.0,40.0 634.0,40.0 640.0,40.0 646.0,40.0 652.0,40.0 658.0,40.0 664.0,40.0 670.0,40.0" fill="none" stroke="#dc2626" stroke-width="3.5"/><rect x="550" y="160" width="14" height="14" rx="3" fill="#dc2626"/><text x="570" y="172" text-anchor="start" font-size="13.5" font-weight="700" fill="#dc2626">O(2ⁿ)</text><text x="370.0" y="330" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">n = ចំនួនទិន្នន័យ →</text><text x="22" y="170" font-size="13" fill="#334155" transform="rotate(-90 22 170)" text-anchor="middle">ពេល/ជំហាន</text></svg><figcaption>🖼️ Big-O — ពេលដំណើរការកើនយ៉ាងម៉េចពេលទិន្នន័យកើន</figcaption></figure>
+
+<table><tr><th>Big-O</th><th>ឈ្មោះ</th><th>ឧទាហរណ៍</th><th>n = 1 លាន</th></tr><tr><td>O(1)</td><td>Constant</td><td>យក list[5], dict lookup</td><td>1</td></tr><tr><td>O(log n)</td><td>Logarithmic</td><td>Binary search</td><td>≈ 20</td></tr><tr><td>O(n)</td><td>Linear</td><td>រកម្តងមួយៗ</td><td>1,000,000</td></tr><tr><td>O(n log n)</td><td></td><td>Sort ល្អ (Python sort)</td><td>≈ 20 លាន</td></tr><tr><td>O(n²)</td><td>Quadratic</td><td>Loop ក្នុង Loop</td><td>10¹² 😱</td></tr><tr><td>O(2ⁿ)</td><td>Exponential</td><td>Fibonacci recursion ឆោត</td><td>មិនអាច</td></tr></table>
+
+<figure class="fig"><svg viewBox="0 0 760 250" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="760" height="250" fill="#fff"/><line x1="380" y1="44" x2="220" y2="86" stroke="#94a3b8" stroke-width="2.5"/><line x1="380" y1="44" x2="540" y2="86" stroke="#94a3b8" stroke-width="2.5"/><line x1="220" y1="114" x2="130" y2="156" stroke="#94a3b8" stroke-width="2.5"/><line x1="220" y1="114" x2="310" y2="156" stroke="#94a3b8" stroke-width="2.5"/><line x1="540" y1="114" x2="470" y2="156" stroke="#94a3b8" stroke-width="2.5"/><line x1="540" y1="114" x2="610" y2="156" stroke="#94a3b8" stroke-width="2.5"/><line x1="130" y1="184" x2="70" y2="216" stroke="#94a3b8" stroke-width="2.5"/><line x1="130" y1="184" x2="190" y2="216" stroke="#94a3b8" stroke-width="2.5"/><rect x="336" y="16" width="88" height="28" rx="14" fill="#7c3aed"/><text x="380" y="35" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">fib(4)</text><rect x="176" y="86" width="88" height="28" rx="14" fill="#7c3aed"/><text x="220" y="105" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">fib(3)</text><rect x="496" y="86" width="88" height="28" rx="14" fill="#7c3aed"/><text x="540" y="105" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">fib(2)</text><rect x="86" y="156" width="88" height="28" rx="14" fill="#7c3aed"/><text x="130" y="175" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">fib(2)</text><rect x="266" y="156" width="88" height="28" rx="14" fill="#059669"/><text x="310" y="175" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">fib(1)</text><rect x="426" y="156" width="88" height="28" rx="14" fill="#059669"/><text x="470" y="175" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">fib(1)</text><rect x="566" y="156" width="88" height="28" rx="14" fill="#059669"/><text x="610" y="175" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">fib(0)</text><rect x="26" y="216" width="88" height="28" rx="14" fill="#059669"/><text x="70" y="235" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">fib(1)</text><rect x="146" y="216" width="88" height="28" rx="14" fill="#059669"/><text x="190" y="235" text-anchor="middle" font-size="13.5" font-weight="700" fill="#fff">fib(0)</text><text x="600" y="236" text-anchor="middle" font-size="13" font-weight="700" fill="#059669">🟢 Base case = ឈប់ហៅ</text></svg><figcaption>🖼️ Recursion tree នៃ fib(4) — fib(2) ត្រូវគណនាស្ទួន</figcaption></figure>
+
+<script type="text/x-code" data-lang="py" data-label="bigo.py">
+import time
+from functools import cache
+
+data = list(range(1_000_000))
+
+def linear_search(arr, x):              # O(n)
+    for i, v in enumerate(arr):
+        if v == x:
+            return i, i + 1             # index, ចំនួនជំហាន
+
+def binary_search(arr, x):              # O(log n) — arr ត្រូវតម្រៀបរួច
+    lo, hi, steps = 0, len(arr) - 1, 0
+    while lo <= hi:
+        steps += 1
+        mid = (lo + hi) // 2
+        if arr[mid] == x: return mid, steps
+        if arr[mid] < x: lo = mid + 1
+        else: hi = mid - 1
+
+print("Linear :", linear_search(data, 999_999))
+print("Binary :", binary_search(data, 999_999))
+
+def fib_slow(n):                        # O(2^n)
+    return n if n < 2 else fib_slow(n - 1) + fib_slow(n - 2)
+
+@cache                                  # ចងចាំលទ្ធផល → O(n)
+def fib_fast(n):
+    return n if n < 2 else fib_fast(n - 1) + fib_fast(n - 2)
+
+t = time.perf_counter(); fib_slow(30); slow = time.perf_counter() - t
+t = time.perf_counter(); fib_fast(30); fast = time.perf_counter() - t
+print(f"fib(30) slow ≈ {slow:.2f}s | fast ≈ {fast*1000:.3f}ms | fib(90) = {fib_fast(90):,}")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>Linear : (999999, 1000000)
+Binary : (999999, 20)
+fib(30) slow ≈ 0.07s | fast ≈ 0.021ms | fib(90) = 2,880,067,194,370,816,120</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>linear_search</code> ពិនិត្យម្តងមួយៗ → 1 លានជំហាន។</li><li><code class='i'>binary_search</code> ចែក lo..hi ពាក់កណ្តាលរាល់ដង → ត្រឹម 20 ជំហាន (log₂ 1,000,000)។</li><li><b>Recursion</b> = Function ហៅខ្លួនឯង · ត្រូវមាន <b>Base case</b> (<code class='i'>n &lt; 2</code>) ដើម្បីឈប់។</li><li><code class='i'>@cache</code> (Memoization) — ចងចាំលទ្ធផលដែលគណនារួច ការពារការគណនាស្ទួន → លឿនរាប់ពាន់ដង។</li><li><code class='i'>time.perf_counter()</code> — វាស់ពេល (លទ្ធផលពេលវេលាប្រែប្រួលតាមម៉ាស៊ីន)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៥</h4><p>Code ខាងក្រោមជា Big-O អ្វី? <code class='i'>for a in L: for b in L: if a+b==10: print(a,b)</code></p><details><summary>មើលចម្លើយ</summary><p>Loop ក្នុង Loop → <b>O(n²)</b>។ កែជា O(n)៖ ប្រើ Set — <code class='i'>s=set(L); [x for x in L if 10-x in s]</code></p></details></div>
+
+</section>
+<section id="l16">
+<h2><span class="badge">មេរៀន ១៦</span>Modular Arithmetic, Prime &amp; Cryptography</h2>
+
+<figure class="fig"><svg viewBox="0 0 700 290" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="700" height="290" fill="#fff"/><circle cx="170" cy="145" r="115" fill="#f5f3ff" stroke="#7c3aed" stroke-width="4"/><text x="170" y="59" text-anchor="middle" font-size="17" font-weight="700" fill="#4c1d95">0</text><text x="216" y="71" text-anchor="middle" font-size="17" font-weight="700" fill="#4c1d95">1</text><text x="250" y="105" text-anchor="middle" font-size="17" font-weight="700" fill="#4c1d95">2</text><text x="262" y="151" text-anchor="middle" font-size="17" font-weight="700" fill="#dc2626">3</text><text x="250" y="197" text-anchor="middle" font-size="17" font-weight="700" fill="#4c1d95">4</text><text x="216" y="231" text-anchor="middle" font-size="17" font-weight="700" fill="#4c1d95">5</text><text x="170" y="243" text-anchor="middle" font-size="17" font-weight="700" fill="#4c1d95">6</text><text x="124" y="231" text-anchor="middle" font-size="17" font-weight="700" fill="#4c1d95">7</text><text x="90" y="197" text-anchor="middle" font-size="17" font-weight="700" fill="#4c1d95">8</text><text x="78" y="151" text-anchor="middle" font-size="17" font-weight="700" fill="#4c1d95">9</text><text x="90" y="105" text-anchor="middle" font-size="17" font-weight="700" fill="#4c1d95">10</text><text x="124" y="71" text-anchor="middle" font-size="17" font-weight="700" fill="#4c1d95">11</text><line x1="170" y1="145" x2="235" y2="145" stroke="#dc2626" stroke-width="5" stroke-linecap="round"/><circle cx="170" cy="145" r="6" fill="#4c1d95"/><text x="480" y="70" text-anchor="middle" font-size="18" font-weight="700" fill="#0f172a">Modular Arithmetic (mod 12)</text><text x="480" y="110" text-anchor="middle" font-size="17" font-weight="700" fill="#dc2626">9 + 6 = 15 → 15 mod 12 = 3</text><text x="480" y="150" text-anchor="middle" font-size="15" font-weight="400" fill="#334155">Python: (9 + 6) % 12 == 3</text><text x="480" y="190" text-anchor="middle" font-size="14" font-weight="400" fill="#334155">ប្រើក្នុង Hash · Cryptography · Loop វិលជុំ</text><text x="480" y="220" text-anchor="middle" font-size="14" font-weight="400" fill="#334155">ថ្ងៃនៃសប្តាហ៍ = (ថ្ងៃ + n) mod 7</text></svg><figcaption>🖼️ Modular arithmetic ដូចនាឡិកា — លេខវិលជុំ</figcaption></figure>
+
+<script type="text/x-code" data-lang="py" data-label="crypto.py">
+# 1) Caesar cipher (Julius Caesar ~50 BC) = shift mod 26
+def caesar(text, k):
+    return "".join(chr((ord(c) - 65 + k) % 26 + 65) if c.isupper() else c for c in text)
+enc = caesar("HELLO IT", 3)
+print("Caesar:", enc, "→", caesar(enc, -3))
+
+# 2) Check digit (ដូច ISBN/លេខកាត) — Luhn algorithm
+def luhn_ok(number):
+    digits = [int(d) for d in str(number)][::-1]
+    total = sum(d if i % 2 == 0 else (d * 2 - 9 if d * 2 > 9 else d * 2) for i, d in enumerate(digits))
+    return total % 10 == 0
+print("Luhn 79927398713:", luhn_ok(79927398713))
+
+# 3) Prime numbers
+def is_prime(n):
+    return n > 1 and all(n % i for i in range(2, int(n ** .5) + 1))
+print("Primes < 40:", [n for n in range(40) if is_prime(n)])
+
+# 4) RSA តូចសម្រាប់រៀន (លេខពិតប្រើ 2048 bits!)
+p, q = 61, 53
+n, phi = p * q, (p - 1) * (q - 1)
+e = 17
+d = pow(e, -1, phi)                 # inverse mod phi
+msg = 65
+cipher = pow(msg, e, n)             # encrypt: m^e mod n
+plain = pow(cipher, d, n)           # decrypt: c^d mod n
+print(f"RSA n={n} e={e} d={d} | {msg} → {cipher} → {plain}")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>Caesar: KHOOR LW → HELLO IT
+Luhn 79927398713: True
+Primes &lt; 40: [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]
+RSA n=3233 e=17 d=2753 | 65 → 2790 → 65</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>(x + k) % 26</code> — រំកិលអក្សរ ហើយវិលពី Z ទៅ A (Modulo)។</li><li><b>Luhn</b> — គុណ 2 រាល់ខ្ទង់ទីពីរពីស្តាំ ហើយផលបូកត្រូវចែកដាច់នឹង 10 → រកការវាយលេខកាតខុស។</li><li><code class='i'>all(n % i for i in ...)</code> — Prime បើគ្មានលេខណាចែកដាច់ (ពិនិត្យត្រឹម √n)។</li><li>RSA៖ សោសាធារណៈ (n, e) អ៊ិនគ្រីប · សោឯកជន d ដោះ — សុវត្ថិភាពព្រោះការបំបែក n ធំ (≈617 ខ្ទង់) ទៅជា p×q ពិបាកខ្លាំង។</li><li><code class='i'>pow(a, b, m)</code> — គណនា aᵇ mod m យ៉ាងលឿន · <code class='i'>pow(e, -1, phi)</code> — Inverse modulo។</li><li>⚠️ Caesar និង RSA តូចនេះសម្រាប់រៀនតែប៉ុណ្ណោះ — ក្នុងការងារពិតប្រើ Library ដូចជា <code class='i'>cryptography</code>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៦</h4><p>① 25 mod 7 = ? ② ថ្ងៃនេះថ្ងៃសៅរ៍ (6)។ 100 ថ្ងៃទៀតជាថ្ងៃអ្វី? (0=អាទិត្យ)</p><details><summary>មើលចម្លើយ</summary><p>① <b>4</b> ② (6 + 100) % 7 = 106 % 7 = <b>1 → ថ្ងៃច័ន្ទ</b></p></details></div>
+
+</section>
+<section id="cheat">
+<h2>📋 Cheat Sheet រូបមន្ត</h2>
+
+<table><tr><th>ប្រធានបទ</th><th>រូបមន្ត / Python</th></tr><tr><td>Binary</td><td>bin(13) · int('1101', 2) · 1 Byte = 8 bits = 0–255</td></tr><tr><td>ចែក</td><td>/ ចែក · // យកគត់ · % សំណល់ · math.ceil()</td></tr><tr><td>%</td><td>x% នៃ A = A·x/100 · កើន% = (ថ្មី−ចាស់)/ចាស់</td></tr><tr><td>Power/Log</td><td>2ⁿ តម្លៃ · ⌈log₂N⌉ bits · Binary search = log₂ n ជំហាន</td></tr><tr><td>Set</td><td>A | B · A &amp; B · A − B · A ^ B · A &lt;= B</td></tr><tr><td>Logic</td><td>and · or · not · De Morgan</td></tr><tr><td>Bitwise</td><td>&amp; mask · | set · ^ toggle · &lt;&lt; ×2 · &gt;&gt; ÷2 · chmod rwx=421</td></tr><tr><td>Linear</td><td>y = mx + b · ប្រសព្វ: m₁x+b₁ = m₂x+b₂</td></tr><tr><td>Series</td><td>1+…+n = n(n+1)/2 · aₙ = a₁·rⁿ⁻¹</td></tr><tr><td>Counting</td><td>Product rule · P(n,r) · C(n,r) · n!</td></tr><tr><td>Probability</td><td>P = អំណោយផល/ទាំងអស់ · P(A∩B) = P(A)P(B) · 1−P</td></tr><tr><td>Stats</td><td>mean · median · mode · stdev</td></tr><tr><td>Big-O</td><td>O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n²) &lt; O(2ⁿ)</td></tr><tr><td>Modular</td><td>(a+b) % m · pow(a,b,m) · Prime ពិនិត្យត្រឹម √n</td></tr></table>
+
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងអាជីព៖ Data Report ពិន្ទុសិស្ស</h2>
+
+<p>ប្រើគណិតស្ទើរតែគ្រប់មេរៀន ក្នុងកម្មវិធីតែមួយ៖ ស្ថិតិ, ភាគរយ, Set, Logic, Sort (Big-O) និង Hash — ដូចការងារ Data Analyst/Developer ពិត។</p>
+<script type="text/x-code" data-lang="py" data-label="report.py">
+import statistics as st, hashlib
+
+students = {
+    "Dara":  {"math": 85, "it": 92, "english": 78},
+    "Sokha": {"math": 45, "it": 70, "english": 66},
+    "Vanna": {"math": 95, "it": 88, "english": 90},
+    "Lina":  {"math": 62, "it": 49, "english": 81},
+    "Rith":  {"math": 74, "it": 81, "english": 55},
+}
+
+def grade(avg):
+    return "A" if avg >= 90 else "B" if avg >= 80 else "C" if avg >= 65 else "D" if avg >= 50 else "F"
+
+report = []
+for name, sc in students.items():
+    avg = st.mean(sc.values())                         # ស្ថិតិ
+    failed = {s for s, v in sc.items() if v < 50}      # Set
+    passed = avg >= 50 and not failed                  # Logic
+    report.append((name, round(avg, 1), grade(avg), passed, failed))
+
+report.sort(key=lambda r: r[1], reverse=True)          # O(n log n)
+print(f"{'#':<2} {'ឈ្មោះ':<6} {'មធ្យម':>6} និទ្ទេស  ស្ថានភាព")
+for i, (n, a, g, p, f) in enumerate(report, 1):
+    print(f"{i:<2} {n:<6} {a:>6}   {g}     {'✅' if p else '❌ ' + ','.join(sorted(f)) if f else '❌'}")
+
+avgs = [r[1] for r in report]
+pass_rate = sum(r[3] for r in report) / len(report)    # ភាគរយ
+print(f"\nMean ថ្នាក់ {st.mean(avgs):.1f} · Median {st.median(avgs)} · σ {st.stdev(avgs):.1f} · ជាប់ {pass_rate:.0%}")
+for subject in ["math", "it", "english"]:
+    vals = [s[subject] for s in students.values()]
+    print(f"{subject:<8} max {max(vals)} · min {min(vals)} · mean {st.mean(vals):.1f}")
+
+# Integrity: Hash របាយការណ៍ ដើម្បីដឹងថាគ្មានអ្នកកែ
+digest = hashlib.sha256(str(report).encode()).hexdigest()[:16]
+print("Report SHA-256:", digest)
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>#  ឈ្មោះ   មធ្យម និទ្ទេស  ស្ថានភាព
+1  Vanna      91   A     ✅
+2  Dara       85   B     ✅
+3  Rith       70   C     ✅
+4  Lina       64   D     ❌ it
+5  Sokha    60.3   D     ❌ math
+
+Mean ថ្នាក់ 74.1 · Median 70 · σ 13.4 · ជាប់ 60%
+math     max 95 · min 45 · mean 72.2
+it       max 92 · min 49 · mean 76.0
+english  max 90 · min 55 · mean 74.0
+Report SHA-256: 87b826af7f3194fb</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Dict ក្នុង Dict</b> — សិស្ស → មុខវិជ្ជា → ពិន្ទុ (ដូច Table)។</li><li><code class='i'>st.mean</code> មធ្យម · <code class='i'>{s for ...}</code> Set មុខវិជ្ជាធ្លាក់ · <code class='i'>and not</code> Logic ជាប់/ធ្លាក់។</li><li><code class='i'>sort(key=..., reverse=True)</code> — តម្រៀបពីខ្ពស់ទៅទាប (Timsort = O(n log n))។</li><li><code class='i'>sum(True/False)</code> រាប់ចំនួនជាប់ → ចែកដើម្បីបាន % ។</li><li>SHA-256 — ប្តូរពិន្ទុតែ 1 Hash ប្តូរទាំងស្រុង → ការពារការកែលួច (Integrity)។</li></ol></div>
+
+</section>
+<section id="pro-app">
+<h2>💻 Math Toolkit Pro (App)</h2>
+
+<p>ឧបករណ៍ ៦ ក្នុងមួយ សាកលេងផ្ទាល់៖ <b>Bitwise visualizer</b> · <b>Truth table generator</b> · <b>Statistics + Histogram</b> · <b>Permutation/Combination + Password entropy</b> · <b>Big-O race</b> · <b>Quiz ២០ សំណួរ</b>។</p>
+
+<div class="itk" id="itk">
+  <div class="itk-tabs">
+    <button class="on" data-t="bit">🎛️ Bitwise</button><button data-t="tt">✅ Truth Table</button>
+    <button data-t="st">📊 Statistics</button><button data-t="cnt">🧮 Counting</button>
+    <button data-t="bo">⏱️ Big-O</button><button data-t="quiz">🏆 Quiz</button>
+  </div>
+  <div class="itk-p on" id="t-bit">
+    <div class="itk-row"><label>A <input id="bA" type="number" value="200" min="0" max="255"></label>
+      <label>Operator <select id="bOp"><option>&amp;</option><option>|</option><option>^</option><option>&lt;&lt;</option><option>&gt;&gt;</option><option>~</option></select></label>
+      <label>B <input id="bB" type="number" value="15" min="0" max="255"></label></div>
+    <div id="bView" class="itk-out"></div>
+  </div>
+  <div class="itk-p" id="t-tt">
+    <label>Expression (ប្រើ A B C, and or not xor, ( )) <input id="ttE" value="(A or B) and not C" style="width:100%;max-width:520px;font-family:'JetBrains Mono',monospace"></label>
+    <div class="itk-row">ឧទាហរណ៍៖ <button class="btn" data-ex="A and B">AND</button><button class="btn" data-ex="A xor B">XOR</button><button class="btn" data-ex="not (A and B) == (not A or not B)">De Morgan</button><button class="btn" data-ex="(A or B) and not C">Alarm</button></div>
+    <div id="ttOut" class="itk-out"></div>
+  </div>
+  <div class="itk-p" id="t-st">
+    <label>ទិន្នន័យ (ក្បៀស ឬដកឃ្លា) <input id="stIn" value="45, 58, 62, 67, 70, 71, 74, 75, 78, 80, 82, 85, 88, 91, 95" style="width:100%;max-width:620px"></label>
+    <div id="stOut" class="itk-out"></div><div id="stBars" class="itk-hist"></div>
+  </div>
+  <div class="itk-p" id="t-cnt">
+    <div class="itk-row"><label>n <input id="cN" type="number" value="10" min="0" max="170"></label><label>r <input id="cR" type="number" value="3" min="0" max="170"></label></div>
+    <div id="cOut" class="itk-out"></div>
+    <div class="itk-row" style="margin-top:12px"><label>ប្រវែង Password <input id="pL" type="number" value="12" min="1" max="64"></label>
+      <label>ប្រភេទតួ <select id="pS"><option value="10">លេខ (10)</option><option value="26">អក្សរតូច (26)</option><option value="62">អក្សរ+លេខ (62)</option><option value="94" selected>ទាំងអស់ (94)</option></select></label></div>
+    <div id="pOut" class="itk-out"></div>
+  </div>
+  <div class="itk-p" id="t-bo">
+    <label>n = <b id="boN">1000</b> <input id="boS" type="range" min="1" max="7" step="0.1" value="3" style="width:100%;max-width:520px"></label>
+    <div id="boOut" class="itk-bo"></div>
+  </div>
+  <div class="itk-p" id="t-quiz"><div id="qz"></div></div>
+</div>
+<script>
+(() => {
+  const $ = id => document.getElementById(id), kh = n => String(n).replace(/\d/g, d => "០១២៣៤៥៦៧៨៩"[d]);
+  document.querySelectorAll(".itk-tabs button").forEach(b => b.onclick = () => {
+    document.querySelectorAll(".itk-tabs button,.itk-p").forEach(x => x.classList.remove("on"));
+    b.classList.add("on"); $("t-" + b.dataset.t).classList.add("on");
+  });
+  const bits = (v, c) => `<div class="itk-bits">${[...((v >>> 0) & 255).toString(2).padStart(8, "0")].map((x, i) => `<span class="${x === "1" ? "on" : ""}" style="${x === "1" && c ? "background:" + c : ""}"><b>${x}</b><small>${128 >> i}</small></span>`).join("")}</div>`;
+  function bit() {
+    const a = (+$("bA").value) & 255, b = (+$("bB").value) & 255, op = $("bOp").value;
+    const r = { "&": a & b, "|": a | b, "^": a ^ b, "<<": (a << (b & 7)) & 255, ">>": a >> (b & 7), "~": (~a) & 255 }[op];
+    $("bB").disabled = op === "~";
+    $("bView").innerHTML = `<b>A = ${a}</b>${bits(a)}<b>B = ${op === "~" ? "—" : op === "<<" || op === ">>" ? (b & 7) + " (shift)" : b}</b>${op === "~" ? "" : bits(op === "<<" || op === ">>" ? b & 7 : b, "#7c3aed")}<b>A ${op} ${op === "~" ? "" : "B"} = ${r}</b> · hex ${r.toString(16).toUpperCase().padStart(2, "0")}${bits(r, "#059669")}`;
+  }
+  ["bA", "bB", "bOp"].forEach(i => $(i).addEventListener("input", bit)); bit();
+  function tt() {
+    const src = $("ttE").value, vars = ["A", "B", "C"].filter(v => new RegExp("\\b" + v + "\\b").test(src));
+    let js = src.replace(/\bxor\b/g, "!=").replace(/\band\b/g, "&&").replace(/\bor\b/g, "||").replace(/\bnot\b/g, "!").replace(/==/g, "===").replace(/!===/g, "!==");
+    if (/[^ABC()!&|=\s]/.test(js)) { $("ttOut").innerHTML = "❌ ប្រើតែ A B C and or not xor ( ) =="; return; }
+    let f; try { f = new Function(...vars, "return !!(" + js + ")"); } catch (e) { $("ttOut").innerHTML = "❌ Expression មិនត្រឹមត្រូវ"; return; }
+    const rows = []; let ones = 0;
+    for (let m = 0; m < 1 << vars.length; m++) {
+      const vals = vars.map((_, i) => !!(m >> (vars.length - 1 - i) & 1)); let out;
+      try { out = f(...vals); } catch (e) { $("ttOut").innerHTML = "❌ Error"; return; }
+      ones += out; rows.push(`<tr>${vals.map(v => `<td>${+v}</td>`).join("")}<td class="${out ? "t1" : "t0"}">${+out}</td></tr>`);
+    }
+    $("ttOut").innerHTML = `<table class="tt"><tr>${vars.map(v => `<th>${v}</th>`).join("")}<th>${src}</th></tr>${rows.join("")}</table>${ones === rows.length ? "✅ <b>Tautology</b> — ពិតជានិច្ច" : ones === 0 ? "❌ មិនពិតសោះ" : `ពិត ${ones}/${rows.length} ករណី`}`;
+  }
+  $("ttE").addEventListener("input", tt); document.querySelectorAll("[data-ex]").forEach(b => b.onclick = () => { $("ttE").value = b.dataset.ex; tt(); }); tt();
+  function st() {
+    const d = $("stIn").value.split(/[\s,]+/).filter(Boolean).map(Number).filter(x => !isNaN(x));
+    if (d.length < 2) { $("stOut").innerHTML = "បញ្ចូលលេខយ៉ាងតិច 2"; $("stBars").innerHTML = ""; return; }
+    const s = [...d].sort((a, b) => a - b), n = d.length, mean = d.reduce((a, b) => a + b) / n;
+    const med = n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2, cnt = {}; d.forEach(x => cnt[x] = (cnt[x] || 0) + 1);
+    const mx = Math.max(...Object.values(cnt)), mode = mx > 1 ? Object.keys(cnt).filter(k => cnt[k] === mx).join(", ") : "គ្មាន";
+    const sd = Math.sqrt(d.reduce((a, x) => a + (x - mean) ** 2, 0) / (n - 1)), out = d.filter(x => Math.abs(x - mean) > 2 * sd);
+    $("stOut").innerHTML = `<b>n</b> ${n} · <b>Sum</b> ${+d.reduce((a, b) => a + b).toFixed(4)}<br><b>Mean</b> ${mean.toFixed(2)} · <b>Median</b> ${med} · <b>Mode</b> ${mode}<br><b>Min</b> ${s[0]} · <b>Max</b> ${s[n - 1]} · <b>Range</b> ${s[n - 1] - s[0]}<br><b>Std dev (σ)</b> ${sd.toFixed(2)} · <b>Anomaly (&gt;2σ)</b> ${out.length ? out.join(", ") : "គ្មាន"}`;
+    const lo = s[0], hi = s[n - 1], k = Math.min(8, Math.max(3, Math.round(Math.sqrt(n)))), w = (hi - lo) / k || 1, bins = Array(k).fill(0);
+    d.forEach(x => bins[Math.min(k - 1, Math.floor((x - lo) / w))]++); const bm = Math.max(...bins);
+    $("stBars").innerHTML = bins.map((c, i) => `<div><i style="height:${c / bm * 120}px"></i><b>${c}</b><small>${+(lo + i * w).toFixed(1)}</small></div>`).join("");
+  }
+  $("stIn").addEventListener("input", st); st();
+  const fact = n => { let r = 1n; for (let i = 2n; i <= BigInt(n); i++) r *= i; return r; };
+  const fmt = b => { const s = b.toString(); return s.length > 15 ? s[0] + "." + s.slice(1, 4) + "×10^" + (s.length - 1) : (+s).toLocaleString(); };
+  function cnt() {
+    const n = +$("cN").value, r = +$("cR").value;
+    if (!(n >= 0 && r >= 0 && n <= 170)) return;
+    if (r > n) { $("cOut").innerHTML = "r ត្រូវតែ ≤ n"; } else {
+      const P = fact(n) / fact(n - r), C = P / fact(r);
+      $("cOut").innerHTML = `<b>${n}!</b> = ${fmt(fact(n))}<br><b>P(${n},${r})</b> (លំដាប់សំខាន់) = ${fmt(P)}<br><b>C(${n},${r})</b> (លំដាប់មិនសំខាន់) = ${fmt(C)}<br><b>${n}<sup>${r}</sup></b> (ជ្រើសស្ទួនបាន) = ${fmt(BigInt(n) ** BigInt(r))}`;
+    }
+    const L = +$("pL").value, S = +$("pS").value, bitsE = L * Math.log2(S), secs = 2 ** bitsE / 1e10;
+    const t = secs < 1 ? "តិចជាង 1 វិនាទី" : secs < 3600 ? (secs / 60).toFixed(1) + " នាទី" : secs < 86400 * 365 ? (secs / 86400).toFixed(1) + " ថ្ងៃ" : secs < 3.15e9 ? (secs / 3.15e7).toFixed(0) + " ឆ្នាំ" : (secs / 3.15e7).toExponential(1) + " ឆ្នាំ";
+    $("pOut").innerHTML = `ជម្រើស = ${S}<sup>${L}</sup> ≈ <b>${(2 ** bitsE).toExponential(2)}</b><br>Entropy = <b>${bitsE.toFixed(1)} bits</b> ${bitsE >= 60 ? "✅ ខ្លាំង" : bitsE >= 40 ? "⚠️ មធ្យម" : "❌ ខ្សោយ"}<br>ពេលទាយ (10¹⁰/វិនាទី) ≈ <b>${t}</b>`;
+  }
+  ["cN", "cR", "pL", "pS"].forEach(i => $(i).addEventListener("input", cnt)); cnt();
+  function bo() {
+    const n = Math.round(10 ** +$("boS").value); $("boN").textContent = n.toLocaleString();
+    const F = [["O(1)", 1, "#059669"], ["O(log n)", Math.log2(n), "#0891b2"], ["O(n)", n, "#2563eb"], ["O(n log n)", n * Math.log2(n), "#7c3aed"], ["O(n²)", n * n, "#ea580c"], ["O(2ⁿ)", 2 ** n, "#dc2626"]];
+    const sec = ops => { const s = ops / 1e9; return !isFinite(s) || s > 3.15e16 ? "លើសអាយុសកលលោក 🌌" : s < 1e-6 ? "< 1 μs" : s < 1e-3 ? (s * 1e6).toFixed(0) + " μs" : s < 1 ? (s * 1e3).toFixed(0) + " ms" : s < 3600 ? s.toFixed(1) + " s" : s < 3.15e7 ? (s / 86400).toFixed(1) + " ថ្ងៃ" : (s / 3.15e7).toExponential(1) + " ឆ្នាំ"; };
+    const mx = Math.log10(Math.max(2, n * n * 10));
+    $("boOut").innerHTML = F.map(([nm, v, c]) => `<div class="bo-row"><b style="color:${c}">${nm}</b><div class="bo-bar"><i style="width:${Math.min(100, Math.max(1, Math.log10(Math.max(1, v)) / mx * 100))}%;background:${c}"></i></div><span>${isFinite(v) && v < 1e15 ? Math.round(v).toLocaleString() : v.toExponential ? (isFinite(v) ? v.toExponential(1) : "∞") : v} ជំហាន · ${sec(v)}</span></div>`).join("") + "<small>សន្មត CPU 10⁹ ជំហាន/វិនាទី · របារជា Log scale</small>";
+  }
+  $("boS").addEventListener("input", bo); bo();
+  const Q = [["1101₂ ស្មើ Decimal?", ["11", "13", "15", "9"], 1], ["1 + 1 ក្នុង Binary =", ["2", "11", "10", "0"], 2], ["17 % 5 = ?", ["3", "2", "3.4", "12"], 1], ["17 // 5 = ?", ["3", "3.4", "2", "4"], 0], ["ហេតុអ្វី 0.1 + 0.2 ≠ 0.3 ក្នុង Python?", ["Python ខូច", "Float រក្សាជា Binary មិនជាក់លាក់", "ត្រូវប្រើ //", "ត្រូវប្រើ %"], 1], ["$200 បញ្ចុះ 25% នៅសល់?", ["$175", "$150", "$50", "$225"], 1], ["ត្រូវការប៉ុន្មាន bits ដើម្បីតំណាង 1000 តម្លៃ?", ["8", "9", "10", "1000"], 2], ["IPv4 មាន 2^? address", ["8", "16", "32", "128"], 2], ["A={1,2,3}, B={2,3,4} → A ∩ B =", ["{1,4}", "{2,3}", "{1,2,3,4}", "{}"], 1], ["True and (not True) =", ["True", "False", "1", "Error"], 1], ["XOR ផ្តល់ 1 ពេល?", ["ទាំងពីរ 1", "ទាំងពីរ 0", "Input ខុសគ្នា", "ជានិច្ច"], 2], ["chmod 755 → Owner មានសិទ្ធិ?", ["r--", "rw-", "rwx", "r-x"], 2], ["192.168.5.99 AND 255.255.255.0 =", ["192.168.5.0", "192.168.0.0", "0.0.0.99", "255.255.255.0"], 0], ["1 + 2 + … + 100 =", ["5000", "5050", "10100", "4950"], 1], ["PIN 4 ខ្ទង់ (0–9) មានប៉ុន្មានជម្រើស?", ["40", "1,000", "10,000", "9,999"], 2], ["C(5,2) = ?", ["10", "20", "25", "5"], 0], ["គប់កាក់ 2 ដង បានក្បាលទាំងពីរ?", ["1/2", "1/3", "1/4", "1"], 2], ["[1, 2, 2, 3, 100] Median =", ["21.6", "2", "3", "100"], 1], ["Binary search មាន Big-O?", ["O(1)", "O(log n)", "O(n)", "O(n²)"], 1], ["(10 + 5) % 12 = ?", ["3", "15", "0", "5"], 0]]; let qi = 0, ok = 0, picked = false; const order = Q.map((_, i) => i).sort(() => Math.random() - .5);
+  function quiz() {
+    if (qi >= Q.length) { const pct = Math.round(ok / Q.length * 100);
+      $("qz").innerHTML = `<div class="itk-done"><div class="big">${pct >= 80 ? "🏆" : pct >= 50 ? "👍" : "📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><p>${pct >= 80 ? "អស្ចារ្យ! គណិតមិនពិបាកទៀតទេ" : pct >= 50 ? "ល្អ! រំលឹកមេរៀនដែលខុស" : "សូមរៀនម្តងទៀត — អ្នកអាចធ្វើបាន!"}</p><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;
+      $("qAgain").onclick = () => { qi = 0; ok = 0; quiz(); }; return; }
+    const [q, opts, a] = Q[order[qi]]; picked = false;
+    $("qz").innerHTML = `<div class="itk-qh">សំណួរ ${kh(qi + 1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi / Q.length * 100}%"></i></div><h3>${q}</h3>` + opts.map((o, i) => `<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("") + `<div id="qNext"></div>`;
+    $("qz").querySelectorAll(".itk-opt").forEach(b => b.onclick = () => {
+      if (picked) return; picked = true; const i = +b.dataset.i; if (i === a) ok++;
+      $("qz").querySelectorAll(".itk-opt").forEach(x => x.classList.add(+x.dataset.i === a ? "good" : +x.dataset.i === i ? "bad" : "dim"));
+      $("qNext").innerHTML = `<button class="btn" id="qN">${qi + 1 < Q.length ? "បន្ទាប់ →" : "មើលលទ្ធផល 🏁"}</button>`;
+      $("qN").onclick = () => { qi++; quiz(); };
+    });
+  }
+  quiz();
+})();
+</script>
+
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+
+<ol class="steps"><li><b>Math for IT</b> (វគ្គនេះ) ✅ + <b>Fundamentals of IT</b></li>
+<li><b>Python</b> — អនុវត្តគណិតជាមួយ Code ច្រើនទៀត</li>
+<li><b>Excel / SQL</b> — Statistics &amp; Data analysis</li>
+<li><b>Networking &amp; Security</b> — Bitwise, Subnet, Cryptography</li>
+<li>កម្រិតខ្ពស់៖ Linear Algebra &amp; Probability សម្រាប់ <b>AI/Machine Learning</b>, Algorithms &amp; Data Structures</li></ol>
+<div class="note">💡 ច្បាប់មាស៖ <b>យល់គំនិត → គូររូប → ឲ្យ Code គណនា</b>។ អ្នកមិនចាំបាច់ចាំរូបមន្តទាំងអស់ទេ!</div>
+
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="mathit"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>គណនេយ្យ ៣·២ — ពន្ធដារកម្ពុជា</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#c92a2a; --accent2:#ff6b6b; --accent-soft:#f1f8ff;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#ff6b6b; --accent2:#ff6b6b; --accent-soft:#0f1a24;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#ff6b6b; --accent2:#ff6b6b; --accent-soft:#0f1a24;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#0b1220,#c92a2a 55%,#ff6b6b);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/acc6.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/acc6.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Accounting Y3S2 · ពន្ធដារកម្ពុជា</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. មុខវិជ្ជានេះជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#setup">២. ទីតាំងក្នុងកម្មវិធីសិក្សា ៤ ឆ្នាំ</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: ប្រព័ន្ធពន្ធ &amp; ការចុះបញ្ជី</a>
+<a href="#l2">មេរៀន ២: ToI — ប្រាក់ចំណេញជាប់ពន្ធ (Tax adjustments)</a>
+<a href="#l3">មេរៀន ៣: ប្រាក់រំដោះពន្ធលើប្រាក់ចំណូល &amp; Minimum tax</a>
+<a href="#l4">មេរៀន ៤: ពន្ធលើប្រាក់បៀវត្ស</a>
+<a href="#l5">មេរៀន ៥: ពន្ធកាត់ទុក (Withholding tax)</a>
+<a href="#l6">មេរៀន ៦: VAT — Output, Input, Credit</a>
+<a href="#l7">មេរៀន ៧: ពន្ធផ្សេងៗ</a>
+<a href="#l8">មេរៀន ៨: Deferred tax ក្នុងបរិបទកម្ពុជា</a>
+<a href="#l9">មេរៀន ៩: ការប្រកាស បង់ &amp; e-Filing</a>
+<a href="#l10">មេរៀន ១០: សវនកម្មពន្ធ &amp; ទោសទណ្ឌ</a>
+<a href="#l11">មេរៀន ១១: ការលើកទឹកចិត្តវិនិយោគ (QIP) &amp; ផែនការពន្ធ</a>
+<a href="#l12">មេរៀន ១២: ក្រមសីលធម៌ &amp; អាជីពពន្ធ</a>
+<a href="#cheat">📋 សង្ខេបរូបមន្ត</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងចុងឆមាស</a>
+<a href="#pro-app">💻 Accounting Lab (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🇰🇭 ឆ្នាំទី ៣ ឆមាសទី ២ — Cambodian Taxation</h2>
+  <p>ToI · Prepayment · Salary tax · WHT · VAT · Filing · Tax audit — ១២ មេរៀន · លំហាត់ + ចម្លើយ · ឧទាហរណ៍គណនាពិត (គ្មាន Code) · Accounting Lab · Quiz · ស្តង់ដារ <b>CIFRS (IFRS)</b> និងច្បាប់ <b>កម្ពុជា</b>។</p>
+  <p><span class="badge">📘 ១២ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">📊 ឧទាហរណ៍គណនា (គ្មាន Code)</span><span class="badge">📒 Accounting Lab</span></p>
+</section>
+<section id="intro">
+<h2>១. មុខវិជ្ជានេះជាអ្វី? អ្នកណាបង្កើត?</h2>
+
+<p>សិក្សា <b>ប្រព័ន្ធពន្ធដារកម្ពុជា</b>៖ ការចុះបញ្ជី និងប្រភេទអ្នកជាប់ពន្ធ, <b>ពន្ធលើប្រាក់ចំណូល (ToI 20%)</b>, ប្រាក់រំដោះពន្ធ, <b>ពន្ធលើប្រាក់បៀវត្ស</b> &amp; Fringe benefits, <b>ពន្ធកាត់ទុក</b>, <b>VAT 10%</b>, ពន្ធផ្សេងៗ (ពន្ធពិសេស អាករស្នាក់នៅ ពន្ធប៉ាតង់ ពន្ធលើអចលនទ្រព្យ), ការប្រកាស e-Filing, សវនកម្មពន្ធ និងទោសទណ្ឌ។</p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#868e96"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#868e96">1997</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">ច្បាប់ស្តីពីសារពើពន្ធ</text><circle cx="220" cy="115" r="11" fill="#1c7ed6"/><text x="220" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#1c7ed6">1999</text><text x="220" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">VAT 10%</text><circle cx="360" cy="115" r="11" fill="#7048e8"/><text x="360" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#7048e8">2017</text><text x="360" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">ច្បាប់ហិរញ្ញវត្ថុ · Minimum tax</text><circle cx="500" cy="115" r="11" fill="#0ca678"/><text x="500" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#0ca678">2020s</text><text x="500" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">e-Filing · e-Payment</text><circle cx="640" cy="115" r="11" fill="#e8590c"/><text x="640" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#e8590c">2021</text><text x="640" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">ច្បាប់វិនិយោគ · QIP</text><circle cx="780" cy="115" r="11" fill="#c92a2a"/><text x="780" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#c92a2a">2023</text><text x="780" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">ច្បាប់សារពើពន្ធថ្មី</text><circle cx="920" cy="115" r="11" fill="#495057"/><text x="920" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#495057">ថ្ងៃនេះ</text><text x="920" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">ពិនិត្យ GDT</text></svg><figcaption>🖼️ ប្រវត្តិ និងអ្នកបង្កើតគំនិតសំខាន់ៗ</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>1997</td><td><b>ច្បាប់ស្តីពីសារពើពន្ធ</b> (Law on Taxation)</td><td>មូលដ្ឋានប្រព័ន្ធពន្ធទំនើបកម្ពុជា (កែប្រែជាច្រើនដង)</td></tr><tr><td>1999</td><td>ការដាក់ឲ្យអនុវត្ត <b>VAT 10%</b></td><td>ជំនួសពន្ធលើការលក់ចាស់</td></tr><tr><td>2017</td><td><b>ច្បាប់ស្តីពីហិរញ្ញវត្ថុ 2017</b></td><td>Minimum tax 1% មិនអនុវត្តចំពោះសហគ្រាសដែលរក្សាបញ្ជីគណនេយ្យត្រឹមត្រូវ (យោង PwC)</td></tr><tr><td>2023</td><td><b>ច្បាប់ស្តីពីសារពើពន្ធ (ថ្មី)</b></td><td>ធ្វើបច្ចុប្បន្នភាពច្បាប់ 1997 — អនុវត្តជាដំណាក់កាល តាមអនុក្រឹត្យ/ប្រកាស</td></tr><tr><td>ថ្ងៃនេះ</td><td><b>អគ្គនាយកដ្ឋានពន្ធដារ (GDT)</b></td><td>ការចុះបញ្ជី ប្រកាស បង់ពន្ធអនឡាញ (e-Tax services)</td></tr></table>
+
+<div class="grid"><div class="card"><b>🏢 ក្រុមហ៊ុន</b><br>ប្រកាសពន្ធប្រចាំខែ/ប្រចាំឆ្នាំ</div><div class="card"><b>👩‍💼 HR/Payroll</b><br>ពន្ធលើប្រាក់បៀវត្ស</div><div class="card"><b>🧾 គណនេយ្យករ</b><br>VAT · WHT · វិក្កយបត្រអាករ</div><div class="card"><b>🔍 សវនកម្មពន្ធ</b><br>ការពារហានិភ័យ និងទោសទណ្ឌ</div></div>
+
+<div class="note">💡 ឧទាហរណ៍ក្រុមហ៊ុន និងតួលេខក្នុងវគ្គ ជា <b>ទិន្នន័យគំរូ</b> សម្រាប់រៀន។ អត្រាពន្ធ និងបទប្បញ្ញត្តិ អាចផ្លាស់ប្តូរ — ពិនិត្យជានិច្ចជាមួយ <b>អគ្គនាយកដ្ឋានពន្ធដារ (GDT)</b>, <b>ACAR</b> និងគណនេយ្យករជំនាញ មុនប្រើក្នុងការងារពិត។</div>
+
+</section>
+<section id="setup">
+<h2>២. ទីតាំងក្នុងកម្មវិធីសិក្សា ៤ ឆ្នាំ</h2>
+
+<table><tr><th>ឆ្នាំ</th><th>ឆមាសទី ១</th><th>ឆមាសទី ២</th></tr><tr><td>ឆ្នាំទី ១</td><td>គោលការណ៍គណនេយ្យ ១</td><td>គោលការណ៍គណនេយ្យ ២</td></tr><tr><td>ឆ្នាំទី ២</td><td>គណនេយ្យហិរញ្ញវត្ថុកម្រិតមធ្យម ១ (CIFRS)</td><td>គណនេយ្យថ្លៃដើម &amp; គ្រប់គ្រង</td></tr><tr><td>ឆ្នាំទី ៣</td><td>គណនេយ្យហិរញ្ញវត្ថុកម្រិតមធ្យម ២ &amp; Group</td><td>ពន្ធដារកម្ពុជា</td></tr><tr><td>ឆ្នាំទី ៤</td><td>សវនកម្ម &amp; ការធានា</td><td>ការគ្រប់គ្រងហិរញ្ញវត្ថុ &amp; Capstone</td></tr></table>
+
+<p>អ្នកកំពុងរៀន៖ <b>ឆ្នាំទី ៣ · ឆមាសទី ២ — ពន្ធដារកម្ពុជា</b>។ តម្រូវការមុន៖ គណនេយ្យ ឆ្នាំ ១–២ និង IAS 12 (ឆ្នាំ ៣ ឆមាស ១)។ ⚠️ អត្រាក្នុងវគ្គនេះ យោងប្រភពសាធារណៈ (PwC Tax Summaries ពិនិត្យខែមេសា 2026) — <b>ត្រូវផ្ទៀងផ្ទាត់ជាមួយ GDT</b> មុនប្រើពិត។</p>
+<ol class="steps"><li>អានមេរៀន → ធ្វើឧទាហរណ៍តាម (Excel ឬក្រដាស) → ធ្វើលំហាត់ មុនមើលចម្លើយ។</li><li>ប្រើ <b>Accounting Lab</b> នៅចុងវគ្គ ដើម្បីហាត់ Journal, Depreciation, ពន្ធ, Ratios, Break-even។</li><li>ប្រអប់ <b>📊 ឧទាហរណ៍គណនា</b> បង្ហាញលទ្ធផលគណនាពិត — <b>មិនចាំបាច់ចេះ Code ទេ</b>។ សាកគណនាតាមដោយ Excel ឬម៉ាស៊ីនគិតលេខ។</li></ol>
+</section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>ប្រព័ន្ធពន្ធ &amp; ការចុះបញ្ជី</h2>
+<table><tr><th>ប្រភេទពន្ធ</th><th>មូលដ្ឋាន</th><th>អត្រាទូទៅ</th></tr><tr><td>ពន្ធលើប្រាក់ចំណូល (ToI)</td><td>ប្រាក់ចំណេញជាប់ពន្ធប្រចាំឆ្នាំ</td><td>20% (ស្តង់ដារ) · 0–20% អ្នកជាប់ពន្ធតូច · 30% ប្រេង/រ៉ែ</td></tr><tr><td>ពន្ធលើប្រាក់បៀវត្ស</td><td>ប្រាក់ខែប្រចាំខែ</td><td>0–20% (ថ្នាក់)</td></tr><tr><td>Fringe benefits</td><td>អត្ថប្រយោជន៍បន្ថែម</td><td>20%</td></tr><tr><td>VAT</td><td>ការផ្គត់ផ្គង់</td><td>10% (0% នាំចេញ)</td></tr><tr><td>ពន្ធកាត់ទុក (WHT)</td><td>ការទូទាត់មួយចំនួន</td><td>ផ្សេងៗតាមប្រភេទ</td></tr></table>
+<div class="note">💡 អ្នកជាប់ពន្ធត្រូវចុះបញ្ជីជាមួយ <b>GDT</b> (មាន TIN) ហើយចាត់ថ្នាក់ជា តូច / មធ្យម / ធំ តាមចំណូល — ពិនិត្យកម្រិតបច្ចុប្បន្ន។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>ក្រុមហ៊ុនមធ្យមចំណេញជាប់ពន្ធ $50,000។ ToI (20%)?</p><details><summary>មើលចម្លើយ</summary><p><b>$10,000</b>។</p></details></div>
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>ToI — ប្រាក់ចំណេញជាប់ពន្ធ (Tax adjustments)</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Accounting profit 180,000 + Add-backs 42,500 − Deductions 45,000 = Taxable 177,500
+ToI 20% = 35,500</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ចាប់ពីប្រាក់ចំណេញគណនេយ្យ → បូកចំណាយមិនអាចកាត់កង → ដកចំណូលលើកលែង/ការកាត់បន្ថយពន្ធ។</li><li>Depreciation គណនេយ្យ ត្រូវជំនួសដោយ <b>Tax depreciation</b> តាមអត្រាច្បាប់។</li><li>ចំណាយត្រូវមានភស្តុតាង (វិក្កយបត្រអាករ) ទើបកាត់កងបាន។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>Profit 100,000 · ពិន័យ 3,000 (មិនកាត់កង)។ Taxable?</p><details><summary>មើលចម្លើយ</summary><p><b>103,000</b> → ToI 20,600។</p></details></div>
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>ប្រាក់រំដោះពន្ធលើប្រាក់ចំណូល &amp; Minimum tax</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>ប្រាក់រំដោះ 1% ប្រចាំខែ: [&#x27;420&#x27;, &#x27;390&#x27;, &#x27;450&#x27;] សរុប 1,260
+ToI ប្រចាំឆ្នាំ 9,800 − ប្រាក់រំដោះបានបង់ (ឧ. 12 ខែ ≈ 5,040) → បង់បន្ថែម/ឥណទានយោង</pre></div>
+<div class="note">💡 <b>ប្រាក់រំដោះពន្ធលើប្រាក់ចំណូល</b> 1% នៃផលរបរប្រចាំខែ ជាប្រវត្តិ — ដកពី ToI ប្រចាំឆ្នាំ។ <b>Minimum tax 1%</b> នៃផលរបរប្រចាំឆ្នាំ មិនអនុវត្តចំពោះសហគ្រាសដែល <b>រក្សាបញ្ជីគណនេយ្យត្រឹមត្រូវ</b> (ច្បាប់ហិរញ្ញវត្ថុ 2017)។ ពិនិត្យប្រកាសបច្ចុប្បន្ន ព្រោះមានការកែប្រែ/ការលើកលែង។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>ផលរបរខែ $60,000។ ប្រាក់រំដោះ 1%?</p><details><summary>មើលចម្លើយ</summary><p><b>$600</b>។</p></details></div>
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>ពន្ធលើប្រាក់បៀវត្ស</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>អ្នកលក់        1,400,000 ៛ → ពន្ធ           0 ៛ ( 0.00%)
+គណនេយ្យករ      3,200,000 ៛ → ពន្ធ     145,000 ៛ ( 4.53%)
+អ្នកគ្រប់គ្រង  10,000,000 ៛ → ពន្ធ     900,000 ៛ ( 9.00%)
+នាយក          20,000,000 ៛ → ពន្ធ   2,775,000 ៛ (13.88%)
+Fringe benefit (ឧ. ឡានក្រុមហ៊ុន) 2,000,000 × 20% = 400,000 ៛ (និយោជកបង់)</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ថ្នាក់អត្រា (និវាសនជន)៖ ≤ 1.5M 0% · 1.5–2M 5% · 2–8.5M 10% · 8.5–12.5M 15% · > 12.5M 20%។</li><li>អ្នកមិនមែននិវាសនជន 20% ថេរ។ មានការកាត់បន្ថយសម្រាប់ប្តី/ប្រពន្ធ និងកូន — ពិនិត្យចំនួនបច្ចុប្បន្ន។</li><li>ប្រាក់ខែ USD ត្រូវបំលែងជា KHR តាមអត្រាផ្លូវការដែល GDT ប្រកាស។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>ប្រាក់ខែ 9,000,000 ៛។ ពន្ធ?</p><details><summary>មើលចម្លើយ</summary><p>0 + 25,000 + 650,000 + 75,000 = <b>750,000 ៛</b>។</p></details></div>
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>ពន្ធកាត់ទុក (Withholding tax)</h2>
+<table><tr><th>ការទូទាត់</th><th>អត្រាទូទៅ (ពិនិត្យ GDT)</th></tr><tr><td>សេវា/ការប្រឹក្សា ឲ្យនិវាសនជនមិនបានចុះបញ្ជី</td><td>15%</td></tr><tr><td>សួយសារ (Royalties)</td><td>15%</td></tr><tr><td>ការប្រាក់ (មិនមែនធនាគារ)</td><td>15%</td></tr><tr><td>ជួលចលនទ្រព្យ/អចលនទ្រព្យ</td><td>10%</td></tr><tr><td>ការប្រាក់គណនីសន្សំ/បញ្ញើមានកាលកំណត់ (ធនាគារ)</td><td>4% / 6%</td></tr><tr><td>ទូទាត់ឲ្យអ្នកមិនមែននិវាសនជន</td><td>14%</td></tr></table>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>ជួលការិយាល័យ $2,000/ខែ → WHT 200 · បង់ម្ចាស់ផ្ទះ 1,800
+Journal: Dr Rent expense 2,000 / Cr WHT payable 200 / Cr Cash 1,800</pre></div>
+<div class="note">💡 អ្នកទូទាត់ជាអ្នក <b>កាត់ និងបង់</b> ពន្ធជំនួស → ប្រកាសប្រចាំខែ។ អត្រាអាចប្តូរ ឬមានសន្ធិសញ្ញាពន្ធទ្វេ (DTA)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>បង់ថ្លៃប្រឹក្សា $1,000 ឲ្យក្រុមហ៊ុនបរទេស (មិនមែននិវាសនជន)។ WHT 14%?</p><details><summary>មើលចម្លើយ</summary><p><b>$140</b> កាត់ទុក · បង់ $860។</p></details></div>
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>VAT — Output, Input, Credit</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>មករា: Output 3,000 − Input 2,600 − Credit 0 = បង់ 400
+កុម្ភៈ: Output 2,000 − Input 3,100 → Credit យោង 1,100
+មីនា: Output 3,500 − Input 1,500 − Credit 1,100 = បង់ 900</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Input VAT ទាមទារបាន លុះត្រាមាន <b>វិក្កយបត្រអាករ</b> ត្រឹមត្រូវ និងទាក់ទងសកម្មភាពជាប់ពន្ធ។</li><li>Credit លើស យោងទៅខែបន្ទាប់ (ការស្នើសងវិញមានលក្ខខណ្ឌ)។</li><li>នាំចេញ 0% · ការផ្គត់ផ្គង់មួយចំនួនលើកលែង — ពិនិត្យបញ្ជី។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>Output 3,000 Input 3,800។ ខែនេះ?</p><details><summary>មើលចម្លើយ</summary><p><b>Credit 800</b> យោងទៅខែក្រោយ។</p></details></div>
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>ពន្ធផ្សេងៗ</h2>
+<table><tr><th>ពន្ធ</th><th>ចំណាំ</th></tr><tr><td>ពន្ធពិសេសលើទំនិញ និងសេវាមួយចំនួន</td><td>ស្រា បារី ភេសជ្ជៈ សេវាទូរគមនាគមន៍…</td></tr><tr><td>អាករលើការស្នាក់នៅ</td><td>សណ្ឋាគារ ផ្ទះសំណាក់</td></tr><tr><td>ពន្ធប៉ាតង់</td><td>បង់ប្រចាំឆ្នាំ ពេលចុះបញ្ជី</td></tr><tr><td>ពន្ធលើអចលនទ្រព្យ</td><td>លើតម្លៃលើសកម្រិត</td></tr><tr><td>អាករត្រា (Stamp/Registration)</td><td>ផ្ទេរកម្មសិទ្ធិដី ឡាន ភាគហ៊ុន</td></tr><tr><td>ពន្ធលើចំណេញមូលធន (Capital gains)</td><td>អនុវត្តជាដំណាក់កាល — ពិនិត្យកាលបរិច្ឆេទចូលជាធរមាន</td></tr></table>
+<div class="note">💡 ពន្ធទាំងនេះប្រែប្រួលញឹកញាប់ — ប្រើតារាងនេះជាចំណុចចាប់ផ្តើម ហើយផ្ទៀងផ្ទាត់អត្រា/កាលបរិច្ឆេទពី GDT។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>ទិញអគារ — ពន្ធអ្វីខ្លះដែលត្រូវពិចារណា?</p><details><summary>មើលចម្លើយ</summary><p><b>អាករត្រា</b> លើការផ្ទេរ · <b>ពន្ធលើអចលនទ្រព្យ</b> ប្រចាំឆ្នាំ · VAT (បើពាក់ព័ន្ធ) · WHT លើការជួល (បើជួលចេញ)។</p></details></div>
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Deferred tax ក្នុងបរិបទកម្ពុជា</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>ឆ្នាំ 1: Carrying 50,000 · Tax base 45,000 · DTL 1,000
+ឆ្នាំ 2: Carrying 40,000 · Tax base 33,750 · DTL 1,250
+ឆ្នាំ 3: Carrying 30,000 · Tax base 25,312 · DTL 938</pre></div>
+<div class="note">💡 អត្រារំលោះពន្ធកម្ពុជាកំណត់តាមប្រភេទទ្រព្យ (Class) — ឧទាហរណ៍នេះប្រើអត្រាគំរូ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>ហេតុអ្វីមាន DTL ពេលរំលោះពន្ធលឿនជាងគណនេយ្យ?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះកាត់កងពន្ធមុន → បង់ពន្ធតិចឥឡូវ តែច្រើននៅពេលក្រោយ = <b>កាតព្វកិច្ចពន្ធអនាគត</b>។</p></details></div>
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>ការប្រកាស បង់ &amp; e-Filing</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="156.0" height="96" rx="14" fill="#1c7ed6"/><text x="98.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">រៀបចំ</text><text x="98.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">វិក្កយបត្រ · Payroll</text><line x1="178.0" y1="82" x2="204.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="206.0" y="34" width="156.0" height="96" rx="14" fill="#7048e8"/><text x="284.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">គណនា</text><text x="284.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">VAT · WHT · ToS · Prepay</text><line x1="364.0" y1="82" x2="390.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="392.0" y="34" width="156.0" height="96" rx="14" fill="#0ca678"/><text x="470.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">ប្រកាស</text><text x="470.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">GDT e-Filing</text><line x1="550.0" y1="82" x2="576.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="578.0" y="34" width="156.0" height="96" rx="14" fill="#e8590c"/><text x="656.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">បង់</text><text x="656.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">e-Payment/Bakong/ធនាគារ</text><line x1="736.0" y1="82" x2="762.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="764.0" y="34" width="156.0" height="96" rx="14" fill="#c92a2a"/><text x="842.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">រក្សាទុក</text><text x="842.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ឯកសារ ១០ ឆ្នាំ*</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">ដំណើរការពន្ធប្រចាំខែ</text></svg><figcaption>🖼️ ការប្រកាស បង់ &amp; e-Filing</figcaption></figure>
+<div class="note">💡 ពន្ធប្រចាំខែ (VAT, WHT, ToS, ប្រាក់រំដោះ…) ប្រកាសតាមកាលកំណត់ក្នុងខែបន្ទាប់ · ToI ប្រចាំឆ្នាំ ប្រកាសក្នុងរយៈពេលកំណត់បន្ទាប់ឆ្នាំសារពើពន្ធ។ *រយៈពេលរក្សាឯកសារ និងថ្ងៃផុតកំណត់ ត្រូវពិនិត្យនឹងច្បាប់/ប្រកាសបច្ចុប្បន្ន។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>ហេតុអ្វីត្រូវផ្ទៀងផ្ទាត់ VAT ប្រកាស ជាមួយ Ledger រៀងរាល់ខែ?</p><details><summary>មើលចម្លើយ</summary><p>ដើម្បីរកកំហុស វិក្កយបត្របាត់ ឬកត់ខុស មុនពេលសវនកម្មពន្ធ — កាត់បន្ថយហានិភ័យពិន័យ និងការប្រាក់។</p></details></div>
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>សវនកម្មពន្ធ &amp; ទោសទណ្ឌ</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>ពន្ធខ្វះ 10,000 + ពិន័យ 1,000 + ការប្រាក់ 900 = 11,900</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ប្រភេទសវនកម្ម៖ Desk audit · Limited audit · Comprehensive audit។</li><li>ការពារ៖ ឯកសារពេញលេញ · វិក្កយបត្រអាករ · ផ្ទៀងផ្ទាត់ Payroll/VAT/WHT ជាមួយ Ledger។</li><li>ការប្រាក់ និងពិន័យ កើនតាមពេលវេលា — បង់ទាន់ពេល។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>អ្វីជាហានិភ័យធំបំផុតពេលគ្មានវិក្កយបត្រអាករ?</p><details><summary>មើលចម្លើយ</summary><p>ចំណាយ <b>មិនអាចកាត់កង</b> ToI និង Input VAT <b>មិនអាចទាមទារ</b> → ពន្ធកើន + ពិន័យ។</p></details></div>
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>ការលើកទឹកចិត្តវិនិយោគ (QIP) &amp; ផែនការពន្ធ</h2>
+<table><tr><th>ប្រធានបទ</th><th>សង្ខេប</th></tr><tr><td>QIP (គម្រោងវិនិយោគមានលក្ខណៈសម្បត្តិគ្រប់គ្រាន់)</td><td>ក្រោមច្បាប់វិនិយោគ 2021 — ការលើកលែង ToI ឬការកាត់បន្ថយពិសេស ការលើកលែងពន្ធនាំចូល</td></tr><tr><td>Tax planning</td><td>ប្រើការលើកទឹកចិត្តស្របច្បាប់ · Timing · រចនាសម្ព័ន្ធ</td></tr><tr><td>Tax evasion</td><td>លាក់ចំណូល វិក្កយបត្រក្លែង = <b>ខុសច្បាប់</b></td></tr><tr><td>Transfer pricing</td><td>ប្រតិបត្តិការជាមួយភាគីពាក់ព័ន្ធ ត្រូវតាមតម្លៃទីផ្សារ (Arm's length)</td></tr></table>
+<div class="note">💡 ការលើកទឹកចិត្ត QIP ស្ថិតក្រោម <b>ក្រុមប្រឹក្សាអភិវឌ្ឍន៍កម្ពុជា (CDC)</b> — ពិនិត្យលក្ខខណ្ឌជាមួយ CDC/GDT។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>ការបំបែកវិក្កយបត្រដើម្បីឲ្យនៅក្រោមកម្រិតជាប់ VAT ជា Planning ឬ Evasion?</p><details><summary>មើលចម្លើយ</summary><p><b>Evasion/Avoidance ខុសច្បាប់</b> — ការរៀបចំក្លែងក្លាយ ដើម្បីគេចពន្ធ។</p></details></div>
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>ក្រមសីលធម៌ &amp; អាជីពពន្ធ</h2>
+<div class="grid"><div class="card"><b>⚖️ ក្រមសីលធម៌</b><br>ស្មោះត្រង់ជាមួយ GDT · មិនជួយគេចពន្ធ · រក្សាការសម្ងាត់អតិថិជន</div><div class="card"><b>🎓 វិញ្ញាបនបត្រ</b><br>ភ្នាក់ងារសេវាកម្មពន្ធ (អាជ្ញាប័ណ្ណ GDT) · ACCA TX/ATX</div><div class="card"><b>💼 អាជីព</b><br>Tax accountant · Tax consultant · មន្ត្រីពន្ធដារ</div><div class="card"><b>🔄 បច្ចុប្បន្នភាព</b><br>អានប្រកាស GDT ថ្មីៗ ប្រចាំខែ</div></div>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>📅 VAT / WHT / ToS / ប្រាក់រំដោះ → ប្រចាំខែ (ខែបន្ទាប់)
+📅 ToI ប្រចាំឆ្នាំ              → ក្រោយឆ្នាំសារពើពន្ធ (ពិនិត្យថ្ងៃផុតកំណត់)
+📅 ពន្ធប៉ាតង់                   → ប្រចាំឆ្នាំ
+📅 ពន្ធលើអចលនទ្រព្យ             → ប្រចាំឆ្នាំ</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>អតិថិជនសុំឲ្យអ្នកធ្វើវិក្កយបត្រចំណាយក្លែង ដើម្បីកាត់ពន្ធ។ ធ្វើយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p><b>បដិសេធ</b> — ពន្យល់ហានិភ័យផ្លូវច្បាប់ ហើយណែនាំជម្រើសស្របច្បាប់ (ការលើកទឹកចិត្ត ការកត់ត្រាត្រឹមត្រូវ)។</p></details></div>
+</section>
+<section id="cheat">
+<h2>📋 សង្ខេបរូបមន្ត</h2>
+<table><tr><th>រូបមន្ត / គោលការណ៍</th><th>ន័យ</th></tr><tr><td>ToI = 20% × Taxable profit</td><td>ស្តង់ដារ</td></tr><tr><td>Prepayment = 1% × Monthly turnover</td><td>ដកពី ToI</td></tr><tr><td>ToS 0/5/10/15/20%</td><td>≤1.5M · 2M · 8.5M · 12.5M ៛</td></tr><tr><td>Fringe benefit 20%</td><td></td></tr><tr><td>VAT = 10% × (Output − Input)</td><td>Credit យោង</td></tr><tr><td>WHT ជួល 10% · សេវា 15% · មិនមែននិវាសនជន 14%</td><td>ពិនិត្យ GDT</td></tr></table>
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងចុងឆមាស</h2>
+<p>ក្រុមហ៊ុនគំរូ «Phnom Penh Trading Co., Ltd.» (អ្នកជាប់ពន្ធមធ្យម)៖ គណនា និងរៀបចំឯកសារប្រកាសពន្ធ ៣ ខែ — VAT, WHT (ជួល សេវា), ពន្ធលើប្រាក់បៀវត្សបុគ្គលិក ៥ នាក់ (KHR), ប្រាក់រំដោះ 1% និង ToI ប្រចាំឆ្នាំ (Tax adjustments)។ សរសេរ Memo ពីហានិភ័យពន្ធ ៣ ចំណុច។</p></section>
+<section id="pro-app">
+<h2>💻 Accounting Lab (App)</h2>
+
+<p><b>📒 Journal → Statements</b>៖ ចុះ Journal (Dr/Cr) → Ledger → Trial balance → Income statement &amp; Financial position ដោយស្វ័យប្រវត្តិ · <b>🏗️ Depreciation</b> (SL, DDB, SYD) · <b>🇰🇭 ពន្ធ</b> (Salary tax, ToI, VAT) · <b>📊 Ratios</b> + DuPont · <b>⚖️ Break-even</b>។</p>
+
+<div class="itk" id="al">
+<div class="itk-tabs"><button class="on" data-t="j">📒 Journal → Statements</button><button data-t="d">🏗️ Depreciation</button><button data-t="t">🇰🇭 ពន្ធ</button><button data-t="r">📊 Ratios</button><button data-t="b">⚖️ Break-even</button></div>
+
+<div class="itk-p on" data-p="j">
+ <div class="itk-row">
+  <label>ថ្ងៃ<input id="j_dt" type="date" style="width:140px"></label>
+  <label>ពិពណ៌នា<input id="j_ds" value="លក់សេវាជាសាច់ប្រាក់" style="width:190px"></label>
+  <label>Debit<select id="j_dr"></select></label>
+  <label>Credit<select id="j_cr"></select></label>
+  <label>ចំនួន ($)<input id="j_am" type="number" value="500" style="width:100px"></label>
+  <button class="btn" id="j_add">➕ ចុះ Journal</button><button class="btn" id="j_demo">📋 គំរូ</button><button class="btn" id="j_clr">♻ លុប</button>
+ </div>
+ <div class="itk-out" id="j_list" style="font-size:13.5px;max-height:220px;overflow:auto"></div>
+ <div class="itk-out" id="j_tb" style="font-size:13.5px"></div>
+</div>
+
+<div class="itk-p" data-p="d">
+ <div class="itk-row">
+  <label>ថ្លៃដើម ($)<input id="d_c" type="number" value="12000" style="width:110px"></label>
+  <label>តម្លៃនៅសល់ ($)<input id="d_s" type="number" value="2000" style="width:110px"></label>
+  <label>អាយុ (ឆ្នាំ)<input id="d_n" type="number" value="5" style="width:80px"></label>
+  <label>វិធី<select id="d_m"><option value="sl">Straight-line</option><option value="ddb">Double-declining</option><option value="syd">Sum-of-years</option></select></label>
+ </div>
+ <div class="itk-out" id="d_out" style="font-size:13.5px"></div>
+</div>
+
+<div class="itk-p" data-p="t">
+ <div class="itk-row">
+  <label>ប្រាក់ខែប្រចាំខែ (៛)<input id="t_s" type="number" value="3000000" style="width:140px"></label>
+  <label>ប្រាក់ចំណេញមុនពន្ធ ($)<input id="t_p" type="number" value="80000" style="width:120px"></label>
+  <label>ការលក់មិនរាប់ VAT ($)<input id="t_v" type="number" value="25000" style="width:120px"></label>
+  <label>ការទិញមាន VAT ($)<input id="t_i" type="number" value="12000" style="width:120px"></label>
+ </div>
+ <div class="itk-out" id="t_out" style="font-size:13.5px"></div>
+</div>
+
+<div class="itk-p" data-p="r">
+ <div class="itk-row">
+  <label>Revenue<input id="r_rev" type="number" value="500000" style="width:100px"></label>
+  <label>Net profit<input id="r_np" type="number" value="45000" style="width:100px"></label>
+  <label>Current assets<input id="r_ca" type="number" value="180000" style="width:100px"></label>
+  <label>Inventory<input id="r_inv" type="number" value="60000" style="width:100px"></label>
+  <label>Current liabilities<input id="r_cl" type="number" value="100000" style="width:100px"></label>
+  <label>Total assets<input id="r_ta" type="number" value="600000" style="width:100px"></label>
+  <label>Total liabilities<input id="r_tl" type="number" value="280000" style="width:100px"></label>
+ </div>
+ <div class="itk-out" id="r_out" style="font-size:13.5px"></div>
+</div>
+
+<div class="itk-p" data-p="b">
+ <div class="itk-row">
+  <label>Fixed cost ($/ខែ)<input id="b_f" type="number" value="6000" style="width:100px"></label>
+  <label>Price ($/unit)<input id="b_p" type="number" value="2.5" step="0.1" style="width:90px"></label>
+  <label>Variable cost ($/unit)<input id="b_v" type="number" value="1.0" step="0.1" style="width:90px"></label>
+  <label>Units sold<input id="b_q" type="number" value="5000" style="width:90px"></label>
+ </div>
+ <canvas id="b_cv" width="900" height="260" style="width:100%;background:#fff;border:1px solid var(--line);border-radius:10px"></canvas>
+ <div class="itk-out" id="b_out" style="font-size:13.5px"></div>
+</div>
+</div>
+<script>
+(() => {
+const $ = id => document.getElementById(id), root = $("al");
+const K = "acc6_", st = { get(k, d) { try { const v = localStorage.getItem(K + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(K + k, JSON.stringify(v)); } catch (e) {} } };
+const f$ = (x, d = 2) => (x < 0 ? "(" : "") + "$" + Math.abs(x).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d }) + (x < 0 ? ")" : "");
+const fr = x => Math.round(x).toLocaleString("en-US") + " ៛";
+root.querySelectorAll(".itk-tabs button").forEach(b => b.onclick = () => { root.querySelectorAll(".itk-tabs button").forEach(x => x.classList.toggle("on", x === b)); root.querySelectorAll(".itk-p").forEach(p => p.classList.toggle("on", p.dataset.p === b.dataset.t)); if (b.dataset.t === "b") be(); });
+
+/* ---- journal → ledger → TB → statements ---- */
+const COA = [["1010","Cash (សាច់ប្រាក់)","A"],["1020","Bank (ធនាគារ)","A"],["1100","Accounts receivable (អតិថិជនជំពាក់)","A"],["1200","Inventory (ស្តុក)","A"],["1300","Prepaid rent (ជួលបង់មុន)","A"],["1500","Equipment (បរិក្ខារ)","A"],["1510","Accumulated depreciation","XA"],
+ ["2010","Accounts payable (ជំពាក់អ្នកផ្គត់ផ្គង់)","L"],["2100","Salaries payable","L"],["2200","VAT payable","L"],["2300","Loan payable (ប្រាក់កម្ចី)","L"],["3010","Owner's capital (ដើមទុន)","E"],["3020","Drawings (ដកប្រើផ្ទាល់ខ្លួន)","XE"],
+ ["4010","Service revenue (ចំណូលសេវា)","R"],["4020","Sales revenue (ចំណូលលក់)","R"],["5010","Cost of goods sold","X"],["5020","Salaries expense","X"],["5030","Rent expense","X"],["5040","Utilities expense","X"],["5050","Depreciation expense","X"]];
+const NAME = Object.fromEntries(COA.map(a => [a[0], a[1]])), TYPE = Object.fromEntries(COA.map(a => [a[0], a[2]]));
+$("j_dr").innerHTML = $("j_cr").innerHTML = COA.map(a => `<option value="${a[0]}">${a[0]} ${a[1]}</option>`).join("");
+$("j_dr").value = "1010"; $("j_cr").value = "4010"; $("j_dt").valueAsDate = new Date();
+let J = st.get("j", []);
+const DEMO = [["ម្ចាស់ដាក់ដើមទុន","1020","3010",20000],["ទិញបរិក្ខារជាសាច់ប្រាក់ធនាគារ","1500","1020",6000],["បង់ថ្លៃជួល ៣ ខែមុន","1300","1020",1500],["ទិញស្តុកជំពាក់","1200","2010",4000],["លក់សេវាជាសាច់ប្រាក់","1010","4010",3500],["លក់សេវាជំពាក់","1100","4010",2200],
+ ["បង់ប្រាក់ខែបុគ្គលិក","5020","1010",1800],["ថ្លៃទឹកភ្លើង","5040","1010",300],["កែតម្រូវ៖ ជួល ១ ខែប្រើរួច","5030","1300",500],["កែតម្រូវ៖ រំលោះបរិក្ខារ","5050","1510",100],["ម្ចាស់ដកប្រើផ្ទាល់ខ្លួន","3020","1010",400]];
+function jr() {
+  $("j_list").innerHTML = J.length ? `<b>General Journal (${J.length})</b><br>` + J.map((e, i) => `${e.d} · ${e.s.replace(/[<>&]/g, "")}<br>&nbsp;&nbsp;Dr ${NAME[e.dr]} <b>${f$(e.a)}</b><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cr ${NAME[e.cr]} <b>${f$(e.a)}</b> <button class="btn" data-del="${i}" style="padding:0 6px;font-size:12px">🗑</button>`).join("<br>") : "Journal ទទេ — ចុច 📋 គំរូ ឬបញ្ចូល Transaction";
+  $("j_list").querySelectorAll("[data-del]").forEach(b => b.onclick = () => { J.splice(+b.dataset.del, 1); st.set("j", J); jr(); });
+  const bal = {}; J.forEach(e => { bal[e.dr] = (bal[e.dr] || 0) + e.a; bal[e.cr] = (bal[e.cr] || 0) - e.a; });
+  const rows = Object.keys(bal).sort().filter(k => Math.abs(bal[k]) > 1e-9);
+  let td = 0, tc = 0; const tb = rows.map(k => { const v = bal[k]; if (v > 0) td += v; else tc -= v; return `<tr><td>${k}</td><td>${NAME[k]}</td><td style="text-align:right">${v > 0 ? f$(v) : ""}</td><td style="text-align:right">${v < 0 ? f$(-v) : ""}</td></tr>`; }).join("");
+  const sum = t => rows.filter(k => TYPE[k] === t).reduce((s, k) => s + bal[k], 0);
+  const rev = -sum("R"), exp = sum("X"), ni = rev - exp, assets = sum("A") + sum("XA"), liab = -sum("L"), cap = -sum("E"), draw = sum("XE");
+  $("j_tb").innerHTML = rows.length ? `<b>Trial Balance</b> ${Math.abs(td - tc) < 1e-6 ? "✅ Balanced" : "❌ មិនស្មើ"}<div style="overflow-x:auto"><table><tr><th>Code</th><th>Account</th><th>Debit</th><th>Credit</th></tr>${tb}<tr><td></td><td><b>Total</b></td><td style="text-align:right"><b>${f$(td)}</b></td><td style="text-align:right"><b>${f$(tc)}</b></td></tr></table></div>
+   <b>Income Statement</b><br>Revenue ${f$(rev)} − Expenses ${f$(exp)} = <b>Net ${ni >= 0 ? "income" : "loss"} ${f$(ni)}</b><br>
+   <b>Statement of Financial Position</b><br>Assets <b>${f$(assets)}</b> = Liabilities ${f$(liab)} + Equity ${f$(cap + ni - draw)} <small>(Capital ${f$(cap)} + Net income ${f$(ni)} − Drawings ${f$(draw)})</small> ${Math.abs(assets - (liab + cap + ni - draw)) < 1e-6 ? "✅" : "❌"}` : "";
+}
+$("j_add").onclick = () => { const a = +$("j_am").value; if (!(a > 0) || $("j_dr").value === $("j_cr").value) return; J.push({ d: $("j_dt").value, s: $("j_ds").value, dr: $("j_dr").value, cr: $("j_cr").value, a }); st.set("j", J); jr(); };
+$("j_demo").onclick = () => { const d = new Date().toISOString().slice(0, 10); J = DEMO.map(([s, dr, cr, a]) => ({ d, s, dr, cr, a })); st.set("j", J); jr(); };
+$("j_clr").onclick = () => { J = []; st.set("j", J); jr(); };
+
+/* ---- depreciation ---- */
+function dep() { const c = +$("d_c").value, s = +$("d_s").value, n = Math.max(1, Math.round(+$("d_n").value)), m = $("d_m").value; let bv = c, acc = 0, rows = [];
+  for (let y = 1; y <= n; y++) { let d = m === "sl" ? (c - s) / n : m === "ddb" ? Math.min(bv * 2 / n, bv - s) : (c - s) * (n - y + 1) / (n * (n + 1) / 2);
+    if (m === "ddb" && y === n) d = bv - s; d = Math.max(0, d); acc += d; bv -= d; rows.push(`<tr><td>${y}</td><td style="text-align:right">${f$(d)}</td><td style="text-align:right">${f$(acc)}</td><td style="text-align:right">${f$(bv)}</td></tr>`); }
+  $("d_out").innerHTML = `<div style="overflow-x:auto"><table><tr><th>ឆ្នាំ</th><th>Depreciation</th><th>Accumulated</th><th>Carrying amount</th></tr>${rows.join("")}</table></div>Journal ប្រចាំឆ្នាំ៖ Dr Depreciation expense / Cr Accumulated depreciation`; }
+["d_c", "d_s", "d_n", "d_m"].forEach(id => $(id).oninput = dep);
+
+/* ---- Cambodia tax (illustrative) ---- */
+const BR = [[1500000, 0], [2000000, .05], [8500000, .10], [12500000, .15], [Infinity, .20]];
+function tax() { const sal = +$("t_s").value; let prev = 0, t = 0, rows = [];
+  for (const [cap, r] of BR) { const part = Math.max(0, Math.min(sal, cap) - prev); if (part > 0) rows.push(`${fr(prev + 1)}–${cap === Infinity ? "…" : fr(cap)} × ${r * 100}% = ${fr(part * r)}`); t += part * r; prev = cap; if (sal <= cap) break; }
+  const p = +$("t_p").value, v = +$("t_v").value, i = +$("t_i").value;
+  $("t_out").innerHTML = `<b>Tax on Salary (និវាសនជន)</b> — ប្រាក់ខែ ${fr(sal)}<br>${rows.join("<br>")}<br>ពន្ធសរុប <b>${fr(t)}</b> · ប្រាក់ខែសុទ្ធ <b>${fr(sal - t)}</b> · អត្រាមធ្យម ${(t / sal * 100 || 0).toFixed(2)}%<br><br>
+  <b>Tax on Income</b> (អត្រាស្តង់ដារ 20%)៖ ${f$(p)} × 20% = <b>${f$(p * .2)}</b><br>
+  <b>VAT 10%</b>៖ Output ${f$(v * .1)} − Input ${f$(i * .1)} = <b>${(v - i) * .1 >= 0 ? "ត្រូវបង់ " + f$((v - i) * .1) : "ឥណទានយោង " + f$((i - v) * .1)}</b><br>
+  <small style="color:var(--muted)">⚠️ សម្រាប់រៀន — អត្រា និងលក្ខខណ្ឌពិត (Dependent allowance, Fringe benefit 20%, អ្នកមិនមែននិវាសនជន 20%…) ត្រូវពិនិត្យជាមួយ GDT</small>`; }
+["t_s", "t_p", "t_v", "t_i"].forEach(id => $(id).oninput = tax);
+
+/* ---- ratios ---- */
+function ratio() { const g = id => +$(id).value, rev = g("r_rev"), np = g("r_np"), ca = g("r_ca"), inv = g("r_inv"), cl = g("r_cl"), ta = g("r_ta"), tl = g("r_tl"), eq = ta - tl;
+  const R = [["Current ratio", ca / cl, "x", "≥ 1.5 ល្អ"], ["Quick ratio", (ca - inv) / cl, "x", "≥ 1"], ["Net profit margin", np / rev * 100, "%", "ខ្ពស់ = ល្អ"], ["ROA", np / ta * 100, "%", ""], ["ROE", np / eq * 100, "%", ""], ["Debt ratio", tl / ta * 100, "%", "ទាប = សុវត្ថិភាព"], ["Debt-to-equity", tl / eq, "x", ""], ["Asset turnover", rev / ta, "x", ""]];
+  $("r_out").innerHTML = `<div style="overflow-x:auto"><table><tr><th>Ratio</th><th>លទ្ធផល</th><th>អាន</th></tr>${R.map(([n, v, u, c]) => `<tr><td>${n}</td><td style="text-align:right"><b>${isFinite(v) ? v.toFixed(2) + u : "—"}</b></td><td>${c}</td></tr>`).join("")}</table></div>DuPont៖ ROE = Margin ${(np / rev * 100).toFixed(1)}% × Turnover ${(rev / ta).toFixed(2)} × Equity multiplier ${(ta / eq).toFixed(2)} = <b>${(np / eq * 100).toFixed(1)}%</b>`; }
+["r_rev", "r_np", "r_ca", "r_inv", "r_cl", "r_ta", "r_tl"].forEach(id => $(id).oninput = ratio);
+
+/* ---- break-even ---- */
+function be() { const F = +$("b_f").value, P = +$("b_p").value, V = +$("b_v").value, Q = +$("b_q").value, cm = P - V, bq = cm > 0 ? F / cm : Infinity;
+  const cv = $("b_cv"), g = cv.getContext("2d"), W = cv.width, H = cv.height, qmax = Math.max(Q, isFinite(bq) ? bq : Q) * 1.6 || 1, ymax = qmax * P * 1.05 || 1;
+  const X = q => 60 + q / qmax * (W - 80), Y = v => H - 30 - v / ymax * (H - 50); g.fillStyle = "#fff"; g.fillRect(0, 0, W, H); g.font = "12px sans-serif";
+  g.strokeStyle = "#94a3b8"; g.beginPath(); g.moveTo(60, H - 30); g.lineTo(W - 20, H - 30); g.moveTo(60, 10); g.lineTo(60, H - 30); g.stroke();
+  [[q => q * P, "#2f9e44", "Revenue"], [q => F + q * V, "#e03131", "Total cost"], [q => F, "#adb5bd", "Fixed cost"]].forEach(([fn, c, l], k) => { g.strokeStyle = c; g.lineWidth = 2.5; g.beginPath(); g.moveTo(X(0), Y(fn(0))); g.lineTo(X(qmax), Y(fn(qmax))); g.stroke(); g.fillStyle = c; g.fillText(l, 70 + k * 110, 22); });
+  if (isFinite(bq)) { g.fillStyle = "#7048e8"; g.beginPath(); g.arc(X(bq), Y(bq * P), 6, 0, 7); g.fill(); g.fillText("BEP " + Math.ceil(bq).toLocaleString() + " units", X(bq) + 8, Y(bq * P) - 8); }
+  g.strokeStyle = "#1c7ed6"; g.setLineDash([5, 4]); g.beginPath(); g.moveTo(X(Q), H - 30); g.lineTo(X(Q), 10); g.stroke(); g.setLineDash([]); g.lineWidth = 1;
+  const prof = Q * cm - F;
+  $("b_out").innerHTML = `Contribution margin = ${f$(cm)}/unit (CM ratio ${(cm / P * 100).toFixed(1)}%) · Break-even <b>${isFinite(bq) ? Math.ceil(bq).toLocaleString() + " units = " + f$(bq * P) : "—"}</b><br>លក់ ${Q.toLocaleString()} units → ប្រាក់ចំណេញ <b style="color:${prof >= 0 ? "#2f9e44" : "#e03131"}">${f$(prof)}</b> · Margin of safety ${isFinite(bq) ? ((Q - bq) / Q * 100).toFixed(1) + "%" : "—"}`; }
+["b_f", "b_p", "b_v", "b_q"].forEach(id => $(id).oninput = be);
+jr(); dep(); tax(); ratio(); be();
+})();
+</script>
+
+<h3>🏆 Quiz ឆ្នាំទី ៣ · ឆមាសទី ២ — ពន្ធដារកម្ពុជា ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["ToI ស្តង់ដារ?", ["10%", "20%", "30%", "15%"], 1], ["ប្រេង/រ៉ែ ToI?", ["20%", "25%", "30%", "40%"], 2], ["ប្រាក់រំដោះ ToI ប្រចាំខែ?", ["1% ផលរបរ", "10% ចំណេញ", "20%", "0.5%"], 0], ["Minimum tax 1% មិនអនុវត្ត បើ?", ["រក្សាបញ្ជីគណនេយ្យត្រឹមត្រូវ", "ខាត", "តូច", "នាំចេញ"], 0], ["ToS ≤ 1,500,000 ៛?", ["0%", "5%", "10%", "20%"], 0], ["ToS ខ្ពស់បំផុត?", ["15%", "20%", "25%", "30%"], 1], ["Fringe benefits?", ["10%", "15%", "20%", "0%"], 2], ["អ្នកមិនមែននិវាសនជន (ប្រាក់ខែ)?", ["0–20%", "20% ថេរ", "10%", "14%"], 1], ["VAT ស្តង់ដារ?", ["10%", "7%", "12%", "5%"], 0], ["នាំចេញ VAT?", ["10%", "0%", "5%", "លើកលែង"], 1], ["Input VAT ទាមទារត្រូវការ?", ["វិក្កយបត្រអាករ", "បង្កាន់ដៃដៃ", "គ្មាន", "Email"], 0], ["Output 3,000 Input 3,800 →", ["បង់ 800", "Credit 800", "0", "បង់ 6,800"], 1], ["WHT ជួល?", ["10%", "15%", "4%", "20%"], 0], ["WHT ទូទាត់ឲ្យមិនមែននិវាសនជន?", ["10%", "14%", "20%", "6%"], 1], ["អ្នកណាបង់ WHT ទៅ GDT?", ["អ្នកទទួល", "អ្នកទូទាត់ (កាត់ទុក)", "ធនាគារ", "CDC"], 1], ["ច្បាប់ស្តីពីសារពើពន្ធដើម?", ["1993", "1997", "2005", "2012"], 1], ["Taxable = Profit 100k + ពិន័យ 3k?", ["97,000", "103,000", "100,000", "3,000"], 1], ["QIP គ្រប់គ្រងដោយ?", ["CDC", "NBC", "ACAR", "SEC"], 0], ["ការបំបែកវិក្កយបត្រគេចពន្ធ?", ["Planning", "ខុសច្បាប់", "IFRS", "ល្អ"], 1], ["Tax depreciation លឿនជាងគណនេយ្យ →", ["DTA", "DTL", "គ្មាន", "VAT"], 1]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+
+<ol class="steps"><li>ឆ្នាំ ៣ ឆមាស ១ ✅</li><li><b>ឆ្នាំ ៣ ឆមាស ២</b> (វគ្គនេះ) ✅</li><li><b>ឆ្នាំ ៤ ឆមាស ១</b>៖ សវនកម្ម &amp; ការធានា</li><li>ACCA TX · ATX</li></ol>
+<p class="muted">វិញ្ញាបនបត្រអាជីព៖ <b>CAT/ACCA</b> (អន្តរជាតិ) · <b>CPA/CA Cambodia</b> តាម KICPAA · <b>CIMA</b> (គណនេយ្យគ្រប់គ្រង) · <b>CFA</b> (វិនិយោគ)។</p>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="acc6"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

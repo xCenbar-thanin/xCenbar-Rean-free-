@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន Node.js ពីដើមដល់ចប់</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f8f5; --panel:#ffffff; --text:#1d2a22; --muted:#5b6b61; --line:#dfe6e0;
+  --accent:#3c873a; --accent2:#68a063; --accent-soft:#e7f3e6;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#7ccf6f; --accent2:#5fae58; --accent-soft:#1b2a1d;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#7ccf6f; --accent2:#5fae58; --accent-soft:#1b2a1d;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#2f6f2d,#68a063);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+</style>
+<link rel="icon" href="../assets/icons/node.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/node.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>វគ្គសិក្សា Node.js ពីដើមដល់កម្រិតអាជីព</h1>
+  <button class="btn" id="themeBtn">🌓</button>
+</header>
+
+<div class="layout">
+<nav class="side" id="side">
+  <h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+  <a href="#intro">១. Node.js ជាអ្វី?</a>
+  <a href="#history">២. អ្នកបង្កើត និងប្រវត្តិ</a>
+  <a href="#uses">៣. គេប្រើធ្វើអ្វី?</a>
+  <a href="#install">៤. ដំឡើង Node.js + VS Code</a>
+  <a href="#elements">៥. ធាតុនីមួយៗរបស់ Node.js</a>
+  <h4>ផ្នែកទី ២ – មេរៀន</h4>
+  <a href="#l1">មេរៀន ១: Hello World</a>
+  <a href="#l2">មេរៀន ២: Modules</a>
+  <a href="#l3">មេរៀន ៣: npm & package.json</a>
+  <a href="#l4">មេរៀន ៤: File System (fs)</a>
+  <a href="#l5">មេរៀន ៥: path & os</a>
+  <a href="#l6">មេរៀន ៦: Events</a>
+  <a href="#l7">មេរៀន ៧: Asynchronous & Event Loop</a>
+  <a href="#l8">មេរៀន ៨: HTTP Server</a>
+  <a href="#l9">មេរៀន ៩: Express.js</a>
+  <a href="#l10">មេរៀន ១០: REST API (CRUD)</a>
+  <a href="#l11">មេរៀន ១១: Middleware & Error</a>
+  <a href="#l12">មេរៀន ១២: Environment Variables</a>
+  <a href="#l13">មេរៀន ១៣: Database (MongoDB)</a>
+  <a href="#l14">មេរៀន ១៤: Streams & Buffer</a>
+  <h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+  <a href="#pro">App កម្រិតអាជីព</a>
+  <a href="#pro-auth">Authentication (JWT)</a>
+  <a href="#pro-security">Security</a>
+  <a href="#pro-test">Testing</a>
+  <a href="#pro-deploy">Docker & Deploy</a>
+  <a href="#roadmap">ផែនទីបន្តការសិក្សា</a>
+</nav>
+
+<main>
+
+<!-- ===================== INTRO ===================== -->
+<section class="hero" id="intro">
+  <h2>១. Node.js ជាអ្វី?</h2>
+  <p><b>Node.js</b> គឺជា <b>JavaScript Runtime</b> ដែលអនុញ្ញាតឱ្យយើងដំណើរការកូដ JavaScript នៅខាង <b>Server</b> (ក្រៅ Browser)។ វាត្រូវបានសាងសង់លើ <b>V8 Engine</b> របស់ Google Chrome ដែលបំប្លែងកូដ JavaScript ទៅជា Machine Code យ៉ាងលឿន។</p>
+  <p>មុនពេលមាន Node.js, JavaScript អាចដំណើរការតែនៅក្នុង Browser ប៉ុណ្ណោះ។ ឥឡូវនេះ យើងអាចប្រើភាសាតែមួយ (JavaScript) សម្រាប់ទាំង Frontend និង Backend។</p>
+</section>
+
+<section id="history">
+  <h2>២. អ្នកបង្កើត និងប្រវត្តិ</h2>
+  <div class="grid">
+    <div class="card"><b>អ្នកបង្កើត</b><br><b style="font-size:20px">Ryan Dahl</b><br>វិស្វករកម្មវិធីជនជាតិអាមេរិក</div>
+    <div class="card"><b>ឆ្នាំបង្កើត</b><br>ឆ្នាំ <b style="font-size:20px">2009</b><br>បង្ហាញជាលើកដំបូងនៅ JSConf EU</div>
+    <div class="card"><b>Engine</b><br>Google <b>V8</b> (សរសេរដោយ C++)</div>
+    <div class="card"><b>អ្នកថែទាំបច្ចុប្បន្ន</b><br>OpenJS Foundation និងសហគមន៍ Open Source</div>
+  </div>
+  <h3>ពេលវេលាសំខាន់ៗ</h3>
+  <table>
+    <tr><th>ឆ្នាំ</th><th>ព្រឹត្តិការណ៍</th></tr>
+    <tr><td>2009</td><td>Ryan Dahl បង្កើត Node.js ដើម្បីដោះស្រាយបញ្ហា Web Server ដែលរង់ចាំ (blocking) ពេលធ្វើការងារ I/O</td></tr>
+    <tr><td>2010</td><td><b>npm</b> (Node Package Manager) ត្រូវបានបង្កើតដោយ Isaac Z. Schlueter</td></tr>
+    <tr><td>2010</td><td><b>Express.js</b> Framework កើតឡើង</td></tr>
+    <tr><td>2015</td><td>Node.js Foundation បង្កើតឡើង (ក្រោយមកបញ្ចូលទៅជា OpenJS Foundation ឆ្នាំ 2019)</td></tr>
+    <tr><td>2018</td><td>Ryan Dahl បង្កើត <b>Deno</b> ជា Runtime ថ្មីមួយទៀត</td></tr>
+    <tr><td>បច្ចុប្បន្ន</td><td>Node.js ចេញ Version ថ្មីជាប្រចាំ ហើយ Version គូ (ឧ. 20, 22, 24) ក្លាយជា <b>LTS</b> (Long Term Support)</td></tr>
+  </table>
+</section>
+
+<section id="uses">
+  <h2>៣. គេប្រើប្រាស់ Node.js សម្រាប់ធ្វើអ្វី?</h2>
+  <div class="grid">
+    <div class="card">🌐 <b>Web Server & REST API</b><br>Backend សម្រាប់ Website និង Mobile App</div>
+    <div class="card">💬 <b>Real-time App</b><br>Chat, Notification, Game Online (Socket.io)</div>
+    <div class="card">🎬 <b>Streaming</b><br>Video/Audio Streaming ដូច Netflix</div>
+    <div class="card">🧩 <b>Microservices</b><br>បំបែក System ធំជាសេវាតូចៗ</div>
+    <div class="card">🛠️ <b>CLI Tools</b><br>ឧ. npm, Vite, ESLint សុទ្ធតែសរសេរដោយ Node.js</div>
+    <div class="card">🖥️ <b>Desktop App</b><br>ជាមួយ Electron (VS Code, Slack, Discord)</div>
+    <div class="card">🤖 <b>IoT & Automation</b><br>គ្រប់គ្រងឧបករណ៍ Script ស្វ័យប្រវត្តិ</div>
+    <div class="card">⚡ <b>Serverless</b><br>AWS Lambda, Vercel, Cloudflare</div>
+  </div>
+  <p><b>ក្រុមហ៊ុនល្បីៗដែលប្រើ Node.js:</b> Netflix, PayPal, LinkedIn, Uber, NASA, Walmart, eBay, Trello ។</p>
+  <h3>ហេតុអ្វីបានជាពេញនិយម?</h3>
+  <ul>
+    <li><b>លឿន</b> – ដោយសារ V8 Engine និង Non-blocking I/O</li>
+    <li><b>ភាសាតែមួយ</b> – JavaScript ទាំង Frontend និង Backend</li>
+    <li><b>npm</b> – មាន Package រាប់លានសម្រាប់ប្រើ</li>
+    <li><b>Scalable</b> – ដោះស្រាយ Request ច្រើនក្នុងពេលតែមួយបានល្អ</li>
+  </ul>
+  <div class="warn">⚠️ Node.js មិនសូវល្អសម្រាប់ការងារគណនាធ្ងន់ៗ (CPU-intensive) ដូចជា Video Encoding ឬ Machine Learning ធំៗ ព្រោះវាដំណើរការលើ <b>Single Thread</b> (ទោះបីអាចប្រើ Worker Threads ជួយបាន)។</div>
+</section>
+
+<!-- ===================== INSTALL ===================== -->
+<section id="install">
+  <h2>៤. របៀបដំឡើង Node.js និងប្រើក្នុង VS Code</h2>
+  <div class="note">💡 <b>ចំណាំសំខាន់:</b> Node.js មិនមែនដំឡើង «ក្នុង» VS Code ទេ។ យើងដំឡើង Node.js លើកុំព្យូទ័រ រួចប្រើវាតាមរយៈ <b>Terminal</b> ក្នុង VS Code។</div>
+
+  <h3>ជំហានទី ១: ដំឡើង Node.js</h3>
+  <ol class="steps">
+    <li>ចូលទៅគេហទំព័រ <a href="https://nodejs.org" target="_blank">https://nodejs.org</a></li>
+    <li>ជ្រើសរើស Version ដែលមានសញ្ញា <b>LTS</b> (Recommended for most users) — Version នេះមានស្ថេរភាពជាង</li>
+    <li>ទាញយក File សម្រាប់ប្រព័ន្ធរបស់អ្នក (Windows <code class="i">.msi</code>, macOS <code class="i">.pkg</code>)</li>
+    <li>ចុច Next រហូតដល់ Finish (ទុក Option ដើមទាំងអស់ — វាដំឡើង <b>npm</b> ជាមួយផងដែរ)</li>
+    <li>បិទ ហើយបើក Terminal / Command Prompt ឡើងវិញ</li>
+  </ol>
+
+  <h3>ជំហានទី ២: ពិនិត្យថាដំឡើងជោគជ័យ</h3>
+  <div class="codebox"><span class="label">Terminal</span><pre><code class="bash"># ពិនិត្យ Version របស់ Node.js
+node -v
+
+# ពិនិត្យ Version របស់ npm
+npm -v</code></pre></div>
+  <p>បើវាបង្ហាញលេខ Version (ឧ. <code class="i">v24.x.x</code>) មានន័យថាជោគជ័យ ✅</p>
+
+  <h3>ជំហានទី ៣: ដំឡើង VS Code</h3>
+  <ol class="steps">
+    <li>ទាញយកពី <a href="https://code.visualstudio.com" target="_blank">https://code.visualstudio.com</a> ហើយដំឡើង</li>
+    <li>បើក VS Code → <b>File → Open Folder</b> → បង្កើត Folder ថ្មីឈ្មោះ <code class="i">node-learning</code></li>
+    <li>បើក Terminal ក្នុង VS Code ដោយចុច <b>Ctrl + `</b> (ឬ Menu <b>Terminal → New Terminal</b>)</li>
+    <li>វាយ <code class="i">node -v</code> ក្នុង Terminal នោះ ដើម្បីពិនិត្យម្តងទៀត</li>
+  </ol>
+
+  <h3>ជំហានទី ៤: Extensions ណែនាំសម្រាប់ VS Code</h3>
+  <table>
+    <tr><th>Extension</th><th>មុខងារ</th></tr>
+    <tr><td><b>ESLint</b></td><td>រកកំហុស និងរក្សាស្តង់ដារកូដ</td></tr>
+    <tr><td><b>Prettier</b></td><td>រៀបចំទម្រង់កូដឱ្យស្អាតស្វ័យប្រវត្តិ</td></tr>
+    <tr><td><b>Code Runner</b></td><td>ដំណើរការកូដដោយចុចប៊ូតុង ▶</td></tr>
+    <tr><td><b>Thunder Client</b> ឬ <b>REST Client</b></td><td>សាកល្បង API ក្នុង VS Code ផ្ទាល់</td></tr>
+    <tr><td><b>DotENV</b></td><td>បន្ថែមពណ៌ឱ្យ File <code class="i">.env</code></td></tr>
+  </table>
+
+  <h3>ជំហានទី ៥: ដំណើរការកូដដំបូង</h3>
+  <p>បង្កើត File <code class="i">app.js</code> ហើយសរសេរ:</p>
+  <div class="codebox"><span class="label">app.js</span><pre><code class="js">console.log("សួស្តី Node.js! 🎉");</code></pre></div>
+  <div class="codebox"><span class="label">Terminal</span><pre><code class="bash">node app.js</code></pre></div>
+
+  <div class="note">💡 <b>ជម្រើសអាជីព – nvm:</b> អ្នកអភិវឌ្ឍន៍អាជីពច្រើនប្រើ <b>nvm</b> (Node Version Manager) ដើម្បីប្តូររវាង Version ផ្សេងៗ។ Windows ប្រើ <b>nvm-windows</b>។<br>ឧទាហរណ៍: <code class="i">nvm install --lts</code> និង <code class="i">nvm use --lts</code></div>
+</section>
+
+<!-- ===================== ELEMENTS ===================== -->
+<section id="elements">
+  <h2>៥. ធាតុ (Components) នីមួយៗរបស់ Node.js</h2>
+  <table>
+    <tr><th>ធាតុ</th><th>ពន្យល់</th></tr>
+    <tr><td><b>V8 Engine</b></td><td>ម៉ាស៊ីនរបស់ Google ដែលបំប្លែង JavaScript ទៅជា Machine Code</td></tr>
+    <tr><td><b>libuv</b></td><td>Library (C) ដែលគ្រប់គ្រង Event Loop, Thread Pool និង Asynchronous I/O</td></tr>
+    <tr><td><b>Event Loop</b></td><td>បេះដូងរបស់ Node.js — ពិនិត្យ និងដំណើរការ Callback ដែលរួចរាល់ ដោយមិនបង្អាក់កម្មវិធី</td></tr>
+    <tr><td><b>Non-blocking I/O</b></td><td>អានឯកសារ ឬ Database ដោយមិនចាំឱ្យចប់ — បន្តធ្វើការងារផ្សេង</td></tr>
+    <tr><td><b>Modules</b></td><td>បំបែកកូដជា File តូចៗ (CommonJS <code class="i">require</code> / ES Modules <code class="i">import</code>)</td></tr>
+    <tr><td><b>npm</b></td><td>កម្មវិធីគ្រប់គ្រង Package (ដំឡើង Library ពីខាងក្រៅ)</td></tr>
+    <tr><td><b>package.json</b></td><td>File ព័ត៌មាន Project: ឈ្មោះ Version Dependencies Scripts</td></tr>
+    <tr><td><b>Global Objects</b></td><td><code class="i">process</code>, <code class="i">console</code>, <code class="i">__dirname</code>, <code class="i">setTimeout</code>, <code class="i">fetch</code> ...</td></tr>
+    <tr><td><b>REPL</b></td><td>វាយ <code class="i">node</code> តែឯងក្នុង Terminal ដើម្បីសាកកូដភ្លាមៗ</td></tr>
+  </table>
+
+  <h3>Core Modules (Module ដែលមានស្រាប់)</h3>
+  <div class="grid">
+    <div class="card"><b>fs</b><br>អាន/សរសេរ/លុប ឯកសារ</div>
+    <div class="card"><b>path</b><br>គ្រប់គ្រងផ្លូវ (Path) ឯកសារ</div>
+    <div class="card"><b>http / https</b><br>បង្កើត Web Server</div>
+    <div class="card"><b>os</b><br>ព័ត៌មានប្រព័ន្ធប្រតិបត្តិការ</div>
+    <div class="card"><b>events</b><br>បង្កើត និងស្តាប់ Event</div>
+    <div class="card"><b>stream</b><br>ដំណើរការទិន្នន័យជាផ្នែកៗ</div>
+    <div class="card"><b>buffer</b><br>គ្រប់គ្រងទិន្នន័យ Binary</div>
+    <div class="card"><b>url</b><br>វិភាគ URL</div>
+    <div class="card"><b>crypto</b><br>Hash, Encryption, UUID</div>
+    <div class="card"><b>child_process</b><br>ដំណើរការ Command ផ្សេង</div>
+    <div class="card"><b>worker_threads</b><br>ការងារ CPU ធ្ងន់ៗ</div>
+    <div class="card"><b>test</b><br>សរសេរ Test (មានស្រាប់)</div>
+  </div>
+
+  <h3>រូបភាព Event Loop (សាមញ្ញ)</h3>
+  <div class="codebox"><span class="label">Diagram</span><pre><code class="txt">   ┌───────────────────────────┐
+┌─>│        timers             │  ← setTimeout, setInterval
+│  └─────────────┬─────────────┘
+│  ┌─────────────┴─────────────┐
+│  │     pending callbacks     │
+│  └─────────────┬─────────────┘
+│  ┌─────────────┴─────────────┐
+│  │          poll             │  ← I/O (fs, network)
+│  └─────────────┬─────────────┘
+│  ┌─────────────┴─────────────┐
+│  │          check            │  ← setImmediate
+│  └─────────────┬─────────────┘
+│  ┌─────────────┴─────────────┐
+└──┤     close callbacks       │
+   └───────────────────────────┘
+ (process.nextTick & Promise រត់មុនគេ រវាងដំណាក់កាលនីមួយៗ)</code></pre></div>
+</section>
+
+<!-- ===================== LESSONS ===================== -->
+<section id="l1">
+  <h2><span class="badge">មេរៀន ១</span>Hello World & Global Objects</h2>
+  <div class="codebox"><span class="label">hello.js</span><pre><code class="js">// បង្ហាញអក្សរ
+console.log("Hello, Node.js!");
+
+// Variables
+const name = "សុខា";
+let age = 20;
+console.log(`ឈ្មោះ: ${name}, អាយុ: ${age}`);
+
+// Global objects ពិសេសរបស់ Node.js
+console.log(__dirname);        // Folder បច្ចុប្បន្ន
+console.log(__filename);       // File បច្ចុប្បន្ន
+console.log(process.version);  // Version Node.js
+console.log(process.platform); // win32, darwin, linux
+
+// ទទួល Arguments ពី Terminal: node hello.js Dara
+const args = process.argv.slice(2);
+console.log("Arguments:", args);</code></pre></div>
+  <div class="note">💡 ប្រើ <code class="i">node --watch hello.js</code> ដើម្បីឱ្យវា Restart ស្វ័យប្រវត្តិពេលកែ File (មិនចាំបាច់ nodemon)។</div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ១</h4>
+    <p>សរសេរកម្មវិធីទទួលលេខពីរពី Terminal (ឧ. <code class="i">node calc.js 5 3</code>) ហើយបង្ហាញ ផលបូក ផលដក ផលគុណ ផលចែក។</p>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">calc.js</span><pre><code class="js">const [a, b] = process.argv.slice(2).map(Number);
+
+if (isNaN(a) || isNaN(b)) {
+  console.log("សូមបញ្ចូលលេខពីរ: node calc.js 5 3");
+  process.exit(1);
+}
+
+console.log(`${a} + ${b} = ${a + b}`);
+console.log(`${a} - ${b} = ${a - b}`);
+console.log(`${a} × ${b} = ${a * b}`);
+console.log(`${a} ÷ ${b} = ${b !== 0 ? a / b : "មិនអាចចែកនឹង 0"}`);</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l2">
+  <h2><span class="badge">មេរៀន ២</span>Modules (CommonJS & ES Modules)</h2>
+  <p>Module ជួយបំបែកកូដជា File តូចៗ ងាយស្រួលថែទាំ និងប្រើឡើងវិញ។</p>
+  <h3>ក) CommonJS (របៀបដើម)</h3>
+  <div class="codebox"><span class="label">math.js</span><pre><code class="js">function add(a, b) {
+  return a + b;
+}
+const PI = 3.14159;
+
+module.exports = { add, PI };</code></pre></div>
+  <div class="codebox"><span class="label">main.js</span><pre><code class="js">const { add, PI } = require("./math");
+const os = require("os"); // Core module
+
+console.log(add(2, 3)); // 5
+console.log(PI);</code></pre></div>
+
+  <h3>ខ) ES Modules (របៀបទំនើប – ណែនាំ)</h3>
+  <p>បន្ថែម <code class="i">"type": "module"</code> ក្នុង <code class="i">package.json</code> ឬប្តូរឈ្មោះ File ជា <code class="i">.mjs</code>។</p>
+  <div class="codebox"><span class="label">math.mjs</span><pre><code class="js">export function add(a, b) {
+  return a + b;
+}
+export const PI = 3.14159;
+
+export default function multiply(a, b) {
+  return a * b;
+}</code></pre></div>
+  <div class="codebox"><span class="label">main.mjs</span><pre><code class="js">import multiply, { add, PI } from "./math.mjs";
+import os from "node:os"; // prefix "node:" សម្រាប់ core module
+
+console.log(add(2, 3), multiply(4, 5), PI);</code></pre></div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ២</h4>
+    <p>បង្កើត Module <code class="i">student.js</code> ដែល Export Function <code class="i">getGrade(score)</code> (≥90 → A, ≥80 → B, ≥70 → C, ≥50 → D, ក្រៅពីនេះ → F)។ រួច Import ទៅប្រើក្នុង <code class="i">index.js</code>។</p>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">student.js</span><pre><code class="js">export function getGrade(score) {
+  if (score >= 90) return "A";
+  if (score >= 80) return "B";
+  if (score >= 70) return "C";
+  if (score >= 50) return "D";
+  return "F";
+}</code></pre></div>
+    <div class="codebox"><span class="label">index.js</span><pre><code class="js">import { getGrade } from "./student.js";
+
+const scores = [95, 82, 74, 51, 30];
+scores.forEach((s) => console.log(`ពិន្ទុ ${s} → ${getGrade(s)}`));</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l3">
+  <h2><span class="badge">មេរៀន ៣</span>npm & package.json</h2>
+  <div class="codebox"><span class="label">Terminal</span><pre><code class="bash"># បង្កើត package.json
+npm init -y
+
+# ដំឡើង Package (dependencies)
+npm install express
+
+# ដំឡើងសម្រាប់តែពេល Develop (devDependencies)
+npm install --save-dev eslint
+
+# ដំឡើង Package ទាំងអស់ពី package.json
+npm install
+
+# លុប Package
+npm uninstall express
+
+# ដំណើរការ Script
+npm run dev</code></pre></div>
+  <div class="codebox"><span class="label">package.json</span><pre><code class="js">{
+  "name": "my-app",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^5.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0"
+  }
+}</code></pre></div>
+  <div class="warn">⚠️ កុំ Upload Folder <code class="i">node_modules</code> ទៅ GitHub។ បង្កើត File <code class="i">.gitignore</code> ហើយសរសេរ <code class="i">node_modules</code> និង <code class="i">.env</code>។</div>
+  <p><b>Semantic Versioning:</b> <code class="i">^5.1.2</code> → MAJOR.MINOR.PATCH ។ សញ្ញា <code class="i">^</code> អនុញ្ញាត Update MINOR និង PATCH។</p>
+
+  <div class="ex"><h4>✍️ លំហាត់ ៣</h4>
+    <p>បង្កើត Project ថ្មី ដំឡើង Package <code class="i">chalk</code> ហើយបង្ហាញអក្សរ «ជោគជ័យ» ពណ៌បៃតង និង «កំហុស» ពណ៌ក្រហម។ បន្ថែម Script <code class="i">"start"</code>។</p>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">Terminal</span><pre><code class="bash">npm init -y
+npm install chalk</code></pre></div>
+    <div class="codebox"><span class="label">index.js</span><pre><code class="js">import chalk from "chalk";
+
+console.log(chalk.green("✔ ជោគជ័យ"));
+console.log(chalk.red("✖ កំហុស"));
+console.log(chalk.blue.bold("ព័ត៌មាន"));</code></pre></div>
+    <p>ក្នុង package.json បន្ថែម <code class="i">"type": "module"</code> និង <code class="i">"start": "node index.js"</code> រួចរត់ <code class="i">npm start</code>។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l4">
+  <h2><span class="badge">មេរៀន ៤</span>File System (fs)</h2>
+  <p>Module <code class="i">fs</code> មាន ៣ របៀប: <b>Sync</b> (បង្អាក់), <b>Callback</b>, និង <b>Promise</b> (ណែនាំ)។</p>
+  <div class="codebox"><span class="label">fs-demo.js</span><pre><code class="js">import fs from "node:fs";
+import { readFile, writeFile, appendFile, mkdir, readdir, unlink } from "node:fs/promises";
+
+// 1) Sync – ងាយ ប៉ុន្តែបង្អាក់កម្មវិធី
+fs.writeFileSync("note.txt", "បន្ទាត់ទី ១\n");
+
+// 2) Callback
+fs.readFile("note.txt", "utf8", (err, data) => {
+  if (err) return console.error(err);
+  console.log("Callback:", data);
+});
+
+// 3) Promise + async/await – ណែនាំបំផុត
+async function main() {
+  try {
+    await appendFile("note.txt", "បន្ទាត់ទី ២\n");
+    const text = await readFile("note.txt", "utf8");
+    console.log("Promise:", text);
+
+    await mkdir("data", { recursive: true });
+    await writeFile("data/user.json", JSON.stringify({ name: "Dara" }, null, 2));
+
+    const files = await readdir(".");
+    console.log("Files:", files);
+
+    // await unlink("note.txt"); // លុប File
+  } catch (err) {
+    console.error("កំហុស:", err.message);
+  }
+}
+main();</code></pre></div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ៤</h4>
+    <p>សរសេរកម្មវិធី «កំណត់ត្រា» (Notes CLI): <code class="i">node notes.js add "ទិញបាយ"</code> រក្សាទុកក្នុង <code class="i">notes.json</code>, ហើយ <code class="i">node notes.js list</code> បង្ហាញទាំងអស់។</p>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">notes.js</span><pre><code class="js">import { readFile, writeFile } from "node:fs/promises";
+
+const FILE = "notes.json";
+
+async function loadNotes() {
+  try {
+    return JSON.parse(await readFile(FILE, "utf8"));
+  } catch {
+    return []; // File មិនទាន់មាន
+  }
+}
+
+async function saveNotes(notes) {
+  await writeFile(FILE, JSON.stringify(notes, null, 2));
+}
+
+const [command, ...rest] = process.argv.slice(2);
+const notes = await loadNotes();
+
+if (command === "add") {
+  notes.push({ id: Date.now(), text: rest.join(" ") });
+  await saveNotes(notes);
+  console.log("✔ បានបន្ថែម");
+} else if (command === "list") {
+  notes.forEach((n, i) => console.log(`${i + 1}. ${n.text}`));
+} else {
+  console.log('ប្រើ: node notes.js add "អត្ថបទ" | list');
+}</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l5">
+  <h2><span class="badge">មេរៀន ៥</span>path & os</h2>
+  <div class="codebox"><span class="label">path-os.js</span><pre><code class="js">import path from "node:path";
+import os from "node:os";
+import { fileURLToPath } from "node:url";
+
+// ក្នុង ES Modules គ្មាន __dirname ទេ ត្រូវបង្កើតខ្លួនឯង
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+// (Node.js ថ្មីៗ អាចប្រើ import.meta.dirname ផ្ទាល់)
+
+const filePath = path.join(__dirname, "uploads", "photo.png");
+console.log(filePath);
+console.log(path.basename(filePath)); // photo.png
+console.log(path.extname(filePath));  // .png
+console.log(path.parse(filePath));
+
+console.log("OS:", os.type(), os.release());
+console.log("CPU:", os.cpus().length, "cores");
+console.log("RAM:", (os.totalmem() / 1024 ** 3).toFixed(1), "GB");
+console.log("Free:", (os.freemem() / 1024 ** 3).toFixed(1), "GB");
+console.log("Home:", os.homedir());</code></pre></div>
+  <div class="note">💡 ប្រើ <code class="i">path.join()</code> ជានិច្ច ជំនួសការភ្ជាប់ String ដោយដៃ ព្រោះ Windows ប្រើ <code class="i">\</code> ចំណែក Linux/Mac ប្រើ <code class="i">/</code>។</div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ៥</h4>
+    <p>សរសេរកម្មវិធីបង្ហាញ «របាយការណ៍ប្រព័ន្ធ» ដែលមាន ឈ្មោះ Host, ចំនួន CPU, RAM សរុប/ទំនេរ (GB) និងភាគរយ RAM ដែលកំពុងប្រើ។</p>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">system.js</span><pre><code class="js">import os from "node:os";
+
+const total = os.totalmem();
+const free = os.freemem();
+const usedPercent = (((total - free) / total) * 100).toFixed(1);
+const gb = (b) => (b / 1024 ** 3).toFixed(2) + " GB";
+
+console.table({
+  Host: os.hostname(),
+  CPU: os.cpus().length,
+  "RAM សរុប": gb(total),
+  "RAM ទំនេរ": gb(free),
+  "កំពុងប្រើ": usedPercent + "%",
+});</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l6">
+  <h2><span class="badge">មេរៀន ៦</span>Events (EventEmitter)</h2>
+  <p>Node.js ផ្អែកលើ <b>Event-driven</b>: យើង «ស្តាប់» (<code class="i">on</code>) និង «បញ្ចេញ» (<code class="i">emit</code>) Event។</p>
+  <div class="codebox"><span class="label">events.js</span><pre><code class="js">import { EventEmitter } from "node:events";
+
+class Shop extends EventEmitter {
+  order(product, qty) {
+    console.log(`📦 កុម្ម៉ង់: ${product} x${qty}`);
+    this.emit("ordered", { product, qty });
+  }
+}
+
+const shop = new Shop();
+
+shop.on("ordered", (data) => {
+  console.log(`📧 ផ្ញើ Email បញ្ជាក់ ${data.product}`);
+});
+
+shop.once("ordered", () => {
+  console.log("🎁 ការកុម្ម៉ង់ដំបូង ទទួលបានការបញ្ចុះតម្លៃ!");
+});
+
+shop.order("កាហ្វេ", 2);
+shop.order("នំ", 1);</code></pre></div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ៦</h4>
+    <p>បង្កើត Class <code class="i">BankAccount</code> ដែល emit <code class="i">"deposit"</code>, <code class="i">"withdraw"</code> និង <code class="i">"lowBalance"</code> (ពេលសមតុល្យតិចជាង $10)។</p>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">bank.js</span><pre><code class="js">import { EventEmitter } from "node:events";
+
+class BankAccount extends EventEmitter {
+  #balance = 0;
+
+  deposit(amount) {
+    this.#balance += amount;
+    this.emit("deposit", amount, this.#balance);
+  }
+
+  withdraw(amount) {
+    if (amount > this.#balance) {
+      return this.emit("error", new Error("សមតុល្យមិនគ្រប់គ្រាន់"));
+    }
+    this.#balance -= amount;
+    this.emit("withdraw", amount, this.#balance);
+    if (this.#balance &lt; 10) this.emit("lowBalance", this.#balance);
+  }
+}
+
+const acc = new BankAccount();
+acc.on("deposit", (a, b) => console.log(`+$${a} → សមតុល្យ $${b}`));
+acc.on("withdraw", (a, b) => console.log(`-$${a} → សមតុល្យ $${b}`));
+acc.on("lowBalance", (b) => console.log(`⚠️ សមតុល្យទាប: $${b}`));
+acc.on("error", (e) => console.log("❌", e.message));
+
+acc.deposit(50);
+acc.withdraw(45);
+acc.withdraw(100);</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l7">
+  <h2><span class="badge">មេរៀន ៧</span>Asynchronous Programming & Event Loop</h2>
+  <h3>Callback → Promise → async/await</h3>
+  <div class="codebox"><span class="label">async.js</span><pre><code class="js">// 1) Callback (អាចនាំឱ្យមាន "Callback Hell")
+function getUserCb(id, callback) {
+  setTimeout(() => callback(null, { id, name: "Dara" }), 500);
+}
+getUserCb(1, (err, user) => console.log("Callback:", user));
+
+// 2) Promise
+function getUser(id) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (id &lt;= 0) reject(new Error("ID មិនត្រឹមត្រូវ"));
+      else resolve({ id, name: "Dara" });
+    }, 500);
+  });
+}
+getUser(1)
+  .then((user) => console.log("Promise:", user))
+  .catch((err) => console.error(err.message));
+
+// 3) async/await – អានងាយបំផុត
+async function main() {
+  try {
+    const user = await getUser(2);
+    console.log("Await:", user);
+
+    // ដំណើរការស្របគ្នា (Parallel)
+    const users = await Promise.all([getUser(3), getUser(4)]);
+    console.log("All:", users);
+  } catch (err) {
+    console.error(err.message);
+  }
+}
+main();</code></pre></div>
+
+  <h3>លំដាប់ Event Loop</h3>
+  <div class="codebox"><span class="label">order.js</span><pre><code class="js">console.log("1. Sync");
+
+setTimeout(() => console.log("5. setTimeout"), 0);
+setImmediate(() => console.log("6. setImmediate"));
+Promise.resolve().then(() => console.log("4. Promise"));
+process.nextTick(() => console.log("3. nextTick"));
+
+console.log("2. Sync");
+// លទ្ធផល: 1 → 2 → 3 → 4 → 5 → 6 (5 និង 6 អាចប្តូរលំដាប់បានពេលខ្លះ)</code></pre></div>
+
+  <h3>fetch (មានស្រាប់ក្នុង Node.js)</h3>
+  <div class="codebox"><span class="label">fetch.js</span><pre><code class="js">const res = await fetch("https://jsonplaceholder.typicode.com/todos/1");
+const todo = await res.json();
+console.log(todo);</code></pre></div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ៧</h4>
+    <p>សរសេរ Function <code class="i">sleep(ms)</code> ដែល return Promise។ បន្ទាប់មកធ្វើ «រាប់ថយក្រោយ» 5 ដល់ 1 រៀងរាល់ 1 វិនាទី រួចបង្ហាញ «🚀 ចាប់ផ្តើម!»។</p>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">countdown.js</span><pre><code class="js">const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function countdown(from) {
+  for (let i = from; i > 0; i--) {
+    console.log(i);
+    await sleep(1000);
+  }
+  console.log("🚀 ចាប់ផ្តើម!");
+}
+
+countdown(5);</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l8">
+  <h2><span class="badge">មេរៀន ៨</span>HTTP Server (ដោយមិនប្រើ Framework)</h2>
+  <div class="codebox"><span class="label">server.js</span><pre><code class="js">import http from "node:http";
+
+const PORT = 3000;
+const products = [
+  { id: 1, name: "កាហ្វេ", price: 1.5 },
+  { id: 2, name: "តែ", price: 1 },
+];
+
+const server = http.createServer((req, res) => {
+  const { method, url } = req;
+
+  if (method === "GET" &amp;&amp; url === "/") {
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    return res.end("&lt;h1>សូមស្វាគមន៍មកកាន់ Node.js Server&lt;/h1>");
+  }
+
+  if (method === "GET" &amp;&amp; url === "/api/products") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify(products));
+  }
+
+  if (method === "POST" &amp;&amp; url === "/api/products") {
+    let body = "";
+    req.on("data", (chunk) => (body += chunk));
+    req.on("end", () => {
+      const product = { id: products.length + 1, ...JSON.parse(body) };
+      products.push(product);
+      res.writeHead(201, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(product));
+    });
+    return;
+  }
+
+  res.writeHead(404, { "Content-Type": "application/json" });
+  res.end(JSON.stringify({ message: "រកមិនឃើញ" }));
+});
+
+server.listen(PORT, () => {
+  console.log(`✅ Server កំពុងដំណើរការ http://localhost:${PORT}`);
+});</code></pre></div>
+  <p>បើក Browser ទៅ <code class="i">http://localhost:3000</code> និង <code class="i">http://localhost:3000/api/products</code>។</p>
+
+  <div class="ex"><h4>✍️ លំហាត់ ៨</h4>
+    <p>បន្ថែម Route <code class="i">GET /api/time</code> ដែល Return ម៉ោងបច្ចុប្បន្ន ជា JSON និង Route <code class="i">GET /about</code> Return HTML ព័ត៌មានអំពីអ្នក។</p>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">បន្ថែមក្នុង createServer</span><pre><code class="js">if (method === "GET" &amp;&amp; url === "/api/time") {
+  res.writeHead(200, { "Content-Type": "application/json" });
+  return res.end(JSON.stringify({
+    iso: new Date().toISOString(),
+    local: new Date().toLocaleString("km-KH", { timeZone: "Asia/Phnom_Penh" }),
+  }));
+}
+
+if (method === "GET" &amp;&amp; url === "/about") {
+  res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+  return res.end("&lt;h1>អំពីខ្ញុំ&lt;/h1>&lt;p>ខ្ញុំកំពុងរៀន Node.js&lt;/p>");
+}</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l9">
+  <h2><span class="badge">មេរៀន ៩</span>Express.js</h2>
+  <p>Express គឺជា Framework ពេញនិយមបំផុតសម្រាប់ Node.js — ធ្វើឱ្យការបង្កើត Server ងាយស្រួលជាង Module <code class="i">http</code> ច្រើន។</p>
+  <div class="codebox"><span class="label">Terminal</span><pre><code class="bash">npm init -y
+npm install express</code></pre></div>
+  <div class="codebox"><span class="label">app.js</span><pre><code class="js">import express from "express";
+
+const app = express();
+const PORT = 3000;
+
+app.use(express.json());                 // អាន JSON body
+app.use(express.static("public"));       // បម្រើ File HTML/CSS/JS
+
+app.get("/", (req, res) => {
+  res.send("សួស្តី Express!");
+});
+
+// Route Parameters: /users/5
+app.get("/users/:id", (req, res) => {
+  res.json({ id: req.params.id });
+});
+
+// Query String: /search?q=node&amp;page=2
+app.get("/search", (req, res) => {
+  const { q, page = 1 } = req.query;
+  res.json({ q, page: Number(page) });
+});
+
+app.post("/login", (req, res) => {
+  const { email } = req.body;
+  res.status(201).json({ message: `ស្វាគមន៍ ${email}` });
+});
+
+app.listen(PORT, () => console.log(`🚀 http://localhost:${PORT}`));</code></pre></div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ៩</h4>
+    <p>បង្កើត Express App ដែលមាន Route <code class="i">GET /calc/:op/:a/:b</code> (op = add, sub, mul, div) ហើយ Return លទ្ធផលជា JSON។ បើ op មិនត្រឹមត្រូវ Return Status 400។</p>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">calc-app.js</span><pre><code class="js">import express from "express";
+const app = express();
+
+const ops = {
+  add: (a, b) => a + b,
+  sub: (a, b) => a - b,
+  mul: (a, b) => a * b,
+  div: (a, b) => (b === 0 ? null : a / b),
+};
+
+app.get("/calc/:op/:a/:b", (req, res) => {
+  const { op } = req.params;
+  const a = Number(req.params.a);
+  const b = Number(req.params.b);
+
+  if (!ops[op]) return res.status(400).json({ error: "op មិនត្រឹមត្រូវ" });
+  if (isNaN(a) || isNaN(b)) return res.status(400).json({ error: "ត្រូវតែជាលេខ" });
+
+  const result = ops[op](a, b);
+  if (result === null) return res.status(400).json({ error: "មិនអាចចែកនឹង 0" });
+
+  res.json({ op, a, b, result });
+});
+
+app.listen(3000);</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l10">
+  <h2><span class="badge">មេរៀន ១០</span>REST API (CRUD)</h2>
+  <table>
+    <tr><th>Method</th><th>URL</th><th>សកម្មភាព</th><th>Status</th></tr>
+    <tr><td>GET</td><td>/api/books</td><td>អានទាំងអស់ (Read)</td><td>200</td></tr>
+    <tr><td>GET</td><td>/api/books/:id</td><td>អានមួយ</td><td>200 / 404</td></tr>
+    <tr><td>POST</td><td>/api/books</td><td>បង្កើត (Create)</td><td>201</td></tr>
+    <tr><td>PUT / PATCH</td><td>/api/books/:id</td><td>កែប្រែ (Update)</td><td>200</td></tr>
+    <tr><td>DELETE</td><td>/api/books/:id</td><td>លុប (Delete)</td><td>204</td></tr>
+  </table>
+  <div class="codebox"><span class="label">books-api.js</span><pre><code class="js">import express from "express";
+import { randomUUID } from "node:crypto";
+
+const app = express();
+app.use(express.json());
+
+let books = [
+  { id: randomUUID(), title: "រឿងព្រេងខ្មែរ", author: "ស៊ុន", year: 2020 },
+];
+
+// READ ALL
+app.get("/api/books", (req, res) => res.json(books));
+
+// READ ONE
+app.get("/api/books/:id", (req, res) => {
+  const book = books.find((b) => b.id === req.params.id);
+  if (!book) return res.status(404).json({ message: "រកមិនឃើញសៀវភៅ" });
+  res.json(book);
+});
+
+// CREATE
+app.post("/api/books", (req, res) => {
+  const { title, author, year } = req.body;
+  if (!title || !author) {
+    return res.status(400).json({ message: "title និង author ត្រូវតែមាន" });
+  }
+  const book = { id: randomUUID(), title, author, year };
+  books.push(book);
+  res.status(201).json(book);
+});
+
+// UPDATE
+app.patch("/api/books/:id", (req, res) => {
+  const book = books.find((b) => b.id === req.params.id);
+  if (!book) return res.status(404).json({ message: "រកមិនឃើញសៀវភៅ" });
+  Object.assign(book, req.body);
+  res.json(book);
+});
+
+// DELETE
+app.delete("/api/books/:id", (req, res) => {
+  const before = books.length;
+  books = books.filter((b) => b.id !== req.params.id);
+  if (books.length === before) return res.status(404).json({ message: "រកមិនឃើញ" });
+  res.status(204).end();
+});
+
+app.listen(3000, () => console.log("📚 Books API: http://localhost:3000/api/books"));</code></pre></div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ១០</h4>
+    <p>បន្ថែមមុខងារ <b>ស្វែងរក</b> និង <b>Pagination</b>: <code class="i">GET /api/books?search=ខ្មែរ&amp;page=1&amp;limit=5</code></p>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">ជំនួស READ ALL</span><pre><code class="js">app.get("/api/books", (req, res) => {
+  const { search = "", page = 1, limit = 5 } = req.query;
+  const p = Math.max(1, Number(page));
+  const l = Math.min(50, Math.max(1, Number(limit)));
+
+  const filtered = books.filter((b) =>
+    b.title.toLowerCase().includes(search.toLowerCase())
+  );
+  const start = (p - 1) * l;
+
+  res.json({
+    total: filtered.length,
+    page: p,
+    totalPages: Math.ceil(filtered.length / l),
+    data: filtered.slice(start, start + l),
+  });
+});</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l11">
+  <h2><span class="badge">មេរៀន ១១</span>Middleware & Error Handling</h2>
+  <p>Middleware គឺជា Function ដែលដំណើរការ <b>មុន</b> ពេល Request ទៅដល់ Route។ វាមាន Parameters: <code class="i">(req, res, next)</code>។</p>
+  <div class="codebox"><span class="label">middleware.js</span><pre><code class="js">import express from "express";
+const app = express();
+
+// 1) Logger middleware
+function logger(req, res, next) {
+  const start = Date.now();
+  res.on("finish", () => {
+    console.log(`${req.method} ${req.url} → ${res.statusCode} (${Date.now() - start}ms)`);
+  });
+  next(); // បន្តទៅ middleware/route បន្ទាប់
+}
+
+// 2) Auth middleware សាមញ្ញ
+function requireApiKey(req, res, next) {
+  if (req.headers["x-api-key"] !== "secret123") {
+    return res.status(401).json({ message: "គ្មានសិទ្ធិ" });
+  }
+  next();
+}
+
+app.use(express.json());
+app.use(logger);
+
+app.get("/public", (req, res) => res.json({ ok: true }));
+app.get("/private", requireApiKey, (req, res) => res.json({ secret: "🔐" }));
+
+app.get("/crash", async () => {
+  throw new Error("មានបញ្ហាអ្វីមួយ!"); // Express 5 ចាប់ async error ដោយស្វ័យប្រវត្តិ
+});
+
+// 3) 404 handler
+app.use((req, res) => res.status(404).json({ message: "Route មិនមាន" }));
+
+// 4) Error handler (ត្រូវមាន 4 parameters)
+app.use((err, req, res, next) => {
+  console.error("💥", err.message);
+  res.status(err.status || 500).json({ message: err.message || "Server Error" });
+});
+
+app.listen(3000);</code></pre></div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ១១</h4>
+    <p>សរសេរ Middleware <code class="i">validate(fields)</code> ដែលពិនិត្យថា <code class="i">req.body</code> មាន Field ទាំងអស់ដែលត្រូវការ ហើយ Return 400 ជាមួយបញ្ជី Field ដែលខ្វះ។</p>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">validate.js</span><pre><code class="js">export const validate = (fields) => (req, res, next) => {
+  const missing = fields.filter(
+    (f) => req.body?.[f] === undefined || req.body[f] === ""
+  );
+  if (missing.length > 0) {
+    return res.status(400).json({ message: "ខ្វះទិន្នន័យ", missing });
+  }
+  next();
+};
+
+// ការប្រើ:
+// app.post("/api/books", validate(["title", "author"]), createBook);</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l12">
+  <h2><span class="badge">មេរៀន ១២</span>Environment Variables (.env)</h2>
+  <p>ព័ត៌មានសម្ងាត់ (Password, API Key, Database URL) មិនត្រូវសរសេរក្នុងកូដផ្ទាល់ទេ។ ដាក់វាក្នុង File <code class="i">.env</code>។</p>
+  <div class="codebox"><span class="label">.env</span><pre><code class="bash">PORT=3000
+NODE_ENV=development
+MONGO_URI=mongodb://127.0.0.1:27017/myapp
+JWT_SECRET=change-this-to-a-long-random-string</code></pre></div>
+  <div class="codebox"><span class="label">config.js</span><pre><code class="js">// Node.js ថ្មីៗអាន .env ផ្ទាល់: node --env-file=.env app.js
+// (ឬប្រើ package "dotenv" សម្រាប់ Version ចាស់)
+
+export const config = {
+  port: Number(process.env.PORT) || 3000,
+  env: process.env.NODE_ENV || "development",
+  mongoUri: process.env.MONGO_URI,
+  jwtSecret: process.env.JWT_SECRET,
+};
+
+if (!config.jwtSecret) {
+  throw new Error("❌ ត្រូវកំណត់ JWT_SECRET ក្នុង .env");
+}</code></pre></div>
+  <div class="codebox"><span class="label">package.json (scripts)</span><pre><code class="js">"scripts": {
+  "dev": "node --watch --env-file=.env src/server.js",
+  "start": "node --env-file=.env src/server.js"
+}</code></pre></div>
+  <div class="warn">⚠️ ត្រូវដាក់ <code class="i">.env</code> ក្នុង <code class="i">.gitignore</code> ជានិច្ច ហើយបង្កើត <code class="i">.env.example</code> (គ្មានតម្លៃពិត) សម្រាប់ក្រុមការងារ។</div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ១២</h4>
+    <p>កែ Books API ឱ្យអាន <code class="i">PORT</code> ពី .env ហើយបង្ហាញសារ «Development Mode» ឬ «Production Mode» តាម <code class="i">NODE_ENV</code>។</p>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">server.js</span><pre><code class="js">const PORT = process.env.PORT || 3000;
+const mode = process.env.NODE_ENV === "production" ? "Production" : "Development";
+
+app.listen(PORT, () => {
+  console.log(`🚀 ${mode} Mode → http://localhost:${PORT}`);
+});</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l13">
+  <h2><span class="badge">មេរៀន ១៣</span>Database ជាមួយ MongoDB (Mongoose)</h2>
+  <p>ទាញយក MongoDB Community ឬប្រើ <b>MongoDB Atlas</b> (Cloud ឥតគិតថ្លៃ)។ ជម្រើសផ្សេង: PostgreSQL/MySQL ជាមួយ <b>Prisma</b>។</p>
+  <div class="codebox"><span class="label">Terminal</span><pre><code class="bash">npm install mongoose</code></pre></div>
+  <div class="codebox"><span class="label">db.js</span><pre><code class="js">import mongoose from "mongoose";
+
+export async function connectDB(uri) {
+  try {
+    await mongoose.connect(uri);
+    console.log("✅ ភ្ជាប់ MongoDB ជោគជ័យ");
+  } catch (err) {
+    console.error("❌ MongoDB:", err.message);
+    process.exit(1);
+  }
+}</code></pre></div>
+  <div class="codebox"><span class="label">models/Product.js</span><pre><code class="js">import mongoose from "mongoose";
+
+const productSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: [true, "ត្រូវមានឈ្មោះ"], trim: true },
+    price: { type: Number, required: true, min: 0 },
+    stock: { type: Number, default: 0 },
+    category: { type: String, enum: ["drink", "food", "other"], default: "other" },
+  },
+  { timestamps: true } // បង្កើត createdAt, updatedAt
+);
+
+export const Product = mongoose.model("Product", productSchema);</code></pre></div>
+  <div class="codebox"><span class="label">routes ជាមួយ Database</span><pre><code class="js">import { Product } from "./models/Product.js";
+
+app.get("/api/products", async (req, res) => {
+  const products = await Product.find().sort({ createdAt: -1 });
+  res.json(products);
+});
+
+app.post("/api/products", async (req, res) => {
+  const product = await Product.create(req.body);
+  res.status(201).json(product);
+});
+
+app.patch("/api/products/:id", async (req, res) => {
+  const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  if (!product) return res.status(404).json({ message: "រកមិនឃើញ" });
+  res.json(product);
+});
+
+app.delete("/api/products/:id", async (req, res) => {
+  await Product.findByIdAndDelete(req.params.id);
+  res.status(204).end();
+});</code></pre></div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ១៣</h4>
+    <p>បង្កើត Model <code class="i">Student</code> (name, email unique, score 0–100) និង Route <code class="i">GET /api/students/top</code> ដែល Return សិស្ស ៣ នាក់ដែលមានពិន្ទុខ្ពស់បំផុត។</p>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">Student.js + route</span><pre><code class="js">const studentSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true, lowercase: true },
+  score: { type: Number, min: 0, max: 100, default: 0 },
+});
+export const Student = mongoose.model("Student", studentSchema);
+
+app.get("/api/students/top", async (req, res) => {
+  const top = await Student.find().sort({ score: -1 }).limit(3).select("name score");
+  res.json(top);
+});</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l14">
+  <h2><span class="badge">មេរៀន ១៤</span>Streams & Buffer</h2>
+  <p><b>Stream</b> អនុញ្ញាតឱ្យដំណើរការទិន្នន័យធំៗជាផ្នែកតូចៗ (Chunks) ដោយមិនផ្ទុកទាំងអស់ចូល RAM។ ប្រភេទ: Readable, Writable, Duplex, Transform។</p>
+  <div class="codebox"><span class="label">streams.js</span><pre><code class="js">import { createReadStream, createWriteStream } from "node:fs";
+import { pipeline } from "node:stream/promises";
+import { createGzip } from "node:zlib";
+import { Transform } from "node:stream";
+
+// Buffer – ទិន្នន័យ Binary
+const buf = Buffer.from("សួស្តី", "utf8");
+console.log(buf, buf.length, buf.toString());
+
+// បង្ហាប់ File ធំ (Gzip) ដោយប្រើ Stream
+await pipeline(
+  createReadStream("big-file.txt"),
+  createGzip(),
+  createWriteStream("big-file.txt.gz")
+);
+console.log("✅ បង្ហាប់រួចរាល់");
+
+// Transform Stream – ប្តូរអក្សរជាអក្សរធំ
+const upper = new Transform({
+  transform(chunk, encoding, callback) {
+    callback(null, chunk.toString().toUpperCase());
+  },
+});
+process.stdin.pipe(upper).pipe(process.stdout);</code></pre></div>
+
+  <div class="ex"><h4>✍️ លំហាត់ ១៤</h4>
+    <p>បង្កើត Express Route <code class="i">GET /video</code> ដែល Stream File <code class="i">video.mp4</code> ទៅ Browser ដោយប្រើ <code class="i">createReadStream</code>។</p>
+    <details><summary>មើលចម្លើយ</summary>
+    <div class="codebox"><span class="label">video route</span><pre><code class="js">import { createReadStream, statSync } from "node:fs";
+
+app.get("/video", (req, res) => {
+  const path = "video.mp4";
+  const { size } = statSync(path);
+  const range = req.headers.range;
+
+  if (!range) {
+    res.writeHead(200, { "Content-Length": size, "Content-Type": "video/mp4" });
+    return createReadStream(path).pipe(res);
+  }
+
+  const [startStr, endStr] = range.replace("bytes=", "").split("-");
+  const start = Number(startStr);
+  const end = endStr ? Number(endStr) : Math.min(start + 1_000_000, size - 1);
+
+  res.writeHead(206, {
+    "Content-Range": `bytes ${start}-${end}/${size}`,
+    "Accept-Ranges": "bytes",
+    "Content-Length": end - start + 1,
+    "Content-Type": "video/mp4",
+  });
+  createReadStream(path, { start, end }).pipe(res);
+});</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<!-- ===================== PRO ===================== -->
+<section class="hero" id="pro">
+  <h2>🏆 ផ្នែកទី ៣: App កម្រិតអាជីព (Professional Upgrade)</h2>
+  <p>យើងនឹងសាងសង់ <b>Task Manager API</b> ដែលមានស្តង់ដារដូចក្រុមហ៊ុនពិតប្រាកដ: រចនាសម្ព័ន្ធ Layer, Authentication (JWT), Validation, Security, Logging, Testing, Docker។</p>
+</section>
+
+<section>
+  <h2>រចនាសម្ព័ន្ធ Project</h2>
+  <div class="codebox"><span class="label">Folder Structure</span><pre><code class="txt">task-api/
+├── src/
+│   ├── config/
+│   │   ├── env.js            # អាន .env
+│   │   └── db.js             # ភ្ជាប់ Database
+│   ├── models/
+│   │   ├── User.js
+│   │   └── Task.js
+│   ├── services/             # Business logic
+│   │   ├── auth.service.js
+│   │   └── task.service.js
+│   ├── controllers/          # ទទួល req ផ្ញើ res
+│   │   ├── auth.controller.js
+│   │   └── task.controller.js
+│   ├── routes/
+│   │   ├── auth.routes.js
+│   │   └── task.routes.js
+│   ├── middlewares/
+│   │   ├── auth.js
+│   │   ├── validate.js
+│   │   └── errorHandler.js
+│   ├── validators/
+│   │   └── task.schema.js
+│   ├── utils/
+│   │   └── AppError.js
+│   ├── app.js                # Express app
+│   └── server.js             # Start server
+├── tests/
+│   └── task.test.js
+├── .env.example
+├── .gitignore
+├── Dockerfile
+└── package.json</code></pre></div>
+  <div class="note">💡 <b>Route → Controller → Service → Model</b>: Controller មិនគួរមាន Logic ធំៗ ទេ។ Service អាចប្រើឡើងវិញ និងងាយសរសេរ Test។</div>
+  <div class="codebox"><span class="label">Terminal</span><pre><code class="bash">mkdir task-api &amp;&amp; cd task-api
+npm init -y
+npm install express mongoose bcrypt jsonwebtoken zod helmet cors express-rate-limit pino pino-http
+npm install --save-dev supertest</code></pre></div>
+</section>
+
+<section>
+  <h2>Config, Utils & App</h2>
+  <div class="codebox"><span class="label">src/config/env.js</span><pre><code class="js">const required = ["MONGO_URI", "JWT_SECRET"];
+for (const key of required) {
+  if (!process.env[key]) throw new Error(`Missing env: ${key}`);
+}
+
+export const env = {
+  port: Number(process.env.PORT) || 3000,
+  nodeEnv: process.env.NODE_ENV || "development",
+  mongoUri: process.env.MONGO_URI,
+  jwtSecret: process.env.JWT_SECRET,
+  jwtExpiresIn: process.env.JWT_EXPIRES_IN || "1d",
+};</code></pre></div>
+  <div class="codebox"><span class="label">src/utils/AppError.js</span><pre><code class="js">export class AppError extends Error {
+  constructor(message, status = 500) {
+    super(message);
+    this.status = status;
+    this.isOperational = true;
+  }
+}</code></pre></div>
+  <div class="codebox"><span class="label">src/app.js</span><pre><code class="js">import express from "express";
+import helmet from "helmet";
+import cors from "cors";
+import rateLimit from "express-rate-limit";
+import pinoHttp from "pino-http";
+
+import authRoutes from "./routes/auth.routes.js";
+import taskRoutes from "./routes/task.routes.js";
+import { errorHandler, notFound } from "./middlewares/errorHandler.js";
+
+export const app = express();
+
+app.use(helmet());                                   // Security headers
+app.use(cors({ origin: ["http://localhost:5173"] })); // អនុញ្ញាត Frontend
+app.use(express.json({ limit: "10kb" }));            // កំណត់ទំហំ body
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, limit: 100 })); // 100 req / 15 នាទី
+if (process.env.NODE_ENV !== "test") app.use(pinoHttp()); // Logging
+
+app.get("/health", (req, res) => res.json({ status: "ok", uptime: process.uptime() }));
+
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/tasks", taskRoutes);
+
+app.use(notFound);
+app.use(errorHandler);</code></pre></div>
+  <div class="codebox"><span class="label">src/server.js</span><pre><code class="js">import mongoose from "mongoose";
+import { app } from "./app.js";
+import { env } from "./config/env.js";
+
+await mongoose.connect(env.mongoUri);
+console.log("✅ MongoDB connected");
+
+const server = app.listen(env.port, () => {
+  console.log(`🚀 [${env.nodeEnv}] http://localhost:${env.port}`);
+});
+
+// Graceful shutdown – បិទដោយសុវត្ថិភាព
+const shutdown = async (signal) => {
+  console.log(`${signal} received, shutting down...`);
+  server.close(async () => {
+    await mongoose.disconnect();
+    process.exit(0);
+  });
+};
+process.on("SIGINT", shutdown);
+process.on("SIGTERM", shutdown);
+
+process.on("unhandledRejection", (err) => {
+  console.error("💥 Unhandled Rejection:", err);
+  server.close(() => process.exit(1));
+});</code></pre></div>
+</section>
+
+<section id="pro-auth">
+  <h2>🔐 Authentication ជាមួយ JWT & bcrypt</h2>
+  <div class="codebox"><span class="label">src/models/User.js</span><pre><code class="js">import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+
+const userSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true, trim: true },
+    email: { type: String, required: true, unique: true, lowercase: true },
+    password: { type: String, required: true, minlength: 8, select: false },
+    role: { type: String, enum: ["user", "admin"], default: "user" },
+  },
+  { timestamps: true }
+);
+
+// Hash password មុនពេលរក្សាទុក
+userSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
+  this.password = await bcrypt.hash(this.password, 12);
+});
+
+userSchema.methods.comparePassword = function (plain) {
+  return bcrypt.compare(plain, this.password);
+};
+
+export const User = mongoose.model("User", userSchema);</code></pre></div>
+  <div class="codebox"><span class="label">src/services/auth.service.js</span><pre><code class="js">import jwt from "jsonwebtoken";
+import { User } from "../models/User.js";
+import { AppError } from "../utils/AppError.js";
+import { env } from "../config/env.js";
+
+const signToken = (user) =>
+  jwt.sign({ sub: user.id, role: user.role }, env.jwtSecret, {
+    expiresIn: env.jwtExpiresIn,
+  });
+
+export async function register({ name, email, password }) {
+  const exists = await User.exists({ email });
+  if (exists) throw new AppError("Email នេះត្រូវបានប្រើរួចហើយ", 409);
+  const user = await User.create({ name, email, password });
+  return { user: { id: user.id, name, email }, token: signToken(user) };
+}
+
+export async function login({ email, password }) {
+  const user = await User.findOne({ email }).select("+password");
+  if (!user || !(await user.comparePassword(password))) {
+    throw new AppError("Email ឬ Password មិនត្រឹមត្រូវ", 401);
+  }
+  return { user: { id: user.id, name: user.name, email }, token: signToken(user) };
+}</code></pre></div>
+  <div class="codebox"><span class="label">src/middlewares/auth.js</span><pre><code class="js">import jwt from "jsonwebtoken";
+import { env } from "../config/env.js";
+import { AppError } from "../utils/AppError.js";
+
+export function protect(req, res, next) {
+  const header = req.headers.authorization || "";
+  const token = header.startsWith("Bearer ") ? header.slice(7) : null;
+  if (!token) throw new AppError("សូម Login ជាមុនសិន", 401);
+
+  try {
+    const payload = jwt.verify(token, env.jwtSecret);
+    req.user = { id: payload.sub, role: payload.role };
+    next();
+  } catch {
+    throw new AppError("Token មិនត្រឹមត្រូវ ឬផុតកំណត់", 401);
+  }
+}
+
+export const restrictTo = (...roles) => (req, res, next) => {
+  if (!roles.includes(req.user.role)) throw new AppError("គ្មានសិទ្ធិ", 403);
+  next();
+};</code></pre></div>
+  <div class="codebox"><span class="label">src/controllers/auth.controller.js + routes</span><pre><code class="js">// controller
+import * as authService from "../services/auth.service.js";
+
+export const register = async (req, res) => {
+  res.status(201).json(await authService.register(req.body));
+};
+export const login = async (req, res) => {
+  res.json(await authService.login(req.body));
+};
+
+// routes/auth.routes.js
+import { Router } from "express";
+import * as ctrl from "../controllers/auth.controller.js";
+import { validate } from "../middlewares/validate.js";
+import { registerSchema, loginSchema } from "../validators/task.schema.js";
+
+const router = Router();
+router.post("/register", validate(registerSchema), ctrl.register);
+router.post("/login", validate(loginSchema), ctrl.login);
+export default router;</code></pre></div>
+</section>
+
+<section>
+  <h2>✅ Tasks: Model, Validation, Service, Controller</h2>
+  <div class="codebox"><span class="label">src/models/Task.js</span><pre><code class="js">import mongoose from "mongoose";
+
+const taskSchema = new mongoose.Schema(
+  {
+    title: { type: String, required: true, trim: true, maxlength: 120 },
+    description: { type: String, default: "" },
+    status: { type: String, enum: ["todo", "doing", "done"], default: "todo" },
+    priority: { type: String, enum: ["low", "medium", "high"], default: "medium" },
+    dueDate: Date,
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  },
+  { timestamps: true }
+);
+
+taskSchema.index({ owner: 1, status: 1 }); // ធ្វើឱ្យ Query លឿន
+export const Task = mongoose.model("Task", taskSchema);</code></pre></div>
+  <div class="codebox"><span class="label">src/validators/task.schema.js (Zod)</span><pre><code class="js">import { z } from "zod";
+
+export const registerSchema = z.object({
+  name: z.string().min(2),
+  email: z.string().email(),
+  password: z.string().min(8, "Password យ៉ាងតិច 8 តួ"),
+});
+
+export const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
+});
+
+export const createTaskSchema = z.object({
+  title: z.string().min(1).max(120),
+  description: z.string().optional(),
+  status: z.enum(["todo", "doing", "done"]).optional(),
+  priority: z.enum(["low", "medium", "high"]).optional(),
+  dueDate: z.coerce.date().optional(),
+});
+
+export const updateTaskSchema = createTaskSchema.partial();</code></pre></div>
+  <div class="codebox"><span class="label">src/middlewares/validate.js</span><pre><code class="js">export const validate = (schema) => (req, res, next) => {
+  const result = schema.safeParse(req.body);
+  if (!result.success) {
+    return res.status(400).json({
+      message: "ទិន្នន័យមិនត្រឹមត្រូវ",
+      errors: result.error.issues.map((i) => ({ field: i.path.join("."), message: i.message })),
+    });
+  }
+  req.body = result.data; // ទិន្នន័យដែលស្អាតរួច
+  next();
+};</code></pre></div>
+  <div class="codebox"><span class="label">src/services/task.service.js</span><pre><code class="js">import { Task } from "../models/Task.js";
+import { AppError } from "../utils/AppError.js";
+
+export async function list(ownerId, { status, page = 1, limit = 10 }) {
+  const filter = { owner: ownerId, ...(status &amp;&amp; { status }) };
+  const skip = (page - 1) * limit;
+  const [data, total] = await Promise.all([
+    Task.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit),
+    Task.countDocuments(filter),
+  ]);
+  return { data, total, page, totalPages: Math.ceil(total / limit) };
+}
+
+export const create = (ownerId, input) => Task.create({ ...input, owner: ownerId });
+
+export async function update(ownerId, id, input) {
+  const task = await Task.findOneAndUpdate({ _id: id, owner: ownerId }, input, {
+    new: true,
+    runValidators: true,
+  });
+  if (!task) throw new AppError("រកមិនឃើញ Task", 404);
+  return task;
+}
+
+export async function remove(ownerId, id) {
+  const task = await Task.findOneAndDelete({ _id: id, owner: ownerId });
+  if (!task) throw new AppError("រកមិនឃើញ Task", 404);
+}</code></pre></div>
+  <div class="codebox"><span class="label">src/controllers/task.controller.js</span><pre><code class="js">import * as taskService from "../services/task.service.js";
+
+export const list = async (req, res) => {
+  const page = Math.max(1, Number(req.query.page) || 1);
+  const limit = Math.min(50, Number(req.query.limit) || 10);
+  res.json(await taskService.list(req.user.id, { status: req.query.status, page, limit }));
+};
+
+export const create = async (req, res) => {
+  res.status(201).json(await taskService.create(req.user.id, req.body));
+};
+
+export const update = async (req, res) => {
+  res.json(await taskService.update(req.user.id, req.params.id, req.body));
+};
+
+export const remove = async (req, res) => {
+  await taskService.remove(req.user.id, req.params.id);
+  res.status(204).end();
+};</code></pre></div>
+  <div class="codebox"><span class="label">src/routes/task.routes.js</span><pre><code class="js">import { Router } from "express";
+import * as ctrl from "../controllers/task.controller.js";
+import { protect } from "../middlewares/auth.js";
+import { validate } from "../middlewares/validate.js";
+import { createTaskSchema, updateTaskSchema } from "../validators/task.schema.js";
+
+const router = Router();
+router.use(protect); // គ្រប់ Route ខាងក្រោមត្រូវ Login
+
+router.route("/")
+  .get(ctrl.list)
+  .post(validate(createTaskSchema), ctrl.create);
+
+router.route("/:id")
+  .patch(validate(updateTaskSchema), ctrl.update)
+  .delete(ctrl.remove);
+
+export default router;</code></pre></div>
+  <div class="codebox"><span class="label">src/middlewares/errorHandler.js</span><pre><code class="js">export const notFound = (req, res) => {
+  res.status(404).json({ message: `រកមិនឃើញ ${req.originalUrl}` });
+};
+
+export const errorHandler = (err, req, res, next) => {
+  // Mongoose errors
+  if (err.name === "CastError") { err.status = 400; err.message = "ID មិនត្រឹមត្រូវ"; }
+  if (err.code === 11000) { err.status = 409; err.message = "ទិន្នន័យស្ទួន"; }
+
+  const status = err.status || 500;
+  if (status === 500) console.error(err);
+
+  res.status(status).json({
+    message: status === 500 &amp;&amp; process.env.NODE_ENV === "production"
+      ? "Server Error"
+      : err.message,
+    ...(process.env.NODE_ENV === "development" &amp;&amp; { stack: err.stack }),
+  });
+};</code></pre></div>
+</section>
+
+<section id="pro-security">
+  <h2>🛡️ Security Checklist (កម្រិតអាជីព)</h2>
+  <table>
+    <tr><th>ការពារ</th><th>ឧបករណ៍ / វិធី</th></tr>
+    <tr><td>Security Headers</td><td><code class="i">helmet</code></td></tr>
+    <tr><td>Brute force / DDoS តូច</td><td><code class="i">express-rate-limit</code></td></tr>
+    <tr><td>CORS</td><td><code class="i">cors</code> កំណត់ origin ច្បាស់លាស់</td></tr>
+    <tr><td>Password</td><td><code class="i">bcrypt</code> (salt rounds ≥ 10)</td></tr>
+    <tr><td>Input Validation</td><td><code class="i">zod</code> / <code class="i">joi</code></td></tr>
+    <tr><td>Secrets</td><td><code class="i">.env</code> មិន Commit ទៅ Git</td></tr>
+    <tr><td>Dependencies</td><td><code class="i">npm audit</code> និង Update ជាប្រចាំ</td></tr>
+    <tr><td>HTTPS</td><td>ប្រើ Reverse Proxy (Nginx) ឬ Hosting ដែលមាន SSL</td></tr>
+    <tr><td>Body size</td><td><code class="i">express.json({ limit: "10kb" })</code></td></tr>
+  </table>
+</section>
+
+<section id="pro-test">
+  <h2>🧪 Testing (node:test + supertest)</h2>
+  <div class="codebox"><span class="label">tests/task.test.js</span><pre><code class="js">import { test, describe } from "node:test";
+import assert from "node:assert/strict";
+import request from "supertest";
+import { app } from "../src/app.js";
+
+describe("Health & Auth", () => {
+  test("GET /health returns ok", async () => {
+    const res = await request(app).get("/health");
+    assert.equal(res.status, 200);
+    assert.equal(res.body.status, "ok");
+  });
+
+  test("GET /api/v1/tasks without token → 401", async () => {
+    const res = await request(app).get("/api/v1/tasks");
+    assert.equal(res.status, 401);
+  });
+
+  test("Unknown route → 404", async () => {
+    const res = await request(app).get("/nope");
+    assert.equal(res.status, 404);
+  });
+});</code></pre></div>
+  <div class="codebox"><span class="label">Terminal</span><pre><code class="bash"># ដំណើរការ Test ទាំងអស់
+NODE_ENV=test MONGO_URI=x JWT_SECRET=test node --test</code></pre></div>
+</section>
+
+<section id="pro-deploy">
+  <h2>🐳 Docker & Deploy</h2>
+  <div class="codebox"><span class="label">Dockerfile</span><pre><code class="bash">FROM node:lts-alpine
+WORKDIR /app
+ENV NODE_ENV=production
+
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+COPY src ./src
+USER node
+EXPOSE 3000
+CMD ["node", "src/server.js"]</code></pre></div>
+  <div class="codebox"><span class="label">docker-compose.yml</span><pre><code class="bash">services:
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file: .env
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/taskdb
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:7
+    volumes:
+      - mongo-data:/data/db
+volumes:
+  mongo-data:</code></pre></div>
+  <div class="codebox"><span class="label">Terminal</span><pre><code class="bash"># ដំណើរការជាមួយ Docker
+docker compose up --build
+
+# ឬប្រើ PM2 លើ VPS
+npm install -g pm2
+pm2 start src/server.js --name task-api -i max
+pm2 save</code></pre></div>
+  <p><b>កន្លែង Deploy ពេញនិយម:</b> Render, Railway, Fly.io, DigitalOcean, AWS, Google Cloud ។</p>
+
+  <h3>សាកល្បង API</h3>
+  <div class="codebox"><span class="label">Terminal (curl)</span><pre><code class="bash"># Register
+curl -X POST http://localhost:3000/api/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Dara","email":"dara@mail.com","password":"12345678"}'
+
+# បង្កើត Task (ដាក់ Token ដែលទទួលបាន)
+curl -X POST http://localhost:3000/api/v1/tasks \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"រៀន Node.js","priority":"high"}'</code></pre></div>
+
+  <div class="ex"><h4>🏁 លំហាត់គម្រោងចុងក្រោយ</h4>
+    <ol>
+      <li>បន្ថែម Route <code class="i">GET /api/v1/auth/me</code> ដែល Return ព័ត៌មាន User ដែល Login</li>
+      <li>បន្ថែម Route Admin <code class="i">GET /api/v1/admin/users</code> ប្រើ <code class="i">restrictTo("admin")</code></li>
+      <li>បន្ថែមការ Upload រូបភាពសម្រាប់ Task ដោយប្រើ <code class="i">multer</code></li>
+      <li>បន្ថែម Real-time Notification ពេល Task ត្រូវបានបង្កើត ដោយប្រើ <code class="i">socket.io</code></li>
+      <li>សរសេរ API Documentation ដោយប្រើ Swagger (<code class="i">swagger-ui-express</code>)</li>
+      <li>Deploy ទៅ Render ឬ Railway ហើយភ្ជាប់ MongoDB Atlas</li>
+    </ol>
+    <details><summary>មើលចម្លើយ (ចំណុចទី ១ និង ២)</summary>
+    <div class="codebox"><span class="label">auth.routes.js + admin</span><pre><code class="js">import { protect, restrictTo } from "../middlewares/auth.js";
+import { User } from "../models/User.js";
+
+// 1) /me
+router.get("/me", protect, async (req, res) => {
+  const user = await User.findById(req.user.id);
+  res.json(user);
+});
+
+// 2) admin route (ក្នុង routes/admin.routes.js)
+const adminRouter = Router();
+adminRouter.use(protect, restrictTo("admin"));
+adminRouter.get("/users", async (req, res) => {
+  res.json(await User.find().select("name email role createdAt"));
+});
+// app.use("/api/v1/admin", adminRouter);</code></pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="roadmap">
+  <h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+  <ol class="steps">
+    <li><b>JavaScript មូលដ្ឋានរឹងមាំ</b> – ES6+, Array methods, Promise, Class</li>
+    <li><b>Node.js Core</b> – Modules, fs, events, streams, event loop (មេរៀន ១–៨)</li>
+    <li><b>Express & REST API</b> – Routing, Middleware, Error handling (មេរៀន ៩–១១)</li>
+    <li><b>Database</b> – MongoDB/Mongoose និង PostgreSQL/Prisma</li>
+    <li><b>Auth & Security</b> – JWT, bcrypt, OAuth, Helmet</li>
+    <li><b>Testing</b> – node:test, Supertest, Jest/Vitest</li>
+    <li><b>TypeScript</b> – សរសេរ Node.js ដោយមាន Type (ជំនាញដែលក្រុមហ៊ុនត្រូវការខ្លាំង)</li>
+    <li><b>Framework កម្រិតខ្ពស់</b> – NestJS, Fastify</li>
+    <li><b>DevOps</b> – Docker, CI/CD (GitHub Actions), Cloud Deploy</li>
+    <li><b>Architecture</b> – Microservices, Redis Cache, Message Queue (RabbitMQ/BullMQ)</li>
+  </ol>
+  <div class="note">🎯 <b>គន្លឹះ:</b> សរសេរកូដរាល់ថ្ងៃ ធ្វើគម្រោងពិត (Blog API, E-commerce API, Chat App) ហើយដាក់លើ GitHub ដើម្បីបង្ហាញជា Portfolio។</div>
+  <p><b>ឯកសារយោងផ្លូវការ:</b> <a href="https://nodejs.org/docs" target="_blank">nodejs.org/docs</a> · <a href="https://expressjs.com" target="_blank">expressjs.com</a> · <a href="https://mongoosejs.com" target="_blank">mongoosejs.com</a></p>
+</section>
+
+</main>
+</div>
+
+<script>
+// ===== Syntax highlighter (គ្មាន Library ខាងក្រៅ) =====
+const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const BUILTINS = "console|process|require|module|exports|JSON|Math|Promise|Object|Array|Number|String|Date|Buffer|Error|app|router|res|req|next";
+const jsRe = new RegExp(
+  "(\\/\\/.*$|\\/\\*[\\s\\S]*?\\*\\/)" +                                   // 1 comment
+  "|(`(?:\\\\.|[^`\\\\])*`|'(?:\\\\.|[^'\\\\\\n])*'|\"(?:\\\\.|[^\"\\\\\\n])*\")" + // 2 string
+  "|\\b(const|let|var|function|return|if|else|for|while|do|async|await|new|class|extends|import|from|export|default|try|catch|finally|throw|of|in|this|true|false|null|undefined|typeof|instanceof|switch|case|break|continue|static|get|set)\\b" + // 3 keyword
+  "|\\b(\\d[\\d_]*(?:\\.\\d+)?)\\b" +                                      // 4 number
+  "|\\b(" + BUILTINS + ")\\b" +                                            // 5 builtin
+  "|([A-Za-z_$][\\w$]*)(?=\\s*\\()",                                       // 6 function
+  "gm"
+);
+const bashRe = /(#.*$)|("(?:\\.|[^"\\])*"|'[^']*')|^(\s*)(node|npm|npx|nvm|mkdir|cd|curl|docker|pm2|git|FROM|WORKDIR|ENV|COPY|RUN|USER|EXPOSE|CMD|services|volumes)\b|(\s-{1,2}[\w-]+)/gm;
+
+function highlight(text, re, map) {
+  let out = "", last = 0, m;
+  re.lastIndex = 0;
+  while ((m = re.exec(text))) {
+    if (m[0] === "") { re.lastIndex++; continue; }
+    out += esc(text.slice(last, m.index));
+    out += map(m);
+    last = re.lastIndex;
+  }
+  return out + esc(text.slice(last));
+}
+
+document.querySelectorAll("pre code").forEach((el) => {
+  const src = el.textContent;
+  if (el.classList.contains("js")) {
+    el.innerHTML = highlight(src, jsRe, (m) => {
+      if (m[1]) return `<span class="tok-com">${esc(m[0])}</span>`;
+      if (m[2]) return `<span class="tok-str">${esc(m[0])}</span>`;
+      if (m[3]) return `<span class="tok-kw">${m[0]}</span>`;
+      if (m[4]) return `<span class="tok-num">${m[0]}</span>`;
+      if (m[5]) return `<span class="tok-bi">${m[0]}</span>`;
+      if (m[6]) return `<span class="tok-fn">${m[0]}</span>`;
+      return esc(m[0]);
+    });
+  } else if (el.classList.contains("bash")) {
+    el.innerHTML = highlight(src, bashRe, (m) => {
+      if (m[1]) return `<span class="tok-com">${esc(m[0])}</span>`;
+      if (m[2]) return `<span class="tok-str">${esc(m[0])}</span>`;
+      if (m[4]) return esc(m[3]) + `<span class="tok-cmd">${m[4]}</span>`;
+      if (m[5]) return `<span class="tok-bi">${esc(m[0])}</span>`;
+      return esc(m[0]);
+    });
+  }
+});
+
+// ===== Copy buttons =====
+document.querySelectorAll(".codebox").forEach((box) => {
+  const btn = document.createElement("button");
+  btn.className = "btn copy";
+  btn.textContent = "ចម្លង";
+  btn.onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(box.querySelector("code").textContent);
+      btn.textContent = "✔ បានចម្លង";
+    } catch { btn.textContent = "បរាជ័យ"; }
+    setTimeout(() => (btn.textContent = "ចម្លង"), 1500);
+  };
+  box.appendChild(btn);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="node"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន Swift iPhone App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#f05138; --accent2:#ff8a65; --accent-soft:#fff0ec;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#ff8a65; --accent2:#ffab91; --accent-soft:#2d1510;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#ff8a65; --accent2:#ffab91; --accent-soft:#2d1510;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#2b0f0a,#c0392b 55%,#ff8a65);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/swift.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/swift.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>iPhone App ជាមួយ Swift &amp; SwiftUI</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Swift &amp; SwiftUI ជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#install">២. ដំឡើង Xcode</a>
+<a href="#elements">៣. ធាតុនីមួយៗរបស់ SwiftUI</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Swift មូលដ្ឋាន៖ let/var, Type &amp; Optionals</a>
+<a href="#l2">មេរៀន ២: struct, enum, Closure &amp; Collections</a>
+<a href="#l3">មេរៀន ៣: async/await &amp; Concurrency</a>
+<a href="#l4">មេរៀន ៤: App SwiftUI ដំបូង</a>
+<a href="#l5">មេរៀន ៥: Views &amp; Modifiers៖ Text, Image, Button</a>
+<a href="#l6">មេរៀន ៦: Layout៖ VStack, HStack, ZStack &amp; List</a>
+<a href="#l7">មេរៀន ៧: State៖ @State &amp; @Binding</a>
+<a href="#l8">មេរៀន ៨: NavigationStack &amp; TabView</a>
+<a href="#l9">មេរៀន ៩: @Observable Cart (Model ចែករំលែក)</a>
+<a href="#l10">មេរៀន ១០: URLSession &amp; Codable (REST API)</a>
+<a href="#l11">មេរៀន ១១: SwiftData &amp; @AppStorage</a>
+<a href="#l12">មេរៀន ១២: Permission, Test &amp; Publish លើ App Store</a>
+<a href="#cheat">📋 Cheat Sheet</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងអាជីព៖ Kafe Order App (SwiftUI)</a>
+<a href="#pro-app">💻 SwiftUI Playground Pro (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🍎 Swift + SwiftUI — App iPhone &amp; iPad</h2>
+  <p>ភាសារបស់ Apple៖ <b>Swift, Optionals, Struct/Enum, async/await, SwiftUI Views, Modifiers, Stacks, List, @State/@Binding, NavigationStack, @Observable, URLSession, SwiftData</b> និង Publish លើ App Store។</p>
+  <p><span class="badge">📘 ១២ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">💻 Code មានពណ៌ + លទ្ធផល</span><span class="badge">🍎 SwiftUI Playground Pro</span></p>
+</section>
+<section id="intro">
+<h2>១. Swift &amp; SwiftUI ជាអ្វី? អ្នកណាបង្កើត?</h2>
+
+<p><b>Swift</b> គឺជាភាសារបស់ក្រុមហ៊ុន <b>Apple</b> សម្រាប់ធ្វើ App <b>iPhone, iPad, Mac, Apple Watch, Vision Pro</b>។ ចាប់ផ្តើមដោយ <b>Chris Lattner</b> (អ្នកបង្កើត LLVM) ឆ្នាំ 2010 ហើយបង្ហាញនៅ <b>WWDC 2014</b> ដើម្បីជំនួស Objective-C។ <b>SwiftUI</b> (2019) ជា UI framework បែប Declarative។ <button class="btn say" data-say="Swift and SwiftUI">🔊 អានពាក្យ</button></p>
+<table><tr><th>ឆ្នាំ</th><th>ព្រឹត្តិការណ៍</th></tr><tr><td>2007</td><td><b>Steve Jobs</b> បង្ហាញ iPhone ដំបូង</td></tr><tr><td>2008</td><td><b>App Store</b> បើក (Objective-C)</td></tr><tr><td>2014</td><td><b>Swift 1.0</b> (WWDC)</td></tr><tr><td>2015</td><td>Swift ក្លាយជា <b>Open source</b></td></tr><tr><td>2019</td><td><b>SwiftUI</b> + Combine</td></tr><tr><td>2021</td><td><b>async/await</b> (Swift 5.5)</td></tr><tr><td>2023</td><td><b>@Observable</b> &amp; <b>SwiftData</b></td></tr><tr><td>2024</td><td><b>Swift 6</b> — Data-race safety</td></tr></table>
+
+<div class="grid"><div class="card"><b>📱 iOS App</b><br>App Store — អ្នកប្រើ 1 ពាន់លាន+ ឧបករណ៍</div><div class="card"><b>💻 macOS · watchOS</b><br>Code ដូចគ្នាច្រើនផ្លាតហ្វម</div><div class="card"><b>🥽 visionOS</b><br>Apple Vision Pro</div><div class="card"><b>🏢 អ្នកប្រើ</b><br>Apple, Airbnb, Uber, LinkedIn, ABA Mobile</div></div>
+
+<figure class="fig"><svg viewBox="0 0 900 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="900" height="230" fill="#fff"/><text x="90" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">Framework</text><text x="230" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">ភាសា</text><text x="360" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">ក្រុមហ៊ុន</text><text x="520" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">ល្បឿន</text><text x="660" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">Cross-platform</text><text x="810" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a">Native API</text><rect x="10" y="40" width="880" height="36" rx="8" fill="#02569b" fill-opacity=".08"/><text x="90" y="64" text-anchor="middle" font-size="14" font-weight="800" fill="#02569b">Flutter</text><text x="230" y="64" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">Dart</text><text x="360" y="64" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">Google</text><circle cx="480" cy="60" r="6" fill="#02569b"/><circle cx="498" cy="60" r="6" fill="#02569b"/><circle cx="516" cy="60" r="6" fill="#02569b"/><circle cx="534" cy="60" r="6" fill="#02569b"/><circle cx="552" cy="60" r="6" fill="#02569b"/><circle cx="625" cy="60" r="6" fill="#02569b"/><circle cx="643" cy="60" r="6" fill="#02569b"/><circle cx="661" cy="60" r="6" fill="#02569b"/><circle cx="679" cy="60" r="6" fill="#02569b"/><circle cx="697" cy="60" r="6" fill="#02569b"/><circle cx="770" cy="60" r="6" fill="#02569b"/><circle cx="788" cy="60" r="6" fill="#02569b"/><circle cx="806" cy="60" r="6" fill="#02569b"/><circle cx="824" cy="60" r="6" fill="#02569b"/><circle cx="842" cy="60" r="6" fill="#e2e8f0"/><rect x="10" y="82" width="880" height="36" rx="8" fill="#0ea5e9" fill-opacity=".08"/><text x="90" y="106" text-anchor="middle" font-size="14" font-weight="800" fill="#0ea5e9">React Native</text><text x="230" y="106" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">JS/TS</text><text x="360" y="106" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">Meta</text><circle cx="480" cy="102" r="6" fill="#0ea5e9"/><circle cx="498" cy="102" r="6" fill="#0ea5e9"/><circle cx="516" cy="102" r="6" fill="#0ea5e9"/><circle cx="534" cy="102" r="6" fill="#0ea5e9"/><circle cx="552" cy="102" r="6" fill="#e2e8f0"/><circle cx="625" cy="102" r="6" fill="#0ea5e9"/><circle cx="643" cy="102" r="6" fill="#0ea5e9"/><circle cx="661" cy="102" r="6" fill="#0ea5e9"/><circle cx="679" cy="102" r="6" fill="#0ea5e9"/><circle cx="697" cy="102" r="6" fill="#0ea5e9"/><circle cx="770" cy="102" r="6" fill="#0ea5e9"/><circle cx="788" cy="102" r="6" fill="#0ea5e9"/><circle cx="806" cy="102" r="6" fill="#0ea5e9"/><circle cx="824" cy="102" r="6" fill="#0ea5e9"/><circle cx="842" cy="102" r="6" fill="#e2e8f0"/><rect x="10" y="124" width="880" height="36" rx="8" fill="#7c3aed" fill-opacity=".08"/><text x="90" y="148" text-anchor="middle" font-size="14" font-weight="800" fill="#7c3aed">Kotlin (Android)</text><text x="230" y="148" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">Kotlin</text><text x="360" y="148" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">JetBrains/Google</text><circle cx="480" cy="144" r="6" fill="#7c3aed"/><circle cx="498" cy="144" r="6" fill="#7c3aed"/><circle cx="516" cy="144" r="6" fill="#7c3aed"/><circle cx="534" cy="144" r="6" fill="#7c3aed"/><circle cx="552" cy="144" r="6" fill="#7c3aed"/><circle cx="625" cy="144" r="6" fill="#7c3aed"/><circle cx="643" cy="144" r="6" fill="#7c3aed"/><circle cx="661" cy="144" r="6" fill="#e2e8f0"/><circle cx="679" cy="144" r="6" fill="#e2e8f0"/><circle cx="697" cy="144" r="6" fill="#e2e8f0"/><circle cx="770" cy="144" r="6" fill="#7c3aed"/><circle cx="788" cy="144" r="6" fill="#7c3aed"/><circle cx="806" cy="144" r="6" fill="#7c3aed"/><circle cx="824" cy="144" r="6" fill="#7c3aed"/><circle cx="842" cy="144" r="6" fill="#7c3aed"/><rect x="10" y="166" width="880" height="36" rx="8" fill="#ea580c" fill-opacity=".08"/><text x="90" y="190" text-anchor="middle" font-size="14" font-weight="800" fill="#ea580c">Swift (iOS)</text><text x="230" y="190" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">Swift</text><text x="360" y="190" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">Apple</text><circle cx="480" cy="186" r="6" fill="#ea580c"/><circle cx="498" cy="186" r="6" fill="#ea580c"/><circle cx="516" cy="186" r="6" fill="#ea580c"/><circle cx="534" cy="186" r="6" fill="#ea580c"/><circle cx="552" cy="186" r="6" fill="#ea580c"/><circle cx="625" cy="186" r="6" fill="#ea580c"/><circle cx="643" cy="186" r="6" fill="#ea580c"/><circle cx="661" cy="186" r="6" fill="#e2e8f0"/><circle cx="679" cy="186" r="6" fill="#e2e8f0"/><circle cx="697" cy="186" r="6" fill="#e2e8f0"/><circle cx="770" cy="186" r="6" fill="#ea580c"/><circle cx="788" cy="186" r="6" fill="#ea580c"/><circle cx="806" cy="186" r="6" fill="#ea580c"/><circle cx="824" cy="186" r="6" fill="#ea580c"/><circle cx="842" cy="186" r="6" fill="#ea580c"/></svg><figcaption>🖼️ ប្រៀបធៀប Framework Mobile</figcaption></figure>
+
+</section>
+<section id="install">
+<h2>២. ដំឡើង Xcode</h2>
+
+<ol class="steps"><li>ត្រូវការ <b>Mac</b> (macOS ថ្មី) — ទាញយក <b>Xcode</b> ពី Mac App Store (ឥតគិតថ្លៃ)។</li>
+<li><b>File → New → Project → iOS App</b> · Interface: <b>SwiftUI</b> · Language: Swift។</li>
+<li>ជ្រើស Simulator (iPhone 16) ចុច ▶ ឬ <b>⌘R</b> · Preview បង្ហាញខាងស្តាំ (<b>#Preview</b>)។</li>
+<li>គ្មាន Mac? រៀន Swift ជាមុនលើ <b>Swift Playgrounds</b> (iPad) ឬ Online compiler · Build iOS លើ Cloud (Xcode Cloud / Codemagic)។</li></ol>
+<script type="text/x-code" data-lang="txt" data-label="Project">
+KafeApp/
+├── KafeApp.swift          ← @main ចំណុចចាប់ផ្តើម
+├── ContentView.swift      ← អេក្រង់ដំបូង
+├── Models/ MenuItem.swift
+├── Views/  MenuView.swift · DetailView.swift · CartView.swift
+├── Store/  Cart.swift (@Observable)
+├── Assets.xcassets        ← Icon, រូប, ពណ៌
+└── Info.plist             ← Permission text
+</script>
+
+<div class="warn">⚠️ Swift/SwiftUI មិនអាចរត់ក្នុង Browser នេះបានទេ — លទ្ធផលខាងក្រោមជាគំរូដែលពិនិត្យដោយដៃ។</div>
+
+</section>
+<section id="elements">
+<h2>៣. ធាតុនីមួយៗរបស់ SwiftUI</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="230" fill="#fff"/><rect x="20" y="60" width="230" height="100" rx="14" fill="#16a34a"/><text x="135.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">UI (Composable / View)</text><text x="135.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">បង្ហាញ State · ផ្ញើ Event</text><rect x="355" y="60" width="230" height="100" rx="14" fill="#7c3aed"/><text x="470.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">ViewModel</text><text x="470.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">StateFlow / @Observable</text><rect x="690" y="60" width="230" height="100" rx="14" fill="#ea580c"/><text x="805.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Repository</text><text x="805.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">API (Retrofit/URLSession) + DB</text><line x1="252" y1="90" x2="351" y2="90" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="301.5" y="82.0" text-anchor="middle" font-size="13" fill="#334155">event: onAddClick()</text><line x1="351" y1="130" x2="252" y2="130" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="301.5" y="122.0" text-anchor="middle" font-size="13" fill="#334155">state: UiState</text><line x1="587" y1="90" x2="686" y2="90" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="636.5" y="82.0" text-anchor="middle" font-size="13" fill="#334155">getMenu()</text><line x1="686" y1="130" x2="587" y2="130" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="636.5" y="122.0" text-anchor="middle" font-size="13" fill="#334155">data</text><text x="470" y="205" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">MVVM — UI មិនហៅ API ផ្ទាល់ · State ហូរមួយទិស (Unidirectional data flow)</text></svg><figcaption>🖼️ ស្ថាបត្យកម្ម MVVM (View ↔ Model)</figcaption></figure>
+
+<table><tr><th>ធាតុ</th><th>តួនាទី</th><th>Flutter ប្រៀបធៀប</th></tr><tr><td>struct … : View</td><td>UI (body)</td><td>StatelessWidget</td></tr><tr><td>Modifier (.padding .font)</td><td>កែរូបរាង</td><td>Padding/TextStyle</td></tr><tr><td>VStack / HStack / ZStack</td><td>Layout</td><td>Column/Row/Stack</td></tr><tr><td>List / LazyVStack</td><td>បញ្ជី</td><td>ListView</td></tr><tr><td>@State / @Binding</td><td>State ក្នុង View / ចែករំលែកជាមួយកូន</td><td>setState / callback</td></tr><tr><td>@Observable class</td><td>Model ចែករំលែក</td><td>ChangeNotifier</td></tr><tr><td>NavigationStack · TabView</td><td>ផ្លាស់ទី</td><td>Navigator · NavigationBar</td></tr><tr><td>async/await · URLSession</td><td>Async · HTTP</td><td>Future · http</td></tr><tr><td>SwiftData</td><td>Database</td><td>sqflite</td></tr></table>
+
+</section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>Swift មូលដ្ឋាន៖ let/var, Type &amp; Optionals</h2>
+
+<script type="text/x-code" data-lang="swift" data-label="Basics.swift">
+let shop = "Kafe Angkor"        // let = មិនប្តូរ
+var cups = 3                    // var = ប្តូរបាន
+let price: Double = 2.5
+cups += 2
+print("\(shop) លក់ \(cups) កែវ = \(Double(cups) * price)$")
+
+var coupon: String? = nil       // Optional
+print(coupon?.count as Any)     // nil
+print(coupon ?? "គ្មាន Coupon")  // Nil-coalescing
+coupon = "KH10"
+
+if let code = coupon {          // Optional binding
+    print("Coupon \(code) មាន \(code.count) តួ")
+}
+
+func level(_ cups: Int) -> String {
+    guard cups > 0 else { return "ថ្មី" }   // guard: ចេញមុនពេលខុស
+    switch cups {
+    case 10...: return "Gold"
+    case 5..<10: return "Silver"
+    default: return "Member"
+    }
+}
+print("Level:", level(cups))
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផល (Console)</span></div><pre>Kafe Angkor លក់ 5 កែវ = 12.5$
+nil
+គ្មាន Coupon
+Coupon KH10 មាន 4 តួ
+Level: Silver</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>let</code> មិនប្តូរ (ប្រើជាលំនាំដើម) · <code class='i'>var</code> ប្តូរបាន។</li><li><code class='i'>"\(x)"</code> — String interpolation · Swift មិនបំលែង Type ស្វ័យប្រវត្តិ → <code class='i'>Double(cups)</code>។</li><li><code class='i'>String?</code> Optional · <code class='i'>??</code> តម្លៃជំនួស · <code class='i'>if let</code> ពន្លាតដោយសុវត្ថិភាព។</li><li><code class='i'>guard … else { return }</code> — ពិនិត្យលក្ខខណ្ឌ ហើយចេញមុន · <code class='i'>switch</code> ជាមួយ Range <code class='i'>10...</code> <code class='i'>5..&lt;10</code>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p><code class='i'>let n: Int? = nil</code> បង្ហាញ n ឬ 0។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="swift" data-label="answer.swift">
+print(n ?? 0)   // 0
+</script>
+</details></div>
+
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>struct, enum, Closure &amp; Collections</h2>
+
+<script type="text/x-code" data-lang="swift" data-label="Models.swift">
+struct MenuItem: Identifiable, Codable, Hashable {
+    let id: Int
+    var name: String
+    var price: Double
+    var hot = true
+}
+
+enum Size: String, CaseIterable { case s = "S", m = "M", l = "L"
+    var extra: Double { switch self { case .s: -0.25; case .m: 0; case .l: 0.5 } }
+}
+
+let menu = [
+    MenuItem(id: 1, name: "Americano", price: 2.0),
+    MenuItem(id: 2, name: "Iced Latte", price: 2.5, hot: false),
+    MenuItem(id: 3, name: "Mocha", price: 2.75),
+]
+let hot = menu.filter { $0.hot }.map(\.name)
+print(hot)
+let total = menu.reduce(0) { $0 + $1.price }
+print(String(format: "%.2f", total * 1.1))
+
+var big = menu[1]           // struct = Copy (Value type)
+big.price += Size.l.extra
+print(menu[1].price, big.price)
+print(Size.allCases.map(\.rawValue))
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផល (Console)</span></div><pre>[&quot;Americano&quot;, &quot;Mocha&quot;]
+7.98
+2.5 3.0
+[&quot;S&quot;, &quot;M&quot;, &quot;L&quot;]</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>struct</code> — Value type (Copy ពេល assign) → សុវត្ថិភាព · <code class='i'>class</code> = Reference type។</li><li>Protocol <code class='i'>Identifiable</code> (មាន id សម្រាប់ List) · <code class='i'>Codable</code> (JSON) · <code class='i'>Hashable</code>។</li><li><code class='i'>enum</code> + rawValue + computed property <code class='i'>extra</code> · <code class='i'>CaseIterable</code> → allCases។</li><li>Closure <code class='i'>{ $0.hot }</code> — $0 ធាតុទី១ · <code class='i'>\.name</code> Key path · <code class='i'>reduce(0) { $0 + $1.price }</code>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>ហេតុអ្វីប្តូរ <code class='i'>big.price</code> មិនប៉ះពាល់ <code class='i'>menu[1]</code>?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះ <b>struct ជា Value type</b> — <code class='i'>var big = menu[1]</code> បង្កើតច្បាប់ចម្លងថ្មី។</p></details></div>
+
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>async/await &amp; Concurrency</h2>
+
+<script type="text/x-code" data-lang="swift" data-label="Async.swift">
+func fetchMenu() async throws -> [String] {
+    try await Task.sleep(for: .milliseconds(500))   // ក្លែង Network
+    return ["Latte", "Mocha"]
+}
+
+func orderStatus() -> AsyncStream<String> {
+    AsyncStream { c in
+        Task {
+            for s in ["⏳ Pending", "☕ Brewing", "✅ Ready"] {
+                try? await Task.sleep(for: .milliseconds(300)); c.yield(s)
+            }
+            c.finish()
+        }
+    }
+}
+
+Task {
+    do {
+        print("កំពុងទាញ...")
+        print(try await fetchMenu())
+        async let a = fetchMenu()          // ស្របគ្នា
+        async let b = fetchMenu()
+        print(try await a.count + b.count)
+        for await s in orderStatus() { print(s) }
+    } catch {
+        print("⚠️", error)
+    }
+}
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផល (Console)</span></div><pre>កំពុងទាញ...
+[&quot;Latte&quot;, &quot;Mocha&quot;]
+4
+⏳ Pending
+☕ Brewing
+✅ Ready</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>async throws</code> — Function រង់ចាំ + អាចបោះ Error · ហៅដោយ <code class='i'>try await</code>។</li><li><code class='i'>Task { }</code> — ចាប់ផ្តើមការងារ Async · ក្នុង View ប្រើ <code class='i'>.task { }</code>។</li><li><code class='i'>async let</code> — រត់ស្របគ្នា · <code class='i'>AsyncStream</code> + <code class='i'>for await</code> ដូច Stream/Flow។</li><li><code class='i'>do / catch</code> — ចាប់ Error · <code class='i'>@MainActor</code> ធានា Update UI លើ Main thread។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>ខុសគ្នារវាង <code class='i'>try</code>, <code class='i'>try?</code>, <code class='i'>try!</code>?</p><details><summary>មើលចម្លើយ</summary><p><b>try</b> បោះ Error ទៅ catch · <b>try?</b> ប្តូរ Error ទៅ nil · <b>try!</b> Crash បើ Error (កុំប្រើ)។</p></details></div>
+
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>App SwiftUI ដំបូង</h2>
+
+<script type="text/x-code" data-lang="swift" data-label="KafeApp.swift">
+import SwiftUI
+
+@main
+struct KafeApp: App {
+    var body: some Scene {
+        WindowGroup { ContentView() }
+    }
+}
+
+struct ContentView: View {
+    var body: some View {
+        VStack(spacing: 8) {
+            Image(systemName: "cup.and.saucer.fill")
+                .font(.system(size: 60))
+                .foregroundStyle(.brown)
+            Text("Kafe Angkor")
+                .font(.largeTitle.bold())
+            Text("សួស្តី SwiftUI!")
+                .foregroundStyle(.secondary)
+        }
+        .padding()
+    }
+}
+
+#Preview { ContentView() }
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar ios" style="color:#111"></div><div class="ph-body"><div class="ph-center"><div style="text-align:center"><div style="font-size:54px">☕</div><b style="font-size:26px">Kafe Angkor</b><div style="color:#888">សួស្តី SwiftUI!</div></div></div></div></div><figcaption>📱 លទ្ធផលលើ iPhone Simulator</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>@main struct KafeApp: App</code> — ចំណុចចាប់ផ្តើម · <code class='i'>WindowGroup</code> បង្អួច App។</li><li><code class='i'>struct ContentView: View</code> + <code class='i'>var body: some View</code> — View ត្រឡប់ UI។</li><li><code class='i'>Image(systemName:)</code> — <b>SF Symbols</b> (Icon Apple 6,000+ ឥតគិតថ្លៃ)។</li><li><b>Modifier</b> <code class='i'>.font .foregroundStyle .padding</code> — ភ្ជាប់ជាច្រវាក់ (លំដាប់សំខាន់)។</li><li><code class='i'>#Preview</code> — មើលភ្លាមក្នុង Xcode Canvas។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>ប្តូរ <code class='i'>.padding().background(.yellow)</code> ទៅ <code class='i'>.background(.yellow).padding()</code> ឃើញអ្វីខុស?</p><details><summary>មើលចម្លើយ</summary><p>ទី១ ពណ៌លឿងគ្រប Padding (ធំជាង) · ទី២ ពណ៌លឿងតែជុំវិញអក្សរ ហើយ Padding នៅខាងក្រៅ។</p></details></div>
+
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>Views &amp; Modifiers៖ Text, Image, Button</h2>
+
+<script type="text/x-code" data-lang="swift" data-label="ProductCard.swift">
+struct ProductCard: View {
+    let item: MenuItem
+    var onAdd: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            AsyncImage(url: URL(string: "https://picsum.photos/400/240")) { img in
+                img.resizable().scaledToFill()
+            } placeholder: { ProgressView() }
+            .frame(height: 140).clipShape(.rect(cornerRadius: 14))
+
+            Text(item.name).font(.headline)
+            Text(item.price, format: .currency(code: "USD")).foregroundStyle(.secondary)
+
+            Button(action: onAdd) {
+                Label("បន្ថែម", systemImage: "plus").frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent).tint(.brown)
+        }
+        .padding(12)
+        .background(.background, in: .rect(cornerRadius: 18))
+        .shadow(color: .black.opacity(0.1), radius: 8, y: 4)
+    }
+}
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar ios" style="color:#111">Menu</div><div class="ph-body"><div class="ph-card"><div class="ph-img" style="background:linear-gradient(135deg,#a1887f,#4e342e)">🧋</div><b>Iced Latte</b><div style="color:#888">$2.50</div><span class="ph-btn" style="display:block;text-align:center;background:#8d6e63">＋ បន្ថែម</span></div></div></div><figcaption>📱 ProductCard</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>let item</code> — ទិន្នន័យចូល · <code class='i'>var onAdd: () -&gt; Void</code> — Closure ពេលចុច។</li><li><code class='i'>AsyncImage</code> — ទាញរូបពី Internet + placeholder ពេលកំពុងផ្ទុក។</li><li><code class='i'>Text(price, format: .currency(code: "USD"))</code> — បង្ហាញលុយតាម Locale។</li><li><code class='i'>.buttonStyle(.borderedProminent)</code> · <code class='i'>.frame(maxWidth: .infinity)</code> ពេញទទឹង។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>បង្ហាញតម្លៃជា ៛ (KHR)?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="swift" data-label="answer.swift">
+Text(item.price * 4100, format: .currency(code: "KHR"))
+</script>
+</details></div>
+
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Layout៖ VStack, HStack, ZStack &amp; List</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 250" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="250" fill="#fff"/><rect x="20" y="30" width="200" height="190" rx="18" fill="#f1f5f9" stroke="#0f172a" stroke-width="3"/><text x="120" y="22" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">Column ↓</text><rect x="60" y="50" width="120" height="45" rx="8" fill="#2563eb"/><rect x="60" y="105" width="120" height="45" rx="8" fill="#16a34a"/><rect x="60" y="160" width="120" height="45" rx="8" fill="#ea580c"/><rect x="255" y="30" width="200" height="190" rx="18" fill="#f1f5f9" stroke="#0f172a" stroke-width="3"/><text x="355" y="22" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">Row →</text><rect x="270" y="100" width="50" height="50" rx="8" fill="#2563eb"/><rect x="330" y="100" width="50" height="50" rx="8" fill="#16a34a"/><rect x="390" y="100" width="50" height="50" rx="8" fill="#ea580c"/><rect x="490" y="30" width="200" height="190" rx="18" fill="#f1f5f9" stroke="#0f172a" stroke-width="3"/><text x="590" y="22" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">Stack ⧉</text><rect x="510" y="50" width="160" height="150" rx="10" fill="#93c5fd"/><circle cx="590" cy="125" r="45" fill="#16a34a"/><rect x="620" y="60" width="44" height="24" rx="12" fill="#e11d48"/><rect x="725" y="30" width="200" height="190" rx="18" fill="#f1f5f9" stroke="#0f172a" stroke-width="3"/><text x="825" y="22" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">Expanded</text><rect x="740" y="100" width="40" height="50" rx="8" fill="#2563eb"/><rect x="785" y="100" width="110" height="50" rx="8" fill="#16a34a"/><text x="840" y="130" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">flex: 1</text><text x="470" y="245" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">mainAxisAlignment = តាមទិសមេ · crossAxisAlignment = តាមទិសទទឹង (ដូច CSS Flexbox)</text></svg><figcaption>🖼️ Layout ក្នុង Mobile</figcaption></figure>
+
+<script type="text/x-code" data-lang="swift" data-label="Layout.swift">
+struct ProfileRow: View {
+    var body: some View {
+        HStack(spacing: 12) {
+            Circle().fill(.brown.opacity(0.3)).frame(width: 48, height: 48)
+            VStack(alignment: .leading) {
+                Text("Dara").bold()
+                Text("Gold member · 1,250 points").foregroundStyle(.gray).lineLimit(1)
+            }
+            Spacer()                                   // រុញទៅខាងស្តាំ
+            ZStack(alignment: .topTrailing) {
+                Image(systemName: "bell.fill").font(.title2)
+                Text("3").font(.caption2).foregroundStyle(.white).padding(4).background(.red, in: .circle).offset(x: 8, y: -8)
+            }
+        }
+        .padding()
+    }
+}
+
+struct MenuList: View {
+    let items: [MenuItem]
+    var body: some View {
+        List(items) { item in
+            HStack { Text(item.name); Spacer(); Text("$\(item.price, specifier: "%.2f")") }
+        }
+        .listStyle(.insetGrouped)
+    }
+}
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar ios" style="color:#111">Profile</div><div class="ph-body"><div class="ph-row"><span class="ph-av">D</span><div style="flex:1"><b>Dara</b><div style="font-size:12px;color:#777">Gold member · 1,250 points</div></div><span style="position:relative;font-size:22px">🔔<i class="ph-badge">3</i></span></div><div class="ph-tile"><div style="flex:1">Coffee #1</div>$1.75</div><div class="ph-tile"><div style="flex:1">Coffee #2</div>$2.00</div><div class="ph-tile"><div style="flex:1">Coffee #3</div>$2.25</div><div class="ph-tile"><div style="flex:1">Coffee #4</div>$2.50</div><div class="ph-tile"><div style="flex:1">Coffee #5</div>$2.75</div></div></div><figcaption>📱 HStack + Spacer + ZStack · List</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>VStack</code> បញ្ឈរ · <code class='i'>HStack</code> ផ្តេក · <code class='i'>ZStack</code> ត្រួតគ្នា។</li><li><code class='i'>Spacer()</code> — យកចន្លោះទំនេរ (ដូច Expanded ទទេ)។</li><li><code class='i'>List(items)</code> — បញ្ជី (items ត្រូវ Identifiable) · Grid៖ <code class='i'>LazyVGrid(columns:)</code>។</li><li><code class='i'>.offset</code> រំកិល · <code class='i'>.lineLimit(1)</code> កាត់អក្សរ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>ប៊ូតុង ៣ ចែកទទឹងស្មើ?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="swift" data-label="answer.swift">
+HStack {
+    ForEach(["S", "M", "L"], id: \.self) { s in
+        Button(s) {}.frame(maxWidth: .infinity).buttonStyle(.bordered)
+    }
+}
+</script>
+</details></div>
+
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>State៖ @State &amp; @Binding</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="230" fill="#fff"/><rect x="20" y="30" width="260" height="90" rx="14" fill="#64748b"/><text x="150.0" y="69.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">StatelessWidget</text><text x="150.0" y="91.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">មិនប្តូរ: Text, Icon, Logo</text><rect x="330" y="30" width="260" height="90" rx="14" fill="#02569b"/><text x="460.0" y="69.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">StatefulWidget + State</text><text x="460.0" y="91.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ប្តូរបាន: Counter, Form, Like ❤</text><rect x="640" y="10" width="280" height="50" rx="14" fill="#16a34a"/><text x="780.0" y="41.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">① User ចុច (onPressed)</text><rect x="640" y="70" width="280" height="50" rx="14" fill="#ea580c"/><text x="780.0" y="101.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">② setState(() => count++)</text><rect x="640" y="130" width="280" height="50" rx="14" fill="#7c3aed"/><text x="780.0" y="161.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">③ build() ម្តងទៀត → UI ថ្មី</text><line x1="780" y1="62" x2="780" y2="68" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="780" y1="122" x2="780" y2="128" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><path d="M920 155 Q 935 90 922 35" fill="none" stroke="#475569" stroke-width="2.5" stroke-dasharray="5 4" marker-end="url(#ar)"/><text x="470" y="200" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">State = ទិន្នន័យដែលប្តូរ · UI = build(State)</text></svg><figcaption>🖼️ State ប្តូរ → body គណនាឡើងវិញ</figcaption></figure>
+
+<script type="text/x-code" data-lang="swift" data-label="DetailView.swift">
+struct DetailView: View {
+    @State private var qty = 1
+    @State private var name = ""
+    @State private var iced = false
+    let price = 2.5
+
+    var body: some View {
+        Form {
+            QtyPicker(qty: $qty)                      // $ = Binding (ចែករំលែក)
+            Toggle("ទឹកកក 🧊", isOn: $iced)
+            TextField("ឈ្មោះលើកែវ", text: $name)
+            Text("សរុប \(Double(qty) * price, format: .currency(code: "USD"))").bold()
+        }
+    }
+}
+
+struct QtyPicker: View {
+    @Binding var qty: Int                            // មិនកាន់ State ផ្ទាល់ — ខ្ចីពី View មេ
+    var body: some View {
+        Stepper("ចំនួន: \(qty)", value: $qty, in: 1...20)
+    }
+}
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar ios" style="color:#111">Detail</div><div class="ph-body"><div class="ph-tile"><div style="flex:1">ចំនួន: 2</div><span class="ph-chip">− ＋</span></div><div class="ph-tile"><div style="flex:1">ទឹកកក 🧊</div><span class="ph-sw on"></span></div><div class="ph-field">ឈ្មោះលើកែវ: Dara</div><div class="ph-tile"><b>សរុប $5.00</b></div></div></div><figcaption>📱 Form + Stepper + Toggle</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>@State private var</code> — State ដែល View ជាម្ចាស់ · ប្តូរ → body គណនាឡើងវិញ។</li><li><code class='i'>$qty</code> — <b>Binding</b> (ផ្ញើសិទ្ធិអាន/សរសេរ) ទៅ Child · Child ប្រើ <code class='i'>@Binding</code>។</li><li><code class='i'>Toggle(isOn:)</code>, <code class='i'>TextField(text:)</code>, <code class='i'>Stepper(value:in:)</code> — ទាំងអស់ទទួល Binding។</li><li><code class='i'>Form</code> — រចនាប័ទ្ម Settings របស់ iOS ស្វ័យប្រវត្តិ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>ហេតុអ្វី @State គួរតែ private?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះ State ជារបស់ View នោះតែប៉ុណ្ណោះ — បើ View ផ្សេងត្រូវការប្តូរ ផ្ញើ <b>Binding</b> ឬប្រើ @Observable model។</p></details></div>
+
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>NavigationStack &amp; TabView</h2>
+
+<figure class="fig"><svg viewBox="0 0 900 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="900" height="230" fill="#fff"/><rect x="60" y="40" width="190" height="150" rx="14" fill="#64748b" stroke="#0f172a" stroke-width="2"/><text x="155" y="80" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Home</text><rect x="84" y="58" width="190" height="150" rx="14" fill="#0175c2" stroke="#0f172a" stroke-width="2"/><text x="179" y="98" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Menu</text><rect x="108" y="76" width="190" height="150" rx="14" fill="#02569b" stroke="#0f172a" stroke-width="2"/><text x="203" y="116" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Detail ☕</text><rect x="420" y="40" width="200" height="56" rx="14" fill="#16a34a"/><text x="520.0" y="62.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Navigator.push</text><text x="520.0" y="84.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ដាក់ទំព័រថ្មីពីលើ</text><rect x="420" y="120" width="200" height="56" rx="14" fill="#dc2626"/><text x="520.0" y="142.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Navigator.pop</text><text x="520.0" y="164.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ត្រឡប់ក្រោយ</text><rect x="660" y="70" width="220" height="70" rx="14" fill="#7c3aed"/><text x="770.0" y="99.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">go_router</text><text x="770.0" y="121.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">context.go('/menu/7')</text><text x="155" y="222" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Navigation = Stack នៃទំព័រ</text></svg><figcaption>🖼️ Navigation stack</figcaption></figure>
+
+<script type="text/x-code" data-lang="swift" data-label="Navigation.swift">
+struct RootView: View {
+    var body: some View {
+        TabView {
+            Tab("Menu", systemImage: "cup.and.saucer") { MenuScreen() }
+            Tab("Orders", systemImage: "list.bullet.rectangle") { OrdersScreen() }
+            Tab("Profile", systemImage: "person") { ProfileScreen() }
+        }
+        .tint(.brown)
+    }
+}
+
+struct MenuScreen: View {
+    let menu: [MenuItem] = MenuItem.samples
+    @State private var path = NavigationPath()
+
+    var body: some View {
+        NavigationStack(path: $path) {
+            List(menu) { item in
+                NavigationLink(item.name, value: item)          // ចុច → push
+            }
+            .navigationTitle("Kafe Angkor")
+            .navigationDestination(for: MenuItem.self) { item in
+                DetailView(item: item)
+            }
+            .toolbar { Button("Cart", systemImage: "cart") { path.append(Route.cart) } }
+        }
+    }
+}
+</script>
+
+<figure class="phf"><div class="ph"><div class="ph-notch"></div><div class="ph-bar ios" style="color:#111"></div><div class="ph-body"><div style="font-size:26px;font-weight:800;margin:4px 0 8px">Kafe Angkor</div><div class="ph-tile">Americano ›</div><div class="ph-tile">Iced Latte ›</div><div class="ph-tile">Mocha ›</div><div class="ph-nav" style="background:#f8f8fa"><span class="on" style="--pc:transparent;color:#8d6e63">☕<br>Menu</span><span>🧾<br>Orders</span><span>👤<br>Profile</span></div></div></div><figcaption>📱 Large title + TabView</figcaption></figure>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>TabView</code> + <code class='i'>Tab</code> — Tab ខាងក្រោម (iOS 18+ syntax · ចាស់ប្រើ <code class='i'>.tabItem</code>)។</li><li><code class='i'>NavigationStack</code> — Stack ទំព័រ · <code class='i'>NavigationLink(value:)</code> + <code class='i'>.navigationDestination(for:)</code>។</li><li><code class='i'>NavigationPath</code> — គ្រប់គ្រងដោយ Code (push <code class='i'>path.append</code>, ត្រឡប់ទៅដើម <code class='i'>path = NavigationPath()</code>)។</li><li><code class='i'>.navigationTitle</code> — ចំណងជើងធំបែប iOS · <code class='i'>.toolbar</code> ប៊ូតុងលើ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>បង្ហាញ Cart ជា Sheet (រំកិលពីក្រោម)?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="swift" data-label="answer.swift">
+@State private var showCart = false
+...
+.sheet(isPresented: $showCart) { CartView() }
+</script>
+</details></div>
+
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>@Observable Cart (Model ចែករំលែក)</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="230" fill="#fff"/><rect x="20" y="60" width="230" height="100" rx="14" fill="#16a34a"/><text x="135.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">UI (Composable / View)</text><text x="135.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">បង្ហាញ State · ផ្ញើ Event</text><rect x="355" y="60" width="230" height="100" rx="14" fill="#7c3aed"/><text x="470.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">ViewModel</text><text x="470.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">StateFlow / @Observable</text><rect x="690" y="60" width="230" height="100" rx="14" fill="#ea580c"/><text x="805.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Repository</text><text x="805.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">API (Retrofit/URLSession) + DB</text><line x1="252" y1="90" x2="351" y2="90" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="301.5" y="82.0" text-anchor="middle" font-size="13" fill="#334155">event: onAddClick()</text><line x1="351" y1="130" x2="252" y2="130" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="301.5" y="122.0" text-anchor="middle" font-size="13" fill="#334155">state: UiState</text><line x1="587" y1="90" x2="686" y2="90" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="636.5" y="82.0" text-anchor="middle" font-size="13" fill="#334155">getMenu()</text><line x1="686" y1="130" x2="587" y2="130" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="636.5" y="122.0" text-anchor="middle" font-size="13" fill="#334155">data</text><text x="470" y="205" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">MVVM — UI មិនហៅ API ផ្ទាល់ · State ហូរមួយទិស (Unidirectional data flow)</text></svg><figcaption>🖼️ View ↔ @Observable Model</figcaption></figure>
+
+<script type="text/x-code" data-lang="swift" data-label="Cart.swift">
+import Observation
+
+@Observable
+final class Cart {
+    private(set) var lines: [Int: (item: MenuItem, qty: Int)] = [:]
+
+    var count: Int { lines.values.reduce(0) { $0 + $1.qty } }
+    var total: Double { lines.values.reduce(0) { $0 + Double($1.qty) * $1.item.price } }
+
+    func add(_ item: MenuItem) { lines[item.id, default: (item, 0)].qty += 1 }
+    func clear() { lines.removeAll() }
+}
+
+// KafeApp.swift
+@main struct KafeApp: App {
+    @State private var cart = Cart()
+    var body: some Scene { WindowGroup { RootView().environment(cart) } }
+}
+
+// View ណាក៏បាន
+struct CartButton: View {
+    @Environment(Cart.self) private var cart
+    var body: some View {
+        Label("\(cart.count)", systemImage: "cart.fill")
+            .badge(cart.count)
+    }
+}
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>@Observable</code> (iOS 17+) — Class ដែល SwiftUI តាមដានដោយស្វ័យប្រវត្តិ (ជំនួស ObservableObject + @Published)។</li><li><code class='i'>private(set)</code> — អានពីក្រៅបាន តែប្តូរបានតែក្នុង Class។</li><li><code class='i'>lines[id, default: (item, 0)].qty += 1</code> — Dictionary ជាមួយតម្លៃលំនាំដើម។</li><li><code class='i'>.environment(cart)</code> ចាក់ចូល · <code class='i'>@Environment(Cart.self)</code> យកប្រើ — ដូច Provider។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>Latte ($2.5) ×2 + Mocha ($2.75) ×1 → count/total?</p><details><summary>មើលចម្លើយ</summary><p>count = <b>3</b> · total = <b>$7.75</b>។</p></details></div>
+
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>URLSession &amp; Codable (REST API)</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 220" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="220" fill="#fff"/><rect x="20" y="70" width="170" height="80" rx="14" fill="#02569b"/><text x="105.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">📱 Flutter UI</text><text x="105.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">FutureBuilder</text><rect x="250" y="70" width="170" height="80" rx="14" fill="#0891b2"/><text x="335.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Repository</text><text x="335.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">http.get()</text><rect x="480" y="70" width="170" height="80" rx="14" fill="#ea580c"/><text x="565.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🌐 REST API</text><text x="565.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">GET /menu</text><rect x="710" y="70" width="200" height="80" rx="14" fill="#16a34a"/><text x="810.0" y="104.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🗄️ Server + DB</text><text x="810.0" y="126.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Node.js · PostgreSQL</text><line x1="192" y1="100" x2="246" y2="100" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="219.0" y="92.0" text-anchor="middle" font-size="13" fill="#334155">request</text><line x1="422" y1="100" x2="476" y2="100" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="652" y1="100" x2="706" y2="100" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="706" y1="130" x2="652" y2="130" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="476" y1="130" x2="422" y2="130" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="449.0" y="122.0" text-anchor="middle" font-size="13" fill="#334155">JSON</text><line x1="246" y1="130" x2="192" y2="130" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="219.0" y="122.0" text-anchor="middle" font-size="13" fill="#334155">List<Item></text><text x="470" y="200" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">JSON → jsonDecode → Model (fromJson) → Widget</text></svg><figcaption>🖼️ Data flow ពី API ទៅ UI</figcaption></figure>
+
+<script type="text/x-code" data-lang="swift" data-label="API.swift">
+struct MenuDTO: Codable, Identifiable { let id: Int; let name: String; let price: Double }
+
+enum API {
+    static let base = URL(string: "https://api.example.com/")!
+    static func menu() async throws -> [MenuDTO] {
+        let (data, res) = try await URLSession.shared.data(from: base.appending(path: "menu"))
+        guard (res as? HTTPURLResponse)?.statusCode == 200 else { throw URLError(.badServerResponse) }
+        return try JSONDecoder().decode([MenuDTO].self, from: data)
+    }
+}
+
+struct ProductsView: View {
+    @State private var items: [MenuDTO] = []
+    @State private var error: String?
+    @State private var loading = true
+
+    var body: some View {
+        Group {
+            if loading { ProgressView() }
+            else if let error { ContentUnavailableView("មានបញ្ហា", systemImage: "wifi.slash", description: Text(error)) }
+            else { List(items) { Text("\($0.name) — $\($0.price, specifier: "%.2f")") } }
+        }
+        .task { await load() }               // រត់ពេលបង្ហាញ ហើយបោះបង់ពេលចាកចេញ
+        .refreshable { await load() }        // Pull to refresh
+    }
+
+    func load() async {
+        do { items = try await API.menu(); error = nil } catch { self.error = error.localizedDescription }
+        loading = false
+    }
+}
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>URLSession.shared.data(from:)</code> — HTTP GET ដោយ async/await។</li><li><code class='i'>Codable</code> + <code class='i'>JSONDecoder().decode</code> — JSON → struct ស្វ័យប្រវត្តិ (ឈ្មោះ Key ត្រូវដូចគ្នា ឬប្រើ CodingKeys)។</li><li><code class='i'>.task { }</code> — ផ្ទុកទិន្នន័យពេល View បង្ហាញ · <code class='i'>.refreshable</code> ទាញចុះ Refresh។</li><li><code class='i'>ContentUnavailableView</code> — អេក្រង់ទទេ/Error ស្តង់ដារ iOS។</li><li>iOS តម្រូវ <b>HTTPS</b> (App Transport Security)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>JSON មាន Key <code class='i'>unit_price</code> តែ struct ប្រើ <code class='i'>price</code>?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="swift" data-label="answer.swift">
+let decoder = JSONDecoder()
+decoder.keyDecodingStrategy = .convertFromSnakeCase   // unit_price → unitPrice
+// ឬ enum CodingKeys: String, CodingKey { case price = "unit_price" }
+</script>
+</details></div>
+
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>SwiftData &amp; @AppStorage</h2>
+
+<script type="text/x-code" data-lang="swift" data-label="Orders.swift">
+import SwiftData
+
+@Model
+final class Order {
+    var items: String
+    var total: Double
+    var time: Date
+    init(items: String, total: Double, time: Date = .now) { self.items = items; self.total = total; self.time = time }
+}
+
+// KafeApp: WindowGroup { RootView() }.modelContainer(for: Order.self)
+
+struct OrdersScreen: View {
+    @Environment(\.modelContext) private var context
+    @Query(sort: \Order.time, order: .reverse) private var orders: [Order]
+    @AppStorage("dark") private var dark = false            // UserDefaults
+
+    var body: some View {
+        List {
+            Toggle("Dark mode", isOn: $dark)
+            ForEach(orders) { o in
+                VStack(alignment: .leading) { Text(o.items); Text(o.time, style: .relative).font(.caption) }
+            }
+            .onDelete { idx in idx.forEach { context.delete(orders[$0]) } }
+        }
+        .preferredColorScheme(dark ? .dark : nil)
+    }
+
+    func save(_ cart: Cart) { context.insert(Order(items: "\(cart.count) items", total: cart.total)) }
+}
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>@Model</code> — Class ក្លាយជាតារាង Database (SwiftData លើ Core Data/SQLite)។</li><li><code class='i'>.modelContainer(for:)</code> បង្កើត DB · <code class='i'>@Query</code> ទាញ + Update UI ស្វ័យប្រវត្តិ · <code class='i'>context.insert/delete</code>។</li><li><code class='i'>@AppStorage</code> — Setting តូចៗក្នុង UserDefaults (ដូច shared_preferences)។</li><li>Token សម្ងាត់៖ <b>Keychain</b>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>បង្ហាញតែ Orders ដែល total &gt; 5?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="swift" data-label="answer.swift">
+@Query(filter: #Predicate<Order> { $0.total > 5 }) private var big: [Order]
+</script>
+</details></div>
+
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>Permission, Test &amp; Publish លើ App Store</h2>
+
+<figure class="fig"><svg viewBox="0 0 980 160" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="980" height="160" fill="#fff"/><path d="M12 30h118l18 40-18 40h-118l18-40z" fill="#02569b"/><text x="80" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Code</text><text x="80" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">flutter run</text><path d="M151 30h118l18 40-18 40h-118l18-40z" fill="#0175c2"/><text x="219" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Test</text><text x="219" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">flutter test</text><path d="M290 30h118l18 40-18 40h-118l18-40z" fill="#0891b2"/><text x="358" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Icon + Name</text><text x="358" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">launcher icons</text><path d="M429 30h118l18 40-18 40h-118l18-40z" fill="#7c3aed"/><text x="497" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Sign</text><text x="497" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">keystore</text><path d="M568 30h118l18 40-18 40h-118l18-40z" fill="#ea580c"/><text x="636" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Build</text><text x="636" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">appbundle / ipa</text><path d="M707 30h118l18 40-18 40h-118l18-40z" fill="#16a34a"/><text x="775" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Store</text><text x="775" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">Play · App Store</text><path d="M846 30h118l18 40-18 40h-118l18-40z" fill="#ca8a04"/><text x="914" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">Update</text><text x="914" y="86" text-anchor="middle" font-size="11" font-weight="400" fill="#fff">version +1</text><text x="490" y="145" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">ដំណើរការ Publish App</text></svg><figcaption>🖼️ ពី Code ទៅ Store</figcaption></figure>
+
+<script type="text/x-code" data-lang="swift" data-label="Permission + Tests">
+// Info.plist: NSCameraUsageDescription = "ថតរូបកាហ្វេសម្រាប់ Review"
+//             NSLocationWhenInUseUsageDescription = "រកហាងជិតអ្នក"
+import AVFoundation
+func askCamera() async -> Bool { await AVCaptureDevice.requestAccess(for: .video) }
+
+// PhotosPicker (មិនត្រូវការ Permission)
+PhotosPicker("ជ្រើសរូប", selection: $photo, matching: .images)
+
+// Swift Testing (Xcode 16)
+import Testing
+@Test func addTwice() {
+    let cart = Cart()
+    let latte = MenuItem(id: 2, name: "Latte", price: 2.5)
+    cart.add(latte); cart.add(latte)
+    #expect(cart.count == 2)
+    #expect(cart.total == 5.0)
+}
+</script>
+
+<ol class="steps"><li>ចុះឈ្មោះ <b>Apple Developer Program</b> ($99/ឆ្នាំ)។</li><li>Xcode → Signing &amp; Capabilities → ជ្រើស Team · Bundle ID <code class='i'>com.kafe.app</code>។</li>
+<li><b>Product → Archive</b> → Distribute App → App Store Connect។</li><li><b>TestFlight</b> — ផ្ញើឲ្យអ្នកសាករហូតដល់ 10,000 នាក់។</li>
+<li>App Store Connect៖ Screenshots, Privacy (Nutrition label), Description → <b>Submit for Review</b> (ច្រើនតែ ១–២ ថ្ងៃ)។</li></ol>
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li>រាល់ Permission ត្រូវមានអក្សរពន្យល់ក្នុង <b>Info.plist</b> — បើគ្មាន App Crash ហើយ Review បដិសេធ។</li><li><b>Swift Testing</b> <code class='i'>@Test</code> + <code class='i'>#expect</code> (ឬ XCTest ចាស់)។</li><li><b>Archive</b> → Upload · <b>TestFlight</b> សាក Beta · ចុងក្រោយ App Review។</li><li>Version (1.2.0) + Build number ត្រូវកើនរាល់ Upload។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>App ត្រូវ Apple បដិសេធ ព្រោះ "Guideline 5.1.1"។ ច្រើនតែមកពីអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>បញ្ហា <b>Privacy</b>៖ ស្នើ Permission ដោយគ្មានហេតុផលច្បាស់ ឬគ្មាន Privacy policy / មិនអនុញ្ញាតលុបគណនី។</p></details></div>
+
+</section>
+<section id="cheat">
+<h2>📋 Cheat Sheet</h2>
+
+<table><tr><th>Flutter</th><th>SwiftUI</th></tr><tr><td>StatelessWidget</td><td>struct X: View</td></tr><tr><td>Column / Row / Stack</td><td>VStack / HStack / ZStack</td></tr><tr><td>Expanded</td><td>Spacer() / .frame(maxWidth: .infinity)</td></tr><tr><td>ListView</td><td>List / LazyVStack</td></tr><tr><td>setState</td><td>@State</td></tr><tr><td>callback</td><td>@Binding</td></tr><tr><td>Provider</td><td>@Observable + .environment</td></tr><tr><td>Navigator</td><td>NavigationStack</td></tr><tr><td>http + jsonDecode</td><td>URLSession + Codable</td></tr><tr><td>sqflite</td><td>SwiftData</td></tr></table>
+
+<script type="text/x-code" data-lang="swift" data-label="Swift">
+let · var · String? · ?? · if let · guard · struct · enum · async/await · @State · @Binding · @Observable
+</script>
+
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងអាជីព៖ Kafe Order App (SwiftUI)</h2>
+
+<p>App iPhone ពេញលេញ៖ <b>TabView (Menu · Orders · Profile) → NavigationStack Detail → Cart (@Observable) → Checkout Form → Orders (SwiftData)</b> + URLSession + Dark mode (@AppStorage) + SF Symbols។</p>
+<script type="text/x-code" data-lang="txt" data-label="Project structure">
+KafeApp/
+├── KafeApp.swift          ← @main · .environment(cart) · .modelContainer(for: Order.self)
+├── Models/  MenuItem.swift · Order.swift (@Model)
+├── Store/   Cart.swift (@Observable)
+├── Services/ API.swift (URLSession)
+├── Views/
+│   ├── RootView.swift     ← TabView
+│   ├── MenuScreen.swift   ← LazyVGrid + .searchable
+│   ├── DetailView.swift   ← Size Picker + Stepper
+│   ├── CartView.swift · CheckoutView.swift
+│   └── OrdersScreen.swift ← @Query
+└── KafeAppTests/ CartTests.swift
+</script>
+
+<script type="text/x-code" data-lang="swift" data-label="DetailView.swift">
+struct DetailView: View {
+    let item: MenuItem
+    @Environment(Cart.self) private var cart
+    @Environment(\.dismiss) private var dismiss
+    @State private var qty = 1
+    @State private var size: Size = .m
+
+    var price: Double { item.price + size.extra }
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                AsyncImage(url: item.imageURL) { $0.resizable().scaledToFill() } placeholder: { Color.brown.opacity(0.2) }
+                    .frame(height: 240).clipShape(.rect(cornerRadius: 20))
+                Text(item.name).font(.largeTitle.bold())
+                Picker("Size", selection: $size) {
+                    ForEach(Size.allCases, id: \.self) { Text($0.rawValue) }
+                }.pickerStyle(.segmented)
+                Stepper("ចំនួន: \(qty)", value: $qty, in: 1...20)
+                Button {
+                    for _ in 0..<qty { cart.add(MenuItem(id: item.id, name: item.name, price: price)) }
+                    dismiss()
+                } label: {
+                    Text("បន្ថែម \(price * Double(qty), format: .currency(code: "USD"))").frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent).controlSize(.large).tint(.brown)
+            }.padding()
+        }
+    }
+}
+</script>
+
+<table><tr><th>ជំហាន</th><th>មេរៀន</th></tr><tr><td>Model + Swift</td><td>១ · ២</td></tr><tr><td>UI Card/Grid</td><td>៤ · ៥ · ៦</td></tr><tr><td>Qty, Size</td><td>៧</td></tr><tr><td>Tabs + Detail</td><td>៨</td></tr><tr><td>Cart</td><td>៩</td></tr><tr><td>API</td><td>១០</td></tr><tr><td>Orders + Setting</td><td>១១</td></tr><tr><td>Permission + Publish</td><td>១២</td></tr></table>
+
+</section>
+<section id="pro-app">
+<h2>💻 SwiftUI Playground Pro (App)</h2>
+
+<p><b>UI Builder</b>៖ ជ្រើស Component ប្តូរពណ៌ Dark mode TabView → មើលលើទូរស័ព្ទ ហើយទទួលបាន <b>Code SwiftUI</b> ចម្លងទៅ Xcode / Swift Playgrounds។ <b>Layout Lab</b>៖ សាក VStack/HStack + alignment + spacing + Spacer។</p>
+
+<div class="fb" id="fb">
+  <div class="itk-tabs fb-tabs"><button class="on" data-t="build">🧱 UI Builder</button><button data-t="lay">📐 Layout Lab</button></div>
+  <div class="fb-p on" data-t="build">
+    <div class="fb-grid">
+      <div class="fb-ctl">
+        <label>AppBar title <input id="b_title" value="Kafe Angkor"></label>
+        <label>Seed color <input type="color" id="b_seed" value="#795548"></label>
+        <label><input type="checkbox" id="b_dark"> Dark mode</label>
+        <label><input type="checkbox" id="b_nav" checked> NavigationBar</label>
+        <label><input type="checkbox" id="b_fab" checked> FloatingActionButton</label>
+        <div class="fb-add"><b>បន្ថែម Widget៖</b>
+          <button class="btn" data-w="text">Text</button><button class="btn" data-w="image">Image</button><button class="btn" data-w="card">Card</button>
+          <button class="btn" data-w="tile">ListTile</button><button class="btn" data-w="button">Button</button><button class="btn" data-w="field">TextField</button>
+          <button class="btn" data-w="switch">Switch</button><button class="btn" data-w="chips">Chips</button><button class="btn" data-w="space">SizedBox</button></div>
+        <div id="b_list" class="fb-list"></div>
+      </div>
+      <div class="fb-phone"><div class="ph big" id="b_ph"></div></div>
+    </div>
+    <pre class="vl-code" id="b_code"></pre>
+  </div>
+  <div class="fb-p" data-t="lay">
+    <div class="fb-row">
+      <label>Widget <select id="l_dir"><option value="col">VStack</option><option value="row">HStack</option></select></label>
+      <label>mainAxisAlignment <select id="l_main"><option>start</option><option>center</option><option>end</option><option>spaceBetween</option><option>spaceAround</option><option>spaceEvenly</option></select></label>
+      <label>crossAxisAlignment <select id="l_cross"><option>center</option><option>start</option><option>end</option><option>stretch</option></select></label>
+      <label>Children <input type="range" id="l_n" min="1" max="5" value="3"></label>
+      <label><input type="checkbox" id="l_exp"> Expanded លើទី ២</label>
+    </div>
+    <div class="fb-lay"><div id="l_box"></div></div>
+    <pre class="vl-code" id="l_code"></pre>
+  </div>
+</div>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  document.querySelectorAll(".fb-tabs button").forEach(b => b.onclick = () => document.querySelectorAll(".fb-tabs button,.fb-p").forEach(x => x.classList.toggle("on", x.dataset.t === b.dataset.t)));
+  let W = [{ t: "text", v: "សួស្តី 👋 ថ្ងៃនេះផឹកអ្វី?" }, { t: "image" }, { t: "tile", v: "Iced Latte" }, { t: "button", v: "បញ្ជាទិញ" }];
+  const DEF = { text: "Text ថ្មី", tile: "Americano", button: "ចុចខ្ញុំ", field: "ឈ្មោះ", switch: "ការជូនដំណឹង", card: "Card title" };
+  const esc = s => String(s).replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[m]);
+  const dq = s => String(s).replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/\$/g, "\\$");
+  function mix(hex, t, to) { const n = parseInt(hex.slice(1), 16), a = [n >> 16, n >> 8 & 255, n & 255], b = to === "w" ? [255, 255, 255] : [20, 20, 22]; return "rgb(" + a.map((v, i) => Math.round(v + (b[i] - v) * t)).join(",") + ")"; }
+  function render() {
+    const seed = $("b_seed").value, dark = $("b_dark").checked, title = $("b_title").value;
+    const bg = dark ? "#151517" : mix(seed, .94, "w"), fg = dark ? "#eee" : "#1c1b1f", prim = dark ? mix(seed, .45, "w") : seed, card = dark ? "#232326" : "#fff", cont = dark ? mix(seed, .65, "d") : mix(seed, .8, "w");
+    let h = `<div class="ph-notch"></div><div class="ph-bar" style="background:${dark ? "#232326" : cont};color:${fg}">${esc(title)}</div><div class="ph-body" style="background:${bg};color:${fg}">`;
+    W.forEach(w => {
+      if (w.t === "text") h += `<div style="font-size:17px;font-weight:600;margin:4px 2px 8px">${esc(w.v)}</div>`;
+      if (w.t === "image") h += `<div class="ph-img" style="background:linear-gradient(135deg,${mix(seed, .3, "w")},${seed})">☕</div>`;
+      if (w.t === "card") h += `<div class="ph-card" style="background:${card}"><b>${esc(w.v)}</b><div style="font-size:12px;opacity:.7">Card subtitle</div></div>`;
+      if (w.t === "tile") h += `<div class="ph-tile" style="background:${card}"><span class="ph-av" style="background:${cont};color:${dark ? "#fff" : seed}">☕</span><div style="flex:1"><b>${esc(w.v)}</b><div style="font-size:12px;opacity:.65">$2.50</div></div>›</div>`;
+      if (w.t === "button") h += `<span class="ph-btn" style="background:${prim};color:${dark ? "#111" : "#fff"};display:block;text-align:center;margin:8px 0">${esc(w.v)}</span>`;
+      if (w.t === "field") h += `<div class="ph-field" style="background:${card};border-color:${prim}"><small style="color:${prim}">${esc(w.v)}</small></div>`;
+      if (w.t === "switch") h += `<div class="ph-tile" style="background:${card}"><div style="flex:1">${esc(w.v)}</div><span class="ph-sw" style="background:${prim}"></span></div>`;
+      if (w.t === "chips") h += `<div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0">${["Hot", "Iced", "Frappe"].map((c, i) => `<span class="ph-chip" style="${i === 0 ? `background:${cont};` : ""}border-color:${prim}">${c}</span>`).join("")}</div>`;
+      if (w.t === "space") h += `<div style="height:16px"></div>`;
+    });
+    h += `</div>`;
+    if ($("b_fab").checked) h += `<div class="ph-fab" style="background:${cont};color:${fg};bottom:${$("b_nav").checked ? 70 : 18}px">＋</div>`;
+    if ($("b_nav").checked) h += `<div class="ph-nav" style="color:${fg};background:${dark ? "#1d1d20" : mix(seed, .9, "w")}"><span class="on" style="--pc:${cont}">🏠<br>Home</span><span>🧾<br>Orders</span><span>👤<br>Profile</span></div>`;
+    $("b_ph").innerHTML = h;
+    $("b_list").innerHTML = W.map((w, i) => `<div class="fb-item"><b>${w.t}</b>${w.v !== undefined ? `<input data-i="${i}" value="${esc(w.v)}">` : "<span></span>"}<button data-up="${i}" title="ឡើង">↑</button><button data-del="${i}" title="លុប">✕</button></div>`).join("");
+
+    const q = s => String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+    const kids = W.map(w => "                " + ({
+      text: `Text("${q(w.v)}").font(.headline)`,
+      image: `Image("coffee").resizable().scaledToFill().frame(height: 140).clipShape(RoundedRectangle(cornerRadius: 16))`,
+      card: `VStack(alignment: .leading) { Text("${q(w.v)}").bold(); Text("Card subtitle").foregroundStyle(.secondary) }\n                    .frame(maxWidth: .infinity, alignment: .leading).padding().background(.background, in: .rect(cornerRadius: 16)).shadow(radius: 2)`,
+      tile: `HStack { Image(systemName: "cup.and.saucer.fill"); Text("${q(w.v)}"); Spacer(); Text("$2.50").foregroundStyle(.secondary) }\n                    .padding().background(.background, in: .rect(cornerRadius: 14))`,
+      button: `Button("${q(w.v)}") { }.buttonStyle(.borderedProminent).frame(maxWidth: .infinity)`,
+      field: `TextField("${q(w.v)}", text: $name).textFieldStyle(.roundedBorder)`,
+      switch: `Toggle("${q(w.v)}", isOn: $on)`,
+      chips: `HStack { ForEach(["Hot", "Iced", "Frappe"], id: \\.self) { Text($0).padding(.horizontal, 12).padding(.vertical, 4).overlay(Capsule().stroke(.tint)) } }`,
+      space: `Spacer().frame(height: 16)`,
+    })[w.t]).join("\n");
+    const body = `NavigationStack {
+            ScrollView {
+                VStack(spacing: 12) {
+${kids}
+                }
+                .padding()
+            }
+            .navigationTitle("${q(title)}")${$("b_fab").checked ? `
+            .overlay(alignment: .bottomTrailing) {
+                Button { } label: { Image(systemName: "plus").font(.title2).padding().background(.tint.opacity(0.2), in: .rect(cornerRadius: 16)) }.padding()
+            }` : ""}
+        }`;
+    $("b_code").textContent = `import SwiftUI
+
+struct HomeView: View {
+    @State private var name = ""
+    @State private var on = true
+
+    var body: some View {
+        ${$("b_nav").checked ? `TabView {
+        ${body.replace(/\n/g, "\n    ")}
+            .tabItem { Label("Home", systemImage: "house") }
+            Text("Orders").tabItem { Label("Orders", systemImage: "list.bullet.rectangle") }
+            Text("Profile").tabItem { Label("Profile", systemImage: "person") }
+        }` : body}
+        .tint(Color(hex: 0x${seed.slice(1).toUpperCase()}))${dark ? "\n        .preferredColorScheme(.dark)" : ""}
+    }
+}
+
+// Helper: Color ពីលេខ Hex (ដាក់ម្តងក្នុង Project)
+extension Color {
+    init(hex: UInt) {
+        self.init(red: Double((hex >> 16) & 0xFF) / 255, green: Double((hex >> 8) & 0xFF) / 255, blue: Double(hex & 0xFF) / 255)
+    }
+}`;
+
+  }
+  document.querySelectorAll("[data-w]").forEach(b => b.onclick = () => { W.push({ t: b.dataset.w, v: DEF[b.dataset.w] }); render(); });
+  $("b_list").addEventListener("input", e => { const i = e.target.dataset.i; if (i !== undefined) { W[i].v = e.target.value; const keep = e.target.selectionStart; render(); const n = $("b_list").querySelector(`[data-i="${i}"]`); n.focus(); n.setSelectionRange(keep, keep); } });
+  $("b_list").addEventListener("click", e => { const d = e.target.dataset; if (d.del !== undefined) { W.splice(+d.del, 1); render(); } if (d.up !== undefined && +d.up > 0) { const i = +d.up; [W[i - 1], W[i]] = [W[i], W[i - 1]]; render(); } });
+  ["b_title", "b_seed", "b_dark", "b_nav", "b_fab"].forEach(i => $(i).addEventListener("input", render));
+  render();
+  // ---------- Layout lab
+  const COL = ["#2563eb", "#16a34a", "#ea580c", "#7c3aed", "#db2777"];
+  const MAP = { start: "flex-start", center: "center", end: "flex-end", spaceBetween: "space-between", spaceAround: "space-around", spaceEvenly: "space-evenly", stretch: "stretch" };
+  function lay() {
+    const col = $("l_dir").value === "col", n = +$("l_n").value, exp = $("l_exp").checked && n >= 2, m = $("l_main").value, c = $("l_cross").value;
+    const box = $("l_box"); box.style.flexDirection = col ? "column" : "row"; box.style.justifyContent = MAP[m]; box.style.alignItems = MAP[c];
+    box.innerHTML = Array.from({ length: n }, (_, i) => { const s = 34 + (i % 3) * 14, grow = exp && i === 1; return `<div style="background:${COL[i]};${col ? `height:${s}px;width:${c === "stretch" ? "auto" : 40 + i * 18 + "px"}` : `width:${s}px;height:${c === "stretch" ? "auto" : 40 + i * 18 + "px"}`};${grow ? "flex:1" : ""}">${grow ? "Expanded" : i + 1}</div>`; }).join("");
+
+    const AL = col ? { start: ".leading", center: ".center", end: ".trailing", stretch: ".center" } : { start: ".top", center: ".center", end: ".bottom", stretch: ".center" };
+    const sp = m === "spaceBetween" || m === "spaceAround" || m === "spaceEvenly";
+    const rect = i => `Rectangle().fill(Color(hex: 0x${COL[i].slice(1).toUpperCase()}))${exp && i === 1 ? `.frame(${col ? "maxHeight" : "maxWidth"}: .infinity)` : ""}.frame(width: ${c === "stretch" && col ? ".infinity" : col ? 40 + i * 18 : 34 + (i % 3) * 14}, height: ${c === "stretch" && !col ? ".infinity" : col ? 34 + (i % 3) * 14 : 40 + i * 18})`;
+    let items = Array.from({ length: n }, (_, i) => "    " + rect(i));
+    if (m === "center" || m === "spaceAround" || m === "spaceEvenly") items = ["    Spacer()", ...items.flatMap((x, i) => i < items.length - 1 && sp ? [x, "    Spacer()"] : [x]), "    Spacer()"];
+    else if (m === "end") items = ["    Spacer()", ...items];
+    else if (m === "start") items = [...items, "    Spacer()"];
+    else items = items.flatMap((x, i) => i < items.length - 1 ? [x, "    Spacer()"] : [x]);
+    $("l_code").textContent = `${col ? "VStack" : "HStack"}(alignment: ${AL[c]}, spacing: 6) {\n${items.join("\n")}\n}\n// SwiftUI ប្រើ Spacer() ជំនួស mainAxisAlignment`;
+  }
+  ["l_dir", "l_main", "l_cross", "l_n", "l_exp"].forEach(i => $(i).addEventListener("input", lay)); lay();
+})();
+</script>
+
+<h3>🏆 Quiz Swift &amp; SwiftUI ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["Swift ត្រូវបានបង្កើតដោយក្រុមហ៊ុន?", ["Google", "Apple", "Microsoft", "JetBrains"], 1], ["Swift បង្ហាញជាសាធារណៈនៅ WWDC ឆ្នាំ?", ["2010", "2014", "2017", "2019"], 1], ["អ្នកចាប់ផ្តើមបង្កើត Swift?", ["Steve Jobs", "Chris Lattner", "Tim Cook", "Andrey Breslav"], 1], ["SwiftUI ចេញឆ្នាំ?", ["2014", "2016", "2019", "2023"], 2], ["let និង var?", ["let ប្តូរបាន", "let មិនប្តូរ · var ប្តូរបាន", "ដូចគ្នា", "let សម្រាប់ Class"], 1], ["String? ហៅថា?", ["Array", "Optional", "Tuple", "Protocol"], 1], ["Operator ?? ធ្វើអ្វី?", ["បូក", "ផ្តល់តម្លៃជំនួសពេល nil", "ប្រៀបធៀប", "Error"], 1], ["struct ជា?", ["Reference type", "Value type (Copy)", "Thread", "View"], 1], ["ធ្វើឲ្យ struct បំលែង JSON បាន ប្រើ Protocol?", ["Identifiable", "Codable", "Hashable", "View"], 1], ["ត្រួតធាតុលើគ្នា ប្រើ?", ["VStack", "HStack", "ZStack", "List"], 2], ["រុញធាតុទៅខាងចុង ប្រើ?", ["Spacer()", "Divider()", "Padding", "Group"], 0], ["State ដែល View ជាម្ចាស់?", ["@Binding", "@State", "@Environment", "@Query"], 1], ["ផ្ញើ State ឲ្យ Child កែបាន ប្រើ?", ["@State", "@Binding ($value)", "let", "static"], 1], ["Model ចែករំលែក iOS 17+?", ["@Observable", "@Model", "@main", "@Test"], 0], ["ផ្លាស់ទីទំព័រ ប្រើ?", ["NavigationStack", "ZStack", "Form", "Toolbar"], 0], ["ផ្ទុកទិន្នន័យពេល View បង្ហាញ ប្រើ Modifier?", [".task", ".padding", ".tint", ".badge"], 0], ["ហៅ HTTP ក្នុង Swift?", ["Retrofit", "URLSession", "fetch", "Dio"], 1], ["Database ថ្មីរបស់ Apple (2023)?", ["Room", "SwiftData", "Realm", "SQLite3"], 1], ["Permission Camera ត្រូវមានអក្សរពន្យល់ក្នុង?", ["Info.plist", "README", "Podfile", "main.swift"], 0], ["ផ្ញើ Beta ឲ្យអ្នកសាក iOS ប្រើ?", ["Expo Go", "TestFlight", "Play Console", "Firebase"], 1]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+
+<ol class="steps"><li><b>Swift + SwiftUI</b> (វគ្គនេះ) ✅</li><li>Animation (withAnimation, matchedGeometryEffect), Charts, MapKit</li>
+<li>Widgets (WidgetKit), Live Activities, App Intents (Siri)</li><li>Swift 6 Concurrency (Actors, Sendable) · UIKit ពេលត្រូវការ</li>
+<li>Backend៖ Firebase / Supabase / Vapor (Swift on Server)</li><li>Publish App ១ លើ App Store → Portfolio</li></ol>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="swift"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

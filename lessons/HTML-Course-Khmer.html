@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន HTML ពីដើមដល់ចប់</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#faf7f6; --panel:#ffffff; --text:#24191a; --muted:#5b6b61; --line:#eee2de;
+  --accent:#e34c26; --accent2:#f06529; --accent-soft:#fdeee8;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#ff8a65; --accent2:#f06529; --accent-soft:#2e1a14;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#ff8a65; --accent2:#f06529; --accent-soft:#2e1a14;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:#e34c26;color:#fff;font-size:11px;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#a8321a,#f06529);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.c{color:#8b949e;font-style:italic}.d{color:#8b949e}.p{color:#8b949e}.t{color:#7ee787}.a{color:#79c0ff}.v{color:#a5d6ff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lab{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:60px;background:#fff}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em}
+
+</style>
+<link rel="icon" href="../assets/icons/html.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/html.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>វគ្គសិក្សា HTML ពីដើមដល់កម្រិតអាជីព</h1>
+  <button class="btn" id="themeBtn">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#l0">មេរៀន ០: ស្គាល់ HTML</a>
+<a href="#l1">មេរៀន ១: ដំឡើង VS Code និងរៀបចំ HTML</a>
+<a href="#l2">មេរៀន ២: រចនាសម្ព័ន្ធឯកសារ HTML</a>
+<a href="#elements">ធាតុនីមួយៗរបស់ HTML</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l3">មេរៀន ៣: ចំណងជើង ប្រការ និងបន្ទាត់</a>
+<a href="#l4">មេរៀន ៤: ធ្វើទម្រង់អត្ថបទ</a>
+<a href="#l5">មេរៀន ៥: តំណភ្ជាប់ (Link)</a>
+<a href="#l6">មេរៀន ៦: រូបភាព (Image)</a>
+<a href="#l7">មេរៀន ៧: បញ្ជី (List)</a>
+<a href="#l8">មេរៀន ៨: តារាង (Table)</a>
+<a href="#l9">មេរៀន ៩: ទម្រង់បញ្ចូលទិន្នន័យ (Form)</a>
+<a href="#l10">មេរៀន ១០: div, span និង Attribute</a>
+<a href="#l11">មេរៀន ១១: Semantic Elements</a>
+<a href="#l12">មេរៀន ១២: សំឡេង វីដេអូ និង iframe</a>
+<a href="#l13">មេរៀន ១៣: Comment និង Entity</a>
+<a href="#l14">មេរៀន ១៤: តារាងសង្ខេបធាតុ HTML ទាំងអស់</a>
+<a href="#l15">មេរៀន ១៥: គម្រោងចុងក្រោយ៖ ទំព័រណែនាំខ្លួន</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">ទំព័រកម្រិតអាជីព</a>
+<a href="#pro-code">កូដពេញលេញ</a>
+<a href="#pro-check">Checklist & ឧបករណ៍</a>
+<a href="#roadmap">ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>មេរៀន HTML ពីដើមដល់ចប់</h2>
+  <p>មេរៀន ១៦ • ឧទាហរណ៍កូដមានពណ៌ <b>ជាមួយលទ្ធផលផ្ទាល់ក្នុង Browser</b> • លំហាត់ និងចម្លើយ • គម្រោងចុងក្រោយ • ទំព័រកម្រិតអាជីព</p>
+</section>
+<!-- ============ មេរៀន 0 ============ -->
+<section id="l0">
+  <h2><span class="badge">មេរៀន ០</span>ស្គាល់ HTML</h2>
+
+  <h3>១. HTML ជាអ្វី?</h3>
+  <p><b>HTML</b> មកពី <b>H</b>yper<b>T</b>ext <b>M</b>arkup <b>L</b>anguage។ វាជា «ភាសាសម្គាល់» (markup language) សម្រាប់កំណត់រចនាសម្ព័ន្ធ និងខ្លឹមសាររបស់ទំព័រគេហទំព័រ ដូចជា ចំណងជើង អត្ថបទ រូបភាព តំណភ្ជាប់ តារាង និងទម្រង់បញ្ចូលទិន្នន័យ។</p>
+  <ul>
+    <li><b>HyperText</b> = អត្ថបទដែលអាចចុចតភ្ជាប់ទៅទំព័រ ឬឯកសារផ្សេងបាន (link)។</li>
+    <li><b>Markup</b> = ការដាក់សញ្ញាសម្គាល់ (tag) ជុំវិញខ្លឹមសារ ដើម្បីប្រាប់ browser ថាអ្វីជាចំណងជើង អ្វីជាប្រការ។</li>
+  </ul>
+  <div class="warn">⚠️ HTML <b>មិនមែនជាភាសាសរសេរកម្មវិធី</b> (programming language) ទេ ព្រោះវាមិនមាន logic ដូចជា if / loop ។ វាគ្រាន់តែរៀបចំរចនាសម្ព័ន្ធខ្លឹមសារប៉ុណ្ណោះ។</div>
+
+  <h3>២. អ្នកបង្កើត HTML</h3>
+  <p><b>Sir Tim Berners-Lee</b> (ទីម ប៊ឺណឺស-លី) អ្នករូបវិទ្យាជនជាតិអង់គ្លេស ដែលធ្វើការនៅ <b>CERN</b> (អង្គការស្រាវជ្រាវនុយក្លេអ៊ែរអឺរ៉ុប) ប្រទេសស្វីស។ គាត់បានស្នើគំនិត World Wide Web ក្នុងឆ្នាំ <b>១៩៨៩</b> ហើយបានបោះផ្សាយការពិពណ៌នា HTML ដំបូងក្នុងឆ្នាំ <b>១៩៩១</b> ដើម្បីឲ្យអ្នកស្រាវជ្រាវចែករំលែកឯកសារតភ្ជាប់គ្នាបានយ៉ាងងាយ។ ក្រោយមក ស្តង់ដារ HTML ត្រូវបានថែរក្សាដោយអង្គការ <b>W3C</b> និង <b>WHATWG</b>។</p>
+
+  <h3>៣. ប្រវត្តិសង្ខេបនៃកំណែ</h3>
+  <table>
+    <tr><th>ឆ្នាំ</th><th>ព្រឹត្តិការណ៍</th></tr>
+    <tr><td>1991</td><td>Tim Berners-Lee ពិពណ៌នា HTML ដំបូង (មាន tag ប្រហែល ១៨)</td></tr>
+    <tr><td>1995</td><td>HTML 2.0 ជាស្តង់ដារផ្លូវការដំបូង</td></tr>
+    <tr><td>1997</td><td>HTML 3.2 និង HTML 4.0</td></tr>
+    <tr><td>1999</td><td>HTML 4.01</td></tr>
+    <tr><td>2014</td><td><b>HTML5</b> ក្លាយជា W3C Recommendation (មាន audio, video, semantic tags…)</td></tr>
+    <tr><td>បច្ចុប្បន្ន</td><td>HTML Living Standard (WHATWG) ត្រូវបានធ្វើបច្ចុប្បន្នភាពជាបន្តបន្ទាប់</td></tr>
+  </table>
+
+  <h3>៤. គេប្រើ HTML សម្រាប់ធ្វើអ្វី?</h3>
+  <ul>
+    <li>បង្កើតគេហទំព័រ (website) គ្រប់ប្រភេទ៖ ព័ត៌មាន ហាងលក់ អនឡាញ ប្លក់ ផលប័ត្រផ្ទាល់ខ្លួន</li>
+    <li>បង្កើតទម្រង់បញ្ចូលទិន្នន័យ៖ ចុះឈ្មោះ ចូលគណនី ទំនាក់ទំនង</li>
+    <li>ធ្វើជាមូលដ្ឋានសម្រាប់ Web App និង Progressive Web App</li>
+    <li>សរសេរ Email ជាទម្រង់ HTML (newsletter)</li>
+    <li>ជាមូលដ្ឋានរបស់ App ប្រភេទ hybrid ដូចជា Ionic, Cordova និងសូម្បីតែ UI ខ្លះក្នុង Desktop App (Electron)</li>
+    <li>បង្ហាញឯកសារ និងសៀវភៅអេឡិចត្រូនិក (EPUB ប្រើ HTML ផង)</li>
+  </ul>
+
+  <h3>៥. HTML ជាមួយ CSS និង JavaScript</h3>
+  <table>
+    <tr><th>បច្ចេកវិទ្យា</th><th>តួនាទី</th><th>ប្រៀបធៀប</th></tr>
+    <tr><td>HTML</td><td>រចនាសម្ព័ន្ធ និងខ្លឹមសារ</td><td>គ្រោងឆ្អឹងផ្ទះ</td></tr>
+    <tr><td>CSS</td><td>រចនា ពណ៌ ទំហំ ប្លង់</td><td>ថ្នាំលាប និងការតុបតែង</td></tr>
+    <tr><td>JavaScript</td><td>សកម្មភាព អន្តរកម្ម</td><td>ប្រព័ន្ធភ្លើង ទឹក ទ្វារ</td></tr>
+  </table>
+
+  <h3>៦. ទម្រង់ទូទៅនៃធាតុ HTML (Element)</h3>
+<script type="text/html" class="src" data-title="ទម្រង់ធាតុ" data-run="no">
+<tagname attribute="តម្លៃ">ខ្លឹមសារ</tagname>
+
+<!-- ឧទាហរណ៍ -->
+<p class="intro">សួស្តី HTML!</p>
+</script>
+  <ul>
+    <li><b>Opening tag</b> = <code class="i">&lt;p&gt;</code> ចាប់ផ្តើមធាតុ</li>
+    <li><b>Closing tag</b> = <code class="i">&lt;/p&gt;</code> បញ្ចប់ធាតុ (មាន <code class="i">/</code>)</li>
+    <li><b>Attribute</b> = ព័ត៌មានបន្ថែម ដាក់ក្នុង opening tag ជាទម្រង់ <code class="i">ឈ្មោះ="តម្លៃ"</code></li>
+    <li><b>Content</b> = អ្វីដែលនៅចន្លោះ opening និង closing tag</li>
+    <li>ធាតុខ្លះគ្មាន closing tag ហៅថា <b>void element</b> ដូចជា <code class="i">&lt;br&gt;</code>, <code class="i">&lt;img&gt;</code>, <code class="i">&lt;hr&gt;</code>, <code class="i">&lt;input&gt;</code></li>
+  </ul>
+
+  <div class="ex">
+    <h4>✍️ លំហាត់ ០</h4>
+    <p>១) HTML ជាអក្សរកាត់នៃអ្វី? ២) អ្នកណាបង្កើត HTML? ៣) តើ HTML ជា programming language ឬទេ?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p>១) HyperText Markup Language ។ ២) Tim Berners-Lee ក្នុងឆ្នាំ 1991 នៅ CERN ។ ៣) មិនមែនទេ វាជា markup language ។</p>
+    </details>
+  </div>
+</section>
+
+<!-- ============ មេរៀន 1 ============ -->
+<section id="l1">
+  <h2><span class="badge">មេរៀន ១</span>ដំឡើង VS Code និងរៀបចំ HTML</h2>
+  <div class="note">💡 <b>HTML មិនចាំបាច់ install ទេ!</b> អ្នកត្រូវការតែ (១) កម្មវិធីសរសេរ code (Text Editor) ដូចជា <b>Visual Studio Code</b> និង (២) <b>Browser</b> ដូចជា Chrome, Edge, Firefox។ ខាងក្រោមជាជំហានរៀបចំ VS Code សម្រាប់សរសេរ HTML។</div>
+
+  <h3>ជំហានទី ១៖ ទាញយក និងដំឡើង VS Code</h3>
+  <ol>
+    <li>បើក browser ហើយទៅ <b>code.visualstudio.com</b></li>
+    <li>ចុច <b>Download</b> ជ្រើសរើសតាមប្រព័ន្ធរបស់អ្នក (Windows / macOS / Linux)</li>
+    <li>បើក file ដែលទាញយក (ឧ. <code class="i">VSCodeUserSetup.exe</code>) ហើយចុច <b>Next</b></li>
+    <li>ក្នុងជំហាន «Select Additional Tasks» សូមធីក ✅ <b>Add "Open with Code" action</b> និង ✅ <b>Add to PATH</b></li>
+    <li>ចុច <b>Install</b> រួចចុច <b>Finish</b></li>
+  </ol>
+
+  <h3>ជំហានទី ២៖ បង្កើត Folder និង File HTML</h3>
+  <ol>
+    <li>បង្កើត folder ថ្មីក្នុងកុំព្យូទ័រ ឈ្មោះ <code class="i">html-lesson</code></li>
+    <li>បើក VS Code ហើយចុច <b>File → Open Folder…</b> ជ្រើសរើស folder នោះ</li>
+    <li>ចុចរូប <b>New File</b> ក្បែរឈ្មោះ folder ក្នុង Explorer ហើយដាក់ឈ្មោះ <code class="i">index.html</code> (ត្រូវបញ្ចប់ដោយ <code class="i">.html</code>)</li>
+    <li>ក្នុង file នោះ វាយ <code class="i">!</code> រួចចុច <kbd>Tab</kbd> → VS Code នឹងបង្កើតរចនាសម្ព័ន្ធ HTML មូលដ្ឋានឲ្យដោយស្វ័យប្រវត្តិ (Emmet)</li>
+    <li>ចុច <kbd>Ctrl</kbd> + <kbd>S</kbd> ដើម្បី Save (Mac៖ <kbd>Cmd</kbd> + <kbd>S</kbd>)</li>
+  </ol>
+
+  <h3>ជំហានទី ៣៖ មើលលទ្ធផលក្នុង Browser</h3>
+  <p><b>វិធីទី ១ (ធម្មតា)៖</b> ចុចពីរដងលើ file <code class="i">index.html</code> ក្នុង folder ដើម្បីបើកក្នុង browser។</p>
+  <p><b>វិធីទី ២ (ល្អបំផុត)៖ ដំឡើង Live Server</b> ដើម្បីឲ្យទំព័រ refresh ស្វ័យប្រវត្តិរាល់ពេល Save៖</p>
+  <ol>
+    <li>ចុចរូប <b>Extensions</b> នៅរបារខាងឆ្វេង (ឬ <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>)</li>
+    <li>ស្វែងរក <b>Live Server</b> (ដោយ Ritwick Dey)</li>
+    <li>ចុច <b>Install</b></li>
+    <li>ចុចខាងស្តាំលើ file <code class="i">index.html</code> ជ្រើស <b>Open with Live Server</b> (ឬចុច <b>Go Live</b> នៅរបារខាងក្រោម)</li>
+  </ol>
+
+  <h3>Extension ដែលណែនាំបន្ថែម</h3>
+  <ul>
+    <li><b>Auto Rename Tag</b> — ប្តូរឈ្មោះ tag បើក ហើយ tag បិទប្តូរតាម</li>
+    <li><b>Prettier – Code formatter</b> — រៀបចំ code ឲ្យស្អាត</li>
+    <li><b>HTML CSS Support</b> — ជួយបំពេញ class ក្នុង HTML</li>
+    <li><b>Material Icon Theme</b> — icon ស្អាតសម្រាប់ file</li>
+  </ul>
+
+  <h3>ផ្លូវកាត់ដែលមានប្រយោជន៍ក្នុង VS Code</h3>
+  <table>
+    <tr><th>ផ្លូវកាត់</th><th>មុខងារ</th></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>S</kbd></td><td>រក្សាទុក</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>/</kbd></td><td>ដាក់ / ដក comment</td></tr>
+    <tr><td><kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>F</kbd></td><td>រៀបចំ code ឲ្យស្អាត (Format)</td></tr>
+    <tr><td><kbd>Alt</kbd>+<kbd>↑/↓</kbd></td><td>ផ្លាស់ទីបន្ទាត់</td></tr>
+    <tr><td><kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>↓</kbd></td><td>ចម្លងបន្ទាត់</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd></td><td>Undo</td></tr>
+  </table>
+
+  <h3>Emmet — វាយខ្លីៗ ដើម្បីបង្កើត code លឿន</h3>
+<script type="text/html" class="src" data-title="Emmet" data-run="no">
+<!-- វាយនេះ ហើយចុច Tab -->
+p            →  <p></p>
+h1           →  <h1></h1>
+div.box      →  <div class="box"></div>
+div#main     →  <div id="main"></div>
+ul>li*3      →  <ul>
+                  <li></li>
+                  <li></li>
+                  <li></li>
+                </ul>
+a[href=#]    →  <a href="#"></a>
+</script>
+
+  <div class="ex">
+    <h4>✍️ លំហាត់ ១</h4>
+    <p>បង្កើត folder <code class="i">html-lesson</code> ក្នុង VS Code បង្កើត <code class="i">index.html</code> វាយ <code class="i">!</code> + Tab ប្តូរ <code class="i">&lt;title&gt;</code> ជា «ទំព័រដំបូងរបស់ខ្ញុំ» រួចបើកក្នុង Live Server។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/html" class="src" data-title="index.html">
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ទំព័រដំបូងរបស់ខ្ញុំ</title>
+</head>
+<body>
+  <h1>សួស្តី! ខ្ញុំកំពុងរៀន HTML</h1>
+</body>
+</html>
+</script>
+    </details>
+  </div>
+</section>
+
+<!-- ============ មេរៀន 2 ============ -->
+<section id="l2">
+  <h2><span class="badge">មេរៀន ២</span>រចនាសម្ព័ន្ធឯកសារ HTML</h2>
+  <p>ឯកសារ HTML ទាំងអស់មានរចនាសម្ព័ន្ធមូលដ្ឋានដូចគ្នា៖</p>
+<script type="text/html" class="src" data-title="index.html">
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ការពិពណ៌នាខ្លីអំពីទំព័រ">
+  <title>ចំណងជើងទំព័រ</title>
+  <style>
+    body { font-family: sans-serif; }
+  </style>
+</head>
+<body>
+  <h1>នេះជាខ្លឹមសារដែលបង្ហាញលើអេក្រង់</h1>
+  <p>សួស្តី ពិភពលោក!</p>
+</body>
+</html>
+</script>
+
+  <h3>ពន្យល់ធាតុនីមួយៗ</h3>
+  <table>
+    <tr><th>ធាតុ</th><th>ពន្យល់</th></tr>
+    <tr><td><code class="i">&lt;!DOCTYPE html&gt;</code></td><td>ប្រាប់ browser ថានេះជាឯកសារ HTML5 (មិនមែន tag ទេ ជា declaration)</td></tr>
+    <tr><td><code class="i">&lt;html&gt;</code></td><td>ធាតុឫស (root) ដែលគ្របដណ្តប់ទំព័រទាំងមូល។ <code class="i">lang="km"</code> ប្រាប់ថាភាសាខ្មែរ</td></tr>
+    <tr><td><code class="i">&lt;head&gt;</code></td><td>ព័ត៌មានអំពីទំព័រ (មិនបង្ហាញលើអេក្រង់) ដូចជា title, meta, style, link</td></tr>
+    <tr><td><code class="i">&lt;meta charset="UTF-8"&gt;</code></td><td>កំណត់ encoding ឲ្យបង្ហាញអក្សរខ្មែរបានត្រឹមត្រូវ <b>(សំខាន់ណាស់!)</b></td></tr>
+    <tr><td><code class="i">&lt;meta name="viewport"…&gt;</code></td><td>ធ្វើឲ្យទំព័រសមស្របនឹងអេក្រង់ទូរស័ព្ទ</td></tr>
+    <tr><td><code class="i">&lt;meta name="description"…&gt;</code></td><td>ការពិពណ៌នាខ្លី ដែល Google បង្ហាញក្នុងលទ្ធផលស្វែងរក (SEO)</td></tr>
+    <tr><td><code class="i">&lt;style&gt;</code></td><td>ដាក់ CSS ក្នុង head (ឬភ្ជាប់ File ដោយ <code class="i">&lt;link rel="stylesheet"&gt;</code>)</td></tr>
+    <tr><td><code class="i">&lt;title&gt;</code></td><td>ចំណងជើងដែលបង្ហាញលើ Tab របស់ browser</td></tr>
+    <tr><td><code class="i">&lt;body&gt;</code></td><td>ខ្លឹមសារទាំងអស់ដែលអ្នកប្រើមើលឃើញ</td></tr>
+  </table>
+
+  <div class="ex">
+    <h4>✍️ លំហាត់ ២</h4>
+    <p>សរសេរឯកសារ HTML ដែលមាន title ជា «ការណែនាំខ្លួន» ហើយក្នុង body មាន h1 ជាឈ្មោះរបស់អ្នក និង p ប្រាប់ថាអ្នករៀននៅណា។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/html" class="src">
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <title>ការណែនាំខ្លួន</title>
+</head>
+<body>
+  <h1>សុខា ចាន់</h1>
+  <p>ខ្ញុំរៀននៅរាជធានីភ្នំពេញ។</p>
+</body>
+</html>
+</script>
+    </details>
+  </div>
+</section>
+
+
+<section id="elements">
+  <h2>🧩 ធាតុនីមួយៗរបស់ HTML និងរបៀប Browser ដំណើរការ</h2>
+  <script type="text/html" class="src" data-title="Rendering" data-run="no">
+ឯកសារ HTML  ──►  Browser អាន (Parse)  ──►  DOM Tree  ──►  + CSS  ──►  បង្ហាញលើអេក្រង់
+                                                    ▲
+                                              JavaScript អាចកែ
+</script>
+  <p>Browser បំប្លែង HTML ទៅជា <b>DOM Tree</b> (ដើមឈើ) — ធាតុនីមួយៗជា «ថ្នាំង» ដែលមានមេ (parent) និងកូន (children)៖</p>
+  <script type="text/html" class="src" data-title="DOM Tree" data-run="no">
+html
+├── head
+│   ├── meta
+│   └── title
+└── body
+    ├── h1
+    └── p
+        └── strong
+</script>
+  <table>
+    <tr><th>ធាតុ / គោលគំនិត</th><th>ពន្យល់</th></tr>
+    <tr><td><b>Element</b></td><td>Opening tag + Content + Closing tag ឧ. <code class="i">&lt;p&gt;សួស្តី&lt;/p&gt;</code></td></tr>
+    <tr><td><b>Void element</b></td><td>គ្មាន Content និង Closing tag៖ <code class="i">br, hr, img, input, meta, link</code></td></tr>
+    <tr><td><b>Attribute</b></td><td><code class="i">ឈ្មោះ="តម្លៃ"</code> ក្នុង Opening tag · <b>Boolean attribute</b> មិនចាំបាច់មានតម្លៃ ឧ. <code class="i">required</code>, <code class="i">disabled</code></td></tr>
+    <tr><td><b>Nesting</b></td><td>ធាតុដាក់ក្នុងធាតុ — ត្រូវបិទតាមលំដាប់ច្រាស៖ <code class="i">&lt;p&gt;&lt;b&gt;..&lt;/b&gt;&lt;/p&gt;</code> ✅ មិនមែន <code class="i">&lt;p&gt;&lt;b&gt;..&lt;/p&gt;&lt;/b&gt;</code> ❌</td></tr>
+    <tr><td><b>Block</b></td><td>ចាប់ផ្តើមបន្ទាត់ថ្មី ហើយយកទទឹងពេញ៖ <code class="i">div, p, h1–h6, ul, table, section</code></td></tr>
+    <tr><td><b>Inline</b></td><td>នៅក្នុងបន្ទាត់ជាមួយអត្ថបទ៖ <code class="i">span, a, strong, em, img, code</code></td></tr>
+    <tr><td><b>Semantic</b></td><td>ធាតុដែលមានន័យ (header, nav, main, article) — ល្អសម្រាប់ SEO និង Accessibility</td></tr>
+    <tr><td><b>Accessibility (a11y)</b></td><td>ធ្វើឱ្យមនុស្សគ្រប់គ្នា (រួមទាំងអ្នកពិការភ្នែក) ប្រើបាន៖ <code class="i">alt</code>, <code class="i">label</code>, <code class="i">lang</code></td></tr>
+  </table>
+  <div class="warn">⚠️ HTML ខុស (ភ្លេចបិទ Tag) ជាញឹកញាប់ <b>មិនបង្ហាញ Error</b> ទេ — Browser ព្យាយាមជួសជុលដោយខ្លួនឯង តែលទ្ធផលអាចខុស។ ពិនិត្យកូដរបស់អ្នកនៅ <b>validator.w3.org</b>។</div>
+</section>
+
+<!-- ============ មេរៀន 3 ============ -->
+<section id="l3">
+  <h2><span class="badge">មេរៀន ៣</span>ចំណងជើង ប្រការ និងបន្ទាត់</h2>
+
+  <h3>Heading: <code class="i">&lt;h1&gt;</code> ដល់ <code class="i">&lt;h6&gt;</code></h3>
+  <p>មាន ៦ កម្រិត៖ <b>h1 ធំបំផុត</b> (សំខាន់បំផុត) ដល់ <b>h6 តូចបំផុត</b>។ ទំព័រមួយគួរមាន <code class="i">h1</code> តែមួយ។</p>
+<script type="text/html" class="src">
+<h1>ចំណងជើងកម្រិត ១</h1>
+<h2>ចំណងជើងកម្រិត ២</h2>
+<h3>ចំណងជើងកម្រិត ៣</h3>
+<h4>ចំណងជើងកម្រិត ៤</h4>
+<h5>ចំណងជើងកម្រិត ៥</h5>
+<h6>ចំណងជើងកម្រិត ៦</h6>
+</script>
+
+  <h3>Paragraph: <code class="i">&lt;p&gt;</code></h3>
+<script type="text/html" class="src">
+<p>នេះជាប្រការទី១។ browser នឹងដាក់គម្លាតពីលើ និងពីក្រោមដោយស្វ័យប្រវត្តិ។</p>
+<p>នេះជាប្រការទី២។</p>
+</script>
+
+  <h3>បន្ទាត់ថ្មី <code class="i">&lt;br&gt;</code> និងបន្ទាត់ខណ្ឌ <code class="i">&lt;hr&gt;</code></h3>
+<script type="text/html" class="src">
+<p>បន្ទាត់ទី១<br>បន្ទាត់ទី២<br>បន្ទាត់ទី៣</p>
+<hr>
+<p>ខាងក្រោមបន្ទាត់ខណ្ឌ</p>
+</script>
+
+  <h3>Preformatted: <code class="i">&lt;pre&gt;</code> និង Quote</h3>
+<script type="text/html" class="src">
+<pre>
+  បន្ទាត់ទី១
+      បន្ទាត់ទី២ (ចន្លោះត្រូវបានរក្សា)
+</pre>
+
+<blockquote>ការរៀនសូត្រគឺជាកំណប់ដែលតាមអ្នកទាំងអស់។</blockquote>
+<p>គាត់និយាយថា <q>សួស្តី</q> មកខ្ញុំ។</p>
+</script>
+
+  <div class="note">📝 HTML មិនអើពើនឹងចន្លោះ ឬ Enter ច្រើនជាប់គ្នា។ ដើម្បីចុះបន្ទាត់ត្រូវប្រើ <code class="i">&lt;br&gt;</code> ឬ <code class="i">&lt;p&gt;</code>។</div>
+
+  <div class="ex">
+    <h4>✍️ លំហាត់ ៣</h4>
+    <p>សរសេរចំណងជើង h1 «ប្រទេសកម្ពុជា» h2 «ទីក្រុងសំខាន់ៗ» ប្រការមួយ បន្ទាត់ខណ្ឌ ហើយប្រការមួយទៀត។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/html" class="src">
+<h1>ប្រទេសកម្ពុជា</h1>
+<h2>ទីក្រុងសំខាន់ៗ</h2>
+<p>ភ្នំពេញ គឺជារាជធានី។</p>
+<hr>
+<p>សៀមរាប ជាទីតាំងនៃប្រាសាទអង្គរវត្ត។</p>
+</script>
+    </details>
+  </div>
+</section>
+
+<!-- ============ មេរៀន 4 ============ -->
+<section id="l4">
+  <h2><span class="badge">មេរៀន ៤</span>ធ្វើទម្រង់អត្ថបទ</h2>
+  <table>
+    <tr><th>Tag</th><th>មុខងារ</th></tr>
+    <tr><td><code class="i">&lt;b&gt;</code></td><td>ដិត (មិនមានន័យសំខាន់)</td></tr>
+    <tr><td><code class="i">&lt;strong&gt;</code></td><td>ដិត និងមានន័យសំខាន់</td></tr>
+    <tr><td><code class="i">&lt;i&gt;</code></td><td>ទ្រេត</td></tr>
+    <tr><td><code class="i">&lt;em&gt;</code></td><td>ទ្រេត និងសង្កត់ធ្ងន់</td></tr>
+    <tr><td><code class="i">&lt;u&gt;</code></td><td>គូសបន្ទាត់ក្រោម</td></tr>
+    <tr><td><code class="i">&lt;mark&gt;</code></td><td>បន្លិចពណ៌លឿង</td></tr>
+    <tr><td><code class="i">&lt;small&gt;</code></td><td>អក្សរតូច</td></tr>
+    <tr><td><code class="i">&lt;del&gt;</code></td><td>អក្សរគូសកាត់ (លុប)</td></tr>
+    <tr><td><code class="i">&lt;ins&gt;</code></td><td>អក្សរបន្ថែម (គូសក្រោម)</td></tr>
+    <tr><td><code class="i">&lt;sub&gt;</code> / <code class="i">&lt;sup&gt;</code></td><td>អក្សរតូចក្រោម / លើ</td></tr>
+    <tr><td><code class="i">&lt;code&gt;</code></td><td>បង្ហាញ code</td></tr>
+  </table>
+  <div class="note">💡 ក្នុង HTML5 <code class="i">&lt;u&gt;</code> មិនមែនសម្រាប់តុបតែងទេ (អ្នកប្រើអាចច្រឡំជា Link)។ បើចង់គូសបន្ទាត់ក្រោមដើម្បីស្អាត ប្រើ CSS <code class="i">text-decoration: underline</code>។ ជ្រើស <code class="i">&lt;strong&gt;</code> / <code class="i">&lt;em&gt;</code> ពេលពាក្យនោះ <b>សំខាន់ពិតប្រាកដ</b>។</div>
+<script type="text/html" class="src">
+<p><b>ដិត</b> និង <strong>ដិតសំខាន់</strong></p>
+<p><i>ទ្រេត</i> និង <em>ទ្រេតសង្កត់ធ្ងន់</em></p>
+<p><u>គូសក្រោម</u> និង <mark>បន្លិច</mark></p>
+<p>តម្លៃ <del>10$</del> <ins>8$</ins></p>
+<p>ទឹក H<sub>2</sub>O និង 2<sup>3</sup> = 8</p>
+<p>វាយ <code>console.log("hi")</code> ក្នុង JavaScript</p>
+<p><small>អក្សរតូច</small></p>
+</script>
+
+  <div class="ex">
+    <h4>✍️ លំហាត់ ៤</h4>
+    <p>សរសេរប្រការមួយដែលមានពាក្យ «សំខាន់» ដិត, «ប្រយ័ត្ន» ទ្រេត, «ថ្មី» បន្លិច និងរូបមន្ត E = mc² (ប្រើ sup)។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/html" class="src">
+<p>នេះជា <strong>សំខាន់</strong> ហើយត្រូវ <em>ប្រយ័ត្ន</em> ពាក្យ <mark>ថ្មី</mark> ។ រូបមន្ត E = mc<sup>2</sup></p>
+</script>
+    </details>
+  </div>
+</section>
+
+<!-- ============ មេរៀន 5 ============ -->
+<section id="l5">
+  <h2><span class="badge">មេរៀន ៥</span>តំណភ្ជាប់ (Link)</h2>
+  <p>ប្រើ <code class="i">&lt;a&gt;</code> (anchor) ជាមួយ attribute <code class="i">href</code> ដែលកំណត់គោលដៅ។</p>
+<script type="text/html" class="src" data-run="no">
+<!-- តំណទៅគេហទំព័រផ្សេង -->
+<a href="https://www.wikipedia.org">ទៅ Wikipedia</a>
+
+<!-- បើកក្នុង tab ថ្មី -->
+<a href="https://www.wikipedia.org" target="_blank" rel="noopener">បើកក្នុង tab ថ្មី</a>
+
+<!-- តំណទៅ file ផ្សេងក្នុង folder តែមួយ -->
+<a href="about.html">អំពីយើង</a>
+
+<!-- តំណទៅផ្នែកក្នុងទំព័រតែមួយ (ត្រូវការ id) -->
+<a href="#contact">ទៅផ្នែកទំនាក់ទំនង</a>
+<h2 id="contact">ទំនាក់ទំនង</h2>
+
+<!-- តំណអ៊ីមែល និងទូរស័ព្ទ -->
+<a href="mailto:name@example.com">ផ្ញើអ៊ីមែល</a>
+<a href="tel:+85512345678">ហៅទូរស័ព្ទ</a>
+
+<!-- ទាញយក file -->
+<a href="document.pdf" download>ទាញយក PDF</a>
+</script>
+
+  <table>
+    <tr><th>Attribute</th><th>ន័យ</th></tr>
+    <tr><td><code class="i">href</code></td><td>អាសយដ្ឋានគោលដៅ</td></tr>
+    <tr><td><code class="i">target="_blank"</code></td><td>បើកក្នុង tab ថ្មី</td></tr>
+    <tr><td><code class="i">rel="noopener"</code></td><td>សុវត្ថិភាពពេលប្រើ _blank</td></tr>
+    <tr><td><code class="i">download</code></td><td>ទាញយក file ជំនួសការបើក</td></tr>
+    <tr><td><code class="i">title</code></td><td>អត្ថបទបង្ហាញពេល hover</td></tr>
+  </table>
+
+  <div class="ex">
+    <h4>✍️ លំហាត់ ៥</h4>
+    <p>បង្កើតតំណ ២៖ មួយទៅ google.com បើកក្នុង tab ថ្មី ហើយមួយទៀតជាតំណអ៊ីមែល។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/html" class="src" data-run="no">
+<a href="https://www.google.com" target="_blank" rel="noopener">ទៅ Google</a>
+<a href="mailto:me@example.com">ផ្ញើអ៊ីមែលមកខ្ញុំ</a>
+</script>
+    </details>
+  </div>
+</section>
+
+<!-- ============ មេរៀន 6 ============ -->
+<section id="l6">
+  <h2><span class="badge">មេរៀន ៦</span>រូបភាព (Image)</h2>
+  <p><code class="i">&lt;img&gt;</code> គ្មាន closing tag។ Attribute សំខាន់៖ <code class="i">src</code> (ផ្លូវទៅរូប), <code class="i">alt</code> (អត្ថបទជំនួសបើរូបមិនបង្ហាញ និងសម្រាប់អ្នកពិការភ្នែក), <code class="i">width</code>, <code class="i">height</code>។</p>
+<script type="text/html" class="src">
+<img src="https://picsum.photos/id/1018/300/180" alt="ទេសភាពភ្នំ" width="300">
+
+<!-- រូបភាពក្នុង folder ផ្ទាល់ខ្លួន -->
+<!-- <img src="images/angkor.jpg" alt="អង្គរវត្ត"> -->
+
+<!-- រូបភាពមាន caption -->
+<figure>
+  <img src="https://picsum.photos/id/1015/300/160" alt="ទន្លេ" width="300">
+  <figcaption>រូបទី១៖ ទន្លេនៅពេលព្រឹក</figcaption>
+</figure>
+
+<!-- រូបភាពជាតំណ -->
+<a href="https://picsum.photos"><img src="https://picsum.photos/id/1025/100/100" alt="ឆ្កែ"></a>
+</script>
+  <div class="note">💡 ផ្លូវ file៖ <code class="i">logo.png</code> = folder តែមួយ, <code class="i">images/logo.png</code> = ក្នុង folder images, <code class="i">../logo.png</code> = ឡើងលើមួយកម្រិត។</div>
+
+  <div class="ex">
+    <h4>✍️ លំហាត់ ៦</h4>
+    <p>បញ្ចូលរូបភាព <code class="i">cat.jpg</code> ក្នុង folder <code class="i">images</code> ទំហំ ២០០ ភីកសែល ជាមួយ alt «ឆ្មាស្អាត»។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/html" class="src" data-run="no">
+<img src="images/cat.jpg" alt="ឆ្មាស្អាត" width="200">
+</script>
+    </details>
+  </div>
+</section>
+
+<!-- ============ មេរៀន 7 ============ -->
+<section id="l7">
+  <h2><span class="badge">មេរៀន ៧</span>បញ្ជី (List)</h2>
+  <ul>
+    <li><code class="i">&lt;ul&gt;</code> = បញ្ជីគ្មានលំដាប់ (មានចំណុច)</li>
+    <li><code class="i">&lt;ol&gt;</code> = បញ្ជីមានលំដាប់ (មានលេខ)</li>
+    <li><code class="i">&lt;li&gt;</code> = ធាតុនីមួយៗក្នុងបញ្ជី</li>
+    <li><code class="i">&lt;dl&gt; &lt;dt&gt; &lt;dd&gt;</code> = បញ្ជីពិពណ៌នា (ពាក្យ + និយមន័យ)</li>
+  </ul>
+<script type="text/html" class="src">
+<h3>ផ្លែឈើ (ul)</h3>
+<ul>
+  <li>ស្វាយ</li>
+  <li>ចេក</li>
+  <li>ក្រូច</li>
+</ul>
+
+<h3>ជំហានធ្វើតែ (ol)</h3>
+<ol>
+  <li>ដាំទឹកឲ្យពុះ</li>
+  <li>ដាក់ស្លឹកតែ</li>
+  <li>រង់ចាំ ៣ នាទី</li>
+</ol>
+
+<h3>បញ្ជីមាន start និង type</h3>
+<ol start="5" type="A">
+  <li>ធាតុ E</li>
+  <li>ធាតុ F</li>
+</ol>
+
+<h3>បញ្ជីដាក់ជ្រៅ (nested)</h3>
+<ul>
+  <li>សត្វ
+    <ul>
+      <li>ឆ្កែ</li>
+      <li>ឆ្មា</li>
+    </ul>
+  </li>
+  <li>រុក្ខជាតិ</li>
+</ul>
+
+<h3>បញ្ជីពិពណ៌នា (dl)</h3>
+<dl>
+  <dt>HTML</dt>
+  <dd>ភាសាសម្រាប់រចនាសម្ព័ន្ធគេហទំព័រ</dd>
+  <dt>CSS</dt>
+  <dd>ភាសាសម្រាប់រចនាបថ</dd>
+</dl>
+</script>
+
+  <div class="ex">
+    <h4>✍️ លំហាត់ ៧</h4>
+    <p>បង្កើតបញ្ជីលេខ (ol) នៃមុខម្ហូបខ្មែរ ៣ មុខ ហើយក្នុងមុខម្ហូបទី ១ មានបញ្ជីរងនៃគ្រឿងផ្សំ ២ មុខ។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/html" class="src">
+<ol>
+  <li>អាម៉ុក
+    <ul>
+      <li>ត្រី</li>
+      <li>ទឹកដូងគ្រឿង</li>
+    </ul>
+  </li>
+  <li>បាយឆា</li>
+  <li>បង្កងឆា</li>
+</ol>
+</script>
+    </details>
+  </div>
+</section>
+
+<!-- ============ មេរៀន 8 ============ -->
+<section id="l8">
+  <h2><span class="badge">មេរៀន ៨</span>តារាង (Table)</h2>
+  <table>
+    <tr><th>Tag</th><th>ន័យ</th></tr>
+    <tr><td><code class="i">&lt;table&gt;</code></td><td>តារាងទាំងមូល</td></tr>
+    <tr><td><code class="i">&lt;tr&gt;</code></td><td>ជួរដេក (table row)</td></tr>
+    <tr><td><code class="i">&lt;th&gt;</code></td><td>ក្បាលតារាង (ដិត ចំកណ្តាល)</td></tr>
+    <tr><td><code class="i">&lt;td&gt;</code></td><td>ក្រឡាទិន្នន័យ</td></tr>
+    <tr><td><code class="i">&lt;thead&gt; &lt;tbody&gt; &lt;tfoot&gt;</code></td><td>ក្បាល / តួ / ជើង តារាង</td></tr>
+    <tr><td><code class="i">&lt;caption&gt;</code></td><td>ចំណងជើងតារាង</td></tr>
+    <tr><td><code class="i">colspan / rowspan</code></td><td>បញ្ចូលក្រឡាតាមជួរឈរ / ជួរដេក</td></tr>
+  </table>
+<script type="text/html" class="src">
+<style>
+  table { border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid #999; padding: 6px 10px; }
+  th { background: #e0e7ff; }
+</style>
+<table>
+  <caption>តារាងពិន្ទុសិស្ស</caption>
+  <thead>
+    <tr>
+      <th>ឈ្មោះ</th>
+      <th>គណិតវិទ្យា</th>
+      <th>ភាសាខ្មែរ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>សុខា</td>
+      <td>90</td>
+      <td>85</td>
+    </tr>
+    <tr>
+      <td>ដារា</td>
+      <td>78</td>
+      <td>92</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="3">ចំនួនសិស្ស៖ ២ នាក់</td>
+    </tr>
+  </tfoot>
+</table>
+</script>
+
+  <div class="ex">
+    <h4>✍️ លំហាត់ ៨</h4>
+    <p>បង្កើតតារាងកាលវិភាគមាន ៣ ជួរឈរ (ថ្ងៃ, ម៉ោង, មុខវិជ្ជា) និង ២ ជួរដេកទិន្នន័យ។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/html" class="src">
+<style>
+  table { border-collapse: collapse; }
+  th, td { border: 1px solid #999; padding: 6px; }
+</style>
+<table>
+  <tr><th>ថ្ងៃ</th><th>ម៉ោង</th><th>មុខវិជ្ជា</th></tr>
+  <tr><td>ច័ន្ទ</td><td>8:00</td><td>HTML</td></tr>
+  <tr><td>អង្គារ</td><td>9:00</td><td>CSS</td></tr>
+</table>
+</script>
+    </details>
+  </div>
+</section>
+
+<!-- ============ មេរៀន 9 ============ -->
+<section id="l9">
+  <h2><span class="badge">មេរៀន ៩</span>ទម្រង់បញ្ចូលទិន្នន័យ (Form)</h2>
+  <p>Form ប្រើប្រមូលទិន្នន័យពីអ្នកប្រើ។ ធាតុសំខាន់ៗ៖ <code class="i">form</code>, <code class="i">label</code>, <code class="i">input</code>, <code class="i">textarea</code>, <code class="i">select</code>, <code class="i">option</code>, <code class="i">button</code>។</p>
+
+  <h3>ប្រភេទ <code class="i">&lt;input type="…"&gt;</code></h3>
+  <table>
+    <tr><th>type</th><th>ន័យ</th></tr>
+    <tr><td>text</td><td>អត្ថបទមួយបន្ទាត់</td></tr>
+    <tr><td>password</td><td>លេខសម្ងាត់ (លាក់អក្សរ)</td></tr>
+    <tr><td>email</td><td>អ៊ីមែល (ពិនិត្យទម្រង់ស្វ័យប្រវត្តិ)</td></tr>
+    <tr><td>number</td><td>លេខ</td></tr>
+    <tr><td>date</td><td>ជ្រើសថ្ងៃ ខែ ឆ្នាំ</td></tr>
+    <tr><td>radio</td><td>ជ្រើសរើសបានមួយ</td></tr>
+    <tr><td>checkbox</td><td>ជ្រើសរើសបានច្រើន</td></tr>
+    <tr><td>file</td><td>ជ្រើស file ដើម្បីបង្ហោះ</td></tr>
+    <tr><td>range</td><td>របារអូស</td></tr>
+    <tr><td>color</td><td>ជ្រើសពណ៌</td></tr>
+    <tr><td>submit / reset</td><td>ប៊ូតុងផ្ញើ / សម្អាត</td></tr>
+  </table>
+<script type="text/html" class="src">
+<form action="/submit" method="post">
+
+  <label for="name">ឈ្មោះ៖</label><br>
+  <input type="text" id="name" name="name" placeholder="បញ្ចូលឈ្មោះ" required><br><br>
+
+  <label for="email">អ៊ីមែល៖</label><br>
+  <input type="email" id="email" name="email"><br><br>
+
+  <label for="pw">លេខសម្ងាត់៖</label><br>
+  <input type="password" id="pw" name="pw" minlength="6"><br><br>
+
+  <label for="dob">ថ្ងៃកំណើត៖</label>
+  <input type="date" id="dob" name="dob"><br><br>
+
+  <fieldset>
+    <legend>ភេទ</legend>
+    <input type="radio" id="m" name="gender" value="male"><label for="m">ប្រុស</label>
+    <input type="radio" id="f" name="gender" value="female"><label for="f">ស្រី</label>
+  </fieldset><br>
+
+  <fieldset>
+    <legend>ចំណូលចិត្ត</legend>
+    <input type="checkbox" id="c1" name="hobby" value="read"><label for="c1">អាន</label>
+    <input type="checkbox" id="c2" name="hobby" value="sport"><label for="c2">កីឡា</label>
+  </fieldset><br>
+
+  <label for="city">ខេត្ត៖</label>
+  <select id="city" name="city">
+    <option value="">-- ជ្រើសរើស --</option>
+    <option value="pp">ភ្នំពេញ</option>
+    <option value="sr">សៀមរាប</option>
+    <option value="bb">បាត់ដំបង</option>
+  </select><br><br>
+
+  <label for="msg">សារ៖</label><br>
+  <textarea id="msg" name="msg" rows="3" cols="30"></textarea><br><br>
+
+  <button type="submit">ផ្ញើ</button>
+  <button type="reset">សម្អាត</button>
+</form>
+</script>
+
+  <table>
+    <tr><th>Attribute</th><th>ន័យ</th></tr>
+    <tr><td><code class="i">name</code></td><td>ឈ្មោះសម្រាប់ទិន្នន័យដែលផ្ញើទៅ server</td></tr>
+    <tr><td><code class="i">placeholder</code></td><td>អត្ថបទណែនាំក្នុងប្រអប់</td></tr>
+    <tr><td><code class="i">required</code></td><td>ត្រូវបំពេញ</td></tr>
+    <tr><td><code class="i">disabled / readonly</code></td><td>បិទមិនឲ្យប្រើ / មើលបានតែមិនកែបាន</td></tr>
+    <tr><td><code class="i">value</code></td><td>តម្លៃលំនាំដើម</td></tr>
+    <tr><td><code class="i">method</code></td><td>get ឬ post (របៀបផ្ញើទិន្នន័យ)</td></tr>
+    <tr><td><code class="i">action</code></td><td>URL ដែលទទួលទិន្នន័យ</td></tr>
+  </table>
+  <div class="note">💡 <code class="i">&lt;fieldset&gt;</code> + <code class="i">&lt;legend&gt;</code> ដាក់ radio/checkbox ជាក្រុម ដើម្បីឱ្យកម្មវិធីអានអេក្រង់អានសំណួរ «ភេទ» មុនជម្រើស។ HTML គ្រាន់តែប្រមូលទិន្នន័យ — ការរក្សាទុកពិតប្រាកដត្រូវការ <b>Server</b> (ឧ. Node.js) ដែលទទួលនៅ <code class="i">action</code>។</div>
+
+  <div class="ex">
+    <h4>✍️ លំហាត់ ៩</h4>
+    <p>បង្កើតទម្រង់ចូលគណនី (Login) មាន អ៊ីមែល លេខសម្ងាត់ checkbox «ចងចាំខ្ញុំ» និងប៊ូតុង «ចូល»។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/html" class="src">
+<form>
+  <label for="e">អ៊ីមែល៖</label><br>
+  <input type="email" id="e" name="email" required><br>
+  <label for="p">លេខសម្ងាត់៖</label><br>
+  <input type="password" id="p" name="password" required><br>
+  <input type="checkbox" id="r" name="remember">
+  <label for="r">ចងចាំខ្ញុំ</label><br><br>
+  <button type="submit">ចូល</button>
+</form>
+</script>
+    </details>
+  </div>
+</section>
+
+<!-- ============ មេរៀន 10 ============ -->
+<section id="l10">
+  <h2><span class="badge">មេរៀន ១០</span>div, span និង Attribute</h2>
+  <ul>
+    <li><code class="i">&lt;div&gt;</code> = ប្រអប់ប្លុក (block) ចាប់ផ្តើមបន្ទាត់ថ្មី ប្រើដើម្បីដាក់ជាក្រុម</li>
+    <li><code class="i">&lt;span&gt;</code> = ប្រអប់ក្នុងបន្ទាត់ (inline) ប្រើជាមួយអត្ថបទខ្លះៗ</li>
+  </ul>
+  <h3>Attribute ទូទៅដែលប្រើបានគ្រប់ធាតុ</h3>
+  <table>
+    <tr><th>Attribute</th><th>ន័យ</th></tr>
+    <tr><td><code class="i">id</code></td><td>ឈ្មោះមិនស្ទួន (មួយទំព័រ ១ ប្រើតែម្តង)</td></tr>
+    <tr><td><code class="i">class</code></td><td>ឈ្មោះក្រុម (ប្រើស្ទួនបាន)</td></tr>
+    <tr><td><code class="i">style</code></td><td>ដាក់ CSS ផ្ទាល់លើធាតុ</td></tr>
+    <tr><td><code class="i">title</code></td><td>ព័ត៌មានបង្ហាញពេល hover</td></tr>
+    <tr><td><code class="i">hidden</code></td><td>លាក់ធាតុ</td></tr>
+    <tr><td><code class="i">lang</code></td><td>ភាសានៃធាតុ</td></tr>
+    <tr><td><code class="i">data-*</code></td><td>ទិន្នន័យផ្ទាល់ខ្លួនសម្រាប់ JavaScript</td></tr>
+  </table>
+<script type="text/html" class="src">
+<style>
+  .card { border: 2px solid #264de4; border-radius: 10px; padding: 12px; margin: 8px 0; }
+  .red  { color: crimson; font-weight: bold; }
+  #special { background: #fff3cd; }
+</style>
+
+<div class="card">
+  <h3>កាតទី១</h3>
+  <p>នេះគឺជា <span class="red">អក្សរពណ៌ក្រហម</span> ក្នុងប្រការ។</p>
+</div>
+
+<div class="card" id="special">
+  <h3>កាតទី២ (មាន id)</h3>
+  <p style="color: green;">ប្រើ style ផ្ទាល់ (inline)</p>
+  <p title="នេះជា tooltip">ដាក់កណ្តុរលើខ្ញុំ</p>
+</div>
+</script>
+
+  <div class="ex">
+    <h4>✍️ លំហាត់ ១០</h4>
+    <p>បង្កើត div ២ ដែលមាន class «box» (border ខៀវ) ហើយក្នុងប្រការមួយមាន span ពណ៌ក្រហម។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/html" class="src">
+<style>.box{border:2px solid blue;padding:8px;margin:6px 0}.r{color:red}</style>
+<div class="box"><p>ពាក្យ <span class="r">ក្រហម</span> នៅទីនេះ</p></div>
+<div class="box"><p>ប្រអប់ទីពីរ</p></div>
+</script>
+    </details>
+  </div>
+</section>
+
+<!-- ============ មេរៀន 11 ============ -->
+<section id="l11">
+  <h2><span class="badge">មេរៀន ១១</span>Semantic Elements</h2>
+  <p>Semantic tag គឺជា tag ដែលមានន័យច្បាស់លាស់ អាចជួយ SEO (Google) និងអ្នកប្រើកម្មវិធីអានអេក្រង់។ ប្រើវាជំនួស <code class="i">&lt;div&gt;</code> ពេលអាចធ្វើបាន។</p>
+  <table>
+    <tr><th>Tag</th><th>ន័យ</th></tr>
+    <tr><td><code class="i">&lt;header&gt;</code></td><td>ក្បាលទំព័រ ឬក្បាលផ្នែក (logo, ចំណងជើង)</td></tr>
+    <tr><td><code class="i">&lt;nav&gt;</code></td><td>ម៉ឺនុយរុករក</td></tr>
+    <tr><td><code class="i">&lt;main&gt;</code></td><td>ខ្លឹមសារចម្បង (មួយទំព័រ ១ ប៉ុណ្ណោះ)</td></tr>
+    <tr><td><code class="i">&lt;section&gt;</code></td><td>ផ្នែកមួយនៃខ្លឹមសារ</td></tr>
+    <tr><td><code class="i">&lt;article&gt;</code></td><td>អត្ថបទឯករាជ្យ (ព័ត៌មាន, ប្លក់)</td></tr>
+    <tr><td><code class="i">&lt;aside&gt;</code></td><td>ខ្លឹមសារបន្ថែមនៅចំហៀង</td></tr>
+    <tr><td><code class="i">&lt;footer&gt;</code></td><td>ជើងទំព័រ</td></tr>
+  </table>
+<script type="text/html" class="src">
+<style>
+  header,footer{background:#264de4;color:#fff;padding:8px 14px;border-radius:6px}
+  nav a{margin-right:12px}
+  main{display:flex;gap:12px;margin:10px 0}
+  article{flex:3;background:#f1f5f9;padding:10px;border-radius:6px}
+  aside{flex:1;background:#fff7ed;padding:10px;border-radius:6px}
+</style>
+<header>
+  <h2>ប្លក់របស់ខ្ញុំ</h2>
+  <nav>
+    <a href="#" style="color:#fff">ទំព័រដើម</a>
+    <a href="#" style="color:#fff">អំពី</a>
+    <a href="#" style="color:#fff">ទំនាក់ទំនង</a>
+  </nav>
+</header>
+<main>
+  <article>
+    <h3>រៀន HTML ងាយៗ</h3>
+    <p>HTML គឺជាជំហានដំបូងនៃការធ្វើគេហទំព័រ។</p>
+  </article>
+  <aside>
+    <h4>ពាក្យគន្លឹះ</h4>
+    <p>HTML, CSS, JS</p>
+  </aside>
+</main>
+<footer>
+  <p>© 2026 ប្លក់របស់ខ្ញុំ</p>
+</footer>
+</script>
+
+  <div class="ex">
+    <h4>✍️ លំហាត់ ១១</h4>
+    <p>បង្កើតទំព័រដែលមាន header, nav (តំណ ២), main ដែលមាន section ១ និង footer។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/html" class="src">
+<header><h1>គេហទំព័រខ្ញុំ</h1></header>
+<nav><a href="#">ទំព័រដើម</a> | <a href="#">អំពី</a></nav>
+<main>
+  <section>
+    <h2>សេវាកម្ម</h2>
+    <p>យើងបង្កើតគេហទំព័រ។</p>
+  </section>
+</main>
+<footer><p>រក្សាសិទ្ធិ © 2026</p></footer>
+</script>
+    </details>
+  </div>
+</section>
+
+<!-- ============ មេរៀន 12 ============ -->
+<section id="l12">
+  <h2><span class="badge">មេរៀន ១២</span>សំឡេង វីដេអូ និង iframe</h2>
+<script type="text/html" class="src" data-run="no">
+<!-- សំឡេង -->
+<audio controls>
+  <source src="music.mp3" type="audio/mpeg">
+  Browser របស់អ្នកមិនគាំទ្រ audio ទេ។
+</audio>
+
+<!-- វីដេអូ -->
+<video controls width="400" poster="cover.jpg">
+  <source src="movie.mp4" type="video/mp4">
+  Browser របស់អ្នកមិនគាំទ្រ video ទេ។
+</video>
+
+<!-- ដាក់ទំព័រផ្សេងក្នុងទំព័រយើង (ឧ. វីដេអូ YouTube) -->
+<iframe
+  width="400" height="225"
+  src="https://www.youtube.com/embed/VIDEO_ID"
+  title="វីដេអូ YouTube"
+  allowfullscreen>
+</iframe>
+</script>
+  <table>
+    <tr><th>Attribute</th><th>ន័យ</th></tr>
+    <tr><td><code class="i">controls</code></td><td>បង្ហាញប៊ូតុងលេង/ផ្អាក/សំឡេង</td></tr>
+    <tr><td><code class="i">autoplay</code></td><td>លេងដោយស្វ័យប្រវត្តិ (ច្រើនត្រូវការ muted)</td></tr>
+    <tr><td><code class="i">loop</code></td><td>លេងម្តងទៀតរហូត</td></tr>
+    <tr><td><code class="i">muted</code></td><td>បិទសំឡេង</td></tr>
+    <tr><td><code class="i">poster</code></td><td>រូបភាពមុនចាប់ផ្តើមវីដេអូ</td></tr>
+  </table>
+
+  <div class="ex">
+    <h4>✍️ លំហាត់ ១២</h4>
+    <p>បញ្ចូលវីដេអូ <code class="i">intro.mp4</code> ទទឹង ៣០០ ដែលមានប៊ូតុងបញ្ជា និង loop។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/html" class="src" data-run="no">
+<video src="intro.mp4" width="300" controls loop>
+  Browser មិនគាំទ្រ video។
+</video>
+</script>
+    </details>
+  </div>
+</section>
+
+<!-- ============ មេរៀន 13 ============ -->
+<section id="l13">
+  <h2><span class="badge">មេរៀន ១៣</span>Comment និង Entity</h2>
+  <h3>Comment</h3>
+  <p>ការកត់សម្គាល់សម្រាប់អ្នកសរសេរ — browser មិនបង្ហាញទេ។ ផ្លូវកាត់៖ <kbd>Ctrl</kbd>+<kbd>/</kbd></p>
+<script type="text/html" class="src">
+<!-- នេះជា comment មិនបង្ហាញលើទំព័រ -->
+<p>អត្ថបទដែលមើលឃើញ</p>
+<!--
+  comment ច្រើនបន្ទាត់
+  <p>ធាតុនេះត្រូវបានបិទបាំង</p>
+-->
+</script>
+
+  <h3>Entity (តួអក្សរពិសេស)</h3>
+  <p>ដើម្បីបង្ហាញសញ្ញា <code class="i">&lt;</code> ឬ <code class="i">&amp;</code> ត្រូវប្រើ entity ជំនួស៖</p>
+  <table>
+    <tr><th>សញ្ញា</th><th>Entity</th></tr>
+    <tr><td>&lt;</td><td><code class="i">&amp;lt;</code></td></tr>
+    <tr><td>&gt;</td><td><code class="i">&amp;gt;</code></td></tr>
+    <tr><td>&amp;</td><td><code class="i">&amp;amp;</code></td></tr>
+    <tr><td>"</td><td><code class="i">&amp;quot;</code></td></tr>
+    <tr><td>© </td><td><code class="i">&amp;copy;</code></td></tr>
+    <tr><td>ចន្លោះមិនបែក</td><td><code class="i">&amp;nbsp;</code></td></tr>
+    <tr><td>€</td><td><code class="i">&amp;euro;</code></td></tr>
+  </table>
+<script type="text/html" class="src">
+<p>ដើម្បីសរសេរ tag ប្រាប់ &lt;p&gt; ដូច្នេះ។</p>
+<p>រក្សាសិទ្ធិ &copy; 2026 &amp; ក្រុមហ៊ុនខ្ញុំ</p>
+<p>ចន្លោះ&nbsp;&nbsp;&nbsp;&nbsp;ច្រើន</p>
+</script>
+
+  <div class="ex">
+    <h4>✍️ លំហាត់ ១៣</h4>
+    <p>បង្ហាញអត្ថបទ «ប្រើ &lt;br&gt; ដើម្បីចុះបន្ទាត់» ឲ្យបង្ហាញជាអក្សរលើអេក្រង់ និងដាក់ comment មួយ។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/html" class="src">
+<!-- លំហាត់ entity -->
+<p>ប្រើ &lt;br&gt; ដើម្បីចុះបន្ទាត់</p>
+</script>
+    </details>
+  </div>
+</section>
+
+<!-- ============ មេរៀន 14 ============ -->
+<section id="l14">
+  <h2><span class="badge">មេរៀន ១៤</span>តារាងសង្ខេបធាតុ HTML ទាំងអស់</h2>
+  <table>
+    <tr><th>ធាតុ</th><th>មុខងារ</th><th>បិទ?</th></tr>
+    <tr><td colspan="3"><b>រចនាសម្ព័ន្ធ</b></td></tr>
+    <tr><td>&lt;html&gt;</td><td>ធាតុឫសនៃឯកសារ</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;head&gt;</td><td>ព័ត៌មានទំព័រ</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;title&gt;</td><td>ចំណងជើងលើ tab</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;meta&gt;</td><td>ទិន្នន័យ meta</td><td>ទេ</td></tr>
+    <tr><td>&lt;link&gt;</td><td>ភ្ជាប់ file CSS/icon</td><td>ទេ</td></tr>
+    <tr><td>&lt;style&gt;</td><td>ដាក់ CSS</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;script&gt;</td><td>ដាក់ JavaScript</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;body&gt;</td><td>ខ្លឹមសារទំព័រ</td><td>បាទ/ចាស</td></tr>
+    <tr><td colspan="3"><b>អត្ថបទ</b></td></tr>
+    <tr><td>&lt;h1&gt;–&lt;h6&gt;</td><td>ចំណងជើង</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;p&gt;</td><td>ប្រការ</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;br&gt;</td><td>ចុះបន្ទាត់</td><td>ទេ</td></tr>
+    <tr><td>&lt;hr&gt;</td><td>បន្ទាត់ខណ្ឌ</td><td>ទេ</td></tr>
+    <tr><td>&lt;pre&gt;</td><td>អត្ថបទរក្សាទម្រង់</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;blockquote&gt; / &lt;q&gt;</td><td>សម្រង់វែង / ខ្លី</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;b&gt; &lt;strong&gt;</td><td>ដិត</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;i&gt; &lt;em&gt;</td><td>ទ្រេត</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;u&gt; &lt;mark&gt; &lt;small&gt;</td><td>គូសក្រោម / បន្លិច / តូច</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;del&gt; &lt;ins&gt;</td><td>លុប / បន្ថែម</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;sub&gt; &lt;sup&gt;</td><td>អក្សរក្រោម / លើ</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;code&gt;</td><td>បង្ហាញ code</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;abbr&gt;</td><td>អក្សរកាត់ (title ពន្យល់)</td><td>បាទ/ចាស</td></tr>
+    <tr><td colspan="3"><b>តំណ និងមេឌៀ</b></td></tr>
+    <tr><td>&lt;a&gt;</td><td>តំណភ្ជាប់</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;img&gt;</td><td>រូបភាព</td><td>ទេ</td></tr>
+    <tr><td>&lt;figure&gt; &lt;figcaption&gt;</td><td>រូប + ចំណារ</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;audio&gt; &lt;video&gt; &lt;source&gt;</td><td>សំឡេង / វីដេអូ / ប្រភព</td><td>audio, video បាទ/ចាស; source ទេ</td></tr>
+    <tr><td>&lt;iframe&gt;</td><td>ដាក់ទំព័រក្នុងទំព័រ</td><td>បាទ/ចាស</td></tr>
+    <tr><td colspan="3"><b>បញ្ជី</b></td></tr>
+    <tr><td>&lt;ul&gt; &lt;ol&gt; &lt;li&gt;</td><td>បញ្ជីមិនលំដាប់ / លំដាប់ / ធាតុ</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;dl&gt; &lt;dt&gt; &lt;dd&gt;</td><td>បញ្ជីពិពណ៌នា</td><td>បាទ/ចាស</td></tr>
+    <tr><td colspan="3"><b>តារាង</b></td></tr>
+    <tr><td>&lt;table&gt; &lt;tr&gt; &lt;th&gt; &lt;td&gt;</td><td>តារាង / ជួរ / ក្បាល / ក្រឡា</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;thead&gt; &lt;tbody&gt; &lt;tfoot&gt; &lt;caption&gt;</td><td>ផ្នែកតារាង</td><td>បាទ/ចាស</td></tr>
+    <tr><td colspan="3"><b>Form</b></td></tr>
+    <tr><td>&lt;form&gt;</td><td>ទម្រង់</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;input&gt;</td><td>ប្រអប់បញ្ចូល</td><td>ទេ</td></tr>
+    <tr><td>&lt;label&gt;</td><td>ស្លាកឈ្មោះ</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;textarea&gt;</td><td>អត្ថបទច្រើនបន្ទាត់</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;select&gt; &lt;option&gt;</td><td>បញ្ជីជ្រើសរើស</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;button&gt;</td><td>ប៊ូតុង</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;fieldset&gt; &lt;legend&gt;</td><td>ដាក់ក្រុមក្នុង form</td><td>បាទ/ចាស</td></tr>
+    <tr><td colspan="3"><b>ប្លង់ និង Semantic</b></td></tr>
+    <tr><td>&lt;div&gt; &lt;span&gt;</td><td>ប្រអប់ block / inline</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;header&gt; &lt;nav&gt; &lt;main&gt;</td><td>ក្បាល / ម៉ឺនុយ / ខ្លឹមសារចម្បង</td><td>បាទ/ចាស</td></tr>
+    <tr><td>&lt;section&gt; &lt;article&gt; &lt;aside&gt; &lt;footer&gt;</td><td>ផ្នែក / អត្ថបទ / ចំហៀង / ជើង</td><td>បាទ/ចាស</td></tr>
+  </table>
+  <div class="note">📝 បច្ចុប្បន្ន HTML មាន tag ជាង ១០០។ តារាងខាងលើជាធាតុដែលប្រើញឹកញាប់បំផុត។</div>
+</section>
+
+<!-- ============ មេរៀន 15 ============ -->
+<section id="l15">
+  <h2><span class="badge">មេរៀន ១៥</span>គម្រោងចុងក្រោយ៖ ទំព័រណែនាំខ្លួន</h2>
+  <div class="ex">
+    <h4>🏆 គម្រោង</h4>
+    <p>បង្កើតទំព័រណែនាំខ្លួនមួយ ដោយប្រើអ្វីៗដែលបានរៀនទាំងអស់៖ semantic tags, រូបភាព, បញ្ជី, តារាង, តំណ និង form ទំនាក់ទំនង។ សាកល្បងសរសេរដោយខ្លួនឯងសិន ទើបមើលចម្លើយ។</p>
+    <details><summary>មើលចម្លើយគម្រោង</summary>
+<script type="text/html" class="src" data-title="portfolio.html" data-h="700">
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ទំព័រណែនាំខ្លួន - សុខា</title>
+  <style>
+    body { font-family: sans-serif; max-width: 700px; margin: auto; padding: 10px; }
+    header { background: #264de4; color: #fff; padding: 14px; border-radius: 8px; text-align: center; }
+    nav a { margin: 0 8px; }
+    section { margin: 16px 0; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #aaa; padding: 6px; }
+    th { background: #e0e7ff; }
+    footer { text-align: center; color: gray; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>សុខា ចាន់</h1>
+    <p>អ្នកអភិវឌ្ឍគេហទំព័រដែលកំពុងរៀន</p>
+  </header>
+
+  <nav>
+    <a href="#about">អំពីខ្ញុំ</a>
+    <a href="#skills">ជំនាញ</a>
+    <a href="#grades">ពិន្ទុ</a>
+    <a href="#contact">ទំនាក់ទំនង</a>
+  </nav>
+
+  <main>
+    <section id="about">
+      <h2>អំពីខ្ញុំ</h2>
+      <img src="https://picsum.photos/id/1005/120/120" alt="រូបថតខ្ញុំ" width="120">
+      <p>ខ្ញុំជា <strong>និស្សិត</strong> ដែលស្រលាញ់ការបង្កើតគេហទំព័រ។ ខ្ញុំរស់នៅ <em>ភ្នំពេញ</em>។</p>
+    </section>
+
+    <section id="skills">
+      <h2>ជំនាញ</h2>
+      <ul>
+        <li>HTML</li>
+        <li>CSS (កំពុងរៀន)</li>
+        <li>JavaScript (នឹងរៀន)</li>
+      </ul>
+    </section>
+
+    <section id="grades">
+      <h2>ពិន្ទុ</h2>
+      <table>
+        <tr><th>មុខវិជ្ជា</th><th>ពិន្ទុ</th></tr>
+        <tr><td>HTML</td><td>95</td></tr>
+        <tr><td>CSS</td><td>88</td></tr>
+      </table>
+    </section>
+
+    <section id="contact">
+      <h2>ទំនាក់ទំនង</h2>
+      <form>
+        <label for="n">ឈ្មោះ៖</label><br>
+        <input type="text" id="n" name="name" required><br>
+        <label for="m">សារ៖</label><br>
+        <textarea id="m" name="message" rows="3" cols="30"></textarea><br>
+        <button type="submit">ផ្ញើសារ</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 សុខា ចាន់</p>
+  </footer>
+
+</body>
+</html>
+</script>
+    </details>
+  </div>
+
+  <h3>🎉 អបអរសាទរ!</h3>
+  <p>អ្នកបានរៀន HTML មូលដ្ឋានចប់ហើយ។ ជំហានបន្ទាប់៖ រៀន <b>CSS</b> ដើម្បីតុបតែងទំព័រឲ្យស្អាត រួចរៀន <b>JavaScript</b> ដើម្បីបង្កើតអន្តរកម្ម។</p>
+</section>
+
+
+
+<section class="hero" id="pro">
+  <h2>🏆 ផ្នែកទី ៣: ទំព័រ HTML កម្រិតអាជីព</h2>
+  <p>លើកកម្រិតគម្រោងចុងក្រោយ ទៅជាទំព័រដែលក្រុមហ៊ុនពិតប្រាកដធ្វើ៖ <b>SEO</b> (meta description, Open Graph), <b>Responsive</b> លើទូរស័ព្ទ, <b>Accessibility</b> (skip link, label, alt, scope, aria), <b>Performance</b> (lazy loading, width/height) និង <b>Form Validation</b> ដោយ HTML សុទ្ធ។</p>
+  <p><span class="badge">✔ សាកល្បងរួច</span> បើកលើអេក្រង់ទូរស័ព្ទ គ្មាន Error ធាតុទាំងអស់មាន label/alt ហើយ Form Validation ដំណើរការ។</p>
+</section>
+
+<section id="pro-code">
+  <h2>🧱 កូដពេញលេញ (index.html)</h2>
+  <script type="text/html" class="src" data-title="index.html" data-h="900">
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>សុខា ចាន់ · Web Developer</title>
+
+  <!-- SEO: Google បង្ហាញអត្ថបទនេះក្រោមចំណងជើងក្នុងលទ្ធផលស្វែងរក -->
+  <meta name="description" content="Portfolio របស់ សុខា ចាន់ — អ្នកអភិវឌ្ឍគេហទំព័រនៅភ្នំពេញ។ មើលគម្រោង ជំនាញ និងទំនាក់ទំនង។">
+
+  <!-- Open Graph: រូប និងចំណងជើងពេល Share លើ Facebook / Telegram -->
+  <meta property="og:title" content="សុខា ចាន់ · Web Developer">
+  <meta property="og:description" content="គម្រោង ជំនាញ និងទំនាក់ទំនង">
+  <meta property="og:image" content="https://picsum.photos/id/1005/1200/630">
+  <meta property="og:type" content="website">
+
+  <!-- Favicon (រូបលើ Tab) -->
+  <text y='.9em' font-size='90'>🌏</text></svg>">
+
+  <style>
+    :root { --brand: #264de4; --ink: #1e293b; --muted: #64748b; --line: #e2e8f0; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Noto Sans Khmer", system-ui, sans-serif; color: var(--ink); line-height: 1.7; }
+    img { max-width: 100%; height: auto; }
+    a { color: var(--brand); }
+    :focus-visible { outline: 3px solid #f59e0b; outline-offset: 2px; }
+
+    /* Skip link: លាក់ រហូតដល់ចុច Tab */
+    .skip { position: absolute; left: -999px; top: 8px; background: #fff; padding: 8px 12px; }
+    .skip:focus { left: 8px; }
+
+    header { background: var(--brand); color: #fff; }
+    .bar { max-width: 960px; margin: auto; padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+    .bar a { color: #fff; text-decoration: none; margin-left: 14px; }
+    .hero { max-width: 960px; margin: auto; padding: 32px 16px; display: grid; gap: 20px; grid-template-columns: 1fr; align-items: center; }
+    .hero img { border-radius: 50%; width: 160px; }
+    main { max-width: 960px; margin: auto; padding: 0 16px; }
+    section { padding: 24px 0; border-bottom: 1px solid var(--line); }
+    .cards { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); padding: 0; list-style: none; }
+    .cards article { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+    .cards article div { padding: 12px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid var(--line); padding: 8px; text-align: left; }
+    caption { text-align: left; font-weight: 600; margin-bottom: 6px; }
+    form { display: grid; gap: 10px; max-width: 460px; }
+    input, textarea { width: 100%; padding: 8px 10px; border: 2px solid var(--line); border-radius: 8px; font: inherit; }
+    input:user-invalid, textarea:user-invalid { border-color: #dc2626; }   /* ក្រហមក្រោយអ្នកប្រើវាយខុស */
+    .hint { color: var(--muted); font-size: .85rem; }
+    button { padding: 10px 18px; background: var(--brand); color: #fff; border: 0; border-radius: 8px; font: inherit; cursor: pointer; }
+    footer { text-align: center; color: var(--muted); padding: 24px 16px; }
+    @media (min-width: 640px) { .hero { grid-template-columns: 180px 1fr; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">រំលងទៅខ្លឹមសារ</a>
+
+  <header>
+    <div class="bar">
+      <strong>សុខា ចាន់</strong>
+      <nav aria-label="ម៉ឺនុយចម្បង">
+        <a href="#projects">គម្រោង</a>
+        <a href="#skills">ជំនាញ</a>
+        <a href="#contact">ទំនាក់ទំនង</a>
+      </nav>
+    </div>
+    <div class="hero">
+      <img src="https://picsum.photos/id/1005/320/320" alt="រូបថតរបស់ សុខា ចាន់" width="160" height="160">
+      <div>
+        <h1>សួស្តី! ខ្ញុំឈ្មោះ សុខា 👋</h1>
+        <p>អ្នកអភិវឌ្ឍគេហទំព័រនៅភ្នំពេញ ដែលស្រលាញ់ការបង្កើតទំព័រស្អាត លឿន និងងាយប្រើសម្រាប់មនុស្សគ្រប់គ្នា។</p>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section id="projects" aria-labelledby="projects-title">
+      <h2 id="projects-title">គម្រោង</h2>
+      <ul class="cards">
+        <li>
+          <article>
+            <!-- width/height ការពារទំព័រលោតពេលរូបផ្ទុក · loading="lazy" ផ្ទុកពេលជិតមើលឃើញ -->
+            <img src="https://picsum.photos/id/180/480/270" alt="Laptop លើតុ" width="480" height="270" loading="lazy">
+            <div>
+              <h3>ហាងកាហ្វេអនឡាញ</h3>
+              <p>គេហទំព័រលក់កាហ្វេ ជាមួយម៉ឺនុយ និងទម្រង់កុម្ម៉ង់។</p>
+              <a href="#" aria-label="មើលគម្រោង ហាងកាហ្វេអនឡាញ">មើលគម្រោង →</a>
+            </div>
+          </article>
+        </li>
+        <li>
+          <article>
+            <img src="https://picsum.photos/id/20/480/270" alt="សៀវភៅ និងកាតាប" width="480" height="270" loading="lazy">
+            <div>
+              <h3>Blog ការរៀន</h3>
+              <p>Blog សរសេរពីបទពិសោធន៍រៀន HTML និង CSS។</p>
+              <a href="#" aria-label="មើលគម្រោង Blog ការរៀន">មើលគម្រោង →</a>
+            </div>
+          </article>
+        </li>
+      </ul>
+    </section>
+
+    <section id="skills" aria-labelledby="skills-title">
+      <h2 id="skills-title">ជំនាញ</h2>
+      <table>
+        <caption>កម្រិតជំនាញ (ធ្វើបច្ចុប្បន្នភាព <time datetime="2026-11">ខែវិច្ឆិកា 2026</time>)</caption>
+        <thead>
+          <tr><th scope="col">ជំនាញ</th><th scope="col">កម្រិត</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">HTML</th><td><meter min="0" max="100" value="90">90%</meter> ល្អណាស់</td></tr>
+          <tr><th scope="row">CSS</th><td><meter min="0" max="100" value="70">70%</meter> ល្អ</td></tr>
+          <tr><th scope="row">JavaScript</th><td><meter min="0" max="100" value="40">40%</meter> កំពុងរៀន</td></tr>
+        </tbody>
+      </table>
+
+      <h3>សំណួរញឹកញាប់</h3>
+      <details>
+        <summary>តើអ្នកទទួលការងារ Freelance ទេ?</summary>
+        <p>បាទ! ទាក់ទងតាមទម្រង់ខាងក្រោម។</p>
+      </details>
+      <details>
+        <summary>ប្រើឧបករណ៍អ្វីខ្លះ?</summary>
+        <p>VS Code, Git, GitHub និង Chrome DevTools។</p>
+      </details>
+    </section>
+
+    <section id="contact" aria-labelledby="contact-title">
+      <h2 id="contact-title">ទំនាក់ទំនង</h2>
+      <!-- action: ភ្ជាប់ទៅ Backend ឬសេវាដូចជា Formspree ពេលដាក់ប្រើពិត -->
+      <form action="#" method="post">
+        <div>
+          <label for="name">ឈ្មោះ</label>
+          <input id="name" name="name" type="text" autocomplete="name" required minlength="2">
+        </div>
+        <div>
+          <label for="email">អ៊ីមែល</label>
+          <input id="email" name="email" type="email" autocomplete="email" required aria-describedby="email-hint">
+          <small id="email-hint" class="hint">ខ្ញុំនឹងឆ្លើយតបតាមអ៊ីមែលនេះ</small>
+        </div>
+        <div>
+          <label for="phone">លេខទូរស័ព្ទ (ជម្រើស)</label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" pattern="0[0-9]{8,9}" placeholder="012345678" aria-describedby="phone-hint">
+          <small id="phone-hint" class="hint">ចាប់ផ្តើមដោយ 0 ហើយមាន 9–10 ខ្ទង់</small>
+        </div>
+        <div>
+          <label for="message">សារ</label>
+          <textarea id="message" name="message" rows="4" required maxlength="500"></textarea>
+        </div>
+        <button type="submit">ផ្ញើសារ</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <address>📍 ភ្នំពេញ · <a href="mailto:sokha@example.com">sokha@example.com</a></address>
+    <p>&copy; 2026 សុខា ចាន់</p>
+  </footer>
+</body>
+</html>
+</script>
+</section>
+
+<section id="pro-check">
+  <h2>✅ Checklist កម្រិតអាជីព</h2>
+  <table>
+    <tr><th>ផ្នែក</th><th>អ្វីដែលធ្វើក្នុងទំព័រខាងលើ</th></tr>
+    <tr><td><b>SEO</b></td><td><code class="i">&lt;title&gt;</code> ច្បាស់, <code class="i">meta description</code>, <code class="i">h1</code> តែមួយ, លំដាប់ h2 → h3 ត្រឹមត្រូវ</td></tr>
+    <tr><td><b>Share Social</b></td><td>Open Graph (<code class="i">og:title</code>, <code class="i">og:image</code>) បង្ហាញរូប និងចំណងជើងពេល Share</td></tr>
+    <tr><td><b>Responsive</b></td><td><code class="i">meta viewport</code>, <code class="i">img { max-width: 100% }</code>, Grid + <code class="i">@media</code></td></tr>
+    <tr><td><b>Accessibility</b></td><td>Skip link, <code class="i">alt</code> រៀបរាប់ពិតប្រាកដ, <code class="i">label for</code>, <code class="i">th scope</code>, <code class="i">caption</code>, <code class="i">aria-label</code> លើ nav និង Link, <code class="i">:focus-visible</code></td></tr>
+    <tr><td><b>Performance</b></td><td><code class="i">loading="lazy"</code> + <code class="i">width/height</code> ការពារទំព័រលោត (CLS)</td></tr>
+    <tr><td><b>Form</b></td><td><code class="i">required</code>, <code class="i">type="email/tel"</code>, <code class="i">pattern</code>, <code class="i">minlength/maxlength</code>, <code class="i">autocomplete</code>, <code class="i">aria-describedby</code>, <code class="i">:user-invalid</code></td></tr>
+    <tr><td><b>Semantic</b></td><td><code class="i">header, nav, main, section, article, footer, address, time, meter, details</code></td></tr>
+  </table>
+  <h3>ឧបករណ៍ពិនិត្យ (ឥតគិតថ្លៃ)</h3>
+  <ol class="steps">
+    <li><b>W3C Validator</b> (validator.w3.org) — រកកំហុស HTML</li>
+    <li><b>Lighthouse</b> — Chrome DevTools (F12) → tab Lighthouse → Analyze៖ ពិន្ទុ Performance, Accessibility, SEO</li>
+    <li><b>Device Toolbar</b> (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd>) — មើលលើទំហំទូរស័ព្ទ</li>
+    <li>សាកប្រើទំព័រដោយ <b>ក្តារចុចតែប៉ុណ្ណោះ</b> (Tab / Enter) — ត្រូវចូលដល់គ្រប់ Link និង Form</li>
+  </ol>
+  <div class="ex"><h4>🏁 លំហាត់គម្រោងចុងក្រោយ</h4>
+    <ol>
+      <li>ប្តូរព័ត៌មាន រូប និងគម្រោង ជារបស់អ្នកផ្ទាល់</li>
+      <li>បន្ថែម <code class="i">&lt;picture&gt;</code> ជាមួយ <code class="i">srcset</code> សម្រាប់រូបទំហំខុសគ្នាលើទូរស័ព្ទ / កុំព្យូទ័រ</li>
+      <li>រត់ Lighthouse ហើយធ្វើឱ្យ Accessibility និង SEO ≥ 95</li>
+      <li>ពិនិត្យនៅ W3C Validator រហូតគ្មាន Error</li>
+      <li>ដាក់ឡើង GitHub Pages (មើលវគ្គ Git & GitHub)</li>
+    </ol>
+  </div>
+</section>
+
+<section id="roadmap">
+  <h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+  <ol class="steps">
+    <li><b>HTML</b> – មេរៀន ០–១៥ និងទំព័រកម្រិតអាជីព ✅</li>
+    <li><b>CSS</b> – ពណ៌ Font Box model Flexbox Grid Responsive</li>
+    <li><b>JavaScript</b> – ធ្វើឱ្យទំព័រមានអន្តរកម្ម (DOM, Events, Fetch)</li>
+    <li><b>Git & GitHub</b> – រក្សាទុក និងដាក់ទំព័រឡើង Internet</li>
+    <li><b>Framework</b> – Tailwind CSS, React ឬ Vue</li>
+    <li><b>Backend</b> – Node.js + Database (SQL) សម្រាប់ទទួលទិន្នន័យពី Form</li>
+  </ol>
+</section>
+
+</main>
+</div>
+<script>
+/* ---------- Syntax highlighter (ពណ៌ code) ---------- */
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function highlight(code){
+  var s = esc(code);
+  var re = /(&lt;!--[\s\S]*?--&gt;)|(&lt;!DOCTYPE[\s\S]*?&gt;)|(&lt;\/?[a-zA-Z][\s\S]*?&gt;)/gi;
+  return s.replace(re, function(m, comment, doctype, tag){
+    if(comment) return '<span class="c">'+comment+'</span>';
+    if(doctype) return '<span class="d">'+doctype+'</span>';
+    var p = tag.match(/^(&lt;\/?)([a-zA-Z0-9-]+)([\s\S]*?)(\/?&gt;)$/);
+    if(!p) return tag;
+    var attrs = p[3].replace(/([\w:-]+)(?:(=)("[^"]*"|'[^']*'))?/g, function(x, n, eq, v){
+      return eq ? '<span class="a">'+n+'</span>'+eq+'<span class="v">'+v+'</span>'
+                : '<span class="a">'+n+'</span>';
+    });
+    return '<span class="p">'+p[1]+'</span><span class="t">'+p[2]+'</span>'+attrs+'<span class="p">'+p[4]+'</span>';
+  });
+}
+
+
+document.querySelectorAll('script.src').forEach(function (el) {
+  var code = el.textContent.replace(/^\n/, '').replace(/\s+$/, '').replace(/<\\\//g, '</');
+  var box = document.createElement('div');
+  box.className = 'codebox';
+  var label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = el.dataset.title || 'HTML';
+  var pre = document.createElement('pre');
+  var c = document.createElement('code');
+  c.innerHTML = highlight(code);
+  pre.appendChild(c);
+  var btn = document.createElement('button');
+  btn.className = 'btn copy';
+  btn.textContent = 'ចម្លង';
+  btn.onclick = async function () {
+    try { await navigator.clipboard.writeText(code); btn.textContent = '✔ បានចម្លង'; }
+    catch (e) { btn.textContent = 'បរាជ័យ'; }
+    setTimeout(function () { btn.textContent = 'ចម្លង'; }, 1500);
+  };
+  box.append(label, pre, btn);
+  if (el.dataset.run !== 'no') {
+    var res = document.createElement('div');
+    res.className = 'result';
+    res.innerHTML = '<div class="lab">▶ លទ្ធផលក្នុង Browser</div>';
+    var f = document.createElement('iframe');
+    f.title = 'លទ្ធផល';
+    f.setAttribute('loading', 'lazy');
+    f.srcdoc = '<meta charset="utf-8"><style>body{font-family:"Noto Sans Khmer","Khmer UI",sans-serif;padding:10px;line-height:1.7}</style>' + code;
+    var fixed = el.dataset.h;
+    f.onload = function () {
+      try {
+        var h = f.contentDocument.documentElement.scrollHeight + 12;
+        f.style.height = (fixed ? Math.min(h, parseInt(fixed, 10)) : Math.min(h, 600)) + 'px';
+      } catch (e) { f.style.height = '200px'; }
+    };
+    res.appendChild(f);
+    box.appendChild(res);
+  }
+  el.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="html"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

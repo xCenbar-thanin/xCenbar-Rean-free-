@@ -1,0 +1,1765 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន Java & Spring Boot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#e76f00; --accent2:#f89820; --accent-soft:#fff3e6;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#ffa94d; --accent2:#f89820; --accent-soft:#2b1a08;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#ffa94d; --accent2:#f89820; --accent-soft:#2b1a08;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#0b2a4a,#5382a1 45%,#e76f00);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/java.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/java.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Java ពីដើមដល់ Spring Boot</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Java ជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#install">២. ដំឡើង JDK &amp; IntelliJ</a>
+<a href="#elements">៣. ធាតុនីមួយៗរបស់ Java</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Hello Java៖ Variable, Type &amp; String</a>
+<a href="#l2">មេរៀន ២: Operator, if/switch &amp; Loop</a>
+<a href="#l3">មេរៀន ៣: Method, Array &amp; Recursion</a>
+<a href="#l4">មេរៀន ៤: OOP ១៖ Class, Object &amp; Encapsulation</a>
+<a href="#l5">មេរៀន ៥: OOP ២៖ Inheritance, Polymorphism &amp; Interface</a>
+<a href="#l6">មេរៀន ៦: record, enum, sealed &amp; Pattern Matching (Java 21)</a>
+<a href="#l7">មេរៀន ៧: Collections &amp; Generics</a>
+<a href="#l8">មេរៀន ៨: Lambda &amp; Stream API</a>
+<a href="#l9">មេរៀន ៩: Exception Handling</a>
+<a href="#l10">មេរៀន ១០: File I/O &amp; CSV (java.nio)</a>
+<a href="#l11">មេរៀន ១១: Concurrency៖ Thread, Executor &amp; Virtual Threads</a>
+<a href="#l12">មេរៀន ១២: HTTP៖ REST API ដោយ HttpServer + HttpClient</a>
+<a href="#l13">មេរៀន ១៣: Package, Build (Maven/Gradle) &amp; JUnit</a>
+<a href="#l14">មេរៀន ១៤: JDBC &amp; SQL Database</a>
+<a href="#l15">មេរៀន ១៥: Spring Boot៖ REST API + JPA + Validation</a>
+<a href="#l16">មេរៀន ១៦: Spring Security, Docker &amp; Deploy</a>
+<a href="#cheat">📋 Cheat Sheet</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងអាជីព៖ Kafe Banking-style Order API (Spring Boot)</a>
+<a href="#pro-app">💻 Java Lab Pro (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>☕ Java — Write once, run anywhere</h2>
+  <p>រៀន <b>Java 21</b>៖ Type, OOP, record/sealed, Collections, <b>Lambda &amp; Stream</b>, Exception, File, <b>Virtual threads</b>, HTTP, Maven/JUnit, JDBC រហូតដល់ <b>Spring Boot REST API</b>, Security និង Docker — Code រត់ពិតលើ OpenJDK 21។</p>
+  <p><span class="badge">📘 ១៦ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">💻 Code មានពណ៌ + លទ្ធផល</span><span class="badge">☕ Java Lab Pro</span></p>
+</section>
+<section id="intro">
+<h2>១. Java ជាអ្វី? អ្នកណាបង្កើត?</h2>
+
+<p><b>Java</b> គឺជាភាសាសរសេរកម្មវិធី <b>Object-Oriented</b> ដែលពេញនិយមបំផុតមួយក្នុងពិភពលោក។ Code Java ត្រូវ Compile ទៅជា <b>Bytecode</b> ហើយរត់លើ <b>JVM</b> (Java Virtual Machine) — ដូច្នេះ <b>"Write once, run anywhere"</b>។ ធនាគារ ក្រុមហ៊ុនធំៗ និង Backend ជាច្រើនប្រើ Java + <b>Spring Boot</b>។ <button class="btn say" data-say="Java">🔊 អានពាក្យ</button></p>
+<figure class="fig"><svg viewBox="0 0 940 280" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="280" fill="#fff"/><rect x="20" y="95" width="170" height="80" rx="14" fill="#0ea5e9"/><text x="105.0" y="129.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Main.java</text><text x="105.0" y="151.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Source code</text><rect x="235" y="95" width="150" height="80" rx="14" fill="#f59e0b"/><text x="310.0" y="129.0" text-anchor="middle" font-size="17" font-weight="700" fill="#111">javac</text><text x="310.0" y="151.0" text-anchor="middle" font-size="13" fill="#111" opacity=".92">Compiler</text><rect x="430" y="95" width="170" height="80" rx="14" fill="#ea580c"/><text x="515.0" y="129.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">Main.class</text><text x="515.0" y="151.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Bytecode</text><line x1="192" y1="135" x2="231" y2="135" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="387" y1="135" x2="426" y2="135" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="680" y="15" width="240" height="62" rx="14" fill="#2563eb"/><text x="800.0" y="52.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">☕ JVM · Windows</text><rect x="680" y="104" width="240" height="62" rx="14" fill="#16a34a"/><text x="800.0" y="141.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">☕ JVM · macOS</text><rect x="680" y="193" width="240" height="62" rx="14" fill="#7c3aed"/><text x="800.0" y="230.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">☕ JVM · Linux / Android*</text><line x1="602" y1="125" x2="676" y2="46" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="602" y1="135" x2="676" y2="135" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="602" y1="145" x2="676" y2="224" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="310" y="235" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">Write once, run anywhere — Compile ម្តង រត់គ្រប់ OS</text><text x="310" y="262" text-anchor="middle" font-size="13" font-weight="400" fill="#64748b">JDK = javac + JVM + Library · JVM ប្រើ JIT បំលែង Bytecode → Machine code (លឿន)</text></svg><figcaption>🖼️ Java៖ Source → Bytecode → JVM លើគ្រប់ OS</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>ព្រឹត្តិការណ៍</th></tr><tr><td>1991</td><td><b>James Gosling</b> និងក្រុម "Green Team" នៅ <b>Sun Microsystems</b> ចាប់ផ្តើមគម្រោង (ឈ្មោះដំបូង <b>Oak</b>)</td></tr><tr><td>1995</td><td><b>Java 1.0</b> ចេញជាសាធារណៈ — ឈ្មោះមកពីកាហ្វេ Java ☕</td></tr><tr><td>2004</td><td>Java 5៖ Generics, enum, for-each</td></tr><tr><td>2008</td><td><b>Android</b> ប្រើ Java ជាភាសាសម្រាប់ App</td></tr><tr><td>2010</td><td><b>Oracle</b> ទិញ Sun Microsystems</td></tr><tr><td>2014</td><td><b>Java 8</b>៖ Lambda &amp; Stream API · <b>Spring Boot 1.0</b></td></tr><tr><td>2018→</td><td>ចេញកំណែថ្មីរៀងរាល់ ៦ ខែ · LTS៖ 11, 17, <b>21 (2023 — Virtual threads, Pattern matching)</b>, 25 (2025)</td></tr></table>
+
+<div class="grid"><div class="card"><b>🏦 ធនាគារ &amp; ហិរញ្ញវត្ថុ</b><br>Core banking, Payment (ធនាគារនៅកម្ពុជាជាច្រើនប្រើ Java)</div><div class="card"><b>🏢 Enterprise</b><br>Spring Boot, Microservices</div><div class="card"><b>📱 Android</b><br>App ចាស់ៗ + Android SDK (ឥឡូវ Kotlin-first)</div><div class="card"><b>🎮 &amp; Big data</b><br>Minecraft, Kafka, Hadoop, Elasticsearch</div></div>
+
+</section>
+<section id="install">
+<h2>២. ដំឡើង JDK &amp; IntelliJ</h2>
+
+<ol class="steps"><li>ទាញយក <b>JDK 21</b> (LTS) ពី <b>adoptium.net</b> (Eclipse Temurin) ឬ Oracle JDK។</li>
+<li>ពិនិត្យ៖ <code class='i'>java -version</code> និង <code class='i'>javac -version</code>។</li>
+<li>Editor៖ <b>IntelliJ IDEA Community</b> (ឥតគិតថ្លៃ) ឬ VS Code + "Extension Pack for Java"។</li>
+<li>សាក Online៖ <b>jdoodle.com</b> ឬប្រើ <b>jshell</b> (Console Java)។</li></ol>
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+java -version                  # openjdk version "21..."
+java Main.java                 # Java 11+: រត់ File តែមួយផ្ទាល់ (Compile + Run)
+javac Main.java && java Main   # វិធីប្រពៃណី: Compile → Main.class → Run
+jshell                         # សាក Code មួយបន្ទាត់ៗ: jshell> 2 + 3
+</script>
+
+<div class="note">💡 Code Java ក្នុងមេរៀន ១–១៣ ខ្ញុំ <b>រត់ពិត</b> ដោយ <b>OpenJDK 21</b> នៅទីនេះ។ JDBC Driver និង Spring Boot ត្រូវទាញពី Internet ដូច្នេះមេរៀន ១៤–១៦ ជាលទ្ធផលគំរូដែលពិនិត្យដោយដៃ។</div>
+
+</section>
+<section id="elements">
+<h2>៣. ធាតុនីមួយៗរបស់ Java</h2>
+
+<table><tr><th>ធាតុ</th><th>ពន្យល់</th><th>មេរៀន</th></tr><tr><td>JDK · JRE · JVM</td><td>JDK = ឧបករណ៍អភិវឌ្ឍ (javac) · JVM = ម៉ាស៊ីនរត់ Bytecode</td><td>២</td></tr><tr><td>Primitive &amp; String</td><td>int, double, boolean, char · String (Object)</td><td>១</td></tr><tr><td>Control flow</td><td>if, switch expression, for, while</td><td>២</td></tr><tr><td>Method &amp; Array</td><td>static method, int[]</td><td>៣</td></tr><tr><td>OOP</td><td>class, object, encapsulation, inheritance, polymorphism, interface</td><td>៤ · ៥</td></tr><tr><td>record · enum · sealed</td><td>Data class, តម្លៃកំណត់, Pattern matching (Java 21)</td><td>៦</td></tr><tr><td>Collections + Generics</td><td>List, Map, Set, &lt;T&gt;</td><td>៧</td></tr><tr><td>Lambda + Stream</td><td>Functional programming</td><td>៨</td></tr><tr><td>Exception</td><td>try/catch, checked vs unchecked</td><td>៩</td></tr><tr><td>I/O · Concurrency · HTTP</td><td>File, Thread, Virtual thread, HttpClient/Server</td><td>១០–១២</td></tr><tr><td>Maven · JUnit · JDBC · Spring Boot</td><td>Project, Test, Database, Backend</td><td>១៣–១៦</td></tr></table>
+
+</section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>Hello Java៖ Variable, Type &amp; String</h2>
+
+<script type="text/x-code" data-lang="java" data-label="Main.java">
+public class Main {
+    public static void main(String[] args) {
+        String shop = "Kafe Angkor";     // String = Object
+        int cups = 3;                    // primitive: int, long, double, boolean, char
+        double price = 2.5;
+        boolean open = true;
+        char grade = 'A';
+        var total = cups * price;        // var: Java ទាយ Type (double)
+        cups++;
+
+        System.out.println("Hello, " + shop + "! ☕");
+        System.out.printf("%d កែវ × $%.2f = $%.2f%n", cups, price, cups * price);
+        System.out.println("total(3 កែវ) = " + total + " · open=" + open + " · grade=" + grade);
+
+        // String methods
+        String name = "  Iced Latte  ";
+        System.out.println("[" + name.trim().toUpperCase() + "] length=" + name.trim().length());
+        System.out.println("contains Latte? " + name.contains("Latte"));
+        System.out.println("equals: " + "latte".equals("Latte") + " · equalsIgnoreCase: " + "latte".equalsIgnoreCase("Latte"));
+
+        // Text block (Java 15+)
+        String receipt = """
+            ======== Kafe ========
+            Latte x2     $5.00
+            ======================
+            """;
+        System.out.print(receipt);
+
+        // Integer overflow!
+        int big = Integer.MAX_VALUE;
+        System.out.println(big + " + 1 = " + (big + 1) + " · long: " + ((long) big + 1));
+    }
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Java 21</span></div><pre>Hello, Kafe Angkor! ☕
+4 កែវ × $2.50 = $10.00
+total(3 កែវ) = 7.5 · open=true · grade=A
+[ICED LATTE] length=10
+contains Latte? true
+equals: false · equalsIgnoreCase: true
+======== Kafe ========
+Latte x2     $5.00
+======================
+2147483647 + 1 = -2147483648 · long: 2147483648</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>public static void main(String[] args)</code> — ចំណុចចាប់ផ្តើមកម្មវិធី · ឈ្មោះ class = ឈ្មោះ File។</li><li>Java ជាភាសា <b>Static typing</b>៖ <code class='i'>int cups</code> មិនអាចដាក់ String បាន (ចាប់ Error ពេល Compile)។</li><li><code class='i'>printf</code>៖ <code class='i'>%d</code> លេខគត់ · <code class='i'>%.2f</code> ២ ខ្ទង់ក្រោយក្បៀស · <code class='i'>%n</code> បន្ទាត់ថ្មី។</li><li>ប្រៀបធៀប String ប្រើ <code class='i'>.equals()</code> មិនមែន <code class='i'>==</code> (== ប្រៀបធៀប Reference)។</li><li><code class='i'>int</code> អតិបរមា 2,147,483,647 — លើសហើយ <b>Overflow</b> ទៅលេខអវិជ្ជមាន (ឃើញពិតខាងលើ) → ប្រើ <code class='i'>long</code> ឬ <code class='i'>BigDecimal</code> សម្រាប់លុយ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>ហេតុអ្វី <code class='i'>0.1 + 0.2 == 0.3</code> ជា false? គួរគណនាលុយដោយអ្វី?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="java" data-label="answer.java">
+System.out.println(0.1 + 0.2);   // 0.30000000000000004
+var total = new java.math.BigDecimal("0.1").add(new java.math.BigDecimal("0.2"));   // 0.3
+</script>
+</details></div>
+
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>Operator, if/switch &amp; Loop</h2>
+
+<script type="text/x-code" data-lang="java" data-label="Main.java">
+public class Main {
+    public static void main(String[] args) {
+        int points = 1250;
+
+        // if / else if
+        String level;
+        if (points >= 2000) level = "Platinum";
+        else if (points >= 1000) level = "Gold";
+        else level = "Member";
+        System.out.println("Level: " + level);
+
+        // switch expression (Java 14+) — ត្រឡប់តម្លៃ គ្មាន break
+        String day = "SAT";
+        int discount = switch (day) {
+            case "SAT", "SUN" -> 20;
+            case "FRI" -> 10;
+            default -> 0;
+        };
+        System.out.println("Discount " + day + ": " + discount + "%");
+
+        // Ternary
+        System.out.println(points % 2 == 0 ? "លេខគូ" : "លេខសេស");
+
+        // for
+        for (int i = 1; i <= 3; i++) System.out.print("☕".repeat(i) + " ");
+        System.out.println();
+
+        // while + break/continue: រកលេខបឋម ≤ 30
+        int n = 1;
+        StringBuilder primes = new StringBuilder();
+        while (++n <= 30) {
+            boolean prime = true;
+            for (int d = 2; d * d <= n; d++) if (n % d == 0) { prime = false; break; }
+            if (!prime) continue;
+            primes.append(n).append(' ');
+        }
+        System.out.println("Primes: " + primes);
+
+        // Multiplication table 3×3
+        for (int r = 1; r <= 3; r++) {
+            for (int c = 1; c <= 3; c++) System.out.printf("%4d", r * c);
+            System.out.println();
+        }
+    }
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Java 21</span></div><pre>Level: Gold
+Discount SAT: 20%
+លេខគូ
+☕ ☕☕ ☕☕☕ 
+Primes: 2 3 5 7 11 13 17 19 23 29 
+   1   2   3
+   2   4   6
+   3   6   9</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>if / else if / else</code> — លក្ខខណ្ឌ · Operator៖ <code class='i'>&amp;&amp; || ! == != % ++</code>។</li><li><b>switch expression</b> <code class='i'>case "SAT", "SUN" -&gt; 20;</code> — ខ្លី មិនបាច់ break ហើយ Compiler ពិនិត្យ default។</li><li><code class='i'>for (init; condition; step)</code> · <code class='i'>while</code> · <code class='i'>break</code> ចេញ · <code class='i'>continue</code> រំលង។</li><li><code class='i'>d * d &lt;= n</code> — ពិនិត្យដល់ √n គ្រប់គ្រាន់ (គណិតពីវគ្គ Math for IT)។</li><li><code class='i'>StringBuilder</code> — ភ្ជាប់ String ក្នុង Loop លឿនជាង <code class='i'>+</code>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>បង្ហាញ FizzBuzz 1–15 (3 → Fizz, 5 → Buzz, ទាំងពីរ → FizzBuzz)។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="java" data-label="answer.java">
+for (int i = 1; i <= 15; i++) {
+    System.out.println(i % 15 == 0 ? "FizzBuzz" : i % 3 == 0 ? "Fizz" : i % 5 == 0 ? "Buzz" : String.valueOf(i));
+}
+</script>
+</details></div>
+
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Method, Array &amp; Recursion</h2>
+
+<script type="text/x-code" data-lang="java" data-label="Main.java">
+import java.util.Arrays;
+
+public class Main {
+    // static method: ប្រើបានដោយមិនបាច់បង្កើត Object
+    static double lineTotal(double price, int qty) {
+        return price * qty;
+    }
+
+    // Overloading: ឈ្មោះដូចគ្នា Parameter ខុសគ្នា
+    static double lineTotal(double price, int qty, double discount) {
+        return lineTotal(price, qty) * (1 - discount);
+    }
+
+    // Varargs
+    static double sum(double... values) {
+        double s = 0;
+        for (double v : values) s += v;
+        return s;
+    }
+
+    // Recursion
+    static long factorial(int n) {
+        return n <= 1 ? 1 : n * factorial(n - 1);
+    }
+
+    static int binarySearch(int[] a, int target) {
+        int lo = 0, hi = a.length - 1;
+        while (lo <= hi) {
+            int mid = (lo + hi) >>> 1;
+            if (a[mid] == target) return mid;
+            if (a[mid] < target) lo = mid + 1; else hi = mid - 1;
+        }
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(lineTotal(2.5, 2) + " · " + lineTotal(2.5, 2, 0.1));
+        System.out.println("sum = " + sum(2.0, 2.5, 2.75));
+        System.out.println("10! = " + factorial(10));
+
+        int[] sales = {12, 5, 30, 8, 21};
+        System.out.println("length=" + sales.length + " first=" + sales[0]);
+        Arrays.sort(sales);
+        System.out.println("sorted " + Arrays.toString(sales));
+        System.out.println("index of 21 = " + binarySearch(sales, 21));
+
+        int[][] table = new int[2][3];        // 2D array
+        table[1][2] = 9;
+        System.out.println(Arrays.deepToString(table));
+    }
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Java 21</span></div><pre>5.0 · 4.5
+sum = 7.25
+10! = 3628800
+length=5 first=12
+sorted [5, 8, 12, 21, 30]
+index of 21 = 3
+[[0, 0, 0], [0, 0, 9]]</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>static double lineTotal(double price, int qty)</code> — Return type + ឈ្មោះ + Parameter។</li><li><b>Overloading</b> — Method ឈ្មោះដូចគ្នា ប៉ុន្តែចំនួន/ប្រភេទ Parameter ខុស។</li><li><code class='i'>double... values</code> — Varargs ទទួលច្រើនតម្លៃ · <code class='i'>for (double v : values)</code> for-each។</li><li><b>Array</b> ទំហំថេរ · index ចាប់ពី 0 · <code class='i'>Arrays.sort / toString</code>។</li><li><b>Recursion</b> — Method ហៅខ្លួនឯង (ត្រូវមានលក្ខខណ្ឌឈប់) · <b>Binary search</b> O(log n) លើ Array តម្រៀប។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>សរសេរ Method រកតម្លៃធំបំផុតក្នុង <code class='i'>int[]</code>។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="java" data-label="answer.java">
+static int max(int[] a) {
+    int m = a[0];
+    for (int v : a) if (v > m) m = v;
+    return m;
+}   // ឬ Arrays.stream(a).max().getAsInt()
+</script>
+</details></div>
+
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>OOP ១៖ Class, Object &amp; Encapsulation</h2>
+
+<script type="text/x-code" data-lang="java" data-label="Main.java">
+public class Main {
+    public static void main(String[] args) {
+        Account dara = new Account("Dara", 100);
+        dara.deposit(50);
+        dara.withdraw(30);
+        System.out.println(dara);
+
+        try {
+            dara.withdraw(500);
+        } catch (IllegalArgumentException e) {
+            System.out.println("⚠️ " + e.getMessage());
+        }
+        Account sokha = new Account("Sokha", 20);
+        System.out.println("Accounts: " + Account.count() + " · " + sokha.getOwner() + " $" + sokha.getBalance());
+    }
+}
+
+class Account {
+    private static int count = 0;            // ចែករំលែកគ្រប់ Object
+    private final String owner;              // final: កំណត់ម្តង
+    private double balance;                  // private: ការពារពីខាងក្រៅ
+
+    Account(String owner, double opening) {  // Constructor
+        this.owner = owner;
+        this.balance = opening;
+        count++;
+    }
+
+    void deposit(double amount) {
+        if (amount <= 0) throw new IllegalArgumentException("ចំនួនត្រូវ > 0");
+        balance += amount;
+    }
+
+    void withdraw(double amount) {
+        if (amount > balance) throw new IllegalArgumentException("សមតុល្យមិនគ្រប់ ($" + balance + ")");
+        balance -= amount;
+    }
+
+    String getOwner() { return owner; }       // Getter
+    double getBalance() { return balance; }
+    static int count() { return count; }
+
+    @Override
+    public String toString() { return "Account[" + owner + ", $" + balance + "]"; }
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Java 21</span></div><pre>Account[Dara, $120.0]
+⚠️ សមតុល្យមិនគ្រប់ ($120.0)
+Accounts: 2 · Sokha $20.0</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Class</b> = គំរូ · <b>Object</b> = ឧទាហរណ៍ពិត (<code class='i'>new Account(...)</code>)។</li><li><b>Encapsulation</b>៖ Field <code class='i'>private</code> + Method <code class='i'>deposit/withdraw</code> ពិនិត្យច្បាប់ → គ្មាននរណាដាក់ balance = -1000 បាន។</li><li><b>Constructor</b> — ឈ្មោះដូច Class · <code class='i'>this.owner</code> = Field របស់ Object នេះ។</li><li><code class='i'>static</code> — ជារបស់ Class (count ចែករំលែក) · <code class='i'>final</code> — មិនប្តូរ។</li><li><code class='i'>@Override toString()</code> — កំណត់របៀបបង្ហាញ Object ពេល println។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>បន្ថែម Method <code class='i'>transfer(Account to, double amount)</code>។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="java" data-label="answer.java">
+void transfer(Account to, double amount) {
+    this.withdraw(amount);   // បោះ Exception បើមិនគ្រប់
+    to.deposit(amount);
+}
+</script>
+</details></div>
+
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>OOP ២៖ Inheritance, Polymorphism &amp; Interface</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 280" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="280" fill="#fff"/><rect x="330" y="15" width="280" height="90" rx="12" fill="#fff7ed" stroke="#ea580c" stroke-width="2.5"/><text x="470" y="40" text-anchor="middle" font-size="16" font-weight="800" fill="#9a3412">«abstract» Drink</text><text x="470" y="66" text-anchor="middle" font-size="13.5" font-weight="400" fill="#7c2d12">- name · - price</text><text x="470" y="90" text-anchor="middle" font-size="13.5" font-weight="400" fill="#7c2d12">+ price(size)  + abstract make()</text><rect x="40" y="170" width="230" height="80" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5"/><text x="155" y="196" text-anchor="middle" font-size="15.5" font-weight="800" fill="#1e3a8a">Coffee</text><text x="155" y="224" text-anchor="middle" font-size="13" font-weight="400" fill="#1e40af">make(): ☕ espresso</text><rect x="355" y="170" width="230" height="80" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5"/><text x="470" y="196" text-anchor="middle" font-size="15.5" font-weight="800" fill="#1e3a8a">Tea</text><text x="470" y="224" text-anchor="middle" font-size="13" font-weight="400" fill="#1e40af">make(): 🍵 steep</text><rect x="670" y="170" width="230" height="80" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5"/><text x="785" y="196" text-anchor="middle" font-size="15.5" font-weight="800" fill="#1e3a8a">Smoothie</text><text x="785" y="224" text-anchor="middle" font-size="13" font-weight="400" fill="#1e40af">make(): 🥤 blend</text><line x1="155" y1="168" x2="400" y2="108" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="277.5" y="130.0" text-anchor="middle" font-size="13" fill="#334155">extends</text><line x1="470" y1="168" x2="470" y2="108" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="785" y1="168" x2="540" y2="108" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="470" y="272" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">Inheritance + Polymorphism៖ Drink d = new Tea(); d.make(); → ហៅ make() របស់ Tea</text></svg><figcaption>🖼️ Abstract class + Subclasses</figcaption></figure>
+
+<script type="text/x-code" data-lang="java" data-label="Main.java">
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        List<Drink> order = List.of(new Coffee("Latte", 2.5), new Tea("Green Tea", 1.5), new Coffee("Mocha", 2.75));
+        double total = 0;
+        for (Drink d : order) {                       // Polymorphism
+            System.out.println(d.make() + "  " + d.name() + " $" + d.price("L"));
+            total += d.price("L");
+        }
+        System.out.println("Total (L): $" + total);
+
+        Discountable promo = new Tea("Jasmine", 2.0);   // Interface type
+        System.out.println("Promo: $" + promo.applyDiscount(0.5));
+        System.out.println(order.get(0) instanceof Coffee c ? "First is coffee: " + c.name() : "other");
+    }
+}
+
+interface Discountable {
+    double basePrice();
+    default double applyDiscount(double pct) { return basePrice() * (1 - pct); }   // default method
+}
+
+abstract class Drink implements Discountable {
+    private final String name;
+    protected final double price;
+    Drink(String name, double price) { this.name = name; this.price = price; }
+
+    String name() { return name; }
+    public double basePrice() { return price; }
+    double price(String size) { return size.equals("L") ? price + 0.5 : price; }
+    abstract String make();                           // Subclass ត្រូវសរសេរ
+}
+
+class Coffee extends Drink {
+    Coffee(String name, double price) { super(name, price); }
+    @Override String make() { return "☕ espresso"; }
+}
+
+class Tea extends Drink {
+    Tea(String name, double price) { super(name, price); }
+    @Override String make() { return "🍵 steep"; }
+    @Override double price(String size) { return price; }   // តែមិនបន្ថែមថ្លៃ Size
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Java 21</span></div><pre>☕ espresso  Latte $3.0
+🍵 steep  Green Tea $1.5
+☕ espresso  Mocha $3.25
+Total (L): $7.75
+Promo: $1.0
+First is coffee: Latte</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>extends</code> — <b>Inheritance</b>៖ Coffee ទទួល Field/Method ពី Drink · <code class='i'>super(...)</code> ហៅ Constructor មេ។</li><li><code class='i'>abstract</code> — Class មិនអាច new · Method abstract បង្ខំ Subclass សរសេរ។</li><li><b>Polymorphism</b>៖ <code class='i'>Drink d</code> តែ <code class='i'>d.make()</code> ហៅ Method តាម Object ពិត (Coffee/Tea)។</li><li><code class='i'>@Override</code> — សរសេរ Method មេឡើងវិញ (Tea មិនបន្ថែមថ្លៃ L)។</li><li><code class='i'>interface</code> — កិច្ចសន្យា · Class មួយ implements បានច្រើន · <code class='i'>default</code> method មានកូដស្រាប់។</li><li><code class='i'>instanceof Coffee c</code> — Pattern matching (Java 16+)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>បន្ថែម Class <code class='i'>Smoothie</code> ដែល make() ត្រឡប់ "🥤 blend"។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="java" data-label="answer.java">
+class Smoothie extends Drink {
+    Smoothie(String name, double price) { super(name, price); }
+    @Override String make() { return "🥤 blend"; }
+}
+</script>
+</details></div>
+
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>record, enum, sealed &amp; Pattern Matching (Java 21)</h2>
+
+<script type="text/x-code" data-lang="java" data-label="Main.java">
+import java.util.List;
+
+public class Main {
+    static String describe(Payment p) {
+        return switch (p) {                                    // Pattern matching for switch (Java 21)
+            case Cash c -> "💵 Cash $" + c.amount();
+            case Card(String bank, double amt) when amt > 100 -> "💳 " + bank + " (ត្រូវ OTP) $" + amt;
+            case Card(String bank, double amt) -> "💳 " + bank + " $" + amt;
+            case KHQR q -> "📱 KHQR → " + q.account() + " $" + q.amount();
+        };
+    }
+
+    public static void main(String[] args) {
+        var a = new Product("Latte", 2.5);
+        var b = new Product("Latte", 2.5);
+        System.out.println(a + " · equals=" + a.equals(b) + " · same object=" + (a == b));
+
+        Size s = Size.valueOf("L");
+        System.out.println(s + " extra=$" + s.extra + " · all=" + List.of(Size.values()));
+
+        List<Payment> pays = List.of(new Cash(5), new Card("ABA", 12.5), new Card("ACLEDA", 150), new KHQR("kafe@aclb", 7.75));
+        pays.forEach(p -> System.out.println(describe(p)));
+    }
+}
+
+record Product(String name, double price) {          // constructor, getters, equals, toString ស្វ័យប្រវត្តិ
+    Product {
+        if (price <= 0) throw new IllegalArgumentException("price > 0");
+    }
+}
+
+enum Size {
+    S(-0.25), M(0), L(0.5);
+    final double extra;
+    Size(double extra) { this.extra = extra; }
+}
+
+sealed interface Payment permits Cash, Card, KHQR {}
+record Cash(double amount) implements Payment {}
+record Card(String bank, double amount) implements Payment {}
+record KHQR(String account, double amount) implements Payment {}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Java 21</span></div><pre>Product[name=Latte, price=2.5] · equals=true · same object=false
+L extra=$0.5 · all=[S, M, L]
+💵 Cash $5.0
+💳 ABA $12.5
+💳 ACLEDA (ត្រូវ OTP) $150.0
+📱 KHQR → kafe@aclb $7.75</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>record</code> — Data class ខ្លី · equals/hashCode/toString ស្វ័យប្រវត្តិ · Field ជា final · <b>Compact constructor</b> សម្រាប់ Validation។</li><li><code class='i'>enum</code> — តម្លៃកំណត់ (S, M, L) អាចមាន Field/Constructor · <code class='i'>valueOf / values()</code>។</li><li><code class='i'>sealed interface ... permits</code> — កំណត់ថាមានតែ ៣ ប្រភេទ Payment → switch មិនបាច់ default (Compiler ដឹងគ្រប់ករណី)។</li><li><b>Record pattern</b> <code class='i'>case Card(String bank, double amt) when amt &gt; 100</code> — បំបែក Field + លក្ខខណ្ឌ។</li><li>បើបន្ថែម Payment ថ្មី (ឧ. Wing) Compiler នឹងប្រាប់កន្លែងដែលភ្លេចកែ — សុវត្ថិភាព។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>បង្កើត record <code class='i'>OrderLine(Product product, int qty)</code> មាន method <code class='i'>total()</code>។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="java" data-label="answer.java">
+record OrderLine(Product product, int qty) {
+    double total() { return product.price() * qty; }
+}
+</script>
+</details></div>
+
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Collections &amp; Generics</h2>
+
+<script type="text/x-code" data-lang="java" data-label="Main.java">
+import java.util.*;
+
+public class Main {
+    // Generic method
+    static <T extends Comparable<T>> T maxOf(List<T> list) {
+        T best = list.get(0);
+        for (T x : list) if (x.compareTo(best) > 0) best = x;
+        return best;
+    }
+
+    public static void main(String[] args) {
+        // List: តាមលំដាប់ មានស្ទួនបាន
+        List<String> orders = new ArrayList<>(List.of("Latte", "Mocha", "Latte", "Tea"));
+        orders.add("Americano");
+        orders.remove("Tea");
+        System.out.println("List  " + orders + " size=" + orders.size() + " [1]=" + orders.get(1));
+
+        // Set: គ្មានស្ទួន
+        Set<String> unique = new TreeSet<>(orders);            // TreeSet = តម្រៀប
+        System.out.println("Set   " + unique);
+
+        // Map: key → value (រាប់ចំនួន)
+        Map<String, Integer> count = new HashMap<>();
+        for (String o : orders) count.merge(o, 1, Integer::sum);
+        System.out.println("Map   " + new TreeMap<>(count) + " Latte=" + count.getOrDefault("Latte", 0));
+
+        // Queue / Deque
+        Deque<String> queue = new ArrayDeque<>(List.of("#1 Dara", "#2 Sokha"));
+        queue.offer("#3 Vanna");
+        System.out.println("Serve " + queue.poll() + " → waiting " + queue);
+
+        // Sort ដោយ Comparator
+        List<String> menu = new ArrayList<>(List.of("Mocha", "Tea", "Americano"));
+        menu.sort(Comparator.comparing(String::length).thenComparing(Comparator.naturalOrder()));
+        System.out.println("By length " + menu);
+        System.out.println("max " + maxOf(List.of(3, 9, 4)) + " · " + maxOf(menu));
+    }
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Java 21</span></div><pre>List  [Latte, Mocha, Latte, Americano] size=4 [1]=Mocha
+Set   [Americano, Latte, Mocha]
+Map   {Americano=1, Latte=2, Mocha=1} Latte=2
+Serve #1 Dara → waiting [#2 Sokha, #3 Vanna]
+By length [Tea, Mocha, Americano]
+max 9 · Tea</pre></div>
+
+<table><tr><th>Collection</th><th>លក្ខណៈ</th><th>get/contains</th><th>ប្រើពេល</th></tr><tr><td>ArrayList</td><td>លំដាប់, index</td><td>O(1) / O(n)</td><td>បញ្ជីធម្មតា (ប្រើច្រើនបំផុត)</td></tr><tr><td>HashSet / TreeSet</td><td>គ្មានស្ទួន / តម្រៀប</td><td>O(1) / O(log n)</td><td>ពិនិត្យថាមានឬអត់</td></tr><tr><td>HashMap / TreeMap</td><td>key → value</td><td>O(1) / O(log n)</td><td>រាប់, Cache, Index</td></tr><tr><td>ArrayDeque</td><td>Queue/Stack</td><td>O(1) ចុង</td><td>ជួររង់ចាំ, Undo</td></tr></table>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>List&lt;String&gt;</code> — <b>Generics</b>៖ កំណត់ប្រភេទធាតុ → Compiler ការពារដាក់ខុសប្រភេទ។</li><li><code class='i'>List.of(...)</code> មិនអាចកែ (Immutable) · <code class='i'>new ArrayList&lt;&gt;(...)</code> កែបាន។</li><li><code class='i'>map.merge(key, 1, Integer::sum)</code> — រាប់ចំនួនក្នុងមួយបន្ទាត់។</li><li><code class='i'>Comparator.comparing(...).thenComparing(...)</code> — តម្រៀបច្រើនលក្ខខណ្ឌ។</li><li><code class='i'>&lt;T extends Comparable&lt;T&gt;&gt;</code> — Generic method ប្រើបានជាមួយ Integer, String ...</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>ពិនិត្យថា Menu មាន "Tea" ឬអត់ ឲ្យលឿនបំផុតពេលមាន ១០,០០០ ធាតុ?</p><details><summary>មើលចម្លើយ</summary><p>ប្រើ <code class='i'>HashSet</code>៖ <code class='i'>set.contains("Tea")</code> = O(1) ជំនួស List O(n)។</p></details></div>
+
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Lambda &amp; Stream API</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 220" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="220" fill="#fff"/><rect x="10" y="70" width="140" height="76" rx="14" fill="#334155"/><text x="80.0" y="102.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">orders</text><text x="80.0" y="124.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">List (6)</text><rect x="190" y="70" width="160" height="76" rx="14" fill="#0ea5e9"/><text x="270.0" y="102.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">filter</text><text x="270.0" y="124.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">paid ✓ (4)</text><rect x="390" y="70" width="160" height="76" rx="14" fill="#16a34a"/><text x="470.0" y="102.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">map</text><text x="470.0" y="124.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">→ total</text><rect x="590" y="70" width="150" height="76" rx="14" fill="#f59e0b"/><text x="665.0" y="102.0" text-anchor="middle" font-size="17" font-weight="700" fill="#111">sorted</text><text x="665.0" y="124.0" text-anchor="middle" font-size="13" fill="#111" opacity=".92">desc</text><rect x="780" y="70" width="150" height="76" rx="14" fill="#7c3aed"/><text x="855.0" y="102.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">collect</text><text x="855.0" y="124.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">List / sum</text><line x1="152" y1="108" x2="186" y2="108" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="352" y1="108" x2="386" y2="108" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="552" y1="108" x2="586" y2="108" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="742" y1="108" x2="776" y2="108" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="470" y="40" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">Stream pipeline៖ Source → Intermediate (lazy) → Terminal</text><text x="470" y="190" text-anchor="middle" font-size="13.5" font-weight="400" fill="#334155">orders.stream().filter(o -> o.paid()).map(Order::total).sorted(reverseOrder()).toList()</text></svg><figcaption>🖼️ Stream pipeline</figcaption></figure>
+
+<script type="text/x-code" data-lang="java" data-label="Main.java">
+import java.util.*;
+import java.util.stream.*;
+
+public class Main {
+    record Order(int id, String customer, String item, double total, boolean paid) {}
+
+    public static void main(String[] args) {
+        List<Order> orders = List.of(
+            new Order(1, "Dara", "Latte", 5.00, true),
+            new Order(2, "Sokha", "Mocha", 2.75, false),
+            new Order(3, "Dara", "Tea", 1.50, true),
+            new Order(4, "Vanna", "Latte", 7.50, true),
+            new Order(5, "Sokha", "Latte", 2.50, true),
+            new Order(6, "Vanna", "Mocha", 5.50, false));
+
+        List<Double> paidTotals = orders.stream()
+            .filter(Order::paid)                       // method reference
+            .map(Order::total)
+            .sorted(Comparator.reverseOrder())
+            .toList();
+        System.out.println("Paid totals: " + paidTotals);
+
+        double revenue = orders.stream().filter(Order::paid).mapToDouble(Order::total).sum();
+        System.out.printf("Revenue: $%.2f%n", revenue);
+
+        Map<String, Double> byCustomer = orders.stream()
+            .collect(Collectors.groupingBy(Order::customer, TreeMap::new, Collectors.summingDouble(Order::total)));
+        System.out.println("By customer: " + byCustomer);
+
+        Map<String, Long> popular = orders.stream()
+            .collect(Collectors.groupingBy(Order::item, TreeMap::new, Collectors.counting()));
+        System.out.println("Popular: " + popular);
+
+        Optional<Order> big = orders.stream().filter(o -> o.total() > 7).findFirst();
+        System.out.println("Big order: " + big.map(Order::customer).orElse("none"));
+
+        String names = orders.stream().map(Order::customer).distinct().sorted().collect(Collectors.joining(", "));
+        System.out.println("Customers: " + names);
+        System.out.println("Sum 1..100 = " + IntStream.rangeClosed(1, 100).sum());
+    }
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Java 21</span></div><pre>Paid totals: [7.5, 5.0, 2.5, 1.5]
+Revenue: $16.50
+By customer: {Dara=6.5, Sokha=5.25, Vanna=13.0}
+Popular: {Latte=3, Mocha=2, Tea=1}
+Big order: Vanna
+Customers: Dara, Sokha, Vanna
+Sum 1..100 = 5050</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Lambda</b> <code class='i'>o -&gt; o.total() &gt; 7</code> — Function ខ្លី · <b>Method reference</b> <code class='i'>Order::total</code>។</li><li>Stream = <b>Source → Intermediate (filter, map, sorted, distinct) → Terminal (toList, sum, collect)</b> · Intermediate ជា Lazy (រត់ពេលមាន Terminal)។</li><li><code class='i'>Collectors.groupingBy</code> — ដូច SQL GROUP BY · <code class='i'>summingDouble/counting</code>។</li><li><code class='i'>Optional</code> — តម្លៃអាចគ្មាន · <code class='i'>orElse</code> ជៀស NullPointerException។</li><li>Stream មិនកែ List ដើម — បង្កើតលទ្ធផលថ្មី។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>រកមធ្យម total នៃ Order ដែលមិនទាន់បង់។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="java" data-label="answer.java">
+double avg = orders.stream().filter(o -> !o.paid()).mapToDouble(Order::total).average().orElse(0);   // 4.125
+</script>
+</details></div>
+
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Exception Handling</h2>
+
+<script type="text/x-code" data-lang="java" data-label="Main.java">
+import java.util.*;
+
+public class Main {
+    static class OutOfStockException extends Exception {          // Checked exception
+        OutOfStockException(String item) { super(item + " អស់ស្តុក"); }
+    }
+
+    static final Map<String, Integer> STOCK = new HashMap<>(Map.of("Latte", 2, "Mocha", 0));
+
+    static void order(String item, int qty) throws OutOfStockException {
+        Integer left = STOCK.get(item);
+        if (left == null) throw new IllegalArgumentException("គ្មាន " + item + " ក្នុង Menu");   // Unchecked
+        if (left < qty) throw new OutOfStockException(item);
+        STOCK.put(item, left - qty);
+        System.out.println("✅ " + item + " x" + qty + " (នៅសល់ " + (left - qty) + ")");
+    }
+
+    public static void main(String[] args) {
+        String[][] requests = {{"Latte", "1"}, {"Mocha", "1"}, {"Pizza", "1"}, {"Latte", "abc"}, {"Latte", "5"}};
+        for (String[] r : requests) {
+            try {
+                order(r[0], Integer.parseInt(r[1]));
+            } catch (OutOfStockException e) {
+                System.out.println("📦 " + e.getMessage());
+            } catch (IllegalArgumentException e) {       // NumberFormatException ក៏ជា subclass
+                System.out.println("⚠️ " + e.getClass().getSimpleName() + ": " + e.getMessage());
+            } finally {
+                System.out.print("");                      // រត់ជានិច្ច (បិទ Resource)
+            }
+        }
+
+        try (var sc = new Scanner("10 20 x")) {           // try-with-resources: close ស្វ័យប្រវត្តិ
+            int sum = 0;
+            while (sc.hasNextInt()) sum += sc.nextInt();
+            System.out.println("sum = " + sum);
+        }
+
+        String s = null;
+        try { s.length(); } catch (NullPointerException e) { System.out.println("NPE: " + e.getMessage()); }
+    }
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Java 21</span></div><pre>✅ Latte x1 (នៅសល់ 1)
+📦 Mocha អស់ស្តុក
+⚠️ IllegalArgumentException: គ្មាន Pizza ក្នុង Menu
+⚠️ NumberFormatException: For input string: &quot;abc&quot;
+📦 Latte អស់ស្តុក
+sum = 30
+NPE: Cannot invoke &quot;String.length()&quot; because &quot;&lt;local2&gt;&quot; is null</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>try / catch / finally</code> — ចាប់ Error ដោយកម្មវិធីមិនគាំង · finally រត់ជានិច្ច។</li><li><b>Checked</b> (extends Exception) — ត្រូវប្រកាស <code class='i'>throws</code> ឬ catch · <b>Unchecked</b> (RuntimeException) — Bug ក្នុង Code (IllegalArgument, NullPointer)។</li><li>Custom exception <code class='i'>OutOfStockException</code> — សារច្បាស់សម្រាប់ Business rule។</li><li><code class='i'>try (var sc = ...)</code> — <b>try-with-resources</b> បិទ File/Connection ស្វ័យប្រវត្តិ។</li><li>Java 14+ បង្ហាញសារ NPE លម្អិត (<code class='i'>Cannot invoke "String.length()" because ... is null</code>) — ពេល Compile ជាមួយ Debug info (IntelliJ/Maven) ឃើញឈ្មោះ Variable <code class='i'>"s"</code> ជំនួស <code class='i'>&lt;local2&gt;</code>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>ហេតុអ្វី <code class='i'>catch (Exception e) {}</code> ទទេ ជាទម្លាប់អាក្រក់?</p><details><summary>មើលចម្លើយ</summary><p>វាលាក់ Error ទាំងអស់ → Bug ពិបាករក។ ត្រូវចាប់ Exception ជាក់លាក់ ហើយ Log/បង្ហាញសារ ឬបោះបន្ត។</p></details></div>
+
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>File I/O &amp; CSV (java.nio)</h2>
+
+<script type="text/x-code" data-lang="java" data-label="Main.java">
+import java.nio.file.*;
+import java.util.*;
+import java.util.stream.*;
+
+public class Main {
+    record Sale(String date, String item, int qty, double price) {
+        double total() { return qty * price; }
+        static Sale parse(String line) {
+            String[] p = line.split(",");
+            return new Sale(p[0], p[1], Integer.parseInt(p[2]), Double.parseDouble(p[3]));
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        Path csv = Path.of("sales.csv");
+        Files.writeString(csv, """
+            date,item,qty,price
+            2025-06-01,Latte,12,2.5
+            2025-06-01,Mocha,5,2.75
+            2025-06-02,Latte,9,2.5
+            2025-06-02,Tea,14,1.5
+            """);
+        System.out.println("Wrote " + Files.size(csv) + " bytes");
+
+        List<Sale> sales;
+        try (Stream<String> lines = Files.lines(csv)) {
+            sales = lines.skip(1).filter(l -> !l.isBlank()).map(Sale::parse).toList();
+        }
+        Map<String, Double> perDay = sales.stream()
+            .collect(Collectors.groupingBy(Sale::date, TreeMap::new, Collectors.summingDouble(Sale::total)));
+
+        StringBuilder report = new StringBuilder("📊 Daily report\n");
+        perDay.forEach((d, t) -> report.append(String.format("%s  $%7.2f%n", d, t)));
+        report.append(String.format("TOTAL       $%7.2f%n", perDay.values().stream().mapToDouble(x -> x).sum()));
+
+        Path out = Files.createDirectories(Path.of("reports")).resolve("daily.txt");
+        Files.writeString(out, report);
+        System.out.print(Files.readString(out));
+        System.out.println("Files: " + Files.list(Path.of(".")).map(p -> p.getFileName().toString()).sorted().toList());
+    }
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Java 21</span></div><pre>Wrote 113 bytes
+📊 Daily report
+2025-06-01  $  43.75
+2025-06-02  $  43.50
+TOTAL       $  87.25
+Files: [Main.java, reports, sales.csv]</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>Path.of</code> + <code class='i'>Files</code> (java.nio) — API ទំនើបសម្រាប់ File។</li><li><code class='i'>Files.writeString / readString</code> — សរសេរ/អាន File តូច · <code class='i'>Files.lines</code> — អានជា Stream (File ធំ) ត្រូវនៅក្នុង try-with-resources។</li><li><code class='i'>line.split(",")</code> → <code class='i'>Integer.parseInt / Double.parseDouble</code> — បំលែង CSV ទៅ record។</li><li><code class='i'>String.format("%7.2f")</code> — តម្រឹមលេខជាជួរ (Report)។</li><li><code class='i'>throws Exception</code> ក្នុង main — ងាយសម្រាប់ Demo · កម្មវិធីពិតគួរ catch IOException។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>រកទំនិញលក់បានចំនួនច្រើនជាងគេ (qty)។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="java" data-label="answer.java">
+String best = sales.stream()
+    .collect(Collectors.groupingBy(Sale::item, Collectors.summingInt(Sale::qty)))
+    .entrySet().stream().max(Map.Entry.comparingByValue()).get().getKey();   // Latte (21)
+</script>
+</details></div>
+
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>Concurrency៖ Thread, Executor &amp; Virtual Threads</h2>
+
+<script type="text/x-code" data-lang="java" data-label="Main.java">
+import java.time.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class Main {
+    static String brew(String item) {
+        try { Thread.sleep(300); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+        return "✅ " + item;
+    }
+
+    public static void main(String[] args) throws Exception {
+        List<String> items = List.of("Latte", "Mocha", "Tea", "Americano");
+
+        long t0 = System.nanoTime();
+        items.forEach(Main::brew);                                    // ម្តងមួយ
+        System.out.printf("Sequential: %d ms%n", Duration.ofNanos(System.nanoTime() - t0).toMillis() / 100 * 100);
+
+        t0 = System.nanoTime();
+        try (ExecutorService pool = Executors.newVirtualThreadPerTaskExecutor()) {   // Java 21
+            List<Future<String>> fs = items.stream().map(i -> pool.submit(() -> brew(i))).toList();
+            for (Future<String> f : fs) System.out.print(f.get() + " ");
+        }
+        System.out.printf("%nVirtual threads: %d ms%n", Duration.ofNanos(System.nanoTime() - t0).toMillis() / 100 * 100);
+
+        // 10,000 virtual threads ងាយៗ
+        AtomicInteger done = new AtomicInteger();
+        try (var pool = Executors.newVirtualThreadPerTaskExecutor()) {
+            for (int i = 0; i < 10_000; i++) pool.submit(() -> { Thread.sleep(50); return done.incrementAndGet(); });
+        }
+        System.out.println("10,000 tasks done = " + done.get());
+
+        // Race condition vs AtomicInteger
+        int[] unsafe = {0};
+        AtomicInteger safe = new AtomicInteger();
+        Thread[] ts = new Thread[4];
+        for (int k = 0; k < 4; k++) {
+            ts[k] = new Thread(() -> { for (int j = 0; j < 100_000; j++) { unsafe[0]++; safe.incrementAndGet(); } });
+            ts[k].start();
+        }
+        for (Thread t : ts) t.join();
+        System.out.println("safe = " + safe.get() + " · unsafe ត្រឹមត្រូវ? " + (unsafe[0] == 400_000));
+
+        CompletableFuture<String> cf = CompletableFuture.supplyAsync(() -> brew("Cappuccino")).thenApply(s -> s + " 🔔");
+        System.out.println(cf.get());
+    }
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Java 21</span></div><pre>Sequential: 1200 ms
+✅ Latte ✅ Mocha ✅ Tea ✅ Americano 
+Virtual threads: 300 ms
+10,000 tasks done = 10000
+safe = 400000 · unsafe ត្រឹមត្រូវ? false
+✅ Cappuccino 🔔</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Thread</b> — ធ្វើការច្រើនព្រមគ្នា · ៤ ទំនិញ × 300ms = 1200ms (ម្តងមួយ) ធៀប ~300ms (ព្រមគ្នា)។</li><li><code class='i'>ExecutorService</code> — Pool គ្រប់គ្រង Thread · <code class='i'>submit</code> → <code class='i'>Future.get()</code> រង់ចាំលទ្ធផល។</li><li><b>Virtual threads</b> (Java 21) — Thread ស្រាល រាប់ម៉ឺន/សែនបាន → Server ទទួល Request ច្រើនដោយ Code សាមញ្ញ។</li><li><b>Race condition</b>៖ <code class='i'>unsafe[0]++</code> មិន Atomic → លទ្ធផលខុស · ប្រើ <code class='i'>AtomicInteger</code> ឬ <code class='i'>synchronized</code>។</li><li><code class='i'>CompletableFuture</code> — Async chain (ដូច Promise ក្នុង JavaScript)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>ធ្វើ <code class='i'>counter++</code> ឲ្យ Thread-safe ដោយ <code class='i'>synchronized</code>?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="java" data-label="answer.java">
+private int counter = 0;
+synchronized void inc() { counter++; }   // Thread មួយក្នុងមួយពេល
+</script>
+</details></div>
+
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>HTTP៖ REST API ដោយ HttpServer + HttpClient</h2>
+
+<script type="text/x-code" data-lang="java" data-label="Main.java">
+import com.sun.net.httpserver.HttpServer;
+import java.net.*;
+import java.net.http.*;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.concurrent.*;
+
+public class Main {
+    static final Map<Integer, String> MENU = new ConcurrentHashMap<>(Map.of(1, "Latte", 2, "Mocha"));
+
+    public static void main(String[] args) throws Exception {
+        HttpServer server = HttpServer.create(new InetSocketAddress(0), 0);
+        server.createContext("/api/menu", ex -> {
+            String body; int status = 200;
+            if (ex.getRequestMethod().equals("GET")) {
+                body = MENU.entrySet().stream().sorted(Map.Entry.comparingByKey())
+                    .map(e -> "{\"id\":" + e.getKey() + ",\"name\":\"" + e.getValue() + "\"}")
+                    .reduce((a, b) -> a + "," + b).map(s -> "[" + s + "]").orElse("[]");
+            } else if (ex.getRequestMethod().equals("POST")) {
+                String name = new String(ex.getRequestBody().readAllBytes(), StandardCharsets.UTF_8).trim();
+                if (name.isEmpty()) { status = 400; body = "{\"error\":\"name required\"}"; }
+                else { int id = MENU.size() + 1; MENU.put(id, name); status = 201; body = "{\"id\":" + id + "}"; }
+            } else { status = 405; body = "{\"error\":\"method not allowed\"}"; }
+            byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
+            ex.getResponseHeaders().add("Content-Type", "application/json");
+            ex.sendResponseHeaders(status, bytes.length);
+            try (var os = ex.getResponseBody()) { os.write(bytes); }
+        });
+        server.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
+        server.start();
+        String base = "http://localhost:" + server.getAddress().getPort() + "/api/menu";
+
+        HttpClient client = HttpClient.newHttpClient();
+        var get = HttpRequest.newBuilder(URI.create(base)).GET().build();
+        var post = HttpRequest.newBuilder(URI.create(base)).POST(HttpRequest.BodyPublishers.ofString("Matcha")).build();
+        var bad = HttpRequest.newBuilder(URI.create(base)).POST(HttpRequest.BodyPublishers.ofString("")).build();
+        var del = HttpRequest.newBuilder(URI.create(base)).DELETE().build();
+
+        for (var req : List.of(get, post, bad, del, get)) {
+            HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
+            System.out.printf("%-6s → %d %s%n", req.method(), res.statusCode(), res.body());
+        }
+        server.stop(0);
+    }
+}
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Java 21</span></div><pre>GET    → 200 [{&quot;id&quot;:1,&quot;name&quot;:&quot;Latte&quot;},{&quot;id&quot;:2,&quot;name&quot;:&quot;Mocha&quot;}]
+POST   → 201 {&quot;id&quot;:3}
+POST   → 400 {&quot;error&quot;:&quot;name required&quot;}
+DELETE → 405 {&quot;error&quot;:&quot;method not allowed&quot;}
+GET    → 200 [{&quot;id&quot;:1,&quot;name&quot;:&quot;Latte&quot;},{&quot;id&quot;:2,&quot;name&quot;:&quot;Mocha&quot;},{&quot;id&quot;:3,&quot;name&quot;:&quot;Matcha&quot;}]</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>HttpServer.create</code> + <code class='i'>createContext("/api/menu", handler)</code> — Server HTTP ស្រាប់ក្នុង JDK (ល្អសម្រាប់រៀន)។</li><li>Handler៖ ពិនិត្យ Method (GET/POST) → បង្កើត JSON → <code class='i'>sendResponseHeaders(status, length)</code> → សរសេរ Body។</li><li>Status code៖ 200, 201 Created, 400 Bad request, 405 Method not allowed (ឃើញពិតខាងលើ)។</li><li><code class='i'>HttpClient</code> (Java 11+) — ហៅ API · <code class='i'>client.send(req, BodyHandlers.ofString())</code>។</li><li>Production ប្រើ <b>Spring Boot</b> (មេរៀន ១៥) ដែលបំលែង JSON ↔ Object ស្វ័យប្រវត្តិ (Jackson)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>ហៅ API ដោយ Async (មិនរង់ចាំ)?</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="java" data-label="answer.java">
+client.sendAsync(get, HttpResponse.BodyHandlers.ofString())
+      .thenApply(HttpResponse::body)
+      .thenAccept(System.out::println);
+</script>
+</details></div>
+
+</section>
+<section id="l13">
+<h2><span class="badge">មេរៀន ១៣</span>Package, Build (Maven/Gradle) &amp; JUnit</h2>
+
+<script type="text/x-code" data-lang="txt" data-label="Maven project">
+kafe/
+├── pom.xml                         ← Maven: dependencies + build
+└── src/
+    ├── main/java/com/kafe/
+    │   ├── App.java
+    │   ├── model/Product.java
+    │   └── service/CartService.java
+    └── test/java/com/kafe/service/
+        └── CartServiceTest.java    ← JUnit
+</script>
+
+<script type="text/x-code" data-lang="java" data-label="CartService.java">
+package com.kafe.service;
+
+import com.kafe.model.Product;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CartService {
+    private final List<Product> items = new ArrayList<>();
+
+    public void add(Product p, int qty) {
+        if (qty < 1) throw new IllegalArgumentException("qty >= 1");
+        for (int i = 0; i < qty; i++) items.add(p);
+    }
+
+    public double total() {
+        return items.stream().mapToDouble(Product::price).sum();
+    }
+
+    public int count() { return items.size(); }
+}
+</script>
+
+<script type="text/x-code" data-lang="java" data-label="App.java">
+package com.kafe;
+
+import com.kafe.model.Product;
+import com.kafe.service.CartService;
+
+public class App {
+    public static void main(String[] args) {
+        var cart = new CartService();
+        cart.add(new Product("Latte", 2.5), 2);
+        cart.add(new Product("Mocha", 2.75), 1);
+        System.out.printf("Items: %d · Total: $%.2f%n", cart.count(), cart.total());
+    }
+}
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · javac + jar (JDK 21)</span></div><pre><span class="tp">dara@pc:~/kafe$</span> <span class="tc">javac -d target/classes $(find src -name &quot;*.java&quot;)</span>
+<span class="tp">dara@pc:~/kafe$</span> <span class="tc">find target -name &#x27;*.class&#x27; | sort</span>
+target/classes/com/kafe/App.class
+target/classes/com/kafe/model/Product.class
+target/classes/com/kafe/service/CartService.class
+<span class="tp">dara@pc:~/kafe$</span> <span class="tc">jar --create --file target/kafe.jar --main-class com.kafe.App -C target/classes .</span>
+<span class="tp">dara@pc:~/kafe$</span> <span class="tc">java -jar target/kafe.jar</span>
+Items: 3 · Total: $7.75</pre></div>
+<script type="text/x-code" data-lang="html" data-label="pom.xml">
+<!-- pom.xml (ផ្នែកសំខាន់) -->
+<properties><maven.compiler.release>21</maven.compiler.release></properties>
+<dependencies>
+  <dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter</artifactId>
+    <version>5.11.4</version>
+    <scope>test</scope>
+  </dependency>
+</dependencies>
+</script>
+
+<script type="text/x-code" data-lang="java" data-label="CartServiceTest.java">
+package com.kafe.service;
+
+import com.kafe.model.Product;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+class CartServiceTest {
+    CartService cart;
+
+    @BeforeEach void setUp() { cart = new CartService(); }
+
+    @Test void totalOfTwoLattesAndOneMocha() {
+        cart.add(new Product("Latte", 2.5), 2);
+        cart.add(new Product("Mocha", 2.75), 1);
+        assertEquals(3, cart.count());
+        assertEquals(7.75, cart.total(), 0.001);
+    }
+
+    @Test void rejectsZeroQty() {
+        assertThrows(IllegalArgumentException.class, () -> cart.add(new Product("Tea", 1.5), 0));
+    }
+}
+</script>
+
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+mvn test                # រត់ Test
+mvn package             # → target/kafe-1.0.jar
+./gradlew build         # បើប្រើ Gradle
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>ឧទាហរណ៍លទ្ធផល · mvn test</span></div><pre>[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>package com.kafe.service;</code> — ក្រុម Class តាម Folder · <code class='i'>import</code> ប្រើ Class ពី Package ផ្សេង។</li><li><code class='i'>javac -d target/classes</code> → File <code class='i'>.class</code> (Bytecode) · <code class='i'>jar --main-class</code> → <b>kafe.jar</b> រត់ដោយ <code class='i'>java -jar</code> (ពិតខាងលើ)។</li><li><b>Maven/Gradle</b> — ទាញ Library (Dependencies) + Compile + Test + Package ស្វ័យប្រវត្តិ។</li><li><b>JUnit 5</b>៖ <code class='i'>@Test</code>, <code class='i'>assertEquals</code>, <code class='i'>assertThrows</code>, <code class='i'>@BeforeEach</code>។</li><li><code class='i'>public</code> — ប្រើបានពី Package ផ្សេង · គ្មាន modifier = តែក្នុង Package តែមួយ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៣</h4><p>scope <code class='i'>test</code> ក្នុង pom.xml មានន័យអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>Library នោះប្រើតែពេល Compile/Run Test ប៉ុណ្ណោះ — មិនចូលក្នុង JAR Production។</p></details></div>
+
+</section>
+<section id="l14">
+<h2><span class="badge">មេរៀន ១៤</span>JDBC &amp; SQL Database</h2>
+
+<script type="text/x-code" data-lang="java" data-label="OrderDao.java">
+import java.sql.*;
+
+public class OrderDao {
+    private static final String URL = "jdbc:postgresql://localhost:5432/kafe";
+
+    public static void main(String[] args) throws SQLException {
+        try (Connection conn = DriverManager.getConnection(URL, "kafe", System.getenv("DB_PASSWORD"))) {
+            conn.setAutoCommit(false);                                 // Transaction
+            try (PreparedStatement order = conn.prepareStatement(
+                     "INSERT INTO orders (customer, total) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
+                 PreparedStatement stock = conn.prepareStatement(
+                     "UPDATE products SET stock = stock - ? WHERE name = ? AND stock >= ?")) {
+
+                order.setString(1, "Dara");
+                order.setBigDecimal(2, new java.math.BigDecimal("5.00"));
+                order.executeUpdate();
+
+                stock.setInt(1, 2); stock.setString(2, "Latte"); stock.setInt(3, 2);
+                if (stock.executeUpdate() == 0) throw new SQLException("Latte អស់ស្តុក");
+
+                conn.commit();                                         // ✅ ទាំងពីរ
+                try (ResultSet keys = order.getGeneratedKeys()) {
+                    if (keys.next()) System.out.println("Order #" + keys.getLong(1) + " saved");
+                }
+            } catch (SQLException e) {
+                conn.rollback();                                       // ↩️ មិនធ្វើសោះ
+                System.out.println("Rollback: " + e.getMessage());
+            }
+
+            try (PreparedStatement q = conn.prepareStatement("SELECT name, price FROM products WHERE price <= ? ORDER BY price")) {
+                q.setDouble(1, 2.5);
+                try (ResultSet rs = q.executeQuery()) {
+                    while (rs.next()) System.out.printf("%-12s $%.2f%n", rs.getString("name"), rs.getDouble("price"));
+                }
+            }
+        }
+    }
+}
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>ឧទាហរណ៍លទ្ធផល (PostgreSQL)</span></div><pre>Order #42 saved
+Green Tea    $1.50
+Americano    $2.00
+Iced Latte   $2.50</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>JDBC</b> — API ស្តង់ដារភ្ជាប់ Database · ត្រូវមាន Driver (ឧ. <code class='i'>org.postgresql:postgresql</code> ក្នុង pom.xml)។</li><li><code class='i'>PreparedStatement</code> + <code class='i'>?</code> — ការពារ <b>SQL Injection</b> (ដូចមេរៀន PDO/PHP)។</li><li><b>Transaction</b>៖ <code class='i'>setAutoCommit(false)</code> → <code class='i'>commit()</code> ឬ <code class='i'>rollback()</code> — Order និងកាត់ Stock ជោគជ័យទាំងពីរ ឬមិនធ្វើសោះ។</li><li>try-with-resources បិទ Connection/Statement/ResultSet ស្វ័យប្រវត្តិ (Leak connection = Server គាំង)។</li><li>Password Database ពី Environment variable — កុំសរសេរក្នុង Code។ Spring Data JPA (មេរៀន ១៥) លាក់ JDBC ទាំងនេះ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៤</h4><p>ហេតុអ្វីប្រើ <code class='i'>BigDecimal</code> សម្រាប់ Column លុយ?</p><details><summary>មើលចម្លើយ</summary><p><code class='i'>double</code> មានកំហុសទសភាគ (0.1+0.2) · <code class='i'>BigDecimal</code> + SQL <code class='i'>NUMERIC(10,2)</code> ត្រឹមត្រូវ ១០០%។</p></details></div>
+
+</section>
+<section id="l15">
+<h2><span class="badge">មេរៀន ១៥</span>Spring Boot៖ REST API + JPA + Validation</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="230" fill="#fff"/><rect x="15" y="75" width="150" height="80" rx="14" fill="#0ea5e9"/><text x="90.0" y="109.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">📱 Client</text><text x="90.0" y="131.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">GET /api/products</text><rect x="205" y="75" width="170" height="80" rx="14" fill="#6db33f"/><text x="290.0" y="109.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">@RestController</text><text x="290.0" y="131.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">HTTP ↔ JSON</text><rect x="415" y="75" width="150" height="80" rx="14" fill="#16a34a"/><text x="490.0" y="109.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">@Service</text><text x="490.0" y="131.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Business logic</text><rect x="605" y="75" width="160" height="80" rx="14" fill="#15803d"/><text x="685.0" y="109.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">@Repository</text><text x="685.0" y="131.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">JpaRepository</text><rect x="805" y="75" width="120" height="80" rx="14" fill="#334155"/><text x="865.0" y="109.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">🛢️ DB</text><text x="865.0" y="131.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">PostgreSQL</text><line x1="167" y1="115" x2="201" y2="115" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="377" y1="115" x2="411" y2="115" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="567" y1="115" x2="601" y2="115" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="767" y1="115" x2="801" y2="115" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><text x="470" y="40" text-anchor="middle" font-size="16" font-weight="800" fill="#0f172a">Spring Boot Layered Architecture</text><text x="470" y="195" text-anchor="middle" font-size="14" font-weight="400" fill="#334155">Spring បង្កើត Object (Bean) ហើយភ្ជាប់គ្នាដោយ Dependency Injection</text></svg><figcaption>🖼️ Controller → Service → Repository → Database</figcaption></figure>
+
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+# start.spring.io → Java 21 · Dependencies: Spring Web, Spring Data JPA, Validation, PostgreSQL, Lombok(optional)
+./mvnw spring-boot:run         # → http://localhost:8080
+</script>
+
+<script type="text/x-code" data-lang="java" data-label="Spring Boot">
+// Product.java — Entity (តារាង)
+@Entity
+public class Product {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(nullable = false, unique = true) private String name;
+    @Column(precision = 8, scale = 2) private BigDecimal price;
+    private int stock;
+    // getters/setters (ឬ Lombok @Getter @Setter)
+}
+
+// ProductRepository.java — Spring បង្កើត SQL ឲ្យពីឈ្មោះ Method
+public interface ProductRepository extends JpaRepository<Product, Long> {
+    List<Product> findByPriceLessThanEqualOrderByPrice(BigDecimal max);
+    boolean existsByName(String name);
+}
+
+// DTO + Validation
+public record ProductRequest(
+    @NotBlank @Size(max = 80) String name,
+    @NotNull @DecimalMin("0.25") BigDecimal price,
+    @Min(0) int stock) {}
+
+// ProductService.java
+@Service
+public class ProductService {
+    private final ProductRepository repo;
+    public ProductService(ProductRepository repo) { this.repo = repo; }      // Constructor injection
+
+    @Transactional
+    public Product create(ProductRequest req) {
+        if (repo.existsByName(req.name())) throw new ResponseStatusException(HttpStatus.CONFLICT, "ឈ្មោះស្ទួន");
+        var p = new Product();
+        p.setName(req.name()); p.setPrice(req.price()); p.setStock(req.stock());
+        return repo.save(p);
+    }
+}
+
+// ProductController.java
+@RestController
+@RequestMapping("/api/products")
+public class ProductController {
+    private final ProductRepository repo;
+    private final ProductService service;
+    public ProductController(ProductRepository repo, ProductService service) { this.repo = repo; this.service = service; }
+
+    @GetMapping
+    public List<Product> list(@RequestParam(defaultValue = "100") BigDecimal max) {
+        return repo.findByPriceLessThanEqualOrderByPrice(max);
+    }
+
+    @GetMapping("/{id}")
+    public Product one(@PathVariable Long id) {
+        return repo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Product create(@Valid @RequestBody ProductRequest req) {
+        return service.create(req);
+    }
+}
+</script>
+
+<script type="text/x-code" data-lang="yaml" data-label="application.yml">
+# src/main/resources/application.yml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/kafe
+    username: kafe
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate.ddl-auto: validate     # Production: ប្រើ Flyway/Liquibase migration
+    open-in-view: false
+</script>
+
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+curl localhost:8080/api/products?max=2.5
+curl -X POST localhost:8080/api/products -H "Content-Type: application/json" -d '{"name":"Matcha","price":3.0,"stock":10}'
+curl -X POST localhost:8080/api/products -H "Content-Type: application/json" -d '{"name":"","price":0}'
+</script>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>ឧទាហរណ៍លទ្ធផល</span></div><pre>[{&quot;id&quot;:4,&quot;name&quot;:&quot;Green Tea&quot;,&quot;price&quot;:1.50,&quot;stock&quot;:30},{&quot;id&quot;:1,&quot;name&quot;:&quot;Americano&quot;,&quot;price&quot;:2.00,&quot;stock&quot;:25},{&quot;id&quot;:2,&quot;name&quot;:&quot;Iced Latte&quot;,&quot;price&quot;:2.50,&quot;stock&quot;:20}]
+{&quot;id&quot;:5,&quot;name&quot;:&quot;Matcha&quot;,&quot;price&quot;:3.0,&quot;stock&quot;:10}
+{&quot;status&quot;:400,&quot;error&quot;:&quot;Bad Request&quot;,&quot;path&quot;:&quot;/api/products&quot;}</pre></div>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Spring Boot</b> — Framework Backend Java ពេញនិយមបំផុត · Server Tomcat ស្រាប់ · Config តិច។</li><li><code class='i'>@Entity</code> + <b>JPA/Hibernate</b> — Class ↔ តារាង · <code class='i'>JpaRepository</code> មាន save/findAll/findById/delete ស្រាប់។</li><li><b>Derived query</b> <code class='i'>findByPriceLessThanEqualOrderByPrice</code> — Spring បង្កើត SQL ពីឈ្មោះ Method។</li><li><b>Dependency Injection</b>៖ Spring បង្កើត Repository/Service ហើយផ្ញើចូល Constructor ស្វ័យប្រវត្តិ។</li><li><code class='i'>@RestController</code> + <code class='i'>@GetMapping/@PostMapping</code> — Object → JSON ស្វ័យប្រវត្តិ · <code class='i'>@Valid</code> + <code class='i'>@NotBlank/@DecimalMin</code> → 400 បើខុស។</li><li><code class='i'>@Transactional</code> — Method ទាំងមូលជា Transaction មួយ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៥</h4><p>បន្ថែម Endpoint <code class='i'>DELETE /api/products/{id}</code> ត្រឡប់ 204។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="java" data-label="answer.java">
+@DeleteMapping("/{id}")
+@ResponseStatus(HttpStatus.NO_CONTENT)
+public void delete(@PathVariable Long id) {
+    repo.deleteById(id);
+}
+</script>
+</details></div>
+
+</section>
+<section id="l16">
+<h2><span class="badge">មេរៀន ១៦</span>Spring Security, Docker &amp; Deploy</h2>
+
+<script type="text/x-code" data-lang="java" data-label="SecurityConfig.java">
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+    @Bean
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+            .csrf(csrf -> csrf.disable())                                   // API ប្រើ Token (មិនមែន Cookie form)
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated())
+            .oauth2ResourceServer(o -> o.jwt(Customizer.withDefaults()))   // JWT Bearer token
+            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .build();
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
+}
+</script>
+
+<script type="text/x-code" data-lang="txt" data-label="Dockerfile">
+# Dockerfile — Multi-stage build
+FROM eclipse-temurin:21-jdk AS build
+WORKDIR /app
+COPY . .
+RUN ./mvnw -q package -DskipTests
+
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75", "-jar", "app.jar"]
+</script>
+
+<script type="text/x-code" data-lang="bash" data-label="Terminal">
+docker build -t kafe-api .
+docker run -p 8080:8080 -e DB_PASSWORD=*** -e SPRING_PROFILES_ACTIVE=prod kafe-api
+curl localhost:8080/actuator/health        # {"status":"UP"} (spring-boot-starter-actuator)
+</script>
+
+<table><tr><th>✅ Production checklist</th><th></th></tr><tr><td>Secret</td><td>Environment variable / Vault · កុំ Commit application-prod.yml ដែលមាន Password</td></tr>
+<tr><td>Database</td><td>Flyway migration · <code class='i'>ddl-auto: validate</code> · Connection pool (HikariCP ស្រាប់)</td></tr>
+<tr><td>សុវត្ថិភាព</td><td>HTTPS · BCrypt · JWT ផុតកំណត់ខ្លី · Rate limit · CORS តឹង</td></tr>
+<tr><td>Monitoring</td><td>Actuator health/metrics · Log JSON · Alert</td></tr>
+<tr><td>Deploy</td><td>VPS (Docker), Railway/Render, AWS/GCP, Kubernetes</td></tr></table>
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><b>Spring Security</b> — Filter chain ពិនិត្យរាល់ Request មុនដល់ Controller (ដូច Middleware)។</li><li><code class='i'>permitAll / hasRole / authenticated</code> — ច្បាប់តាម URL · <b>JWT</b> សម្រាប់ Mobile App/SPA (Stateless)។</li><li><code class='i'>BCryptPasswordEncoder</code> — Hash Password។</li><li><b>Docker multi-stage</b>៖ Stage JDK Build → Stage JRE តូចសម្រាប់រត់ (មើលវគ្គ Docker &amp; CI/CD)។</li><li><b>Actuator</b> <code class='i'>/actuator/health</code> — Load balancer/Kubernetes ពិនិត្យថា App រស់។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៦</h4><p>ហេតុអ្វី API ដែលប្រើ JWT អាចបិទ CSRF?</p><details><summary>មើលចម្លើយ</summary><p>CSRF វាយប្រហារតាម Cookie ដែល Browser ផ្ញើស្វ័យប្រវត្តិ។ JWT ផ្ញើក្នុង Header <code class='i'>Authorization</code> ដោយ Code — Website ផ្សេងមិនអាចបន្ថែមបាន។ (Web ដែលប្រើ Session cookie ត្រូវបើក CSRF)។</p></details></div>
+
+</section>
+<section id="cheat">
+<h2>📋 Cheat Sheet</h2>
+
+<table><tr><th>ប្រធានបទ</th><th>Syntax</th></tr><tr><td>Variable</td><td>int n = 1; double p = 2.5; var s = "Kafe"; final int MAX = 10;</td></tr><tr><td>String</td><td>s.equals(t) · s.length() · s.split(",") · String.format("%.2f", x) · """text block"""</td></tr><tr><td>Control</td><td>if/else · switch (x) { case A -&gt; 1; default -&gt; 0; } · for · while · for (T x : list)</td></tr><tr><td>OOP</td><td>class A extends B implements I · abstract · @Override · record P(String n) { }</td></tr><tr><td>Collections</td><td>List.of · new ArrayList&lt;&gt;() · Map&lt;K,V&gt; · Set · merge · getOrDefault</td></tr><tr><td>Stream</td><td>stream().filter(..).map(..).sorted().toList() · Collectors.groupingBy</td></tr><tr><td>Exception</td><td>try { } catch (E e) { } finally { } · try (var r = ...) · throw new X()</td></tr><tr><td>Spring</td><td>@RestController · @GetMapping · @Service · JpaRepository · @Valid · @Transactional</td></tr></table>
+
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងអាជីព៖ Kafe Banking-style Order API (Spring Boot)</h2>
+
+<p>Backend Java ពេញលេញ៖ <b>Menu API → Order (Transaction + កាត់ Stock) → Payment (sealed: Cash/Card/KHQR) → Report (Stream) → Security (JWT) → Docker</b> — ប្រើគ្រប់មេរៀនក្នុងវគ្គ។</p>
+<script type="text/x-code" data-lang="txt" data-label="Project structure">
+kafe-api/
+├── pom.xml
+├── Dockerfile                                  ← មេរៀន ១៦
+└── src/main/java/com/kafe/
+    ├── KafeApplication.java                    ← @SpringBootApplication
+    ├── product/  Product · ProductRepository · ProductController   (១៥)
+    ├── order/    Order · OrderLine (record) · OrderService (@Transactional) · OrderController
+    ├── payment/  Payment (sealed) · Cash · Card · KHQR · PaymentService   (៦)
+    ├── report/   ReportService (Stream groupingBy)   (៨)
+    ├── security/ SecurityConfig (JWT)   (១៦)
+    └── common/   ApiExceptionHandler (@RestControllerAdvice)   (៩)
+</script>
+
+<script type="text/x-code" data-lang="java" data-label="OrderService.java">
+@Service
+public class OrderService {
+    private final ProductRepository products;
+    private final OrderRepository orders;
+    public OrderService(ProductRepository products, OrderRepository orders) { this.products = products; this.orders = orders; }
+
+    public record LineRequest(Long productId, @Min(1) int qty) {}
+
+    @Transactional                                         // ទាំងអស់ ឬមិនធ្វើសោះ
+    public Order place(String customer, List<LineRequest> lines) {
+        var order = new Order(customer);
+        for (var l : lines) {
+            var p = products.findById(l.productId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product " + l.productId()));
+            if (p.getStock() < l.qty()) throw new OutOfStockException(p.getName());
+            p.setStock(p.getStock() - l.qty());
+            order.addLine(p, l.qty());                     // តម្លៃពី DB មិនមែនពី Client
+        }
+        return orders.save(order);
+    }
+}
+
+@RestControllerAdvice
+class ApiExceptionHandler {
+    @ExceptionHandler(OutOfStockException.class)
+    ProblemDetail outOfStock(OutOfStockException e) {
+        var pd = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, e.getMessage());
+        pd.setTitle("អស់ស្តុក");
+        return pd;                                         // {"status":409,"title":"អស់ស្តុក",...}
+    }
+}
+</script>
+
+<table><tr><th>ផ្នែក</th><th>មេរៀន</th></tr><tr><td>Model (record, enum, sealed)</td><td>៤–៦</td></tr><tr><td>Collections + Stream report</td><td>៧ · ៨</td></tr><tr><td>Exception → HTTP error</td><td>៩</td></tr><tr><td>Concurrency (Virtual threads)</td><td>១១</td></tr><tr><td>Build + Test</td><td>១៣</td></tr><tr><td>Database + Transaction</td><td>១៤ · ១៥</td></tr><tr><td>Security + Docker</td><td>១៦</td></tr></table>
+
+</section>
+<section id="pro-app">
+<h2>💻 Java Lab Pro (App)</h2>
+
+<p><b>JVM Memory</b>៖ ដើរតាម Code ម្តងមួយបន្ទាត់ មើល <b>Stack</b> និង <b>Heap</b>, Reference និង <b>Garbage Collector</b>។ <b>Class Builder</b>៖ វាយ Fields → ទទួល class/record/JPA Entity + UML។ <b>Stream Builder</b>៖ ជ្រើស filter/map/sorted/limit → មើលទិន្នន័យហូរតាមដំណាក់កាលនីមួយៗ + Code Java។</p>
+
+<div class="itk" id="jl">
+<div class="itk-tabs"><button class="on" data-t="m">🧠 JVM Memory</button><button data-t="c">🏗️ Class Builder</button><button data-t="s">🌊 Stream Builder</button></div>
+
+<div class="itk-p on" data-p="m">
+ <div class="fb-grid" style="grid-template-columns:1fr 1fr">
+  <pre id="m_code" class="itk-out" style="white-space:pre;font:13px/1.9 'JetBrains Mono',monospace;color:var(--text);margin:0"></pre>
+  <div>
+   <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:10px">
+    <div><b>📚 Stack</b><div id="m_stack" style="margin-top:6px"></div></div>
+    <div><b>🗄️ Heap</b><div id="m_heap" style="margin-top:6px"></div></div>
+   </div>
+  </div>
+ </div>
+ <div class="itk-out" id="m_msg"></div>
+ <div style="margin-top:8px"><button class="btn" id="m_prev">◀ ថយ</button> <button class="btn" id="m_next">បន្ទាប់ ▶</button> <span id="m_step" style="margin-left:8px;color:var(--muted)"></span></div>
+</div>
+
+<div class="itk-p" data-p="c">
+ <div class="itk-row">
+  <label>Class<input id="c_n" value="Product" size="12"></label>
+  <label style="flex:1;min-width:240px">Fields (Type name, …)<input id="c_f" value="String name, double price, int stock, boolean available"></label>
+  <label>ប្រភេទ<select id="c_k"><option value="class">class (Encapsulation)</option><option value="record">record</option><option value="entity">JPA @Entity</option></select></label>
+  <label><span><input type="checkbox" id="c_v" checked> Validation</span></label>
+ </div>
+ <div class="fb-grid" style="grid-template-columns:1.6fr 1fr">
+  <pre id="c_out" class="itk-out" style="white-space:pre;overflow:auto;max-height:460px;font:12.5px/1.6 'JetBrains Mono',monospace;color:var(--text);margin:0"></pre>
+  <div><b>UML</b><div id="c_uml" style="margin-top:6px"></div></div>
+ </div>
+</div>
+
+<div class="itk-p" data-p="s">
+ <div class="itk-row">
+  <label><span><input type="checkbox" id="s_paid" checked> filter(Order::paid)</span></label>
+  <label><span><input type="checkbox" id="s_min"> filter(total &gt;)</span><input id="s_minv" type="number" value="3" step="0.5" style="width:70px"></label>
+  <label>map<select id="s_map"><option value="">(គ្មាន)</option><option value="total" selected>Order::total</option><option value="customer">Order::customer</option><option value="item">Order::item</option></select></label>
+  <label><span><input type="checkbox" id="s_dis"> distinct()</span></label>
+  <label>sorted<select id="s_sort"><option value="">(គ្មាន)</option><option value="asc">asc</option><option value="desc" selected>reverseOrder</option></select></label>
+  <label><span><input type="checkbox" id="s_lim"> limit</span><input id="s_limv" type="number" value="3" min="1" style="width:60px"></label>
+  <label>Terminal<select id="s_term"><option value="list">toList()</option><option value="count">count()</option><option value="sum">sum()</option><option value="group">groupingBy(customer, sum)</option></select></label>
+ </div>
+ <div id="s_flow" style="margin-top:8px"></div>
+ <pre id="s_code" class="itk-out" style="white-space:pre-wrap;font:13px/1.6 'JetBrains Mono',monospace;color:var(--text)"></pre>
+</div>
+</div>
+<script>
+(()=>{
+const $=id=>document.getElementById(id),R=$("jl");
+R.querySelectorAll(":scope>.itk-tabs button").forEach(b=>b.onclick=()=>{R.querySelectorAll(":scope>.itk-tabs button").forEach(x=>x.classList.toggle("on",x===b));R.querySelectorAll(":scope>.itk-p").forEach(p=>p.classList.toggle("on",p.dataset.p===b.dataset.t))});
+const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+/* ---------- JVM memory ---------- */
+const CODE=['Order o1 = new Order("Dara", 5.0);','Order o2 = new Order("Sokha", 2.75);','Order o3 = o1;','o3.total = 7.5;','int n = 3;','o1 = null;','o3 = null;','System.gc();  // GC អាចលុប Object គ្មាន Reference'];
+const ST=[
+ {s:[],h:[],m:"ចាប់ផ្តើម main() — Stack frame ទទេ"},
+ {s:[["o1","@101"]],h:[{id:101,f:'customer="Dara", total=5.0'}],m:"<b>new Order(...)</b> បង្កើត Object នៅ <b>Heap</b> (@101) · Variable <b>o1</b> នៅ <b>Stack</b> ផ្ទុកតែ Reference (អាសយដ្ឋាន)"},
+ {s:[["o1","@101"],["o2","@102"]],h:[{id:101,f:'customer="Dara", total=5.0'},{id:102,f:'customer="Sokha", total=2.75'}],m:"Object ទី ២ (@102)"},
+ {s:[["o1","@101"],["o2","@102"],["o3","@101"]],h:[{id:101,f:'customer="Dara", total=5.0'},{id:102,f:'customer="Sokha", total=2.75'}],m:"<b>o3 = o1</b> មិនមែនចម្លង Object ទេ — ចម្លងតែ Reference → o1 និង o3 ចង្អុល Object <b>តែមួយ</b>"},
+ {s:[["o1","@101"],["o2","@102"],["o3","@101"]],h:[{id:101,f:'customer="Dara", total=<b style="color:#e03131">7.5</b>'},{id:102,f:'customer="Sokha", total=2.75'}],m:"កែតាម o3 → <b>o1.total</b> ក៏ក្លាយ 7.5 ដែរ (Object ដូចគ្នា) — ប្រភពនៃ Bug ច្រើន!"},
+ {s:[["o1","@101"],["o2","@102"],["o3","@101"],["n","3"]],h:[{id:101,f:'customer="Dara", total=7.5'},{id:102,f:'customer="Sokha", total=2.75'}],m:"<b>int n = 3</b> — Primitive ផ្ទុក<b>តម្លៃផ្ទាល់</b>នៅ Stack (មិនមែន Reference)"},
+ {s:[["o1","null"],["o2","@102"],["o3","@101"],["n","3"]],h:[{id:101,f:'customer="Dara", total=7.5'},{id:102,f:'customer="Sokha", total=2.75'}],m:"o1 = null — Object @101 នៅរស់ ព្រោះ <b>o3</b> នៅចង្អុល"},
+ {s:[["o1","null"],["o2","@102"],["o3","null"],["n","3"]],h:[{id:101,f:'customer="Dara", total=7.5',dead:1},{id:102,f:'customer="Sokha", total=2.75'}],m:"គ្មាន Reference ណាចង្អុល @101 ទៀត → <b>Unreachable</b> 🗑️"},
+ {s:[["o1","null"],["o2","@102"],["o3","null"],["n","3"]],h:[{id:102,f:'customer="Sokha", total=2.75'}],m:"<b>Garbage Collector</b> លុប @101 ស្វ័យប្រវត្តិ — Java មិនបាច់ free() memory ដូច C/C++"}];
+let si=0;
+function mem(){const s=ST[si];
+ $("m_code").innerHTML=CODE.map((l,i)=>`<span style="${i===si-1?"background:var(--accent-soft);font-weight:700;display:block;border-left:3px solid var(--accent);padding-left:4px":"display:block;padding-left:7px;opacity:"+(i<si?1:.45)}">${i+1}  ${esc(l)}</span>`).join("");
+ $("m_stack").innerHTML=s.s.map(([n,v])=>`<div style="display:flex;justify-content:space-between;border:1px solid var(--line);border-radius:8px;padding:6px 8px;margin-bottom:5px;font:13px 'JetBrains Mono',monospace"><b>${n}</b><span style="color:${v==="null"?"#868e96":v.startsWith("@")?"#1c7ed6":"#2f9e44"}">${v.startsWith("@")?"→ "+v:v}</span></div>`).join("")||'<i style="color:var(--muted)">(ទទេ)</i>';
+ $("m_heap").innerHTML=s.h.map(o=>`<div style="border:2px solid ${o.dead?"#e03131":"#1c7ed6"};border-radius:10px;padding:6px 8px;margin-bottom:6px;font:12.5px 'JetBrains Mono',monospace;${o.dead?"opacity:.6;text-decoration:line-through":""}"><b style="color:${o.dead?"#e03131":"#1c7ed6"}">@${o.id} Order</b>${o.dead?" 🗑️":""}<br>${o.f}</div>`).join("")||'<i style="color:var(--muted)">(ទទេ)</i>';
+ $("m_msg").innerHTML=s.m;$("m_step").textContent=`ជំហាន ${si}/${ST.length-1}`;$("m_prev").disabled=si===0;$("m_next").disabled=si===ST.length-1;}
+$("m_prev").onclick=()=>{si=Math.max(0,si-1);mem()};$("m_next").onclick=()=>{si=Math.min(ST.length-1,si+1);mem()};mem();
+/* ---------- Class builder ---------- */
+const cap=s=>s[0].toUpperCase()+s.slice(1);
+function cls(){
+ const N=cap(($("c_n").value.trim()||"Product").replace(/\W/g,"")),k=$("c_k").value,V=$("c_v").checked;
+ const F=$("c_f").value.split(",").map(x=>x.trim().split(/\s+/)).filter(a=>a.length===2).map(([t,n])=>({t,n}));
+ const ann=f=>!V?"":f.t==="String"?"@NotBlank ":["double","int","long","BigDecimal"].includes(f.t)?(f.n.match(/price|amount|total/)?'@Positive ':'@PositiveOrZero '):"";
+ const getter=f=>(f.t==="boolean"?"is":"get")+cap(f.n);
+ let out;
+ if(k==="record"){
+  const checks=F.filter(f=>V&&f.t==="String").map(f=>`        if (${f.n} == null || ${f.n}.isBlank()) throw new IllegalArgumentException("${f.n} required");`).concat(F.filter(f=>V&&["double","int","long"].includes(f.t)).map(f=>`        if (${f.n} < 0) throw new IllegalArgumentException("${f.n} >= 0");`));
+  out=`public record ${N}(${F.map(f=>`${f.t} ${f.n}`).join(", ")}) {\n${checks.length?`    public ${N} {                       // compact constructor\n${checks.join("\n")}\n    }\n`:""}}\n\n// ប្រើ:\nvar x = new ${N}(${F.map(f=>f.t==="String"?`"${cap(f.n)}"`:f.t==="boolean"?"true":f.t==="double"?"2.5":"1").join(", ")});\nSystem.out.println(x.${F[0]?F[0].n:"name"}());   // getter = ឈ្មោះ Field`;
+ } else {
+  const ent=k==="entity";
+  out=(ent?"import jakarta.persistence.*;\n":"")+(V?"import jakarta.validation.constraints.*;\n":"")+(ent||V?"\n":"")+(ent?`@Entity\n@Table(name = "${N.toLowerCase()}s")\n`:"")+`public class ${N} {\n`+(ent?`    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n\n`:"")+F.map(f=>`    ${ann(f)}private ${f.t} ${f.n};`).join("\n")+"\n\n"+(ent?`    protected ${N}() {}                    // JPA ត្រូវការ\n\n`:"")+`    public ${N}(${F.map(f=>`${f.t} ${f.n}`).join(", ")}) {\n${F.map(f=>`        this.${f.n} = ${f.n};`).join("\n")}\n    }\n\n`+F.map(f=>`    public ${f.t} ${getter(f)}() { return ${f.n}; }\n    public void set${cap(f.n)}(${f.t} ${f.n}) { this.${f.n} = ${f.n}; }`).join("\n")+`\n\n    @Override\n    public String toString() {\n        return "${N}[" + ${F.map(f=>`"${f.n}=" + ${f.n}`).join(' + ", " + ')} + "]";\n    }\n}`;
+ }
+ $("c_out").textContent=out;
+ $("c_uml").innerHTML=`<div style="border:2px solid var(--accent);border-radius:10px;overflow:hidden;font:13px 'JetBrains Mono',monospace"><div style="background:var(--accent);color:#fff;text-align:center;padding:6px;font-weight:700">${k==="record"?"«record» ":k==="entity"?"«entity» ":""}${esc(N)}</div><div style="padding:6px 10px;border-bottom:1px solid var(--line)">${(k==="entity"?["- id: Long"]:[]).concat(F.map(f=>`${k==="record"?"":"- "}${esc(f.n)}: ${esc(f.t)}`)).join("<br>")}</div><div style="padding:6px 10px">${k==="record"?F.map(f=>`+ ${esc(f.n)}()`).join("<br>")+"<br>+ equals() · hashCode()<br>+ toString()":`+ ${esc(N)}(…)<br>`+F.map(f=>`+ ${getter(f)}() / set${cap(f.n)}()`).join("<br>")+"<br>+ toString()"}</div></div><p style="font-size:13px;color:var(--muted)">- = private · + = public${k==="record"?" · record Field ជា final (Immutable)":""}</p>`;
+}
+["c_n","c_f","c_k","c_v"].forEach(i=>$(i).oninput=cls);cls();
+/* ---------- Stream builder ---------- */
+const OR=[{id:1,customer:"Dara",item:"Latte",total:5.0,paid:true},{id:2,customer:"Sokha",item:"Mocha",total:2.75,paid:false},{id:3,customer:"Dara",item:"Tea",total:1.5,paid:true},{id:4,customer:"Vanna",item:"Latte",total:7.5,paid:true},{id:5,customer:"Sokha",item:"Latte",total:2.5,paid:true},{id:6,customer:"Vanna",item:"Mocha",total:5.5,paid:false}];
+const chip=(x,c)=>`<span style="display:inline-block;margin:2px;padding:2px 8px;border-radius:999px;font:12.5px 'JetBrains Mono',monospace;background:${c};color:#fff">${esc(typeof x==="object"?"#"+x.id+" "+x.customer+" $"+x.total+(x.paid?"":" ✗"):typeof x==="number"?x.toFixed(2):x)}</span>`;
+const jd=x=>typeof x==="number"&&Number.isInteger(x)?x.toFixed(1):String(x);
+function st(){
+ const term=$("s_term");const mp=$("s_map").value;
+ term.querySelector('[value=sum]').disabled=mp!=="total";term.querySelector('[value=group]').disabled=mp!=="";
+ if(term.selectedOptions[0].disabled)term.value="list";
+ let data=OR.slice(),stages=[["orders.stream()",data,"#495057"]],code=["orders.stream()"];
+ if($("s_paid").checked){data=data.filter(o=>o.paid);stages.push(["filter(Order::paid)",data,"#1c7ed6"]);code.push(".filter(Order::paid)");}
+ if($("s_min").checked){const v=+$("s_minv").value;data=data.filter(o=>o.total>v);stages.push([`filter(o -> o.total() > ${v})`,data,"#1971c2"]);code.push(`.filter(o -> o.total() > ${v})`);}
+ if(mp){data=data.map(o=>o[mp]);stages.push([`map(Order::${mp})`,data,"#2f9e44"]);code.push(`.map(Order::${mp})`);}
+ if($("s_dis").checked){data=[...new Set(data.map(x=>typeof x==="object"?JSON.stringify(x):x))].map(x=>x[0]==="{"?JSON.parse(x):x);stages.push(["distinct()",data,"#0ca678"]);code.push(".distinct()");}
+ const s=$("s_sort").value;
+ if(s){const key=x=>typeof x==="object"?x.total:x;data=data.slice().sort((a,b)=>(key(a)>key(b)?1:key(a)<key(b)?-1:0)*(s==="desc"?-1:1));const cmp=mp?(s==="desc"?"Comparator.reverseOrder()":""):(s==="desc"?"Comparator.comparing(Order::total).reversed()":"Comparator.comparing(Order::total)");stages.push([`sorted(${cmp})`,data,"#f08c00"]);code.push(`.sorted(${cmp})`);}
+ if($("s_lim").checked){const n=+$("s_limv").value||1;data=data.slice(0,n);stages.push([`limit(${n})`,data,"#e8590c"]);code.push(`.limit(${n})`);}
+ const t=term.value;let res,line;
+ if(t==="count"){res=data.length;line=".count();";}
+ else if(t==="sum"){res=data.reduce((a,b)=>a+b,0).toFixed(2);line=".mapToDouble(Double::doubleValue).sum();";}
+ else if(t==="group"){const g={};data.forEach(o=>g[o.customer]=(g[o.customer]||0)+o.total);res="{"+Object.keys(g).sort().map(k=>k+"="+jd(g[k])).join(", ")+"}";line=".collect(Collectors.groupingBy(Order::customer, TreeMap::new,\n        Collectors.summingDouble(Order::total)));";}
+ else{res="["+data.map(x=>typeof x==="object"?"Order[id="+x.id+"]":jd(x)).join(", ")+"]";line=".toList();";}
+ $("s_flow").innerHTML=stages.map(([n,d,c])=>`<div style="display:flex;gap:8px;align-items:flex-start;margin:4px 0"><code style="min-width:230px;font-size:12.5px">${esc(n)}</code><div>${d.length?d.map(x=>chip(x,c)).join(""):'<i style="color:var(--muted)">(ទទេ)</i>'}</div></div>`).join("")+`<div style="margin-top:6px"><b>➡️ ${esc(line.replace(/^\./,"").split("(")[0])}</b> = <code>${esc(res)}</code></div>`;
+ $("s_code").textContent="var result = "+code.join("\n    ")+"\n    "+line+"\n// → "+res;
+}
+["s_paid","s_min","s_minv","s_map","s_dis","s_sort","s_lim","s_limv","s_term"].forEach(i=>$(i).oninput=st);st();
+})();
+</script>
+
+<h3>🏆 Quiz Java ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["អ្នកបង្កើតភាសា Java?", ["James Gosling", "Bjarne Stroustrup", "Dennis Ritchie", "Guido van Rossum"], 0], ["Java ចេញជាសាធារណៈឆ្នាំ?", ["1985", "1995", "2005", "2014"], 1], ["Java ត្រូវបានបង្កើតនៅក្រុមហ៊ុន?", ["Oracle", "Microsoft", "Sun Microsystems", "Google"], 2], ["Code Java Compile ទៅជា?", ["Machine code ផ្ទាល់", "Bytecode (.class)", "JavaScript", "PDF"], 1], ["ប្រៀបធៀប String ត្រឹមត្រូវ?", ["a == b", "a.equals(b)", "a = b", "a.compare(b)"], 1], ["int + 1 លើស MAX_VALUE កើតអ្វី?", ["Error", "Overflow ទៅលេខអវិជ្ជមាន", "ក្លាយជា long", "0"], 1], ["Field private + method public ហៅថា?", ["Inheritance", "Encapsulation", "Polymorphism", "Recursion"], 1], ["Keyword សម្រាប់ Inheritance?", ["implements", "extends", "inherits", "super"], 1], ["Class មិនអាច new ហើយមាន method គ្មាន body?", ["final", "abstract", "static", "record"], 1], ["record ក្នុង Java ផ្តល់អ្វីស្វ័យប្រវត្តិ?", ["Database", "constructor/getters/equals/toString", "Thread", "UI"], 1], ["sealed interface ... permits ជួយ?", ["លឿន", "កំណត់ប្រភេទរងទាំងអស់ → switch គ្រប់ករណី", "Encrypt", "Garbage collect"], 1], ["Collection គ្មានធាតុស្ទួន?", ["ArrayList", "HashSet", "ArrayDeque", "Array"], 1], ["HashMap.get() ជាមធ្យម?", ["O(1)", "O(n)", "O(log n)", "O(n²)"], 0], ["Stream operation ណាជា Terminal?", ["filter", "map", "collect / toList", "sorted"], 2], ["Optional ប្រើដើម្បី?", ["លឿន", "តំណាងតម្លៃអាចគ្មាន ជៀស NPE", "Thread", "File"], 1], ["try-with-resources ធ្វើអ្វី?", ["Retry", "បិទ Resource ស្វ័យប្រវត្តិ", "Log", "Test"], 1], ["Java 21 មាន Thread ស្រាលរាប់សែន ហៅថា?", ["Green threads", "Virtual threads", "Coroutines", "Workers"], 1], ["ការពារ SQL Injection ក្នុង JDBC?", ["Statement + String concat", "PreparedStatement + ?", "trim()", "toUpperCase()"], 1], ["Spring Boot annotation សម្រាប់ REST API?", ["@Entity", "@RestController", "@Test", "@Override"], 1], ["Object ដែលគ្មាន Reference ណាចង្អុល ត្រូវ?", ["Crash", "Garbage Collector លុប", "នៅជារៀងរហូត", "ប្តូរទៅ Stack"], 1]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+
+<ol class="steps"><li><b>Java Core + Spring Boot</b> (វគ្គនេះ) ✅</li><li>Spring Data JPA កម្រិតខ្ពស់, Flyway, Testcontainers, Spring Security OAuth2</li>
+<li>Android៖ វគ្គ <b>Kotlin</b> (ភាសាបងប្អូន JVM — Kotlin ហៅ Java Library បាន)</li><li>Database &amp; DevOps៖ វគ្គ <b>SQL · PostgreSQL · Docker &amp; CI/CD</b></li>
+<li>Microservices, Kafka, Kubernetes · Certification៖ Oracle Java SE 21 Developer</li></ol>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="java"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

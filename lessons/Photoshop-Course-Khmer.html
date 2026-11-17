@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន Adobe Photoshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#1473e6; --accent2:#31a8ff; --accent-soft:#e6f1ff;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#6cb6ff; --accent2:#31a8ff; --accent-soft:#0e2238;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#6cb6ff; --accent2:#31a8ff; --accent-soft:#0e2238;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#001e36,#0b4f8a 55%,#31a8ff);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/photoshop.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/photoshop.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Adobe Photoshop with AI ពីដើមដល់កម្រិតអាជីព</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Photoshop ជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#install">២. ដំឡើង &amp; ត្រៀម</a>
+<a href="#elements">៣. ធាតុនីមួយៗរបស់ Photoshop</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: ផ្ទាំងកម្មវិធី, Document ថ្មី &amp; Resolution</a>
+<a href="#l2">មេរៀន ២: Raster ទល់នឹង Vector &amp; ប្រភេទ File</a>
+<a href="#l3">មេរៀន ៣: Layers &amp; Layer Properties</a>
+<a href="#l4">មេរៀន ៤: Selection Tools</a>
+<a href="#l5">មេរៀន ៥: Remove Background (៤ វិធី)</a>
+<a href="#l6">មេរៀន ៦: Color, Paint Bucket &amp; Gradient</a>
+<a href="#l7">មេរៀន ៧: Type Tool &amp; Shape Tool</a>
+<a href="#l8">មេរៀន ៨: Transform &amp; Clipping Mask</a>
+<a href="#l9">មេរៀន ៩: Pen &amp; Curvature Pen Tool</a>
+<a href="#l10">មេរៀន ១០: Layer Mask &amp; Adjustments</a>
+<a href="#l11">មេរៀន ១១: Filters៖ Liquify, Camera Raw &amp; Blur Gallery</a>
+<a href="#l12">មេរៀន ១២: Layer Style &amp; Blending Mode</a>
+<a href="#l13">មេរៀន ១៣: Retouch៖ Healing, Clone &amp; Content-Aware</a>
+<a href="#l14">មេរៀន ១៤: AI Tools៖ Generative Fill, Expand &amp; Contextual Task Bar</a>
+<a href="#l15">មេរៀន ១៥: Export, Actions &amp; Automation</a>
+<a href="#cheat">📋 Shortcut Cheat Sheet</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងអាជីព៖ Thumbnail &amp; Facebook Post</a>
+<a href="#pro-app">💻 Photo Editor Pro (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🖼️ Adobe Photoshop with AI — កាត់ កែ តុបតែងរូបភាព</h2>
+  <p>រៀនពី <b>Layers, Selection, Remove Background, Mask, Adjustments, Filters, Layer Style, Retouch</b> រហូតដល់ <b>AI Generative Fill/Expand</b> និង Automation — មានរូបភាពពន្យល់ Code CSS ដែលធ្វើ Effect ដូច Photoshop (សាកលេងបាន) និង Photoshop Script។</p>
+  <p><span class="badge">📘 ១៥ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">💻 Code មានពណ៌ + លទ្ធផល</span><span class="badge">📸 Photo Editor Pro</span></p>
+</section>
+<section id="intro">
+<h2>១. Photoshop ជាអ្វី? អ្នកណាបង្កើត?</h2>
+
+<p><b>Adobe Photoshop</b> គឺជាកម្មវិធី <b>កែ និងតុបតែងរូបភាព Raster (Pixel)</b> ដ៏ល្បីបំផុតលើលោក — ប្រើសម្រាប់កែរូបថត កាត់ផ្ទៃខាងក្រោយ (Remove BG) តុបតែងមុខ រចនា Poster, Banner, Thumbnail និងបង្កើតរូបភាពថ្មីដោយ <b>AI (Adobe Firefly)</b>។ <button class="btn say" data-say="Adobe Photoshop">🔊 អានពាក្យ</button></p>
+<h3>👤 អ្នកណាបង្កើត?</h3>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#dc2626"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#dc2626">1982</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Adobe បង្កើត</text><circle cx="200" cy="115" r="11" fill="#7c3aed"/><text x="200" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#7c3aed">1987</text><text x="200" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Knoll បង្កើត Display</text><circle cx="320" cy="115" r="11" fill="#2563eb"/><text x="320" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#2563eb">1990</text><text x="320" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Photoshop 1.0</text><circle cx="440" cy="115" r="11" fill="#0891b2"/><text x="440" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#0891b2">1994</text><text x="440" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Layers (3.0)</text><circle cx="560" cy="115" r="11" fill="#059669"/><text x="560" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#059669">2003</text><text x="560" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Creative Suite</text><circle cx="680" cy="115" r="11" fill="#65a30d"/><text x="680" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#65a30d">2013</text><text x="680" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Creative Cloud</text><circle cx="800" cy="115" r="11" fill="#ca8a04"/><text x="800" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#ca8a04">2023</text><text x="800" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Generative Fill ✨</text><circle cx="920" cy="115" r="11" fill="#ea580c"/><text x="920" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#ea580c">2025</text><text x="920" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">AI Assistant</text></svg><figcaption>🖼️ ប្រវត្តិ Photoshop សង្ខេប</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>ព្រឹត្តិការណ៍</th></tr><tr><td>1982</td><td><b>John Warnock</b> និង <b>Charles Geschke</b> បង្កើតក្រុមហ៊ុន <b>Adobe</b> (California)</td></tr><tr><td>1987</td><td>បងប្អូន <b>Thomas Knoll</b> (និស្សិតបណ្ឌិត) និង <b>John Knoll</b> (Industrial Light &amp; Magic) សរសេរកម្មវិធី “Display” បង្ហាញរូបភាពលើ Mac</td></tr><tr><td>1988</td><td>Adobe ទិញសិទ្ធិចែកចាយ ហើយដាក់ឈ្មោះថា <b>Photoshop</b></td></tr><tr><td>1990</td><td><b>Photoshop 1.0</b> ចេញលើ Macintosh (ខែកុម្ភៈ)</td></tr><tr><td>1994</td><td>Photoshop 3.0 បន្ថែម <b>Layers</b></td></tr><tr><td>2013</td><td>ប្តូរទៅ <b>Creative Cloud</b> (ជាវប្រចាំខែ)</td></tr><tr><td>2023</td><td><b>Generative Fill</b> ដោយ Adobe Firefly — បំពេញរូបភាពដោយ AI តាម Prompt</td></tr></table>
+
+<h3>🎯 គេប្រើ Photoshop ធ្វើអ្វី?</h3>
+<div class="grid"><div class="card"><b>📸 កែរូបថត</b><br>ពន្លឺ ពណ៌ លុបមុន ទម្រង់មុខ</div><div class="card"><b>✂️ Remove Background</b><br>រូបផលិតផល Online shop</div><div class="card"><b>📱 Social Media</b><br>Facebook post, Thumbnail YouTube</div><div class="card"><b>🖼️ Poster &amp; Banner</b><br>ការផ្សព្វផ្សាយ ព្រឹត្តិការណ៍</div><div class="card"><b>🎨 Digital painting</b><br>គំនូរ Concept art</div><div class="card"><b>🖥️ UI mockup</b><br>រចនា Website/App (ឥឡូវភាគច្រើនប្រើ Figma)</div><div class="card"><b>✨ AI Generative</b><br>បន្ថែម/លុប/ពង្រីករូបភាពដោយ Prompt</div><div class="card"><b>🏢 ការងារ</b><br>Graphic Designer, Photographer, Marketing</div></div>
+
+<div class="note">💡 <b>Photoshop ទល់នឹង Illustrator៖</b> Photoshop = <b>Pixel</b> (រូបថត) · Illustrator = <b>Vector</b> (Logo, Icon)។ អ្នករចនាអាជីពប្រើទាំងពីរជាមួយគ្នា — មើលវគ្គ Illustrator ក្នុង xCenBar។</div>
+
+</section>
+<section id="install">
+<h2>២. ដំឡើង &amp; ត្រៀម</h2>
+
+<ol class="steps">
+<li>ចូល <code class="i">adobe.com</code> → បង្កើត Adobe ID → ទាញយក <b>Creative Cloud Desktop</b>។</li>
+<li>ក្នុង Creative Cloud ចុច <b>Install</b> ក្បែរ Photoshop (មាន Free trial 7 ថ្ងៃ · សិស្ស/គ្រូមានតម្លៃពិសេស)។</li>
+<li>តម្រូវការ៖ Windows 10/11 64-bit ឬ macOS ថ្មីៗ · RAM ≥ 8 GB (ណែនាំ 16 GB) · GPU គាំទ្រ DirectX 12 / Metal · SSD។</li>
+<li>មុខងារ <b>Generative AI</b> ត្រូវការ Internet និងប្រើ <b>Generative credits</b> តាមគម្រោងជាវ។</li>
+<li>ជម្រើសឥតគិតថ្លៃសម្រាប់រៀន៖ <b>Photopea</b> (Web, ស្រដៀង Photoshop), <b>GIMP</b>, ឬ <b>Photoshop on the web</b>។</li>
+</ol>
+<div class="warn">⚠️ កុំប្រើ Photoshop Crack — អាចមាន Malware និងខុសច្បាប់។ សូមប្រើ Trial, គម្រោងសិស្ស ឬកម្មវិធីឥតគិតថ្លៃខាងលើ។</div>
+
+</section>
+<section id="elements">
+<h2>៣. ធាតុនីមួយៗរបស់ Photoshop</h2>
+
+<figure class="fig"><svg viewBox="0 0 980 380" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="980" height="380" fill="#1e1e1e"/><rect x="0" y="0" width="980" height="34" fill="#2b2b2b"/><rect x="10" y="7" width="28" height="20" rx="4" fill="#31a8ff"/><text x="24" y="22" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">Ps</text><text x="60" y="22" text-anchor="start" font-size="12.5" font-weight="400" fill="#ddd">File  Edit  Image  Layer  Type  Select  Filter  View  Window  Help</text><rect x="0" y="34" width="980" height="30" fill="#323232"/><text x="60" y="54" text-anchor="start" font-size="12" font-weight="400" fill="#aaa">Options bar — ការកំណត់របស់ Tool ដែលកំពុងជ្រើស</text><rect x="0" y="64" width="44" height="316" fill="#2b2b2b"/><rect x="8" y="72" width="28" height="24" rx="4" fill="#3a3a3a"/><text x="22" y="89" text-anchor="middle" font-size="13" font-weight="400" fill="#eee">↖</text><rect x="8" y="100" width="28" height="24" rx="4" fill="#3a3a3a"/><text x="22" y="117" text-anchor="middle" font-size="13" font-weight="400" fill="#eee">⬚</text><rect x="8" y="128" width="28" height="24" rx="4" fill="#3a3a3a"/><text x="22" y="145" text-anchor="middle" font-size="13" font-weight="400" fill="#eee">ʘ</text><rect x="8" y="156" width="28" height="24" rx="4" fill="#3a3a3a"/><text x="22" y="173" text-anchor="middle" font-size="13" font-weight="400" fill="#eee">✂</text><rect x="8" y="184" width="28" height="24" rx="4" fill="#3a3a3a"/><text x="22" y="201" text-anchor="middle" font-size="13" font-weight="400" fill="#eee">🖌</text><rect x="8" y="212" width="28" height="24" rx="4" fill="#3a3a3a"/><text x="22" y="229" text-anchor="middle" font-size="13" font-weight="400" fill="#eee">◐</text><rect x="8" y="240" width="28" height="24" rx="4" fill="#3a3a3a"/><text x="22" y="257" text-anchor="middle" font-size="13" font-weight="400" fill="#eee">T</text><rect x="8" y="268" width="28" height="24" rx="4" fill="#3a3a3a"/><text x="22" y="285" text-anchor="middle" font-size="13" font-weight="400" fill="#eee">✒</text><rect x="8" y="296" width="28" height="24" rx="4" fill="#3a3a3a"/><text x="22" y="313" text-anchor="middle" font-size="13" font-weight="400" fill="#eee">▭</text><rect x="8" y="324" width="28" height="24" rx="4" fill="#3a3a3a"/><text x="22" y="341" text-anchor="middle" font-size="13" font-weight="400" fill="#eee">✋</text><rect x="60" y="80" width="640" height="290" fill="#3c3c3c"/><rect x="150" y="105" width="460" height="240" fill="#fff"/><text x="380" y="230" text-anchor="middle" font-size="16" font-weight="700" fill="#64748b">Canvas / Artboard (ផ្ទៃធ្វើការ)</text><rect x="716" y="64" width="264" height="316" fill="#2b2b2b"/><rect x="724" y="72" width="248" height="60" rx="6" fill="#383838"/><text x="736" y="92" text-anchor="start" font-size="13" font-weight="700" fill="#fff">Properties</text><rect x="724" y="140" width="248" height="60" rx="6" fill="#383838"/><text x="736" y="160" text-anchor="start" font-size="13" font-weight="700" fill="#fff">Adjustments</text><rect x="724" y="208" width="248" height="160" rx="6" fill="#383838"/><text x="736" y="228" text-anchor="start" font-size="13" font-weight="700" fill="#fff">Layers</text><rect x="2" y="66" width="40" height="288" fill="none" stroke="#31a8ff" stroke-width="2" stroke-dasharray="5 4"/><text x="22" y="375" text-anchor="middle" font-size="11" font-weight="700" fill="#31a8ff">Tools</text></svg><figcaption>🖼️ ផ្ទាំងធ្វើការ (Workspace) របស់ Photoshop</figcaption></figure>
+
+<table><tr><th>ធាតុ</th><th>ន័យ</th><th>មេរៀន</th></tr><tr><td>🧭 Menu bar &amp; Options bar</td><td>ពាក្យបញ្ជាទាំងអស់ · ការកំណត់របស់ Tool ដែលកំពុងប្រើ</td><td>១</td></tr><tr><td>🧰 Tools panel</td><td>ឧបករណ៍៖ Move, Selection, Brush, Type, Pen…</td><td>២–៩</td></tr><tr><td>🖼️ Canvas</td><td>ផ្ទៃរូបភាព (Pixel)</td><td>១–២</td></tr><tr><td>📚 Layers</td><td>សន្លឹកថ្លាត្រួតគ្នា — បេះដូងរបស់ Photoshop</td><td>៣</td></tr><tr><td>🎭 Masks</td><td>លាក់/បង្ហាញផ្នែក ដោយមិនលុបពិត (Non-destructive)</td><td>៥ · ១០</td></tr><tr><td>🎚️ Adjustments</td><td>កែពន្លឺ ពណ៌ Contrast</td><td>១០</td></tr><tr><td>🌀 Filters</td><td>Blur, Liquify, Camera Raw</td><td>១១</td></tr><tr><td>✨ Layer Styles &amp; Blend modes</td><td>ស្រមោល ពន្លឺ ស៊ុម លាយពណ៌</td><td>១២</td></tr><tr><td>🩹 Retouch</td><td>Healing, Clone, Content-Aware</td><td>១៣</td></tr><tr><td>🤖 AI (Firefly)</td><td>Generative Fill/Expand, Remove tool, Select Subject</td><td>១៤</td></tr><tr><td>💾 Export &amp; Automation</td><td>JPG/PNG/WebP, Actions, Scripting (JavaScript)</td><td>១៥</td></tr></table>
+
+<div class="note">💡 ក្នុងវគ្គនេះ “<b>Code</b>” មាន ២ ប្រភេទ៖ ① <b>CSS/HTML</b> ដែលធ្វើ Effect ដូច Photoshop នៅលើ Website (សាកលេងបានផ្ទាល់) ② <b>Photoshop Scripting (JavaScript/ExtendScript)</b> ដើម្បីធ្វើការងារស្វ័យប្រវត្តិ — File → Scripts → Browse…</div>
+
+</section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>ផ្ទាំងកម្មវិធី, Document ថ្មី &amp; Resolution</h2>
+
+<h3>បង្កើត Document ថ្មី (<kbd>Ctrl</kbd>+<kbd>N</kbd>)</h3>
+<table><tr><th>គោលបំណង</th><th>ទំហំ (px)</th><th>Resolution</th><th>Color mode</th></tr><tr><td>Facebook post</td><td>1080 × 1080 ឬ 1080 × 1350</td><td>72 ppi</td><td>RGB</td></tr><tr><td>YouTube thumbnail</td><td>1280 × 720</td><td>72 ppi</td><td>RGB</td></tr><tr><td>Story / Reel</td><td>1080 × 1920</td><td>72 ppi</td><td>RGB</td></tr><tr><td>A4 Poster បោះពុម្ព</td><td>2480 × 3508 (210×297 mm)</td><td>300 ppi</td><td>CMYK</td></tr><tr><td>Name card</td><td>90 × 54 mm + Bleed 3 mm</td><td>300 ppi</td><td>CMYK</td></tr></table>
+
+<figure class="fig"><svg viewBox="0 0 900 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="900" height="230" fill="#fff"/><rect x="40.0" y="30.0" width="19.4" height="19.4" fill="#f1f5f9"/><rect x="60.0" y="30.0" width="19.4" height="19.4" fill="#f1f5f9"/><rect x="80.0" y="30.0" width="19.4" height="19.4" fill="#f1f5f9"/><rect x="100.0" y="30.0" width="19.4" height="19.4" fill="#f1f5f9"/><rect x="120.0" y="30.0" width="19.4" height="19.4" fill="#f1f5f9"/><rect x="140.0" y="30.0" width="19.4" height="19.4" fill="#f1f5f9"/><rect x="40.0" y="50.0" width="19.4" height="19.4" fill="#f1f5f9"/><rect x="60.0" y="50.0" width="19.4" height="19.4" fill="#94a3b8"/><rect x="80.0" y="50.0" width="19.4" height="19.4" fill="#94a3b8"/><rect x="100.0" y="50.0" width="19.4" height="19.4" fill="#94a3b8"/><rect x="120.0" y="50.0" width="19.4" height="19.4" fill="#94a3b8"/><rect x="140.0" y="50.0" width="19.4" height="19.4" fill="#f1f5f9"/><rect x="40.0" y="70.0" width="19.4" height="19.4" fill="#f1f5f9"/><rect x="60.0" y="70.0" width="19.4" height="19.4" fill="#94a3b8"/><rect x="80.0" y="70.0" width="19.4" height="19.4" fill="#94a3b8"/><rect x="100.0" y="70.0" width="19.4" height="19.4" fill="#94a3b8"/><rect x="120.0" y="70.0" width="19.4" height="19.4" fill="#94a3b8"/><rect x="140.0" y="70.0" width="19.4" height="19.4" fill="#f1f5f9"/><rect x="40.0" y="90.0" width="19.4" height="19.4" fill="#f1f5f9"/><rect x="60.0" y="90.0" width="19.4" height="19.4" fill="#94a3b8"/><rect x="80.0" y="90.0" width="19.4" height="19.4" fill="#94a3b8"/><rect x="100.0" y="90.0" width="19.4" height="19.4" fill="#94a3b8"/><rect x="120.0" y="90.0" width="19.4" height="19.4" fill="#94a3b8"/><rect x="140.0" y="90.0" width="19.4" height="19.4" fill="#f1f5f9"/><rect x="40.0" y="110.0" width="19.4" height="19.4" fill="#f1f5f9"/><rect x="60.0" y="110.0" width="19.4" height="19.4" fill="#94a3b8"/><rect x="80.0" y="110.0" width="19.4" height="19.4" fill="#94a3b8"/><rect x="100.0" y="110.0" width="19.4" height="19.4" fill="#94a3b8"/><rect x="120.0" y="110.0" width="19.4" height="19.4" fill="#94a3b8"/><rect x="140.0" y="110.0" width="19.4" height="19.4" fill="#f1f5f9"/><rect x="40.0" y="130.0" width="19.4" height="19.4" fill="#f1f5f9"/><rect x="60.0" y="130.0" width="19.4" height="19.4" fill="#f1f5f9"/><rect x="80.0" y="130.0" width="19.4" height="19.4" fill="#f1f5f9"/><rect x="100.0" y="130.0" width="19.4" height="19.4" fill="#f1f5f9"/><rect x="120.0" y="130.0" width="19.4" height="19.4" fill="#f1f5f9"/><rect x="140.0" y="130.0" width="19.4" height="19.4" fill="#f1f5f9"/><text x="100" y="175" text-anchor="middle" font-size="18" font-weight="800" fill="#94a3b8">72 ppi</text><text x="100" y="198" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Web / Social (ចាស់)</text><rect x="330.0" y="30.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="342.0" y="30.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="354.0" y="30.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="366.0" y="30.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="378.0" y="30.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="390.0" y="30.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="402.0" y="30.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="414.0" y="30.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="426.0" y="30.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="438.0" y="30.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="330.0" y="42.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="342.0" y="42.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="354.0" y="42.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="366.0" y="42.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="378.0" y="42.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="390.0" y="42.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="402.0" y="42.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="414.0" y="42.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="426.0" y="42.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="438.0" y="42.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="330.0" y="54.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="342.0" y="54.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="354.0" y="54.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="366.0" y="54.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="378.0" y="54.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="390.0" y="54.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="402.0" y="54.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="414.0" y="54.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="426.0" y="54.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="438.0" y="54.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="330.0" y="66.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="342.0" y="66.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="354.0" y="66.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="366.0" y="66.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="378.0" y="66.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="390.0" y="66.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="402.0" y="66.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="414.0" y="66.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="426.0" y="66.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="438.0" y="66.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="330.0" y="78.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="342.0" y="78.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="354.0" y="78.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="366.0" y="78.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="378.0" y="78.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="390.0" y="78.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="402.0" y="78.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="414.0" y="78.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="426.0" y="78.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="438.0" y="78.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="330.0" y="90.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="342.0" y="90.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="354.0" y="90.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="366.0" y="90.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="378.0" y="90.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="390.0" y="90.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="402.0" y="90.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="414.0" y="90.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="426.0" y="90.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="438.0" y="90.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="330.0" y="102.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="342.0" y="102.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="354.0" y="102.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="366.0" y="102.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="378.0" y="102.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="390.0" y="102.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="402.0" y="102.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="414.0" y="102.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="426.0" y="102.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="438.0" y="102.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="330.0" y="114.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="342.0" y="114.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="354.0" y="114.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="366.0" y="114.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="378.0" y="114.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="390.0" y="114.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="402.0" y="114.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="414.0" y="114.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="426.0" y="114.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="438.0" y="114.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="330.0" y="126.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="342.0" y="126.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="354.0" y="126.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="366.0" y="126.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="378.0" y="126.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="390.0" y="126.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="402.0" y="126.0" width="11.4" height="11.4" fill="#0891b2"/><rect x="414.0" y="126.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="426.0" y="126.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="438.0" y="126.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="330.0" y="138.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="342.0" y="138.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="354.0" y="138.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="366.0" y="138.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="378.0" y="138.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="390.0" y="138.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="402.0" y="138.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="414.0" y="138.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="426.0" y="138.0" width="11.4" height="11.4" fill="#f1f5f9"/><rect x="438.0" y="138.0" width="11.4" height="11.4" fill="#f1f5f9"/><text x="390" y="175" text-anchor="middle" font-size="18" font-weight="800" fill="#0891b2">150 ppi</text><text x="390" y="198" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Banner ធំ (មើលពីឆ្ងាយ)</text><rect x="620.0" y="30.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="627.5" y="30.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="635.0" y="30.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="642.5" y="30.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="650.0" y="30.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="657.5" y="30.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="665.0" y="30.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="672.5" y="30.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="680.0" y="30.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="687.5" y="30.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="695.0" y="30.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="702.5" y="30.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="710.0" y="30.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="717.5" y="30.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="725.0" y="30.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="732.5" y="30.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="620.0" y="37.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="627.5" y="37.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="635.0" y="37.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="642.5" y="37.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="650.0" y="37.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="657.5" y="37.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="665.0" y="37.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="672.5" y="37.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="680.0" y="37.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="687.5" y="37.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="695.0" y="37.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="702.5" y="37.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="710.0" y="37.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="717.5" y="37.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="725.0" y="37.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="732.5" y="37.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="620.0" y="45.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="627.5" y="45.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="635.0" y="45.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="642.5" y="45.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="650.0" y="45.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="657.5" y="45.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="665.0" y="45.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="672.5" y="45.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="680.0" y="45.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="687.5" y="45.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="695.0" y="45.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="702.5" y="45.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="710.0" y="45.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="717.5" y="45.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="725.0" y="45.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="732.5" y="45.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="620.0" y="52.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="627.5" y="52.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="635.0" y="52.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="642.5" y="52.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="650.0" y="52.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="657.5" y="52.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="665.0" y="52.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="672.5" y="52.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="680.0" y="52.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="687.5" y="52.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="695.0" y="52.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="702.5" y="52.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="710.0" y="52.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="717.5" y="52.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="725.0" y="52.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="732.5" y="52.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="620.0" y="60.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="627.5" y="60.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="635.0" y="60.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="642.5" y="60.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="650.0" y="60.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="657.5" y="60.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="665.0" y="60.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="672.5" y="60.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="680.0" y="60.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="687.5" y="60.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="695.0" y="60.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="702.5" y="60.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="710.0" y="60.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="717.5" y="60.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="725.0" y="60.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="732.5" y="60.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="620.0" y="67.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="627.5" y="67.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="635.0" y="67.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="642.5" y="67.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="650.0" y="67.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="657.5" y="67.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="665.0" y="67.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="672.5" y="67.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="680.0" y="67.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="687.5" y="67.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="695.0" y="67.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="702.5" y="67.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="710.0" y="67.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="717.5" y="67.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="725.0" y="67.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="732.5" y="67.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="620.0" y="75.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="627.5" y="75.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="635.0" y="75.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="642.5" y="75.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="650.0" y="75.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="657.5" y="75.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="665.0" y="75.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="672.5" y="75.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="680.0" y="75.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="687.5" y="75.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="695.0" y="75.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="702.5" y="75.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="710.0" y="75.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="717.5" y="75.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="725.0" y="75.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="732.5" y="75.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="620.0" y="82.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="627.5" y="82.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="635.0" y="82.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="642.5" y="82.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="650.0" y="82.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="657.5" y="82.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="665.0" y="82.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="672.5" y="82.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="680.0" y="82.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="687.5" y="82.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="695.0" y="82.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="702.5" y="82.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="710.0" y="82.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="717.5" y="82.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="725.0" y="82.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="732.5" y="82.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="620.0" y="90.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="627.5" y="90.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="635.0" y="90.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="642.5" y="90.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="650.0" y="90.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="657.5" y="90.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="665.0" y="90.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="672.5" y="90.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="680.0" y="90.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="687.5" y="90.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="695.0" y="90.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="702.5" y="90.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="710.0" y="90.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="717.5" y="90.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="725.0" y="90.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="732.5" y="90.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="620.0" y="97.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="627.5" y="97.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="635.0" y="97.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="642.5" y="97.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="650.0" y="97.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="657.5" y="97.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="665.0" y="97.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="672.5" y="97.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="680.0" y="97.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="687.5" y="97.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="695.0" y="97.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="702.5" y="97.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="710.0" y="97.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="717.5" y="97.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="725.0" y="97.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="732.5" y="97.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="620.0" y="105.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="627.5" y="105.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="635.0" y="105.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="642.5" y="105.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="650.0" y="105.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="657.5" y="105.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="665.0" y="105.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="672.5" y="105.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="680.0" y="105.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="687.5" y="105.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="695.0" y="105.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="702.5" y="105.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="710.0" y="105.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="717.5" y="105.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="725.0" y="105.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="732.5" y="105.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="620.0" y="112.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="627.5" y="112.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="635.0" y="112.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="642.5" y="112.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="650.0" y="112.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="657.5" y="112.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="665.0" y="112.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="672.5" y="112.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="680.0" y="112.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="687.5" y="112.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="695.0" y="112.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="702.5" y="112.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="710.0" y="112.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="717.5" y="112.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="725.0" y="112.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="732.5" y="112.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="620.0" y="120.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="627.5" y="120.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="635.0" y="120.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="642.5" y="120.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="650.0" y="120.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="657.5" y="120.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="665.0" y="120.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="672.5" y="120.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="680.0" y="120.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="687.5" y="120.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="695.0" y="120.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="702.5" y="120.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="710.0" y="120.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="717.5" y="120.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="725.0" y="120.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="732.5" y="120.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="620.0" y="127.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="627.5" y="127.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="635.0" y="127.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="642.5" y="127.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="650.0" y="127.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="657.5" y="127.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="665.0" y="127.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="672.5" y="127.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="680.0" y="127.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="687.5" y="127.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="695.0" y="127.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="702.5" y="127.5" width="6.9" height="6.9" fill="#7c3aed"/><rect x="710.0" y="127.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="717.5" y="127.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="725.0" y="127.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="732.5" y="127.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="620.0" y="135.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="627.5" y="135.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="635.0" y="135.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="642.5" y="135.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="650.0" y="135.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="657.5" y="135.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="665.0" y="135.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="672.5" y="135.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="680.0" y="135.0" width="6.9" height="6.9" fill="#7c3aed"/><rect x="687.5" y="135.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="695.0" y="135.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="702.5" y="135.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="710.0" y="135.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="717.5" y="135.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="725.0" y="135.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="732.5" y="135.0" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="620.0" y="142.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="627.5" y="142.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="635.0" y="142.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="642.5" y="142.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="650.0" y="142.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="657.5" y="142.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="665.0" y="142.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="672.5" y="142.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="680.0" y="142.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="687.5" y="142.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="695.0" y="142.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="702.5" y="142.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="710.0" y="142.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="717.5" y="142.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="725.0" y="142.5" width="6.9" height="6.9" fill="#f1f5f9"/><rect x="732.5" y="142.5" width="6.9" height="6.9" fill="#f1f5f9"/><text x="680" y="175" text-anchor="middle" font-size="18" font-weight="800" fill="#7c3aed">300 ppi</text><text x="680" y="198" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">បោះពុម្ពជិតភ្នែក (Name card, Poster)</text><text x="450" y="224" text-anchor="middle" font-size="14" font-weight="600" fill="#0f172a">ទំហំ Pixel = អ៊ីញ × ppi · A4 (8.27×11.69 in) @300ppi = 2480×3508 px</text></svg><figcaption>🖼️ Resolution — ppi កាន់តែខ្ពស់ ចំណុចកាន់តែល្អិត</figcaption></figure>
+
+<figure class="fig"><svg viewBox="0 0 940 290" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="290" fill="#fff"/><text x="220" y="28" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">RGB — ពន្លឺ (អេក្រង់, Web)</text><text x="700" y="28" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">CMYK — ទឹកថ្នាំ (បោះពុម្ព)</text><g style="mix-blend-mode:screen"><rect x="40" y="40" width="360" height="220" fill="#000"/></g><circle cx="190" cy="125" r="70" fill="#ff0000" style="mix-blend-mode:screen"/><circle cx="250" cy="125" r="70" fill="#00ff00" style="mix-blend-mode:screen"/><circle cx="220" cy="175" r="70" fill="#0000ff" style="mix-blend-mode:screen"/><circle cx="670" cy="125" r="70" fill="#00ffff" style="mix-blend-mode:multiply"/><circle cx="730" cy="125" r="70" fill="#ff00ff" style="mix-blend-mode:multiply"/><circle cx="700" cy="175" r="70" fill="#ffff00" style="mix-blend-mode:multiply"/><text x="220" y="282" text-anchor="middle" font-size="14" font-weight="600" fill="#334155">R+G+B = ស (Additive)</text><text x="700" y="282" text-anchor="middle" font-size="14" font-weight="600" fill="#334155">C+M+Y = ខ្មៅ (Subtractive) + K</text></svg><figcaption>🖼️ RGB សម្រាប់អេក្រង់ · CMYK សម្រាប់បោះពុម្ព</figcaption></figure>
+
+<h3>⌨️ Shortcut សំខាន់</h3>
+<table><tr><th>សកម្មភាព</th><th>Windows</th><th>macOS</th></tr><tr><td>Zoom in/out</td><td><kbd>Ctrl</kbd>+<kbd>+</kbd> / <kbd>Ctrl</kbd>+<kbd>−</kbd></td><td><kbd>Cmd</kbd>+<kbd>+</kbd> / <kbd>Cmd</kbd>+<kbd>−</kbd></td></tr><tr><td>មើលពេញអេក្រង់</td><td><kbd>Ctrl</kbd>+<kbd>0</kbd></td><td><kbd>Cmd</kbd>+<kbd>0</kbd></td></tr><tr><td>រំកិល Canvas</td><td>សង្កត់ <kbd>Space</kbd></td><td><kbd>Space</kbd></td></tr><tr><td>Undo / Redo</td><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd></td><td><kbd>Cmd</kbd>+<kbd>Z</kbd></td></tr><tr><td>Save / Save As</td><td><kbd>Ctrl</kbd>+<kbd>S</kbd> / <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd></td><td><kbd>Cmd</kbd>+<kbd>S</kbd></td></tr></table>
+
+<h3>💻 Code៖ បង្កើត Document ដោយ Script</h3>
+<script type="text/x-code" data-lang="js" data-label="new-post.jsx">
+// Photoshop: File → Scripts → Browse… → ជ្រើស new-post.jsx
+var w = 1080, h = 1350;
+var doc = app.documents.add(
+    UnitValue(w, "px"), UnitValue(h, "px"),
+    72,                         // resolution (ppi)
+    "FB Post " + w + "x" + h,   // ឈ្មោះ
+    NewDocumentMode.RGB,
+    DocumentFill.WHITE
+);
+alert("បានបង្កើត: " + doc.name + " (" + doc.width + " × " + doc.height + ")");
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>app.documents.add(...)</code> — ដូចចុច File → New ប៉ុន្តែដោយ Code។</li><li><code class='i'>UnitValue(1080, 'px')</code> — ទំហំជា Pixel · <code class='i'>72</code> = ppi សម្រាប់អេក្រង់។</li><li><code class='i'>NewDocumentMode.RGB</code> — Color mode · ប្តូរជា <code class='i'>CMYK</code> ពេលបោះពុម្ព។</li><li><code class='i'>alert()</code> — បង្ហាញសារ។ Script អាចបង្កើត Document ១០០ ក្នុងមួយវិនាទី — ល្អសម្រាប់ការងារដដែលៗ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>អ្នកត្រូវរចនា Poster A3 (297×420 mm) ដើម្បីបោះពុម្ព។ ទំហំ Pixel ប៉ុន្មាន? ប្រើ Color mode អ្វី?</p><details><summary>មើលចម្លើយ</summary><p>297 mm = 11.69 in × 300 = <b>3508 px</b> · 420 mm = 16.54 in × 300 = <b>4961 px</b> → 3508 × 4961 px · <b>CMYK</b> · 300 ppi (+ Bleed 3 mm)</p></details></div>
+
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>Raster ទល់នឹង Vector &amp; ប្រភេទ File</h2>
+
+<figure class="fig"><svg viewBox="0 0 960 300" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="960" height="300" fill="#fff"/><text x="230" y="28" text-anchor="middle" font-size="16" font-weight="700" fill="#1d4ed8">Raster (Photoshop) — ផ្សំពី Pixel</text><text x="720" y="28" text-anchor="middle" font-size="16" font-weight="700" fill="#c2410c">Vector (Illustrator) — ផ្សំពីគណិត (Path)</text><circle cx="110" cy="150" r="70" fill="#2563eb"/><rect x="230" y="60" width="13" height="13" fill="#e2e8f0"/><rect x="244" y="60" width="13" height="13" fill="#e2e8f0"/><rect x="258" y="60" width="13" height="13" fill="#e2e8f0"/><rect x="272" y="60" width="13" height="13" fill="#e2e8f0"/><rect x="286" y="60" width="13" height="13" fill="#e2e8f0"/><rect x="300" y="60" width="13" height="13" fill="#e2e8f0"/><rect x="314" y="60" width="13" height="13" fill="#e2e8f0"/><rect x="328" y="60" width="13" height="13" fill="#e2e8f0"/><rect x="342" y="60" width="13" height="13" fill="#e2e8f0"/><rect x="356" y="60" width="13" height="13" fill="#e2e8f0"/><rect x="370" y="60" width="13" height="13" fill="#e2e8f0"/><rect x="384" y="60" width="13" height="13" fill="#e2e8f0"/><rect x="398" y="60" width="13" height="13" fill="#e2e8f0"/><rect x="412" y="60" width="13" height="13" fill="#e2e8f0"/><rect x="230" y="74" width="13" height="13" fill="#e2e8f0"/><rect x="244" y="74" width="13" height="13" fill="#e2e8f0"/><rect x="258" y="74" width="13" height="13" fill="#e2e8f0"/><rect x="272" y="74" width="13" height="13" fill="#e2e8f0"/><rect x="286" y="74" width="13" height="13" fill="#2563eb"/><rect x="300" y="74" width="13" height="13" fill="#2563eb"/><rect x="314" y="74" width="13" height="13" fill="#2563eb"/><rect x="328" y="74" width="13" height="13" fill="#2563eb"/><rect x="342" y="74" width="13" height="13" fill="#2563eb"/><rect x="356" y="74" width="13" height="13" fill="#2563eb"/><rect x="370" y="74" width="13" height="13" fill="#e2e8f0"/><rect x="384" y="74" width="13" height="13" fill="#e2e8f0"/><rect x="398" y="74" width="13" height="13" fill="#e2e8f0"/><rect x="412" y="74" width="13" height="13" fill="#e2e8f0"/><rect x="230" y="88" width="13" height="13" fill="#e2e8f0"/><rect x="244" y="88" width="13" height="13" fill="#e2e8f0"/><rect x="258" y="88" width="13" height="13" fill="#2563eb"/><rect x="272" y="88" width="13" height="13" fill="#2563eb"/><rect x="286" y="88" width="13" height="13" fill="#2563eb"/><rect x="300" y="88" width="13" height="13" fill="#2563eb"/><rect x="314" y="88" width="13" height="13" fill="#2563eb"/><rect x="328" y="88" width="13" height="13" fill="#2563eb"/><rect x="342" y="88" width="13" height="13" fill="#2563eb"/><rect x="356" y="88" width="13" height="13" fill="#2563eb"/><rect x="370" y="88" width="13" height="13" fill="#2563eb"/><rect x="384" y="88" width="13" height="13" fill="#2563eb"/><rect x="398" y="88" width="13" height="13" fill="#e2e8f0"/><rect x="412" y="88" width="13" height="13" fill="#e2e8f0"/><rect x="230" y="102" width="13" height="13" fill="#e2e8f0"/><rect x="244" y="102" width="13" height="13" fill="#e2e8f0"/><rect x="258" y="102" width="13" height="13" fill="#2563eb"/><rect x="272" y="102" width="13" height="13" fill="#2563eb"/><rect x="286" y="102" width="13" height="13" fill="#2563eb"/><rect x="300" y="102" width="13" height="13" fill="#2563eb"/><rect x="314" y="102" width="13" height="13" fill="#2563eb"/><rect x="328" y="102" width="13" height="13" fill="#2563eb"/><rect x="342" y="102" width="13" height="13" fill="#2563eb"/><rect x="356" y="102" width="13" height="13" fill="#2563eb"/><rect x="370" y="102" width="13" height="13" fill="#2563eb"/><rect x="384" y="102" width="13" height="13" fill="#2563eb"/><rect x="398" y="102" width="13" height="13" fill="#e2e8f0"/><rect x="412" y="102" width="13" height="13" fill="#e2e8f0"/><rect x="230" y="116" width="13" height="13" fill="#e2e8f0"/><rect x="244" y="116" width="13" height="13" fill="#2563eb"/><rect x="258" y="116" width="13" height="13" fill="#2563eb"/><rect x="272" y="116" width="13" height="13" fill="#2563eb"/><rect x="286" y="116" width="13" height="13" fill="#2563eb"/><rect x="300" y="116" width="13" height="13" fill="#2563eb"/><rect x="314" y="116" width="13" height="13" fill="#2563eb"/><rect x="328" y="116" width="13" height="13" fill="#2563eb"/><rect x="342" y="116" width="13" height="13" fill="#2563eb"/><rect x="356" y="116" width="13" height="13" fill="#2563eb"/><rect x="370" y="116" width="13" height="13" fill="#2563eb"/><rect x="384" y="116" width="13" height="13" fill="#2563eb"/><rect x="398" y="116" width="13" height="13" fill="#2563eb"/><rect x="412" y="116" width="13" height="13" fill="#e2e8f0"/><rect x="230" y="130" width="13" height="13" fill="#e2e8f0"/><rect x="244" y="130" width="13" height="13" fill="#2563eb"/><rect x="258" y="130" width="13" height="13" fill="#2563eb"/><rect x="272" y="130" width="13" height="13" fill="#2563eb"/><rect x="286" y="130" width="13" height="13" fill="#2563eb"/><rect x="300" y="130" width="13" height="13" fill="#2563eb"/><rect x="314" y="130" width="13" height="13" fill="#2563eb"/><rect x="328" y="130" width="13" height="13" fill="#2563eb"/><rect x="342" y="130" width="13" height="13" fill="#2563eb"/><rect x="356" y="130" width="13" height="13" fill="#2563eb"/><rect x="370" y="130" width="13" height="13" fill="#2563eb"/><rect x="384" y="130" width="13" height="13" fill="#2563eb"/><rect x="398" y="130" width="13" height="13" fill="#2563eb"/><rect x="412" y="130" width="13" height="13" fill="#e2e8f0"/><rect x="230" y="144" width="13" height="13" fill="#e2e8f0"/><rect x="244" y="144" width="13" height="13" fill="#2563eb"/><rect x="258" y="144" width="13" height="13" fill="#2563eb"/><rect x="272" y="144" width="13" height="13" fill="#2563eb"/><rect x="286" y="144" width="13" height="13" fill="#2563eb"/><rect x="300" y="144" width="13" height="13" fill="#2563eb"/><rect x="314" y="144" width="13" height="13" fill="#2563eb"/><rect x="328" y="144" width="13" height="13" fill="#2563eb"/><rect x="342" y="144" width="13" height="13" fill="#2563eb"/><rect x="356" y="144" width="13" height="13" fill="#2563eb"/><rect x="370" y="144" width="13" height="13" fill="#2563eb"/><rect x="384" y="144" width="13" height="13" fill="#2563eb"/><rect x="398" y="144" width="13" height="13" fill="#2563eb"/><rect x="412" y="144" width="13" height="13" fill="#e2e8f0"/><rect x="230" y="158" width="13" height="13" fill="#e2e8f0"/><rect x="244" y="158" width="13" height="13" fill="#2563eb"/><rect x="258" y="158" width="13" height="13" fill="#2563eb"/><rect x="272" y="158" width="13" height="13" fill="#2563eb"/><rect x="286" y="158" width="13" height="13" fill="#2563eb"/><rect x="300" y="158" width="13" height="13" fill="#2563eb"/><rect x="314" y="158" width="13" height="13" fill="#2563eb"/><rect x="328" y="158" width="13" height="13" fill="#2563eb"/><rect x="342" y="158" width="13" height="13" fill="#2563eb"/><rect x="356" y="158" width="13" height="13" fill="#2563eb"/><rect x="370" y="158" width="13" height="13" fill="#2563eb"/><rect x="384" y="158" width="13" height="13" fill="#2563eb"/><rect x="398" y="158" width="13" height="13" fill="#2563eb"/><rect x="412" y="158" width="13" height="13" fill="#e2e8f0"/><rect x="230" y="172" width="13" height="13" fill="#e2e8f0"/><rect x="244" y="172" width="13" height="13" fill="#2563eb"/><rect x="258" y="172" width="13" height="13" fill="#2563eb"/><rect x="272" y="172" width="13" height="13" fill="#2563eb"/><rect x="286" y="172" width="13" height="13" fill="#2563eb"/><rect x="300" y="172" width="13" height="13" fill="#2563eb"/><rect x="314" y="172" width="13" height="13" fill="#2563eb"/><rect x="328" y="172" width="13" height="13" fill="#2563eb"/><rect x="342" y="172" width="13" height="13" fill="#2563eb"/><rect x="356" y="172" width="13" height="13" fill="#2563eb"/><rect x="370" y="172" width="13" height="13" fill="#2563eb"/><rect x="384" y="172" width="13" height="13" fill="#2563eb"/><rect x="398" y="172" width="13" height="13" fill="#2563eb"/><rect x="412" y="172" width="13" height="13" fill="#e2e8f0"/><rect x="230" y="186" width="13" height="13" fill="#e2e8f0"/><rect x="244" y="186" width="13" height="13" fill="#2563eb"/><rect x="258" y="186" width="13" height="13" fill="#2563eb"/><rect x="272" y="186" width="13" height="13" fill="#2563eb"/><rect x="286" y="186" width="13" height="13" fill="#2563eb"/><rect x="300" y="186" width="13" height="13" fill="#2563eb"/><rect x="314" y="186" width="13" height="13" fill="#2563eb"/><rect x="328" y="186" width="13" height="13" fill="#2563eb"/><rect x="342" y="186" width="13" height="13" fill="#2563eb"/><rect x="356" y="186" width="13" height="13" fill="#2563eb"/><rect x="370" y="186" width="13" height="13" fill="#2563eb"/><rect x="384" y="186" width="13" height="13" fill="#2563eb"/><rect x="398" y="186" width="13" height="13" fill="#2563eb"/><rect x="412" y="186" width="13" height="13" fill="#e2e8f0"/><rect x="230" y="200" width="13" height="13" fill="#e2e8f0"/><rect x="244" y="200" width="13" height="13" fill="#e2e8f0"/><rect x="258" y="200" width="13" height="13" fill="#2563eb"/><rect x="272" y="200" width="13" height="13" fill="#2563eb"/><rect x="286" y="200" width="13" height="13" fill="#2563eb"/><rect x="300" y="200" width="13" height="13" fill="#2563eb"/><rect x="314" y="200" width="13" height="13" fill="#2563eb"/><rect x="328" y="200" width="13" height="13" fill="#2563eb"/><rect x="342" y="200" width="13" height="13" fill="#2563eb"/><rect x="356" y="200" width="13" height="13" fill="#2563eb"/><rect x="370" y="200" width="13" height="13" fill="#2563eb"/><rect x="384" y="200" width="13" height="13" fill="#2563eb"/><rect x="398" y="200" width="13" height="13" fill="#e2e8f0"/><rect x="412" y="200" width="13" height="13" fill="#e2e8f0"/><rect x="230" y="214" width="13" height="13" fill="#e2e8f0"/><rect x="244" y="214" width="13" height="13" fill="#e2e8f0"/><rect x="258" y="214" width="13" height="13" fill="#2563eb"/><rect x="272" y="214" width="13" height="13" fill="#2563eb"/><rect x="286" y="214" width="13" height="13" fill="#2563eb"/><rect x="300" y="214" width="13" height="13" fill="#2563eb"/><rect x="314" y="214" width="13" height="13" fill="#2563eb"/><rect x="328" y="214" width="13" height="13" fill="#2563eb"/><rect x="342" y="214" width="13" height="13" fill="#2563eb"/><rect x="356" y="214" width="13" height="13" fill="#2563eb"/><rect x="370" y="214" width="13" height="13" fill="#2563eb"/><rect x="384" y="214" width="13" height="13" fill="#2563eb"/><rect x="398" y="214" width="13" height="13" fill="#e2e8f0"/><rect x="412" y="214" width="13" height="13" fill="#e2e8f0"/><rect x="230" y="228" width="13" height="13" fill="#e2e8f0"/><rect x="244" y="228" width="13" height="13" fill="#e2e8f0"/><rect x="258" y="228" width="13" height="13" fill="#e2e8f0"/><rect x="272" y="228" width="13" height="13" fill="#e2e8f0"/><rect x="286" y="228" width="13" height="13" fill="#2563eb"/><rect x="300" y="228" width="13" height="13" fill="#2563eb"/><rect x="314" y="228" width="13" height="13" fill="#2563eb"/><rect x="328" y="228" width="13" height="13" fill="#2563eb"/><rect x="342" y="228" width="13" height="13" fill="#2563eb"/><rect x="356" y="228" width="13" height="13" fill="#2563eb"/><rect x="370" y="228" width="13" height="13" fill="#e2e8f0"/><rect x="384" y="228" width="13" height="13" fill="#e2e8f0"/><rect x="398" y="228" width="13" height="13" fill="#e2e8f0"/><rect x="412" y="228" width="13" height="13" fill="#e2e8f0"/><rect x="230" y="242" width="13" height="13" fill="#e2e8f0"/><rect x="244" y="242" width="13" height="13" fill="#e2e8f0"/><rect x="258" y="242" width="13" height="13" fill="#e2e8f0"/><rect x="272" y="242" width="13" height="13" fill="#e2e8f0"/><rect x="286" y="242" width="13" height="13" fill="#e2e8f0"/><rect x="300" y="242" width="13" height="13" fill="#e2e8f0"/><rect x="314" y="242" width="13" height="13" fill="#e2e8f0"/><rect x="328" y="242" width="13" height="13" fill="#e2e8f0"/><rect x="342" y="242" width="13" height="13" fill="#e2e8f0"/><rect x="356" y="242" width="13" height="13" fill="#e2e8f0"/><rect x="370" y="242" width="13" height="13" fill="#e2e8f0"/><rect x="384" y="242" width="13" height="13" fill="#e2e8f0"/><rect x="398" y="242" width="13" height="13" fill="#e2e8f0"/><rect x="412" y="242" width="13" height="13" fill="#e2e8f0"/><text x="110" y="250" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">100%</text><text x="328" y="275" text-anchor="middle" font-size="13" font-weight="600" fill="#dc2626">Zoom 800% → ឃើញការ៉េ (ព្រិល)</text><circle cx="600" cy="150" r="70" fill="#ea580c"/><circle cx="820" cy="150" r="100" fill="#ea580c"/><rect x="815" y="45" width="10" height="10" fill="#fff" stroke="#0f172a" stroke-width="2"/><rect x="915" y="145" width="10" height="10" fill="#fff" stroke="#0f172a" stroke-width="2"/><rect x="815" y="245" width="10" height="10" fill="#fff" stroke="#0f172a" stroke-width="2"/><rect x="715" y="145" width="10" height="10" fill="#fff" stroke="#0f172a" stroke-width="2"/><text x="600" y="250" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">100%</text><text x="820" y="275" text-anchor="middle" font-size="13" font-weight="600" fill="#059669">Zoom ប៉ុន្មានក៏ច្បាស់ (Anchor points)</text></svg><figcaption>🖼️ Raster (Pixel) ទល់នឹង Vector (Path)</figcaption></figure>
+
+<table><tr><th>File</th><th>ប្រភេទ</th><th>ថ្លា?</th><th>ប្រើពេល</th></tr><tr><td><b>PSD</b></td><td>Photoshop (រក្សា Layers)</td><td>✅</td><td>រក្សាទុកកែពេលក្រោយ — ត្រូវតែ Save!</td></tr><tr><td><b>JPG</b></td><td>Raster បង្រួម (បាត់គុណភាពបន្តិច)</td><td>❌</td><td>រូបថត, Facebook</td></tr><tr><td><b>PNG</b></td><td>Raster មិនបាត់គុណភាព</td><td>✅</td><td>Logo, រូប Remove BG</td></tr><tr><td><b>WebP / AVIF</b></td><td>Raster ទំនើប តូចជាង JPG</td><td>✅</td><td>Website</td></tr><tr><td><b>PDF</b></td><td>ឯកសារបោះពុម្ព</td><td>✅</td><td>ផ្ញើរោងពុម្ព</td></tr><tr><td><b>SVG / AI</b></td><td>Vector</td><td>✅</td><td>Logo, Icon (Illustrator)</td></tr></table>
+
+<h3>💻 Code៖ រូបភាព Raster ក្នុង Website</h3>
+<script type="text/x-code" data-lang="html" data-label="raster-vs-vector.html · ▶ លទ្ធផលពិត" data-demo>
+<style>
+  .box{display:flex;gap:12px;align-items:end;font:13px sans-serif}
+  .px{image-rendering:pixelated;width:128px;height:128px;border:1px solid #ccc}
+  .sm{image-rendering:auto;width:128px;height:128px;border:1px solid #ccc}
+</style>
+<canvas id="c" width="16" height="16" hidden></canvas>
+<div class="box"><div><img id="a" class="px"><br>pixelated (ឃើញ Pixel)</div><div><img id="b" class="sm"><br>smooth (ព្រិល)</div>
+<div><svg width="128" height="128" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="#2563eb"/></svg><br>SVG (Vector ច្បាស់)</div></div>
+<script>
+  const c = document.getElementById("c"), x = c.getContext("2d");
+  x.fillStyle = "#2563eb"; x.beginPath(); x.arc(8, 8, 6, 0, Math.PI * 2); x.fill();  // គូររង្វង់ 16x16 px
+  a.src = b.src = c.toDataURL("image/png");
+<\/script>
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>&lt;canvas width=16&gt;</code> — បង្កើតរូប Raster តូច 16×16 Pixel ហើយគូររង្វង់។</li><li>ពង្រីកទៅ 128px៖ <code class='i'>image-rendering:pixelated</code> បង្ហាញ Pixel ការ៉េៗ · <code class='i'>auto</code> ធ្វើឲ្យព្រិល។</li><li>SVG រង្វង់ដដែល ពង្រីកប៉ុន្មានក៏ច្បាស់ ព្រោះជារូបមន្តគណិត — ហេតុនេះ Logo ត្រូវធ្វើជា Vector។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>ជ្រើស Format៖ ① រូបថតផលិតផលដាក់ Facebook ② Logo ផ្ទៃថ្លាដាក់លើ Video ③ File ដែលចង់កែ Layer ពេលក្រោយ</p><details><summary>មើលចម្លើយ</summary><p>① JPG (ឬ WebP) ② PNG ③ PSD</p></details></div>
+
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Layers &amp; Layer Properties</h2>
+
+<figure class="fig"><svg viewBox="0 0 900 295" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="900" height="300" fill="#fff"/><path d="M60 70l60-30h300l-60 30z" fill="#dc2626" fill-opacity=".85" stroke="#0f172a" stroke-opacity=".2"/><text x="480" y="62" text-anchor="start" font-size="15" font-weight="600" fill="#0f172a">1. Text — “SALE 50%”</text><path d="M86 122l60-30h300l-60 30z" fill="#f59e0b" fill-opacity=".85" stroke="#0f172a" stroke-opacity=".2"/><text x="506" y="114" text-anchor="start" font-size="15" font-weight="600" fill="#0f172a">2. Shape — ស្លាក</text><path d="M112 174l60-30h300l-60 30z" fill="#2563eb" fill-opacity=".85" stroke="#0f172a" stroke-opacity=".2"/><text x="532" y="166" text-anchor="start" font-size="15" font-weight="600" fill="#0f172a">3. Product (Remove BG)</text><path d="M138 226l60-30h300l-60 30z" fill="#94a3b8" fill-opacity=".85" stroke="#0f172a" stroke-opacity=".2"/><text x="558" y="218" text-anchor="start" font-size="15" font-weight="600" fill="#0f172a">4. Background</text><text x="450" y="280" text-anchor="middle" font-size="14" font-weight="600" fill="#334155">Layer = សន្លឹកថ្លាដាក់ត្រួតគ្នា · Layer ខាងលើបាំងខាងក្រោម · កែម្តងមួយបានដោយមិនប៉ះមួយផ្សេង</text></svg><figcaption>🖼️ Layers ត្រួតគ្នា បង្កើតជា Poster មួយ</figcaption></figure>
+
+<table><tr><th>សកម្មភាព</th><th>Shortcut / របៀប</th></tr><tr><td>Layer ថ្មី</td><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>N</kbd></td></tr><tr><td>ចម្លង Layer</td><td><kbd>Ctrl</kbd>+<kbd>J</kbd></td></tr><tr><td>លាក់/បង្ហាញ</td><td>ចុច 👁️</td></tr><tr><td>ចាក់សោ</td><td>🔒</td></tr><tr><td>Group</td><td><kbd>Ctrl</kbd>+<kbd>G</kbd></td></tr><tr><td>Merge</td><td><kbd>Ctrl</kbd>+<kbd>E</kbd> (ប្រយ័ត្ន — បាត់ការកែដាច់ដោយឡែក)</td></tr><tr><td>Opacity / Fill</td><td>ថ្លាទាំង Layer / ថ្លាតែខ្លឹមសារ (Effect នៅដដែល)</td></tr><tr><td>Smart Object</td><td>Right-click → Convert — Scale ដោយមិនបាត់គុណភាព</td></tr></table>
+
+<h3>💻 Code៖ Layers ក្នុង CSS = <code class="i">z-index</code></h3>
+<script type="text/x-code" data-lang="html" data-label="layers.html · ▶ លទ្ធផលពិត" data-demo>
+<style>
+  .poster{position:relative;width:300px;height:200px;font-family:sans-serif;overflow:hidden;border-radius:10px}
+  .bg{position:absolute;inset:0;background:linear-gradient(135deg,#94a3b8,#e2e8f0);z-index:1}
+  .product{position:absolute;left:30px;bottom:20px;width:120px;height:120px;border-radius:50%;background:#2563eb;z-index:2}
+  .tag{position:absolute;right:20px;top:30px;width:120px;height:60px;background:#f59e0b;border-radius:8px;z-index:3;opacity:.9}
+  .text{position:absolute;right:28px;top:44px;color:#fff;font:800 26px sans-serif;z-index:4}
+</style>
+<div class="poster">
+  <div class="bg"></div><div class="product"></div><div class="tag"></div><div class="text">SALE 50%</div>
+</div>
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>position:absolute</code> — ធាតុនីមួយៗដូច Layer ដាក់ត្រួតគ្នាបាន។</li><li><code class='i'>z-index</code> — លេខធំនៅខាងលើ (ដូចលំដាប់ Layers panel)។</li><li><code class='i'>opacity:.9</code> — ដូច Opacity 90% ក្នុង Photoshop។</li></ol></div>
+
+<script type="text/x-code" data-lang="js" data-label="layers.jsx">
+// Photoshop Script: បង្ហាញឈ្មោះ Layer ទាំងអស់ ហើយកំណត់ Opacity
+var doc = app.activeDocument;
+for (var i = 0; i < doc.artLayers.length; i++) {
+    var L = doc.artLayers[i];
+    $.writeln(i + ": " + L.name + " | visible=" + L.visible + " | opacity=" + L.opacity);
+}
+var copy = doc.activeLayer.duplicate();   // ដូច Ctrl+J
+copy.name = "Backup";
+copy.opacity = 50;
+</script>
+
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>ហេតុអ្វីគួរ <b>Ctrl+J</b> ចម្លង Layer រូបថតដើម មុនពេលកែ?</p><details><summary>មើលចម្លើយ</summary><p>ដើម្បីរក្សារូបដើមទុក (Non-destructive) — បើកែខុស អាចលុប Layer ចម្លង ហើយចាប់ផ្តើមម្តងទៀត។</p></details></div>
+
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Selection Tools</h2>
+
+<figure class="fig"><svg viewBox="0 0 960 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="960" height="230" fill="#fff"/><rect x="20" y="20" width="176" height="150" rx="12" fill="#f8fafc" stroke="#e2e8f0"/><rect x="208" y="20" width="176" height="150" rx="12" fill="#f8fafc" stroke="#e2e8f0"/><rect x="396" y="20" width="176" height="150" rx="12" fill="#f8fafc" stroke="#e2e8f0"/><rect x="584" y="20" width="176" height="150" rx="12" fill="#f8fafc" stroke="#e2e8f0"/><rect x="772" y="20" width="176" height="150" rx="12" fill="#f8fafc" stroke="#e2e8f0"/><rect x="50" y="50" width="116" height="90" fill="#bfdbfe" stroke="#0f172a" stroke-width="2" stroke-dasharray="6 4"/><path d="M240 60q40-30 80 0t40 50q-20 40-70 30t-50-80z" fill="#bbf7d0" stroke="#0f172a" stroke-width="2" stroke-dasharray="6 4"/><circle cx="490" cy="95" r="45" fill="#fde68a"/><path d="M445 95a45 45 0 1 0 90 0a45 45 0 1 0-90 0" fill="none" stroke="#0f172a" stroke-width="2" stroke-dasharray="6 4"/><circle cx="470" cy="80" r="9" fill="none" stroke="#2563eb" stroke-width="2"/><path d="M470 80l14 14" stroke="#2563eb" stroke-width="2"/><rect x="620" y="40" width="140" height="110" fill="#e2e8f0"/><path d="M660 140v-50q30-40 60 0v50z" fill="#f472b6"/><path d="M660 140v-50q30-40 60 0v50z" fill="none" stroke="#0f172a" stroke-width="2" stroke-dasharray="6 4"/><rect x="806" y="40" width="140" height="110" fill="#334155"/><circle cx="876" cy="95" r="38" fill="#fff"/><text x="876" y="101" text-anchor="middle" font-size="13" fill="#7c3aed" font-weight="700">AI ✨</text><text x="108" y="196" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Marquee (M)</text><text x="108" y="216" text-anchor="middle" font-size="12" font-weight="400" fill="#475569">ការ៉េ/រង្វង់</text><text x="296" y="196" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Lasso (L)</text><text x="296" y="216" text-anchor="middle" font-size="12" font-weight="400" fill="#475569">គូរដៃ</text><text x="484" y="196" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Quick Selection (W)</text><text x="484" y="216" text-anchor="middle" font-size="12" font-weight="400" fill="#475569">លាបលើផ្ទៃ</text><text x="672" y="196" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Object Selection</text><text x="672" y="216" text-anchor="middle" font-size="12" font-weight="400" fill="#475569">គូសប្រអប់ → AI រក</text><text x="860" y="196" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Select Subject</text><text x="860" y="216" text-anchor="middle" font-size="12" font-weight="400" fill="#475569">AI រកមនុស្ស/វត្ថុ</text></svg><figcaption>🖼️ ឧបករណ៍ជ្រើសរើស ពីដៃ ដល់ AI</figcaption></figure>
+
+<table><tr><th>Tool</th><th>Key</th><th>ល្អសម្រាប់</th></tr><tr><td>Rectangular/Elliptical Marquee</td><td>M</td><td>ការ៉េ រង្វង់</td></tr><tr><td>Lasso / Polygonal / Magnetic</td><td>L</td><td>រាងសេរី, គែមត្រង់</td></tr><tr><td>Object Selection</td><td>W</td><td>គូសប្រអប់ជុំវិញវត្ថុ → AI រក</td></tr><tr><td>Quick Selection</td><td>W</td><td>លាបលើផ្ទៃពណ៌ស្រដៀង</td></tr><tr><td>Magic Wand</td><td>W</td><td>ផ្ទៃពណ៌តែមួយ (Tolerance)</td></tr><tr><td>Select Subject</td><td>Select menu</td><td>មនុស្ស/វត្ថុសំខាន់ (AI)</td></tr><tr><td>Select and Mask</td><td><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>R</kbd></td><td>កែគែមសក់ (Refine Hair)</td></tr></table>
+
+<div class="note">💡 <kbd>Shift</kbd> = បន្ថែម Selection · <kbd>Alt</kbd> = ដក · <kbd>Ctrl</kbd>+<kbd>D</kbd> = បោះបង់ · <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd> = បញ្ច្រាស (Inverse)</div>
+
+<script type="text/x-code" data-lang="js" data-label="select-fill.jsx">
+// ជ្រើសតំបន់ការ៉េ 400x300 ចាប់ពី (100,100) ហើយបំពេញពណ៌ទឹកក្រូច
+var doc = app.activeDocument;
+var x = 100, y = 100, w = 400, h = 300;
+doc.selection.select([[x, y], [x + w, y], [x + w, y + h], [x, y + h]]);
+var c = new SolidColor();
+c.rgb.hexValue = "F97316";
+doc.selection.fill(c);
+doc.selection.deselect();
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>selection.select([[x,y],...])</code> — ចំណុច ៤ ជ្រុងនៃ Selection (ដូចអូស Marquee)។</li><li><code class='i'>new SolidColor()</code> + <code class='i'>hexValue</code> — បង្កើតពណ៌ពីលេខ Hex។</li><li><code class='i'>fill()</code> ដូច Edit → Fill · <code class='i'>deselect()</code> ដូច Ctrl+D។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>រូបមានមនុស្សលើផ្ទៃមេឃពណ៌ខៀវតែមួយ។ វិធីណាលឿនបំផុតដើម្បីជ្រើសមនុស្ស?</p><details><summary>មើលចម្លើយ</summary><p>① <b>Select Subject</b> (១ ចុច) ឬ ② Magic Wand ចុចលើមេឃ → <b>Ctrl+Shift+I</b> បញ្ច្រាស។ បន្ទាប់មក Select and Mask កែគែមសក់។</p></details></div>
+
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>Remove Background (៤ វិធី)</h2>
+
+<table><tr><th>វិធី</th><th>របៀប</th><th>ល្អសម្រាប់</th></tr><tr><td>① Remove Background (AI)</td><td>Properties → Quick Actions → <b>Remove Background</b></td><td>លឿនបំផុត ១ ចុច</td></tr><tr><td>② Quick/Object Selection + Mask</td><td>ជ្រើស → ចុច 🎭 Add Layer Mask</td><td>កែបានល្អិត</td></tr><tr><td>③ Pen / Curvature Pen</td><td>គូស Path → Make Selection</td><td>ផលិតផលគែមរលោង (ដប ទូរស័ព្ទ)</td></tr><tr><td>④ Background Eraser</td><td>លុបពណ៌ដែលនៅកណ្តាល Brush</td><td>ផ្ទៃពណ៌ច្បាស់</td></tr></table>
+
+<figure class="fig"><svg viewBox="0 0 900 215" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="900" height="220" fill="#fff"/><defs><linearGradient id="mk"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient><mask id="mk1"><rect x="620" y="30" width="250" height="150" fill="url(#mk)"/></mask></defs><rect x="30" y="30" width="250" height="150" rx="8" fill="#f97316"/><text x="155" y="200" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Layer (រូបភាព)</text><rect x="325" y="30" width="250" height="150" rx="8" fill="url(#mk)" stroke="#cbd5e1"/><text x="450" y="200" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Mask: ស = បង្ហាញ · ខ្មៅ = លាក់</text><rect x="620" y="30" width="250" height="150" rx="8" fill="#e2e8f0"/><rect x="620" y="30" width="250" height="150" rx="8" fill="#f97316" mask="url(#mk1)"/><text x="745" y="200" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">លទ្ធផល (រលាយបន្តិចម្តងៗ)</text><text x="303" y="110" text-anchor="middle" font-size="28" font-weight="800" fill="#0f172a">+</text><text x="598" y="110" text-anchor="middle" font-size="28" font-weight="800" fill="#0f172a">=</text></svg><figcaption>🖼️ Layer Mask៖ ស = បង្ហាញ · ខ្មៅ = លាក់ · ប្រផេះ = ថ្លាពាក់កណ្តាល</figcaption></figure>
+
+<div class="warn">⚠️ ប្រើ <b>Layer Mask</b> ជំនួសឲ្យ Eraser — Eraser លុបពិតៗ (មិនអាចត្រឡប់) តែ Mask លាក់ប៉ុណ្ណោះ (គូរពណ៌ស វាត្រឡប់មកវិញ)។</div>
+
+<h3>💻 Code៖ Mask ក្នុង CSS</h3>
+<script type="text/x-code" data-lang="html" data-label="mask.html · ▶ លទ្ធផលពិត" data-demo>
+<style>
+  .row{display:flex;gap:14px;font:13px sans-serif;text-align:center}
+  .img{width:150px;height:110px;border-radius:8px;background:linear-gradient(135deg,#f97316,#db2777)}
+  .fade{-webkit-mask-image:linear-gradient(90deg,#000,transparent);mask-image:linear-gradient(90deg,#000,transparent)}
+  .circle{-webkit-mask-image:radial-gradient(circle,#000 55%,transparent 56%);mask-image:radial-gradient(circle,#000 55%,transparent 56%)}
+  .checker{background:repeating-conic-gradient(#ddd 0 25%,#fff 0 50%) 0 0/16px 16px;border-radius:8px}
+</style>
+<div class="row">
+  <div><div class="checker"><div class="img"></div></div>ដើម</div>
+  <div><div class="checker"><div class="img fade"></div></div>Gradient mask</div>
+  <div><div class="checker"><div class="img circle"></div></div>Circle mask</div>
+</div>
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>mask-image</code> — ពណ៌ខ្មៅ(=មើលឃើញ) និងថ្លា(=លាក់) ក្នុង CSS (ផ្ទុយពី Photoshop បន្តិច៖ CSS ប្រើ Alpha)។</li><li><code class='i'>linear-gradient(90deg,#000,transparent)</code> — រលាយពីឆ្វេងទៅស្តាំ ដូច Layer Mask + Gradient Tool។</li><li>ផ្ទៃក្រឡាអុក (Checker) បង្ហាញតំបន់ថ្លា ដូចក្នុង Photoshop។</li></ol></div>
+
+<script type="text/x-code" data-lang="js" data-label="remove-bg.jsx">
+// AI Remove Background ដោយ Script (Photoshop 2022+)
+var d = new ActionDescriptor();
+executeAction(stringIDToTypeID("autoCutout"), d, DialogModes.NO);  // = Select Subject
+app.activeDocument.selection.invert();
+app.activeDocument.selection.clear();   // លុបផ្ទៃខាងក្រោយ (ឬបង្កើត Mask)
+</script>
+
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>ហាងលក់អាវមានរូបថត ២០០ សន្លឹក ត្រូវ Remove BG។ ធ្វើយ៉ាងម៉េចឲ្យលឿន?</p><details><summary>មើលចម្លើយ</summary><p>Record <b>Action</b> (Select Subject → Mask → Save PNG) រួច File → Automate → <b>Batch</b> លើ Folder ទាំងមូល (មេរៀន ១៥)។</p></details></div>
+
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Color, Paint Bucket &amp; Gradient</h2>
+
+<table><tr><th>Tool</th><th>Key</th><th>ការប្រើ</th></tr><tr><td>Foreground / Background color</td><td>D (Default) · X (ប្តូរ)</td><td>ពណ៌មុខ/ក្រោយ</td></tr><tr><td>Eyedropper</td><td>I</td><td>ស្រង់ពណ៌ពីរូប</td></tr><tr><td>Paint Bucket</td><td>G</td><td>ចាក់ពណ៌លើផ្ទៃពណ៌ស្រដៀង</td></tr><tr><td>Gradient</td><td>G</td><td>ពណ៌រលាយ៖ Linear, Radial, Angle, Reflected, Diamond</td></tr><tr><td>Brush</td><td>B</td><td>គូរ · [ ] ប្តូរទំហំ</td></tr></table>
+
+<h3>💻 Code៖ Gradient ប្រភេទផ្សេងៗ</h3>
+<script type="text/x-code" data-lang="html" data-label="gradients.html · ▶ លទ្ធផលពិត" data-demo>
+<style>
+  .g{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;font:12px sans-serif;text-align:center}
+  .g div div{height:90px;border-radius:10px;margin-bottom:4px}
+</style>
+<div class="g">
+  <div><div style="background:linear-gradient(90deg,#7c3aed,#f97316)"></div>Linear</div>
+  <div><div style="background:radial-gradient(circle,#fde047,#ea580c)"></div>Radial</div>
+  <div><div style="background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red)"></div>Angle (Conic)</div>
+  <div><div style="background:linear-gradient(90deg,#0ea5e9,#fff,#0ea5e9)"></div>Reflected</div>
+</div>
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>linear-gradient(90deg, A, B)</code> — រលាយពី A ទៅ B តាមទិស 90° (ឆ្វេង→ស្តាំ)។</li><li><code class='i'>radial-gradient</code> — ពីកណ្តាលចេញក្រៅ · <code class='i'>conic-gradient</code> — វិលជុំ (ដូច Angle gradient)។</li><li>Reflected = ពណ៌ A → B → A ឆ្លុះគ្នា។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>បង្កើត Gradient ផ្ទៃមេឃពេលល្ងាច (ពណ៌ស្វាយលើ → ទឹកក្រូចក្រោម)។ សរសេរ CSS។</p><details><summary>មើលចម្លើយ</summary><script type="text/x-code" data-lang="css" data-label="Answer">
+background: linear-gradient(180deg, #4c1d95, #db2777 55%, #f97316);
+</script>
+</details></div>
+
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Type Tool &amp; Shape Tool</h2>
+
+<table><tr><th>Tool</th><th>Key</th><th>ចំណាំ</th></tr><tr><td>Horizontal/Vertical Type</td><td>T</td><td>ចុចម្តង = Point text · អូស = Paragraph text</td></tr><tr><td>Character panel</td><td>Window → Character</td><td>Font, Size, Tracking (ចន្លោះអក្សរ), Leading (ចន្លោះបន្ទាត់)</td></tr><tr><td>Warp Text</td><td>Options bar</td><td>កោងអក្សរ (Arc, Flag…)</td></tr><tr><td>Rectangle/Ellipse/Polygon/Line</td><td>U</td><td>Shape = Vector ក្នុង Photoshop</td></tr><tr><td>Custom Shape</td><td>U</td><td>Icon ស្រាប់</td></tr></table>
+
+<div class="note">💡 Font ខ្មែរ៖ <b>Kantumruy Pro, Battambang, Moul, Koulen, Noto Sans Khmer</b> (ឥតគិតថ្លៃ Google Fonts)។ ចំណងជើងប្រើ Moul/Koulen · អត្ថបទប្រើ Kantumruy/Battambang។</div>
+
+<script type="text/x-code" data-lang="html" data-label="type-shape.html · ▶ លទ្ធផលពិត" data-demo>
+<link href="https://fonts.googleapis.com/css2?family=Koulen&family=Kantumruy+Pro:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  .card{width:320px;padding:18px;border-radius:14px;background:#0f172a;color:#fff}
+  h1{font-family:Koulen;font-size:40px;margin:0;letter-spacing:1px;
+     background:linear-gradient(90deg,#fde047,#f97316);-webkit-background-clip:text;background-clip:text;color:transparent}
+  p{font-family:"Kantumruy Pro";margin:6px 0 12px;line-height:1.7}
+  .btn{display:inline-block;padding:6px 16px;border-radius:999px;background:#e11d48;font:700 14px sans-serif}
+  .star{width:40px;height:40px;background:#fde047;float:right;clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+</style>
+<div class="card"><div class="star"></div><h1>បញ្ចុះតម្លៃ</h1><p>រហូតដល់ ៥០% សម្រាប់សិស្ស និស្សិត</p><span class="btn">ទិញឥឡូវ</span></div>
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>font-family:Koulen</code> — Font ខ្មែរចំណងជើង ពី Google Fonts។</li><li><code class='i'>background-clip:text</code> + <code class='i'>color:transparent</code> — អក្សរ Gradient (ដូច Clipping mask លើ Text)។</li><li><code class='i'>clip-path:polygon(...)</code> — រាងផ្កាយ ដូច Polygon/Custom Shape tool។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>Tracking និង Leading ខុសគ្នាយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p><b>Tracking</b> = ចន្លោះរវាងតួអក្សរ (ផ្តេក) · <b>Leading</b> = ចន្លោះរវាងបន្ទាត់ (បញ្ឈរ)។</p></details></div>
+
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Transform &amp; Clipping Mask</h2>
+
+<table><tr><th>Transform</th><th>Shortcut</th><th>ធ្វើអ្វី</th></tr><tr><td>Free Transform</td><td><kbd>Ctrl</kbd>+<kbd>T</kbd></td><td>Scale, Rotate (Shift = រក្សាសមាមាត្រ/15°)</td></tr><tr><td>Skew / Distort / Perspective</td><td>Right-click ក្នុង Free Transform</td><td>ដាក់រូបលើអេក្រង់ ស្លាក</td></tr><tr><td>Warp</td><td>Right-click → Warp</td><td>កោងរូបលើពែង អាវ</td></tr><tr><td>Flip</td><td>Edit → Transform</td><td>ឆ្លុះផ្តេក/បញ្ឈរ</td></tr><tr><td>Clipping Mask</td><td><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>G</kbd></td><td>ដាក់រូបចូលក្នុងរាង/អក្សរខាងក្រោម</td></tr></table>
+
+<script type="text/x-code" data-lang="html" data-label="transform.html · ▶ លទ្ធផលពិត" data-demo>
+<style>
+  .row{display:flex;gap:18px;align-items:center;font:12px sans-serif;text-align:center}
+  .b{width:80px;height:80px;background:linear-gradient(135deg,#2563eb,#22d3ee);border-radius:6px;margin:10px auto}
+  .clip{font:900 64px/1 sans-serif;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%23f97316'/%3E%3Ccircle cx='20' cy='20' r='12' fill='%23fde047'/%3E%3C/svg%3E");
+        -webkit-background-clip:text;background-clip:text;color:transparent}
+</style>
+<div class="row">
+  <div><div class="b" style="transform:scale(.7)"></div>scale(.7)</div>
+  <div><div class="b" style="transform:rotate(25deg)"></div>rotate(25°)</div>
+  <div><div class="b" style="transform:skewX(-20deg)"></div>skew</div>
+  <div><div class="b" style="transform:perspective(200px) rotateY(40deg)"></div>perspective</div>
+  <div><div class="b" style="transform:scaleX(-1);background:linear-gradient(90deg,#e11d48,#fde047)"></div>flip</div>
+  <div><div class="clip">KH</div>Clipping mask</div>
+</div>
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>transform:scale / rotate / skewX</code> — ដូច Free Transform។</li><li><code class='i'>perspective() rotateY()</code> — ដូច Perspective transform (ដាក់រូបលើជញ្ជាំង)។</li><li><code class='i'>scaleX(-1)</code> — Flip Horizontal · <code class='i'>background-clip:text</code> — Clipping mask រូបចូលក្នុងអក្សរ។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>ចង់ដាក់រូបថតទេសភាពចូលក្នុងអក្សរ “ANGKOR” ត្រូវរៀប Layer យ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>Layer អក្សរ <b>នៅខាងក្រោម</b> · Layer រូបថត <b>នៅខាងលើ</b> → ជ្រើស Layer រូប → <b>Ctrl+Alt+G</b>។</p></details></div>
+
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Pen &amp; Curvature Pen Tool</h2>
+
+<figure class="fig"><svg viewBox="0 0 900 300" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="900" height="300" fill="#fff"/><path d="M80 230 C 180 40, 380 40, 450 160 S 720 290, 820 90" fill="none" stroke="#ea580c" stroke-width="5"/><line x1="80" y1="230" x2="180" y2="40" stroke="#94a3b8" stroke-width="2"/><line x1="450" y1="160" x2="380" y2="40" stroke="#94a3b8" stroke-width="2"/><line x1="450" y1="160" x2="520" y2="280" stroke="#94a3b8" stroke-width="2"/><line x1="820" y1="90" x2="720" y2="290" stroke="#94a3b8" stroke-width="2"/><circle cx="180" cy="40" r="8" fill="#2563eb"/><circle cx="380" cy="40" r="8" fill="#2563eb"/><circle cx="520" cy="280" r="8" fill="#2563eb"/><circle cx="720" cy="290" r="8" fill="#2563eb"/><rect x="72" y="222" width="16" height="16" fill="#fff" stroke="#0f172a" stroke-width="3"/><rect x="442" y="152" width="16" height="16" fill="#fff" stroke="#0f172a" stroke-width="3"/><rect x="812" y="82" width="16" height="16" fill="#fff" stroke="#0f172a" stroke-width="3"/><text x="80" y="260" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">Anchor point</text><text x="200" y="30" text-anchor="middle" font-size="13" font-weight="700" fill="#2563eb">Handle (ដៃ)</text><text x="450" y="190" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">Smooth point</text><text x="640" y="140" text-anchor="middle" font-size="14" font-weight="700" fill="#ea580c">Path (Segment)</text><text x="450" y="296" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">SVG: M80 230 C180 40, 380 40, 450 160 S720 290, 820 90</text></svg><figcaption>🖼️ Path មាន Anchor point, Segment និង Handle (Bezier curve)</figcaption></figure>
+
+<table><tr><th>Tool</th><th>Key</th><th>របៀប</th></tr><tr><td>Pen Tool</td><td>P</td><td>ចុច = ចំណុចត្រង់ · ចុចអូស = ខ្សែកោង · Alt = បំបែក Handle</td></tr><tr><td>Curvature Pen</td><td>P</td><td>ចុចតែប៉ុណ្ណោះ — កោងដោយស្វ័យប្រវត្តិ (ងាយសម្រាប់អ្នកចាប់ផ្តើម)</td></tr><tr><td>Direct Selection</td><td>A</td><td>កែ Anchor/Handle</td></tr><tr><td>Path → Selection</td><td><kbd>Ctrl</kbd>+<kbd>Enter</kbd></td><td>បំលែង Path ជា Selection</td></tr></table>
+
+<script type="text/x-code" data-lang="html" data-label="pen-path.svg.html · ▶ លទ្ធផលពិត" data-demo>
+<svg width="420" height="200" viewBox="0 0 420 200" style="font:12px sans-serif">
+  <path d="M30 160 C 90 20, 190 20, 210 100 S 330 190, 390 40" fill="none" stroke="#ea580c" stroke-width="4"/>
+  <path d="M30 160 L90 20 M210 100 L190 20 M210 100 L230 180 M390 40 L330 190" stroke="#94a3b8"/>
+  <g fill="#2563eb"><circle cx="90" cy="20" r="5"/><circle cx="190" cy="20" r="5"/><circle cx="230" cy="180" r="5"/><circle cx="330" cy="190" r="5"/></g>
+  <g fill="#fff" stroke="#000" stroke-width="2"><rect x="25" y="155" width="10" height="10"/><rect x="205" y="95" width="10" height="10"/><rect x="385" y="35" width="10" height="10"/></g>
+  <text x="30" y="190">M = ចាប់ផ្តើម · C = Cubic Bezier · S = បន្តរលោង</text>
+</svg>
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>M30 160</code> — Move ទៅចំណុចដំបូង (Anchor ដំបូង)។</li><li><code class='i'>C 90 20, 190 20, 210 100</code> — Handle ១, Handle ២, Anchor បញ្ចប់ = ដូចចុចអូសក្នុង Pen tool។</li><li><code class='i'>S</code> — បន្តខ្សែកោងរលោង (Handle ឆ្លុះស្វ័យប្រវត្តិ) — Path របស់ Photoshop/Illustrator ជារូបមន្តដូចនេះ!</li><li>សាក Pen ផ្ទាល់ក្នុង <b>Vector Lab</b> នៃវគ្គ Illustrator។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>ហេតុអ្វីអ្នករចនាអាជីពប្រើ Pen tool កាត់ផលិតផល (ដប, កែវយឺត) ជំនួស Quick Selection?</p><details><summary>មើលចម្លើយ</summary><p>Pen បង្កើតគែម <b>រលោង ច្បាស់ ១០០%</b> និងកែបានគ្រប់ពេល (Path) ចំណែក Selection ដោយ AI អាចមានគែមរដិបរដុប ពេលផ្ទៃខាងក្រោយពណ៌ស្រដៀង។</p></details></div>
+
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>Layer Mask &amp; Adjustments</h2>
+
+<table><tr><th>Adjustment</th><th>កែអ្វី</th><th>ប្រើពេល</th></tr><tr><td>Brightness/Contrast</td><td>ពន្លឺ · ភាពច្បាស់</td><td>រូបងងឹត</td></tr><tr><td>Levels (Ctrl+L)</td><td>Shadow · Midtone · Highlight</td><td>រូបស្រអាប់</td></tr><tr><td>Curves (Ctrl+M)</td><td>ពន្លឺតាមខ្សែកោង (S-curve)</td><td>Pro color grading</td></tr><tr><td>Hue/Saturation (Ctrl+U)</td><td>ប្តូរពណ៌ · ភាពដិត</td><td>ប្តូរពណ៌អាវ</td></tr><tr><td>Vibrance</td><td>ដិតពណ៌ស្លេក មិនប៉ះពណ៌ស្បែក</td><td>រូបមនុស្ស</td></tr><tr><td>Black &amp; White</td><td>ខ្មៅស</td><td>រូបសិល្បៈ</td></tr><tr><td>Color Balance / Photo Filter</td><td>កក់ក្តៅ/ត្រជាក់</td><td>Mood</td></tr></table>
+
+<div class="note">💡 ប្រើ <b>Adjustment Layer</b> (ចុច ◐ ក្រោម Layers panel) ជំនួស Image → Adjustments — វាមាន Mask ស្រាប់ ហើយកែ/លុបបានគ្រប់ពេល (Non-destructive)។</div>
+
+<script type="text/x-code" data-lang="html" data-label="adjustments.html · ▶ លទ្ធផលពិត" data-demo>
+<style>
+  .r{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;font:12px sans-serif;text-align:center}
+  .p{height:90px;border-radius:8px;background:
+     radial-gradient(circle at 70% 30%,#fde047 0 12%,transparent 13%),
+     linear-gradient(#38bdf8 0 55%,#16a34a 55%)}
+</style>
+<div class="r">
+  <div><div class="p"></div>Original</div>
+  <div><div class="p" style="filter:brightness(1.3) contrast(1.2)"></div>Brightness/Contrast</div>
+  <div><div class="p" style="filter:saturate(2)"></div>Saturation</div>
+  <div><div class="p" style="filter:hue-rotate(120deg)"></div>Hue</div>
+  <div><div class="p" style="filter:grayscale(1)"></div>Black &amp; White</div>
+  <div><div class="p" style="filter:sepia(.8)"></div>Sepia (Photo filter)</div>
+  <div><div class="p" style="filter:invert(1)"></div>Invert</div>
+  <div><div class="p" style="filter:brightness(.8) contrast(1.4) saturate(1.3)"></div>Combo</div>
+</div>
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>filter:brightness() contrast()</code> — ដូច Brightness/Contrast (1 = ដើម)។</li><li><code class='i'>saturate(2)</code> — ពណ៌ដិតទ្វេ · <code class='i'>hue-rotate(120deg)</code> — បង្វិលពណ៌លើកង់ពណ៌ (Hue)។</li><li><code class='i'>grayscale</code>, <code class='i'>sepia</code>, <code class='i'>invert</code> — ដូច Adjustment layer នីមួយៗ · ដាក់ច្រើនជាមួយគ្នាបាន។</li><li>សាក Slider ផ្ទាល់ក្នុង <b>Photo Editor Pro</b> នៅខាងក្រោម។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>ចង់ប្តូរពណ៌អាវក្រហមទៅខៀវ តែមិនប៉ះពណ៌ផ្សេង។ ធ្វើយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>ជ្រើសអាវ (Quick Selection) → បង្កើត <b>Hue/Saturation</b> Adjustment layer (Mask ចេញស្វ័យប្រវត្តិ) → អូស Hue។ ឬប្រើ Select → Color Range។</p></details></div>
+
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>Filters៖ Liquify, Camera Raw &amp; Blur Gallery</h2>
+
+<table><tr><th>Filter</th><th>Shortcut</th><th>ធ្វើអ្វី</th></tr><tr><td>Liquify</td><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd></td><td>Push/Pull Pixel · <b>Face-Aware</b>៖ ប្តូររាងមុខ ភ្នែក ញញឹម</td></tr><tr><td>Camera Raw Filter</td><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>A</kbd></td><td>កែពណ៌ដូច Lightroom · <b>Masking</b> AI (Sky, Subject, People)</td></tr><tr><td>Blur Gallery</td><td>Filter → Blur Gallery</td><td>Field, Iris, Tilt-Shift, <b>Path Blur</b> (ចលនា), <b>Spin Blur</b> (កង់វិល)</td></tr><tr><td>Gaussian Blur</td><td>Filter → Blur</td><td>ព្រិលទូទៅ</td></tr><tr><td>Unsharp Mask / Smart Sharpen</td><td>Filter → Sharpen</td><td>ធ្វើឲ្យច្បាស់</td></tr><tr><td>Neural Filters</td><td>Filter menu</td><td>AI៖ Skin smoothing, Colorize រូបចាស់, Super Zoom</td></tr></table>
+
+<div class="note">💡 បំលែង Layer ជា <b>Smart Object</b> មុនដាក់ Filter → ក្លាយជា <b>Smart Filter</b> កែ/លុបបានក្រោយ។</div>
+
+<script type="text/x-code" data-lang="html" data-label="filters.html · ▶ លទ្ធផលពិត" data-demo>
+<style>
+  .r{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;font:12px sans-serif;text-align:center}
+  .p{height:100px;border-radius:8px;position:relative;overflow:hidden;background:linear-gradient(#93c5fd,#e0f2fe)}
+  .p i{position:absolute;left:40%;top:30%;width:40px;height:40px;border-radius:50%;background:#e11d48}
+  .tilt{background:linear-gradient(#93c5fd,#e0f2fe)}
+  .tilt::before,.tilt::after{content:"";position:absolute;left:0;right:0;height:35%;backdrop-filter:blur(4px)}
+  .tilt::before{top:0}.tilt::after{bottom:0}
+</style>
+<div class="r">
+  <div><div class="p"><i></i></div>Original</div>
+  <div><div class="p" style="filter:blur(3px)"><i></i></div>Gaussian blur</div>
+  <div><div class="p tilt"><i></i></div>Tilt-shift (backdrop-filter)</div>
+  <div><div class="p"><i style="box-shadow:-12px 0 6px #e11d4888,-24px 0 10px #e11d4855,-36px 0 14px #e11d4833"></i></div>Path blur (ចលនា)</div>
+  <div><div class="p"><i style="border-radius:20% 50% 40% 60%;transform:scaleX(1.4)"></i></div>Liquify (ប្តូររាង)</div>
+  <div><div class="p" style="filter:contrast(1.3) saturate(1.4) brightness(1.05)"><i></i></div>Camera Raw</div>
+</div>
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>filter:blur(3px)</code> — ដូច Gaussian Blur radius 3px។</li><li><code class='i'>backdrop-filter:blur()</code> លើផ្នែកខាងលើ/ក្រោម — ក្លែង Tilt-shift (មើលទៅដូចម៉ូដែលតូច)។</li><li><code class='i'>box-shadow</code> ច្រើនស្រទាប់ — ក្លែង Path blur (Motion)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>រូបថតម៉ូតូកំពុងបើក ប៉ុន្តែមើលទៅឈរស្ងៀម។ ប្រើ Filter អ្វីឲ្យមើលទៅលឿន? កង់វិលប្រើអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>ផ្ទៃខាងក្រោយ៖ <b>Path Blur</b> (ឬ Motion Blur) · កង់៖ <b>Spin Blur</b>។</p></details></div>
+
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>Layer Style &amp; Blending Mode</h2>
+
+<figure class="fig"><svg viewBox="0 0 960 210" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="960" height="210" fill="#fff"/><defs><linearGradient id="bg1"><stop offset="0" stop-color="#1d4ed8"/><stop offset=".5" stop-color="#f8fafc"/><stop offset="1" stop-color="#f59e0b"/></linearGradient></defs><g><rect x="14" y="20" width="108" height="140" rx="10" fill="url(#bg1)"/><circle cx="68" cy="90" r="40" fill="#e11d48" style="mix-blend-mode:normal"/></g><text x="68" y="182" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Normal</text><g><rect x="132" y="20" width="108" height="140" rx="10" fill="url(#bg1)"/><circle cx="186" cy="90" r="40" fill="#e11d48" style="mix-blend-mode:multiply"/></g><text x="186" y="182" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Multiply</text><g><rect x="250" y="20" width="108" height="140" rx="10" fill="url(#bg1)"/><circle cx="304" cy="90" r="40" fill="#e11d48" style="mix-blend-mode:screen"/></g><text x="304" y="182" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Screen</text><g><rect x="368" y="20" width="108" height="140" rx="10" fill="url(#bg1)"/><circle cx="422" cy="90" r="40" fill="#e11d48" style="mix-blend-mode:overlay"/></g><text x="422" y="182" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Overlay</text><g><rect x="486" y="20" width="108" height="140" rx="10" fill="url(#bg1)"/><circle cx="540" cy="90" r="40" fill="#e11d48" style="mix-blend-mode:darken"/></g><text x="540" y="182" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Darken</text><g><rect x="604" y="20" width="108" height="140" rx="10" fill="url(#bg1)"/><circle cx="658" cy="90" r="40" fill="#e11d48" style="mix-blend-mode:lighten"/></g><text x="658" y="182" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Lighten</text><g><rect x="722" y="20" width="108" height="140" rx="10" fill="url(#bg1)"/><circle cx="776" cy="90" r="40" fill="#e11d48" style="mix-blend-mode:difference"/></g><text x="776" y="182" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Difference</text><g><rect x="840" y="20" width="108" height="140" rx="10" fill="url(#bg1)"/><circle cx="894" cy="90" r="40" fill="#e11d48" style="mix-blend-mode:color"/></g><text x="894" y="182" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Color</text><text x="480" y="205" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">Blending mode = របៀបដែល Layer ខាងលើ (រង្វង់ក្រហម) លាយជាមួយខាងក្រោម</text></svg><figcaption>🖼️ Blending modes សំខាន់ៗ</figcaption></figure>
+
+<table><tr><th>Layer Style (fx)</th><th>ប្រើសម្រាប់</th></tr><tr><td>Drop Shadow</td><td>ស្រមោលក្រោមអក្សរ/ផលិតផល</td></tr><tr><td>Stroke</td><td>ស៊ុមជុំវិញអក្សរ (Thumbnail YouTube)</td></tr><tr><td>Outer/Inner Glow</td><td>ពន្លឺ Neon</td></tr><tr><td>Bevel &amp; Emboss</td><td>លៀន 3D</td></tr><tr><td>Gradient/Color Overlay</td><td>ប្តូរពណ៌ Layer ទាំងមូល</td></tr></table>
+
+<table><tr><th>Blend mode</th><th>លទ្ធផល</th><th>ប្រើពេល</th></tr><tr><td>Multiply</td><td>ងងឹត (លុបពណ៌ស)</td><td>Logo ផ្ទៃសលើក្រដាស · ស្រមោល</td></tr><tr><td>Screen</td><td>ភ្លឺ (លុបពណ៌ខ្មៅ)</td><td>ភ្លើង ផ្កាយ ពន្លឺ (Effect ផ្ទៃខ្មៅ)</td></tr><tr><td>Overlay / Soft Light</td><td>Contrast</td><td>Texture លើរូប</td></tr><tr><td>Color</td><td>ប្តូរពណ៌រក្សាពន្លឺ</td><td>ពណ៌រូបចាស់</td></tr></table>
+
+<script type="text/x-code" data-lang="html" data-label="layer-style.html · ▶ លទ្ធផលពិត" data-demo>
+<style>
+  body{background:#e2e8f0}
+  .t{font:900 56px/1.1 Impact,Arial Black,sans-serif;margin:6px 0}
+  .shadow{color:#fde047;text-shadow:4px 4px 0 #0f172a,6px 6px 12px rgba(0,0,0,.5)}
+  .stroke{color:#fff;-webkit-text-stroke:3px #e11d48;paint-order:stroke fill}
+  .neon{color:#fff;background:#0f172a;padding:4px 12px;border-radius:8px;text-shadow:0 0 6px #22d3ee,0 0 16px #22d3ee,0 0 32px #0891b2}
+  .bevel{color:#94a3b8;text-shadow:-1px -1px 0 #fff,2px 2px 2px #334155}
+</style>
+<div class="t shadow">SHADOW</div><div class="t stroke">STROKE</div><div class="t neon">NEON</div><div class="t bevel">BEVEL</div>
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>text-shadow: x y blur color</code> — Drop Shadow · ដាក់ច្រើនដោយក្បៀស = Glow ច្រើនស្រទាប់ (Neon)។</li><li><code class='i'>-webkit-text-stroke</code> — Stroke ជុំវិញអក្សរ។</li><li>ស្រមោលភ្លឺខាងលើឆ្វេង + ងងឹតខាងក្រោមស្តាំ = Bevel &amp; Emboss។</li><li>Blend mode ក្នុង CSS៖ <code class='i'>mix-blend-mode:multiply | screen | overlay</code>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>មានរូបផ្កាភ្លើង (Fireworks) លើផ្ទៃខ្មៅ ចង់ដាក់លើរូបទីក្រុង ដោយមិនឃើញផ្ទៃខ្មៅ។ ប្រើ Blend mode អ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Screen</b> (ឬ Lighten / Linear Dodge (Add)) — ពណ៌ខ្មៅបាត់ នៅសល់តែពន្លឺ។</p></details></div>
+
+</section>
+<section id="l13">
+<h2><span class="badge">មេរៀន ១៣</span>Retouch៖ Healing, Clone &amp; Content-Aware</h2>
+
+<table><tr><th>Tool</th><th>Key</th><th>របៀប</th></tr><tr><td>Spot Healing Brush</td><td>J</td><td>លាបលើមុន ស្នាម — លុបស្វ័យប្រវត្តិ</td></tr><tr><td>Healing Brush</td><td>J</td><td>Alt+ចុចយកប្រភព → លាប (លាយពន្លឺ)</td></tr><tr><td>Patch Tool</td><td>J</td><td>គូសតំបន់ → អូសទៅកន្លែងស្អាត</td></tr><tr><td>Clone Stamp</td><td>S</td><td>ចម្លង Pixel ពិតប្រាកដ (Alt+ចុចប្រភព)</td></tr><tr><td><b>Remove Tool</b> (AI)</td><td>J</td><td>លាបលើវត្ថុ/មនុស្សមិនចង់បាន — AI លុប</td></tr><tr><td>Content-Aware Fill</td><td>Edit menu</td><td>ជ្រើស → បំពេញតាមផ្ទៃជុំវិញ</td></tr></table>
+
+<div class="note">💡 Retouch មុខឲ្យធម្មជាតិ៖ ធ្វើលើ <b>Layer ទទេ</b> (ធីក Sample: All Layers) · កុំលុបស្នាមខ្លួន/ស្នាមជ្រួញទាំងអស់ · ពិនិត្យនៅ Zoom 100%។</div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៣</h4><p>Healing Brush និង Clone Stamp ខុសគ្នាអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Clone Stamp</b> ចម្លង Pixel ដូចបេះ · <b>Healing</b> ចម្លង Texture ហើយលាយពណ៌/ពន្លឺជាមួយកន្លែងគោលដៅ → ល្អសម្រាប់ស្បែក។</p></details></div>
+
+</section>
+<section id="l14">
+<h2><span class="badge">មេរៀន ១៤</span>AI Tools៖ Generative Fill, Expand &amp; Contextual Task Bar</h2>
+
+<figure class="fig"><svg viewBox="0 0 960 240" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="960" height="240" fill="#fff"/><rect x="30" y="30" width="250" height="170" rx="10" fill="#bae6fd"/><rect x="30" y="140" width="250" height="60" fill="#86efac"/><circle cx="230" cy="70" r="20" fill="#fde047"/><rect x="90" y="95" width="90" height="70" fill="none" stroke="#7c3aed" stroke-width="3" stroke-dasharray="7 5"/><text x="155" y="222" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">① ជ្រើសតំបន់ (Lasso)</text><rect x="330" y="80" width="300" height="70" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/><text x="480" y="108" text-anchor="middle" font-size="15" font-weight="800" fill="#6d28d9">✨ Generative Fill</text><text x="480" y="134" text-anchor="middle" font-size="14" font-weight="400" fill="#334155">“ឆ្កែតូចមួយអង្គុយលើស្មៅ”</text><text x="480" y="222" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">② វាយ Prompt → Generate</text><rect x="680" y="30" width="250" height="170" rx="10" fill="#bae6fd"/><rect x="680" y="140" width="250" height="60" fill="#86efac"/><circle cx="880" cy="70" r="20" fill="#fde047"/><ellipse cx="785" cy="150" rx="34" ry="20" fill="#a16207"/><circle cx="805" cy="120" r="17" fill="#a16207"/><circle cx="811" cy="116" r="3" fill="#111"/><text x="805" y="222" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">③ ជ្រើស 1 ក្នុង 3 Variations</text><line x1="284" y1="115" x2="326" y2="115" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><line x1="634" y1="115" x2="676" y2="115" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/></svg><figcaption>🖼️ Generative Fill (Adobe Firefly) — ជ្រើស → វាយ Prompt → ជ្រើស Variation</figcaption></figure>
+
+<table><tr><th>AI Tool</th><th>នៅណា</th><th>ធ្វើអ្វី</th></tr><tr><td>Contextual Task Bar</td><td>ខាងក្រោម Selection</td><td>ប៊ូតុងរហ័ស៖ Select subject, Remove BG, Generative fill</td></tr><tr><td><b>Generative Fill</b></td><td>ជ្រើសតំបន់ → Task bar</td><td>បន្ថែម/ប្តូរ/លុបវត្ថុតាម Prompt</td></tr><tr><td><b>Generative Expand</b></td><td>Crop tool (C) → ពង្រីកលើស Canvas</td><td>បន្តផ្ទៃខាងក្រៅរូប (ប្តូរ 1:1 → 16:9)</td></tr><tr><td>Generate Image / Background</td><td>Task bar</td><td>បង្កើតរូប/ផ្ទៃក្រោយថ្មីពីអក្សរ</td></tr><tr><td>Remove Tool</td><td>J</td><td>លុបមនុស្ស ខ្សែភ្លើង វត្ថុ</td></tr><tr><td>Select Subject / Sky</td><td>Select menu</td><td>AI ជ្រើសរើស</td></tr><tr><td>Neural Filters</td><td>Filter menu</td><td>Colorize, Smart portrait, Super zoom</td></tr></table>
+
+<h3>✍️ របៀបសរសេរ Prompt ឲ្យល្អ</h3>
+<table><tr><th>❌ ខ្សោយ</th><th>✅ ល្អ</th></tr><tr><td>dog</td><td>a small golden puppy sitting on green grass, soft morning light</td></tr><tr><td>remove</td><td>(ទុកប្រអប់ទទេ) → Generate = លុបតំបន់ដែលជ្រើស</td></tr><tr><td>sky</td><td>dramatic orange sunset sky with scattered clouds</td></tr></table>
+
+<div class="note">💡 Prompt ជាភាសាអង់គ្លេសដំណើរការល្អបំផុត · ពិពណ៌នា <b>វត្ថុ + ទីតាំង + ពន្លឺ + Style</b> · ជ្រើសតំបន់ធំជាងវត្ថុបន្តិច · Generate ច្រើនដង ហើយជ្រើស Variation ល្អបំផុត។</div>
+
+<div class="warn">⚠️ ក្រមសីលធម៌ AI៖ កុំបង្កើតរូបក្លែងបន្លំមនុស្សពិត (Deepfake), ឯកសារផ្លូវការ ឬរូបដែលបោកបញ្ឆោត · Adobe ភ្ជាប់ <b>Content Credentials</b> ដើម្បីប្រាប់ថាប្រើ AI · គោរពកម្មសិទ្ធិរូបភាពអ្នកដទៃ។</div>
+
+<script type="text/x-code" data-lang="js" data-label="expand-16x9.jsx">
+// Script: Generative Expand ជំនួស — ពង្រីក Canvas ជា 16:9 ហើយទុកឲ្យ AI បំពេញ
+var doc = app.activeDocument;
+var h = doc.height.as("px");
+var newW = Math.round(h * 16 / 9);
+doc.resizeCanvas(UnitValue(newW, "px"), UnitValue(h, "px"), AnchorPosition.MIDDLECENTER);
+alert("Canvas ថ្មី " + newW + "×" + h + " — ជ្រើសផ្ទៃទទេ ហើយចុច Generative Fill");
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>doc.height.as('px')</code> — យកកម្ពស់ជា Pixel។</li><li><code class='i'>h * 16 / 9</code> — គណនាទទឹងសម្រាប់សមាមាត្រ 16:9 (មើលវគ្គ Math for IT មេរៀន ៣)។</li><li><code class='i'>resizeCanvas(..., MIDDLECENTER)</code> — ពង្រីកស្មើគ្នាទាំងសងខាង។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៤</h4><p>រូបផលិតផលបញ្ឈរ (1080×1350) ត្រូវប្រើជា Banner Website 1920×600។ ប្រើ AI Tool អ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Crop tool → Generative Expand</b> (ឬ Canvas size + Generative Fill) ដើម្បីបន្ថែមផ្ទៃសងខាង · រួចដាក់ Text នៅតំបន់ថ្មី។</p></details></div>
+
+</section>
+<section id="l15">
+<h2><span class="badge">មេរៀន ១៥</span>Export, Actions &amp; Automation</h2>
+
+<table><tr><th>Export</th><th>របៀប</th><th>ណែនាំ</th></tr><tr><td>Quick Export as PNG</td><td>File → Export</td><td>លឿន</td></tr><tr><td>Export As</td><td><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>W</kbd></td><td>ជ្រើស JPG/PNG/WebP, Scale 1x 2x</td></tr><tr><td>Save for Web (Legacy)</td><td><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd></td><td>គ្រប់គ្រង Quality/KB</td></tr><tr><td>PDF បោះពុម្ព</td><td>Save As → Photoshop PDF</td><td>CMYK, 300 ppi, Bleed</td></tr></table>
+
+<table><tr><th>Automation</th><th>ធ្វើអ្វី</th></tr><tr><td>Actions (Alt+F9)</td><td>Record ជំហាន → Play ម្តងទៀត</td></tr><tr><td>Batch</td><td>Action លើ Folder រូបទាំងមូល</td></tr><tr><td>Image Processor</td><td>Resize + Convert ច្រើនរូប</td></tr><tr><td>Scripts (.jsx / UXP .psjs)</td><td>JavaScript គ្រប់គ្រង Photoshop ទាំងស្រុង</td></tr></table>
+
+<script type="text/x-code" data-lang="js" data-label="batch-export.jsx">
+// Export រូបភាពទាំងអស់ក្នុង Folder ជា JPG 1080px (ដូច Batch)
+var input = Folder.selectDialog("ជ្រើស Folder រូបភាព");
+var files = input.getFiles(/\.(jpg|jpeg|png|psd)$/i);
+var output = new Folder(input + "/export"); output.create();
+
+for (var i = 0; i < files.length; i++) {
+    var doc = open(files[i]);
+    if (doc.width.as("px") > 1080) {
+        doc.resizeImage(UnitValue(1080, "px"), null, 72, ResampleMethod.BICUBICSHARPER);
+    }
+    var opt = new JPEGSaveOptions(); opt.quality = 9;          // 0–12
+    var name = doc.name.replace(/\.[^.]+$/, "") + "_1080.jpg";
+    doc.saveAs(new File(output + "/" + name), opt, true);
+    doc.close(SaveOptions.DONOTSAVECHANGES);
+}
+alert("✅ បាន Export " + files.length + " រូប");
+</script>
+
+<div class="how"><b>🧩 របៀប Code ជំហានៗ</b><ol class="steps"><li><code class='i'>Folder.selectDialog</code> — បើកផ្ទាំងជ្រើស Folder · <code class='i'>getFiles(/regex/)</code> — យកតែ File រូបភាព។</li><li><code class='i'>for</code> loop — បើករូបម្តងមួយៗ (<code class='i'>open</code>)។</li><li><code class='i'>resizeImage(1080px, null)</code> — <code class='i'>null</code> កម្ពស់ = រក្សាសមាមាត្រ · BICUBICSHARPER ល្អពេលបង្រួម។</li><li><code class='i'>JPEGSaveOptions</code> quality 9/12 · <code class='i'>saveAs(..., true)</code> = Save as copy · <code class='i'>close(DONOTSAVECHANGES)</code> មិនប៉ះ File ដើម។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១៥</h4><p>រូប Facebook ចេញព្រិល។ គួរ Export ទំហំ និង Format អ្វី?</p><details><summary>មើលចម្លើយ</summary><p>Export ត្រូវទំហំពិត (ឧ. <b>1080 px</b> ឬ 2160 px = 2x) · <b>JPG Quality 80–90%</b> ឬ PNG សម្រាប់អក្សរ/Graphic · sRGB · កុំ Upload រូបធំពេក ព្រោះ Facebook បង្រួមម្តងទៀត។</p></details></div>
+
+</section>
+<section id="cheat">
+<h2>📋 Shortcut Cheat Sheet</h2>
+
+<table><tr><th>Shortcut</th><th>សកម្មភាព</th><th>Shortcut</th><th>សកម្មភាព</th></tr><tr><td><kbd>V</kbd></td><td>Move</td><td><kbd>Ctrl</kbd>+<kbd>T</kbd></td><td>Free Transform</td></tr><tr><td><kbd>M</kbd></td><td>Marquee</td><td><kbd>Ctrl</kbd>+<kbd>J</kbd></td><td>ចម្លង Layer</td></tr><tr><td><kbd>L</kbd></td><td>Lasso</td><td><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>G</kbd></td><td>Clipping mask</td></tr><tr><td><kbd>W</kbd></td><td>Object/Quick selection</td><td><kbd>Ctrl</kbd>+<kbd>D</kbd></td><td>Deselect</td></tr><tr><td><kbd>C</kbd></td><td>Crop</td><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd></td><td>Inverse</td></tr><tr><td><kbd>J</kbd></td><td>Healing / Remove</td><td><kbd>Ctrl</kbd>+<kbd>L</kbd></td><td>Levels</td></tr><tr><td><kbd>B</kbd></td><td>Brush · [ ] ទំហំ</td><td><kbd>Ctrl</kbd>+<kbd>M</kbd></td><td>Curves</td></tr><tr><td><kbd>S</kbd></td><td>Clone stamp</td><td><kbd>Ctrl</kbd>+<kbd>U</kbd></td><td>Hue/Saturation</td></tr><tr><td><kbd>G</kbd></td><td>Gradient / Bucket</td><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd></td><td>Liquify</td></tr><tr><td><kbd>T</kbd></td><td>Type</td><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>A</kbd></td><td>Camera Raw</td></tr><tr><td><kbd>P</kbd></td><td>Pen</td><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>N</kbd></td><td>Layer ថ្មី</td></tr><tr><td><kbd>U</kbd></td><td>Shape</td><td><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>W</kbd></td><td>Export as</td></tr></table>
+
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងអាជីព៖ Thumbnail &amp; Facebook Post</h2>
+
+<ol class="steps">
+<li><b>Brief</b>៖ Thumbnail YouTube 1280×720 សម្រាប់វីដេអូ “រៀន Excel ក្នុង ១០ នាទី”។</li>
+<li><b>Remove BG</b> រូបមនុស្ស (មេរៀន ៥) → ដាក់ខាងស្តាំ · Drop shadow + Stroke ស (មេរៀន ១២)។</li>
+<li><b>Background</b>៖ Gradient ពណ៌បៃតង Excel (មេរៀន ៦) + Generative Expand បើរូបតូច (មេរៀន ១៤)។</li>
+<li><b>Text</b>៖ ចំណងជើង ≤ 4 ពាក្យ Font ក្រាស់ (Koulen) ធំ ដាក់ Stroke ខ្មៅ — អានបានលើទូរស័ព្ទ។</li>
+<li><b>Adjust</b>៖ Vibrance/Contrast ឲ្យពណ៌រស់ (មេរៀន ១០)។</li>
+<li><b>Export</b> JPG 1280×720 &lt; 2 MB (មេរៀន ១៥) · Save PSD ទុក។</li>
+</ol>
+<table><tr><th>ច្បាប់រចនា</th><th>ពន្យល់</th></tr><tr><td>Contrast</td><td>អក្សរភ្លឺលើផ្ទៃងងឹត ឬផ្ទុយមកវិញ</td></tr><tr><td>Hierarchy</td><td>ចំណងជើងធំបំផុត → រង → ព័ត៌មានតូច</td></tr><tr><td>Alignment &amp; Grid</td><td>តម្រង់ធាតុតាមបន្ទាត់ · ប្រើ Guides (Ctrl+R)</td></tr><tr><td>Color 60-30-10</td><td>ពណ៌មេ 60% · រង 30% · Accent 10%</td></tr><tr><td>Whitespace</td><td>ទុកកន្លែងទំនេរ កុំដាក់ពេញ</td></tr></table>
+
+</section>
+<section id="pro-app">
+<h2>💻 Photo Editor Pro (App)</h2>
+
+<p>កម្មវិធីកែរូបក្នុង Browser ដែលប្រើគំនិតដូច Photoshop៖ <b>Adjustments</b> (Brightness, Contrast, Saturation, Hue, Warmth, B&amp;W, Sepia) · <b>Presets</b> · <b>Effects</b> (Blur, Vignette, Pixelate, Color overlay + Blend mode, Flip) · <b>Text</b> ជាមួយ Stroke &amp; Shadow · <b>Size presets</b> Facebook/YouTube/Story · <b>Export</b> PNG/JPG/WebP។ សង្កត់ប៊ូតុង <b>◀ ដើម</b> ដើម្បីប្រៀបធៀបមុន/ក្រោយ។ បើករូបរបស់អ្នកបាន (រូបមិនចេញពីឧបករណ៍របស់អ្នកទេ)។</p>
+
+<div class="pe" id="pe">
+  <div class="pe-stage"><canvas id="peC" width="720" height="480"></canvas><div class="pe-cmp" id="peCmp">◀ ដើម</div></div>
+  <div class="pe-side">
+    <div class="pe-row"><label class="btn pe-up">📂 បើករូប<input type="file" id="peFile" accept="image/*" hidden></label><button class="btn" id="peSample">🎲 រូបគំរូ</button><button class="btn" id="peReset">↺ Reset</button></div>
+    <div class="pe-tabs"><button class="on" data-p="adj">🎚️ Adjust</button><button data-p="fx">✨ Effects</button><button data-p="txt">T Text</button><button data-p="sz">📐 Size</button></div>
+    <div class="pe-p on" data-p="adj">
+      <label>☀️ Brightness <input type="range" id="f_b" min="0" max="200" value="100"><output></output></label>
+      <label>◐ Contrast <input type="range" id="f_c" min="0" max="200" value="100"><output></output></label>
+      <label>🎨 Saturation <input type="range" id="f_s" min="0" max="300" value="100"><output></output></label>
+      <label>🌈 Hue <input type="range" id="f_h" min="-180" max="180" value="0"><output></output></label>
+      <label>🌡️ Warmth <input type="range" id="f_w" min="-100" max="100" value="0"><output></output></label>
+      <label>⚫ Grayscale <input type="range" id="f_g" min="0" max="100" value="0"><output></output></label>
+      <label>📜 Sepia <input type="range" id="f_sp" min="0" max="100" value="0"><output></output></label>
+      <div class="pe-pre"><button class="btn" data-pre="vivid">Vivid</button><button class="btn" data-pre="bw">B&amp;W</button><button class="btn" data-pre="vintage">Vintage</button><button class="btn" data-pre="cool">Cool</button><button class="btn" data-pre="warm">Golden</button></div>
+    </div>
+    <div class="pe-p" data-p="fx">
+      <label>💧 Blur <input type="range" id="f_bl" min="0" max="20" value="0"><output></output></label>
+      <label>🔲 Vignette <input type="range" id="f_v" min="0" max="100" value="0"><output></output></label>
+      <label>🟪 Pixelate <input type="range" id="f_px" min="1" max="40" value="1"><output></output></label>
+      <label>🎭 Overlay color <input type="color" id="f_oc" value="#ff6a00"></label>
+      <label>Blend mode <select id="f_bm"><option>source-over</option><option>multiply</option><option>screen</option><option selected>overlay</option><option>soft-light</option><option>color</option><option>difference</option></select></label>
+      <label>Overlay opacity <input type="range" id="f_oo" min="0" max="100" value="0"><output></output></label>
+      <label><input type="checkbox" id="f_fl"> ↔ Flip horizontal</label>
+    </div>
+    <div class="pe-p" data-p="txt">
+      <label>អក្សរ <input id="t_v" value="សួស្តី xCBRF"></label>
+      <label>ទំហំ <input type="range" id="t_s" min="16" max="160" value="64"><output></output></label>
+      <label>ពណ៌ <input type="color" id="t_c" value="#ffffff"></label>
+      <label>Stroke <input type="color" id="t_k" value="#e11d48"></label>
+      <label>ទីតាំង Y <input type="range" id="t_y" min="5" max="95" value="85"><output></output></label>
+      <label><input type="checkbox" id="t_sh" checked> Drop shadow</label>
+    </div>
+    <div class="pe-p" data-p="sz">
+      <label>Preset <select id="z_p"><option value="">— ដើម —</option><option value="1080x1080">Facebook 1:1 (1080²)</option><option value="1080x1350">Facebook 4:5</option><option value="1280x720">YouTube thumbnail</option><option value="1080x1920">Story 9:16</option></select></label>
+      <div class="pe-info" id="z_i"></div>
+      <label>Export <select id="z_f"><option value="image/png">PNG</option><option value="image/jpeg">JPG 90%</option><option value="image/webp">WebP</option></select></label>
+      <button class="btn pe-dl" id="peDl">💾 Export</button><div class="pe-info" id="peSz"></div>
+    </div>
+  </div>
+</div>
+<script>
+(() => {
+  const C = document.getElementById("peC"), X = C.getContext("2d"), $ = id => document.getElementById(id);
+  let src = null, showOrig = false;
+  function sample() {
+    const c = document.createElement("canvas"); c.width = 900; c.height = 600; const x = c.getContext("2d");
+    let g = x.createLinearGradient(0, 0, 0, 600); g.addColorStop(0, "#1e3a8a"); g.addColorStop(.55, "#f97316"); g.addColorStop(.56, "#0e7490"); g.addColorStop(1, "#164e63"); x.fillStyle = g; x.fillRect(0, 0, 900, 600);
+    x.fillStyle = "#fde68a"; x.beginPath(); x.arc(450, 320, 70, 0, 7); x.fill();
+    x.fillStyle = "#0f172a";
+    [[160, 150], [450, 210], [740, 150]].forEach(([cx, h]) => { x.beginPath(); x.moveTo(cx - 70, 340); x.quadraticCurveTo(cx - 40, 340 - h * .6, cx, 340 - h); x.quadraticCurveTo(cx + 40, 340 - h * .6, cx + 70, 340); x.fill(); });
+    x.fillRect(60, 330, 780, 14);
+    for (let i = 0; i < 40; i++) { x.globalAlpha = .25; x.fillStyle = "#fde68a"; x.fillRect(Math.random() * 900, 360 + Math.random() * 220, 40 + Math.random() * 120, 2); }
+    x.globalAlpha = 1; const im = new Image(); im.onload = () => { src = im; fit(); }; im.src = c.toDataURL();
+  }
+  function fit() {
+    const p = $("z_p").value; let w, h;
+    if (p) [w, h] = p.split("x").map(Number); else { const s = Math.min(1, 1600 / Math.max(src.width, src.height)); w = Math.round(src.width * s); h = Math.round(src.height * s); }
+    C.width = w; C.height = h; $("z_i").textContent = `Canvas ${w} × ${h} px · Aspect ${(w / h).toFixed(2)}`; draw();
+  }
+  const v = id => +$(id).value;
+  function draw() {
+    if (!src) return; const w = C.width, h = C.height;
+    document.querySelectorAll(".pe-p output").forEach(o => o.textContent = o.previousElementSibling.value);
+    X.save(); X.clearRect(0, 0, w, h);
+    if ($("f_fl").checked && !showOrig) { X.translate(w, 0); X.scale(-1, 1); }
+    const s = Math.max(w / src.width, h / src.height), dw = src.width * s, dh = src.height * s;
+    X.filter = showOrig ? "none" : `brightness(${v("f_b")}%) contrast(${v("f_c")}%) saturate(${v("f_s")}%) hue-rotate(${v("f_h")}deg) grayscale(${v("f_g")}%) sepia(${v("f_sp")}%) blur(${v("f_bl")}px)`;
+    const px = showOrig ? 1 : v("f_px");
+    if (px > 1) { const t = document.createElement("canvas"); t.width = Math.ceil(w / px); t.height = Math.ceil(h / px); const tx = t.getContext("2d"); tx.filter = X.filter; tx.drawImage(src, (w - dw) / 2 / px, (h - dh) / 2 / px, dw / px, dh / px); X.filter = "none"; X.imageSmoothingEnabled = false; X.drawImage(t, 0, 0, w, h); X.imageSmoothingEnabled = true; }
+    else X.drawImage(src, (w - dw) / 2, (h - dh) / 2, dw, dh);
+    X.filter = "none"; X.restore();
+    if (showOrig) return;
+    const wm = v("f_w"); if (wm) { X.globalCompositeOperation = "soft-light"; X.fillStyle = wm > 0 ? `rgba(255,140,0,${wm / 100 * .6})` : `rgba(0,120,255,${-wm / 100 * .6})`; X.fillRect(0, 0, w, h); }
+    const oo = v("f_oo"); if (oo) { X.globalCompositeOperation = $("f_bm").value; X.globalAlpha = oo / 100; X.fillStyle = $("f_oc").value; X.fillRect(0, 0, w, h); X.globalAlpha = 1; }
+    X.globalCompositeOperation = "source-over";
+    const vg = v("f_v"); if (vg) { const g = X.createRadialGradient(w / 2, h / 2, Math.min(w, h) * .3, w / 2, h / 2, Math.max(w, h) * .75); g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(1, `rgba(0,0,0,${vg / 100})`); X.fillStyle = g; X.fillRect(0, 0, w, h); }
+    const t = $("t_v").value; if (t) { const fs = v("t_s") * w / 1080 * 1.4; X.font = `700 ${fs}px "Kantumruy Pro", "Noto Sans Khmer", sans-serif`; X.textAlign = "center"; X.textBaseline = "middle"; const y = h * v("t_y") / 100;
+      if ($("t_sh").checked) { X.shadowColor = "rgba(0,0,0,.6)"; X.shadowBlur = fs / 4; X.shadowOffsetY = fs / 12; }
+      X.lineWidth = fs / 8; X.strokeStyle = $("t_k").value; X.lineJoin = "round"; X.strokeText(t, w / 2, y); X.shadowColor = "transparent"; X.fillStyle = $("t_c").value; X.fillText(t, w / 2, y); }
+  }
+  const PRE = { vivid: { f_b: 105, f_c: 120, f_s: 160 }, bw: { f_g: 100, f_c: 130, f_s: 100 }, vintage: { f_sp: 55, f_c: 90, f_b: 105, f_v: 45 }, cool: { f_w: -55, f_s: 110 }, warm: { f_w: 60, f_b: 105, f_v: 25 } };
+  function reset() { document.querySelectorAll('.pe-p[data-p="adj"] input,.pe-p[data-p="fx"] input[type=range]').forEach(i => i.value = i.defaultValue); $("f_fl").checked = false; }
+  document.querySelectorAll("[data-pre]").forEach(b => b.onclick = () => { reset(); Object.entries(PRE[b.dataset.pre]).forEach(([k, val]) => $(k).value = val); draw(); });
+  document.querySelectorAll(".pe input,.pe select").forEach(i => i.addEventListener("input", () => i.id === "z_p" ? fit() : draw()));
+  document.querySelectorAll(".pe-tabs button").forEach(b => b.onclick = () => { document.querySelectorAll(".pe-tabs button,.pe-p").forEach(x => x.classList.toggle("on", x.dataset.p === b.dataset.p)); b.classList.add("on"); });
+  $("peReset").onclick = () => { reset(); draw(); };
+  $("peSample").onclick = sample;
+  $("peFile").onchange = e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => { const im = new Image(); im.onload = () => { src = im; fit(); }; im.src = r.result; }; r.readAsDataURL(f); };
+  const cmp = $("peCmp"); ["pointerdown"].forEach(ev => cmp.addEventListener(ev, () => { showOrig = true; draw(); })); ["pointerup", "pointerleave"].forEach(ev => cmp.addEventListener(ev, () => { showOrig = false; draw(); }));
+  $("peDl").onclick = () => { const type = $("z_f").value; const url = C.toDataURL(type, .9); $("peSz").textContent = `ទំហំប្រហែល ${Math.round(url.length * .75 / 1024)} KB`; try { const a = document.createElement("a"); a.href = url; a.download = "xcbrf-photo." + type.split("/")[1]; document.body.appendChild(a); a.click(); a.remove(); } catch (e) {} };
+  sample();
+})();
+</script>
+
+<h3>🏆 Quiz Photoshop ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["Photoshop ធ្វើការជាមួយរូបភាពប្រភេទណា?", ["Vector", "Raster (Pixel)", "3D តែប៉ុណ្ណោះ", "Audio"], 1], ["អ្នកណាបង្កើត Photoshop ដំបូង?", ["Bill Gates", "Thomas &amp; John Knoll", "Steve Jobs", "Linus Torvalds"], 1], ["Photoshop 1.0 ចេញឆ្នាំ?", ["1985", "1990", "2000", "2013"], 1], ["Poster បោះពុម្ពគួរប្រើ Resolution?", ["72 ppi", "150 ppi", "300 ppi", "30 ppi"], 2], ["Color mode សម្រាប់បោះពុម្ព?", ["RGB", "CMYK", "Grayscale ជានិច្ច", "Indexed"], 1], ["File ណារក្សា Layers?", ["JPG", "PNG", "PSD", "GIF"], 2], ["Logo ផ្ទៃថ្លាគួរ Export ជា?", ["JPG", "PNG", "BMP", "TXT"], 1], ["Ctrl + J ធ្វើអ្វី?", ["លុប Layer", "ចម្លង Layer", "Merge", "Save"], 1], ["ក្នុង Layer Mask ពណ៌ខ្មៅមានន័យ?", ["បង្ហាញ", "លាក់", "ពណ៌ខ្មៅលើរូប", "Blur"], 1], ["Shortcut Free Transform?", ["Ctrl+F", "Ctrl+T", "Ctrl+R", "Ctrl+E"], 1], ["Clipping Mask = ?", ["Ctrl+Alt+G", "Ctrl+G", "Ctrl+M", "Ctrl+Shift+C"], 0], ["Blend mode ណាលុបពណ៌ខ្មៅ (ល្អសម្រាប់ផ្កាភ្លើង)?", ["Multiply", "Screen", "Darken", "Normal"], 1], ["Blend mode ណាលុបពណ៌ស?", ["Screen", "Lighten", "Multiply", "Color"], 2], ["Tool ណាលុបមុនលើមុខលឿនបំផុត?", ["Spot Healing Brush", "Pen", "Type", "Gradient"], 0], ["Generative Fill ប្រើ AI ឈ្មោះ?", ["ChatGPT", "Adobe Firefly", "Gemini", "Siri"], 1], ["ពង្រីករូបលើស Canvas ដោយ AI ប្រើ?", ["Generative Expand", "Liquify", "Clone Stamp", "Magic Wand"], 0], ["Liquify ប្រើសម្រាប់?", ["ប្តូររាង Pixel/មុខ", "ប្តូរ Font", "Export", "បង្កើត Layer"], 0], ["Adjustment Layer ល្អជាង Image→Adjustment ព្រោះ?", ["លឿនជាង", "កែ/លុបបានក្រោយ (Non-destructive)", "File តូច", "មាន Font"], 1], ["Pen Tool បង្កើតអ្វី?", ["Pixel", "Path (Anchor + Handle)", "Layer style", "Filter"], 1], ["Action + Batch ប្រើសម្រាប់?", ["ការងារដដែលៗលើរូបច្រើន", "គូរដៃ", "Font", "Print"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+
+<ol class="steps"><li><b>Photoshop</b> (វគ្គនេះ) ✅</li><li><b>Illustrator</b> — Logo &amp; Vector (xCenBar)</li><li><b>UX/UI &amp; Figma</b> — រចនា App/Website</li>
+<li><b>Premiere / After Effects / DaVinci</b> — វីដេអូ &amp; Motion</li><li>Portfolio ៥–១០ ស្នាដៃលើ Behance/Facebook Page → ទទួល Freelance</li></ol>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="photoshop"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

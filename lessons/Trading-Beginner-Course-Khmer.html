@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន Trading កម្រិតដំបូង</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#0b7285; --accent2:#12b886; --accent-soft:#e6fcf5;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#63e6be; --accent2:#38d9a9; --accent-soft:#0b2620;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#63e6be; --accent2:#38d9a9; --accent-soft:#0b2620;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#081c2c,#0b7285 50%,#12b886);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/tr1.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/tr1.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Trading កម្រិតដំបូង៖ Stock · Forex · Crypto</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Trading ជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#setup">២. ត្រៀមខ្លួន៖ Demo account &amp; ឧបករណ៍</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Trading · Investing · Gambling ខុសគ្នាដូចម្តេច?</a>
+<a href="#l2">មេរៀន ២: ទីផ្សារ ៣៖ Stock · Forex · Crypto</a>
+<a href="#l3">មេរៀន ៣: Stock &amp; ផ្សារមូលបត្រកម្ពុជា (CSX)</a>
+<a href="#l4">មេរៀន ៤: Forex៖ Currency pair · Pip · Lot · Spread</a>
+<a href="#l5">មេរៀន ៥: Crypto៖ Blockchain · Wallet · Exchange · Stablecoin</a>
+<a href="#l6">មេរៀន ៦: ប្រភេទ Order៖ Market · Limit · Stop · SL · TP</a>
+<a href="#l7">មេរៀន ៧: Bid/Ask · Spread · ថ្លៃសេវា · Slippage</a>
+<a href="#l8">មេរៀន ៨: អាន Chart៖ Line · Bar · Candlestick</a>
+<a href="#l9">មេរៀន ៩: Trend &amp; Timeframe</a>
+<a href="#l10">មេរៀន ១០: Support &amp; Resistance</a>
+<a href="#l11">មេរៀន ១១: Risk management៖ ច្បាប់ 1% · Position size · R:R</a>
+<a href="#l12">មេរៀន ១២: Trading plan · Journal · ចិត្តសាស្ត្រ · ការការពារ Scam</a>
+<a href="#cheat">📋 Cheat Sheet</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោង៖ Trading plan ផ្ទាល់ខ្លួន + Demo ៣០ Trade</a>
+<a href="#pro-app">💻 Trading Lab Pro (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>📈 Trading កម្រិតដំបូង (១/៣) — យល់ទីផ្សារ មុនប្រើលុយ</h2>
+  <p>Trading vs Investing, ទីផ្សារ <b>Stock (CSX កម្ពុជា) · Forex · Crypto</b>, Pip/Lot/Spread, ប្រភេទ Order, អាន <b>Candlestick</b>, Trend, <b>Support/Resistance</b>, <b>Risk 1% &amp; Position size</b>, Trading plan, Journal និងការការពារ Scam — ឧទាហរណ៍គណនា (គ្មាន Code) + App Paper trading។ <b>សម្រាប់ការអប់រំ មិនមែនដំបូន្មានហិរញ្ញវត្ថុ</b>។</p>
+  <p><span class="badge">📘 ១២ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">📊 ឧទាហរណ៍គណនា (គ្មាន Code)</span><span class="badge">📈 Trading Lab Pro</span></p>
+</section>
+<section id="intro">
+<h2>១. Trading ជាអ្វី? អ្នកណាបង្កើត?</h2>
+
+<div class="warn" style="border-left-color:#e03131">⚠️ <b>ការព្រមាន (សូមអានមុនរៀន)</b>៖ វគ្គនេះសម្រាប់ <b>ការអប់រំប៉ុណ្ណោះ</b> មិនមែនជាដំបូន្មានហិរញ្ញវត្ថុ ឬការណែនាំឲ្យទិញ/លក់ទេ។ Trading មាន <b>ហានិភ័យខ្ពស់</b> — អ្នកអាចបាត់បង់ប្រាក់ទាំងអស់ (ជាពិសេសពេលប្រើ Leverage)។ Broker CFD ដែលមានអាជ្ញាប័ណ្ណនៅអឺរ៉ុប ត្រូវបង្ហាញថាគណនីអតិថិជនភាគច្រើន (ជាទូទៅ <b>៧០–៨០%+</b>) <b>ខាតប្រាក់</b>។
+<br>✅ អាយុក្រោម <b>១៨ ឆ្នាំ</b>៖ រៀនទ្រឹស្តី និងហាត់តែលើ <b>គណនីសាកល្បង (Demo)</b> / Paper trading ក្នុងវគ្គនេះ ហើយពិភាក្សាជាមួយឪពុកម្តាយ។ ✅ កុំប្រើប្រាក់ខ្ចី ប្រាក់សាលា ឬប្រាក់ដែលអ្នកមិនអាចបាត់បង់បាន។ ✅ ប្រុងប្រយ័ត្ន <b>ការបោកប្រាស់</b>៖ «ចំណេញធានា ១០%/ខែ», «Signal VIP», «ផ្ញើលុយមកខ្ញុំ Trade ជំនួស» = សញ្ញាគ្រោះថ្នាក់។</div>
+
+<p><b>Trading</b> (ការជួញដូរ) = ការ <b>ទិញ និងលក់</b> ទ្រព្យហិរញ្ញវត្ថុ (ភាគហ៊ុន រូបិយប័ណ្ណ Crypto…) ក្នុងរយៈពេលខ្លី ឬមធ្យម ដើម្បីរកចំណេញពីការ <b>ប្រែប្រួលតម្លៃ</b>។ Trader ល្អមិនមែនជាអ្នក «ទាយត្រូវ» គ្រប់ពេលទេ — តែជាអ្នកមាន <b>ផែនការ</b>, <b>គ្រប់គ្រងហានិភ័យ</b> និង <b>វិន័យ</b>។ <button class="btn say" data-say="Trading, Stock, Forex, Crypto">🔊 អានពាក្យ</button></p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#7048e8"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#7048e8">1602</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Amsterdam · VOC ភាគហ៊ុនដំបូង</text><circle cx="200" cy="115" r="11" fill="#e8590c"/><text x="200" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#e8590c">1700s</text><text x="200" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Homma · ទៀនជប៉ុន</text><circle cx="320" cy="115" r="11" fill="#1c7ed6"/><text x="320" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#1c7ed6">1792</text><text x="320" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Buttonwood → NYSE</text><circle cx="440" cy="115" r="11" fill="#0ca678"/><text x="440" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#0ca678">1884</text><text x="440" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Charles Dow · Index</text><circle cx="560" cy="115" r="11" fill="#c92a2a"/><text x="560" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#c92a2a">1971</text><text x="560" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Forex អណ្តែត · NASDAQ</text><circle cx="680" cy="115" r="11" fill="#f59f00"/><text x="680" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#f59f00">2009</text><text x="680" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Bitcoin (Satoshi)</text><circle cx="800" cy="115" r="11" fill="#d6336c"/><text x="800" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#d6336c">2012</text><text x="800" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">CSX ជួញដូរដំបូង</text><circle cx="920" cy="115" r="11" fill="#495057"/><text x="920" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#495057">2024</text><text x="920" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">NBC Prakas Crypto</text></svg><figcaption>🖼️ ប្រវត្តិទីផ្សារហិរញ្ញវត្ថុ — ពីភាគហ៊ុនដំបូង ដល់ Crypto និងកម្ពុជា</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>1602</td><td><b>ក្រុមហ៊ុន VOC</b> (ហូឡង់) · ផ្សារ Amsterdam</td><td>ក្រុមហ៊ុនដំបូងដែលចេញភាគហ៊ុនឲ្យសាធារណជនទិញលក់ — កំណើតផ្សារភាគហ៊ុនទំនើប</td></tr><tr><td>សតវត្សទី ១៨</td><td><b>Munehisa Homma</b> (ជប៉ុន) · ផ្សារស្រូវ Dōjima, Osaka</td><td>ឫសគល់នៃ <b>Candlestick</b> (ទៀនជប៉ុន) — Steve Nison ផ្សព្វផ្សាយទៅលោកខាងលិចឆ្នាំ 1991</td></tr><tr><td>1792</td><td><b>Buttonwood Agreement</b> (ឈ្មួញ ២៤ នាក់ នៅ Wall Street)</td><td>កំណើត <b>New York Stock Exchange (NYSE)</b></td></tr><tr><td>1884–1896</td><td><b>Charles Dow</b> (Wall Street Journal)</td><td>សន្ទស្សន៍ Dow Jones · <b>Dow Theory</b> = គ្រឹះនៃ Technical analysis</td></tr><tr><td>1971</td><td><b>Nixon</b> បញ្ចប់ការប្តូរដុល្លារជាមាស (Bretton Woods)</td><td>អត្រាប្តូរប្រាក់ <b>អណ្តែត</b> → ទីផ្សារ <b>Forex</b> ទំនើប · NASDAQ (ផ្សារអេឡិចត្រូនិក) ក៏ចាប់ផ្តើមឆ្នាំនេះ</td></tr><tr><td>2008–2009</td><td><b>Satoshi Nakamoto</b> (ឈ្មោះក្លែង)</td><td>Whitepaper <b>Bitcoin</b> (ខែតុលា 2008) · Block ដំបូង (មករា 2009)</td></tr><tr><td>2011–2012</td><td><b>Cambodia Securities Exchange (CSX)</b></td><td>បង្កើតឆ្នាំ 2011 · ការជួញដូរដំបូង (រដ្ឋាករទឹកស្វយ័តភ្នំពេញ PWSA) ឆ្នាំ 2012 · គ្រប់គ្រងដោយ <b>SERC</b></td></tr><tr><td>2024</td><td><b>ធនាគារជាតិនៃកម្ពុជា (NBC)</b></td><td>ប្រកាសលើប្រតិបត្តិការ Crypto-asset (ធ្នូ 2024)៖ ធនាគារអាចធ្វើប្រតិបត្តិការ Stablecoin/Tokenized asset ដោយមានការអនុញ្ញាត ប៉ុន្តែ <b>មិនអាច</b> ជាមួយ Crypto គ្មានទ្រព្យធានា ដូច Bitcoin</td></tr></table>
+
+<div class="grid"><div class="card"><b>🎯 ប្រើធ្វើអ្វី?</b><br>រកចំណេញរយៈពេលខ្លី · Hedge (ការពារហានិភ័យ) · ផ្តល់ Liquidity ដល់ទីផ្សារ</div><div class="card"><b>🏢 អាជីព</b><br>Trader ក្រុមហ៊ុនមូលបត្រ/ធនាគារ · Analyst · Risk manager · Quant developer</div><div class="card"><b>🧠 ជំនាញ</b><br>គណិតវិទ្យា ភាគរយ · អាន Chart · គ្រប់គ្រងអារម្មណ៍ · Excel (វគ្គកម្រិតខ្ពស់)</div><div class="card"><b>📚 វគ្គនេះ</b><br>កម្រិតដំបូង (១/៣) → Intermediate → Advanced</div></div>
+
+</section>
+<section id="setup">
+<h2>២. ត្រៀមខ្លួន៖ Demo account &amp; ឧបករណ៍</h2>
+
+<ol class="steps">
+<li><b>Paper trading</b>៖ ប្រើ <b>Trading Lab Pro</b> នៅចុងវគ្គនេះ (លុយក្លែង $10,000 · Chart ក្លែង) — មិនបាច់ចុះឈ្មោះ។</li>
+<li><b>Chart ពិត</b>៖ TradingView (ឥតគិតថ្លៃ) — មើល Chart Stock/Forex/Crypto ពិត ហើយហាតគូស Support/Resistance។</li>
+<li><b>Demo account</b> (១៨+)៖ Broker ដែលមានអាជ្ញាប័ណ្ណ ច្រើនផ្តល់គណនី Demo ឥតគិតថ្លៃ — ហាត់ <b>យ៉ាងតិច ៣ ខែ</b> មុនគិតពីប្រាក់ពិត។</li>
+<li><b>Stock កម្ពុជា</b>៖ បើកគណនីតាម <b>ក្រុមហ៊ុនមូលបត្រ ដែលមានអាជ្ញាប័ណ្ណពី SERC</b> ហើយស្នើលេខ <b>Investor ID</b> — ពិនិត្យបញ្ជីផ្លូវការលើ serc.gov.kh / csx.com.kh។</li>
+<li><b>Journal</b>៖ កត់ត្រារាល់ Trade (មេរៀន ១២) — គ្មាន Journal = គ្មានការរៀន។</li></ol>
+<div class="note">💡 វគ្គនេះមិនណែនាំ Broker ឬ Exchange ណាមួយទេ។ មុនប្រើសេវាណាមួយ (ពេលអ្នកពេញអាយុ) ត្រូវពិនិត្យ <b>អាជ្ញាប័ណ្ណ</b> ពីនិយ័តករ (SERC កម្ពុជា, FCA អង់គ្លេស, ASIC អូស្ត្រាលី…) — Broker គ្មានអាជ្ញាប័ណ្ណ អាចបិទ ហើយយកលុយអ្នកទៅ។</div>
+
+</section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>Trading · Investing · Gambling ខុសគ្នាដូចម្តេច?</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 200" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="200" fill="#fff"/><defs><linearGradient id="sp" x1="0" x2="1"><stop offset="0" stop-color="#2f9e44"/><stop offset=".5" stop-color="#f59f00"/><stop offset="1" stop-color="#e03131"/></linearGradient></defs><rect x="40" y="70" width="860" height="22" rx="11" fill="url(#sp)"/><rect x="40" y="110" width="230" height="70" rx="14" fill="#2f9e44"/><text x="155.0" y="139.0" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">🌳 Investing</text><text x="155.0" y="161.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ឆ្នាំ ↔ ទសវត្ស · Value</text><rect x="355" y="110" width="230" height="70" rx="14" fill="#f59f00"/><text x="470.0" y="139.0" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">📈 Trading</text><text x="470.0" y="161.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">នាទី ↔ សប្តាហ៍ · Plan + SL</text><rect x="670" y="110" width="230" height="70" rx="14" fill="#e03131"/><text x="785.0" y="139.0" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">🎰 Gambling</text><text x="785.0" y="161.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">គ្មានផែនការ · គ្មាន Edge</text><text x="470" y="40" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">រយៈពេល ហានិភ័យ និងវិន័យ — Trading គ្មានផែនការ = ល្បែងស៊ីសង</text></svg><figcaption>🖼️ Trading ស្ថិតនៅកណ្តាល — ភាពខុសគ្នាគឺ ផែនការ + ការគ្រប់គ្រងហានិភ័យ</figcaption></figure>
+
+<table><tr><th></th><th>Investing</th><th>Trading</th><th>Gambling</th></tr><tr><td>រយៈពេល</td><td>ឆ្នាំ–ទសវត្ស</td><td>នាទី–សប្តាហ៍ (Day/Swing)</td><td>ភ្លាមៗ</td></tr><tr><td>ផ្អែកលើ</td><td>តម្លៃក្រុមហ៊ុន · ភាគលាភ</td><td>Chart · ព័ត៌មាន · ស្ថិតិ</td><td>សំណាង</td></tr><tr><td>ការការពារ</td><td>ចែកហានិភ័យ (Diversify)</td><td>Stop-loss · Position size</td><td>គ្មាន</td></tr><tr><td>ប្រភេទ Trader</td><td>—</td><td>Scalper (នាទី) · Day trader (ថ្ងៃ) · Swing (ថ្ងៃ–សប្តាហ៍) · Position (ខែ)</td><td>—</td></tr></table>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>ការប្រាក់ 5%/ឆ្នាំ: 5ឆ្នាំ=$1,276  10ឆ្នាំ=$1,629  20ឆ្នាំ=$2,653  30ឆ្នាំ=$4,322
+ការប្រាក់ 8%/ឆ្នាំ: 5ឆ្នាំ=$1,469  10ឆ្នាំ=$2,159  20ឆ្នាំ=$4,661  30ឆ្នាំ=$10,063
+ការប្រាក់ 10%/ឆ្នាំ: 5ឆ្នាំ=$1,611  10ឆ្នាំ=$2,594  20ឆ្នាំ=$6,727  30ឆ្នាំ=$17,449
+
+ខាត 10% × 5 ដង: $590 → ត្រូវចំណេញ 69% ដើម្បីត្រឡប់មក $1,000</pre></div>
+
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li><b>Compound</b>៖ ចំណេញបន្តបង្កើតចំណេញ — $1,000 × (1+r)<sup>n</sup>។ រយៈពេលកាន់តែវែង ឥទ្ធិពលកាន់តែធំ — ហេតុនេះហើយបានជាការចាប់ផ្តើមសន្សំពីក្មេង មានប្រយោជន៍ខ្លាំង។</li><li>ការខាត <b>មិនស្មើ</b> ការចំណេញ៖ ខាត 50% ត្រូវចំណេញ 100% ទើបត្រឡប់មកវិញ — ដូច្នេះ <b>ការពារដើមទុន</b> សំខាន់ជាងរកចំណេញ។</li><li>លទ្ធផលពិតខាងលើ៖ ខាត 10% ៥ ដង នៅសល់ $590 → ត្រូវចំណេញ ~69%។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>មិត្តម្នាក់ទិញ Crypto ព្រោះ «គេថាវានឹងឡើង ១០ ដង» ដោយគ្មាន Stop-loss ។ ជា Trading ឬ Gambling?</p><details><summary>មើលចម្លើយ</summary><p><b>Gambling</b> — គ្មានផែនការ គ្មានការវិភាគ គ្មានការកំណត់ការខាត។ Trading ត្រូវមាន Entry/Exit/Stop-loss និងទំហំ Position ច្បាស់មុនចូល។</p></details></div>
+
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>ទីផ្សារ ៣៖ Stock · Forex · Crypto</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 250" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="250" fill="#fff"/><rect x="20" y="30" width="280" height="150" rx="14" fill="#1c7ed6"/><text x="160.0" y="99.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">📊 Stock (ភាគហ៊ុន)</text><text x="160.0" y="121.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ម្ចាស់ចំណែកក្រុមហ៊ុន · CSX, NYSE</text><rect x="330" y="30" width="280" height="150" rx="14" fill="#0ca678"/><text x="470.0" y="99.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">💱 Forex (រូបិយប័ណ្ណ)</text><text x="470.0" y="121.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">EUR/USD · ២៤ម៉ោង/៥ថ្ងៃ</text><rect x="640" y="30" width="280" height="150" rx="14" fill="#f59f00"/><text x="780.0" y="99.0" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">₿ Crypto</text><text x="780.0" y="121.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">BTC, ETH, USDT · ២៤/៧</text><text x="160" y="210" text-anchor="middle" font-size="14" font-weight="700" fill="#1c7ed6">ហានិភ័យ៖ មធ្យម</text><text x="470" y="210" text-anchor="middle" font-size="14" font-weight="700" fill="#0ca678">ហានិភ័យ៖ ខ្ពស់ (Leverage)</text><text x="780" y="210" text-anchor="middle" font-size="14" font-weight="700" fill="#e8590c">ហានិភ័យ៖ ខ្ពស់ណាស់</text><text x="470" y="240" text-anchor="middle" font-size="13" font-weight="400" fill="#334155">ទីផ្សារទាំង ៣ ប្រើ Chart និងការគ្រប់គ្រងហានិភ័យដូចគ្នា — ខុសគ្នាត្រង់ទ្រព្យ ម៉ោង ថ្លៃ និងច្បាប់</text></svg><figcaption>🖼️ ទីផ្សារទាំង ៣ ដែលវគ្គនេះសិក្សា</figcaption></figure>
+
+<table><tr><th></th><th>📊 Stock</th><th>💱 Forex</th><th>₿ Crypto</th></tr><tr><td>អ្វីដែលទិញ</td><td>ចំណែកកម្មសិទ្ធិក្រុមហ៊ុន</td><td>រូបិយប័ណ្ណមួយ ធៀបមួយទៀត</td><td>Token ឌីជីថលលើ Blockchain</td></tr><tr><td>ម៉ោង</td><td>ម៉ោងផ្សារ (ថ្ងៃធ្វើការ)</td><td>២៤ ម៉ោង · ច័ន្ទ–សុក្រ</td><td>២៤/៧</td></tr><tr><td>ទំហំ</td><td>NYSE/NASDAQ ធំបំផុត · CSX តូច ប៉ុន្តែកំពុងលូតលាស់</td><td>ធំបំផុតលើលោក (BIS 2022: ~$7.5 ពាន់ពាន់លាន/ថ្ងៃ)</td><td>ប្រែប្រួលខ្លាំង</td></tr><tr><td>ចំណេញពី</td><td>តម្លៃឡើង + <b>ភាគលាភ</b></td><td>ការប្រែប្រួលអត្រាប្តូរប្រាក់ (pip)</td><td>ការប្រែប្រួលតម្លៃ</td></tr><tr><td>និយ័តករ (ឧ.)</td><td>SERC (កម្ពុជា) · SEC (US)</td><td>FCA, ASIC… (Broker)</td><td>NBC/SERC (កម្ពុជា ចំពោះស្ថាប័ន) · ខុសគ្នាតាមប្រទេស</td></tr><tr><td>ហានិភ័យពិសេស</td><td>ក្រុមហ៊ុនក្ស័យធន</td><td>Leverage ខ្ពស់</td><td>Exchange ដួលរលំ (ឧ. FTX 2022) · Scam · Hack</td></tr></table>
+
+<figure class="fig"><svg viewBox="0 0 940 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="230" fill="#fff"/><line x1="80" y1="40" x2="80" y2="190" stroke="#eef1f5"/><text x="80" y="205" text-anchor="middle" font-size="11" font-weight="400" fill="#94a3b8">00</text><line x1="115" y1="40" x2="115" y2="190" stroke="#eef1f5"/><line x1="150" y1="40" x2="150" y2="190" stroke="#eef1f5"/><line x1="185" y1="40" x2="185" y2="190" stroke="#eef1f5"/><text x="185" y="205" text-anchor="middle" font-size="11" font-weight="400" fill="#94a3b8">03</text><line x1="220" y1="40" x2="220" y2="190" stroke="#eef1f5"/><line x1="255" y1="40" x2="255" y2="190" stroke="#eef1f5"/><line x1="290" y1="40" x2="290" y2="190" stroke="#eef1f5"/><text x="290" y="205" text-anchor="middle" font-size="11" font-weight="400" fill="#94a3b8">06</text><line x1="325" y1="40" x2="325" y2="190" stroke="#eef1f5"/><line x1="360" y1="40" x2="360" y2="190" stroke="#eef1f5"/><line x1="395" y1="40" x2="395" y2="190" stroke="#eef1f5"/><text x="395" y="205" text-anchor="middle" font-size="11" font-weight="400" fill="#94a3b8">09</text><line x1="430" y1="40" x2="430" y2="190" stroke="#eef1f5"/><line x1="465" y1="40" x2="465" y2="190" stroke="#eef1f5"/><line x1="500" y1="40" x2="500" y2="190" stroke="#eef1f5"/><text x="500" y="205" text-anchor="middle" font-size="11" font-weight="400" fill="#94a3b8">12</text><line x1="535" y1="40" x2="535" y2="190" stroke="#eef1f5"/><line x1="570" y1="40" x2="570" y2="190" stroke="#eef1f5"/><line x1="605" y1="40" x2="605" y2="190" stroke="#eef1f5"/><text x="605" y="205" text-anchor="middle" font-size="11" font-weight="400" fill="#94a3b8">15</text><line x1="640" y1="40" x2="640" y2="190" stroke="#eef1f5"/><line x1="675" y1="40" x2="675" y2="190" stroke="#eef1f5"/><line x1="710" y1="40" x2="710" y2="190" stroke="#eef1f5"/><text x="710" y="205" text-anchor="middle" font-size="11" font-weight="400" fill="#94a3b8">18</text><line x1="745" y1="40" x2="745" y2="190" stroke="#eef1f5"/><line x1="780" y1="40" x2="780" y2="190" stroke="#eef1f5"/><line x1="815" y1="40" x2="815" y2="190" stroke="#eef1f5"/><text x="815" y="205" text-anchor="middle" font-size="11" font-weight="400" fill="#94a3b8">21</text><line x1="850" y1="40" x2="850" y2="190" stroke="#eef1f5"/><line x1="885" y1="40" x2="885" y2="190" stroke="#eef1f5"/><line x1="920" y1="40" x2="920" y2="190" stroke="#eef1f5"/><text x="920" y="205" text-anchor="middle" font-size="11" font-weight="400" fill="#94a3b8">24</text><rect x="220" y="50" width="315" height="28" rx="8" fill="#0ca678"/><text x="377.5" y="69" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">🇦🇺🇯🇵 Sydney/Tokyo</text><rect x="570" y="90" width="315" height="28" rx="8" fill="#1c7ed6"/><text x="727.5" y="109" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">🇬🇧 London</text><rect x="745" y="130" width="175" height="28" rx="8" fill="#c92a2a"/><text x="832.5" y="149" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">🇺🇸 New York →04:00</text><rect x="80" y="130" width="140" height="28" rx="8" fill="#c92a2a"/><text x="150.0" y="149" text-anchor="middle" font-size="13" font-weight="700" fill="#fff"></text><text x="470" y="25" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">ម៉ោង Forex តាមម៉ោងកម្ពុជា (UTC+7, ប្រហាក់ប្រហែល — ប្រែប្រួលតាម Daylight saving)</text><text x="470" y="225" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">London + New York ជាន់គ្នា (~19:00–23:00) = Volume ខ្ពស់បំផុត · Crypto ២៤/៧ · CSX ថ្ងៃធ្វើការ (ពិនិត្យម៉ោងផ្លូវការលើ csx.com.kh)</text></svg><figcaption>🖼️ ម៉ោងទីផ្សារ Forex — ពេលណា Volume ខ្ពស់</figcaption></figure>
+
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ទីផ្សារទាំងអស់ប្រើ <b>Chart, Order, Stop-loss</b> ដូចគ្នា → រៀនម្តង ប្រើបានទាំង ៣។</li><li><b>Volume ខ្ពស់</b> = Spread តូច Order បំពេញលឿន · Volume ទាប = តម្លៃលោតខុសធម្មតា។</li><li>Crypto ២៤/៧ — ប្រយ័ត្ន <b>មិនបានគេង</b> ព្រោះចង់មើល Chart! កំណត់ម៉ោង Trade ក្នុង Trading plan។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>អ្នករៀននៅសាលាពេលថ្ងៃ ទំនេរតែ ២០:០០–២២:០០ (ម៉ោងកម្ពុជា)។ ទីផ្សារ Forex នៅពេលនោះសកម្មទេ?</p><details><summary>មើលចម្លើយ</summary><p>បាទ — ជាពេល London និង New York ជាន់គ្នា (Volume ខ្ពស់បំផុត)។ ប៉ុន្តែកុំប៉ះពាល់ការគេង និងការសិក្សា!</p></details></div>
+
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Stock &amp; ផ្សារមូលបត្រកម្ពុជា (CSX)</h2>
+
+<p><b>ភាគហ៊ុន (Share/Stock)</b> = ចំណែកកម្មសិទ្ធិតូចមួយនៃក្រុមហ៊ុន។ ពេលក្រុមហ៊ុនលក់ភាគហ៊ុនជាលើកដំបូងទៅសាធារណជន ហៅថា <b>IPO</b> (Initial Public Offering)។ ក្រោយ IPO វិនិយោគិនទិញលក់គ្នាលើ <b>ផ្សារមូលបត្រ</b>។</p>
+<div class="grid"><div class="card"><b>🏛️ CSX</b><br>Cambodia Securities Exchange — ផ្សារមូលបត្រកម្ពុជា (ភ្នំពេញ) · បង្កើត 2011</div><div class="card"><b>⚖️ SERC</b><br>និយ័តករមូលបត្រកម្ពុជា — ផ្តល់អាជ្ញាប័ណ្ណ និងការពារវិនិយោគិន</div><div class="card"><b>🏢 ក្រុមហ៊ុនមូលបត្រ</b><br>Broker/Underwriter ដែលមានអាជ្ញាប័ណ្ណ — អ្នកបើកគណនីតាមរយៈពួកគេ</div><div class="card"><b>🪪 Investor ID</b><br>លេខសម្គាល់វិនិយោគិន ដែលត្រូវការមុនទិញលក់</div></div>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>ដើមទុន:           3,012,000 ៛
+លក់បាន:           3,286,800 ៛
+ភាគលាភ:             120,000 ៛  (Dividend yield = 4.0%)
+ចំណេញសរុប:          394,800 ៛  (13.1%)</pre></div>
+
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ចំណេញពី Stock = <b>Capital gain</b> (លក់ថ្លៃជាងទិញ) + <b>Dividend</b> (ភាគលាភ ក្រុមហ៊ុនចែកពីប្រាក់ចំណេញ)។</li><li><b>Dividend yield</b> = ភាគលាភ ÷ តម្លៃហ៊ុន — 240 ÷ 6,000 = 4%។</li><li>កុំភ្លេច <b>ថ្លៃសេវា</b> និង <b>ពន្ធ</b> (ពិនិត្យច្បាប់ពន្ធលើមូលបត្របច្ចុប្បន្នពីអគ្គនាយកដ្ឋានពន្ធដារ)។</li><li>ក្រុមហ៊ុនដែលបានចុះបញ្ជីលើ CSX មានឧ. រដ្ឋាករទឹកស្វយ័តភ្នំពេញ (PWSA), កំពង់ផែស្វយ័តភ្នំពេញ, ធនាគារ ACLEDA … — មើលបញ្ជីពេញ និងតម្លៃពិតលើ csx.com.kh។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>ហ៊ុនតម្លៃ $20 ចែកភាគលាភ $0.80/ឆ្នាំ។ Dividend yield ប៉ុន្មាន? បើទិញ 50 ហ៊ុន ទទួលភាគលាភប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>Yield = 0.80 ÷ 20 = <b>4%</b> · 50 × $0.80 = <b>$40/ឆ្នាំ</b> (មុនពន្ធ)។</p></details></div>
+
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Forex៖ Currency pair · Pip · Lot · Spread</h2>
+
+<p><b>EUR/USD = 1.0850</b> មានន័យថា ១ អឺរ៉ូ = 1.0850 ដុល្លារ។ រូបិយប័ណ្ណខាងឆ្វេង = <b>Base</b> ខាងស្តាំ = <b>Quote</b>។ <b>Buy EUR/USD</b> = ទិញ EUR លក់ USD (រំពឹង EUR ឡើង)។ <button class="btn say" data-say="EUR USD, pip, lot, spread">🔊 អានពាក្យ</button></p>
+<table><tr><th>ពាក្យ</th><th>ន័យ</th><th>ឧទាហរណ៍</th></tr><tr><td>Pip</td><td>ការប្រែប្រួលតូចជាងគេដែលគេប្រើ (ខ្ទង់ទសភាគទី ៤ · JPY ខ្ទង់ទី ២)</td><td>1.0850 → 1.0870 = <b>20 pips</b></td></tr><tr><td>Lot</td><td>ទំហំ Position</td><td>1 standard lot = 100,000 · mini 0.1 = 10,000 · micro 0.01 = 1,000</td></tr><tr><td>Pip value</td><td>តម្លៃ ១ pip ជាដុល្លារ</td><td>1 lot EUR/USD ≈ <b>$10/pip</b> · 0.01 lot ≈ $0.10/pip</td></tr><tr><td>Spread</td><td>Ask − Bid (ថ្លៃលាក់)</td><td>Bid 1.08500 / Ask 1.08510 → 1 pip</td></tr><tr><td>Major pairs</td><td>គូពេញនិយមមាន USD</td><td>EUR/USD, GBP/USD, USD/JPY, AUD/USD…</td></tr></table>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>BUY EUR/USD 0.1 lot: 1.085 → 1.088 = +30 pips × $1.00/pip = $+30.00
+BUY USD/JPY 0.05 lot: 151.2 → 150.7 = -50 pips × $0.33/pip = $-16.59
+BUY GBP/USD 0.02 lot: 1.27 → 1.2655 = -45 pips × $0.20/pip = $-9.00</pre></div>
+
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Pip value = Units × Pip size (ជា Quote currency) → ប្តូរជា USD បើចាំបាច់។</li><li>USD/JPY៖ pip = 0.01 ហើយ Quote = JPY → ចែកនឹងតម្លៃ ដើម្បីបាន USD។</li><li>លទ្ធផលពិត៖ BUY USD/JPY ពេលតម្លៃធ្លាក់ = ខាត (−50 pips)។</li><li><b>Leverage</b> ធ្វើឲ្យ Lot ធំបាន ដោយ Margin តិច — ទាំងចំណេញ និង <b>ខាត</b> ធំដូចគ្នា (មេរៀន Advanced)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>SELL EUR/USD 0.2 lot នៅ 1.0900 ហើយបិទនៅ 1.0860។ ចំណេញ ឬខាតប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>SELL ហើយតម្លៃធ្លាក់ 40 pips → <b>ចំណេញ</b>។ 0.2 lot ≈ $2/pip → 40 × $2 = <b>+$80</b>។</p></details></div>
+
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>Crypto៖ Blockchain · Wallet · Exchange · Stablecoin</h2>
+
+<div class="grid"><div class="card"><b>⛓️ Blockchain</b><br>សៀវភៅកត់ត្រាចែករំលែក មិនអាចកែបាន — Block នីមួយៗភ្ជាប់ Hash ពី Block មុន</div><div class="card"><b>₿ Bitcoin</b><br>Crypto ដំបូង (2009) · ចំនួនកំណត់ 21 លាន · Halving រៀងរាល់ ~៤ ឆ្នាំ</div><div class="card"><b>Ξ Ethereum</b><br>Vitalik Buterin et al. (2015) · Smart contract</div><div class="card"><b>💵 Stablecoin</b><br>USDT, USDC — ចងតម្លៃនឹង USD (ហានិភ័យ៖ Issuer)</div><div class="card"><b>👛 Wallet</b><br>Private key/Seed phrase = គ្រប់គ្រងលុយ · «Not your keys, not your coins»</div><div class="card"><b>🏦 Exchange</b><br>កន្លែងទិញលក់ — Custodial (Exchange កាន់ Key ជំនួសអ្នក)</div></div>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>0 Genesis                prev: 0000000000 hash: 7e20ef1264
+1 Dara → Sokha 0.5 BTC   prev: 7e20ef1264 hash: 8dc4e6a736
+2 Sokha → Nita 0.2 BTC   prev: 8dc4e6a736 hash: 331d57dbd5
+
+ក្រោយកែ Block 1 → Chain ត្រឹមត្រូវ? False</pre></div>
+
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Block នីមួយៗរក្សា <b>Hash</b> នៃ Block មុន → កែទិន្នន័យចាស់ = Chain ដាច់ (លទ្ធផលពិត៖ False)។</li><li>Bitcoin ពិតប្រើ <b>Proof of Work</b> + កុំព្យូទ័ររាប់ម៉ឺនផ្ទៀងផ្ទាត់ — ពិបាកកែណាស់។</li><li><b>ច្បាប់កម្ពុជា</b>៖ NBC Prakas (26 ធ្នូ 2024) អនុញ្ញាតឲ្យធនាគារ/ស្ថាប័ន ធ្វើប្រតិបត្តិការ Crypto ក្រុម 1 (Tokenized asset, Stablecoin មានទ្រព្យធានា) ដោយមានការអនុញ្ញាត តែហាមធនាគារជាមួយក្រុម 2 (ដូច Bitcoin)។ ច្បាប់អាចប្តូរ — ពិនិត្យ nbc.gov.kh។</li><li>Crypto <b>ប្រែប្រួលខ្លាំងណាស់</b> — Bitcoin ធ្លាក់ 50–80% ច្រើនដងក្នុងប្រវត្តិ។</li></ol></div>
+
+<div class="warn">⚠️ Scam Crypto ទូទៅ៖ «Mining App» ឲ្យដាក់លុយ · Token ថ្មី «ឡើង ១០០ ដង» (Pump &amp; dump / Rug pull) · គេសុំ <b>Seed phrase</b> (កុំឲ្យនរណាម្នាក់ឡើយ!) · Romance/«Pig-butchering» scam តាម Telegram/Facebook។</div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>នរណាម្នាក់ក្នុង Telegram ថាជា «Support» ហើយសុំ Seed phrase ១២ ពាក្យ ដើម្បី «ជួយដោះសោគណនី»។ ធ្វើដូចម្តេច?</p><details><summary>មើលចម្លើយ</summary><p><b>កុំផ្តល់ឲ្យដាច់ខាត</b> — អ្នកមាន Seed phrase = យកលុយទាំងអស់បាន។ Support ពិតមិនសុំ Seed phrase ឡើយ។ Block ហើយ Report។</p></details></div>
+
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>ប្រភេទ Order៖ Market · Limit · Stop · SL · TP</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 270" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="270" fill="#fff"/><line x1="60" y1="135" x2="880" y2="135" stroke="#212529" stroke-width="2.5"/><text x="70" y="128" text-anchor="start" font-size="13" font-weight="700" fill="#212529">តម្លៃបច្ចុប្បន្ន 100</text><line x1="300" y1="45" x2="880" y2="45" stroke="#2f9e44" stroke-width="2" stroke-dasharray="7 5"/><text x="310" y="39" text-anchor="start" font-size="13.5" font-weight="700" fill="#2f9e44">Buy Stop 105</text><text x="870" y="39" text-anchor="end" font-size="13" font-weight="400" fill="#334155">ទិញពេលតម្លៃឡើងដល់ (Breakout)</text><line x1="300" y1="85" x2="880" y2="85" stroke="#e03131" stroke-width="2" stroke-dasharray="7 5"/><text x="310" y="79" text-anchor="start" font-size="13.5" font-weight="700" fill="#e03131">Sell Limit 103</text><text x="870" y="79" text-anchor="end" font-size="13" font-weight="400" fill="#334155">លក់ពេលតម្លៃឡើងដល់ (តម្លៃល្អជាង)</text><line x1="300" y1="185" x2="880" y2="185" stroke="#2f9e44" stroke-width="2" stroke-dasharray="7 5"/><text x="310" y="179" text-anchor="start" font-size="13.5" font-weight="700" fill="#2f9e44">Buy Limit 97</text><text x="870" y="179" text-anchor="end" font-size="13" font-weight="400" fill="#334155">ទិញពេលតម្លៃធ្លាក់មក (តម្លៃថោកជាង)</text><line x1="300" y1="225" x2="880" y2="225" stroke="#e03131" stroke-width="2" stroke-dasharray="7 5"/><text x="310" y="219" text-anchor="start" font-size="13.5" font-weight="700" fill="#e03131">Sell Stop 95</text><text x="870" y="219" text-anchor="end" font-size="13" font-weight="400" fill="#334155">លក់ពេលតម្លៃធ្លាក់ដល់ / Stop-loss</text><text x="150" y="255" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">Market order = ទិញ/លក់ភ្លាមៗ តាមតម្លៃបច្ចុប្បន្ន</text></svg><figcaption>🖼️ Order ៤ ប្រភេទ ធៀបនឹងតម្លៃបច្ចុប្បន្ន 100</figcaption></figure>
+
+<table><tr><th>Order</th><th>ពេលណាប្រើ</th><th>ចំណាំ</th></tr><tr><td><b>Market</b></td><td>ចង់ចូល/ចេញភ្លាម</td><td>អាចមាន Slippage ពេលទីផ្សារលឿន</td></tr><tr><td><b>Limit</b></td><td>ចង់បានតម្លៃល្អជាងបច្ចុប្បន្ន</td><td>អាចមិនត្រូវបំពេញ (Not filled)</td></tr><tr><td><b>Stop</b></td><td>ចូលពេល Breakout ឬចេញពេលខុស</td><td>ក្លាយជា Market order ពេលដល់តម្លៃ</td></tr><tr><td><b>Stop-loss (SL)</b></td><td>កំណត់ការខាតអតិបរមា</td><td><b>ដាក់គ្រប់ Trade!</b></td></tr><tr><td><b>Take-profit (TP)</b></td><td>យកចំណេញនៅគោលដៅ</td><td>កំណត់មុនចូល ដោយផ្អែក R:R</td></tr></table>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>market buy  @ None: បំពេញនៅជំហាន 0 តម្លៃ 100
+limit  buy  @ 98.0: បំពេញនៅជំហាន 3 តម្លៃ 98.0
+stop   buy  @ 105.0: បំពេញនៅជំហាន 7 តម្លៃ 105.6
+limit  sell @ 110.0: មិនត្រូវបំពេញ</pre></div>
+
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Limit buy 98 → បំពេញពេលតម្លៃធ្លាក់ដល់ ≤ 98។</li><li>Stop buy 105 → តម្លៃលោតពី 103.2 ទៅ 105.6 → បំពេញ 105.6 (<b>Slippage</b> 0.6)។</li><li>Limit sell 110 → តម្លៃមិនដល់ → <b>មិនត្រូវបំពេញ</b>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>អ្នកទិញ BTC នៅ $60,000 ហើយចង់ខាតអតិបរមា 3%។ ដាក់ Stop-loss នៅប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>60,000 × (1 − 0.03) = <b>$58,200</b> (Sell stop)។</p></details></div>
+
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Bid/Ask · Spread · ថ្លៃសេវា · Slippage</h2>
+
+<p><b>Bid</b> = តម្លៃដែលគេព្រមទិញពីអ្នក (អ្នកលក់នៅតម្លៃនេះ) · <b>Ask</b> = តម្លៃដែលគេព្រមលក់ឲ្យអ្នក (អ្នកទិញនៅតម្លៃនេះ)។ ទិញហើយលក់ភ្លាម = ខាត Spread។</p>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>ថ្លៃក្នុង 1 Trade: $0.50
+ថ្លៃសរុប 1 ឆ្នាំ: $1,250  (Trade 2,500 ដង)
+Win rate 50%: Expectancy/Trade មុនថ្លៃ $+0.00 → ក្រោយថ្លៃ $-0.50
+Win rate 52%: Expectancy/Trade មុនថ្លៃ $+0.40 → ក្រោយថ្លៃ $-0.10
+Win rate 55%: Expectancy/Trade មុនថ្លៃ $+1.00 → ក្រោយថ្លៃ $+0.50</pre></div>
+
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Trade ញឹកញាប់ (Scalping) = ថ្លៃច្រើន → ត្រូវការ Edge ធំជាង។</li><li>Win rate 50% (ឈ្នះ/ខាតស្មើ) = <b>ខាត</b> ពេលគិតថ្លៃ។</li><li><b>Slippage</b>៖ ពេលមានព័ត៌មានធំ (ឧ. NFP, ការប្រកាសការប្រាក់) Spread ពង្រីក ហើយ Order អាចបំពេញខុសតម្លៃ។</li><li><b>Swap/Funding</b>៖ ថ្លៃរក្សា Position ឆ្លងយប់ (Forex) ឬ Funding rate (Crypto Perpetual)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>Bid 1.08500 Ask 1.08515 EUR/USD។ Spread ប៉ុន្មាន pips? ទិញ 1 lot ហើយលក់ភ្លាម ខាតប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>Spread = 0.00015 = <b>1.5 pips</b> → 1 lot × $10/pip × 1.5 = <b>−$15</b>។</p></details></div>
+
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>អាន Chart៖ Line · Bar · Candlestick</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 260" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="260" fill="#fff"/><line x1="250" y1="40" x2="250" y2="220" stroke="#12b886" stroke-width="4"/><rect x="205" y="90" width="90" height="80" fill="#12b886" rx="4"/><text x="320" y="44" text-anchor="start" font-size="13" font-weight="400" fill="#334155">High (ខ្ពស់បំផុត)</text><text x="320" y="224" text-anchor="start" font-size="13" font-weight="400" fill="#334155">Low (ទាបបំផុត)</text><text x="320" y="175" text-anchor="start" font-size="13" font-weight="400" fill="#334155">Open (បើក)</text><text x="320" y="95" text-anchor="start" font-size="13" font-weight="400" fill="#334155">Close (បិទ)</text><text x="190" y="65" text-anchor="end" font-size="12" font-weight="400" fill="#64748b">Wick/Shadow</text><text x="190" y="135" text-anchor="end" font-size="12" font-weight="400" fill="#64748b">Body</text><text x="250" y="250" text-anchor="middle" font-size="14" font-weight="700" fill="#12b886">ទៀនឡើង (Bullish) — Close &gt; Open</text><line x1="650" y1="40" x2="650" y2="220" stroke="#fa5252" stroke-width="4"/><rect x="605" y="90" width="90" height="80" fill="#fa5252" rx="4"/><text x="720" y="44" text-anchor="start" font-size="13" font-weight="400" fill="#334155">High (ខ្ពស់បំផុត)</text><text x="720" y="224" text-anchor="start" font-size="13" font-weight="400" fill="#334155">Low (ទាបបំផុត)</text><text x="720" y="95" text-anchor="start" font-size="13" font-weight="400" fill="#334155">Open (បើក)</text><text x="720" y="175" text-anchor="start" font-size="13" font-weight="400" fill="#334155">Close (បិទ)</text><text x="590" y="65" text-anchor="end" font-size="12" font-weight="400" fill="#64748b">Wick/Shadow</text><text x="590" y="135" text-anchor="end" font-size="12" font-weight="400" fill="#64748b">Body</text><text x="650" y="250" text-anchor="middle" font-size="14" font-weight="700" fill="#fa5252">ទៀនចុះ (Bearish) — Close &lt; Open</text></svg><figcaption>🖼️ កាយវិភាគទៀន (Candlestick) — Open, High, Low, Close (OHLC)</figcaption></figure>
+
+<p>ទៀនមួយ = តម្លៃក្នុង <b>រយៈពេលមួយ</b> (1 នាទី, 1 ម៉ោង, 1 ថ្ងៃ…)។ Body ធំ = ការទិញ/លក់ខ្លាំង · Wick វែង = តម្លៃត្រូវបានបដិសេធ។</p>
+<figure class="fig"><svg viewBox="0 0 940 320" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="320" fill="#fff"/><line x1="56" y1="224.0" x2="870" y2="224.0" stroke="#eef1f5"/><text x="876" y="228.0" text-anchor="start" font-size="11" font-weight="400" fill="#94a3b8">17.99</text><line x1="56" y1="176.5" x2="870" y2="176.5" stroke="#eef1f5"/><text x="876" y="180.49999999999997" text-anchor="start" font-size="11" font-weight="400" fill="#94a3b8">19.36</text><line x1="56" y1="129.0" x2="870" y2="129.0" stroke="#eef1f5"/><text x="876" y="132.99999999999994" text-anchor="start" font-size="11" font-weight="400" fill="#94a3b8">20.73</text><line x1="56" y1="81.5" x2="870" y2="81.5" stroke="#eef1f5"/><text x="876" y="85.50000000000003" text-anchor="start" font-size="11" font-weight="400" fill="#94a3b8">22.10</text><line x1="56" y1="34.0" x2="870" y2="34.0" stroke="#eef1f5"/><text x="876" y="38.0" text-anchor="start" font-size="11" font-weight="400" fill="#94a3b8">23.47</text><line x1="62.8" y1="116.8" x2="62.8" y2="166.9" stroke="#12b886" stroke-width="1.2"/><rect x="58.0" y="123.9" width="9.5" height="36.0" fill="#12b886"/><line x1="76.3" y1="117.9" x2="76.3" y2="173.6" stroke="#fa5252" stroke-width="1.2"/><rect x="71.6" y="123.7" width="9.5" height="34.9" fill="#fa5252"/><line x1="89.9" y1="151.1" x2="89.9" y2="162.1" stroke="#12b886" stroke-width="1.2"/><rect x="85.2" y="151.4" width="9.5" height="10.5" fill="#12b886"/><line x1="103.5" y1="144.3" x2="103.5" y2="160.5" stroke="#fa5252" stroke-width="1.2"/><rect x="98.7" y="148.8" width="9.5" height="9.1" fill="#fa5252"/><line x1="117.0" y1="148.7" x2="117.0" y2="166.1" stroke="#12b886" stroke-width="1.2"/><rect x="112.3" y="162.8" width="9.5" height="2.2" fill="#12b886"/><line x1="130.6" y1="163.0" x2="130.6" y2="170.9" stroke="#12b886" stroke-width="1.2"/><rect x="125.9" y="164.3" width="9.5" height="1.6" fill="#12b886"/><line x1="144.2" y1="156.6" x2="144.2" y2="194.0" stroke="#fa5252" stroke-width="1.2"/><rect x="139.4" y="161.9" width="9.5" height="28.2" fill="#fa5252"/><line x1="157.8" y1="185.3" x2="157.8" y2="194.3" stroke="#fa5252" stroke-width="1.2"/><rect x="153.0" y="186.3" width="9.5" height="5.5" fill="#fa5252"/><line x1="171.3" y1="187.5" x2="171.3" y2="201.9" stroke="#fa5252" stroke-width="1.2"/><rect x="166.6" y="198.9" width="9.5" height="2.9" fill="#fa5252"/><line x1="184.9" y1="150.9" x2="184.9" y2="213.8" stroke="#12b886" stroke-width="1.2"/><rect x="180.1" y="156.0" width="9.5" height="47.4" fill="#12b886"/><line x1="198.4" y1="141.9" x2="198.4" y2="159.5" stroke="#12b886" stroke-width="1.2"/><rect x="193.7" y="151.5" width="9.5" height="3.4" fill="#12b886"/><line x1="212.0" y1="146.1" x2="212.0" y2="162.2" stroke="#fa5252" stroke-width="1.2"/><rect x="207.3" y="153.6" width="9.5" height="1.4" fill="#fa5252"/><line x1="225.6" y1="148.1" x2="225.6" y2="161.9" stroke="#fa5252" stroke-width="1.2"/><rect x="220.8" y="149.5" width="9.5" height="8.0" fill="#fa5252"/><line x1="239.2" y1="156.0" x2="239.2" y2="171.9" stroke="#fa5252" stroke-width="1.2"/><rect x="234.4" y="161.6" width="9.5" height="3.7" fill="#fa5252"/><line x1="252.7" y1="153.8" x2="252.7" y2="183.0" stroke="#fa5252" stroke-width="1.2"/><rect x="248.0" y="164.1" width="9.5" height="14.1" fill="#fa5252"/><line x1="266.3" y1="177.3" x2="266.3" y2="190.0" stroke="#fa5252" stroke-width="1.2"/><rect x="261.5" y="181.7" width="9.5" height="1.0" fill="#fa5252"/><line x1="279.9" y1="172.2" x2="279.9" y2="178.4" stroke="#12b886" stroke-width="1.2"/><rect x="275.1" y="174.3" width="9.5" height="3.1" fill="#12b886"/><line x1="293.4" y1="171.3" x2="293.4" y2="183.1" stroke="#fa5252" stroke-width="1.2"/><rect x="288.7" y="174.4" width="9.5" height="1.8" fill="#fa5252"/><line x1="307.0" y1="158.5" x2="307.0" y2="178.5" stroke="#12b886" stroke-width="1.2"/><rect x="302.2" y="161.8" width="9.5" height="15.6" fill="#12b886"/><line x1="320.6" y1="158.4" x2="320.6" y2="171.9" stroke="#12b886" stroke-width="1.2"/><rect x="315.8" y="163.2" width="9.5" height="4.5" fill="#12b886"/><line x1="334.1" y1="151.0" x2="334.1" y2="172.7" stroke="#fa5252" stroke-width="1.2"/><rect x="329.4" y="157.4" width="9.5" height="4.1" fill="#fa5252"/><line x1="347.7" y1="135.1" x2="347.7" y2="160.7" stroke="#12b886" stroke-width="1.2"/><rect x="342.9" y="138.5" width="9.5" height="20.4" fill="#12b886"/><line x1="361.2" y1="111.6" x2="361.2" y2="137.2" stroke="#12b886" stroke-width="1.2"/><rect x="356.5" y="129.3" width="9.5" height="6.5" fill="#12b886"/><line x1="374.8" y1="123.4" x2="374.8" y2="137.0" stroke="#fa5252" stroke-width="1.2"/><rect x="370.1" y="125.2" width="9.5" height="9.9" fill="#fa5252"/><line x1="388.4" y1="129.9" x2="388.4" y2="147.7" stroke="#fa5252" stroke-width="1.2"/><rect x="383.6" y="133.8" width="9.5" height="2.4" fill="#fa5252"/><line x1="401.9" y1="118.6" x2="401.9" y2="143.9" stroke="#12b886" stroke-width="1.2"/><rect x="397.2" y="127.1" width="9.5" height="11.5" fill="#12b886"/><line x1="415.5" y1="87.1" x2="415.5" y2="142.6" stroke="#12b886" stroke-width="1.2"/><rect x="410.8" y="97.1" width="9.5" height="32.8" fill="#12b886"/><line x1="429.1" y1="95.7" x2="429.1" y2="105.0" stroke="#12b886" stroke-width="1.2"/><rect x="424.3" y="99.7" width="9.5" height="1.0" fill="#12b886"/><line x1="442.6" y1="88.1" x2="442.6" y2="101.9" stroke="#fa5252" stroke-width="1.2"/><rect x="437.9" y="94.5" width="9.5" height="7.3" fill="#fa5252"/><line x1="456.2" y1="85.1" x2="456.2" y2="115.6" stroke="#12b886" stroke-width="1.2"/><rect x="451.5" y="85.2" width="9.5" height="22.1" fill="#12b886"/><line x1="469.8" y1="84.9" x2="469.8" y2="97.6" stroke="#fa5252" stroke-width="1.2"/><rect x="465.0" y="87.5" width="9.5" height="9.6" fill="#fa5252"/><line x1="483.3" y1="97.4" x2="483.3" y2="106.1" stroke="#fa5252" stroke-width="1.2"/><rect x="478.6" y="98.3" width="9.5" height="1.7" fill="#fa5252"/><line x1="496.9" y1="84.1" x2="496.9" y2="101.8" stroke="#12b886" stroke-width="1.2"/><rect x="492.2" y="85.1" width="9.5" height="14.0" fill="#12b886"/><line x1="510.5" y1="62.9" x2="510.5" y2="87.2" stroke="#12b886" stroke-width="1.2"/><rect x="505.7" y="74.7" width="9.5" height="8.3" fill="#12b886"/><line x1="524.0" y1="68.1" x2="524.0" y2="80.9" stroke="#12b886" stroke-width="1.2"/><rect x="519.3" y="71.7" width="9.5" height="7.8" fill="#12b886"/><line x1="537.6" y1="58.8" x2="537.6" y2="78.7" stroke="#12b886" stroke-width="1.2"/><rect x="532.9" y="59.6" width="9.5" height="18.8" fill="#12b886"/><line x1="551.2" y1="53.5" x2="551.2" y2="102.5" stroke="#fa5252" stroke-width="1.2"/><rect x="546.4" y="59.7" width="9.5" height="41.9" fill="#fa5252"/><line x1="564.8" y1="80.9" x2="564.8" y2="98.4" stroke="#12b886" stroke-width="1.2"/><rect x="560.0" y="84.6" width="9.5" height="12.4" fill="#12b886"/><line x1="578.3" y1="75.4" x2="578.3" y2="103.8" stroke="#fa5252" stroke-width="1.2"/><rect x="573.6" y="81.7" width="9.5" height="15.9" fill="#fa5252"/><line x1="591.9" y1="94.3" x2="591.9" y2="122.1" stroke="#fa5252" stroke-width="1.2"/><rect x="587.1" y="96.8" width="9.5" height="24.0" fill="#fa5252"/><line x1="605.5" y1="109.0" x2="605.5" y2="137.5" stroke="#12b886" stroke-width="1.2"/><rect x="600.7" y="115.3" width="9.5" height="6.6" fill="#12b886"/><line x1="619.0" y1="100.4" x2="619.0" y2="115.4" stroke="#12b886" stroke-width="1.2"/><rect x="614.3" y="103.5" width="9.5" height="10.8" fill="#12b886"/><line x1="632.6" y1="103.2" x2="632.6" y2="117.4" stroke="#fa5252" stroke-width="1.2"/><rect x="627.8" y="104.4" width="9.5" height="4.2" fill="#fa5252"/><line x1="646.1" y1="99.5" x2="646.1" y2="131.0" stroke="#fa5252" stroke-width="1.2"/><rect x="641.4" y="105.5" width="9.5" height="17.3" fill="#fa5252"/><line x1="659.7" y1="116.3" x2="659.7" y2="134.9" stroke="#12b886" stroke-width="1.2"/><rect x="655.0" y="121.0" width="9.5" height="4.7" fill="#12b886"/><line x1="673.3" y1="108.0" x2="673.3" y2="134.7" stroke="#12b886" stroke-width="1.2"/><rect x="668.5" y="120.3" width="9.5" height="1.0" fill="#12b886"/><line x1="686.9" y1="82.4" x2="686.9" y2="121.8" stroke="#12b886" stroke-width="1.2"/><rect x="682.1" y="98.1" width="9.5" height="22.7" fill="#12b886"/><line x1="700.4" y1="78.7" x2="700.4" y2="97.0" stroke="#12b886" stroke-width="1.2"/><rect x="695.7" y="85.3" width="9.5" height="10.8" fill="#12b886"/><line x1="714.0" y1="77.1" x2="714.0" y2="92.4" stroke="#12b886" stroke-width="1.2"/><rect x="709.2" y="80.8" width="9.5" height="3.6" fill="#12b886"/><line x1="727.5" y1="60.9" x2="727.5" y2="75.1" stroke="#12b886" stroke-width="1.2"/><rect x="722.8" y="62.0" width="9.5" height="9.0" fill="#12b886"/><line x1="741.1" y1="49.4" x2="741.1" y2="67.2" stroke="#fa5252" stroke-width="1.2"/><rect x="736.4" y="56.1" width="9.5" height="7.5" fill="#fa5252"/><line x1="754.7" y1="49.2" x2="754.7" y2="90.1" stroke="#fa5252" stroke-width="1.2"/><rect x="749.9" y="57.8" width="9.5" height="18.7" fill="#fa5252"/><line x1="768.2" y1="57.7" x2="768.2" y2="86.4" stroke="#12b886" stroke-width="1.2"/><rect x="763.5" y="65.8" width="9.5" height="18.5" fill="#12b886"/><line x1="781.8" y1="53.9" x2="781.8" y2="68.3" stroke="#12b886" stroke-width="1.2"/><rect x="777.1" y="55.1" width="9.5" height="12.1" fill="#12b886"/><line x1="795.4" y1="44.2" x2="795.4" y2="58.3" stroke="#12b886" stroke-width="1.2"/><rect x="790.6" y="56.9" width="9.5" height="1.0" fill="#12b886"/><line x1="808.9" y1="52.6" x2="808.9" y2="77.3" stroke="#fa5252" stroke-width="1.2"/><rect x="804.2" y="54.8" width="9.5" height="12.8" fill="#fa5252"/><line x1="822.5" y1="61.4" x2="822.5" y2="81.3" stroke="#12b886" stroke-width="1.2"/><rect x="817.8" y="62.5" width="9.5" height="14.0" fill="#12b886"/><line x1="836.1" y1="51.6" x2="836.1" y2="104.7" stroke="#fa5252" stroke-width="1.2"/><rect x="831.3" y="57.9" width="9.5" height="41.3" fill="#fa5252"/><line x1="849.6" y1="83.1" x2="849.6" y2="103.8" stroke="#12b886" stroke-width="1.2"/><rect x="844.9" y="87.3" width="9.5" height="7.9" fill="#12b886"/><line x1="863.2" y1="61.6" x2="863.2" y2="97.2" stroke="#12b886" stroke-width="1.2"/><rect x="858.5" y="78.2" width="9.5" height="14.0" fill="#12b886"/><rect x="58.0" y="251.3" width="9.5" height="38.7" fill="#12b886" opacity=".55"/><rect x="71.6" y="259.0" width="9.5" height="31.0" fill="#fa5252" opacity=".55"/><rect x="85.2" y="248.5" width="9.5" height="41.5" fill="#12b886" opacity=".55"/><rect x="98.7" y="266.9" width="9.5" height="23.1" fill="#fa5252" opacity=".55"/><rect x="112.3" y="278.1" width="9.5" height="11.9" fill="#12b886" opacity=".55"/><rect x="125.9" y="277.5" width="9.5" height="12.5" fill="#12b886" opacity=".55"/><rect x="139.4" y="256.2" width="9.5" height="33.8" fill="#fa5252" opacity=".55"/><rect x="153.0" y="246.8" width="9.5" height="43.2" fill="#fa5252" opacity=".55"/><rect x="166.6" y="273.5" width="9.5" height="16.5" fill="#fa5252" opacity=".55"/><rect x="180.1" y="238.2" width="9.5" height="51.8" fill="#12b886" opacity=".55"/><rect x="193.7" y="268.8" width="9.5" height="21.2" fill="#12b886" opacity=".55"/><rect x="207.3" y="273.8" width="9.5" height="16.2" fill="#fa5252" opacity=".55"/><rect x="220.8" y="243.8" width="9.5" height="46.2" fill="#fa5252" opacity=".55"/><rect x="234.4" y="275.1" width="9.5" height="14.9" fill="#fa5252" opacity=".55"/><rect x="248.0" y="257.5" width="9.5" height="32.5" fill="#fa5252" opacity=".55"/><rect x="261.5" y="273.4" width="9.5" height="16.6" fill="#fa5252" opacity=".55"/><rect x="275.1" y="268.1" width="9.5" height="21.9" fill="#12b886" opacity=".55"/><rect x="288.7" y="278.9" width="9.5" height="11.1" fill="#fa5252" opacity=".55"/><rect x="302.2" y="241.2" width="9.5" height="48.8" fill="#12b886" opacity=".55"/><rect x="315.8" y="272.2" width="9.5" height="17.8" fill="#12b886" opacity=".55"/><rect x="329.4" y="271.6" width="9.5" height="18.4" fill="#fa5252" opacity=".55"/><rect x="342.9" y="269.0" width="9.5" height="21.0" fill="#12b886" opacity=".55"/><rect x="356.5" y="274.7" width="9.5" height="15.3" fill="#12b886" opacity=".55"/><rect x="370.1" y="263.4" width="9.5" height="26.6" fill="#fa5252" opacity=".55"/><rect x="383.6" y="265.9" width="9.5" height="24.1" fill="#fa5252" opacity=".55"/><rect x="397.2" y="260.1" width="9.5" height="29.9" fill="#12b886" opacity=".55"/><rect x="410.8" y="234.0" width="9.5" height="56.0" fill="#12b886" opacity=".55"/><rect x="424.3" y="269.8" width="9.5" height="20.2" fill="#12b886" opacity=".55"/><rect x="437.9" y="269.9" width="9.5" height="20.1" fill="#fa5252" opacity=".55"/><rect x="451.5" y="250.7" width="9.5" height="39.3" fill="#12b886" opacity=".55"/><rect x="465.0" y="263.7" width="9.5" height="26.3" fill="#fa5252" opacity=".55"/><rect x="478.6" y="274.1" width="9.5" height="15.9" fill="#fa5252" opacity=".55"/><rect x="492.2" y="258.9" width="9.5" height="31.1" fill="#12b886" opacity=".55"/><rect x="505.7" y="257.9" width="9.5" height="32.1" fill="#12b886" opacity=".55"/><rect x="519.3" y="268.1" width="9.5" height="21.9" fill="#12b886" opacity=".55"/><rect x="532.9" y="266.4" width="9.5" height="23.6" fill="#12b886" opacity=".55"/><rect x="546.4" y="238.4" width="9.5" height="51.6" fill="#fa5252" opacity=".55"/><rect x="560.0" y="245.0" width="9.5" height="45.0" fill="#12b886" opacity=".55"/><rect x="573.6" y="266.7" width="9.5" height="23.3" fill="#fa5252" opacity=".55"/><rect x="587.1" y="260.7" width="9.5" height="29.3" fill="#fa5252" opacity=".55"/><rect x="600.7" y="271.2" width="9.5" height="18.8" fill="#12b886" opacity=".55"/><rect x="614.3" y="255.8" width="9.5" height="34.2" fill="#12b886" opacity=".55"/><rect x="627.8" y="280.5" width="9.5" height="9.5" fill="#fa5252" opacity=".55"/><rect x="641.4" y="260.1" width="9.5" height="29.9" fill="#fa5252" opacity=".55"/><rect x="655.0" y="261.9" width="9.5" height="28.1" fill="#12b886" opacity=".55"/><rect x="668.5" y="278.3" width="9.5" height="11.7" fill="#12b886" opacity=".55"/><rect x="682.1" y="239.6" width="9.5" height="50.4" fill="#12b886" opacity=".55"/><rect x="695.7" y="263.3" width="9.5" height="26.7" fill="#12b886" opacity=".55"/><rect x="709.2" y="275.4" width="9.5" height="14.6" fill="#12b886" opacity=".55"/><rect x="722.8" y="267.6" width="9.5" height="22.4" fill="#12b886" opacity=".55"/><rect x="736.4" y="278.4" width="9.5" height="11.6" fill="#fa5252" opacity=".55"/><rect x="749.9" y="268.3" width="9.5" height="21.7" fill="#fa5252" opacity=".55"/><rect x="763.5" y="239.4" width="9.5" height="50.6" fill="#12b886" opacity=".55"/><rect x="777.1" y="273.4" width="9.5" height="16.6" fill="#12b886" opacity=".55"/><rect x="790.6" y="259.8" width="9.5" height="30.2" fill="#12b886" opacity=".55"/><rect x="804.2" y="267.7" width="9.5" height="22.3" fill="#fa5252" opacity=".55"/><rect x="817.8" y="256.1" width="9.5" height="33.9" fill="#12b886" opacity=".55"/><rect x="831.3" y="249.6" width="9.5" height="40.4" fill="#fa5252" opacity=".55"/><rect x="844.9" y="280.7" width="9.5" height="9.3" fill="#12b886" opacity=".55"/><rect x="858.5" y="270.3" width="9.5" height="19.7" fill="#12b886" opacity=".55"/><text x="50" y="254" text-anchor="end" font-size="11" font-weight="400" fill="#64748b">Volume</text><text x="470.0" y="22" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Candlestick chart + Volume</text><text x="870" y="312" text-anchor="end" font-size="11" font-weight="400" fill="#94a3b8">ទិន្នន័យគំរូ (Synthetic) សម្រាប់រៀន</text></svg><figcaption>🖼️ Chart ទៀនជាមួយ Volume</figcaption></figure>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>O=100    H=104    L=99     C=103.5  🟢 ឡើង  body=3.5/5.0 → Body ធំ (ខ្លាំង)
+O=103.5  H=104    L=98     C=98.5   🔴 ចុះ  body=5.0/6.0 → Body ធំ (ខ្លាំង)
+O=98.5   H=99.5   L=94     C=99.3   🟢 ឡើង  body=0.8/5.5 → Long lower wick (អ្នកទិញច្រានឡើងវិញ)
+O=99.3   H=99.9   L=98.7   C=99.35  🟢 ឡើង  body=0.0/1.2 → Doji (មិនច្បាស់)</pre></div>
+
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Body = |Close − Open| · Range = High − Low។</li><li>Wick ក្រោមវែង (≥ 2×Body) = Seller ទម្លាក់ តែ Buyer ច្រានឡើងវិញ → សញ្ញាអាចឡើង (Hammer — Intermediate)។</li><li>Doji = Body តូចណាស់ → ទីផ្សារស្ទាក់ស្ទើរ។</li><li>Chart ច្រើន Timeframe មានទៀនខុសគ្នា ទោះជាទ្រព្យដូចគ្នា (មេរៀន ៩)។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>ទៀន៖ Open 50, High 55, Low 49, Close 54.5។ ឡើង ឬចុះ? Body ប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>Close &gt; Open → <b>ឡើង</b> · Body = <b>4.5</b> · Range 6 → Body ធំ (Buyer ខ្លាំង)។</p></details></div>
+
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Trend &amp; Timeframe</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 320" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="320" fill="#fff"/><line x1="56" y1="294.0" x2="870" y2="294.0" stroke="#eef1f5"/><text x="876" y="298.0" text-anchor="start" font-size="11" font-weight="400" fill="#94a3b8">48.44</text><line x1="56" y1="229.0" x2="870" y2="229.0" stroke="#eef1f5"/><text x="876" y="233.00000000000003" text-anchor="start" font-size="11" font-weight="400" fill="#94a3b8">54.31</text><line x1="56" y1="164.0" x2="870" y2="164.0" stroke="#eef1f5"/><text x="876" y="168.0" text-anchor="start" font-size="11" font-weight="400" fill="#94a3b8">60.19</text><line x1="56" y1="99.0" x2="870" y2="99.0" stroke="#eef1f5"/><text x="876" y="102.99999999999996" text-anchor="start" font-size="11" font-weight="400" fill="#94a3b8">66.07</text><line x1="56" y1="34.0" x2="870" y2="34.0" stroke="#eef1f5"/><text x="876" y="38.0" text-anchor="start" font-size="11" font-weight="400" fill="#94a3b8">71.95</text><line x1="59.7" y1="271.2" x2="59.7" y2="274.7" stroke="#12b886" stroke-width="1.2"/><rect x="57.1" y="273.1" width="5.2" height="1.0" fill="#12b886"/><line x1="67.1" y1="257.7" x2="67.1" y2="280.1" stroke="#12b886" stroke-width="1.2"/><rect x="64.5" y="258.2" width="5.2" height="13.8" fill="#12b886"/><line x1="74.5" y1="243.7" x2="74.5" y2="257.7" stroke="#12b886" stroke-width="1.2"/><rect x="71.9" y="244.1" width="5.2" height="9.6" fill="#12b886"/><line x1="81.9" y1="233.8" x2="81.9" y2="249.0" stroke="#fa5252" stroke-width="1.2"/><rect x="79.3" y="244.0" width="5.2" height="1.1" fill="#fa5252"/><line x1="89.3" y1="243.3" x2="89.3" y2="246.9" stroke="#12b886" stroke-width="1.2"/><rect x="86.7" y="244.2" width="5.2" height="1.9" fill="#12b886"/><line x1="96.7" y1="240.8" x2="96.7" y2="247.5" stroke="#12b886" stroke-width="1.2"/><rect x="94.1" y="245.3" width="5.2" height="2.1" fill="#12b886"/><line x1="104.1" y1="233.6" x2="104.1" y2="243.9" stroke="#12b886" stroke-width="1.2"/><rect x="101.5" y="236.7" width="5.2" height="5.7" fill="#12b886"/><line x1="111.5" y1="224.4" x2="111.5" y2="239.5" stroke="#fa5252" stroke-width="1.2"/><rect x="108.9" y="231.0" width="5.2" height="2.6" fill="#fa5252"/><line x1="118.9" y1="216.4" x2="118.9" y2="237.9" stroke="#12b886" stroke-width="1.2"/><rect x="116.3" y="223.3" width="5.2" height="12.2" fill="#12b886"/><line x1="126.3" y1="220.5" x2="126.3" y2="237.9" stroke="#fa5252" stroke-width="1.2"/><rect x="123.7" y="224.8" width="5.2" height="11.5" fill="#fa5252"/><line x1="133.7" y1="214.8" x2="133.7" y2="240.7" stroke="#12b886" stroke-width="1.2"/><rect x="131.1" y="218.6" width="5.2" height="16.4" fill="#12b886"/><line x1="141.1" y1="208.1" x2="141.1" y2="221.4" stroke="#12b886" stroke-width="1.2"/><rect x="138.5" y="215.8" width="5.2" height="4.7" fill="#12b886"/><line x1="148.5" y1="205.7" x2="148.5" y2="216.8" stroke="#12b886" stroke-width="1.2"/><rect x="145.9" y="205.8" width="5.2" height="10.7" fill="#12b886"/><line x1="155.9" y1="198.2" x2="155.9" y2="210.3" stroke="#12b886" stroke-width="1.2"/><rect x="153.3" y="203.3" width="5.2" height="3.3" fill="#12b886"/><line x1="163.3" y1="201.6" x2="163.3" y2="205.8" stroke="#fa5252" stroke-width="1.2"/><rect x="160.7" y="202.9" width="5.2" height="1.0" fill="#fa5252"/><line x1="170.7" y1="185.9" x2="170.7" y2="203.5" stroke="#12b886" stroke-width="1.2"/><rect x="168.1" y="195.0" width="5.2" height="5.6" fill="#12b886"/><line x1="178.1" y1="182.5" x2="178.1" y2="208.2" stroke="#12b886" stroke-width="1.2"/><rect x="175.5" y="183.2" width="5.2" height="11.7" fill="#12b886"/><line x1="185.5" y1="178.8" x2="185.5" y2="186.2" stroke="#fa5252" stroke-width="1.2"/><rect x="182.9" y="181.0" width="5.2" height="1.0" fill="#fa5252"/><line x1="192.9" y1="176.8" x2="192.9" y2="185.0" stroke="#12b886" stroke-width="1.2"/><rect x="190.3" y="178.9" width="5.2" height="3.4" fill="#12b886"/><line x1="200.3" y1="166.7" x2="200.3" y2="179.1" stroke="#12b886" stroke-width="1.2"/><rect x="197.7" y="168.2" width="5.2" height="9.9" fill="#12b886"/><line x1="207.7" y1="170.0" x2="207.7" y2="178.6" stroke="#12b886" stroke-width="1.2"/><rect x="205.1" y="172.8" width="5.2" height="1.0" fill="#12b886"/><line x1="215.1" y1="172.2" x2="215.1" y2="185.8" stroke="#fa5252" stroke-width="1.2"/><rect x="212.5" y="176.4" width="5.2" height="7.3" fill="#fa5252"/><line x1="222.5" y1="168.7" x2="222.5" y2="183.6" stroke="#12b886" stroke-width="1.2"/><rect x="219.9" y="176.0" width="5.2" height="5.8" fill="#12b886"/><line x1="229.9" y1="176.3" x2="229.9" y2="190.7" stroke="#fa5252" stroke-width="1.2"/><rect x="227.3" y="177.4" width="5.2" height="1.2" fill="#fa5252"/><line x1="237.3" y1="176.2" x2="237.3" y2="194.4" stroke="#fa5252" stroke-width="1.2"/><rect x="234.7" y="177.2" width="5.2" height="16.1" fill="#fa5252"/><line x1="244.7" y1="190.3" x2="244.7" y2="199.8" stroke="#fa5252" stroke-width="1.2"/><rect x="242.1" y="192.0" width="5.2" height="5.2" fill="#fa5252"/><line x1="252.1" y1="189.4" x2="252.1" y2="205.5" stroke="#fa5252" stroke-width="1.2"/><rect x="249.5" y="194.1" width="5.2" height="3.8" fill="#fa5252"/><line x1="259.5" y1="187.7" x2="259.5" y2="214.0" stroke="#fa5252" stroke-width="1.2"/><rect x="256.9" y="195.9" width="5.2" height="9.4" fill="#fa5252"/><line x1="266.9" y1="201.0" x2="266.9" y2="222.1" stroke="#fa5252" stroke-width="1.2"/><rect x="264.3" y="203.0" width="5.2" height="12.5" fill="#fa5252"/><line x1="274.3" y1="208.2" x2="274.3" y2="221.1" stroke="#12b886" stroke-width="1.2"/><rect x="271.7" y="211.5" width="5.2" height="4.3" fill="#12b886"/><line x1="281.7" y1="194.9" x2="281.7" y2="223.2" stroke="#12b886" stroke-width="1.2"/><rect x="279.1" y="199.3" width="5.2" height="13.8" fill="#12b886"/><line x1="289.1" y1="194.3" x2="289.1" y2="203.7" stroke="#12b886" stroke-width="1.2"/><rect x="286.5" y="197.7" width="5.2" height="3.3" fill="#12b886"/><line x1="296.5" y1="193.9" x2="296.5" y2="201.1" stroke="#fa5252" stroke-width="1.2"/><rect x="293.9" y="198.9" width="5.2" height="2.1" fill="#fa5252"/><line x1="303.9" y1="191.7" x2="303.9" y2="208.2" stroke="#12b886" stroke-width="1.2"/><rect x="301.3" y="193.5" width="5.2" height="10.1" fill="#12b886"/><line x1="311.3" y1="179.2" x2="311.3" y2="195.4" stroke="#12b886" stroke-width="1.2"/><rect x="308.7" y="182.8" width="5.2" height="12.1" fill="#12b886"/><line x1="318.7" y1="172.0" x2="318.7" y2="184.1" stroke="#12b886" stroke-width="1.2"/><rect x="316.1" y="181.8" width="5.2" height="1.2" fill="#12b886"/><line x1="326.1" y1="168.6" x2="326.1" y2="188.5" stroke="#12b886" stroke-width="1.2"/><rect x="323.5" y="172.6" width="5.2" height="8.6" fill="#12b886"/><line x1="333.5" y1="155.1" x2="333.5" y2="175.6" stroke="#12b886" stroke-width="1.2"/><rect x="330.9" y="158.2" width="5.2" height="15.2" fill="#12b886"/><line x1="340.9" y1="153.2" x2="340.9" y2="165.3" stroke="#12b886" stroke-width="1.2"/><rect x="338.3" y="156.2" width="5.2" height="6.8" fill="#12b886"/><line x1="348.3" y1="150.1" x2="348.3" y2="162.2" stroke="#fa5252" stroke-width="1.2"/><rect x="345.7" y="156.4" width="5.2" height="4.0" fill="#fa5252"/><line x1="355.7" y1="157.7" x2="355.7" y2="162.2" stroke="#12b886" stroke-width="1.2"/><rect x="353.1" y="159.6" width="5.2" height="1.0" fill="#12b886"/><line x1="363.1" y1="154.0" x2="363.1" y2="160.4" stroke="#fa5252" stroke-width="1.2"/><rect x="360.5" y="156.9" width="5.2" height="2.9" fill="#fa5252"/><line x1="370.5" y1="143.5" x2="370.5" y2="159.9" stroke="#12b886" stroke-width="1.2"/><rect x="367.9" y="151.4" width="5.2" height="7.0" fill="#12b886"/><line x1="377.9" y1="146.7" x2="377.9" y2="167.0" stroke="#fa5252" stroke-width="1.2"/><rect x="375.3" y="153.0" width="5.2" height="14.0" fill="#fa5252"/><line x1="385.3" y1="166.3" x2="385.3" y2="179.9" stroke="#fa5252" stroke-width="1.2"/><rect x="382.7" y="168.8" width="5.2" height="7.4" fill="#fa5252"/><line x1="392.7" y1="171.1" x2="392.7" y2="189.3" stroke="#fa5252" stroke-width="1.2"/><rect x="390.1" y="171.2" width="5.2" height="15.7" fill="#fa5252"/><line x1="400.1" y1="179.3" x2="400.1" y2="208.4" stroke="#fa5252" stroke-width="1.2"/><rect x="397.5" y="185.1" width="5.2" height="20.8" fill="#fa5252"/><line x1="407.5" y1="195.9" x2="407.5" y2="209.9" stroke="#fa5252" stroke-width="1.2"/><rect x="404.9" y="201.6" width="5.2" height="5.6" fill="#fa5252"/><line x1="414.9" y1="200.6" x2="414.9" y2="212.9" stroke="#fa5252" stroke-width="1.2"/><rect x="412.3" y="202.2" width="5.2" height="2.5" fill="#fa5252"/><line x1="422.3" y1="201.2" x2="422.3" y2="214.6" stroke="#fa5252" stroke-width="1.2"/><rect x="419.7" y="206.7" width="5.2" height="7.4" fill="#fa5252"/><line x1="429.7" y1="200.9" x2="429.7" y2="217.8" stroke="#12b886" stroke-width="1.2"/><rect x="427.1" y="203.7" width="5.2" height="9.5" fill="#12b886"/><line x1="437.1" y1="196.4" x2="437.1" y2="204.5" stroke="#12b886" stroke-width="1.2"/><rect x="434.5" y="198.4" width="5.2" height="4.2" fill="#12b886"/><line x1="444.5" y1="186.0" x2="444.5" y2="199.8" stroke="#12b886" stroke-width="1.2"/><rect x="441.9" y="195.0" width="5.2" height="2.1" fill="#12b886"/><line x1="451.9" y1="190.4" x2="451.9" y2="197.3" stroke="#fa5252" stroke-width="1.2"/><rect x="449.3" y="193.7" width="5.2" height="1.0" fill="#fa5252"/><line x1="459.3" y1="185.9" x2="459.3" y2="193.8" stroke="#12b886" stroke-width="1.2"/><rect x="456.7" y="187.1" width="5.2" height="6.1" fill="#12b886"/><line x1="466.7" y1="183.6" x2="466.7" y2="203.6" stroke="#fa5252" stroke-width="1.2"/><rect x="464.1" y="186.7" width="5.2" height="15.6" fill="#fa5252"/><line x1="474.1" y1="198.3" x2="474.1" y2="208.8" stroke="#12b886" stroke-width="1.2"/><rect x="471.5" y="199.1" width="5.2" height="6.8" fill="#12b886"/><line x1="481.5" y1="195.7" x2="481.5" y2="205.5" stroke="#12b886" stroke-width="1.2"/><rect x="478.9" y="195.9" width="5.2" height="3.6" fill="#12b886"/><line x1="488.9" y1="195.4" x2="488.9" y2="217.7" stroke="#fa5252" stroke-width="1.2"/><rect x="486.3" y="197.7" width="5.2" height="17.3" fill="#fa5252"/><line x1="496.3" y1="213.2" x2="496.3" y2="215.1" stroke="#12b886" stroke-width="1.2"/><rect x="493.7" y="214.2" width="5.2" height="1.0" fill="#12b886"/><line x1="503.7" y1="209.8" x2="503.7" y2="226.3" stroke="#fa5252" stroke-width="1.2"/><rect x="501.1" y="215.3" width="5.2" height="3.7" fill="#fa5252"/><line x1="511.1" y1="213.5" x2="511.1" y2="228.4" stroke="#12b886" stroke-width="1.2"/><rect x="508.5" y="214.2" width="5.2" height="3.3" fill="#12b886"/><line x1="518.5" y1="211.0" x2="518.5" y2="222.7" stroke="#fa5252" stroke-width="1.2"/><rect x="515.9" y="212.3" width="5.2" height="8.4" fill="#fa5252"/><line x1="525.9" y1="217.5" x2="525.9" y2="225.7" stroke="#fa5252" stroke-width="1.2"/><rect x="523.3" y="220.0" width="5.2" height="3.3" fill="#fa5252"/><line x1="533.3" y1="217.8" x2="533.3" y2="224.6" stroke="#fa5252" stroke-width="1.2"/><rect x="530.7" y="222.6" width="5.2" height="1.0" fill="#fa5252"/><line x1="540.7" y1="219.2" x2="540.7" y2="235.1" stroke="#fa5252" stroke-width="1.2"/><rect x="538.1" y="222.4" width="5.2" height="10.5" fill="#fa5252"/><line x1="548.1" y1="223.1" x2="548.1" y2="235.5" stroke="#12b886" stroke-width="1.2"/><rect x="545.5" y="229.9" width="5.2" height="4.0" fill="#12b886"/><line x1="555.5" y1="228.8" x2="555.5" y2="240.3" stroke="#fa5252" stroke-width="1.2"/><rect x="552.9" y="230.3" width="5.2" height="3.0" fill="#fa5252"/><line x1="562.9" y1="230.0" x2="562.9" y2="236.0" stroke="#12b886" stroke-width="1.2"/><rect x="560.3" y="231.2" width="5.2" height="3.1" fill="#12b886"/><line x1="570.3" y1="228.8" x2="570.3" y2="240.2" stroke="#fa5252" stroke-width="1.2"/><rect x="567.7" y="230.4" width="5.2" height="7.9" fill="#fa5252"/><line x1="577.7" y1="223.4" x2="577.7" y2="239.9" stroke="#12b886" stroke-width="1.2"/><rect x="575.1" y="225.6" width="5.2" height="12.7" fill="#12b886"/><line x1="585.1" y1="215.7" x2="585.1" y2="227.6" stroke="#12b886" stroke-width="1.2"/><rect x="582.5" y="217.0" width="5.2" height="7.2" fill="#12b886"/><line x1="592.5" y1="212.5" x2="592.5" y2="222.5" stroke="#12b886" stroke-width="1.2"/><rect x="589.9" y="215.6" width="5.2" height="4.5" fill="#12b886"/><line x1="599.9" y1="205.3" x2="599.9" y2="214.5" stroke="#12b886" stroke-width="1.2"/><rect x="597.3" y="206.6" width="5.2" height="6.9" fill="#12b886"/><line x1="607.3" y1="184.0" x2="607.3" y2="212.2" stroke="#12b886" stroke-width="1.2"/><rect x="604.7" y="191.5" width="5.2" height="16.8" fill="#12b886"/><line x1="614.7" y1="164.3" x2="614.7" y2="193.5" stroke="#12b886" stroke-width="1.2"/><rect x="612.1" y="170.9" width="5.2" height="22.4" fill="#12b886"/><line x1="622.1" y1="168.8" x2="622.1" y2="184.1" stroke="#fa5252" stroke-width="1.2"/><rect x="619.5" y="171.4" width="5.2" height="11.7" fill="#fa5252"/><line x1="629.5" y1="163.3" x2="629.5" y2="188.0" stroke="#12b886" stroke-width="1.2"/><rect x="626.9" y="171.1" width="5.2" height="13.3" fill="#12b886"/><line x1="636.9" y1="162.1" x2="636.9" y2="170.6" stroke="#12b886" stroke-width="1.2"/><rect x="634.3" y="163.2" width="5.2" height="7.2" fill="#12b886"/><line x1="644.3" y1="158.9" x2="644.3" y2="167.3" stroke="#12b886" stroke-width="1.2"/><rect x="641.7" y="160.8" width="5.2" height="3.8" fill="#12b886"/><line x1="651.7" y1="162.7" x2="651.7" y2="174.7" stroke="#fa5252" stroke-width="1.2"/><rect x="649.1" y="163.5" width="5.2" height="4.0" fill="#fa5252"/><line x1="659.1" y1="145.7" x2="659.1" y2="174.5" stroke="#12b886" stroke-width="1.2"/><rect x="656.5" y="151.5" width="5.2" height="18.1" fill="#12b886"/><line x1="666.5" y1="146.2" x2="666.5" y2="167.3" stroke="#fa5252" stroke-width="1.2"/><rect x="663.9" y="148.2" width="5.2" height="12.7" fill="#fa5252"/><line x1="673.9" y1="133.4" x2="673.9" y2="163.8" stroke="#12b886" stroke-width="1.2"/><rect x="671.3" y="151.8" width="5.2" height="9.0" fill="#12b886"/><line x1="681.3" y1="128.3" x2="681.3" y2="155.3" stroke="#12b886" stroke-width="1.2"/><rect x="678.7" y="135.0" width="5.2" height="19.8" fill="#12b886"/><line x1="688.7" y1="133.2" x2="688.7" y2="150.2" stroke="#fa5252" stroke-width="1.2"/><rect x="686.1" y="135.0" width="5.2" height="13.1" fill="#fa5252"/><line x1="696.1" y1="146.1" x2="696.1" y2="153.4" stroke="#12b886" stroke-width="1.2"/><rect x="693.5" y="147.7" width="5.2" height="4.3" fill="#12b886"/><line x1="703.5" y1="142.2" x2="703.5" y2="162.4" stroke="#fa5252" stroke-width="1.2"/><rect x="700.9" y="143.2" width="5.2" height="14.5" fill="#fa5252"/><line x1="710.9" y1="142.6" x2="710.9" y2="162.0" stroke="#12b886" stroke-width="1.2"/><rect x="708.3" y="151.8" width="5.2" height="9.7" fill="#12b886"/><line x1="718.3" y1="126.7" x2="718.3" y2="158.1" stroke="#12b886" stroke-width="1.2"/><rect x="715.7" y="132.7" width="5.2" height="17.8" fill="#12b886"/><line x1="725.7" y1="105.2" x2="725.7" y2="131.5" stroke="#12b886" stroke-width="1.2"/><rect x="723.1" y="107.7" width="5.2" height="23.7" fill="#12b886"/><line x1="733.1" y1="111.4" x2="733.1" y2="130.7" stroke="#fa5252" stroke-width="1.2"/><rect x="730.5" y="111.6" width="5.2" height="11.6" fill="#fa5252"/><line x1="740.5" y1="113.7" x2="740.5" y2="126.6" stroke="#fa5252" stroke-width="1.2"/><rect x="737.9" y="122.4" width="5.2" height="3.4" fill="#fa5252"/><line x1="747.9" y1="110.9" x2="747.9" y2="129.5" stroke="#12b886" stroke-width="1.2"/><rect x="745.3" y="114.7" width="5.2" height="8.4" fill="#12b886"/><line x1="755.3" y1="92.9" x2="755.3" y2="120.2" stroke="#12b886" stroke-width="1.2"/><rect x="752.7" y="93.9" width="5.2" height="19.6" fill="#12b886"/><line x1="762.7" y1="69.2" x2="762.7" y2="93.8" stroke="#12b886" stroke-width="1.2"/><rect x="760.1" y="85.5" width="5.2" height="7.7" fill="#12b886"/><line x1="770.1" y1="78.6" x2="770.1" y2="90.5" stroke="#fa5252" stroke-width="1.2"/><rect x="767.5" y="82.8" width="5.2" height="7.2" fill="#fa5252"/><line x1="777.5" y1="78.0" x2="777.5" y2="98.9" stroke="#12b886" stroke-width="1.2"/><rect x="774.9" y="83.1" width="5.2" height="6.6" fill="#12b886"/><line x1="784.9" y1="79.3" x2="784.9" y2="86.3" stroke="#12b886" stroke-width="1.2"/><rect x="782.3" y="79.5" width="5.2" height="2.6" fill="#12b886"/><line x1="792.3" y1="77.8" x2="792.3" y2="92.0" stroke="#12b886" stroke-width="1.2"/><rect x="789.7" y="78.0" width="5.2" height="1.8" fill="#12b886"/><line x1="799.7" y1="71.5" x2="799.7" y2="90.8" stroke="#fa5252" stroke-width="1.2"/><rect x="797.1" y="76.3" width="5.2" height="6.3" fill="#fa5252"/><line x1="807.1" y1="73.7" x2="807.1" y2="95.3" stroke="#12b886" stroke-width="1.2"/><rect x="804.5" y="74.4" width="5.2" height="10.8" fill="#12b886"/><line x1="814.5" y1="62.8" x2="814.5" y2="76.1" stroke="#12b886" stroke-width="1.2"/><rect x="811.9" y="67.1" width="5.2" height="5.1" fill="#12b886"/><line x1="821.9" y1="63.2" x2="821.9" y2="71.4" stroke="#12b886" stroke-width="1.2"/><rect x="819.3" y="64.4" width="5.2" height="4.2" fill="#12b886"/><line x1="829.3" y1="47.9" x2="829.3" y2="68.5" stroke="#12b886" stroke-width="1.2"/><rect x="826.7" y="63.1" width="5.2" height="4.4" fill="#12b886"/><line x1="836.7" y1="54.7" x2="836.7" y2="82.2" stroke="#fa5252" stroke-width="1.2"/><rect x="834.1" y="62.0" width="5.2" height="11.9" fill="#fa5252"/><line x1="844.1" y1="53.3" x2="844.1" y2="83.0" stroke="#fa5252" stroke-width="1.2"/><rect x="841.5" y="69.2" width="5.2" height="6.5" fill="#fa5252"/><line x1="851.5" y1="57.3" x2="851.5" y2="75.8" stroke="#12b886" stroke-width="1.2"/><rect x="848.9" y="58.1" width="5.2" height="14.9" fill="#12b886"/><line x1="858.9" y1="51.3" x2="858.9" y2="63.9" stroke="#12b886" stroke-width="1.2"/><rect x="856.3" y="56.4" width="5.2" height="3.1" fill="#12b886"/><line x1="866.3" y1="50.8" x2="866.3" y2="70.7" stroke="#fa5252" stroke-width="1.2"/><rect x="863.7" y="54.4" width="5.2" height="14.7" fill="#fa5252"/><polyline points="200.3,219.7 207.7,214.6 215.1,210.9 222.5,207.5 229.9,204.2 237.3,201.6 244.7,199.2 252.1,197.3 259.5,195.9 266.9,195.5 274.3,194.2 281.7,193.3 289.1,192.4 296.5,192.1 303.9,191.6 311.3,190.6 318.7,190.0 326.1,189.4 333.5,188.3 340.9,187.2 348.3,186.8 355.7,186.1 363.1,184.9 370.5,183.7 377.9,183.1 385.3,182.2 392.7,181.7 400.1,182.1 407.5,182.2 414.9,181.7 422.3,181.8 429.7,182.0 437.1,182.1 444.5,181.8 451.9,181.8 459.3,182.0 466.7,183.0 474.1,184.3 481.5,186.2 488.9,189.2 496.3,191.9 503.7,194.8 511.1,197.5 518.5,201.0 525.9,203.8 533.3,206.1 540.7,208.5 548.1,209.7 555.5,211.0 562.9,212.3 570.3,213.5 577.7,214.6 585.1,215.5 592.5,216.5 599.9,217.2 607.3,217.4 614.7,215.8 622.1,215.0 629.5,213.8 636.9,211.2 644.3,208.5 651.7,206.0 659.1,202.8 666.5,199.8 673.9,196.3 681.3,191.9 688.7,187.6 696.1,183.5 703.5,179.7 710.9,175.8 718.3,170.5 725.7,164.6 733.1,159.9 740.5,155.4 747.9,150.8 755.3,145.9 762.7,141.7 770.1,137.0 777.5,132.6 784.9,128.4 792.3,124.3 799.7,120.0 807.1,116.2 814.5,111.5 821.9,107.1 829.3,103.5 836.7,99.8 844.1,96.2 851.5,91.3 858.9,86.5 866.3,83.3" fill="none" stroke="#f59f00" stroke-width="2.2"/><rect x="64" y="8" width="14" height="4" fill="#f59f00"/><text x="82" y="14" text-anchor="start" font-size="12" font-weight="700" fill="#f59f00">SMA 20</text><text x="470.0" y="22" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Uptrend៖ Higher High (HH) + Higher Low (HL)</text><text x="870" y="312" text-anchor="end" font-size="11" font-weight="400" fill="#94a3b8">ទិន្នន័យគំរូ (Synthetic) សម្រាប់រៀន</text></svg><figcaption>🖼️ Uptrend៖ កំពូលខ្ពស់ជាងមុន និងបាតខ្ពស់ជាងមុន</figcaption></figure>
+
+<table><tr><th>Trend</th><th>លក្ខណៈ</th><th>យុទ្ធសាស្ត្រទូទៅ</th></tr><tr><td>📈 Uptrend</td><td>Higher High + Higher Low</td><td>Buy ពេលតម្លៃធ្លាក់មកវិញ (Pullback)</td></tr><tr><td>📉 Downtrend</td><td>Lower High + Lower Low</td><td>Sell ពេលតម្លៃឡើងវិញ ឬនៅក្រៅទីផ្សារ</td></tr><tr><td>↔️ Sideways</td><td>លោតក្នុង Range</td><td>Buy Support / Sell Resistance ឬរង់ចាំ</td></tr></table>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Swing highs: [52, 54, 57, 59, 62]
+Swing lows:  [51, 53, 55, 58, 60]
+Trend: 📈 Uptrend</pre></div>
+
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li><b>Swing high</b> = តម្លៃខ្ពស់ជាងសងខាង · <b>Swing low</b> = ទាបជាងសងខាង។</li><li>HH + HL → Uptrend (Dow Theory របស់ Charles Dow)។</li><li><b>Timeframe</b>៖ Swing trader មើល Daily (D1) សម្រាប់ Trend ហើយ H4/H1 សម្រាប់ Entry — «The trend is your friend»។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>Swing highs: 80, 76, 73 · Swing lows: 70, 67, 63។ Trend អ្វី?</p><details><summary>មើលចម្លើយ</summary><p>Lower High + Lower Low → <b>Downtrend</b>។</p></details></div>
+
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>Support &amp; Resistance</h2>
+
+<figure class="fig"><svg viewBox="0 0 940 320" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="320" fill="#fff"/><line x1="56" y1="294.0" x2="870" y2="294.0" stroke="#eef1f5"/><text x="876" y="298.0" text-anchor="start" font-size="11" font-weight="400" fill="#94a3b8">92.37</text><line x1="56" y1="229.0" x2="870" y2="229.0" stroke="#eef1f5"/><text x="876" y="232.99999999999994" text-anchor="start" font-size="11" font-weight="400" fill="#94a3b8">96.37</text><line x1="56" y1="164.0" x2="870" y2="164.0" stroke="#eef1f5"/><text x="876" y="167.9999999999999" text-anchor="start" font-size="11" font-weight="400" fill="#94a3b8">100.37</text><line x1="56" y1="99.0" x2="870" y2="99.0" stroke="#eef1f5"/><text x="876" y="103.00000000000006" text-anchor="start" font-size="11" font-weight="400" fill="#94a3b8">104.37</text><line x1="56" y1="34.0" x2="870" y2="34.0" stroke="#eef1f5"/><text x="876" y="38.0" text-anchor="start" font-size="11" font-weight="400" fill="#94a3b8">108.37</text><rect x="56" y="69.2" width="814" height="32.5" fill="#e03131" opacity=".16"/><text x="62" y="84.22334383295225" text-anchor="start" font-size="12" font-weight="700" fill="#e03131">Resistance (តំបន់លក់)</text><rect x="56" y="238.3" width="814" height="32.5" fill="#2f9e44" opacity=".16"/><text x="62" y="253.27413228349974" text-anchor="start" font-size="12" font-weight="700" fill="#2f9e44">Support (តំបន់ទិញ)</text><line x1="59.4" y1="144.5" x2="59.4" y2="175.1" stroke="#fa5252" stroke-width="1.2"/><rect x="57.0" y="145.1" width="4.7" height="25.0" fill="#fa5252"/><line x1="66.2" y1="125.9" x2="66.2" y2="162.7" stroke="#fa5252" stroke-width="1.2"/><rect x="63.8" y="139.0" width="4.7" height="20.2" fill="#fa5252"/><line x1="73.0" y1="138.9" x2="73.0" y2="155.1" stroke="#fa5252" stroke-width="1.2"/><rect x="70.6" y="142.4" width="4.7" height="6.2" fill="#fa5252"/><line x1="79.7" y1="132.0" x2="79.7" y2="154.3" stroke="#12b886" stroke-width="1.2"/><rect x="77.4" y="138.4" width="4.7" height="9.9" fill="#12b886"/><line x1="86.5" y1="127.2" x2="86.5" y2="160.8" stroke="#12b886" stroke-width="1.2"/><rect x="84.2" y="128.7" width="4.7" height="27.8" fill="#12b886"/><line x1="93.3" y1="106.8" x2="93.3" y2="129.1" stroke="#12b886" stroke-width="1.2"/><rect x="90.9" y="119.7" width="4.7" height="7.4" fill="#12b886"/><line x1="100.1" y1="93.3" x2="100.1" y2="112.1" stroke="#fa5252" stroke-width="1.2"/><rect x="97.7" y="100.6" width="4.7" height="11.1" fill="#fa5252"/><line x1="106.9" y1="79.8" x2="106.9" y2="130.0" stroke="#fa5252" stroke-width="1.2"/><rect x="104.5" y="86.5" width="4.7" height="18.2" fill="#fa5252"/><line x1="113.7" y1="97.8" x2="113.7" y2="143.9" stroke="#12b886" stroke-width="1.2"/><rect x="111.3" y="98.8" width="4.7" height="17.9" fill="#12b886"/><line x1="120.4" y1="85.0" x2="120.4" y2="130.4" stroke="#12b886" stroke-width="1.2"/><rect x="118.1" y="94.3" width="4.7" height="32.8" fill="#12b886"/><line x1="127.2" y1="74.5" x2="127.2" y2="96.3" stroke="#12b886" stroke-width="1.2"/><rect x="124.9" y="91.0" width="4.7" height="1.9" fill="#12b886"/><line x1="134.0" y1="61.0" x2="134.0" y2="103.4" stroke="#fa5252" stroke-width="1.2"/><rect x="131.6" y="62.2" width="4.7" height="27.0" fill="#fa5252"/><line x1="140.8" y1="61.0" x2="140.8" y2="96.1" stroke="#fa5252" stroke-width="1.2"/><rect x="138.4" y="64.5" width="4.7" height="24.2" fill="#fa5252"/><line x1="147.6" y1="86.2" x2="147.6" y2="122.2" stroke="#12b886" stroke-width="1.2"/><rect x="145.2" y="89.8" width="4.7" height="30.1" fill="#12b886"/><line x1="154.4" y1="88.9" x2="154.4" y2="94.1" stroke="#12b886" stroke-width="1.2"/><rect x="152.0" y="92.3" width="4.7" height="1.7" fill="#12b886"/><line x1="161.1" y1="47.9" x2="161.1" y2="110.6" stroke="#fa5252" stroke-width="1.2"/><rect x="158.8" y="50.9" width="4.7" height="45.2" fill="#fa5252"/><line x1="167.9" y1="93.4" x2="167.9" y2="110.2" stroke="#fa5252" stroke-width="1.2"/><rect x="165.6" y="96.4" width="4.7" height="4.9" fill="#fa5252"/><line x1="174.7" y1="73.4" x2="174.7" y2="113.7" stroke="#fa5252" stroke-width="1.2"/><rect x="172.3" y="83.2" width="4.7" height="24.4" fill="#fa5252"/><line x1="181.5" y1="89.3" x2="181.5" y2="120.2" stroke="#fa5252" stroke-width="1.2"/><rect x="179.1" y="98.8" width="4.7" height="16.3" fill="#fa5252"/><line x1="188.3" y1="105.0" x2="188.3" y2="125.6" stroke="#fa5252" stroke-width="1.2"/><rect x="185.9" y="118.4" width="4.7" height="5.2" fill="#fa5252"/><line x1="195.1" y1="112.1" x2="195.1" y2="135.6" stroke="#fa5252" stroke-width="1.2"/><rect x="192.7" y="120.2" width="4.7" height="12.6" fill="#fa5252"/><line x1="201.8" y1="139.4" x2="201.8" y2="158.6" stroke="#12b886" stroke-width="1.2"/><rect x="199.5" y="142.8" width="4.7" height="7.0" fill="#12b886"/><line x1="208.6" y1="148.3" x2="208.6" y2="158.0" stroke="#fa5252" stroke-width="1.2"/><rect x="206.3" y="148.8" width="4.7" height="4.4" fill="#fa5252"/><line x1="215.4" y1="139.8" x2="215.4" y2="167.7" stroke="#fa5252" stroke-width="1.2"/><rect x="213.0" y="144.7" width="4.7" height="19.2" fill="#fa5252"/><line x1="222.2" y1="171.7" x2="222.2" y2="190.9" stroke="#12b886" stroke-width="1.2"/><rect x="219.8" y="174.7" width="4.7" height="7.9" fill="#12b886"/><line x1="229.0" y1="180.2" x2="229.0" y2="212.0" stroke="#12b886" stroke-width="1.2"/><rect x="226.6" y="185.5" width="4.7" height="22.9" fill="#12b886"/><line x1="235.8" y1="143.2" x2="235.8" y2="211.9" stroke="#fa5252" stroke-width="1.2"/><rect x="233.4" y="154.6" width="4.7" height="41.4" fill="#fa5252"/><line x1="242.5" y1="188.1" x2="242.5" y2="209.4" stroke="#fa5252" stroke-width="1.2"/><rect x="240.2" y="195.8" width="4.7" height="10.1" fill="#fa5252"/><line x1="249.3" y1="184.8" x2="249.3" y2="226.6" stroke="#fa5252" stroke-width="1.2"/><rect x="247.0" y="201.7" width="4.7" height="13.6" fill="#fa5252"/><line x1="256.1" y1="202.8" x2="256.1" y2="231.7" stroke="#fa5252" stroke-width="1.2"/><rect x="253.7" y="214.1" width="4.7" height="9.8" fill="#fa5252"/><line x1="262.9" y1="206.8" x2="262.9" y2="238.4" stroke="#fa5252" stroke-width="1.2"/><rect x="260.5" y="207.0" width="4.7" height="24.5" fill="#fa5252"/><line x1="269.7" y1="231.4" x2="269.7" y2="254.3" stroke="#12b886" stroke-width="1.2"/><rect x="267.3" y="238.0" width="4.7" height="8.9" fill="#12b886"/><line x1="276.5" y1="230.9" x2="276.5" y2="254.0" stroke="#12b886" stroke-width="1.2"/><rect x="274.1" y="243.3" width="4.7" height="1.3" fill="#12b886"/><line x1="283.2" y1="227.9" x2="283.2" y2="250.8" stroke="#fa5252" stroke-width="1.2"/><rect x="280.9" y="244.1" width="4.7" height="3.3" fill="#fa5252"/><line x1="290.0" y1="216.0" x2="290.0" y2="264.7" stroke="#fa5252" stroke-width="1.2"/><rect x="287.7" y="223.0" width="4.7" height="27.0" fill="#fa5252"/><line x1="296.8" y1="246.3" x2="296.8" y2="257.6" stroke="#fa5252" stroke-width="1.2"/><rect x="294.4" y="247.5" width="4.7" height="3.7" fill="#fa5252"/><line x1="303.6" y1="228.5" x2="303.6" y2="251.4" stroke="#fa5252" stroke-width="1.2"/><rect x="301.2" y="231.8" width="4.7" height="19.2" fill="#fa5252"/><line x1="310.4" y1="224.2" x2="310.4" y2="255.7" stroke="#fa5252" stroke-width="1.2"/><rect x="308.0" y="225.3" width="4.7" height="24.0" fill="#fa5252"/><line x1="317.2" y1="244.7" x2="317.2" y2="255.1" stroke="#12b886" stroke-width="1.2"/><rect x="314.8" y="246.2" width="4.7" height="5.9" fill="#12b886"/><line x1="323.9" y1="222.7" x2="323.9" y2="251.9" stroke="#fa5252" stroke-width="1.2"/><rect x="321.6" y="225.3" width="4.7" height="16.5" fill="#fa5252"/><line x1="330.7" y1="225.6" x2="330.7" y2="271.7" stroke="#12b886" stroke-width="1.2"/><rect x="328.4" y="236.1" width="4.7" height="20.7" fill="#12b886"/><line x1="337.5" y1="217.4" x2="337.5" y2="241.2" stroke="#12b886" stroke-width="1.2"/><rect x="335.1" y="229.2" width="4.7" height="8.4" fill="#12b886"/><line x1="344.3" y1="179.7" x2="344.3" y2="235.9" stroke="#fa5252" stroke-width="1.2"/><rect x="341.9" y="180.1" width="4.7" height="41.2" fill="#fa5252"/><line x1="351.1" y1="211.8" x2="351.1" y2="238.9" stroke="#12b886" stroke-width="1.2"/><rect x="348.7" y="212.5" width="4.7" height="9.6" fill="#12b886"/><line x1="357.9" y1="186.4" x2="357.9" y2="212.2" stroke="#fa5252" stroke-width="1.2"/><rect x="355.5" y="187.3" width="4.7" height="15.6" fill="#fa5252"/><line x1="364.6" y1="170.0" x2="364.6" y2="197.8" stroke="#12b886" stroke-width="1.2"/><rect x="362.3" y="192.7" width="4.7" height="1.0" fill="#12b886"/><line x1="371.4" y1="177.0" x2="371.4" y2="191.5" stroke="#12b886" stroke-width="1.2"/><rect x="369.1" y="182.1" width="4.7" height="4.3" fill="#12b886"/><line x1="378.2" y1="132.0" x2="378.2" y2="174.8" stroke="#fa5252" stroke-width="1.2"/><rect x="375.8" y="135.3" width="4.7" height="36.1" fill="#fa5252"/><line x1="385.0" y1="157.7" x2="385.0" y2="166.4" stroke="#12b886" stroke-width="1.2"/><rect x="382.6" y="160.5" width="4.7" height="3.7" fill="#12b886"/><line x1="391.8" y1="134.5" x2="391.8" y2="157.0" stroke="#fa5252" stroke-width="1.2"/><rect x="389.4" y="135.2" width="4.7" height="14.7" fill="#fa5252"/><line x1="398.6" y1="129.9" x2="398.6" y2="163.1" stroke="#12b886" stroke-width="1.2"/><rect x="396.2" y="139.6" width="4.7" height="14.5" fill="#12b886"/><line x1="405.3" y1="102.5" x2="405.3" y2="139.2" stroke="#fa5252" stroke-width="1.2"/><rect x="403.0" y="111.0" width="4.7" height="18.8" fill="#fa5252"/><line x1="412.1" y1="113.8" x2="412.1" y2="133.2" stroke="#12b886" stroke-width="1.2"/><rect x="409.8" y="120.8" width="4.7" height="10.2" fill="#12b886"/><line x1="418.9" y1="74.2" x2="418.9" y2="117.4" stroke="#fa5252" stroke-width="1.2"/><rect x="416.5" y="83.4" width="4.7" height="29.2" fill="#fa5252"/><line x1="425.7" y1="96.8" x2="425.7" y2="112.9" stroke="#12b886" stroke-width="1.2"/><rect x="423.3" y="105.5" width="4.7" height="5.4" fill="#12b886"/><line x1="432.5" y1="83.5" x2="432.5" y2="110.8" stroke="#fa5252" stroke-width="1.2"/><rect x="430.1" y="85.1" width="4.7" height="14.4" fill="#fa5252"/><line x1="439.3" y1="87.1" x2="439.3" y2="140.4" stroke="#12b886" stroke-width="1.2"/><rect x="436.9" y="94.7" width="4.7" height="31.3" fill="#12b886"/><line x1="446.0" y1="85.3" x2="446.0" y2="103.1" stroke="#12b886" stroke-width="1.2"/><rect x="443.7" y="91.3" width="4.7" height="8.3" fill="#12b886"/><line x1="452.8" y1="73.9" x2="452.8" y2="143.7" stroke="#12b886" stroke-width="1.2"/><rect x="450.5" y="89.3" width="4.7" height="49.7" fill="#12b886"/><line x1="459.6" y1="77.9" x2="459.6" y2="115.7" stroke="#12b886" stroke-width="1.2"/><rect x="457.2" y="88.7" width="4.7" height="14.3" fill="#12b886"/><line x1="466.4" y1="78.7" x2="466.4" y2="114.4" stroke="#12b886" stroke-width="1.2"/><rect x="464.0" y="89.6" width="4.7" height="17.5" fill="#12b886"/><line x1="473.2" y1="79.7" x2="473.2" y2="106.7" stroke="#12b886" stroke-width="1.2"/><rect x="470.8" y="91.9" width="4.7" height="7.7" fill="#12b886"/><line x1="480.0" y1="71.5" x2="480.0" y2="108.9" stroke="#fa5252" stroke-width="1.2"/><rect x="477.6" y="72.0" width="4.7" height="23.5" fill="#fa5252"/><line x1="486.7" y1="93.4" x2="486.7" y2="105.6" stroke="#12b886" stroke-width="1.2"/><rect x="484.4" y="100.5" width="4.7" height="1.2" fill="#12b886"/><line x1="493.5" y1="100.3" x2="493.5" y2="143.7" stroke="#12b886" stroke-width="1.2"/><rect x="491.2" y="106.8" width="4.7" height="31.8" fill="#12b886"/><line x1="500.3" y1="87.7" x2="500.3" y2="116.2" stroke="#fa5252" stroke-width="1.2"/><rect x="497.9" y="92.5" width="4.7" height="21.7" fill="#fa5252"/><line x1="507.1" y1="113.5" x2="507.1" y2="148.0" stroke="#12b886" stroke-width="1.2"/><rect x="504.7" y="122.5" width="4.7" height="8.7" fill="#12b886"/><line x1="513.9" y1="129.7" x2="513.9" y2="146.8" stroke="#12b886" stroke-width="1.2"/><rect x="511.5" y="131.7" width="4.7" height="2.4" fill="#12b886"/><line x1="520.7" y1="132.1" x2="520.7" y2="156.3" stroke="#12b886" stroke-width="1.2"/><rect x="518.3" y="141.5" width="4.7" height="11.9" fill="#12b886"/><line x1="527.4" y1="121.6" x2="527.4" y2="156.2" stroke="#fa5252" stroke-width="1.2"/><rect x="525.1" y="142.3" width="4.7" height="9.6" fill="#fa5252"/><line x1="534.2" y1="152.5" x2="534.2" y2="174.2" stroke="#fa5252" stroke-width="1.2"/><rect x="531.9" y="154.5" width="4.7" height="8.0" fill="#fa5252"/><line x1="541.0" y1="162.2" x2="541.0" y2="176.5" stroke="#12b886" stroke-width="1.2"/><rect x="538.6" y="173.4" width="4.7" height="2.8" fill="#12b886"/><line x1="547.8" y1="174.0" x2="547.8" y2="203.2" stroke="#12b886" stroke-width="1.2"/><rect x="545.4" y="184.2" width="4.7" height="6.2" fill="#12b886"/><line x1="554.6" y1="162.0" x2="554.6" y2="209.8" stroke="#fa5252" stroke-width="1.2"/><rect x="552.2" y="175.5" width="4.7" height="19.2" fill="#fa5252"/><line x1="561.4" y1="198.7" x2="561.4" y2="223.5" stroke="#12b886" stroke-width="1.2"/><rect x="559.0" y="204.8" width="4.7" height="15.8" fill="#12b886"/><line x1="568.1" y1="173.3" x2="568.1" y2="220.8" stroke="#fa5252" stroke-width="1.2"/><rect x="565.8" y="180.3" width="4.7" height="33.9" fill="#fa5252"/><line x1="574.9" y1="187.4" x2="574.9" y2="229.4" stroke="#fa5252" stroke-width="1.2"/><rect x="572.6" y="200.1" width="4.7" height="22.8" fill="#fa5252"/><line x1="581.7" y1="207.7" x2="581.7" y2="238.3" stroke="#fa5252" stroke-width="1.2"/><rect x="579.3" y="212.7" width="4.7" height="17.9" fill="#fa5252"/><line x1="588.5" y1="212.9" x2="588.5" y2="263.1" stroke="#12b886" stroke-width="1.2"/><rect x="586.1" y="237.3" width="4.7" height="22.8" fill="#12b886"/><line x1="595.3" y1="216.8" x2="595.3" y2="254.2" stroke="#fa5252" stroke-width="1.2"/><rect x="592.9" y="229.2" width="4.7" height="13.5" fill="#fa5252"/><line x1="602.1" y1="212.4" x2="602.1" y2="251.8" stroke="#fa5252" stroke-width="1.2"/><rect x="599.7" y="231.3" width="4.7" height="15.6" fill="#fa5252"/><line x1="608.8" y1="228.7" x2="608.8" y2="251.8" stroke="#fa5252" stroke-width="1.2"/><rect x="606.5" y="238.4" width="4.7" height="11.3" fill="#fa5252"/><line x1="615.6" y1="246.3" x2="615.6" y2="280.1" stroke="#12b886" stroke-width="1.2"/><rect x="613.3" y="251.1" width="4.7" height="10.5" fill="#12b886"/><line x1="622.4" y1="227.1" x2="622.4" y2="258.8" stroke="#fa5252" stroke-width="1.2"/><rect x="620.0" y="231.4" width="4.7" height="19.7" fill="#fa5252"/><line x1="629.2" y1="203.5" x2="629.2" y2="261.7" stroke="#fa5252" stroke-width="1.2"/><rect x="626.8" y="220.2" width="4.7" height="29.4" fill="#fa5252"/><line x1="636.0" y1="241.7" x2="636.0" y2="273.7" stroke="#12b886" stroke-width="1.2"/><rect x="633.6" y="246.7" width="4.7" height="16.0" fill="#12b886"/><line x1="642.8" y1="216.1" x2="642.8" y2="248.5" stroke="#fa5252" stroke-width="1.2"/><rect x="640.4" y="216.8" width="4.7" height="25.6" fill="#fa5252"/><line x1="649.5" y1="215.5" x2="649.5" y2="244.7" stroke="#fa5252" stroke-width="1.2"/><rect x="647.2" y="227.1" width="4.7" height="9.8" fill="#fa5252"/><line x1="656.3" y1="229.5" x2="656.3" y2="241.8" stroke="#12b886" stroke-width="1.2"/><rect x="654.0" y="230.1" width="4.7" height="3.2" fill="#12b886"/><line x1="663.1" y1="207.8" x2="663.1" y2="222.9" stroke="#fa5252" stroke-width="1.2"/><rect x="660.7" y="214.8" width="4.7" height="7.5" fill="#fa5252"/><line x1="669.9" y1="197.4" x2="669.9" y2="221.0" stroke="#fa5252" stroke-width="1.2"/><rect x="667.5" y="204.2" width="4.7" height="9.4" fill="#fa5252"/><line x1="676.7" y1="197.3" x2="676.7" y2="231.4" stroke="#12b886" stroke-width="1.2"/><rect x="674.3" y="204.1" width="4.7" height="17.3" fill="#12b886"/><line x1="683.5" y1="179.5" x2="683.5" y2="196.1" stroke="#fa5252" stroke-width="1.2"/><rect x="681.1" y="179.9" width="4.7" height="14.1" fill="#fa5252"/><line x1="690.2" y1="154.0" x2="690.2" y2="194.6" stroke="#fa5252" stroke-width="1.2"/><rect x="687.9" y="157.3" width="4.7" height="26.2" fill="#fa5252"/><line x1="697.0" y1="122.2" x2="697.0" y2="176.0" stroke="#fa5252" stroke-width="1.2"/><rect x="694.7" y="130.9" width="4.7" height="41.8" fill="#fa5252"/><line x1="703.8" y1="145.5" x2="703.8" y2="166.6" stroke="#fa5252" stroke-width="1.2"/><rect x="701.4" y="158.5" width="4.7" height="3.3" fill="#fa5252"/><line x1="710.6" y1="143.0" x2="710.6" y2="157.5" stroke="#fa5252" stroke-width="1.2"/><rect x="708.2" y="144.7" width="4.7" height="6.5" fill="#fa5252"/><line x1="717.4" y1="122.4" x2="717.4" y2="150.9" stroke="#12b886" stroke-width="1.2"/><rect x="715.0" y="140.8" width="4.7" height="9.5" fill="#12b886"/><line x1="724.2" y1="121.3" x2="724.2" y2="149.2" stroke="#fa5252" stroke-width="1.2"/><rect x="721.8" y="121.7" width="4.7" height="9.3" fill="#fa5252"/><line x1="730.9" y1="100.6" x2="730.9" y2="132.0" stroke="#fa5252" stroke-width="1.2"/><rect x="728.6" y="112.7" width="4.7" height="9.2" fill="#fa5252"/><line x1="737.7" y1="73.2" x2="737.7" y2="119.7" stroke="#fa5252" stroke-width="1.2"/><rect x="735.4" y="84.9" width="4.7" height="28.7" fill="#fa5252"/><line x1="744.5" y1="83.3" x2="744.5" y2="117.1" stroke="#fa5252" stroke-width="1.2"/><rect x="742.1" y="96.7" width="4.7" height="9.6" fill="#fa5252"/><line x1="751.3" y1="89.5" x2="751.3" y2="104.5" stroke="#fa5252" stroke-width="1.2"/><rect x="748.9" y="97.0" width="4.7" height="3.2" fill="#fa5252"/><line x1="758.1" y1="66.5" x2="758.1" y2="113.3" stroke="#fa5252" stroke-width="1.2"/><rect x="755.7" y="80.7" width="4.7" height="14.5" fill="#fa5252"/><line x1="764.9" y1="89.0" x2="764.9" y2="97.0" stroke="#12b886" stroke-width="1.2"/><rect x="762.5" y="91.7" width="4.7" height="3.0" fill="#12b886"/><line x1="771.6" y1="85.6" x2="771.6" y2="123.0" stroke="#12b886" stroke-width="1.2"/><rect x="769.3" y="89.5" width="4.7" height="32.6" fill="#12b886"/><line x1="778.4" y1="72.9" x2="778.4" y2="113.2" stroke="#12b886" stroke-width="1.2"/><rect x="776.1" y="88.7" width="4.7" height="20.9" fill="#12b886"/><line x1="785.2" y1="51.5" x2="785.2" y2="107.2" stroke="#fa5252" stroke-width="1.2"/><rect x="782.8" y="56.3" width="4.7" height="33.1" fill="#fa5252"/><line x1="792.0" y1="78.7" x2="792.0" y2="128.9" stroke="#12b886" stroke-width="1.2"/><rect x="789.6" y="91.5" width="4.7" height="30.8" fill="#12b886"/><line x1="798.8" y1="78.0" x2="798.8" y2="119.5" stroke="#12b886" stroke-width="1.2"/><rect x="796.4" y="95.0" width="4.7" height="19.3" fill="#12b886"/><line x1="805.6" y1="84.4" x2="805.6" y2="102.4" stroke="#fa5252" stroke-width="1.2"/><rect x="803.2" y="86.6" width="4.7" height="13.3" fill="#fa5252"/><line x1="812.3" y1="105.5" x2="812.3" y2="134.7" stroke="#12b886" stroke-width="1.2"/><rect x="810.0" y="105.9" width="4.7" height="13.0" fill="#12b886"/><line x1="819.1" y1="106.2" x2="819.1" y2="123.7" stroke="#12b886" stroke-width="1.2"/><rect x="816.8" y="113.2" width="4.7" height="1.7" fill="#12b886"/><line x1="825.9" y1="104.9" x2="825.9" y2="136.3" stroke="#fa5252" stroke-width="1.2"/><rect x="823.5" y="114.5" width="4.7" height="6.8" fill="#fa5252"/><line x1="832.7" y1="114.2" x2="832.7" y2="138.7" stroke="#fa5252" stroke-width="1.2"/><rect x="830.3" y="119.6" width="4.7" height="10.8" fill="#fa5252"/><line x1="839.5" y1="119.2" x2="839.5" y2="145.3" stroke="#fa5252" stroke-width="1.2"/><rect x="837.1" y="123.1" width="4.7" height="17.1" fill="#fa5252"/><line x1="846.3" y1="143.9" x2="846.3" y2="156.9" stroke="#fa5252" stroke-width="1.2"/><rect x="843.9" y="148.0" width="4.7" height="2.6" fill="#fa5252"/><line x1="853.0" y1="160.7" x2="853.0" y2="185.1" stroke="#12b886" stroke-width="1.2"/><rect x="850.7" y="161.2" width="4.7" height="18.6" fill="#12b886"/><line x1="859.8" y1="162.8" x2="859.8" y2="175.4" stroke="#fa5252" stroke-width="1.2"/><rect x="857.5" y="167.1" width="4.7" height="5.0" fill="#fa5252"/><line x1="866.6" y1="179.1" x2="866.6" y2="202.8" stroke="#12b886" stroke-width="1.2"/><rect x="864.2" y="182.8" width="4.7" height="11.3" fill="#12b886"/><text x="470.0" y="22" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Support &amp; Resistance — តម្លៃលោតរវាងតំបន់ពីរ (Range)</text><text x="870" y="312" text-anchor="end" font-size="11" font-weight="400" fill="#94a3b8">ទិន្នន័យគំរូ (Synthetic) សម្រាប់រៀន</text></svg><figcaption>🖼️ Support (តំបន់ទិញ) និង Resistance (តំបន់លក់)</figcaption></figure>
+
+<p><b>Support</b> = តំបន់ដែលតម្លៃធ្លាប់ឈប់ធ្លាក់ (Buyer ច្រើន) · <b>Resistance</b> = តំបន់ដែលតម្លៃធ្លាប់ឈប់ឡើង (Seller ច្រើន)។ វាជា <b>តំបន់</b> មិនមែនបន្ទាត់ត្រង់ឯកឯង។ ពេល Resistance ត្រូវបំបែក (Breakout) វាច្រើនក្លាយជា Support ថ្មី (<b>Role reversal</b>)។</p>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Resistance zone ≈ 106.14 (touch 3 ដង, ±0.22)
+Support zone    ≈ 94.32 (touch 2 ដង, ±0.02)</pre></div>
+
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Pivot high = តម្លៃខ្ពស់បំផុតក្នុងបង្អួច ១១ ទៀន · Pivot low = ទាបបំផុត។</li><li>តំបន់ដែល «ប៉ះ» ច្រើនដង = សំខាន់ជាង។</li><li>Entry ល្អ៖ Buy ជិត Support ដាក់ SL <b>ក្រោម</b> Support បន្តិច · TP ជិត Resistance។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>Support 1.0800, Resistance 1.0900។ អ្នក Buy នៅ 1.0805។ ដាក់ SL និង TP នៅណា?</p><details><summary>មើលចម្លើយ</summary><p>SL ក្រោម Support ឧ. <b>1.0785</b> (20 pips) · TP មុន Resistance ឧ. <b>1.0890</b> (85 pips) → R:R ≈ 1:4។</p></details></div>
+
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>Risk management៖ ច្បាប់ 1% · Position size · R:R</h2>
+
+<p>ច្បាប់សំខាន់បំផុតក្នុង Trading៖ <b>ហានិភ័យ ១–២% នៃគណនី ក្នុងមួយ Trade</b>។ ទំហំ Position គណនាពី Stop-loss — មិនមែនពីអារម្មណ៍ទេ។</p>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Stock    Risk $10 → 12.5000 units (តម្លៃ $318) · R:R 1:3.0 · Win rate ត្រូវការ ≥ 25%
+EUR/USD  Risk $10 → 3,333.3333 units (តម្លៃ $3,617) · R:R 1:3.0 · Win rate ត្រូវការ ≥ 25%
+BTC      Risk $10 → 0.0050 units (តម្លៃ $325) · R:R 1:2.5 · Win rate ត្រូវការ ≥ 29%
+Risk 1%/trade · ខាត 10 ដងជាប់ → នៅសល់ 90%
+Risk 2%/trade · ខាត 10 ដងជាប់ → នៅសល់ 82%
+Risk 5%/trade · ខាត 10 ដងជាប់ → នៅសល់ 60%
+Risk 10%/trade · ខាត 10 ដងជាប់ → នៅសល់ 35%</pre></div>
+
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li><b>Units = (Balance × Risk%) ÷ |Entry − Stop|</b>។</li><li>R:R 1:3 → ឈ្នះតែ 25% ក៏មិនខាត (មិនគិតថ្លៃ)។</li><li>Risk 10%/trade → ខាត ១០ ដងជាប់ នៅសល់ 35% — ការខាតជាប់គ្នា ១០ ដង <b>កើតឡើងញឹកញាប់</b> ជាងអ្នកគិត។</li><li>សាកក្នុង <b>Trading Lab Pro → 🧮 Position Size</b>។</li></ol></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>គណនី $500, Risk 2%, Entry $10.00, Stop $9.50។ ទិញប៉ុន្មានហ៊ុន?</p><details><summary>មើលចម្លើយ</summary><p>Risk = $10 · ចម្ងាយ = $0.50 → <b>20 ហ៊ុន</b> (តម្លៃ $200)។</p></details></div>
+
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>Trading plan · Journal · ចិត្តសាស្ត្រ · ការការពារ Scam</h2>
+
+<table><tr><th>ផ្នែក Trading plan</th><th>ឧទាហរណ៍</th></tr><tr><td>ទីផ្សារ &amp; ម៉ោង</td><td>EUR/USD · 20:00–22:00 · មិន Trade ពេលប្រឡង</td></tr><tr><td>Setup</td><td>Uptrend លើ D1 + Pullback មក Support លើ H1 + ទៀន Bullish</td></tr><tr><td>Risk</td><td>1%/trade · ខាត 3% ក្នុងថ្ងៃ → ឈប់ · ខាត 6% ក្នុងសប្តាហ៍ → ឈប់ពិនិត្យ</td></tr><tr><td>Exit</td><td>SL ក្រោម Swing low · TP R:R ≥ 1:2</td></tr><tr><td>ពិនិត្យ</td><td>រៀងរាល់ចុងសប្តាហ៍ (Journal)</td></tr></table>
+
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Trades: 15 · Win rate: 40% · Avg win: 2.25R · Avg loss: -0.94R
+Expectancy: +0.33R/trade · សរុប +5.0R
+✅ យុទ្ធសាស្ត្រមាន Edge (Demo)</pre></div>
+
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>កត់ជា <b>R-multiple</b> (ចំណេញ ÷ Risk) ដើម្បីប្រៀបធៀប Trade ទំហំខុសគ្នា។</li><li>Win rate ត្រឹម 40% តែ Expectancy វិជ្ជមាន ព្រោះ Avg win &gt; Avg loss។</li><li>ត្រូវមាន <b>យ៉ាងតិច ៣០–៥០ Trade</b> មុនសន្និដ្ឋាន (ស្ថិតិ)។</li></ol></div>
+
+<div class="grid"><div class="card"><b>😨 FOMO</b><br>ខ្លាចខកខាន → ទិញនៅកំពូល · ដំណោះស្រាយ៖ តាម Plan តែប៉ុណ្ណោះ</div><div class="card"><b>😡 Revenge trading</b><br>ខាតហើយ Trade ធំជាងមុនដើម្បីសងវិញ → ឈប់សម្រាកភ្លាម</div><div class="card"><b>🤑 Overconfidence</b><br>ឈ្នះជាប់ៗ ហើយបង្កើន Risk → រក្សា 1%</div><div class="card"><b>🚩 Scam</b><br>ចំណេញធានា · Signal VIP · «Account manager» · Ponzi/MLM</div></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>Win rate 40%, Avg win 2.5R, Avg loss −1R។ Expectancy ប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>0.4 × 2.5 − 0.6 × 1 = <b>+0.4R/trade</b> → វិជ្ជមាន។</p></details></div>
+
+</section>
+<section id="cheat">
+<h2>📋 Cheat Sheet</h2>
+
+<table><tr><th>រូបមន្ត</th><th>ន័យ</th></tr><tr><td>Units = Balance × Risk% ÷ |Entry − SL|</td><td>ទំហំ Position</td></tr><tr><td>R:R = |TP − Entry| ÷ |Entry − SL|</td><td>Reward ធៀប Risk</td></tr><tr><td>Win rate min = 1 ÷ (1 + R:R)</td><td>Break-even</td></tr><tr><td>Expectancy = WR × AvgWin − (1−WR) × AvgLoss</td><td>ចំណេញមធ្យម/Trade</td></tr><tr><td>1 lot = 100,000 · EUR/USD ≈ $10/pip</td><td>Forex</td></tr><tr><td>Dividend yield = Dividend ÷ Price</td><td>Stock</td></tr></table>
+
+</section>
+<section id="pro">
+<h2>🏆 គម្រោង៖ Trading plan ផ្ទាល់ខ្លួន + Demo ៣០ Trade</h2>
+
+<ol class="steps"><li>សរសេរ <b>Trading plan</b> ១ ទំព័រ (មេរៀន ១២)៖ ទីផ្សារ ១, Setup ១, Risk 1%, ម៉ោង។</li>
+<li>ធ្វើ <b>៣០ Trade</b> លើ <b>Trading Lab Pro</b> (ឬ Demo account) តាម Plan យ៉ាងតឹងរ៉ឹង — គ្រប់ Trade មាន SL។</li>
+<li>កត់គ្រប់ Trade ក្នុង <b>📓 Journal</b> (ហេតុផល + អារម្មណ៍)។</li>
+<li>គណនា Win rate, Avg R, <b>Expectancy</b> · សរសេរ ៣ ចំណុចដែលត្រូវកែ។</li>
+<li>បើ Expectancy អវិជ្ជមាន → កុំប្តូរទៅប្រាក់ពិត! កែ Plan ហើយធ្វើ ៣០ Trade ទៀត។</li></ol>
+</section>
+<section id="pro-app">
+<h2>💻 Trading Lab Pro (App)</h2>
+
+<p><b>📈 Paper Trading</b>៖ Chart ក្លែង (Stock/Forex/Crypto) ចុច Buy/Sell ដាក់ SL/TP ហើយ ⏭ ឬ ▶ មើលលទ្ធផល — Balance រក្សាទុកក្នុង Browser។ <b>🧮 Position Size</b>៖ គណនា Units/Lot, Margin, R:R។ <b>🤖 Backtest</b>៖ SMA crossover។ <b>📓 Journal</b>៖ កត់ត្រា និងស្ថិតិ Expectancy។</p>
+
+<div class="itk" id="tl">
+<div class="itk-tabs"><button class="on" data-t="pt">📈 Paper Trading</button><button data-t="calc">🧮 Position Size</button><button data-t="bt">🤖 Backtest</button><button data-t="jr">📓 Journal</button></div>
+
+<div class="itk-p on" data-p="pt">
+ <div class="itk-row">
+  <label>ទីផ្សារ<select id="t_mk"><option value="stock">📊 Stock · KHMR (USD)</option><option value="fx">💱 Forex · EUR/USD</option><option value="btc">₿ Crypto · BTC/USDT</option></select></label>
+  <label>Indicator<select id="t_ind"><option value="none">គ្មាន</option><option value="ma" selected>SMA 20 + SMA 50</option><option value="bb">Bollinger (20,2)</option><option value="rsi">RSI 14</option></select></label>
+  <label>ទំហំ (Units)<input id="t_qty" type="number" value="10" min="0" step="any" style="width:100px"></label>
+  <label>Stop-loss<input id="t_sl" type="number" step="any" style="width:110px" placeholder="ទទេ = គ្មាន"></label>
+  <label>Take-profit<input id="t_tp" type="number" step="any" style="width:110px" placeholder="ទទេ = គ្មាន"></label>
+ </div>
+ <canvas id="t_cv" width="940" height="380" style="width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none"></canvas>
+ <div class="itk-row" style="gap:6px;margin-top:8px">
+  <button class="btn" id="t_buy" style="background:#12b886;color:#fff;border-color:#12b886">🟢 Buy</button>
+  <button class="btn" id="t_sell" style="background:#fa5252;color:#fff;border-color:#fa5252">🔴 Sell</button>
+  <button class="btn" id="t_close">✖ Close position</button>
+  <button class="btn" id="t_next">⏭ ទៀន ១</button>
+  <button class="btn" id="t_play">▶ Play</button>
+  <button class="btn" id="t_new">🎲 Chart ថ្មី</button>
+  <button class="btn" id="t_reset">♻ Reset $10,000</button>
+ </div>
+ <div class="itk-out" id="t_info"></div>
+ <div class="itk-out" id="t_hist" style="font-size:13.5px;max-height:220px;overflow:auto"></div>
+</div>
+
+<div class="itk-p" data-p="calc">
+ <div class="itk-row">
+  <label>ប្រាក់ក្នុងគណនី ($)<input id="c_bal" type="number" value="1000"></label>
+  <label>Risk ក្នុង ១ Trade (%)<input id="c_r" type="number" value="1" step="0.1"></label>
+  <label>Entry<input id="c_e" type="number" value="1.0850" step="any"></label>
+  <label>Stop-loss<input id="c_s" type="number" value="1.0820" step="any"></label>
+  <label>Take-profit<input id="c_t" type="number" value="1.0940" step="any"></label>
+  <label>ប្រភេទ<select id="c_k"><option value="fx">Forex (xxx/USD, 1 lot = 100,000)</option><option value="u">Stock / Crypto (units)</option></select></label>
+  <label>Leverage<select id="c_lev"><option>1</option><option>5</option><option>10</option><option selected>30</option><option>100</option></select></label>
+ </div>
+ <div class="itk-out" id="c_out"></div>
+</div>
+
+<div class="itk-p" data-p="bt">
+ <p class="vl-tip">យុទ្ធសាស្ត្រ <b>SMA Crossover</b>៖ Buy ពេល SMA លឿន កាត់ឡើងលើ SMA យឺត · ចេញពេលកាត់ចុះ។ សាកប្តូរ Parameter ហើយមើលថាលទ្ធផលប្រែប្រួលប៉ុណ្ណា (ប្រយ័ត្ន Overfitting!)។</p>
+ <div class="itk-row">
+  <label>SMA លឿន<input id="b_f" type="number" value="10" min="2" style="width:80px"></label>
+  <label>SMA យឺត<input id="b_s" type="number" value="40" min="3" style="width:80px"></label>
+  <label>ថ្លៃសេវា/Trade (%)<input id="b_fee" type="number" value="0.1" step="0.05" style="width:90px"></label>
+  <label>Seed ទិន្នន័យ<input id="b_seed" type="number" value="42" style="width:80px"></label>
+  <button class="btn" id="b_run">▶ Run Backtest</button>
+ </div>
+ <canvas id="b_cv" width="940" height="300" style="width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px"></canvas>
+ <div class="itk-out" id="b_out"></div>
+</div>
+
+<div class="itk-p" data-p="jr">
+ <div class="itk-row">
+  <label>ថ្ងៃ<input id="j_d" type="date"></label>
+  <label>Symbol<input id="j_s" value="EUR/USD" style="width:110px"></label>
+  <label>ទិស<select id="j_side"><option>Long</option><option>Short</option></select></label>
+  <label>Risk ($)<input id="j_r" type="number" value="10" style="width:90px"></label>
+  <label>លទ្ធផល ($)<input id="j_p" type="number" value="20" style="width:90px"></label>
+  <label>ហេតុផល / មេរៀន<input id="j_n" value="Breakout + RSI > 50" style="width:220px"></label>
+  <button class="btn" id="j_add">➕ បន្ថែម</button>
+ </div>
+ <div class="itk-out" id="j_stat"></div>
+ <div class="itk-out" id="j_list" style="font-size:13.5px"></div>
+</div>
+</div>
+<script>
+(() => {
+const $ = id => document.getElementById(id), root = $("tl");
+const KEY = "tr1_";
+const fmt = (x, d = 2) => (x < 0 ? "-" : "") + "$" + Math.abs(x).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+const store = { get(k, d) { try { const v = localStorage.getItem(KEY + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(KEY + k, JSON.stringify(v)); } catch (e) {} } };
+root.querySelectorAll(".itk-tabs button").forEach(b => b.onclick = () => {
+  root.querySelectorAll(".itk-tabs button").forEach(x => x.classList.toggle("on", x === b));
+  root.querySelectorAll(".itk-p").forEach(p => p.classList.toggle("on", p.dataset.p === b.dataset.t));
+  if (b.dataset.t === "bt") runBT();
+});
+function rng(seed) { let s = seed >>> 0 || 1; return () => { s ^= s << 13; s >>>= 0; s ^= s >> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; }; }
+function gauss(r) { let u = 0, v = 0; while (!u) u = r(); while (!v) v = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+const MK = { stock: { p: 25, vol: .016, dp: 2, name: "KHMR", step: 1 }, fx: { p: 1.085, vol: .0035, dp: 5, name: "EUR/USD", step: 1000 }, btc: { p: 65000, vol: .028, dp: 1, name: "BTC/USDT", step: .01 } };
+function series(n, seed, m) {
+  const r = rng(seed); let c = m.p, drift = 0, out = [];
+  for (let i = 0; i < n; i++) {
+    if (i % 40 === 0) drift = (r() - .45) * m.vol * .35;
+    const o = c; c = o * Math.exp(drift + gauss(r) * m.vol);
+    const h = Math.max(o, c) * (1 + Math.abs(gauss(r)) * m.vol * .45), l = Math.min(o, c) * (1 - Math.abs(gauss(r)) * m.vol * .45);
+    out.push({ o, h, l, c });
+  }
+  return out;
+}
+const SMA = (a, n) => a.map((_, i) => i < n - 1 ? NaN : a.slice(i - n + 1, i + 1).reduce((s, x) => s + x, 0) / n);
+const STD = (a, n) => a.map((_, i) => { if (i < n - 1) return NaN; const w = a.slice(i - n + 1, i + 1), m = w.reduce((s, x) => s + x, 0) / n; return Math.sqrt(w.reduce((s, x) => s + (x - m) ** 2, 0) / n); });
+function RSI(a, n = 14) { const out = Array(a.length).fill(NaN); let g = 0, l = 0; for (let i = 1; i < a.length; i++) { const d = a[i] - a[i - 1], G = Math.max(d, 0), Lo = Math.max(-d, 0); if (i <= n) { g += G / n; l += Lo / n; if (i === n) out[i] = 100 - 100 / (1 + g / (l || 1e-9)); } else { g = (g * (n - 1) + G) / n; l = (l * (n - 1) + Lo) / n; out[i] = 100 - 100 / (1 + g / (l || 1e-9)); } } return out; }
+
+/* ---------- paper trading ---------- */
+const T = { all: [], shown: 120, seed: 1, pos: null, bal: store.get("bal", 10000), hist: store.get("hist", []), timer: null };
+function newChart() { const m = MK[$("t_mk").value]; T.seed = Math.floor(Math.random() * 1e9); T.all = series(400, T.seed, m); T.shown = 120; T.pos = null; $("t_qty").value = { stock: 40, fx: 10000, btc: .02 }[$("t_mk").value]; $("t_sl").value = ""; $("t_tp").value = ""; draw(); }
+const price = () => T.all[T.shown - 1].c;
+function pnl() { if (!T.pos) return 0; return (price() - T.pos.entry) * T.pos.qty * T.pos.dir; }
+function open(dir) {
+  if (T.pos) return info("⚠️ មាន Position បើករួចហើយ — Close សិន");
+  const qty = +$("t_qty").value; if (!(qty > 0)) return info("⚠️ សូមដាក់ទំហំ (Units) > 0");
+  const sl = +$("t_sl").value || null, tp = +$("t_tp").value || null, p = price();
+  if (sl && (dir > 0 ? sl >= p : sl <= p)) return info("⚠️ Stop-loss ត្រូវនៅ" + (dir > 0 ? "ក្រោម" : "លើ") + "តម្លៃបច្ចុប្បន្ន");
+  if (tp && (dir > 0 ? tp <= p : tp >= p)) return info("⚠️ Take-profit ត្រូវនៅ" + (dir > 0 ? "លើ" : "ក្រោម") + "តម្លៃបច្ចុប្បន្ន");
+  const spread = p * ($("t_mk").value === "fx" ? .00008 : .0005);
+  T.pos = { dir, qty, entry: p + dir * spread / 2, sl, tp, at: T.shown - 1 }; draw();
+}
+function close(reason = "Manual", px) {
+  if (!T.pos) return; const p = px ?? price(); const pl = (p - T.pos.entry) * T.pos.qty * T.pos.dir;
+  T.bal += pl; T.hist.unshift({ m: MK[$("t_mk").value].name, dir: T.pos.dir > 0 ? "Buy" : "Sell", e: T.pos.entry, x: p, pl, why: reason });
+  T.hist = T.hist.slice(0, 50); store.set("bal", T.bal); store.set("hist", T.hist); T.pos = null; draw();
+}
+function step() {
+  if (T.shown >= T.all.length) { stop(); return info("🏁 ចប់ Chart — ចុច 🎲 Chart ថ្មី"); }
+  T.shown++; const k = T.all[T.shown - 1];
+  if (T.pos) { const { dir, sl, tp } = T.pos;
+    if (sl && (dir > 0 ? k.l <= sl : k.h >= sl)) close("Stop-loss", sl);
+    else if (tp && (dir > 0 ? k.h >= tp : k.l <= tp)) close("Take-profit", tp); }
+  draw();
+}
+function stop() { clearInterval(T.timer); T.timer = null; $("t_play").textContent = "▶ Play"; }
+function info(msg) {
+  const m = MK[$("t_mk").value], p = price(), eq = T.bal + pnl();
+  $("t_info").innerHTML = (msg ? `<div>${msg}</div>` : "") + `តម្លៃ <b>${p.toFixed(m.dp)}</b> · Balance <b>${fmt(T.bal)}</b> · Equity <b>${fmt(eq)}</b>` +
+    (T.pos ? ` · Position <b style="color:${T.pos.dir > 0 ? "#12b886" : "#fa5252"}">${T.pos.dir > 0 ? "BUY" : "SELL"} ${T.pos.qty}</b> @ ${T.pos.entry.toFixed(m.dp)} · P/L <b style="color:${pnl() >= 0 ? "#12b886" : "#fa5252"}">${fmt(pnl())}</b>` +
+      (T.pos.sl ? ` · ហានិភ័យ៖ ${fmt(Math.abs(T.pos.entry - T.pos.sl) * T.pos.qty)} (${(Math.abs(T.pos.entry - T.pos.sl) * T.pos.qty / T.bal * 100).toFixed(2)}% នៃគណនី)` : ` · <span style="color:#e03131">⚠️ គ្មាន Stop-loss</span>`) : " · គ្មាន Position");
+  const w = T.hist.filter(h => h.pl > 0).length;
+  $("t_hist").innerHTML = T.hist.length ? `<b>ប្រវត្តិ (${T.hist.length})</b> · ឈ្នះ ${w}/${T.hist.length} (${(w / T.hist.length * 100).toFixed(0)}%) · សរុប ${fmt(T.hist.reduce((s, h) => s + h.pl, 0))}<br>` + T.hist.map(h => `${h.m} ${h.dir} ${h.e.toPrecision(6)} → ${h.x.toPrecision(6)} · <b style="color:${h.pl >= 0 ? "#12b886" : "#fa5252"}">${fmt(h.pl)}</b> · ${h.why}`).join("<br>") : "មិនទាន់មាន Trade — សាក Buy/Sell ហើយចុច ⏭ ឬ ▶";
+}
+function draw() {
+  const cv = $("t_cv"), g = cv.getContext("2d"), W = cv.width, H = cv.height, ind = $("t_ind").value;
+  const N = 90, start = Math.max(0, T.shown - N), d = T.all.slice(start, T.shown), closes = T.all.slice(0, T.shown).map(k => k.c);
+  const subH = ind === "rsi" ? 80 : 0, L = 10, R = 70, top = 10, ph = H - 30 - subH;
+  let lo = Math.min(...d.map(k => k.l)), hi = Math.max(...d.map(k => k.h));
+  const lines = [];
+  if (ind === "ma") { lines.push([SMA(closes, 20), "#f59f00"], [SMA(closes, 50), "#7048e8"]); }
+  if (ind === "bb") { const m = SMA(closes, 20), s = STD(closes, 20); lines.push([m, "#1c7ed6"], [m.map((x, i) => x + 2 * s[i]), "#adb5bd"], [m.map((x, i) => x - 2 * s[i]), "#adb5bd"]); }
+  lines.forEach(([a]) => a.slice(start).forEach(v => { if (v === v) { lo = Math.min(lo, v); hi = Math.max(hi, v); } }));
+  if (T.pos) [T.pos.entry, T.pos.sl, T.pos.tp].forEach(v => { if (v) { lo = Math.min(lo, v); hi = Math.max(hi, v); } });
+  const pad = (hi - lo) * .06; lo -= pad; hi += pad;
+  const cw = (W - L - R) / N, X = i => L + cw * (i + .5), Y = p => top + (hi - p) / (hi - lo) * ph, dp = MK[$("t_mk").value].dp;
+  g.fillStyle = "#fff"; g.fillRect(0, 0, W, H); g.font = "12px Inter,sans-serif";
+  for (let k = 0; k <= 4; k++) { const p = lo + (hi - lo) * k / 4; g.strokeStyle = "#eef1f5"; g.beginPath(); g.moveTo(L, Y(p)); g.lineTo(W - R, Y(p)); g.stroke(); g.fillStyle = "#94a3b8"; g.fillText(p.toFixed(dp), W - R + 4, Y(p) + 4); }
+  d.forEach((k, i) => { const c = k.c >= k.o ? "#12b886" : "#fa5252"; g.strokeStyle = g.fillStyle = c; g.beginPath(); g.moveTo(X(i), Y(k.h)); g.lineTo(X(i), Y(k.l)); g.stroke(); const y1 = Y(Math.max(k.o, k.c)), y2 = Y(Math.min(k.o, k.c)); g.fillRect(X(i) - cw * .35, y1, cw * .7, Math.max(1, y2 - y1)); });
+  lines.forEach(([a, c]) => { g.strokeStyle = c; g.lineWidth = 2; g.beginPath(); let f = true; a.slice(start).forEach((v, i) => { if (v !== v) return; f ? g.moveTo(X(i), Y(v)) : g.lineTo(X(i), Y(v)); f = false; }); g.stroke(); g.lineWidth = 1; });
+  const hline = (p, c, lab) => { g.setLineDash([6, 4]); g.strokeStyle = c; g.lineWidth = 1.5; g.beginPath(); g.moveTo(L, Y(p)); g.lineTo(W - R, Y(p)); g.stroke(); g.setLineDash([]); g.lineWidth = 1; g.fillStyle = c; g.fillRect(W - R, Y(p) - 9, R, 18); g.fillStyle = "#fff"; g.fillText(lab, W - R + 3, Y(p) + 4); };
+  if (T.pos) { hline(T.pos.entry, "#1c7ed6", "Entry"); if (T.pos.sl) hline(T.pos.sl, "#e03131", "SL"); if (T.pos.tp) hline(T.pos.tp, "#2f9e44", "TP"); }
+  const p = price(); g.fillStyle = "#212529"; g.fillRect(W - R, Y(p) - 9, R, 18); g.fillStyle = "#fff"; g.fillText(p.toFixed(dp), W - R + 3, Y(p) + 4);
+  if (ind === "rsi") { const r = RSI(closes).slice(start), y0 = H - 20 - subH + 10, Yr = v => y0 + (100 - v) / 100 * (subH - 10);
+    g.fillStyle = "#f8fafc"; g.fillRect(L, y0, W - L - R, subH - 10); [30, 70].forEach(v => { g.strokeStyle = "#adb5bd"; g.setLineDash([4, 4]); g.beginPath(); g.moveTo(L, Yr(v)); g.lineTo(W - R, Yr(v)); g.stroke(); g.setLineDash([]); g.fillStyle = "#94a3b8"; g.fillText(v, W - R + 4, Yr(v) + 4); });
+    g.strokeStyle = "#7048e8"; g.lineWidth = 2; g.beginPath(); let f = true; r.forEach((v, i) => { if (v !== v) return; f ? g.moveTo(X(i), Yr(v)) : g.lineTo(X(i), Yr(v)); f = false; }); g.stroke(); g.lineWidth = 1; g.fillStyle = "#7048e8"; g.fillText("RSI 14: " + (r[r.length - 1] || 0).toFixed(1), L + 4, y0 + 14); }
+  g.fillStyle = "#94a3b8"; g.fillText(MK[$("t_mk").value].name + " · ទិន្នន័យក្លែងធ្វើ (Random) — មិនមែនតម្លៃពិត · ទៀនទី " + T.shown, L + 4, H - 6);
+  info();
+}
+$("t_buy").onclick = () => open(1); $("t_sell").onclick = () => open(-1); $("t_close").onclick = () => close();
+$("t_next").onclick = step; $("t_new").onclick = () => { stop(); newChart(); }; $("t_mk").onchange = () => { stop(); newChart(); }; $("t_ind").onchange = draw;
+$("t_play").onclick = () => { if (T.timer) return stop(); $("t_play").textContent = "⏸ Pause"; T.timer = setInterval(step, 350); };
+$("t_reset").onclick = () => { stop(); T.bal = 10000; T.hist = []; store.set("bal", T.bal); store.set("hist", T.hist); newChart(); };
+
+/* ---------- position size ---------- */
+function calc() {
+  const bal = +$("c_bal").value, r = +$("c_r").value / 100, e = +$("c_e").value, s = +$("c_s").value, t = +$("c_t").value, fx = $("c_k").value === "fx", lev = +$("c_lev").value;
+  const risk$ = bal * r, dist = Math.abs(e - s); if (!(dist > 0) || !(bal > 0)) { $("c_out").innerHTML = "⚠️ Entry និង Stop-loss ត្រូវខុសគ្នា"; return; }
+  const units = risk$ / dist, rr = Math.abs(t - e) / dist, notional = units * e, margin = notional / lev;
+  const pips = fx ? dist / .0001 : null;
+  $("c_out").innerHTML = `ហានិភ័យ៖ <b>${fmt(risk$)}</b> (${(r * 100).toFixed(2)}% នៃ ${fmt(bal)})<br>ចម្ងាយ Stop៖ <b>${fx ? pips.toFixed(1) + " pips" : dist.toFixed(4)}</b><br>ទំហំ Position៖ <b>${units.toLocaleString("en-US", { maximumFractionDigits: fx ? 0 : 4 })} units</b>` +
+    (fx ? ` = <b>${(units / 100000).toFixed(2)} lot</b> (pip value ≈ ${fmt(units * .0001)}/pip)` : "") +
+    `<br>តម្លៃ Position (Notional)៖ <b>${fmt(notional)}</b> · Margin ត្រូវការ (Leverage 1:${lev})៖ <b>${fmt(margin)}</b>${margin > bal ? ' <span style="color:#e03131">⚠️ លើស Balance</span>' : ""}` +
+    `<br>Risk : Reward = <b>1 : ${rr.toFixed(2)}</b> · ចំណេញបើដល់ TP៖ <b style="color:#12b886">${fmt(risk$ * rr)}</b>` +
+    `<br>Win rate តិចបំផុតដើម្បីមិនខាត (មិនគិតថ្លៃ)៖ <b>${(100 / (1 + rr)).toFixed(1)}%</b>` +
+    `<br><span style="color:var(--muted)">💡 បើខាត ${fmt(risk$)} ១០ ដងជាប់គ្នា → នៅសល់ ${fmt(bal * Math.pow(1 - r, 10))} (${(Math.pow(1 - r, 10) * 100).toFixed(1)}%)</span>`;
+}
+["c_bal", "c_r", "c_e", "c_s", "c_t", "c_k", "c_lev"].forEach(id => $(id).oninput = calc);
+$("c_k").onchange = () => { const fx = $("c_k").value === "fx"; $("c_e").value = fx ? 1.0850 : 25.40; $("c_s").value = fx ? 1.0820 : 24.60; $("c_t").value = fx ? 1.0940 : 27.80; calc(); };
+
+/* ---------- backtest ---------- */
+function runBT() {
+  const f = Math.max(2, +$("b_f").value | 0), s = Math.max(f + 1, +$("b_s").value | 0), fee = +$("b_fee").value / 100, seed = +$("b_seed").value | 0;
+  const d = series(600, seed + 7, MK.stock), c = d.map(k => k.c), F = SMA(c, f), S = SMA(c, s);
+  let pos = 0, eq = 1, entry = 0, trades = [], curve = [], peak = 1, mdd = 0;
+  for (let i = 1; i < c.length; i++) {
+    if (pos) eq *= c[i] / c[i - 1];
+    if (F[i - 1] === F[i - 1] && S[i - 1] === S[i - 1]) {
+      if (!pos && F[i] > S[i] && F[i - 1] <= S[i - 1]) { pos = 1; entry = c[i]; eq *= 1 - fee; }
+      else if (pos && F[i] < S[i] && F[i - 1] >= S[i - 1]) { pos = 0; eq *= 1 - fee; trades.push(c[i] / entry - 1 - 2 * fee); }
+    }
+    peak = Math.max(peak, eq); mdd = Math.min(mdd, eq / peak - 1); curve.push(eq);
+  }
+  const bh = c[c.length - 1] / c[0], wins = trades.filter(t => t > 0), gw = wins.reduce((a, b) => a + b, 0), gl = -trades.filter(t => t <= 0).reduce((a, b) => a + b, 0);
+  const cv = $("b_cv"), g = cv.getContext("2d"), W = cv.width, H = cv.height; g.fillStyle = "#fff"; g.fillRect(0, 0, W, H);
+  const bhc = c.slice(1).map(x => x / c[0]), all = curve.concat(bhc), lo = Math.min(...all) * .95, hi = Math.max(...all) * 1.05, X = i => 50 + i * (W - 70) / curve.length, Y = v => 15 + (hi - v) / (hi - lo) * (H - 45);
+  g.font = "12px Inter,sans-serif"; [lo, 1, hi].forEach(v => { g.strokeStyle = "#eef1f5"; g.beginPath(); g.moveTo(50, Y(v)); g.lineTo(W - 20, Y(v)); g.stroke(); g.fillStyle = "#94a3b8"; g.fillText(v.toFixed(2) + "x", 4, Y(v) + 4); });
+  [[bhc, "#adb5bd", "Buy & Hold"], [curve, "#7048e8", `SMA ${f}/${s}`]].forEach(([a, col, lab], k) => { g.strokeStyle = col; g.lineWidth = 2.2; g.beginPath(); a.forEach((v, i) => i ? g.lineTo(X(i), Y(v)) : g.moveTo(X(i), Y(v))); g.stroke(); g.fillStyle = col; g.fillRect(60 + k * 160, H - 18, 14, 4); g.fillText(lab, 78 + k * 160, H - 12); });
+  g.lineWidth = 1;
+  $("b_out").innerHTML = `Strategy៖ <b style="color:${eq >= 1 ? "#12b886" : "#fa5252"}">${((eq - 1) * 100).toFixed(1)}%</b> · Buy &amp; Hold៖ <b>${((bh - 1) * 100).toFixed(1)}%</b> · Trades <b>${trades.length}</b> · Win rate <b>${trades.length ? (wins.length / trades.length * 100).toFixed(0) : 0}%</b> · Profit factor <b>${gl ? (gw / gl).toFixed(2) : "—"}</b> · Max drawdown <b style="color:#fa5252">${(mdd * 100).toFixed(1)}%</b><br><span style="color:var(--muted)">💡 ប្តូរ Seed (ទិន្នន័យថ្មី) — Parameter ដែលល្អលើ Seed មួយ ច្រើនតែមិនល្អលើ Seed ផ្សេង = Overfitting</span>`;
+}
+$("b_run").onclick = runBT;
+
+/* ---------- journal ---------- */
+let J = store.get("journal", []);
+function jr() {
+  const n = J.length, w = J.filter(t => t.p > 0), l = J.filter(t => t.p <= 0), net = J.reduce((s, t) => s + t.p, 0);
+  const avgW = w.length ? w.reduce((s, t) => s + t.p, 0) / w.length : 0, avgL = l.length ? l.reduce((s, t) => s + t.p, 0) / l.length : 0, R = J.reduce((s, t) => s + (t.r ? t.p / t.r : 0), 0);
+  $("j_stat").innerHTML = n ? `Trades <b>${n}</b> · Win rate <b>${(w.length / n * 100).toFixed(0)}%</b> · ចំណេញមធ្យម <b style="color:#12b886">${fmt(avgW)}</b> · ខាតមធ្យម <b style="color:#fa5252">${fmt(avgL)}</b> · Expectancy <b>${fmt(net / n)}</b>/trade · សរុប <b>${R.toFixed(1)}R</b> · Net <b>${fmt(net)}</b>` : "កត់ត្រា Trade (រួម Demo) ដើម្បីដឹងថាយុទ្ធសាស្ត្ររបស់អ្នកមាន Expectancy វិជ្ជមានឬអត់";
+  $("j_list").innerHTML = J.map((t, i) => `${t.d} · <b>${t.s}</b> ${t.side} · Risk ${fmt(t.r)} · <b style="color:${t.p > 0 ? "#12b886" : "#fa5252"}">${fmt(t.p)}</b> (${t.r ? (t.p / t.r).toFixed(1) : "?"}R) · ${t.n.replace(/[<>&]/g, "")} <button class="btn" data-del="${i}" style="padding:0 8px;font-size:12px">🗑</button>`).join("<br>");
+  $("j_list").querySelectorAll("[data-del]").forEach(b => b.onclick = () => { J.splice(+b.dataset.del, 1); store.set("journal", J); jr(); });
+}
+$("j_d").valueAsDate = new Date();
+$("j_add").onclick = () => { J.unshift({ d: $("j_d").value, s: $("j_s").value, side: $("j_side").value, r: +$("j_r").value, p: +$("j_p").value, n: $("j_n").value }); J = J.slice(0, 200); store.set("journal", J); jr(); };
+
+newChart(); calc(); jr();
+})();
+</script>
+
+<h3>🏆 Quiz Trading កម្រិតដំបូង ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["ក្រុមហ៊ុនដំបូងដែលចេញភាគហ៊ុនឲ្យសាធារណជន (1602)?", ["Apple", "VOC (ហូឡង់)", "Ford", "ACLEDA"], 1], ["Candlestick មានឫសគល់ពី?", ["អាមេរិក", "ជប៉ុន (Munehisa Homma)", "ចិន", "បារាំង"], 1], ["អ្នកបង្កើត Bitcoin?", ["Vitalik Buterin", "Satoshi Nakamoto", "Elon Musk", "Charles Dow"], 1], ["និយ័តករមូលបត្រកម្ពុជា?", ["NBC", "SERC", "SEC", "FCA"], 1], ["ផ្សារមូលបត្រកម្ពុជា ឈ្មោះ?", ["NYSE", "CSX", "SET", "HOSE"], 1], ["Investing ធៀប Trading ខុសត្រង់?", ["Investing រយៈពេលវែងជាង", "ដូចគ្នា", "Trading គ្មានហានិភ័យ", "Investing ប្រើ Leverage"], 0], ["EUR/USD = 1.0850 → Base currency?", ["USD", "EUR", "KHR", "JPY"], 1], ["1.0850 → 1.0870 = ប៉ុន្មាន pips?", ["2", "20", "200", "0.2"], 1], ["1 standard lot = ?", ["1,000", "10,000", "100,000", "1,000,000"], 2], ["Spread = ?", ["Ask − Bid", "High − Low", "Close − Open", "TP − SL"], 0], ["Order ចង់ទិញថោកជាងតម្លៃបច្ចុប្បន្ន?", ["Buy Stop", "Buy Limit", "Market", "Sell Stop"], 1], ["Stop-loss ប្រើដើម្បី?", ["បង្កើនចំណេញ", "កំណត់ការខាតអតិបរមា", "កាត់ថ្លៃ", "បើក Trade"], 1], ["ទៀន Close > Open គឺ?", ["Bearish", "Bullish (ឡើង)", "Doji", "Gap"], 1], ["Uptrend មាន?", ["LH + LL", "HH + HL", "តម្លៃស្មើ", "Volume សូន្យ"], 1], ["Resistance ត្រូវបំបែក ច្រើនក្លាយជា?", ["Support ថ្មី", "Doji", "Spread", "Lot"], 0], ["ច្បាប់ Risk ទូទៅក្នុង ១ Trade?", ["1–2%", "20%", "50%", "100%"], 0], ["$1,000 · Risk 1% · Entry 50 · SL 48 → Units?", ["2", "5", "10", "20"], 1], ["R:R 1:2 → Win rate break-even?", ["25%", "33%", "50%", "66%"], 1], ["នរណាម្នាក់សុំ Seed phrase របស់អ្នក?", ["ផ្តល់ឲ្យ Support", "កុំផ្តល់ដាច់ខាត", "ផ្តល់ពាក់កណ្តាល", "ផ្ញើតាម Email"], 1], ["«ចំណេញធានា ១០%/ខែ» គឺ?", ["ឱកាសល្អ", "សញ្ញា Scam", "ច្បាប់ NBC", "Dividend"], 1]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+
+<ol class="steps"><li><b>Trading កម្រិតដំបូង</b> (វគ្គនេះ) ✅ — Paper trade ៣០ ដង</li><li><b>Trading កម្រិតមធ្យម</b>៖ Candlestick/Chart patterns, Indicators (MA, RSI, MACD, Bollinger), Fibonacci, Fundamental analysis</li>
+<li><b>Trading កម្រិតខ្ពស់</b>៖ Backtest, Leverage &amp; Margin, Portfolio, Options, ចិត្តសាស្ត្រ, Algo trading</li>
+<li>វគ្គពាក់ព័ន្ធ៖ <b>Math for IT</b> (ស្ថិតិ) · <b>Excel</b></li><li>អាន៖ <i>The Intelligent Investor</i> (Benjamin Graham) · <i>Trading in the Zone</i> (Mark Douglas) · <i>Japanese Candlestick Charting Techniques</i> (Steve Nison)</li></ol>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="tr1"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

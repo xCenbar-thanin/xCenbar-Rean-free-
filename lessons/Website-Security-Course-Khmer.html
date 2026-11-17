@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន Website Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#fafafa; --panel:#ffffff; --text:#101828; --muted:#5b6b61; --line:#eaecf0;
+  --accent:#b42318; --accent2:#d92d20; --accent-soft:#fef3f2;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#fda29b; --accent2:#f97066; --accent-soft:#2b1414;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#fda29b; --accent2:#f97066; --accent-soft:#2b1414;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#7a271a,#d92d20);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+</style>
+<link rel="icon" href="../assets/icons/security.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/security.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>វគ្គសិក្សា Website Security ពីដើមដល់កម្រិតអាជីព (OWASP Top 10:2025)</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Website Security ជាអ្វី? អ្នកណាបង្កើតមូលដ្ឋានរបស់វា?</a>
+<a href="#install">២. ឧបករណ៍ និងរបៀបដំឡើងក្នុង VS Code</a>
+<a href="#elements">៣. ធាតុនីមួយៗរបស់ Website Security</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Security Mindset &amp; Threat Modeling (STRIDE)</a>
+<a href="#l2">មេរៀន ២: HTTPS, TLS &amp; HSTS</a>
+<a href="#l3">មេរៀន ៣: Security Headers &amp; Content Security Policy (CSP)</a>
+<a href="#l4">មេរៀន ៤: Injection: SQL Injection (A05)</a>
+<a href="#l5">មេរៀន ៥: Cross-Site Scripting (XSS)</a>
+<a href="#l6">មេរៀន ៦: Cookies, Sessions, CSRF &amp; CORS</a>
+<a href="#l7">មេរៀន ៧: Authentication: Password, MFA, Rate Limit (A07)</a>
+<a href="#l8">មេរៀន ៨: Broken Access Control &amp; IDOR (A01 — គ្រោះថ្នាក់លេខ ១)</a>
+<a href="#l9">មេរៀន ៩: Security Misconfiguration &amp; Secrets (A02)</a>
+<a href="#l10">មេរៀន ១០: Software Supply Chain &amp; Integrity (A03, A08)</a>
+<a href="#l11">មេរៀន ១១: File Upload &amp; SSRF</a>
+<a href="#l12">មេរៀន ១២: Logging, Alerting &amp; Error Handling (A09, A10)</a>
+<a href="#l13">មេរៀន ១៣: API &amp; Frontend Security (React, JWT, Rate limit)</a>
+<a href="#l14">មេរៀន ១៤: Security Testing, CI &amp; Incident Response</a>
+<a href="#cheat">📋 Cheat Sheet: Secure Coding</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងអាជីព: Harden Kafe API + Security Lab</a>
+<a href="#pro-code">🔐 server/src/app.js (Hardened)</a>
+<a href="#pro-app">🧪 Security Lab (ចុចសាកបាន)</a>
+<a href="#pro-check">✅ Pre-launch Security Checklist &amp; គម្រោងចុងក្រោយ</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+
+</nav>
+<main>
+<section class="hero">
+  <h2>🛡️ Website Security ពីដើមដល់ចប់ (សម្រាប់អ្នកអភិវឌ្ឍន៍)</h2>
+  <p>រៀន <b>ការពារ</b> Website និង API របស់អ្នក៖ HTTPS, Security Headers, CSP, Injection, XSS, CSRF, Authentication, Access Control, Secrets, Supply chain, Logging, Testing តាម <b>OWASP Top 10:2025</b>។ គ្រប់មេរៀនបង្ហាញ <b>កូដងាយរងគ្រោះ ❌ ធៀបនឹងកូដសុវត្ថិភាព ✅</b> ហើយមាន <b>Security Lab</b> ចុចសាកបាន។</p>
+  <p><span class="badge">📘 ១៤ មេរៀន</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">🧪 Security Lab</span><span class="badge">🏆 Harden Kafe API</span></p>
+</section>
+
+<div class="warn">⚖️ <b>ច្បាប់ និងសីលធម៌៖</b> ចំណេះដឹងនេះសម្រាប់ <b>ការពារ</b> ប្រព័ន្ធរបស់អ្នក ប៉ុណ្ណោះ។ សាកល្បងតែលើ App ផ្ទាល់ខ្លួន ឬ App ដែលមាន <b>ការអនុញ្ញាតជាលាយលក្ខណ៍អក្សរ</b> (ឧ. Bug bounty)។ ការវាយប្រហារប្រព័ន្ធអ្នកដទៃដោយគ្មានការអនុញ្ញាត គឺខុសច្បាប់ (រួមទាំងច្បាប់កម្ពុជា និងអន្តរជាតិ)។</div>
+
+<!-- NAV: ផ្នែកទី ១ – មូលដ្ឋាន -->
+<section id="intro">
+  <h2>១. Website Security ជាអ្វី? អ្នកណាបង្កើតមូលដ្ឋានរបស់វា?</h2>
+  <p><b>Website Security</b> (Web Application Security) គឺការការពារ Website, API និងទិន្នន័យអ្នកប្រើ ពីការវាយប្រហារ ការលួចទិន្នន័យ និងការរំខានសេវា។ វាមិនមែនជាកម្មវិធីតែមួយទេ — វាជា <b>វិធីសាស្ត្ររចនា សរសេរកូដ ដំឡើង និងតាមដាន</b>។</p>
+  <h3>CIA Triad — គោលដៅទាំង ៣</h3>
+  <div class="grid">
+    <div class="card"><b>🔒 Confidentiality</b> (ការសម្ងាត់)<br>មានតែអ្នកមានសិទ្ធិទើបមើលទិន្នន័យបាន — HTTPS, Encryption, Access control</div>
+    <div class="card"><b>🧾 Integrity</b> (ភាពត្រឹមត្រូវ)<br>ទិន្នន័យមិនត្រូវបានកែដោយអ្នកគ្មានសិទ្ធិ — Validation, Signatures, Hashing</div>
+    <div class="card"><b>🟢 Availability</b> (ភាពអាចប្រើបាន)<br>សេវាដំណើរការជានិច្ច — Rate limit, DDoS protection, Backup</div>
+  </div>
+  <h3>អ្នកត្រួសត្រាយ និងស្តង់ដារ</h3>
+  <table>
+    <tr><th>ឆ្នាំ</th><th>អ្នក / ស្ថាប័ន</th><th>ការរួមចំណែក</th></tr>
+    <tr><td>1995</td><td><b>Netscape</b> (Taher Elgamal — «Father of SSL»)</td><td><b>SSL</b>៖ Encryption រវាង Browser និង Server · <b>Same-Origin Policy</b></td></tr>
+    <tr><td>1999 → 2018</td><td><b>IETF</b></td><td><b>TLS 1.0</b> → <b>TLS 1.3</b> (ស្តង់ដារ HTTPS សព្វថ្ងៃ)</td></tr>
+    <tr><td>2001</td><td><b>Mark Curphey</b> បង្កើត <b>OWASP</b></td><td>Open Worldwide Application Security Project — <b>OWASP Top 10</b>, Cheat Sheets, ZAP</td></tr>
+    <tr><td>2016</td><td><b>Let's Encrypt</b> (ISRG)</td><td>SSL/TLS Certificate <b>ឥតគិតថ្លៃ</b> — HTTPS សម្រាប់មនុស្សគ្រប់គ្នា</td></tr>
+    <tr><td>2010s</td><td><b>W3C</b></td><td><b>Content Security Policy (CSP)</b>, Subresource Integrity</td></tr>
+    <tr><td>វិច្ឆិកា 2025</td><td><b>OWASP</b></td><td><b>OWASP Top 10:2025</b> (កំណែចុងក្រោយ)</td></tr>
+  </table>
+  <h3>គេប្រើវាសម្រាប់ធ្វើអ្វី?</h3>
+  <div class="grid">
+    <div class="card">🏦 <b>ធនាគារ & Payment</b><br>ការពារគណនី ប្រតិបត្តិការ KHQR</div>
+    <div class="card">🛒 <b>E-commerce</b><br>ការពារព័ត៌មានអតិថិជន និងការបញ្ជាទិញ</div>
+    <div class="card">🏛️ <b>រដ្ឋាភិបាល & សុខាភិបាល</b><br>ទិន្នន័យផ្ទាល់ខ្លួនសំខាន់ៗ</div>
+    <div class="card">📜 <b>Compliance</b><br>PCI DSS (កាត), GDPR, ច្បាប់ការពារទិន្នន័យ</div>
+    <div class="card">🐞 <b>Bug Bounty</b><br>អ្នកស្រាវជ្រាវរកកំហុស ហើយរាយការណ៍ដោយទទួលខុសត្រូវ</div>
+    <div class="card">👩‍💻 <b>អាជីព</b><br>AppSec Engineer, Penetration Tester, Security Analyst</div>
+  </div>
+</section>
+
+<section id="install">
+  <h2>២. ឧបករណ៍ និងរបៀបដំឡើងក្នុង VS Code</h2>
+  <div class="note">💡 Website Security មិនមែនជាកម្មវិធីតែមួយដែលដំឡើងបានទេ — យើងដំឡើង <b>ឧបករណ៍</b> ដែលជួយរកកំហុសសុវត្ថិភាពក្នុងកូដ Dependencies និង Website។</div>
+  <h3>VS Code Extensions (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>)</h3>
+  <table>
+    <tr><th>Extension</th><th>ធ្វើអ្វី</th></tr>
+    <tr><td><b>SonarQube for IDE</b> (ឈ្មោះចាស់ SonarLint)</td><td>SAST៖ រកកូដគ្រោះថ្នាក់ពេលកំពុងសរសេរ (SQL injection, Hard-coded secrets…)</td></tr>
+    <tr><td><b>Snyk Security</b></td><td>រក Vulnerability ក្នុង Dependencies និងកូដ</td></tr>
+    <tr><td><b>ESLint</b> + <code class="i">eslint-plugin-security</code></td><td>ច្បាប់ ESLint សម្រាប់ Node.js security</td></tr>
+    <tr><td><b>DotENV</b></td><td>ពណ៌ File .env (ហើយរំលឹកកុំ Commit!)</td></tr>
+    <tr><td><b>REST Client</b></td><td>សាក API (Headers, Auth, Status codes)</td></tr>
+  </table>
+  <h3>ឧបករណ៍ Terminal & ក្រៅ</h3>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+# Node.js project
+npm audit                         # រក Vulnerability ក្នុង Dependencies
+npm audit fix                     # Update ទៅកំណែមានការជួសជុល (ពិនិត្យមុន Merge!)
+npm install -D eslint eslint-plugin-security
+npm install helmet express-rate-limit zod       # Package សុវត្ថិភាពសម្រាប់ Express
+
+# ស្វែងរក Secret ដែលលេចធ្លាយក្នុង Git (ដំឡើង gitleaks ពី github.com/gitleaks/gitleaks)
+gitleaks detect --source . -v
+
+# ZAP baseline scan (Docker) — តែលើ Website របស់អ្នក!
+docker run -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t https://staging.your-site.com
+</script>
+  <table>
+    <tr><th>ឧបករណ៍ Online / Desktop</th><th>ប្រើសម្រាប់</th></tr>
+    <tr><td><b>ZAP</b> (Zed Attack Proxy) · <b>Burp Suite Community</b></td><td>DAST៖ សាក Website ដែលកំពុងរត់ (Proxy, Scan)</td></tr>
+    <tr><td><b>Mozilla HTTP Observatory</b> · <b>securityheaders.com</b></td><td>ពិនិត្យ Security Headers</td></tr>
+    <tr><td><b>SSL Labs Server Test</b></td><td>ពិនិត្យ HTTPS/TLS Configuration</td></tr>
+    <tr><td><b>GitHub Dependabot</b> + <b>Secret scanning</b> + <b>CodeQL</b></td><td>ការពារ Repository ដោយស្វ័យប្រវត្តិ</td></tr>
+    <tr><td><b>Browser DevTools</b> (F12)</td><td>មើល Headers, Cookies, CSP errors, Network</td></tr>
+  </table>
+</section>
+
+<section id="elements">
+  <h2>៣. ធាតុនីមួយៗរបស់ Website Security</h2>
+  <table>
+    <tr><th>ធាតុ</th><th>ពន្យល់</th></tr>
+    <tr><td><b>Authentication</b> (AuthN)</td><td>«អ្នកជានរណា?» — Login, Password, MFA, Passkeys</td></tr>
+    <tr><td><b>Authorization</b> (AuthZ)</td><td>«អ្នកមានសិទ្ធិធ្វើអ្វី?» — Role, Ownership</td></tr>
+    <tr><td><b>HTTPS / TLS</b></td><td>Encryption + ផ្ទៀងផ្ទាត់ Server តាម Certificate</td></tr>
+    <tr><td><b>Cookies & Sessions</b></td><td>Flags៖ <code class="i">HttpOnly</code>, <code class="i">Secure</code>, <code class="i">SameSite</code></td></tr>
+    <tr><td><b>Same-Origin Policy & CORS</b></td><td>Browser រារាំង JavaScript ពី Origin មួយអានទិន្នន័យ Origin ផ្សេង លុះត្រា Server អនុញ្ញាត</td></tr>
+    <tr><td><b>Security Headers / CSP</b></td><td>ប្រាប់ Browser ឱ្យការពារបន្ថែម (Script ពីណា, Frame, HTTPS)</td></tr>
+    <tr><td><b>Input Validation</b></td><td>ទទួលតែទិន្នន័យត្រឹមត្រូវ (Allowlist)</td></tr>
+    <tr><td><b>Output Encoding</b></td><td>បង្ហាញទិន្នន័យជា «អក្សរ» មិនមែនជាកូដ (ការពារ XSS)</td></tr>
+    <tr><td><b>Hashing vs Encryption</b></td><td>Hash = មួយផ្លូវ (Password) · Encryption = អាចដោះវិញដោយ Key</td></tr>
+    <tr><td><b>Secrets Management</b></td><td>Key, Password ក្នុង Env/Vault មិនមែនក្នុងកូដ</td></tr>
+    <tr><td><b>Least Privilege</b></td><td>ផ្តល់សិទ្ធិតិចបំផុតដែលចាំបាច់</td></tr>
+    <tr><td><b>Defense in Depth</b></td><td>ការពារច្រើនស្រទាប់ — បើមួយបរាជ័យ នៅមានមួយទៀត</td></tr>
+    <tr><td><b>Logging & Monitoring</b></td><td>កត់ត្រា និងជូនដំណឹងពេលមានរឿងចម្លែក</td></tr>
+  </table>
+  <h3>OWASP Top 10:2025</h3>
+  <table>
+    <tr><th>#</th><th>ប្រភេទ</th><th>មេរៀន</th></tr>
+    <tr><td>A01</td><td><b>Broken Access Control</b> — ចូលប្រើអ្វីដែលគ្មានសិទ្ធិ (IDOR, SSRF)</td><td>៨, ១១</td></tr>
+    <tr><td>A02</td><td><b>Security Misconfiguration</b> — កំណត់ខុស (Debug, Headers, CORS *)</td><td>៣, ៩</td></tr>
+    <tr><td>A03</td><td><b>Software Supply Chain Failures</b> — Package/Dependency គ្រោះថ្នាក់</td><td>១០</td></tr>
+    <tr><td>A04</td><td><b>Cryptographic Failures</b> — គ្មាន HTTPS, Hash ខ្សោយ</td><td>២, ៧</td></tr>
+    <tr><td>A05</td><td><b>Injection</b> — SQL injection, XSS, Command injection</td><td>៤, ៥</td></tr>
+    <tr><td>A06</td><td><b>Insecure Design</b> — រចនាខ្វះការគិតពីការវាយប្រហារ</td><td>១</td></tr>
+    <tr><td>A07</td><td><b>Authentication Failures</b> — Password ខ្សោយ, គ្មាន Rate limit/MFA</td><td>៧</td></tr>
+    <tr><td>A08</td><td><b>Software or Data Integrity Failures</b> — Update/Data គ្មានការផ្ទៀងផ្ទាត់</td><td>១០</td></tr>
+    <tr><td>A09</td><td><b>Security Logging & Alerting Failures</b></td><td>១២</td></tr>
+    <tr><td>A10</td><td><b>Mishandling of Exceptional Conditions</b> — Error handling ខុស (Fail open)</td><td>១២</td></tr>
+  </table>
+</section>
+
+<!-- NAV: ផ្នែកទី ២ – មេរៀន -->
+<section id="l1">
+  <h2><span class="badge">មេរៀន ១</span>Security Mindset & Threat Modeling (STRIDE)</h2>
+  <p>មុនសរសេរកូដ សួរ ៤ សំណួរ៖ <b>យើងកំពុងសាងសង់អ្វី? អ្វីអាចខុស? យើងនឹងធ្វើអ្វី? យើងធ្វើបានល្អឬទេ?</b></p>
+  <table>
+    <tr><th>STRIDE</th><th>ការគំរាមកំហែង</th><th>ការពារ</th></tr>
+    <tr><td><b>S</b>poofing</td><td>ក្លែងខ្លួនជាអ្នកផ្សេង</td><td>Authentication, MFA</td></tr>
+    <tr><td><b>T</b>ampering</td><td>កែទិន្នន័យ (តម្លៃក្នុង Cart)</td><td>Validation ខាង Server, Integrity</td></tr>
+    <tr><td><b>R</b>epudiation</td><td>បដិសេធថាមិនបានធ្វើ</td><td>Audit logs</td></tr>
+    <tr><td><b>I</b>nformation disclosure</td><td>លេចធ្លាយទិន្នន័យ</td><td>Encryption, Access control</td></tr>
+    <tr><td><b>D</b>enial of service</td><td>ធ្វើឱ្យសេវាគាំង</td><td>Rate limit, Timeouts, CDN</td></tr>
+    <tr><td><b>E</b>levation of privilege</td><td>Staff ក្លាយជា Admin</td><td>Authorization ខាង Server</td></tr>
+  </table>
+  <div class="warn">⚠️ <b>ច្បាប់មាស៖ កុំទុកចិត្ត Client។</b> អ្វីៗពី Browser (Form, Query, Header, Cookie, តម្លៃក្នុង Hidden field, JavaScript validation) អាចត្រូវបានកែ។ Validation និង Authorization ត្រូវធ្វើ <b>ខាង Server ជានិច្ច</b>។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ១</h4>
+    <p>ធ្វើ STRIDE សង្ខេបលើមុខងារ «Checkout» របស់ហាងអនឡាញ (Client ផ្ញើ <code class="i">{ items:[{id, qty, price}], total }</code>)។ រកការគំរាមកំហែង ៣។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ol>
+        <li><b>Tampering៖</b> កែ <code class="i">price</code>/<code class="i">total</code> ជា 0.01 → Server ត្រូវ <b>មិនទទួល price ពី Client</b>; យកតម្លៃពី Database ហើយគណនា total ខាង Server</li>
+        <li><b>Tampering៖</b> <code class="i">qty: -5</code> → Validation (integer ≥ 1, ≤ ស្តុក)</li>
+        <li><b>Elevation / IDOR៖</b> ប្រើ Coupon/Address របស់អ្នកផ្សេង → ពិនិត្យ Ownership</li>
+        <li><b>DoS៖</b> Checkout ១០០០ ដង/នាទី → Rate limit + Idempotency key</li>
+      </ol>
+    </details>
+  </div>
+</section>
+
+<section id="l2">
+  <h2><span class="badge">មេរៀន ២</span>HTTPS, TLS & HSTS</h2>
+  <ul>
+    <li><b>HTTPS</b> = HTTP + TLS៖ Encrypt ទិន្នន័យ (Password, Cookie) និងផ្ទៀងផ្ទាត់ថាជា Server ពិត (Certificate)</li>
+    <li>Certificate ឥតគិតថ្លៃ៖ <b>Let's Encrypt</b> (Certbot) · Vercel/Netlify/Cloudflare ផ្តល់ដោយស្វ័យប្រវត្តិ</li>
+    <li>ប្រើ <b>TLS 1.2+</b> (ល្អបំផុត TLS 1.3) · បិទ SSLv3, TLS 1.0/1.1</li>
+    <li><b>HSTS</b>៖ ប្រាប់ Browser ឱ្យប្រើ HTTPS ជានិច្ច (ការពារ SSL stripping)</li>
+    <li>Redirect HTTP → HTTPS (301) · គ្មាន <b>Mixed content</b> (រូប/Script តាម http:// លើទំព័រ https://)</li>
+  </ul>
+  <script type="text/x-code" data-lang="http" data-label="Response headers">
+HTTP/1.1 200 OK
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+</script>
+  <script type="text/x-code" data-lang="bash" data-label="Linux server + Nginx (Let's Encrypt)">
+sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx -d kafe.com -d www.kafe.com     # ចេញ + ដំឡើង Certificate
+sudo certbot renew --dry-run                           # សាក Auto-renew (Certificate មានសុពលភាពខ្លី)
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ២</h4>
+    <p>ហេតុអ្វីគ្រាន់តែ Redirect HTTP → HTTPS មិនទាន់គ្រប់គ្រាន់ ហើយត្រូវការ HSTS?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p>Request <b>ដំបូង</b> (វាយ <code class="i">kafe.com</code> ឬ Link http://) នៅតែទៅតាម HTTP មុនពេល Redirect — អ្នកនៅលើបណ្តាញដដែល (Wi-Fi សាធារណៈ) អាចស្ទាក់វាបាន។ HSTS ធ្វើឱ្យ Browser ប្តូរទៅ HTTPS <b>ដោយខ្លួនឯងមុនផ្ញើ</b> រយៈពេល max-age · <code class="i">preload</code> ដាក់ Domain ក្នុងបញ្ជីរបស់ Browser សូម្បីការចូលលើកដំបូង។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l3">
+  <h2><span class="badge">មេរៀន ៣</span>Security Headers & Content Security Policy (CSP)</h2>
+  <table>
+    <tr><th>Header</th><th>ការពារ</th></tr>
+    <tr><td><code class="i">Content-Security-Policy</code></td><td>XSS — កំណត់ Script/Style/រូបមកពីណាបាន</td></tr>
+    <tr><td><code class="i">Strict-Transport-Security</code></td><td>បង្ខំ HTTPS</td></tr>
+    <tr><td><code class="i">X-Content-Type-Options: nosniff</code></td><td>Browser មិនទាយប្រភេទ File</td></tr>
+    <tr><td><code class="i">frame-ancestors 'none'</code> (CSP) / <code class="i">X-Frame-Options: DENY</code></td><td>Clickjacking (ដាក់ Site ក្នុង iframe)</td></tr>
+    <tr><td><code class="i">Referrer-Policy: strict-origin-when-cross-origin</code></td><td>មិនលេចធ្លាយ URL ពេញទៅ Site ផ្សេង</td></tr>
+    <tr><td><code class="i">Permissions-Policy</code></td><td>បិទ Camera/Mic/Location ដែលមិនប្រើ</td></tr>
+    <tr><td>ដក <code class="i">X-Powered-By</code></td><td>កុំប្រាប់ថាប្រើ Express</td></tr>
+  </table>
+  <script type="text/x-code" data-lang="js" data-label="Express + helmet">
+import express from "express";
+import helmet from "helmet";
+
+const app = express();
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],                              // គ្មាន inline script, គ្មាន CDN ចៃដន្យ
+      styleSrc: ["'self'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https://api.kafe.com"],
+      frameAncestors: ["'none'"],
+      objectSrc: ["'none'"],
+      baseUri: ["'self'"],
+    },
+  },
+  strictTransportSecurity: { maxAge: 63072000, includeSubDomains: true, preload: true },
+}));
+// helmet ក៏ដក X-Powered-By, ដាក់ nosniff, Referrer-Policy… ដោយស្វ័យប្រវត្តិ
+</script>
+  <div class="note">💡 ចាប់ផ្តើមដោយ <code class="i">Content-Security-Policy-Report-Only</code> ដើម្បីមើល Error ក្នុង Console មុនបង្ខំពិត — កុំឱ្យ Website ខូច។ សាក Headers របស់អ្នកក្នុង <b>Security Lab → Header Scanner</b>។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៣</h4>
+    <p>Website ប្រើ Google Analytics script ពី <code class="i">https://www.googletagmanager.com</code> និងបង្ហាញវីដេអូ YouTube ក្នុង iframe។ តើត្រូវបន្ថែម Directive អ្វីក្នុង CSP?</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="http" data-label="Answer">
+Content-Security-Policy:
+  default-src 'self';
+  script-src 'self' https://www.googletagmanager.com;
+  connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com;
+  img-src 'self' data: https://www.google-analytics.com;
+  frame-src https://www.youtube-nocookie.com https://www.youtube.com;
+  frame-ancestors 'none'; object-src 'none'; base-uri 'self'
+</script>
+      <p><code class="i">frame-src</code> = Site របស់អ្នកដាក់អ្នកណាក្នុង iframe បាន · <code class="i">frame-ancestors</code> = អ្នកណាអាចដាក់ Site <b>របស់អ្នក</b> ក្នុង iframe។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l4">
+  <h2><span class="badge">មេរៀន ៤</span>Injection: SQL Injection (A05)</h2>
+  <p>កើតឡើងពេល <b>ទិន្នន័យអ្នកប្រើ ត្រូវបានភ្ជាប់ចូលក្នុងពាក្យបញ្ជា</b> (SQL, Shell, LDAP…) ហើយ Database យល់ថាវាជា «កូដ»។</p>
+  <script type="text/x-code" data-lang="js" data-label="❌ ងាយរងគ្រោះ: ភ្ជាប់ String">
+// អ្នកប្រើវាយ username:  admin' --
+const sql = `SELECT * FROM users WHERE username = '${req.body.username}' AND password_hash = '${hash}'`;
+// → SELECT * FROM users WHERE username = 'admin' --' AND password_hash = '...'
+//   «--» ធ្វើឱ្យផ្នែកពិនិត្យ Password ក្លាយជា Comment → Login ជា admin ដោយគ្មាន Password!
+</script>
+  <script type="text/x-code" data-lang="js" data-label="✅ សុវត្ថិភាព: Parameterized query / Prepared statement">
+// node:sqlite / better-sqlite3 / mysql2
+const user = db.prepare("SELECT * FROM users WHERE username = ?").get(req.body.username);
+
+// pg (PostgreSQL)
+const { rows } = await pool.query("SELECT * FROM users WHERE username = $1", [req.body.username]);
+
+// Neon / postgres.js — Tagged template ក៏ Parameterize ដោយស្វ័យប្រវត្តិ
+const rows2 = await sql`SELECT * FROM users WHERE username = ${req.body.username}`;
+
+// ORDER BY / ឈ្មោះជួរឈរ មិនអាច Parameterize → ប្រើ Allowlist
+const SORT = { name: "name", price: "price" };
+const order = SORT[req.query.sort] ?? "id";
+</script>
+  <script type="text/x-code" data-lang="js" data-label="Command injection: ❌ exec vs ✅ execFile">
+import { exec, execFile } from "node:child_process";
+// ❌ filename = "a.png; rm -rf /"  → Shell រត់ពាក្យបញ្ជាទី ២
+exec(`convert ${req.query.file} out.webp`);
+// ✅ គ្មាន Shell · Argument ជា Array · + Validate ឈ្មោះ File ដោយ Allowlist regex
+if (!/^[\w-]+\.(png|jpg)$/.test(req.query.file)) return res.status(400).end();
+execFile("convert", [req.query.file, "out.webp"]);
+</script>
+  <p>👉 សាកមើលដោយផ្ទាល់ក្នុង <b>Security Lab → SQL Injection</b>។</p>
+  <div class="ex"><h4>✍️ លំហាត់ ៤</h4>
+    <p>កែកូដនេះឱ្យមានសុវត្ថិភាព៖ <code class="i">db.all(`SELECT * FROM products WHERE category = '${c}' ORDER BY ${s} LIMIT ${l}`)</code></p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="js" data-label="Answer">
+const SORT = { name: "name", price: "price", "-price": "price DESC" };
+const order = SORT[req.query.sort] ?? "id";                          // Allowlist
+const limit = Math.min(Math.max(parseInt(req.query.limit) || 10, 1), 50);   // ជាលេខ និងមានដែនកំណត់
+const rows = db.prepare(`SELECT * FROM products WHERE category = ? ORDER BY ${order} LIMIT ?`)
+               .all(req.query.category, limit);                       // Value → Parameter
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l5">
+  <h2><span class="badge">មេរៀន ៥</span>Cross-Site Scripting (XSS)</h2>
+  <p><b>XSS</b> = Attacker ធ្វើឱ្យ JavaScript របស់គេរត់ក្នុង Website របស់អ្នក ក្នុង Browser របស់អ្នកប្រើផ្សេង → លួច Token, ធ្វើសកម្មភាពជំនួស, កែទំព័រ។ ប្រភេទ៖ <b>Stored</b> (រក្សាក្នុង DB — Comment), <b>Reflected</b> (ពី URL), <b>DOM-based</b> (JavaScript ខាង Client)។</p>
+  <script type="text/x-code" data-lang="html" data-label="❌ innerHTML vs ✅ textContent (ចុចសាក)" data-demo>
+<style>
+  .box { border:1px solid #e5e7eb; border-radius:10px; padding:10px; margin:8px 0; }
+  .alert { display:none; background:#b42318; color:#fff; padding:6px 10px; border-radius:6px; margin-top:6px; }
+  input { width:100%; min-height:36px; font:inherit; }
+  button { min-height:34px; margin-top:6px; }
+</style>
+<label>Comment (សាក៖ <code>&lt;img src=x onerror="pwn()"&gt;</code>)
+  <input id="c" value='ស្អាតណាស់ &lt;b&gt;Latte&lt;/b&gt; &lt;img src=x onerror="pwn()"&gt;'>
+</label>
+<button id="go">Post</button>
+<div class="box"><b>❌ innerHTML</b><div id="bad"></div><div class="alert" id="hit">🚨 Script របស់ Attacker បានរត់! (អាចលួច Token/Cookie)</div></div>
+<div class="box"><b>✅ textContent</b><div id="good"></div></div>
+<script>
+  window.pwn = () => document.getElementById("hit").style.display = "block";   // តំណាងឱ្យកូដអាក្រក់
+  document.getElementById("go").onclick = () => {
+    const v = document.getElementById("c").value;
+    document.getElementById("hit").style.display = "none";
+    document.getElementById("bad").innerHTML = v;       // ❌ HTML ត្រូវបាន Parse ជាកូដ
+    document.getElementById("good").textContent = v;    // ✅ បង្ហាញជាអក្សរ
+  };
+<\/script>
+</script>
+  <h3>ការពារ XSS</h3>
+  <ol class="steps">
+    <li><b>Output encoding</b>៖ ប្រើ <code class="i">textContent</code> · Template engine/React escape ដោយស្វ័យប្រវត្តិ (<code class="i">{comment}</code>)</li>
+    <li>ជៀសវាង <code class="i">innerHTML</code>, <code class="i">document.write</code>, <code class="i">eval</code>, <code class="i">dangerouslySetInnerHTML</code></li>
+    <li>បើត្រូវបង្ហាញ HTML (Rich text) → <b>Sanitize</b> ដោយ <b>DOMPurify</b></li>
+    <li>ពិនិត្យ URL៖ ទទួលតែ <code class="i">https:</code> (ការពារ <code class="i">javascript:</code> ក្នុង href)</li>
+    <li><b>CSP</b> ជាស្រទាប់ទី ២ · Cookie <b>HttpOnly</b> ដើម្បីកុំឱ្យ JS អានបាន</li>
+  </ol>
+  <script type="text/x-code" data-lang="jsx" data-label="React">
+// ✅ React escape ដោយស្វ័យប្រវត្តិ
+<p>{comment.text}</p>
+
+// ❌ គ្រោះថ្នាក់
+<div dangerouslySetInnerHTML={{ __html: comment.html }} />
+
+// ✅ បើត្រូវការ HTML: Sanitize (npm i dompurify)
+import DOMPurify from "dompurify";
+<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(comment.html) }} />
+
+// ✅ Link: Allowlist protocol
+const safeUrl = u => { try { return ["https:", "http:"].includes(new URL(u).protocol) ? u : "#"; } catch { return "#"; } };
+<a href={safeUrl(user.website)} rel="noopener noreferrer" target="_blank">Website</a>
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ៥</h4>
+    <p>ទំព័រស្វែងរកបង្ហាញ <code class="i">resultTitle.innerHTML = "លទ្ធផលសម្រាប់: " + new URLSearchParams(location.search).get("q")</code>។ ប្រភេទ XSS អ្វី? កែយ៉ាងដូចម្តេច?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p><b>DOM-based (Reflected) XSS</b> — Attacker ផ្ញើ Link ដែល <code class="i">q</code> មាន HTML/Script។ កែ៖</p>
+<script type="text/x-code" data-lang="js" data-label="Answer">
+resultTitle.textContent = "លទ្ធផលសម្រាប់: " + (new URLSearchParams(location.search).get("q") ?? "");
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l6">
+  <h2><span class="badge">មេរៀន ៦</span>Cookies, Sessions, CSRF & CORS</h2>
+  <script type="text/x-code" data-lang="http" data-label="Cookie សុវត្ថិភាព">
+Set-Cookie: sid=9f8a…; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=7200
+#  HttpOnly  → JavaScript អានមិនបាន (XSS លួចមិនបាន)
+#  Secure    → ផ្ញើតែតាម HTTPS
+#  SameSite  → Lax/Strict: មិនផ្ញើ Cookie ជាមួយ Request ពី Site ផ្សេង (ការពារ CSRF ភាគច្រើន)
+#  __Host- prefix (ឧ. __Host-sid) → បង្ខំ Secure + Path=/ + គ្មាន Domain
+</script>
+  <p><b>CSRF</b> (Cross-Site Request Forgery)៖ Site អាក្រក់ធ្វើឱ្យ Browser របស់អ្នក (ដែល Login រួច) ផ្ញើ Request ទៅ Site ពិត ជាមួយ Cookie ដោយស្វ័យប្រវត្តិ (ឧ. ផ្ទេរប្រាក់)។</p>
+  <ul>
+    <li><b>SameSite=Lax/Strict</b> Cookie (Default របស់ Browser ទំនើបគឺ Lax)</li>
+    <li>កុំប្រើ <b>GET</b> សម្រាប់សកម្មភាពដែលប្តូរទិន្នន័យ</li>
+    <li><b>CSRF token</b> ក្នុង Form (Synchronizer token) ឬ ពិនិត្យ <code class="i">Origin</code>/<code class="i">Sec-Fetch-Site</code> header</li>
+    <li>API ដែលប្រើ <code class="i">Authorization: Bearer</code> header (មិនមែន Cookie) មិនរងគ្រោះ CSRF ប៉ុន្តែ Token ត្រូវការពារពី XSS</li>
+  </ul>
+  <script type="text/x-code" data-lang="js" data-label="CORS: ❌ vs ✅">
+// ❌ អនុញ្ញាតគ្រប់ Origin ជាមួយ Cookie — គ្រោះថ្នាក់
+app.use(cors({ origin: true, credentials: true }));
+
+// ✅ Allowlist
+const ALLOWED = ["https://kafe.com", "https://admin.kafe.com"];
+app.use(cors({ origin: (o, cb) => cb(null, !o || ALLOWED.includes(o)), credentials: true }));
+// CORS មិនមែនជា Authentication — វាគ្រាន់តែប្រាប់ Browser ថា JS ពី Origin ណាអានបាន
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ៦</h4>
+    <p>Bank App មាន <code class="i">GET /transfer?to=123&amp;amount=100</code> ហើយប្រើ Cookie Session។ ពន្យល់ហានិភ័យ និងដំណោះស្រាយ ៣។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p>Attacker ដាក់ <code class="i">&lt;img src="https://bank.com/transfer?to=666&amp;amount=100"&gt;</code> លើ Site របស់គេ → Browser ផ្ញើ Cookie ជាមួយ (CSRF) — GET ក៏ងាយត្រូវ Cache/Log/Prefetch។</p>
+      <ol><li>ប្តូរជា <b>POST</b> + Body</li><li>Cookie <b>SameSite=Strict</b> (ឬ Lax) + HttpOnly + Secure</li><li><b>CSRF token</b> + ពិនិត្យ Origin · បញ្ជាក់ម្តងទៀត (OTP/MFA) សម្រាប់ប្រតិបត្តិការធំ</li></ol>
+    </details>
+  </div>
+</section>
+
+<section id="l7">
+  <h2><span class="badge">មេរៀន ៧</span>Authentication: Password, MFA, Rate Limit (A07)</h2>
+  <table>
+    <tr><th>❌ កុំធ្វើ</th><th>✅ ធ្វើ</th></tr>
+    <tr><td>រក្សា Password ជាអក្សរដើម ឬ MD5/SHA-1</td><td><b>Argon2id</b> ឬ <b>bcrypt</b> (Slow hash + Salt)</td></tr>
+    <tr><td>ច្បាប់ស្មុគស្មាញ «ត្រូវមាន !@#»</td><td>ប្រវែង ≥ 8 (ល្អ 12–15+), អនុញ្ញាត Passphrase, ពិនិត្យជាមួយបញ្ជី Password ដែលលេចធ្លាយ (NIST SP 800-63B)</td></tr>
+    <tr><td>«អ៊ីមែលនេះមិនមាន» / «Password ខុស»</td><td>សារតែមួយ៖ «អ៊ីមែល ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ»</td></tr>
+    <tr><td>Login ព្យាយាមគ្មានដែនកំណត់</td><td>Rate limit + Lockout បណ្តោះអាសន្ន + CAPTCHA</td></tr>
+    <tr><td>Password តែមួយ</td><td><b>MFA</b> (TOTP App, Passkeys/WebAuthn)</td></tr>
+    <tr><td>JWT គ្មាន exp, Secret ខ្លី</td><td>exp ខ្លី, Secret វែង Random, Rotate, Refresh token</td></tr>
+  </table>
+  <script type="text/x-code" data-lang="js" data-label="Express: Login ការពារ">
+import rateLimit from "express-rate-limit";
+import bcrypt from "bcryptjs";
+
+const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 5, standardHeaders: "draft-8", legacyHeaders: false,
+  message: { error: { message: "ព្យាយាមច្រើនពេក សូមរង់ចាំ 15 នាទី" } } });
+
+const DUMMY = await bcrypt.hash("dummy-password", 12);
+
+app.post("/api/auth/login", loginLimiter, validate(login), async (req, res) => {
+  const { email, password } = req.valid.body;
+  const user = db.prepare("SELECT * FROM users WHERE email = ?").get(email.toLowerCase());
+  // ពិនិត្យ Hash ជានិច្ច (សូម្បីគ្មាន User) → ពេលវេលា Response ស្មើគ្នា
+  const ok = await bcrypt.compare(password, user?.password_hash ?? DUMMY);
+  if (!user || !ok) return res.status(401).json({ error: { message: "អ៊ីមែល ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ" } });
+  // ... បង្កើត Session/Token ...
+});
+</script>
+  <p>👉 សាក <b>Security Lab → Password</b>៖ មើលកម្លាំង Password និងរបៀប Salt + Hash ដំណើរការ។</p>
+  <div class="ex"><h4>✍️ លំហាត់ ៧</h4>
+    <p>ហេតុអ្វី SHA-256(password) មិនសមស្រប សូម្បីតែវាជា Hash ខ្លាំង? ហើយ Salt ជួយអ្វី?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p>SHA-256 <b>លឿនពេក</b>៖ GPU អាចសាកពាន់លានដង/វិនាទី → Brute-force Password ខ្លីៗបានលឿន។ bcrypt/Argon2 <b>យឺតដោយចេតនា</b> (Cost factor) ហើយ Argon2 ប្រើ Memory ច្រើន។ <b>Salt</b> (Random ផ្សេងគ្នាសម្រាប់ User នីមួយៗ) ធ្វើឱ្យ Password ដូចគ្នាមាន Hash ខុសគ្នា → មិនអាចប្រើតារាងគណនាទុកមុន (Rainbow table) ហើយ Attacker ត្រូវ Crack ម្នាក់ៗ។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l8">
+  <h2><span class="badge">មេរៀន ៨</span>Broken Access Control & IDOR (A01 — គ្រោះថ្នាក់លេខ ១)</h2>
+  <script type="text/x-code" data-lang="js" data-label="❌ IDOR (Insecure Direct Object Reference)">
+// អ្នកប្រើ A ប្តូរ URL /api/orders/1001 → /api/orders/1002 → ឃើញការកុម្ម៉ង់របស់ B!
+app.get("/api/orders/:id", requireAuth, (req, res) => {
+  res.json(db.prepare("SELECT * FROM orders WHERE id = ?").get(req.params.id));
+});
+</script>
+  <script type="text/x-code" data-lang="js" data-label="✅ ពិនិត្យ Ownership + Role ខាង Server">
+app.get("/api/orders/:id", requireAuth, (req, res) => {
+  const order = req.user.role === "admin"
+    ? db.prepare("SELECT * FROM orders WHERE id = ?").get(req.params.id)
+    : db.prepare("SELECT * FROM orders WHERE id = ? AND user_id = ?").get(req.params.id, req.user.id);
+  if (!order) return res.status(404).json({ error: { message: "រកមិនឃើញ" } });   // 404 (មិនប្រាប់ថាមាន)
+  res.json(order);
+});
+
+// ✅ Mass assignment: ទទួលតែ Field ដែលអនុញ្ញាត (Zod schema) — កុំឱ្យ User ផ្ញើ { "role": "admin" }
+const profileUpdate = z.object({ name: z.string().min(2), phone: z.string().optional() }).strict();
+</script>
+  <ul>
+    <li><b>Deny by default</b>៖ Route ថ្មីតម្រូវ Auth ដោយ Default</li>
+    <li>ការលាក់ប៊ូតុងក្នុង React <b>មិនមែនជាការការពារ</b> — API ត្រូវពិនិត្យជានិច្ច</li>
+    <li>ID ងាយទាយ (1, 2, 3) មិនមែនជាបញ្ហាដើម — បញ្ហាគឺ <b>គ្មានការពិនិត្យសិទ្ធិ</b> (UUID ជួយបន្ថែមប៉ុណ្ណោះ)</li>
+  </ul>
+  <div class="ex"><h4>✍️ លំហាត់ ៨</h4>
+    <p>Route <code class="i">PATCH /api/users/:id</code> ទទួល <code class="i">req.body</code> ទាំងមូល ហើយ UPDATE។ រកបញ្ហា ២ ហើយកែ។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="js" data-label="Answer">
+// បញ្ហា: (1) IDOR — User ណាក៏កែ :id ណាក៏បាន  (2) Mass assignment — ផ្ញើ role/is_verified បាន
+app.patch("/api/users/:id", requireAuth, validate(profileUpdate), (req, res) => {
+  const id = Number(req.params.id);
+  if (req.user.id !== id && req.user.role !== "admin") return res.status(403).json({ error: { message: "គ្មានសិទ្ធិ" } });
+  const { name, phone } = req.valid.body;                     // តែ Field អនុញ្ញាត
+  db.prepare("UPDATE users SET name = ?, phone = ? WHERE id = ?").run(name, phone ?? null, id);
+  res.json({ ok: true });
+});
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l9">
+  <h2><span class="badge">មេរៀន ៩</span>Security Misconfiguration & Secrets (A02)</h2>
+  <table>
+    <tr><th>❌ កំហុសញឹកញាប់</th><th>✅ ដំណោះស្រាយ</th></tr>
+    <tr><td>បង្ហាញ Stack trace / SQL error ទៅ User</td><td>សារទូទៅ + Log លម្អិតខាង Server · <code class="i">NODE_ENV=production</code></td></tr>
+    <tr><td>Secret ក្នុងកូដ / Git (<code class="i">const KEY = "sk_live_…"</code>)</td><td>Env variables / Secret manager · <code class="i">.gitignore</code> · gitleaks · Rotate ពេលលេចធ្លាយ</td></tr>
+    <tr><td>Default password (admin/admin), Debug mode, Directory listing</td><td>Checklist Deploy · Disable ទាំងអស់</td></tr>
+    <tr><td><code class="i">.env</code>, <code class="i">.git/</code>, Backup <code class="i">.sql</code> អាចទាញពី Web</td><td>Deploy តែ Build output · Block dotfiles</td></tr>
+    <tr><td>Database បើកទៅ Internet (Port 5432/3306)</td><td>Private network / IP allowlist · User DB សិទ្ធិតិច</td></tr>
+    <tr><td>S3/Blob bucket សាធារណៈ</td><td>Private + Signed URLs</td></tr>
+  </table>
+  <script type="text/x-code" data-lang="bash" data-label=".gitignore">
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.sqlite
+*.db
+node_modules/
+</script>
+  <div class="warn">⚠️ បើ Secret ធ្លាប់ Push ទៅ GitHub — <b>ចាត់ទុកថាលេចធ្លាយរួចហើយ</b>។ លុប Commit មិនគ្រប់គ្រាន់ (Bot ស្កេនក្នុងប៉ុន្មានវិនាទី) → <b>Revoke/Rotate Key ភ្លាម</b> បន្ទាប់មកសម្អាត History។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៩</h4>
+    <p>អ្នកឃើញ <code class="i">AWS_SECRET_ACCESS_KEY</code> ក្នុង Commit ចាស់មួយនៃ Repo សាធារណៈ។ សរសេរជំហានឆ្លើយតប ៥ តាមលំដាប់។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ol><li><b>Revoke/Rotate</b> Key ភ្លាមក្នុង AWS Console (អាទិភាពទី ១)</li><li>ពិនិត្យ <b>CloudTrail/Billing</b> រកការប្រើប្រាស់មិនប្រក្រតី</li><li>ដាក់ Key ថ្មីក្នុង Env/Secret manager (មិនមែនកូដ)</li><li>សម្អាត Git history (git filter-repo / BFG) និងបើក GitHub Secret scanning + Push protection</li><li>សរសេរ Post-mortem និងបន្ថែម gitleaks ក្នុង CI/pre-commit</li></ol>
+    </details>
+  </div>
+</section>
+
+<section id="l10">
+  <h2><span class="badge">មេរៀន ១០</span>Software Supply Chain & Integrity (A03, A08)</h2>
+  <ul>
+    <li><b>Lockfile</b> (<code class="i">package-lock.json</code>) Commit ជានិច្ច · CI ប្រើ <code class="i">npm ci</code></li>
+    <li><code class="i">npm audit</code> · <b>Dependabot</b> / Renovate Update ដោយមាន Review</li>
+    <li>ពិនិត្យ Package មុនដំឡើង៖ ឈ្មោះត្រឹមត្រូវ (Typosquatting: <code class="i">expresss</code>), អ្នកថែទាំ, ចំនួនទាញយក, ថ្ងៃ Update</li>
+    <li>បិទ install scripts ដែលមិនចាំបាច់៖ <code class="i">npm config set ignore-scripts true</code> (ពិនិត្យថា Package ត្រូវការឬទេ)</li>
+    <li><b>Subresource Integrity (SRI)</b> សម្រាប់ Script ពី CDN</li>
+    <li>CI/CD៖ Secrets តិចបំផុត, Pin GitHub Actions ទៅ Commit SHA, Branch protection</li>
+  </ul>
+  <script type="text/x-code" data-lang="html" data-label="SRI: Browser បដិសេធបើ File ត្រូវបានកែ">
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"
+        integrity="sha384-…hash-ពី-srihash.org…"
+        crossorigin="anonymous"><\/script>
+</script>
+  <script type="text/x-code" data-lang="bash" data-label=".github/dependabot.yml">
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule: { interval: "weekly" }
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule: { interval: "weekly" }
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១០</h4>
+    <p><code class="i">npm audit</code> រាយការណ៍ «high: Prototype Pollution in lodash &lt;4.17.21 (via some-old-lib)»។ តើត្រូវធ្វើអ្វី?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ol><li>រត់ <code class="i">npm ls lodash</code> មើលថាវាមកពី Package ណា</li><li>Update <code class="i">some-old-lib</code> ទៅកំណែដែលប្រើ lodash ≥ 4.17.21 (<code class="i">npm audit fix</code> ឬ Update ដោយដៃ)</li><li>បើ Package គ្មាន Update → ប្រើ <code class="i">"overrides": { "lodash": "^4.17.21" }</code> ក្នុង package.json ហើយ Test</li><li>វាយតម្លៃ៖ កូដរបស់អ្នកពិតជាហៅផ្នែកងាយរងគ្រោះឬទេ (Reachability) · បើ Package គ្មានអ្នកថែទាំ → ជំនួស</li></ol>
+    </details>
+  </div>
+</section>
+
+<section id="l11">
+  <h2><span class="badge">មេរៀន ១១</span>File Upload & SSRF</h2>
+  <script type="text/x-code" data-lang="js" data-label="✅ File Upload ដោយសុវត្ថិភាព (multer)">
+import multer from "multer";
+import { randomUUID } from "node:crypto";
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 2 * 1024 * 1024, files: 1 },                  // ≤ 2MB
+  fileFilter: (req, file, cb) => cb(null, ["image/png", "image/jpeg", "image/webp"].includes(file.mimetype)),
+});
+
+app.post("/api/avatar", requireAuth, upload.single("avatar"), async (req, res) => {
+  if (!req.file) return res.status(422).json({ error: { message: "ត្រូវការរូបភាព PNG/JPEG/WebP ≤ 2MB" } });
+  // ពិនិត្យ Magic bytes ពិត (មិនទុកចិត្ត mimetype ពី Client) ហើយ Re-encode រូប (ឧ. sharp) ដើម្បីដក Metadata/កូដលាក់
+  const name = `${randomUUID()}.webp`;                              // កុំប្រើឈ្មោះ File ពី User
+  // រក្សាទុកក្នុង Object storage (Blob/S3) មិនមែន Folder ដែល Server រត់កូដ
+  res.status(201).json({ url: `https://cdn.kafe.com/avatars/${name}` });
+});
+</script>
+  <p><b>SSRF</b> (Server-Side Request Forgery)៖ Server ទៅទាញ URL ដែល User ផ្តល់ (ឧ. «បញ្ចូលរូបពី URL») → Attacker ផ្តល់ URL ខាងក្នុង (<code class="i">http://localhost:…</code>, <code class="i">http://169.254.169.254/</code> Cloud metadata) ដើម្បីចូលប្រព័ន្ធខាងក្នុង។</p>
+  <script type="text/x-code" data-lang="js" data-label="✅ ការពារ SSRF (គោលការណ៍)">
+const ALLOWED_HOSTS = new Set(["images.unsplash.com", "cdn.kafe.com"]);   // Allowlist ល្អបំផុត
+function checkUrl(raw) {
+  const u = new URL(raw);
+  if (u.protocol !== "https:") throw new HttpError(400, "តែ https");
+  if (!ALLOWED_HOSTS.has(u.hostname)) throw new HttpError(400, "Host មិនអនុញ្ញាត");
+  return u;
+}
+// + កុំ Follow redirect ដោយស្វ័យប្រវត្តិ (redirect: "manual") · Timeout · ទំហំអតិបរមា
+// + បើត្រូវអនុញ្ញាត Host ណាក៏បាន: Resolve DNS ហើយបដិសេធ IP ឯកជន (10/8, 172.16/12, 192.168/16, 127/8, 169.254/16, ::1)
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១១</h4>
+    <p>User Upload File ឈ្មោះ <code class="i">../../server.js</code> ហើយ App រក្សាទុក <code class="i">path.join("uploads", file.originalname)</code>។ បញ្ហាអ្វី? កែយ៉ាងដូចម្តេច?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p><b>Path traversal</b> — <code class="i">../</code> ចេញក្រៅ Folder uploads ហើយអាចសរសេរជាន់ File កូដ។ កែ៖ <b>កុំប្រើឈ្មោះពី User</b> — បង្កើត <code class="i">randomUUID()</code> + Extension ពី Allowlist, រក្សាទុកក្រៅ Web root ឬក្នុង Object storage ហើយ Server/Folder upload គ្មានសិទ្ធិ Execute។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l12">
+  <h2><span class="badge">មេរៀន ១២</span>Logging, Alerting & Error Handling (A09, A10)</h2>
+  <ul>
+    <li>Log ព្រឹត្តិការណ៍សុវត្ថិភាព៖ Login ជោគជ័យ/បរាជ័យ, ប្តូរ Password/Role, 401/403 ច្រើន, Rate limit, Admin actions</li>
+    <li><b>កុំ Log</b>៖ Password, Token, លេខកាតពេញ, Cookie</li>
+    <li>Log ជា JSON (pino) មាន <code class="i">requestId</code>, userId, IP, ពេលវេលា → ផ្ញើទៅប្រព័ន្ធកណ្តាល · <b>Alert</b> ពេលចម្លែក</li>
+    <li><b>Fail closed</b>៖ ពេល Error ក្នុងការពិនិត្យសិទ្ធិ → បដិសេធ (មិនមែនអនុញ្ញាត)</li>
+  </ul>
+  <script type="text/x-code" data-lang="js" data-label="❌ Fail open vs ✅ Fail closed">
+// ❌ Error ពេលពិនិត្យ → អនុញ្ញាតដោយចៃដន្យ
+async function canEdit(user, doc) {
+  try { return await permissionService.check(user, doc); }
+  catch { return true; }                 // «កុំឱ្យ User ជាប់គាំង»… = ប្រហោងសុវត្ថិភាព
+}
+
+// ✅ Error → បដិសេធ + Log
+async function canEdit(user, doc) {
+  try { return (await permissionService.check(user, doc)) === true; }
+  catch (err) {
+    logger.error({ err, userId: user.id, docId: doc.id }, "permission check failed");
+    return false;
+  }
+}
+</script>
+  <script type="text/x-code" data-lang="js" data-label="Security event log (pino)">
+import pino from "pino";
+export const logger = pino({ redact: ["req.headers.authorization", "req.headers.cookie", "*.password", "*.token"] });
+
+logger.warn({ event: "auth.login_failed", email, ip: req.ip, requestId: req.id }, "login failed");
+logger.info({ event: "admin.product_deleted", userId: req.user.id, productId: id }, "product deleted");
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១២</h4>
+    <p>រចនា Alert ៣ ដែលគួរផ្ញើទៅ Telegram/Email ក្រុមភ្លាមៗ។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ol><li>Login បរាជ័យ &gt; 50 ដង/5 នាទី ពី IP ឬ Account តែមួយ (Brute-force / Credential stuffing)</li><li>Role ត្រូវបានប្តូរទៅ <b>admin</b> ឬ Admin ថ្មីត្រូវបានបង្កើត</li><li>អត្រា 5xx ឬ 403 កើនឡើងខ្លាំង / ការទាញយកទិន្នន័យច្រើនមិនប្រក្រតី (Export ១០,០០០ ជួរ)</li></ol>
+    </details>
+  </div>
+</section>
+
+<section id="l13">
+  <h2><span class="badge">មេរៀន ១៣</span>API & Frontend Security (React, JWT, Rate limit)</h2>
+  <table>
+    <tr><th>ប្រធានបទ</th><th>ការណែនាំ</th></tr>
+    <tr><td>រក្សា Token</td><td>ល្អបំផុត៖ <b>HttpOnly Secure Cookie</b> (+ CSRF protection) · ជៀសវាង localStorage សម្រាប់ Token ដែលមានសិទ្ធិខ្ពស់ (XSS អានបាន)</td></tr>
+    <tr><td>JWT</td><td>ផ្ទៀងផ្ទាត់ Algorithm (<code class="i">algorithms: ["HS256"]</code>), exp ខ្លី, Secret ≥ 32 bytes Random, កុំដាក់ទិន្នន័យសម្ងាត់ក្នុង Payload (Base64 អានបាន)</td></tr>
+    <tr><td>Validation</td><td>Zod/Joi គ្រប់ Body/Query/Params · កំណត់ទំហំ Body (<code class="i">express.json({ limit: "100kb" })</code>)</td></tr>
+    <tr><td>Rate limiting</td><td>គ្រប់ API (ទូទៅ) + តឹងជាងលើ Login/OTP/Reset password</td></tr>
+    <tr><td>Pagination</td><td>limit អតិបរមា (ឧ. 50) — ការពារការទាញទិន្នន័យទាំងអស់</td></tr>
+    <tr><td>Frontend Env</td><td>គ្មាន Secret ក្នុង <code class="i">VITE_*</code> / <code class="i">NEXT_PUBLIC_*</code></td></tr>
+    <tr><td>Third-party script</td><td>តិចបំផុត, CSP, SRI</td></tr>
+  </table>
+  <script type="text/x-code" data-lang="js" data-label="JWT verify ត្រឹមត្រូវ">
+const payload = jwt.verify(token, process.env.JWT_SECRET, {
+  algorithms: ["HS256"],       // ការពារ "alg: none" / algorithm confusion
+  issuer: "kafe-api",
+  audience: "kafe-web",
+});
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១៣</h4>
+    <p>Developer ដាក់ <code class="i">{ userId, role, email, passwordHash }</code> ក្នុង JWT payload ហើយរក្សា Token ក្នុង localStorage។ រកបញ្ហា ២។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ol><li><b>passwordHash ក្នុង JWT</b>៖ Payload គ្រាន់តែ Base64 — អ្នកណាមាន Token អានបាន → ដកចេញ (ដាក់តែ id, role)</li><li><b>localStorage</b>៖ XSS ណាមួយអាចអាន Token → ប្រើ HttpOnly Secure SameSite Cookie, CSP, exp ខ្លី</li></ol>
+    </details>
+  </div>
+</section>
+
+<section id="l14">
+  <h2><span class="badge">មេរៀន ១៤</span>Security Testing, CI & Incident Response</h2>
+  <table>
+    <tr><th>ប្រភេទ</th><th>ឧបករណ៍</th><th>ពេល</th></tr>
+    <tr><td><b>SAST</b> (ស្កេនកូដ)</td><td>SonarQube, CodeQL, Semgrep, eslint-plugin-security</td><td>រាល់ PR</td></tr>
+    <tr><td><b>SCA</b> (Dependencies)</td><td>npm audit, Dependabot, Snyk</td><td>រាល់ PR + ប្រចាំសប្តាហ៍</td></tr>
+    <tr><td><b>Secrets</b></td><td>gitleaks, GitHub Secret scanning</td><td>pre-commit + PR</td></tr>
+    <tr><td><b>DAST</b> (ស្កេន App រត់)</td><td>ZAP baseline</td><td>លើ Staging</td></tr>
+    <tr><td><b>Security tests</b></td><td>Test 401/403/422, IDOR, Rate limit</td><td>CI</td></tr>
+    <tr><td><b>Pentest</b></td><td>អ្នកជំនាញ (មានការអនុញ្ញាត)</td><td>មុន Launch / ប្រចាំឆ្នាំ</td></tr>
+  </table>
+  <script type="text/x-code" data-lang="bash" data-label=".github/workflows/security.yml">
+name: security
+on: [pull_request]
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci
+      - run: npm audit --audit-level=high
+      - run: npx eslint .
+      - uses: gitleaks/gitleaks-action@v2
+        env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
+      - run: npm test                  # រួមទាំង Security tests (401/403/IDOR)
+</script>
+  <h3>Incident Response (ពេលមានហេតុការណ៍)</h3>
+  <ol class="steps">
+    <li><b>Contain</b> — បិទ Feature/Account, Revoke Keys, Block IP</li>
+    <li><b>Investigate</b> — Logs: ពេលណា? ទិន្នន័យអ្វី? ប៉ុន្មាននាក់?</li>
+    <li><b>Fix</b> — ជួសជុល + Test + Deploy</li>
+    <li><b>Notify</b> — អ្នកប្រើ/អាជ្ញាធរ តាមច្បាប់</li>
+    <li><b>Learn</b> — Post-mortem ដោយមិនបន្ទោស ហើយបន្ថែម Test/Alert</li>
+  </ol>
+  <script type="text/x-code" data-lang="txt" data-label="public/.well-known/security.txt (Responsible disclosure)">
+Contact: mailto:security@kafe.com
+Expires: 2027-12-31T23:59:59Z
+Preferred-Languages: km, en
+Policy: https://kafe.com/security-policy
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១៤</h4>
+    <p>សរសេរ Security test (node:test) ដែលពិនិត្យថា User A មិនអាចមើល Order របស់ User B បាន។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="js" data-label="Answer">
+test("IDOR: user A cannot read user B's order", async () => {
+  const tokenA = await loginAs("a@kafe.com");
+  const orderB = await createOrderAs("b@kafe.com");
+  const res = await fetch(`${base}/orders/${orderB.id}`, { headers: { Authorization: `Bearer ${tokenA}` } });
+  assert.equal(res.status, 404);                       // ឬ 403 — តែមិនមែន 200
+});
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="cheat">
+  <h2>📋 Cheat Sheet: Secure Coding</h2>
+  <table>
+    <tr><th>បញ្ហា</th><th>ការពារ</th></tr>
+    <tr><td>SQL Injection</td><td>Parameterized queries · Allowlist សម្រាប់ ORDER BY</td></tr>
+    <tr><td>XSS</td><td>textContent / React escape · DOMPurify · CSP · HttpOnly</td></tr>
+    <tr><td>CSRF</td><td>SameSite cookies · POST · CSRF token / Origin check</td></tr>
+    <tr><td>IDOR</td><td>ពិនិត្យ Ownership ខាង Server · Deny by default</td></tr>
+    <tr><td>Password</td><td>Argon2id/bcrypt · MFA · Rate limit · សារ Error តែមួយ</td></tr>
+    <tr><td>Secrets</td><td>Env/Vault · .gitignore · gitleaks · Rotate</td></tr>
+    <tr><td>Transport</td><td>HTTPS + HSTS · TLS 1.2+</td></tr>
+    <tr><td>Headers</td><td>helmet · CSP · nosniff · frame-ancestors</td></tr>
+    <tr><td>Dependencies</td><td>Lockfile · npm audit · Dependabot · SRI</td></tr>
+    <tr><td>Errors & Logs</td><td>Fail closed · កុំបង្ហាញ Stack · Log events · Alert</td></tr>
+  </table>
+</section>
+
+<!-- NAV: ផ្នែកទី ៣ – កម្រិតអាជីព -->
+<section class="hero" id="pro">
+  <h2>🏆 គម្រោងអាជីព: Harden Kafe API + Security Lab</h2>
+  <p>យក <b>Kafe REST API</b> (វគ្គ React + REST API) មកពង្រឹងសុវត្ថិភាពកម្រិត Production៖ helmet + CSP, CORS allowlist, Rate limit, Body limit, HttpOnly cookie, JWT verify តឹងរ៉ឹង, Ownership checks, Logging with redaction, Error handler fail-closed និង Security tests។ បន្ទាប់មកសាក <b>Security Lab</b> ផ្ទាល់។</p>
+</section>
+
+<section id="pro-code">
+  <h2>🔐 server/src/app.js (Hardened)</h2>
+  <script type="text/x-code" data-lang="js" data-label="server/src/app.js">
+import express from "express";
+import helmet from "helmet";
+import cors from "cors";
+import rateLimit from "express-rate-limit";
+import { randomUUID } from "node:crypto";
+import { logger } from "./logger.js";
+import authRoutes from "./routes/auth.js";
+import productRoutes from "./routes/products.js";
+import { notFound, errorHandler } from "./middleware/errors.js";
+import { checkOrigin } from "./middleware/auth.js";
+
+const ALLOWED_ORIGINS = (process.env.CLIENT_URL || "").split(",").filter(Boolean);
+
+export function createApp(db) {
+  if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+    throw new Error("JWT_SECRET ត្រូវមានយ៉ាងតិច 32 តួ");          // Fail fast ពេល Config ខុស
+  }
+  const app = express();
+  app.disable("x-powered-by");
+  app.set("trust proxy", 1);                                       // នៅក្រោយ Proxy/Vercel → req.ip ត្រឹមត្រូវ
+
+  // 1) Request ID + Access log (គ្មាន Token/Cookie)
+  app.use((req, res, next) => {
+    req.id = req.get("x-request-id") || randomUUID();
+    res.set("x-request-id", req.id);
+    const t0 = Date.now();
+    res.on("finish", () => logger.info({ id: req.id, method: req.method, url: req.originalUrl, status: res.statusCode, ms: Date.now() - t0, ip: req.ip }));
+    next();
+  });
+
+  // 2) Security headers (API: CSP តឹងបំផុត ព្រោះគ្មាន HTML)
+  app.use(helmet({
+    contentSecurityPolicy: { directives: { defaultSrc: ["'none'"], frameAncestors: ["'none'"] } },
+    strictTransportSecurity: { maxAge: 63072000, includeSubDomains: true, preload: true },
+    crossOriginResourcePolicy: { policy: "same-site" },
+  }));
+
+  // 3) CORS allowlist
+  app.use(cors({
+    origin: (origin, cb) => cb(null, !origin || ALLOWED_ORIGINS.includes(origin)),
+    credentials: true,
+    methods: ["GET", "POST", "PATCH", "DELETE"],
+  }));
+
+  // 4) Body limit + Rate limits
+  app.use("/api", checkOrigin(ALLOWED_ORIGINS));                    // CSRF: Cookie auth + Origin check
+  app.use(express.json({ limit: "100kb" }));
+  app.use("/api", rateLimit({ windowMs: 60_000, limit: 120, standardHeaders: "draft-8", legacyHeaders: false }));
+  app.use("/api/auth/login", rateLimit({ windowMs: 15 * 60_000, limit: 5, standardHeaders: "draft-8", legacyHeaders: false,
+    handler: (req, res) => {
+      logger.warn({ event: "auth.rate_limited", ip: req.ip, id: req.id });
+      res.status(429).json({ error: { message: "ព្យាយាមច្រើនពេក សូមរង់ចាំ 15 នាទី" } });
+    } }));
+
+  // 5) Routes
+  app.get("/api/health", (req, res) => res.json({ ok: true }));
+  app.use("/api/auth", authRoutes(db));
+  app.use("/api/products", productRoutes(db));
+
+  // 6) 404 + Error handler (មិនបញ្ចេញ Stack / SQL)
+  app.use(notFound);
+  app.use(errorHandler);
+  return app;
+}
+</script>
+  <script type="text/x-code" data-lang="js" data-label="server/src/routes/auth.js — HttpOnly cookie + strict JWT">
+const COOKIE = { httpOnly: true, secure: true, sameSite: "strict", path: "/api", maxAge: 2 * 60 * 60 * 1000 };
+const DUMMY_HASH = bcrypt.hashSync("not-a-real-password", 12);
+
+r.post("/login", validate(login), async (req, res) => {
+  const email = req.valid.body.email.toLowerCase();
+  const user = db.prepare("SELECT * FROM users WHERE email = ?").get(email);
+  const ok = await bcrypt.compare(req.valid.body.password, user?.password_hash ?? DUMMY_HASH);
+  if (!user || !ok) {
+    logger.warn({ event: "auth.login_failed", email, ip: req.ip, id: req.id });
+    return res.status(401).json({ error: { message: "អ៊ីមែល ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ" } });
+  }
+  const token = jwt.sign({ sub: String(user.id), role: user.role }, process.env.JWT_SECRET,
+    { algorithm: "HS256", expiresIn: "2h", issuer: "kafe-api", audience: "kafe-web" });
+  logger.info({ event: "auth.login_ok", userId: user.id, ip: req.ip, id: req.id });
+  res.cookie("__Host-kafe", token, { ...COOKIE, path: "/" }).json({ user: { id: user.id, name: user.name, role: user.role } });
+});
+
+r.post("/logout", (req, res) => res.clearCookie("__Host-kafe", { ...COOKIE, path: "/" }).status(204).end());
+</script>
+  <script type="text/x-code" data-lang="js" data-label="server/src/middleware/auth.js — Cookie/Bearer + Fail closed">
+export function requireAuth(req, res, next) {
+  const bearer = (req.headers.authorization || "").match(/^Bearer (.+)$/)?.[1];
+  const token = bearer || parseCookie(req.headers.cookie)["__Host-kafe"];
+  if (!token) return res.status(401).json({ error: { message: "ត្រូវ Login ជាមុន" } });
+  try {
+    const p = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ["HS256"], issuer: "kafe-api", audience: "kafe-web" });
+    req.user = { id: Number(p.sub), role: p.role };
+    next();
+  } catch {
+    res.status(401).json({ error: { message: "Token មិនត្រឹមត្រូវ ឬផុតកំណត់" } });   // Fail closed
+  }
+}
+
+// CSRF: Cookie ត្រូវបានផ្ញើដោយ Browser ដោយស្វ័យប្រវត្តិ → ពិនិត្យ Origin លើ Request ដែលប្តូរទិន្នន័យ
+export function checkOrigin(allowed) {
+  return (req, res, next) => {
+    if (["GET", "HEAD", "OPTIONS"].includes(req.method)) return next();
+    const origin = req.get("origin");
+    if (origin && !allowed.includes(origin)) return res.status(403).json({ error: { message: "Origin មិនអនុញ្ញាត" } });
+    next();
+  };
+}
+
+function parseCookie(h = "") {
+  return Object.fromEntries(h.split(";").map(s => s.trim().split("=")).filter(([k]) => k).map(([k, ...v]) => [k, decodeURIComponent(v.join("="))]));
+}
+</script>
+  <script type="text/x-code" data-lang="js" data-label="tests/security.test.js (ផ្នែក)">
+test("security headers present", async () => {
+  const res = await fetch(`${base}/health`);
+  assert.equal(res.headers.get("x-content-type-options"), "nosniff");
+  assert.match(res.headers.get("strict-transport-security"), /max-age=63072000/);
+  assert.equal(res.headers.get("x-powered-by"), null);
+});
+
+test("rejects alg=none / forged token", async () => {
+  const forged = Buffer.from('{"alg":"none"}').toString("base64url") + "." +
+                 Buffer.from('{"sub":"1","role":"admin"}').toString("base64url") + ".";
+  const res = await fetch(`${base}/products`, { method: "POST", headers: { Authorization: `Bearer ${forged}`, "Content-Type": "application/json" }, body: "{}" });
+  assert.equal(res.status, 401);
+});
+
+test("body too large → 413", async () => {
+  const res = await fetch(`${base}/auth/login`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ x: "a".repeat(200_000) }) });
+  assert.equal(res.status, 413);
+});
+</script>
+</section>
+
+<section id="pro-app">
+  <h2>🧪 Security Lab (ចុចសាកបាន)</h2>
+  <p>Tab <b>SQL Injection</b>៖ វាយ Username/Password ហើយមើល Query ដែលបង្កើតដោយការភ្ជាប់ String ធៀបនឹង Parameterized · Tab <b>XSS</b>៖ Render Comment តាមវិធីផ្សេងៗ · Tab <b>Headers</b>៖ បិទភ្ជាប់ Response headers ដើម្បីទទួលពិន្ទុ · Tab <b>Password</b>៖ កម្លាំង Password និង Salt + Hash។ គ្រប់យ៉ាងរត់ក្នុង Browser របស់អ្នកតែប៉ុណ្ណោះ (គ្មាន Server ពិត)។</p>
+  <script type="text/x-code" data-lang="html" data-label="Security Lab" data-demo>
+<style>
+  :root { --red:#b42318; --ok:#0a7d33; --warn:#b54708; --line:#e4e7ec; --soft:#f9fafb; --ink:#101828; --muted:#475467; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#f2f4f7; color:var(--ink); font-family:"Kantumruy Pro",system-ui,sans-serif; }
+  .tabs { display:flex; gap:4px; padding:10px 12px 0; overflow-x:auto; }
+  .tabs button { min-height:40px; padding:0 14px; border:1px solid var(--line); border-bottom:0; background:#eaecf0; border-radius:8px 8px 0 0; font:inherit; font-size:14px; cursor:pointer; white-space:nowrap; }
+  .tabs button[aria-selected="true"] { background:#fff; color:var(--red); font-weight:700; }
+  .pane { background:#fff; margin:0 12px 12px; border:1px solid var(--line); border-radius:0 10px 10px 10px; padding:14px; display:grid; gap:12px; }
+  .pane[hidden] { display:none; }
+  .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; }
+  .card { border:1px solid var(--line); border-radius:10px; padding:12px; background:#fff; min-width:0; }
+  .card.bad { border-top:4px solid var(--red); } .card.good { border-top:4px solid var(--ok); }
+  label { display:grid; gap:4px; font-size:14px; }
+  input, textarea, select { font:inherit; font-size:14px; min-height:38px; border:1px solid #d0d5dd; border-radius:8px; padding:0 10px; width:100%; }
+  textarea { font-family:"JetBrains Mono",monospace; font-size:12.5px; padding:8px; min-height:150px; }
+  button.b { min-height:36px; padding:0 12px; border-radius:8px; border:1px solid #d0d5dd; background:#fff; font:inherit; font-size:13px; cursor:pointer; }
+  button.b.pri { background:var(--ink); color:#fff; border-color:var(--ink); }
+  .row { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+  pre { margin:0; background:#0c111d; color:#e4e7ec; padding:10px; border-radius:8px; font:12.5px/1.6 "JetBrains Mono",monospace; white-space:pre-wrap; word-break:break-all; }
+  .inj { background:#7a271a; color:#fff; border-radius:3px; padding:0 2px; }
+  .param { color:#7cd4fd; }
+  .verdict { padding:8px 10px; border-radius:8px; font-weight:600; font-size:14px; }
+  .verdict.bad { background:#fef3f2; color:var(--red); } .verdict.good { background:#ecfdf3; color:var(--ok); } .verdict.warn { background:#fffaeb; color:var(--warn); }
+  table { border-collapse:collapse; width:100%; font-size:13px; }
+  th, td { border-bottom:1px solid var(--line); padding:5px 6px; text-align:left; vertical-align:top; }
+  .muted { color:var(--muted); font-size:13px; }
+  .render { min-height:48px; border:1px dashed #d0d5dd; border-radius:8px; padding:8px; overflow-wrap:anywhere; }
+  .alarm { display:none; margin-top:6px; } .alarm.on { display:block; }
+  .grade { font-size:44px; font-weight:800; line-height:1; width:72px; height:72px; border-radius:14px; display:grid; place-items:center; color:#fff; }
+  .meter { height:10px; border-radius:99px; background:#eaecf0; overflow:hidden; } .meter i { display:block; height:100%; transition:width .3s; }
+  code { font-family:"JetBrains Mono",monospace; font-size:12.5px; }
+  .ok { color:var(--ok); } .no { color:var(--red); } .mid { color:var(--warn); }
+</style>
+
+<div class="tabs" role="tablist">
+  <button role="tab" aria-selected="true" data-t="sqli">💉 SQL Injection</button>
+  <button role="tab" aria-selected="false" data-t="xss">🧨 XSS</button>
+  <button role="tab" aria-selected="false" data-t="hdr">🧾 Headers</button>
+  <button role="tab" aria-selected="false" data-t="pw">🔑 Password</button>
+</div>
+
+<!-- ================= SQLi ================= -->
+<div class="pane" id="sqli">
+  <div class="row"><span class="muted">សាក៖</span>
+    <button class="b sq" data-u="dara" data-p="kafe123">✅ Login ធម្មតា</button>
+    <button class="b sq" data-u="dara" data-p="wrong">❌ Password ខុស</button>
+    <button class="b sq" data-u="admin' --" data-p="anything">admin' --</button>
+    <button class="b sq" data-u="x' OR '1'='1' --" data-p="x">' OR '1'='1' --</button>
+    <button class="b sq" data-u="O'Neil" data-p="x">O'Neil (ឈ្មោះមាន ')</button>
+  </div>
+  <div class="grid2">
+    <label>Username<input id="u" value="dara" autocomplete="off"></label>
+    <label>Password<input id="p" value="kafe123" autocomplete="off"></label>
+  </div>
+  <div class="grid2">
+    <div class="card bad"><b>❌ ភ្ជាប់ String (Concatenation)</b>
+      <pre id="qBad"></pre><div id="rBad" style="margin-top:8px"></div></div>
+    <div class="card good"><b>✅ Parameterized query</b>
+      <pre id="qGood"></pre><div id="rGood" style="margin-top:8px"></div></div>
+  </div>
+  <details><summary class="muted">តារាង users (Demo — Database ពិតត្រូវរក្សា Hash មិនមែន Password)</summary><table id="users"></table></details>
+</div>
+
+<!-- ================= XSS ================= -->
+<div class="pane" id="xss" hidden>
+  <div class="row"><span class="muted">សាក៖</span>
+    <button class="b xp">ស្អាតណាស់ &lt;b&gt;Latte&lt;/b&gt;!</button>
+    <button class="b xp">&lt;img src=x onerror="pwn()"&gt;</button>
+    <button class="b xp">&lt;a href="javascript:pwn()"&gt;ចុចទីនេះ&lt;/a&gt;</button>
+    <button class="b xp">&lt;svg onload="pwn()"&gt;&lt;/svg&gt;</button>
+  </div>
+  <label>Comment ពី User (ទុកថាវារក្សាក្នុង Database)<textarea id="cmt" style="min-height:70px"></textarea></label>
+  <div class="grid2">
+    <div class="card bad"><b>❌ element.innerHTML = comment</b><div class="render" id="xBad"></div>
+      <div class="verdict bad alarm" id="alarm">🚨 កូដរបស់ Attacker បានរត់ក្នុង Session អ្នកប្រើ! (អាចលួច Token, ធ្វើសកម្មភាពជំនួស)</div></div>
+    <div class="card good"><b>✅ element.textContent = comment</b><div class="render" id="xText"></div><div class="muted">បង្ហាញជាអក្សរ — React <code>{comment}</code> ធ្វើដូចនេះ</div></div>
+    <div class="card good"><b>✅ Sanitize (Allowlist: b, i, em, strong, a[https])</b><div class="render" id="xSan"></div><div class="muted">គំនិតដូច DOMPurify — រក្សា Format ដកកូដ</div></div>
+  </div>
+</div>
+
+<!-- ================= Headers ================= -->
+<div class="pane" id="hdr" hidden>
+  <div class="row"><span class="muted">គំរូ៖</span><button class="b" id="hBad">Express Default (មិនទាន់ការពារ)</button><button class="b" id="hGood">Kafe Hardened (helmet)</button>
+    <span class="muted">ឬបិទភ្ជាប់ពី DevTools → Network → Response Headers</span></div>
+  <div class="grid2">
+    <label>Response headers<textarea id="headers"></textarea></label>
+    <div class="card"><div class="row" style="gap:12px"><div class="grade" id="grade">?</div><div><b id="score"></b><div class="muted">ពិន្ទុក្នុង Demo នេះ (គំនិតស្រដៀង Mozilla Observatory)</div></div></div>
+      <table id="checks" style="margin-top:10px"></table></div>
+  </div>
+</div>
+
+<!-- ================= Password ================= -->
+<div class="pane" id="pw" hidden>
+  <label>Password (មិនផ្ញើទៅណាទេ — គណនាក្នុង Browser)<input id="pwd" value="kafe123" autocomplete="off"></label>
+  <div class="meter" aria-hidden="true"><i id="bar"></i></div>
+  <div class="grid2">
+    <div class="card"><b>កម្លាំង</b><table id="pwInfo"></table></div>
+    <div class="card"><b>Salt + Hash (PBKDF2-SHA256, 100,000 rounds)</b>
+      <p class="muted">Password ដូចគ្នា + Salt ខុសគ្នា = Hash ខុសគ្នា → Rainbow table គ្មានប្រយោជន៍។ ក្នុង Production ប្រើ Argon2id ឬ bcrypt។</p>
+      <button class="b pri" id="hashBtn">Hash ២ ដង (Salt ថ្មី)</button>
+      <pre id="hashOut" style="margin-top:8px">…</pre></div>
+  </div>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  document.querySelectorAll("[role=tab]").forEach(t => t.onclick = () => {
+    document.querySelectorAll("[role=tab]").forEach(x => x.setAttribute("aria-selected", x === t));
+    ["sqli", "xss", "hdr", "pw"].forEach(id => $(id).hidden = id !== t.dataset.t);
+  });
+
+  /* ======================= SQL Injection ======================= */
+  const USERS = [
+    { id: 1, username: "admin", password: "S3cret!Admin", role: "admin" },
+    { id: 2, username: "dara", password: "kafe123", role: "staff" },
+    { id: 3, username: "lina", password: "tea2026", role: "staff" },
+  ];
+  $("users").innerHTML = "<tr><th>id</th><th>username</th><th>password</th><th>role</th></tr>" +
+    USERS.map(u => `<tr><td>${u.id}</td><td>${u.username}</td><td>${u.password}</td><td>${u.role}</td></tr>`).join("");
+
+  // Tokenizer + parser តូចៗ សម្រាប់ WHERE clause (ដើម្បីបង្ហាញពីរបៀប Database «យល់» Input)
+  function tokenize(s) {
+    const t = []; let i = 0;
+    while (i < s.length) {
+      const c = s[i];
+      if (/\s/.test(c)) { i++; continue; }
+      if (s.startsWith("--", i)) break;                       // Comment: នៅសល់ត្រូវបានមិនអើពើ
+      if (c === ";") { t.push({ k: "end" }); break; }
+      if (c === "'") {
+        let v = ""; i++;
+        while (true) {
+          if (i >= s.length) throw new Error("unterminated quoted string");
+          if (s[i] === "'" && s[i + 1] === "'") { v += "'"; i += 2; continue; }
+          if (s[i] === "'") { i++; break; }
+          v += s[i++];
+        }
+        t.push({ k: "lit", v }); continue;
+      }
+      const m = s.slice(i).match(/^(<>|!=|=|\(|\)|\d+|[A-Za-z_]\w*)/);
+      if (!m) throw new Error("syntax error near " + JSON.stringify(s.slice(i, i + 8)));
+      const w = m[0]; i += w.length;
+      if (/^\d+$/.test(w)) t.push({ k: "lit", v: w });
+      else if (/^(AND|OR|NOT)$/i.test(w)) t.push({ k: w.toUpperCase() });
+      else if (/^(TRUE|FALSE)$/i.test(w)) t.push({ k: "lit", v: w.toUpperCase() === "TRUE" ? "1" : "0" });
+      else if (/^[A-Za-z_]/.test(w)) t.push({ k: "id", v: w.toLowerCase() });
+      else t.push({ k: "op", v: w });
+    }
+    return t;
+  }
+  function parse(tokens) {
+    let i = 0;
+    const peek = () => tokens[i], eat = k => (tokens[i]?.k === k || tokens[i]?.v === k) ? tokens[i++] : null;
+    const or = () => { let n = and(); while (eat("OR")) n = { op: "OR", a: n, b: and() }; return n; };
+    const and = () => { let n = not(); while (eat("AND")) n = { op: "AND", a: n, b: not() }; return n; };
+    const not = () => eat("NOT") ? { op: "NOT", a: not() } : cmp();
+    const cmp = () => { const a = prim(); const o = peek(); if (o?.k === "op" && ["=", "<>", "!="].includes(o.v)) { i++; return { op: o.v, a, b: prim() }; } return a; };
+    const prim = () => {
+      if (eat("(")) { const n = or(); if (!eat(")")) throw new Error("missing )"); return n; }
+      const t = tokens[i++];
+      if (!t || !["lit", "id"].includes(t.k)) throw new Error("syntax error");
+      if (t.k === "id" && !["id", "username", "password", "role"].includes(t.v)) throw new Error(`no such column: ${t.v}`);
+      return t;
+    };
+    const n = or();
+    if (i < tokens.length && tokens[i].k !== "end") throw new Error("syntax error near token " + (tokens[i].v || tokens[i].k));
+    return { n, extra: tokens[i]?.k === "end" };
+  }
+  function evalNode(n, row) {
+    if (n.k === "lit") return n.v;
+    if (n.k === "id") return String(row[n.v]);
+    if (n.op === "OR") return truthy(evalNode(n.a, row)) || truthy(evalNode(n.b, row)) ? "1" : "0";
+    if (n.op === "AND") return truthy(evalNode(n.a, row)) && truthy(evalNode(n.b, row)) ? "1" : "0";
+    if (n.op === "NOT") return truthy(evalNode(n.a, row)) ? "0" : "1";
+    const a = evalNode(n.a, row), b = evalNode(n.b, row);
+    return (n.op === "=" ? a === b : a !== b) ? "1" : "0";
+  }
+  const truthy = v => v !== "0" && v !== "";
+
+  function resultHtml(rows, extra) {
+    if (!rows.length) return `<div class="verdict good">🔒 0 ជួរ → Login បរាជ័យ</div>`;
+    const who = rows[0];
+    const cls = who.role === "admin" ? "bad" : "good";
+    return `<div class="verdict ${cls}">${rows.length} ជួរ → Login ជា <b>${esc(who.username)}</b> (${who.role})</div>`
+      + (extra ? `<div class="verdict warn" style="margin-top:6px">⚠ មាន Statement ទី ២ បន្ទាប់ពី «;»</div>` : "");
+  }
+  function runSql() {
+    const u = $("u").value, p = $("p").value;
+    const prefix = "SELECT * FROM users\nWHERE username = '";
+    $("qBad").innerHTML = esc(prefix) + `<span class="inj">${esc(u)}</span>` + esc("' AND password = '") + `<span class="inj">${esc(p)}</span>` + esc("'");
+    $("qGood").innerHTML = esc("SELECT * FROM users\nWHERE username = ? AND password = ?\n") + `<span class="param">-- params: ${esc(JSON.stringify([u, p]))}</span>`;
+    // ❌ Database ឃើញ String ទាំងមូលជា SQL
+    const where = `username = '${u}' AND password = '${p}'`;
+    try {
+      const { n, extra } = parse(tokenize(where));
+      const rows = USERS.filter(r => truthy(evalNode(n, r)));
+      let note = "";
+      if (where.includes("--")) note = `<div class="muted" style="margin-top:6px">«--» ធ្វើឱ្យ <code>${esc(where.slice(where.indexOf("--")))}</code> ក្លាយជា Comment — ការពិនិត្យ Password ត្រូវបានរំលង</div>`;
+      $("rBad").innerHTML = resultHtml(rows, extra) + note;
+    } catch (e) {
+      $("rBad").innerHTML = `<div class="verdict warn">💥 SQL Error: ${esc(e.message)}</div><div class="muted">Error ដែលបង្ហាញទៅ User ក៏ប្រាប់ Attacker ពីរចនាសម្ព័ន្ធ Query ផងដែរ</div>`;
+    }
+    // ✅ Parameter ជាទិន្នន័យជានិច្ច
+    $("rGood").innerHTML = resultHtml(USERS.filter(r => r.username === u && r.password === p), false) +
+      `<div class="muted" style="margin-top:6px">Input ត្រូវបានប្រៀបធៀបជា «អក្សរ» ទាំងស្រុង — <code>'</code> <code>--</code> គ្មានអត្ថន័យពិសេស</div>`;
+  }
+  $("u").oninput = $("p").oninput = runSql;
+  document.querySelectorAll(".sq").forEach(b => b.onclick = () => { $("u").value = b.dataset.u; $("p").value = b.dataset.p; runSql(); });
+  runSql();
+
+  /* ======================= XSS ======================= */
+  window.pwn = () => $("alarm").classList.add("on");          // តំណាងឱ្យកូដអាក្រក់ (មិនធ្វើអ្វីគ្រោះថ្នាក់)
+  function sanitize(html) {
+    const doc = new DOMParser().parseFromString(`<div>${html}</div>`, "text/html");
+    const ALLOW = { B: [], I: [], EM: [], STRONG: [], A: ["href"] };
+    const clean = node => {
+      for (const ch of [...node.childNodes]) {
+        if (ch.nodeType === 3) continue;
+        if (ch.nodeType !== 1 || !(ch.tagName in ALLOW)) { ch.replaceWith(document.createTextNode(ch.textContent || "")); continue; }
+        for (const a of [...ch.attributes]) {
+          const okAttr = ALLOW[ch.tagName].includes(a.name);
+          const okUrl = a.name !== "href" || /^https:\/\//i.test(a.value.trim());
+          if (!okAttr || !okUrl) ch.removeAttribute(a.name);
+        }
+        if (ch.tagName === "A") { ch.setAttribute("rel", "noopener noreferrer"); ch.setAttribute("target", "_blank"); }
+        clean(ch);
+      }
+    };
+    const root = doc.body.firstChild; clean(root);
+    return root.innerHTML;
+  }
+  function renderXss() {
+    const v = $("cmt").value;
+    $("alarm").classList.remove("on");
+    $("xBad").innerHTML = v;                                   // ❌
+    $("xText").textContent = v;                                // ✅
+    $("xSan").innerHTML = sanitize(v);                         // ✅ (Allowlist)
+  }
+  $("cmt").value = 'ស្អាតណាស់ <b>Latte</b>! <img src=x onerror="pwn()">';
+  $("cmt").oninput = renderXss;
+  document.querySelectorAll(".xp").forEach(b => b.onclick = () => { $("cmt").value = b.textContent; renderXss(); });
+  renderXss();
+
+  /* ======================= Headers ======================= */
+  const BAD = `HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: text/html; charset=utf-8
+Access-Control-Allow-Origin: *
+Set-Cookie: session=abc123; Path=/`;
+  const GOOD = `HTTP/1.1 200 OK
+Content-Type: text/html; charset=utf-8
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Content-Security-Policy: default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Permissions-Policy: camera=(), microphone=(), geolocation=()
+Cross-Origin-Opener-Policy: same-origin
+Set-Cookie: __Host-kafe=eyJ...; Path=/; Secure; HttpOnly; SameSite=Strict`;
+  function scan() {
+    const lines = $("headers").value.split("\n").map(l => l.trim()).filter(l => l.includes(":") && !/^HTTP\//i.test(l));
+    const H = {}, cookies = [];
+    lines.forEach(l => { const i = l.indexOf(":"), k = l.slice(0, i).trim().toLowerCase(), v = l.slice(i + 1).trim(); if (k === "set-cookie") cookies.push(v); else H[k] = v; });
+    const csp = H["content-security-policy"] || "";
+    const scriptSrc = (csp.match(/script-src([^;]*)/) || csp.match(/default-src([^;]*)/) || [, ""])[1];
+    const hsts = +(H["strict-transport-security"] || "").match(/max-age=(\d+)/)?.[1] || 0;
+    const checks = [
+      ["HTTPS + HSTS (max-age ≥ 6 ខែ)", hsts >= 15552000, 20, "Strict-Transport-Security: max-age=63072000; includeSubDomains"],
+      ["Content-Security-Policy", !!csp, 25, "ចាប់ផ្តើម default-src 'self' (helmet)"],
+      ["CSP គ្មាន 'unsafe-inline'/'unsafe-eval' ក្នុង script", !!csp && !/unsafe-inline|unsafe-eval/.test(scriptSrc), 10, "ដក inline script ឬប្រើ nonce"],
+      ["Clickjacking (frame-ancestors ឬ X-Frame-Options)", /frame-ancestors/.test(csp) || !!H["x-frame-options"], 10, "frame-ancestors 'none'"],
+      ["X-Content-Type-Options: nosniff", /nosniff/i.test(H["x-content-type-options"] || ""), 10, "X-Content-Type-Options: nosniff"],
+      ["Referrer-Policy", !!H["referrer-policy"], 5, "strict-origin-when-cross-origin"],
+      ["Permissions-Policy", !!H["permissions-policy"], 5, "camera=(), microphone=()"],
+      ["គ្មាន X-Powered-By", !H["x-powered-by"], 5, "app.disable('x-powered-by')"],
+      ["CORS មិនមែន * (សម្រាប់ទិន្នន័យឯកជន)", H["access-control-allow-origin"] !== "*", 5, "Allowlist Origin"],
+      ["Cookies: Secure + HttpOnly + SameSite", cookies.length === 0 || cookies.every(c => /secure/i.test(c) && /httponly/i.test(c) && /samesite/i.test(c)), 5, "Set-Cookie: …; Secure; HttpOnly; SameSite=Lax"],
+    ];
+    const score = checks.reduce((s, c) => s + (c[1] ? c[2] : 0), 0);
+    const [g, col] = score >= 90 ? ["A", "#0a7d33"] : score >= 75 ? ["B", "#3b7d0a"] : score >= 55 ? ["C", "#b54708"] : score >= 35 ? ["D", "#c4320a"] : ["F", "#b42318"];
+    $("grade").textContent = g; $("grade").style.background = col;
+    $("score").textContent = `ពិន្ទុ ${score} / 100`;
+    $("checks").innerHTML = checks.map(([n, ok, pts, fix]) =>
+      `<tr><td>${ok ? '<span class="ok">✔</span>' : '<span class="no">✘</span>'}</td><td>${n}${ok ? "" : `<div class="muted">👉 ${esc(fix)}</div>`}</td><td>${ok ? "+" + pts : "0"}</td></tr>`).join("");
+  }
+  $("headers").value = BAD; $("headers").oninput = scan;
+  $("hBad").onclick = () => { $("headers").value = BAD; scan(); };
+  $("hGood").onclick = () => { $("headers").value = GOOD; scan(); };
+  scan();
+
+  /* ======================= Password ======================= */
+  const COMMON = ["123456", "password", "12345678", "qwerty", "123456789", "111111", "abc123", "password1", "iloveyou", "admin", "welcome", "kafe123", "000000", "letmein", "monkey", "dragon", "football", "sunshine"];
+  const fmtTime = s => s < 1 ? "តិចជាង 1 វិនាទី" : s < 60 ? Math.round(s) + " វិនាទី" : s < 3600 ? Math.round(s / 60) + " នាទី" : s < 86400 ? Math.round(s / 3600) + " ម៉ោង" : s < 3.15e7 ? Math.round(s / 86400) + " ថ្ងៃ" : s < 3.15e9 ? Math.round(s / 3.15e7) + " ឆ្នាំ" : "រាប់សតវត្ស+";
+  function strength() {
+    const pw = $("pwd").value;
+    let pool = 0;
+    if (/[a-z]/.test(pw)) pool += 26; if (/[A-Z]/.test(pw)) pool += 26; if (/\d/.test(pw)) pool += 10;
+    if (/[^A-Za-z0-9]/.test(pw)) pool += 33; if (/[^\x00-\x7f]/.test(pw)) pool += 100;
+    let bits = pw.length * Math.log2(Math.max(pool, 1));
+    const common = COMMON.includes(pw.toLowerCase());
+    const repeat = /(.)\1{2,}/.test(pw), seq = /(0123|1234|2345|3456|4567|5678|6789|abcd|qwer|asdf)/i.test(pw);
+    if (common) bits = Math.min(bits, 5); if (repeat) bits *= 0.8; if (seq) bits *= 0.8;
+    const guesses = Math.pow(2, bits) / 2;
+    const fast = guesses / 1e10, slow = guesses / 1e4;     // Hash លឿន (GPU) vs bcrypt/Argon2
+    const pct = Math.min(100, bits / 80 * 100);
+    $("bar").style.width = pct + "%";
+    $("bar").style.background = bits < 40 ? "#b42318" : bits < 60 ? "#dc6803" : "#0a7d33";
+    $("pwInfo").innerHTML = [
+      ["ប្រវែង", pw.length + (pw.length < 8 ? ' <span class="no">(ខ្លីពេក — យ៉ាងតិច 8, ល្អ 12–15+)</span>' : pw.length >= 15 ? ' <span class="ok">(ល្អ)</span>' : "")],
+      ["Entropy (ប្រហាក់ប្រហែល)", Math.round(bits) + " bits"],
+      ["នៅក្នុងបញ្ជី Password ពេញនិយម/លេចធ្លាយ?", common ? '<span class="no">បាទ — Attacker សាកមុនគេ!</span>' : '<span class="ok">មិនឃើញក្នុងបញ្ជីតូចនេះ</span>'],
+      ["Pattern ងាយទាយ", repeat || seq ? '<span class="mid">មាន (aaa, 1234, qwer)</span>' : '<span class="ok">គ្មាន</span>'],
+      ["Crack បើ Hash លឿន (SHA-256, GPU ~10¹⁰/s)", `<b>${fmtTime(fast)}</b>`],
+      ["Crack បើ bcrypt/Argon2 (~10⁴/s)", `<b>${fmtTime(slow)}</b>`],
+    ].map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join("");
+  }
+  $("pwd").oninput = strength; strength();
+
+  const hex = b => [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join("");
+  async function pbkdf2(pw, salt) {
+    const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveBits"]);
+    return hex(await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt, iterations: 100000 }, key, 256));
+  }
+  $("hashBtn").onclick = async () => {
+    if (!window.crypto?.subtle) { $("hashOut").textContent = "Browser នេះមិនគាំទ្រ Web Crypto (ត្រូវការ HTTPS)"; return; }
+    const pw = $("pwd").value; let out = "";
+    for (let k = 1; k <= 2; k++) {
+      const salt = crypto.getRandomValues(new Uint8Array(16));
+      const t0 = performance.now(), h = await pbkdf2(pw, salt);
+      out += `#${k}\nsalt: ${hex(salt)}\nhash: ${h}\n(${Math.round(performance.now() - t0)} ms — យឺតដោយចេតនា)\n\n`;
+    }
+    $("hashOut").textContent = out + "→ Database រក្សា salt + hash (+ algorithm, iterations) មិនមែន Password";
+  };
+<\/script>
+</script>
+</section>
+
+<section id="pro-check">
+  <h2>✅ Pre-launch Security Checklist & គម្រោងចុងក្រោយ</h2>
+  <table>
+    <tr><th>ផ្នែក</th><th>ពិនិត្យ</th></tr>
+    <tr><td>Transport</td><td>HTTPS គ្រប់ទំព័រ · HSTS · SSL Labs ≥ A</td></tr>
+    <tr><td>Headers</td><td>CSP · nosniff · frame-ancestors · Referrer-Policy · Observatory ≥ B+</td></tr>
+    <tr><td>Auth</td><td>Argon2id/bcrypt · Rate limit · MFA សម្រាប់ Admin · Cookie HttpOnly/Secure/SameSite</td></tr>
+    <tr><td>Access control</td><td>Deny by default · Ownership tests · Admin routes ពិនិត្យ Role</td></tr>
+    <tr><td>Input/Output</td><td>Zod គ្រប់ Input · Parameterized SQL · គ្មាន innerHTML ជាមួយទិន្នន័យ User</td></tr>
+    <tr><td>Secrets & Config</td><td>គ្មាន Secret ក្នុង Git · Debug off · Error ទូទៅ</td></tr>
+    <tr><td>Dependencies</td><td>npm audit = 0 high · Dependabot · Lockfile</td></tr>
+    <tr><td>Monitoring</td><td>Security logs · Alerts · Backup + សាក Restore</td></tr>
+    <tr><td>Process</td><td>security.txt · Incident plan · Security tests ក្នុង CI</td></tr>
+  </table>
+  <div class="ex"><h4>🏁 លំហាត់គម្រោងចុងក្រោយ</h4>
+    <ol>
+      <li>Threat model (STRIDE) សម្រាប់ Kafe៖ Login, Products, Orders</li>
+      <li>អនុវត្ត app.js Hardened + Cookie auth + checkOrigin</li>
+      <li>បន្ថែម Orders ជាមួយ Ownership check និង Test IDOR</li>
+      <li>CSP លើ Frontend (Vercel headers) ហើយ Observatory ≥ B+</li>
+      <li>GitHub Actions៖ npm audit, ESLint security, gitleaks, tests</li>
+      <li>ZAP baseline លើ Staging ហើយជួសជុល Warning</li>
+      <li>សរសេរ security.txt និង Incident response plan ១ ទំព័រ</li>
+    </ol>
+  </div>
+</section>
+
+<section id="roadmap">
+  <h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+  <ol class="steps">
+    <li><b>មូលដ្ឋាន</b>៖ HTTP, Networking, Linux, JavaScript/Node (វគ្គមុនៗ)</li>
+    <li><b>OWASP</b>៖ Top 10:2025, Cheat Sheet Series, ASVS (Application Security Verification Standard)</li>
+    <li><b>ហាត់ក្នុងបរិយាកាសស្របច្បាប់</b>៖ OWASP Juice Shop, PortSwigger Web Security Academy (ឥតគិតថ្លៃ), TryHackMe</li>
+    <li><b>Cloud & DevSecOps</b>៖ IAM, Secrets manager, Container security</li>
+    <li><b>វិញ្ញាបនបត្រ</b> (ជម្រើស)៖ CompTIA Security+, OSCP/eWPT (Pentest)</li>
+    <li><b>Bug bounty</b> — តែកម្មវិធីដែលមានច្បាប់ច្បាស់ (Scope)</li>
+  </ol>
+  <p><b>ប្រភពរៀនបន្ថែម:</b> <a href="https://owasp.org/Top10/" target="_blank">OWASP Top 10</a> · <a href="https://cheatsheetseries.owasp.org" target="_blank">OWASP Cheat Sheets</a> · <a href="https://portswigger.net/web-security" target="_blank">PortSwigger Academy</a> · <a href="https://developer.mozilla.org/docs/Web/Security" target="_blank">MDN Web Security</a> · <a href="https://helmetjs.github.io" target="_blank">helmet</a></p>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http') ? 'm' : '') : esc(code);
+
+const RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="security"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

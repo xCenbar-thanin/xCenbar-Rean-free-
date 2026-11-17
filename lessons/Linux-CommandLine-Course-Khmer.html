@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន Linux & Command Line</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#faf8f7; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#ebe2dd;
+  --accent:#e95420; --accent2:#f07746; --accent-soft:#fdece5;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#ff9b6b; --accent2:#f07746; --accent-soft:#2b1a12;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#ff9b6b; --accent2:#f07746; --accent-soft:#2b1a12;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#a83a12,#f07746);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+</style>
+<link rel="icon" href="../assets/icons/linux.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/linux.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>វគ្គសិក្សា Linux & Command Line ពីដើមដល់ Deploy Server</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Linux ជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#install">២. របៀបដំឡើង (Windows/macOS + VS Code)</a>
+<a href="#elements">៣. ធាតុនីមួយៗរបស់ Linux</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Terminal ដំបូង: ពាក្យបញ្ជា, Options, Help</a>
+<a href="#l2">មេរៀន ២: Navigation: pwd, ls, cd, Paths</a>
+<a href="#l3">មេរៀន ៣: Files &amp; Folders: mkdir, touch, cp, mv, rm, find</a>
+<a href="#l4">មេរៀន ៤: អាន &amp; កែ File: cat, less, head, tail, nano</a>
+<a href="#l5">មេរៀន ៥: Pipes, Redirection &amp; Chaining</a>
+<a href="#l6">មេរៀន ៦: Text Processing: grep, sort, uniq, cut, sed, awk (វិភាគ Log)</a>
+<a href="#l7">មេរៀន ៧: Permissions, Users &amp; sudo</a>
+<a href="#l8">មេរៀន ៨: Processes, Services (systemd) &amp; Logs</a>
+<a href="#l9">មេរៀន ៩: Packages: apt, Node.js, Updates</a>
+<a href="#l10">មេរៀន ១០: Networking: IP, Ports, curl, Firewall (ufw)</a>
+<a href="#l11">មេរៀន ១១: SSH: Keys, Config, scp/rsync</a>
+<a href="#l12">មេរៀន ១២: Environment Variables, PATH, Aliases &amp; .bashrc</a>
+<a href="#l13">មេរៀន ១៣: Bash Scripting</a>
+<a href="#l14">មេរៀន ១៤: Automation: tar Backup, cron, Disk &amp; Logs</a>
+<a href="#cheat">📋 Cheat Sheet</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងអាជីព: Deploy Kafe API លើ Ubuntu Server</a>
+<a href="#pro-steps">🛠️ ជំហាន Deploy</a>
+<a href="#pro-app">💻 Linux Terminal Simulator (បេសកកម្ម)</a>
+<a href="#pro-check">✅ Server Checklist &amp; គម្រោងចុងក្រោយ</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+
+</nav>
+<main>
+<section class="hero">
+  <h2>🐧 Linux & Command Line ពីដើមដល់ Deploy Server</h2>
+  <p>រៀនប្រើ <b>Terminal</b> ដូចអ្នកជំនាញ៖ Navigation, Files, Pipes, grep/sed/awk, Permissions, Processes, Packages, Networking, <b>SSH</b>, Bash scripting, Cron រហូតដល់ <b>Deploy Kafe API លើ Ubuntu Server</b> ជាមួយ systemd + Nginx + HTTPS។ ឧទាហរណ៍ភាគច្រើនមាន <b>លទ្ធផលពិត</b> ដែលបានរត់លើ Ubuntu Linux (User <code class="i">dara</code>)។</p>
+  <p><span class="badge">📘 ១៤ មេរៀន</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">💻 Output ពិត</span><span class="badge">🏆 Deploy Server</span></p>
+</section>
+
+<!-- NAV: ផ្នែកទី ១ – មូលដ្ឋាន -->
+<section id="intro">
+  <h2>១. Linux ជាអ្វី? អ្នកណាបង្កើត?</h2>
+  <p><b>Linux</b> គឺជា <b>Operating System</b> ឥតគិតថ្លៃ និង Open-source (ពិតប្រាកដគឺ <b>Kernel</b> — បេះដូងរបស់ OS)។ វារួមជាមួយឧបករណ៍ <b>GNU</b> ក្លាយជា OS ពេញលេញ ដែលគេហៅថា <b>Distribution</b> (Ubuntu, Debian, Fedora…)។ <b>Command Line</b> (Terminal/Shell) គឺជាការបញ្ជាកុំព្យូទ័រដោយវាយពាក្យបញ្ជា — លឿន ធ្វើស្វ័យប្រវត្តិបាន ហើយជាវិធីតែមួយគត់ដើម្បីគ្រប់គ្រង Server ភាគច្រើន។</p>
+  <div class="grid">
+    <div class="card"><b>Linux Kernel</b><br><b style="font-size:19px">Linus Torvalds</b><br>និស្សិតនៅ University of Helsinki (ហ្វាំងឡង់) · ប្រកាស <b>25 សីហា 1991</b></div>
+    <div class="card"><b>GNU Project</b><br><b style="font-size:19px">Richard Stallman</b><br>1983 · Compiler, Shell, Coreutils (ls, cp, grep…)</div>
+    <div class="card"><b>Unix</b> (ជីដូនជីតា)<br><b>Ken Thompson</b> & <b>Dennis Ritchie</b><br>Bell Labs, 1969 — គំនិត «Everything is a file», Pipes</div>
+    <div class="card"><b>Bash</b> (Shell)<br><b>Brian Fox</b> (GNU), 1989<br>«Bourne Again SHell»</div>
+  </div>
+  <h3>គេប្រើ Linux សម្រាប់ធ្វើអ្វី?</h3>
+  <div class="grid">
+    <div class="card">🌐 <b>Web Servers</b><br>Website និង API ភាគច្រើនបំផុតក្នុងពិភពលោករត់លើ Linux</div>
+    <div class="card">☁️ <b>Cloud</b><br>AWS, Google Cloud, Azure, DigitalOcean, Vercel Functions</div>
+    <div class="card">🐳 <b>Docker / Kubernetes</b><br>Container គឺ Linux</div>
+    <div class="card">📱 <b>Android</b><br>ប្រើ Linux kernel</div>
+    <div class="card">🏆 <b>Supercomputers</b><br>Top 500 ទាំងអស់រត់ Linux</div>
+    <div class="card">👩‍💻 <b>Developer</b><br>Git, Node.js, Python, CI/CD, DevOps</div>
+  </div>
+  <h3>Distributions ពេញនិយម</h3>
+  <table>
+    <tr><th>Distro</th><th>ល្អសម្រាប់</th><th>Package manager</th></tr>
+    <tr><td><b>Ubuntu</b> (LTS: 24.04, 26.04)</td><td>អ្នកចាប់ផ្តើម, Server, Cloud — <b>ណែនាំ</b></td><td><code class="i">apt</code></td></tr>
+    <tr><td>Debian</td><td>Server មានស្ថេរភាព</td><td><code class="i">apt</code></td></tr>
+    <tr><td>Fedora / RHEL / Rocky / Alma</td><td>ក្រុមហ៊ុន (Red Hat)</td><td><code class="i">dnf</code></td></tr>
+    <tr><td>Alpine</td><td>Docker image តូច</td><td><code class="i">apk</code></td></tr>
+    <tr><td>Linux Mint</td><td>Desktop ងាយប្រើ</td><td><code class="i">apt</code></td></tr>
+  </table>
+  <p class="note">💡 <b>Ubuntu 26.04 LTS</b> ចេញខែមេសា 2026 · LTS = Long Term Support (Update សុវត្ថិភាពច្រើនឆ្នាំ) → ជ្រើស LTS សម្រាប់ Server។</p>
+</section>
+
+<section id="install">
+  <h2>២. របៀបដំឡើង (Windows/macOS + VS Code)</h2>
+  <h3>Windows: WSL (Windows Subsystem for Linux)</h3>
+  <ol class="steps">
+    <li>បើក <b>PowerShell</b> ជា Administrator ហើយវាយ <code class="i">wsl --install</code> → Restart (ដំឡើង Ubuntu ដោយ Default)</li>
+    <li>បើក <b>Ubuntu</b> ពី Start menu → កំណត់ Username/Password (Password មិនបង្ហាញពេលវាយ — ធម្មតា)</li>
+    <li>ដំឡើង <b>Windows Terminal</b> (មានស្រាប់ក្នុង Windows 11)</li>
+  </ol>
+  <script type="text/x-code" data-lang="bash" data-label="PowerShell (Windows)">
+wsl --install                 # ដំឡើង WSL + Ubuntu
+wsl --list --online           # មើល Distro ដែលមាន
+wsl --install -d Ubuntu-24.04 # ជ្រើស Distro ជាក់លាក់
+wsl                           # ចូល Linux
+</script>
+  <h3>macOS / Linux</h3>
+  <p>macOS មាន <b>Terminal</b> ស្រាប់ (Shell <b>zsh</b> ស្រដៀង Bash — ពាក្យបញ្ជាភាគច្រើនដូចគ្នា)។ Linux Desktop៖ <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>T</kbd>។</p>
+  <h3>VS Code</h3>
+  <ol class="steps">
+    <li>Extension <b>WSL</b> (Microsoft) → ក្នុង Ubuntu វាយ <code class="i">code .</code> → VS Code បើក Folder ក្នុង Linux</li>
+    <li>Extension <b>Remote - SSH</b> → ភ្ជាប់ទៅ Server (VPS) ហើយកែ File ដូចនៅកុំព្យូទ័រ</li>
+    <li>Terminal ក្នុង VS Code៖ <kbd>Ctrl</kbd>+<kbd>`</kbd> · Extensions៖ <b>ShellCheck</b> (ពិនិត្យ Bash script), <b>Bash IDE</b></li>
+    <li>Server ពិតសម្រាប់ហាត់៖ VPS ថោកៗ (DigitalOcean, Vultr, Hetzner) ឬ Ubuntu ក្នុង VirtualBox/Multipass</li>
+  </ol>
+</section>
+
+<section id="elements">
+  <h2>៣. ធាតុនីមួយៗរបស់ Linux</h2>
+  <table>
+    <tr><th>ធាតុ</th><th>ពន្យល់</th></tr>
+    <tr><td><b>Kernel</b></td><td>គ្រប់គ្រង CPU, Memory, Disk, Network, Devices</td></tr>
+    <tr><td><b>Shell</b> (bash, zsh)</td><td>កម្មវិធីដែលអាន និងរត់ពាក្យបញ្ជារបស់អ្នក</td></tr>
+    <tr><td><b>Terminal</b></td><td>បង្អួចដែលបង្ហាញ Shell</td></tr>
+    <tr><td><b>Prompt</b></td><td><code class="i">dara@kafe:~$</code> = user@host:folder · <code class="i">$</code> user ធម្មតា · <code class="i">#</code> root</td></tr>
+    <tr><td><b>Filesystem</b></td><td>មែកធាងតែមួយចាប់ពី <code class="i">/</code> (Root)</td></tr>
+    <tr><td><b>User / Group / root</b></td><td>root = Admin ខ្ពស់បំផុត · <code class="i">sudo</code> = រត់ជា root មួយពាក្យបញ្ជា</td></tr>
+    <tr><td><b>Permissions</b></td><td>r (អាន) w (សរសេរ) x (រត់) សម្រាប់ Owner / Group / Others</td></tr>
+    <tr><td><b>Process</b></td><td>កម្មវិធីដែលកំពុងរត់ (PID)</td></tr>
+    <tr><td><b>Service / Daemon</b></td><td>Process រត់ជានិច្ចនៅខាងក្រោយ (nginx, ssh) — គ្រប់គ្រងដោយ <b>systemd</b></td></tr>
+    <tr><td><b>Package</b></td><td>កម្មវិធីដែលដំឡើងដោយ <code class="i">apt</code></td></tr>
+    <tr><td><b>Environment variables</b></td><td><code class="i">HOME</code>, <code class="i">PATH</code>, <code class="i">USER</code>…</td></tr>
+    <tr><td><b>Streams</b></td><td>stdin (0), stdout (1), stderr (2) · Pipe <code class="i">|</code></td></tr>
+  </table>
+  <h3>រចនាសម្ព័ន្ធ Folder (FHS)</h3>
+  <script type="text/x-code" data-lang="txt" data-label="/ (Root)">
+/
+├── home/dara     ← Folder ផ្ទាល់ខ្លួន (~)        ├── etc/      ← Config (nginx, ssh, hosts)
+├── root/         ← Home របស់ root                 ├── var/log/  ← Log files
+├── bin, usr/bin  ← កម្មវិធី (ls, cp, node)        ├── var/www/  ← Website (ទម្លាប់)
+├── tmp/          ← File បណ្តោះអាសន្ន             ├── opt/      ← កម្មវិធីបន្ថែម
+├── dev/          ← Devices (disk, null)           └── proc/     ← ព័ត៌មាន Process/Kernel
+</script>
+</section>
+
+<!-- NAV: ផ្នែកទី ២ – មេរៀន -->
+<section id="l1">
+  <h2><span class="badge">មេរៀន ១</span>Terminal ដំបូង: ពាក្យបញ្ជា, Options, Help</h2>
+  <p>ទម្រង់៖ <code class="i">command -options arguments</code> ឧ. <code class="i">ls -l /etc</code>។ Option ខ្លី <code class="i">-l</code> បញ្ចូលគ្នាបាន <code class="i">-la</code> · Option វែង <code class="i">--all</code>។</p>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+whoami                   # ខ្ញុំជានរណា?
+pwd                      # ខ្ញុំនៅ Folder ណា?
+echo "សួស្តី Linux!"
+date +"%Y-%m-%d %H:%M"
+uname -sr                # OS + Kernel
+ls --help | head -4      # ជំនួយខ្លី
+type ls cd               # ពាក្យបញ្ជាជា Program ឬ Shell builtin?
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · bash លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~$</span> <span class="tc">whoami                   # ខ្ញុំជានរណា?</span>
+dara
+<span class="tp">dara@kafe:~$</span> <span class="tc">pwd                      # ខ្ញុំនៅ Folder ណា?</span>
+/home/dara
+<span class="tp">dara@kafe:~$</span> <span class="tc">echo &quot;សួស្តី Linux!&quot;</span>
+សួស្តី Linux!
+<span class="tp">dara@kafe:~$</span> <span class="tc">date +&quot;%Y-%m-%d %H:%M&quot;</span>
+2026-11-13 13:46
+<span class="tp">dara@kafe:~$</span> <span class="tc">uname -sr                # OS + Kernel</span>
+Linux 6.18.44-fc-v445
+<span class="tp">dara@kafe:~$</span> <span class="tc">ls --help | head -4      # ជំនួយខ្លី</span>
+Usage: ls [OPTION]... [FILE]...
+List information about the FILEs (the current directory by default).
+Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.
+
+<span class="tp">dara@kafe:~$</span> <span class="tc">type ls cd               # ពាក្យបញ្ជាជា Program ឬ Shell builtin?</span>
+ls is /usr/bin/ls
+cd is a shell builtin</pre></div>
+  <table>
+    <tr><th>Shortcut</th><th>មុខងារ</th></tr>
+    <tr><td><kbd>Tab</kbd> / <kbd>Tab</kbd><kbd>Tab</kbd></td><td>បំពេញឈ្មោះស្វ័យប្រវត្តិ / បង្ហាញជម្រើស ⭐</td></tr>
+    <tr><td><kbd>↑</kbd> <kbd>↓</kbd> · <kbd>Ctrl</kbd>+<kbd>R</kbd></td><td>ពាក្យបញ្ជាមុនៗ · ស្វែងរកក្នុង History</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>C</kbd></td><td>បញ្ឈប់ពាក្យបញ្ជាដែលកំពុងរត់</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>L</kbd> / <code class="i">clear</code></td><td>សម្អាតអេក្រង់</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>A</kbd> / <kbd>Ctrl</kbd>+<kbd>E</kbd></td><td>ទៅដើម / ចុងបន្ទាត់</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>D</kbd> / <code class="i">exit</code></td><td>ចេញពី Shell / SSH</td></tr>
+    <tr><td><code class="i">man ls</code> · <code class="i">ls --help</code> · <code class="i">tldr ls</code></td><td>ឯកសារជំនួយ (ចុច <kbd>q</kbd> ដើម្បីចេញ)</td></tr>
+    <tr><td><code class="i">!!</code> · <code class="i">sudo !!</code></td><td>ពាក្យបញ្ជាចុងក្រោយ · រត់វាម្តងទៀតជាមួយ sudo</td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ១</h4>
+    <p>បង្ហាញថ្ងៃខែជាទម្រង់ «13/11/2026» ហើយរកមើលថា <code class="i">echo</code> ជា builtin ឬ Program។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash" data-label="Answer" data-sh>
+date +"%d/%m/%Y"
+type echo
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · bash លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~$</span> <span class="tc">date +&quot;%d/%m/%Y&quot;</span>
+13/11/2026
+<span class="tp">dara@kafe:~$</span> <span class="tc">type echo</span>
+echo is a shell builtin</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l2">
+  <h2><span class="badge">មេរៀន ២</span>Navigation: pwd, ls, cd, Paths</h2>
+  <table>
+    <tr><th>Path</th><th>ន័យ</th></tr>
+    <tr><td><code class="i">/home/dara/kafe</code></td><td>Absolute (ចាប់ពី <code class="i">/</code>)</td></tr>
+    <tr><td><code class="i">kafe/src</code></td><td>Relative (ពី Folder បច្ចុប្បន្ន)</td></tr>
+    <tr><td><code class="i">~</code></td><td>Home folder</td></tr>
+    <tr><td><code class="i">.</code> · <code class="i">..</code></td><td>Folder នេះ · Folder មេ</td></tr>
+    <tr><td><code class="i">cd -</code></td><td>ត្រឡប់ទៅ Folder មុន</td></tr>
+  </table>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+ls
+cd kafe
+pwd
+ls -la                   # -l លម្អិត, -a រួមទាំង File លាក់ (.env)
+ls -lh logs              # -h ទំហំងាយអាន (K, M, G)
+cd src && ls && cd ../..
+pwd
+ls -R kafe | head -12    # រួមទាំង Folder រង
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · bash លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~$</span> <span class="tc">ls</span>
+kafe
+notes.txt
+<span class="tp">dara@kafe:~$</span> <span class="tc">cd kafe</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">pwd</span>
+/home/dara/kafe
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">ls -la                   # -l លម្អិត, -a រួមទាំង File លាក់ (.env)</span>
+total 36
+drwxr-xr-x 6 dara dara 4096 Nov 13 13:39 .
+drwxr-x--- 3 dara dara 4096 Nov 13 13:46 ..
+-rw-r--r-- 1 dara dara   31 Nov 13 13:39 .env
+-rw-r--r-- 1 dara dara   99 Nov 13 13:39 README.md
+drwxr-xr-x 2 dara dara 4096 Nov 13 13:39 data
+drwxr-xr-x 2 dara dara 4096 Nov 13 13:39 logs
+-rw-r--r-- 1 dara dara  112 Nov 13 13:39 package.json
+drwxr-xr-x 2 dara dara 4096 Nov 13 13:39 public
+drwxr-xr-x 2 dara dara 4096 Nov 13 13:39 src
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">ls -lh logs              # -h ទំហំងាយអាន (K, M, G)</span>
+total 8.0K
+-rw-r--r-- 1 dara dara 3.3K Nov 13 13:39 access.log
+-rw-r--r-- 1 dara dara  162 Nov 13 13:39 error.log
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">cd src &amp;&amp; ls &amp;&amp; cd ../..</span>
+app.js
+db.js
+<span class="tp">dara@kafe:~$</span> <span class="tc">pwd</span>
+/home/dara
+<span class="tp">dara@kafe:~$</span> <span class="tc">ls -R kafe | head -12    # រួមទាំង Folder រង</span>
+kafe:
+README.md
+data
+logs
+package.json
+public
+src
+
+kafe/data:
+menu.csv
+
+kafe/logs:</pre></div>
+  <div class="ex"><h4>✍️ លំហាត់ ២</h4>
+    <p>ពី Home ចូលទៅ <code class="i">kafe/data</code> ដោយ Absolute path ហើយបង្ហាញ File ទាំងអស់ (រួមទាំង File លាក់) តម្រៀបតាមទំហំធំមុន។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash" data-label="Answer" data-sh>
+cd /home/dara/kafe/data
+ls -laS
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · bash លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~$</span> <span class="tc">cd /home/dara/kafe/data</span>
+<span class="tp">dara@kafe:~/kafe/data$</span> <span class="tc">ls -laS</span>
+total 12
+drwxr-xr-x 2 dara dara 4096 Nov 13 13:39 .
+drwxr-xr-x 6 dara dara 4096 Nov 13 13:39 ..
+-rw-r--r-- 1 dara dara  139 Nov 13 13:39 menu.csv</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l3">
+  <h2><span class="badge">មេរៀន ៣</span>Files & Folders: mkdir, touch, cp, mv, rm, find</h2>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+mkdir -p project/{src,tests,docs}      # -p បង្កើត Folder មេដែលមិនទាន់មាន + Brace expansion
+touch project/src/index.js project/README.md
+cp kafe/data/menu.csv project/docs/
+cp -r kafe/public project/             # -r ចម្លង Folder
+mv project/README.md project/README.txt   # ប្តូរឈ្មោះ (ឬផ្លាស់ទី)
+ls -R project
+rm project/README.txt
+rm -r project/docs                      # លុប Folder (គ្មានធុងសំរាម!)
+find kafe -name "*.js"                  # ស្វែងរក File
+find kafe -type f -size -100c           # File តូចជាង 100 bytes
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · bash លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~$</span> <span class="tc">mkdir -p project/{src,tests,docs}      # -p បង្កើត Folder មេដែលមិនទាន់មាន + Brace expansion</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">touch project/src/index.js project/README.md</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">cp kafe/data/menu.csv project/docs/</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">cp -r kafe/public project/             # -r ចម្លង Folder</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">mv project/README.md project/README.txt   # ប្តូរឈ្មោះ (ឬផ្លាស់ទី)</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">ls -R project</span>
+project:
+README.txt
+docs
+public
+src
+tests
+
+project/docs:
+menu.csv
+
+project/public:
+index.html
+
+project/src:
+index.js
+
+project/tests:
+<span class="tp">dara@kafe:~$</span> <span class="tc">rm project/README.txt</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">rm -r project/docs                      # លុប Folder (គ្មានធុងសំរាម!)</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">find kafe -name &quot;*.js&quot;                  # ស្វែងរក File</span>
+kafe/src/db.js
+kafe/src/app.js
+<span class="tp">dara@kafe:~$</span> <span class="tc">find kafe -type f -size -100c           # File តូចជាង 100 bytes</span>
+kafe/.env
+kafe/src/db.js
+kafe/public/index.html
+kafe/README.md</pre></div>
+  <div class="warn">⚠️ <code class="i">rm</code> លុបជារៀងរហូត — គ្មាន Recycle Bin។ កុំវាយ <code class="i">rm -rf /</code> ឬ <code class="i">rm -rf *</code> ដោយមិនពិនិត្យ <code class="i">pwd</code>។ ប្រើ <code class="i">rm -ri</code> (សួរមុនលុប) ពេលមិនប្រាកដ។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៣</h4>
+    <p>បង្កើត Backup នៃ Folder <code class="i">kafe/src</code> ទៅ <code class="i">backup/src-2026-11-13</code> ហើយរាប់ចំនួន File <code class="i">.js</code> ក្នុង Backup។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash" data-label="Answer" data-sh>
+mkdir -p backup
+cp -r kafe/src "backup/src-$(date +%F)"
+ls backup
+find backup -name "*.js" | wc -l
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · bash លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~$</span> <span class="tc">mkdir -p backup</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">cp -r kafe/src &quot;backup/src-$(date +%F)&quot;</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">ls backup</span>
+src-2026-11-13
+<span class="tp">dara@kafe:~$</span> <span class="tc">find backup -name &quot;*.js&quot; | wc -l</span>
+2</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l4">
+  <h2><span class="badge">មេរៀន ៤</span>អាន & កែ File: cat, less, head, tail, nano</h2>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+cat kafe/README.md
+head -3 kafe/data/menu.csv          # 3 បន្ទាត់ដំបូង
+tail -2 kafe/logs/error.log         # 2 បន្ទាត់ចុងក្រោយ
+wc -l kafe/logs/access.log          # ចំនួនបន្ទាត់
+nl kafe/src/app.js                  # បង្ហាញលេខបន្ទាត់
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · bash លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~$</span> <span class="tc">cat kafe/README.md</span>
+# Kafe API
+REST API សម្រាប់ហាងកាហ្វេ Kafe
+
+npm install
+npm run dev
+<span class="tp">dara@kafe:~$</span> <span class="tc">head -3 kafe/data/menu.csv          # 3 បន្ទាត់ដំបូង</span>
+id,name,category,price
+1,Latte,coffee,2.5
+2,Americano,coffee,2.0
+<span class="tp">dara@kafe:~$</span> <span class="tc">tail -2 kafe/logs/error.log         # 2 បន្ទាត់ចុងក្រោយ</span>
+2026-11-13T08:20:41Z WARN slow query 1200ms
+2026-11-13T08:33:10Z ERROR unhandled exception in POST /api/products
+<span class="tp">dara@kafe:~$</span> <span class="tc">wc -l kafe/logs/access.log          # ចំនួនបន្ទាត់</span>
+40 kafe/logs/access.log
+<span class="tp">dara@kafe:~$</span> <span class="tc">nl kafe/src/app.js                  # បង្ហាញលេខបន្ទាត់</span>
+     1	import express from &quot;express&quot;;
+     2	const app = express();
+     3	// TODO: add auth
+     4	app.get(&quot;/api/health&quot;, (req, res) =&gt; res.json({ ok: true }));
+     5	app.listen(3000);</pre></div>
+  <table>
+    <tr><th>ពាក្យបញ្ជា</th><th>ប្រើពេល</th></tr>
+    <tr><td><code class="i">less file</code></td><td>អាន File វែង (<kbd>Space</kbd> ទំព័របន្ទាប់, <kbd>/</kbd>ស្វែងរក, <kbd>q</kbd> ចេញ)</td></tr>
+    <tr><td><code class="i">tail -f /var/log/nginx/access.log</code></td><td>មើល Log ផ្ទាល់ (Live) ⭐ — <kbd>Ctrl</kbd>+<kbd>C</kbd> ដើម្បីឈប់</td></tr>
+    <tr><td><code class="i">nano file</code></td><td>Editor ងាយ៖ <kbd>Ctrl</kbd>+<kbd>O</kbd> រក្សាទុក, <kbd>Ctrl</kbd>+<kbd>X</kbd> ចេញ, <kbd>Ctrl</kbd>+<kbd>W</kbd> ស្វែងរក</td></tr>
+    <tr><td><code class="i">vim file</code></td><td><kbd>i</kbd> វាយ, <kbd>Esc</kbd> ឈប់វាយ, <code class="i">:wq</code> រក្សាទុក+ចេញ, <code class="i">:q!</code> ចេញមិនរក្សាទុក</td></tr>
+    <tr><td><code class="i">diff a b</code></td><td>ប្រៀបធៀប File ២</td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ៤</h4>
+    <p>បង្ហាញតែបន្ទាត់ទី 2 ដល់ 4 នៃ <code class="i">menu.csv</code>។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash" data-label="Answer" data-sh>
+head -4 kafe/data/menu.csv | tail -3
+sed -n '2,4p' kafe/data/menu.csv        # វិធីទី ២
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · bash លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~$</span> <span class="tc">head -4 kafe/data/menu.csv | tail -3</span>
+1,Latte,coffee,2.5
+2,Americano,coffee,2.0
+3,Green Tea,tea,2.2
+<span class="tp">dara@kafe:~$</span> <span class="tc">sed -n &#x27;2,4p&#x27; kafe/data/menu.csv        # វិធីទី ២</span>
+1,Latte,coffee,2.5
+2,Americano,coffee,2.0
+3,Green Tea,tea,2.2</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l5">
+  <h2><span class="badge">មេរៀន ៥</span>Pipes, Redirection & Chaining</h2>
+  <table>
+    <tr><th>សញ្ញា</th><th>ន័យ</th></tr>
+    <tr><td><code class="i">a | b</code></td><td>Output របស់ a → Input របស់ b ⭐</td></tr>
+    <tr><td><code class="i">&gt; file</code> · <code class="i">&gt;&gt; file</code></td><td>សរសេរជាន់ · បន្ថែមខាងចុង</td></tr>
+    <tr><td><code class="i">2&gt; err.txt</code> · <code class="i">&amp;&gt; all.txt</code></td><td>Error ទៅ File · ទាំង Output និង Error</td></tr>
+    <tr><td><code class="i">&lt; file</code></td><td>យក File ជា Input</td></tr>
+    <tr><td><code class="i">a &amp;&amp; b</code> · <code class="i">a || b</code> · <code class="i">a ; b</code></td><td>b រត់បើ a ជោគជ័យ · បើ a បរាជ័យ · រត់ទាំងពីរ</td></tr>
+    <tr><td><code class="i">$(command)</code></td><td>យកលទ្ធផលមកប្រើ</td></tr>
+    <tr><td><code class="i">/dev/null</code></td><td>«ធុងសំរាម» — បោះចោល Output</td></tr>
+  </table>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+echo "បន្ទាត់ទី ១" > out.txt
+echo "បន្ទាត់ទី ២" >> out.txt
+cat out.txt
+ls kafe nothing-here 2> errors.txt     # Error ទៅ File, Output ទៅអេក្រង់
+cat errors.txt
+cat kafe/data/menu.csv | grep coffee | wc -l
+mkdir -p demo && cd demo && echo "✅ ចូល demo ហើយ"
+ls /missing 2>/dev/null || echo "⚠ រកមិនឃើញ /missing"
+echo "ថ្ងៃនេះ: $(date +%A), File ក្នុង kafe/src: $(ls ~/kafe/src | wc -l)"
+cat ~/kafe/src/*.js | tee all-js.txt | grep -c TODO
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · bash លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~$</span> <span class="tc">echo &quot;បន្ទាត់ទី ១&quot; &gt; out.txt</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">echo &quot;បន្ទាត់ទី ២&quot; &gt;&gt; out.txt</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">cat out.txt</span>
+បន្ទាត់ទី ១
+បន្ទាត់ទី ២
+<span class="tp">dara@kafe:~$</span> <span class="tc">ls kafe nothing-here 2&gt; errors.txt     # Error ទៅ File, Output ទៅអេក្រង់</span>
+kafe:
+README.md
+data
+logs
+package.json
+public
+src
+<span class="tp">dara@kafe:~$</span> <span class="tc">cat errors.txt</span>
+ls: cannot access &#x27;nothing-here&#x27;: No such file or directory
+<span class="tp">dara@kafe:~$</span> <span class="tc">cat kafe/data/menu.csv | grep coffee | wc -l</span>
+3
+<span class="tp">dara@kafe:~$</span> <span class="tc">mkdir -p demo &amp;&amp; cd demo &amp;&amp; echo &quot;✅ ចូល demo ហើយ&quot;</span>
+✅ ចូល demo ហើយ
+<span class="tp">dara@kafe:~/demo$</span> <span class="tc">ls /missing 2&gt;/dev/null || echo &quot;⚠ រកមិនឃើញ /missing&quot;</span>
+⚠ រកមិនឃើញ /missing
+<span class="tp">dara@kafe:~/demo$</span> <span class="tc">echo &quot;ថ្ងៃនេះ: $(date +%A), File ក្នុង kafe/src: $(ls ~/kafe/src | wc -l)&quot;</span>
+ថ្ងៃនេះ: Friday, File ក្នុង kafe/src: 2
+<span class="tp">dara@kafe:~/demo$</span> <span class="tc">cat ~/kafe/src/*.js | tee all-js.txt | grep -c TODO</span>
+2</pre></div>
+  <div class="ex"><h4>✍️ លំហាត់ ៥</h4>
+    <p>រក្សាទុកបញ្ជីឈ្មោះផលិតផល (ជួរឈរទី ២) ពី <code class="i">menu.csv</code> ទៅ <code class="i">names.txt</code> ដោយគ្មានបន្ទាត់ Header។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash" data-label="Answer" data-sh>
+tail -n +2 kafe/data/menu.csv | cut -d, -f2 > names.txt
+cat names.txt
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · bash លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~$</span> <span class="tc">tail -n +2 kafe/data/menu.csv | cut -d, -f2 &gt; names.txt</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">cat names.txt</span>
+Latte
+Americano
+Green Tea
+Croissant
+Iced Khmer Coffee</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l6">
+  <h2><span class="badge">មេរៀន ៦</span>Text Processing: grep, sort, uniq, cut, sed, awk (វិភាគ Log)</h2>
+  <p>File <code class="i">kafe/logs/access.log</code> មាន 40 Requests (ទម្រង់ដូច Nginx)។ ឧបករណ៍ទាំងនេះជួយ Developer/DevOps រកបញ្ហាលឿនជាងបើក Excel។</p>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+head -2 kafe/logs/access.log
+grep -c '" 500 ' kafe/logs/access.log                 # ចំនួន Server error
+grep -n "ERROR" kafe/logs/error.log                    # -n លេខបន្ទាត់
+grep -ri "todo" kafe/src                               # -r ក្នុង Folder, -i មិនខ្វល់អក្សរធំតូច
+# Top IP ដែលហៅច្រើនបំផុត
+awk '{print $1}' kafe/logs/access.log | sort | uniq -c | sort -rn | head -3
+# Status codes ទាំងអស់
+awk '{print $9}' kafe/logs/access.log | sort | uniq -c | sort -rn
+# IP ដែល Login បរាជ័យ (401) ច្រើន → សង្ស័យ Brute-force
+grep 'POST /api/auth/login' kafe/logs/access.log | grep '" 401 ' | awk '{print $1}' | sort | uniq -c | sort -rn
+# sed: ជំនួសអក្សរ (មិនកែ File ដើម)
+sed 's/coffee/កាហ្វេ/g' kafe/data/menu.csv | head -3
+# awk: គណនាតម្លៃមធ្យមពី CSV
+awk -F, 'NR>1 {sum+=$4; n++} END {printf "តម្លៃមធ្យម: $%.2f (%d មុខ)\n", sum/n, n}' kafe/data/menu.csv
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · bash លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~$</span> <span class="tc">head -2 kafe/logs/access.log</span>
+192.0.2.44 - - [13/Nov/2026:08:00:25 +0700] &quot;POST /api/auth/login HTTP/1.1&quot; 401 686
+203.0.113.5 - - [13/Nov/2026:08:01:52 +0700] &quot;GET /api/products/1 HTTP/1.1&quot; 200 568
+<span class="tp">dara@kafe:~$</span> <span class="tc">grep -c &#x27;&quot; 500 &#x27; kafe/logs/access.log                 # ចំនួន Server error</span>
+6
+<span class="tp">dara@kafe:~$</span> <span class="tc">grep -n &quot;ERROR&quot; kafe/logs/error.log                    # -n លេខបន្ទាត់</span>
+1:2026-11-13T08:12:03Z ERROR db connection timeout
+3:2026-11-13T08:33:10Z ERROR unhandled exception in POST /api/products
+<span class="tp">dara@kafe:~$</span> <span class="tc">grep -ri &quot;todo&quot; kafe/src                               # -r ក្នុង Folder, -i មិនខ្វល់អក្សរធំតូច</span>
+kafe/src/db.js:// TODO: migrate to Postgres
+kafe/src/app.js:// TODO: add auth
+<span class="tp">dara@kafe:~$</span> <span class="tc">awk &#x27;{print $1}&#x27; kafe/logs/access.log | sort | uniq -c | sort -rn | head -3</span>
+     14 203.0.113.5
+     10 203.0.113.77
+      6 198.51.100.23
+<span class="tp">dara@kafe:~$</span> <span class="tc">awk &#x27;{print $9}&#x27; kafe/logs/access.log | sort | uniq -c | sort -rn</span>
+     20 200
+     10 401
+      6 500
+      3 204
+      1 404
+<span class="tp">dara@kafe:~$</span> <span class="tc">grep &#x27;POST /api/auth/login&#x27; kafe/logs/access.log | grep &#x27;&quot; 401 &#x27; | awk &#x27;{print $1}&#x27; | sort | uniq -c | sort -rn</span>
+      5 192.0.2.99
+      2 203.0.113.77
+      1 203.0.113.5
+      1 198.51.100.23
+      1 192.0.2.44
+<span class="tp">dara@kafe:~$</span> <span class="tc">sed &#x27;s/coffee/កាហ្វេ/g&#x27; kafe/data/menu.csv | head -3</span>
+id,name,category,price
+1,Latte,កាហ្វេ,2.5
+2,Americano,កាហ្វេ,2.0
+<span class="tp">dara@kafe:~$</span> <span class="tc">awk -F, &#x27;NR&gt;1 {sum+=$4; n++} END {printf &quot;តម្លៃមធ្យម: $%.2f (%d មុខ)\n&quot;, sum/n, n}&#x27; kafe/data/menu.csv</span>
+តម្លៃមធ្យម: $2.00 (5 មុខ)</pre></div>
+  <div class="ex"><h4>✍️ លំហាត់ ៦</h4>
+    <p>(ក) រាប់ Request តាម Method (GET/POST/DELETE) (ខ) រកផលិតផលថ្លៃបំផុតក្នុង menu.csv។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash" data-label="Answer" data-sh>
+awk '{print $6}' kafe/logs/access.log | tr -d '"' | sort | uniq -c | sort -rn
+tail -n +2 kafe/data/menu.csv | sort -t, -k4 -rn | head -1 | cut -d, -f2,4
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · bash លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~$</span> <span class="tc">awk &#x27;{print $6}&#x27; kafe/logs/access.log | tr -d &#x27;&quot;&#x27; | sort | uniq -c | sort -rn</span>
+     20 POST
+     17 GET
+      3 DELETE
+<span class="tp">dara@kafe:~$</span> <span class="tc">tail -n +2 kafe/data/menu.csv | sort -t, -k4 -rn | head -1 | cut -d, -f2,4</span>
+Latte,2.5</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l7">
+  <h2><span class="badge">មេរៀន ៧</span>Permissions, Users & sudo</h2>
+  <script type="text/x-code" data-lang="txt" data-label="ls -l">
+-rw-r--r-- 1 dara dara  112 Nov 13 13:39 package.json
+│└┬┘└┬┘└┬┘   └┬─┘ └┬─┘
+│ │  │  │     │    └── Group
+│ │  │  │     └─────── Owner
+│ │  │  └── Others: r--  (អានបាន)
+│ │  └───── Group:  r--
+│ └──────── Owner:  rw-  (អាន + សរសេរ)
+└────────── ប្រភេទ: - file, d directory, l link
+r = 4, w = 2, x = 1  →  rw- = 6, r-x = 5, r-- = 4  →  644, 755, 600
+</script>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+cd kafe
+ls -l .env package.json
+chmod 600 .env                  # Secret: តែ Owner អាន/សរសេរ
+ls -l .env
+printf '#!/usr/bin/env bash\necho "🚀 Deploying Kafe..."\n' > deploy.sh
+./deploy.sh 2>&1 || true        # គ្មានសិទ្ធិ x → Permission denied
+chmod +x deploy.sh              # ឬ chmod 755
+ls -l deploy.sh
+./deploy.sh
+id                              # uid, groups
+cat /etc/shadow 2>&1 | head -1  # User ធម្មតាមិនអាចអាន Password hashes
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · bash លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~$</span> <span class="tc">cd kafe</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">ls -l .env package.json</span>
+-rw-r--r-- 1 dara dara  31 Nov 13 13:39 .env
+-rw-r--r-- 1 dara dara 112 Nov 13 13:39 package.json
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">chmod 600 .env                  # Secret: តែ Owner អាន/សរសេរ</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">ls -l .env</span>
+-rw------- 1 dara dara 31 Nov 13 13:39 .env
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">printf &#x27;#!/usr/bin/env bash\necho &quot;🚀 Deploying Kafe...&quot;\n&#x27; &gt; deploy.sh</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">./deploy.sh 2&gt;&amp;1 || true        # គ្មានសិទ្ធិ x → Permission denied</span>
+bash: ./deploy.sh: Permission denied
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">chmod +x deploy.sh              # ឬ chmod 755</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">ls -l deploy.sh</span>
+-rwxr-xr-x 1 dara dara 50 Nov 13 13:46 deploy.sh
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">./deploy.sh</span>
+🚀 Deploying Kafe...
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">id                              # uid, groups</span>
+uid=30033(dara) gid=30033(dara) groups=30033(dara)
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">cat /etc/shadow 2&gt;&amp;1 | head -1  # User ធម្មតាមិនអាចអាន Password hashes</span>
+cat: /etc/shadow: Permission denied</pre></div>
+  <table>
+    <tr><th>ពាក្យបញ្ជា</th><th>ន័យ</th></tr>
+    <tr><td><code class="i">chmod 755 dir</code> · <code class="i">chmod 644 file</code></td><td>ទម្លាប់សម្រាប់ Folder/File Website</td></tr>
+    <tr><td><code class="i">chmod 600 ~/.ssh/id_ed25519 .env</code></td><td>Secret: តែ Owner</td></tr>
+    <tr><td><code class="i">sudo chown -R www-data:www-data /var/www/kafe</code></td><td>ប្តូរ Owner</td></tr>
+    <tr><td><code class="i">sudo adduser deploy</code> · <code class="i">sudo usermod -aG sudo deploy</code></td><td>បង្កើត User · ផ្តល់សិទ្ធិ sudo</td></tr>
+    <tr><td><code class="i">sudo command</code></td><td>រត់ជា root (Log ទុក) — ប្រសើរជាង Login ជា root</td></tr>
+  </table>
+  <div class="warn">⚠️ <b>កុំ <code class="i">chmod 777</code></b> (អ្នកណាក៏សរសេរ/រត់បាន) ដើម្បី «ដោះស្រាយ» Permission denied — រក Owner/Group ត្រឹមត្រូវជំនួសវិញ។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៧</h4>
+    <p>តើ <code class="i">chmod 750 scripts</code> មានន័យអ្វី? ហើយ File <code class="i">-rwxr-x---</code> ស្មើលេខប៉ុន្មាន?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p><b>750</b> = Owner <b>rwx</b> (7) · Group <b>r-x</b> (5) · Others <b>---</b> (0)៖ Owner ធ្វើបានទាំងអស់, Group អាន/ចូល/រត់បាន, អ្នកផ្សេងគ្មានសិទ្ធិ។ <code class="i">-rwxr-x---</code> = <b>750</b> ដូចគ្នា។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l8">
+  <h2><span class="badge">មេរៀន ៨</span>Processes, Services (systemd) & Logs</h2>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+sleep 300 &                       # រត់ខាងក្រោយ (Background)
+jobs
+ps -o pid,user,etime,cmd -u dara | grep -v ps
+pkill -f "sleep 300" && echo "🛑 បានបញ្ឈប់ sleep"
+echo "CPU cores: $(nproc)"
+free -h | head -2                 # Memory
+df -h / | tail -1                 # Disk
+du -sh kafe/*                     # ទំហំ Folder នីមួយៗ
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · bash លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~$</span> <span class="tc">sleep 300 &amp;                       # រត់ខាងក្រោយ (Background)</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">jobs</span>
+[1]+  Running                 sleep 300 &amp;
+<span class="tp">dara@kafe:~$</span> <span class="tc">ps -o pid,user,etime,cmd -u dara | grep -v ps</span>
+  PID USER         ELAPSED CMD
+  730 dara           00:00 sleep 300
+<span class="tp">dara@kafe:~$</span> <span class="tc">pkill -f &quot;sleep 300&quot; &amp;&amp; echo &quot;🛑 បានបញ្ឈប់ sleep&quot;</span>
+pkill: killing pid 728 failed: Operation not permitted
+Terminated</pre></div>
+  <table>
+    <tr><th>ពាក្យបញ្ជា</th><th>ន័យ</th></tr>
+    <tr><td><code class="i">top</code> / <code class="i">htop</code></td><td>មើល Process ប្រើ CPU/RAM ផ្ទាល់ (<kbd>q</kbd> ចេញ)</td></tr>
+    <tr><td><code class="i">kill PID</code> · <code class="i">kill -9 PID</code></td><td>សុំឱ្យបិទ (SIGTERM) · បង្ខំបិទ (SIGKILL — ចុងក្រោយ)</td></tr>
+    <tr><td><code class="i">sudo systemctl status nginx</code></td><td>ស្ថានភាព Service</td></tr>
+    <tr><td><code class="i">sudo systemctl start|stop|restart|reload nginx</code></td><td>គ្រប់គ្រង Service</td></tr>
+    <tr><td><code class="i">sudo systemctl enable --now kafe</code></td><td>ចាប់ផ្តើមឥឡូវ + ពេល Boot</td></tr>
+    <tr><td><code class="i">journalctl -u kafe -f</code></td><td>Log របស់ Service (Live)</td></tr>
+    <tr><td><code class="i">journalctl -u kafe --since "1 hour ago" -p err</code></td><td>តែ Error 1 ម៉ោងចុងក្រោយ</td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ៨</h4>
+    <p>Website ធ្លាក់ ហើយ <code class="i">systemctl status kafe</code> បង្ហាញ «failed»។ សរសេរពាក្យបញ្ជា ៤ ដែលអ្នកនឹងរត់តាមលំដាប់។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash" data-label="Answer">
+sudo journalctl -u kafe -n 50 --no-pager      # មើល Error ចុងក្រោយ (ឧ. JWT_SECRET is required)
+df -h && free -h                              # Disk ពេញ? RAM អស់?
+sudo nano /etc/kafe.env                       # ជួសជុល Config (ឧទាហរណ៍)
+sudo systemctl restart kafe && systemctl status kafe --no-pager
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l9">
+  <h2><span class="badge">មេរៀន ៩</span>Packages: apt, Node.js, Updates</h2>
+  <script type="text/x-code" data-lang="bash" data-label="Ubuntu Server">
+sudo apt update                  # ទាញបញ្ជី Package ថ្មី
+sudo apt upgrade -y              # Update Package ទាំងអស់ (Security patches)
+sudo apt install -y nginx git curl ufw htop tree
+apt list --installed | grep nginx
+sudo apt remove nginx            # លុប (រក្សា Config) · purge = លុបទាំង Config
+sudo apt autoremove -y
+
+# Node.js LTS (តាមរយៈ nvm — ដំឡើងជា User មិនបាច់ sudo)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+source ~/.bashrc
+nvm install --lts
+node -v && npm -v
+
+# Update សុវត្ថិភាពដោយស្វ័យប្រវត្តិ
+sudo apt install -y unattended-upgrades
+sudo dpkg-reconfigure -plow unattended-upgrades
+</script>
+  <div class="note">💡 មុនរត់ Script ពី Internet ដូចជា <code class="i">curl … | bash</code> ពិនិត្យថាជា URL ផ្លូវការ (ឧ. GitHub របស់ nvm) — Script នោះរត់ក្នុងកុំព្យូទ័ររបស់អ្នក។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៩</h4>
+    <p>ហេតុអ្វីត្រូវរត់ <code class="i">apt update</code> មុន <code class="i">apt install</code>? ហើយ <code class="i">update</code> ខុសពី <code class="i">upgrade</code> ដូចម្តេច?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p><code class="i">apt update</code> ទាញ <b>បញ្ជី</b> Package និងកំណែថ្មីៗពី Repository (មិនដំឡើងអ្វីទេ) — បើមិនរត់ apt អាចរកមិនឃើញ Package ឬដំឡើងកំណែចាស់។ <code class="i">apt upgrade</code> ដំឡើង Package ដែលមានកំណែថ្មីពិតប្រាកដ។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l10">
+  <h2><span class="badge">មេរៀន ១០</span>Networking: IP, Ports, curl, Firewall (ufw)</h2>
+  <script type="text/x-code" data-lang="bash" data-label="Ubuntu Server">
+ip a                              # IP address របស់ Server
+ping -c 3 google.com              # ពិនិត្យ Internet
+curl -I https://kafe.com          # មើលតែ Headers (Status, HTTPS)
+curl -s http://localhost:3000/api/health      # សាក API ក្នុង Server
+dig +short kafe.com               # DNS → IP
+sudo ss -tulpn                    # Port ណាកំពុងស្តាប់ ដោយ Process ណា
+
+# Firewall: បិទទាំងអស់ បើកតែអ្វីដែលត្រូវការ
+sudo ufw allow OpenSSH            # ⚠ ត្រូវតែមុន enable — បើមិនដូច្នេះ SSH ជាប់សោ!
+sudo ufw allow 'Nginx Full'       # 80 + 443
+sudo ufw enable
+sudo ufw status verbose
+</script>
+  <table>
+    <tr><th>Port</th><th>Service</th></tr>
+    <tr><td>22</td><td>SSH</td></tr>
+    <tr><td>80 / 443</td><td>HTTP / HTTPS (Nginx)</td></tr>
+    <tr><td>3000</td><td>Node.js App (ខាងក្នុងតែប៉ុណ្ណោះ — Nginx ជា Proxy)</td></tr>
+    <tr><td>5432 / 3306</td><td>PostgreSQL / MySQL (កុំបើកទៅ Internet)</td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ១០</h4>
+    <p>API រត់ (<code class="i">curl localhost:3000</code> ដំណើរការ) ប៉ុន្តែពី Browser <code class="i">http://SERVER_IP</code> មិនបាន។ រកមូលហេតុ ៣។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ol><li><b>Firewall</b> មិនបើក Port 80 → <code class="i">sudo ufw allow 'Nginx Full'</code> (និង Cloud firewall/Security group)</li><li><b>Nginx</b> មិនទាន់ Proxy ទៅ 3000 ឬមិនរត់ → <code class="i">systemctl status nginx</code>, <code class="i">sudo nginx -t</code></li><li>App ស្តាប់តែ <code class="i">127.0.0.1</code> ហើយគ្មាន Proxy — ពិនិត្យ <code class="i">sudo ss -tulpn</code> (ល្អ៖ App ស្តាប់ localhost ហើយ Nginx ជាច្រកចូល)</li></ol>
+    </details>
+  </div>
+</section>
+
+<section id="l11">
+  <h2><span class="badge">មេរៀន ១១</span>SSH: Keys, Config, scp/rsync</h2>
+  <script type="text/x-code" data-lang="bash" data-label="កុំព្យូទ័ររបស់អ្នក">
+ssh-keygen -t ed25519 -C "dara@laptop"        # បង្កើត Key pair (~/.ssh/id_ed25519 + .pub)
+ssh-copy-id deploy@203.0.113.10               # ផ្ញើ Public key ទៅ Server
+ssh deploy@203.0.113.10                        # Login ដោយ Key (គ្មាន Password)
+
+# ~/.ssh/config — ដាក់ឈ្មោះខ្លី
+cat >> ~/.ssh/config <<'EOF'
+Host kafe
+  HostName 203.0.113.10
+  User deploy
+  IdentityFile ~/.ssh/id_ed25519
+EOF
+ssh kafe                                       # ខ្លី!
+
+scp backup.sql kafe:/home/deploy/              # ចម្លង File ទៅ Server
+rsync -avz --delete ./dist/ kafe:/var/www/kafe/   # Sync Folder (ចម្លងតែអ្វីប្តូរ)
+</script>
+  <script type="text/x-code" data-lang="bash" data-label="Server: ពង្រឹង SSH (/etc/ssh/sshd_config)">
+# បន្ទាប់ពី Login ដោយ Key បានហើយ ទើបបិទ Password!
+PasswordAuthentication no
+PermitRootLogin no
+# រួចហើយ៖
+sudo sshd -t && sudo systemctl reload ssh
+</script>
+  <div class="warn">⚠️ <b>Private key</b> (<code class="i">id_ed25519</code> គ្មាន .pub) កុំផ្ញើឱ្យអ្នកណា កុំ Commit ទៅ Git។ មានតែ <b>.pub</b> ទេដែលដាក់លើ Server។ បើក Terminal ទី ២ សាក Login មុនបិទ Session ចាស់ ពេលកែ sshd_config។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ១១</h4>
+    <p>ពន្យល់ពីមូលហេតុដែល SSH key សុវត្ថិភាពជាង Password ហើយ Permission ត្រឹមត្រូវនៃ <code class="i">~/.ssh</code> និង <code class="i">authorized_keys</code> ជាអ្វី?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p>Key ed25519 វែង និងចៃដន្យខ្លាំង — មិនអាច Brute-force ដូច Password បាន ហើយ Private key មិនដែលចេញពីកុំព្យូទ័ររបស់អ្នក។ Permission៖ <code class="i">chmod 700 ~/.ssh</code> · <code class="i">chmod 600 ~/.ssh/authorized_keys ~/.ssh/id_ed25519</code> (SSH បដិសេធ Key បើ Permission បើកពេក)។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l12">
+  <h2><span class="badge">មេរៀន ១២</span>Environment Variables, PATH, Aliases & .bashrc</h2>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+echo "$HOME | $USER | $SHELL"
+echo "$PATH" | tr ':' '\n'               # កន្លែងដែល Shell រក Program
+which bash node 2>/dev/null
+NAME="Kafe"                              # Variable តែក្នុង Shell នេះ
+echo "សួស្តី $NAME"
+export NODE_ENV=production               # ផ្ញើទៅ Program កូន
+bash -c 'echo "NODE_ENV ក្នុង Process កូន: $NODE_ENV"'
+PORT=4000 bash -c 'echo "PORT សម្រាប់តែពាក្យបញ្ជានេះ: $PORT"'
+alias ll='ls -lah'
+alias ll
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · bash លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~$</span> <span class="tc">echo &quot;$HOME | $USER | $SHELL&quot;</span>
+/home/dara | dara | /bin/bash
+<span class="tp">dara@kafe:~$</span> <span class="tc">echo &quot;$PATH&quot; | tr &#x27;:&#x27; &#x27;\n&#x27;               # កន្លែងដែល Shell រក Program</span>
+/usr/local/bin
+/usr/bin
+/bin
+<span class="tp">dara@kafe:~$</span> <span class="tc">which bash node 2&gt;/dev/null</span>
+/usr/bin/bash
+/usr/local/bin/node
+<span class="tp">dara@kafe:~$</span> <span class="tc">NAME=&quot;Kafe&quot;                              # Variable តែក្នុង Shell នេះ</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">echo &quot;សួស្តី $NAME&quot;</span>
+សួស្តី Kafe
+<span class="tp">dara@kafe:~$</span> <span class="tc">export NODE_ENV=production               # ផ្ញើទៅ Program កូន</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">bash -c &#x27;echo &quot;NODE_ENV ក្នុង Process កូន: $NODE_ENV&quot;&#x27;</span>
+NODE_ENV ក្នុង Process កូន: production
+<span class="tp">dara@kafe:~$</span> <span class="tc">PORT=4000 bash -c &#x27;echo &quot;PORT សម្រាប់តែពាក្យបញ្ជានេះ: $PORT&quot;&#x27;</span>
+PORT សម្រាប់តែពាក្យបញ្ជានេះ: 4000
+<span class="tp">dara@kafe:~$</span> <span class="tc">alias ll=&#x27;ls -lah&#x27;</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">alias ll</span>
+alias ll=&#x27;ls -lah&#x27;</pre></div>
+  <script type="text/x-code" data-lang="bash" data-label="~/.bashrc (បន្ថែមខាងចុង)">
+alias ll='ls -lah'
+alias gs='git status'
+alias logs='journalctl -u kafe -f'
+export EDITOR=nano
+export PATH="$HOME/bin:$PATH"     # បន្ថែម Folder Script ផ្ទាល់ខ្លួន
+# រួចហើយ៖ source ~/.bashrc
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១២</h4>
+    <p>បង្កើត Folder <code class="i">~/bin</code> ដែលមាន Script <code class="i">hello</code> ហើយធ្វើឱ្យវាយ <code class="i">hello</code> ពីកន្លែងណាក៏បាន។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash" data-label="Answer" data-sh>
+mkdir -p ~/bin
+printf '#!/usr/bin/env bash\necho "👋 សួស្តី $USER!"\n' > ~/bin/hello
+chmod +x ~/bin/hello
+export PATH="$HOME/bin:$PATH"          # ដាក់ក្នុង ~/.bashrc ដើម្បីជាអចិន្ត្រៃយ៍
+cd /tmp && hello
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · bash លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~$</span> <span class="tc">mkdir -p ~/bin</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">printf &#x27;#!/usr/bin/env bash\necho &quot;👋 សួស្តី $USER!&quot;\n&#x27; &gt; ~/bin/hello</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">chmod +x ~/bin/hello</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">export PATH=&quot;$HOME/bin:$PATH&quot;          # ដាក់ក្នុង ~/.bashrc ដើម្បីជាអចិន្ត្រៃយ៍</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">cd /tmp &amp;&amp; hello</span>
+👋 សួស្តី dara!</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l13">
+  <h2><span class="badge">មេរៀន ១៣</span>Bash Scripting</h2>
+  <script type="text/x-code" data-lang="bash" data-label="report.sh" data-sh>
+cat > report.sh <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail                       # ឈប់ពេល Error, Variable មិនកំណត់, Pipe បរាជ័យ
+
+LOG="${1:-kafe/logs/access.log}"        # Argument ទី ១ ឬ Default
+[[ -f "$LOG" ]] || { echo "❌ រកមិនឃើញ $LOG" >&2; exit 1; }
+
+total=$(wc -l < "$LOG")
+errors=$(grep -c '" 5[0-9][0-9] ' "$LOG" || true)
+
+echo "📊 របាយការណ៍: $LOG"
+echo "   Requests: $total · Server errors: $errors"
+
+for code in 200 401 404 500; do
+  n=$(grep -c "\" $code " "$LOG" || true)
+  printf "   %s → %3d %s\n" "$code" "$n" "$(printf '%*s' "$n" '' | sed 's/ /█/g')"
+done
+
+check_ip() {                            # Function
+  local ip=$1 limit=$2
+  local fails
+  fails=$(grep "^$ip " "$LOG" | grep -c '" 401 ' || true)
+  if (( fails >= limit )); then echo "🚨 $ip: Login បរាជ័យ $fails ដង"; fi
+}
+for ip in $(awk '{print $1}' "$LOG" | sort -u); do check_ip "$ip" 5; done
+EOF
+chmod +x report.sh
+./report.sh
+./report.sh missing.log; echo "exit code: $?"
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · bash លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~$</span> <span class="tc">cat &gt; report.sh &lt;&lt;&#x27;EOF&#x27;</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">chmod +x report.sh</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">./report.sh</span>
+📊 របាយការណ៍: kafe/logs/access.log
+   Requests: 40 · Server errors: 6
+   200 →  20 ████████████████████
+   401 →  10 ██████████
+   404 →   1 █
+   500 →   6 ██████
+🚨 192.0.2.99: Login បរាជ័យ 5 ដង
+<span class="tp">dara@kafe:~$</span> <span class="tc">./report.sh missing.log; echo &quot;exit code: $?&quot;</span>
+❌ រកមិនឃើញ missing.log
+exit code: 1</pre></div>
+  <table>
+    <tr><th>Syntax</th><th>ន័យ</th></tr>
+    <tr><td><code class="i">name="value"</code> (គ្មាន Space ជុំវិញ =)</td><td>Variable</td></tr>
+    <tr><td><code class="i">"$var"</code></td><td>ដាក់ " ជានិច្ច (ការពារ Space ក្នុងឈ្មោះ File)</td></tr>
+    <tr><td><code class="i">$1 $2 $@ $#</code></td><td>Arguments · ទាំងអស់ · ចំនួន</td></tr>
+    <tr><td><code class="i">$?</code></td><td>Exit code ចុងក្រោយ (0 = ជោគជ័យ)</td></tr>
+    <tr><td><code class="i">[[ -f f ]]</code> · <code class="i">-d</code> · <code class="i">-z "$s"</code></td><td>File មាន · Folder មាន · String ទទេ</td></tr>
+    <tr><td><code class="i">(( n &gt; 5 ))</code></td><td>គណនា/ប្រៀបធៀបលេខ</td></tr>
+    <tr><td><code class="i">set -euo pipefail</code></td><td>Script សុវត្ថិភាព ⭐</td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ១៣</h4>
+    <p>សរសេរ Script <code class="i">check_health.sh URL</code> ដែលហៅ URL ដោយ curl ហើយ Exit 0 បើ Status 200 ផ្សេងពីនេះបង្ហាញ Error ហើយ Exit 1 (ប្រើក្នុង Cron/CI)។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash" data-label="check_health.sh">
+#!/usr/bin/env bash
+set -euo pipefail
+url="${1:?Usage: $0 URL}"
+status=$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 "$url" || echo 000)
+if [[ "$status" == "200" ]]; then
+  echo "✅ $url OK"
+else
+  echo "❌ $url → HTTP $status" >&2
+  exit 1
+fi
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l14">
+  <h2><span class="badge">មេរៀន ១៤</span>Automation: tar Backup, cron, Disk & Logs</h2>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+mkdir -p backups
+tar -czf "backups/kafe-$(date +%F).tar.gz" --exclude=kafe/logs kafe
+ls -lh backups
+tar -tzf backups/kafe-*.tar.gz | head -5      # មើលខាងក្នុង
+sha256sum backups/*.tar.gz | cut -c1-20       # Checksum ផ្ទៀងផ្ទាត់
+mkdir -p restore && tar -xzf backups/kafe-*.tar.gz -C restore && ls restore/kafe
+find backups -name "*.tar.gz" -mtime +7 -print   # (Backup ចាស់ជាង 7 ថ្ងៃ — មិនទាន់មាន)
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · bash លើ Ubuntu Linux</span></div><pre><span class="tp">dara@kafe:~$</span> <span class="tc">mkdir -p backups</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">tar -czf &quot;backups/kafe-$(date +%F).tar.gz&quot; --exclude=kafe/logs kafe</span>
+<span class="tp">dara@kafe:~$</span> <span class="tc">ls -lh backups</span>
+total 4.0K
+-rw-r--r-- 1 dara dara 820 Nov 13 13:46 kafe-2026-11-13.tar.gz
+<span class="tp">dara@kafe:~$</span> <span class="tc">tar -tzf backups/kafe-*.tar.gz | head -5      # មើលខាងក្នុង</span>
+kafe/
+kafe/.env
+kafe/src/
+kafe/src/db.js
+kafe/src/app.js
+<span class="tp">dara@kafe:~$</span> <span class="tc">sha256sum backups/*.tar.gz | cut -c1-20       # Checksum ផ្ទៀងផ្ទាត់</span>
+5dec803a9a9937def16c
+<span class="tp">dara@kafe:~$</span> <span class="tc">mkdir -p restore &amp;&amp; tar -xzf backups/kafe-*.tar.gz -C restore &amp;&amp; ls restore/kafe</span>
+README.md
+data
+package.json
+public
+src
+<span class="tp">dara@kafe:~$</span> <span class="tc">find backups -name &quot;*.tar.gz&quot; -mtime +7 -print   # (Backup ចាស់ជាង 7 ថ្ងៃ — មិនទាន់មាន)</span></pre></div>
+  <script type="text/x-code" data-lang="bash" data-label="crontab -e">
+# ┌ នាទី (0-59) ┌ ម៉ោង (0-23) ┌ ថ្ងៃ (1-31) ┌ ខែ (1-12) ┌ ថ្ងៃសប្តាហ៍ (0-6, 0=អាទិត្យ)
+# │            │            │            │           │
+  0            2            *            *           *    /home/deploy/bin/backup.sh >> /home/deploy/backup.log 2>&1
+*/5            *            *            *           *    /home/deploy/bin/check_health.sh https://kafe.com || echo "DOWN" | mail -s "Kafe down" me@kafe.com
+  0            3            *            *           0    find /home/deploy/backups -mtime +14 -delete
+</script>
+  <div class="note">💡 Cron រត់ជាមួយ PATH តិចតួច → ប្រើ Path ពេញក្នុង Script · Log Output ទៅ File (<code class="i">&gt;&gt; file 2&gt;&amp;1</code>) · ពិនិត្យម៉ោង Server (<code class="i">timedatectl</code>, <code class="i">sudo timedatectl set-timezone Asia/Phnom_Penh</code>)។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ១៤</h4>
+    <p>សរសេរ Cron line ដែលរត់ <code class="i">report.sh</code> រៀងរាល់ថ្ងៃច័ន្ទ–សុក្រ ម៉ោង 7:30 ព្រឹក។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash" data-label="Answer">
+30 7 * * 1-5  /home/deploy/bin/report.sh /var/log/nginx/access.log >> /home/deploy/report.log 2>&1
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="cheat">
+  <h2>📋 Cheat Sheet</h2>
+  <script type="text/x-code" data-lang="bash" data-label="Linux Cheat Sheet">
+pwd  ls -la  cd ~/dir  cd ..  cd -                 # Navigation
+mkdir -p a/b  touch f  cp -r  mv  rm -r  find . -name "*.js"   # Files
+cat  less  head -n  tail -f  wc -l  nano  diff     # View/Edit
+|  >  >>  2>  &>  &&  ||  $(cmd)  tee  xargs       # Pipes
+grep -rin  sort  uniq -c  cut -d, -f2  sed 's/a/b/g'  awk '{print $1}'   # Text
+chmod 644/755/600  chown user:group  sudo  id      # Permissions
+ps aux  top  kill  systemctl status|restart  journalctl -u x -f   # Processes
+apt update && apt install  · ip a  curl -I  ss -tulpn  ufw   # Packages/Network
+ssh-keygen -t ed25519  ssh-copy-id  ssh host  scp  rsync -avz   # SSH
+export VAR=x  echo $PATH  alias  source ~/.bashrc  # Env
+tar -czf a.tgz dir  tar -xzf a.tgz  crontab -e  df -h  du -sh  free -h   # Admin
+</script>
+</section>
+
+<!-- NAV: ផ្នែកទី ៣ – កម្រិតអាជីព -->
+<section class="hero" id="pro">
+  <h2>🏆 គម្រោងអាជីព: Deploy Kafe API លើ Ubuntu Server</h2>
+  <p>Deploy <b>Kafe API</b> (វគ្គ React + REST API / TypeScript) ទៅ VPS Ubuntu 24.04/26.04 ដូចក្រុមហ៊ុនពិត៖ User + SSH keys, Firewall, Node.js, <b>systemd service</b>, <b>Nginx reverse proxy</b>, <b>HTTPS (Let's Encrypt)</b>, Deploy script, Backup + Cron, Logs។ ខាងក្រោមមាន <b>Terminal Simulator</b> ជាមួយបេសកកម្មសម្រាប់ហាត់។</p>
+</section>
+
+<section id="pro-steps">
+  <h2>🛠️ ជំហាន Deploy</h2>
+  <h3>1) Login លើកដំបូង + User + SSH + Firewall</h3>
+  <script type="text/x-code" data-lang="bash" data-label="ជា root (លើកដំបូងតែប៉ុណ្ណោះ)">
+ssh root@203.0.113.10
+apt update && apt upgrade -y
+adduser deploy && usermod -aG sudo deploy
+rsync --archive --chown=deploy:deploy ~/.ssh /home/deploy     # ចម្លង SSH key ទៅ deploy
+ufw allow OpenSSH && ufw allow 'Nginx Full' && ufw --force enable
+# បិទ Password + root login (/etc/ssh/sshd_config) → systemctl reload ssh
+timedatectl set-timezone Asia/Phnom_Penh
+exit
+ssh deploy@203.0.113.10                                         # ចាប់ពីនេះប្រើ deploy
+</script>
+  <h3>2) Node.js + Code</h3>
+  <script type="text/x-code" data-lang="bash" data-label="ជា deploy">
+sudo apt install -y nginx git
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash && source ~/.bashrc
+nvm install --lts
+sudo mkdir -p /srv/kafe && sudo chown deploy:deploy /srv/kafe
+git clone https://github.com/you/kafe.git /srv/kafe
+cd /srv/kafe/server && npm ci --omit=dev
+sudo install -m 600 -o deploy -g deploy /dev/null /etc/kafe.env
+sudo nano /etc/kafe.env            # PORT=3000 · JWT_SECRET=… · CLIENT_URL=https://kafe.com · DB_FILE=/srv/kafe/data/kafe.db
+</script>
+  <h3>3) systemd service (រត់ជានិច្ច + Restart ពេល Crash + Boot)</h3>
+  <script type="text/x-code" data-lang="bash" data-label="/etc/systemd/system/kafe.service">
+[Unit]
+Description=Kafe API
+After=network.target
+
+[Service]
+Type=simple
+User=deploy
+WorkingDirectory=/srv/kafe/server
+EnvironmentFile=/etc/kafe.env
+ExecStart=/home/deploy/.nvm/versions/node/v24.11.1/bin/node src/server.js
+Restart=on-failure
+RestartSec=3
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/srv/kafe/data
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+</script>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+which node                                   # ចម្លង Path ពិតទៅ ExecStart (កំណែ Node របស់អ្នក)
+sudo systemctl daemon-reload
+sudo systemctl enable --now kafe
+systemctl status kafe --no-pager
+curl -s http://127.0.0.1:3000/api/health     # {"ok":true,...}
+journalctl -u kafe -f
+</script>
+  <h3>4) Nginx reverse proxy + HTTPS</h3>
+  <script type="text/x-code" data-lang="bash" data-label="/etc/nginx/sites-available/kafe">
+server {
+    listen 80;
+    server_name kafe.com www.kafe.com;
+
+    root /var/www/kafe;                      # React build (dist/)
+    index index.html;
+
+    location / {
+        try_files $uri /index.html;          # SPA routing
+    }
+
+    location /api/ {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    client_max_body_size 2m;
+    add_header X-Content-Type-Options nosniff always;
+}
+</script>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+sudo ln -s /etc/nginx/sites-available/kafe /etc/nginx/sites-enabled/
+sudo rm -f /etc/nginx/sites-enabled/default
+sudo nginx -t && sudo systemctl reload nginx
+sudo apt install -y certbot python3-certbot-nginx
+sudo certbot --nginx -d kafe.com -d www.kafe.com      # HTTPS + Auto-renew
+curl -I https://kafe.com/api/health
+</script>
+  <h3>5) Deploy script & Backup (ដំណើរការរាល់ពេល Update)</h3>
+  <script type="text/x-code" data-lang="bash" data-label="/home/deploy/bin/deploy.sh">
+#!/usr/bin/env bash
+set -euo pipefail
+APP=/srv/kafe
+cd "$APP"
+echo "⬇  Pull code..."
+git fetch --all && git reset --hard origin/main
+echo "📦 Install..."
+(cd server && npm ci --omit=dev && npm test)
+echo "🏗  Build frontend..."
+(cd client && npm ci && npm run build)
+rsync -a --delete client/dist/ /var/www/kafe/
+echo "🔁 Restart API..."
+sudo systemctl restart kafe
+sleep 2
+curl -fsS http://127.0.0.1:3000/api/health > /dev/null && echo "✅ Deploy រួចរាល់ $(date '+%F %T')"
+</script>
+  <script type="text/x-code" data-lang="bash" data-label="/home/deploy/bin/backup.sh + crontab">
+#!/usr/bin/env bash
+set -euo pipefail
+DEST=/home/deploy/backups; mkdir -p "$DEST"
+sqlite3 /srv/kafe/data/kafe.db ".backup '$DEST/kafe-$(date +%F).db'"     # Backup ខណៈ DB កំពុងប្រើ
+gzip -f "$DEST/kafe-$(date +%F).db"
+find "$DEST" -name "*.db.gz" -mtime +14 -delete
+# crontab -e:  0 2 * * * /home/deploy/bin/backup.sh >> /home/deploy/backup.log 2>&1
+# ⚠ ចម្លង Backup ទៅកន្លែងផ្សេង (rsync/rclone ទៅ Cloud) — Backup លើ Server ដដែលមិនគ្រប់គ្រាន់
+</script>
+</section>
+
+<section id="pro-app">
+  <h2>💻 Linux Terminal Simulator (បេសកកម្ម)</h2>
+  <p>វាយពាក្យបញ្ជាពិតៗ (<code class="i">ls</code>, <code class="i">cd</code>, <code class="i">mkdir</code>, <code class="i">cat</code>, <code class="i">grep</code>, <code class="i">chmod</code>, <code class="i">systemctl</code>…) ក្នុង Filesystem និម្មិត ហើយបំពេញបេសកកម្ម Deploy Kafe ម្តងមួយៗ។ វាយ <code class="i">help</code> ដើម្បីមើលពាក្យបញ្ជា ប្រើ <kbd>↑</kbd> សម្រាប់ History និង <kbd>Tab</kbd> សម្រាប់ Autocomplete។</p>
+  <script type="text/x-code" data-lang="html" data-label="Linux Terminal Simulator" data-demo>
+<style>
+  * { box-sizing:border-box; }
+  body { margin:0; background:#1b1b1b; font-family:"Kantumruy Pro",system-ui,sans-serif; }
+  .wrap { display:grid; grid-template-columns:minmax(0,1fr) 270px; gap:10px; padding:10px; }
+  @media (max-width:680px) { .wrap { grid-template-columns:1fr; } }
+  .term { background:#300a24; border-radius:10px; overflow:hidden; display:flex; flex-direction:column; height:440px; box-shadow:0 6px 20px #0006; }
+  .bar { background:#3c3b37; color:#dfdbd2; font-size:12.5px; padding:6px 10px; display:flex; gap:6px; align-items:center; }
+  .bar i { width:11px; height:11px; border-radius:50%; background:#e95420; display:inline-block; } .bar i:nth-child(2) { background:#7a7a7a; } .bar i:nth-child(3) { background:#7a7a7a; }
+  .screen { flex:1; overflow:auto; padding:10px 12px; color:#eee; font:13.5px/1.55 "JetBrains Mono",ui-monospace,monospace; white-space:pre-wrap; word-break:break-word; cursor:text; }
+  .p { color:#8ae234; font-weight:700; } .d { color:#729fcf; font-weight:700; } .x { color:#8ae234; } .e { color:#ef6b6b; } .w { color:#fce94f; } .ok { color:#8ae234; }
+  .line { display:flex; } .line input { flex:1; background:none; border:0; color:#fff; font:inherit; outline:none; padding:0; margin-left:6px; caret-color:#fff; min-width:0; }
+  .side { background:#fff; border-radius:10px; padding:12px; font-size:14px; align-self:start; }
+  .side h3 { margin:0 0 6px; font-size:15px; }
+  .m { display:flex; gap:8px; padding:6px 0; border-bottom:1px solid #eee; }
+  .m b { width:22px; flex:none; } .m.done { color:#0a7d33; } .m.cur { font-weight:700; }
+  .m code { font-size:12px; background:#f3f3f3; padding:0 4px; border-radius:4px; }
+  .prog { height:8px; background:#eee; border-radius:99px; overflow:hidden; margin:6px 0 10px; } .prog i { display:block; height:100%; background:#e95420; transition:width .3s; }
+  .hint { font-size:12.5px; color:#666; margin-top:8px; }
+  button { font:inherit; font-size:13px; border:1px solid #ddd; background:#fff; border-radius:6px; padding:4px 10px; cursor:pointer; }
+</style>
+
+<div class="wrap">
+  <div class="term" role="application" aria-label="Terminal">
+    <div class="bar"><i></i><i></i><i></i><span>deploy@kafe-server: ~</span></div>
+    <div class="screen" id="screen"><div id="out"></div><div class="line"><span id="prompt"></span><input id="cmd" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="វាយពាក្យបញ្ជា"></div></div>
+  </div>
+  <aside class="side">
+    <h3>🎯 បេសកកម្ម Deploy Kafe</h3>
+    <div class="prog"><i id="prog"></i></div>
+    <div id="missions"></div>
+    <div class="hint" id="hint"></div>
+    <div style="margin-top:8px"><button id="showHint">💡 ជំនួយ</button> <button id="reset">↺ ចាប់ផ្តើមឡើងវិញ</button></div>
+  </aside>
+</div>
+
+<script>
+  /* ===== Virtual filesystem ===== */
+  const HOME = "/home/deploy";
+  const F = (content, mode = "644") => ({ t: "f", c: content, m: mode });
+  const D = (kids = {}, mode = "755") => ({ t: "d", k: kids, m: mode });
+  function freshFs() {
+    return D({
+      home: D({ deploy: D({
+        kafe: D({
+          "README.md": F("# Kafe API\nnpm install && npm run dev\n"),
+          ".env": F("PORT=3000\nJWT_SECRET=s3cr3t-change-me\n"),
+          src: D({ "server.js": F('import { createApp } from "./app.js";\n// TODO: read PORT from env\ncreateApp().listen(3000);\n'),
+                   "app.js": F('import express from "express";\n// TODO: add helmet\nexport const createApp = () => express();\n') }),
+          logs: D({ "access.log": F('203.0.113.5 "GET /api/products" 200\n192.0.2.99 "POST /api/auth/login" 401\n192.0.2.99 "POST /api/auth/login" 401\n203.0.113.7 "GET /api/health" 200\n') }),
+        }),
+      }) }),
+      etc: D({ hostname: F("kafe-server\n"), "os-release": F('PRETTY_NAME="Ubuntu 26.04 LTS"\n') }),
+      var: D({ log: D({ "syslog": F("Nov 13 08:00:01 kafe-server systemd[1]: Started Daily apt download.\n") }) }),
+      tmp: D(),
+    });
+  }
+  let fs, cwd, hist, hi, sys;
+  const $ = id => document.getElementById(id);
+  const esc = s => s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+
+  function resolve(p = "") {
+    if (!p || p === "~") return HOME;
+    let parts = (p.startsWith("/") ? p : p.startsWith("~/") ? HOME + p.slice(1) : cwd + "/" + p).split("/");
+    const out = [];
+    for (const x of parts) { if (!x || x === ".") continue; if (x === "..") out.pop(); else out.push(x); }
+    return "/" + out.join("/");
+  }
+  function node(path) {
+    let n = fs;
+    for (const x of path.split("/").filter(Boolean)) { if (n.t !== "d" || !n.k[x]) return null; n = n.k[x]; }
+    return n;
+  }
+  function parentOf(path) { const i = path.lastIndexOf("/"); return [node(path.slice(0, i) || "/"), path.slice(i + 1)]; }
+  const short = p => p === HOME ? "~" : p.startsWith(HOME + "/") ? "~" + p.slice(HOME.length) : p;
+  const perm = n => (n.t === "d" ? "d" : "-") + [...n.m].map(c => ["---", "--x", "-w-", "-wx", "r--", "r-x", "rw-", "rwx"][+c]).join("");
+
+  /* ===== Commands ===== */
+  const ERR = m => { throw new Error(m); };
+  const needFile = (p, cmd) => { const n = node(resolve(p)); if (!n) ERR(`${cmd}: ${p}: No such file or directory`); return n; };
+  const C = {
+    help: () => "ពាក្យបញ្ជា: ls [-la] cd pwd mkdir [-p] touch cat echo rm [-r] cp mv head tail wc grep [-rn] chmod whoami hostname\n" +
+      "           history clear tree date uname sudo apt ufw systemctl curl nginx\n" +
+      "Pipes/Redirect: cmd | grep x · cmd | wc -l · echo hi > f · echo hi >> f",
+    pwd: () => cwd,
+    whoami: () => "deploy",
+    hostname: () => "kafe-server",
+    date: () => new Date().toString(),
+    uname: a => a.includes("-a") ? "Linux kafe-server 7.0.0-generic x86_64 GNU/Linux" : "Linux",
+    clear: () => { $("out").innerHTML = ""; return null; },
+    history: () => hist.map((h, i) => `${String(i + 1).padStart(4)}  ${h}`).join("\n"),
+    cd: a => { const p = resolve(a[0] ?? "~"), n = node(p); if (!n) ERR(`cd: ${a[0]}: No such file or directory`); if (n.t !== "d") ERR(`cd: ${a[0]}: Not a directory`); cwd = p; return ""; },
+    ls: a => {
+      const flags = a.filter(x => x.startsWith("-")).join(""), targets = a.filter(x => !x.startsWith("-"));
+      const p = resolve(targets[0] ?? "."), n = node(p);
+      if (!n) ERR(`ls: cannot access '${targets[0]}': No such file or directory`);
+      if (n.t === "f") return targets[0];
+      let names = Object.keys(n.k).sort();
+      if (!flags.includes("a")) names = names.filter(x => !x.startsWith("."));
+      const col = (nm, k) => k.t === "d" ? `<span class="d">${esc(nm)}</span>` : k.m.includes("7") || k.m.includes("5") ? `<span class="x">${esc(nm)}</span>` : esc(nm);
+      if (flags.includes("l")) return { html: names.map(nm => { const k = n.k[nm]; return `${perm(k)} 1 deploy deploy ${String(k.t === "d" ? 4096 : k.c.length).padStart(5)} Nov 13 09:00 ${col(nm, k)}`; }).join("\n") };
+      return { html: names.map(nm => col(nm, n.k[nm])).join("  ") };
+    },
+    tree: a => {
+      const walk = (n, pre) => Object.keys(n.k).filter(x => !x.startsWith(".")).sort().flatMap((nm, i, arr) => {
+        const last = i === arr.length - 1, k = n.k[nm];
+        return [pre + (last ? "└── " : "├── ") + nm, ...(k.t === "d" ? walk(k, pre + (last ? "    " : "│   ")) : [])];
+      });
+      return [short(resolve(a[0] ?? ".")), ...walk(needFile(a[0] ?? ".", "tree"), "")].join("\n");
+    },
+    mkdir: a => {
+      const p = a.includes("-p");
+      for (const t of a.filter(x => x !== "-p")) {
+        const full = resolve(t);
+        if (p) { let cur = fs; for (const x of full.split("/").filter(Boolean)) { cur.k[x] ??= D(); cur = cur.k[x]; } continue; }
+        const [par, nm] = parentOf(full);
+        if (!par) ERR(`mkdir: cannot create directory '${t}': No such file or directory`);
+        if (par.k[nm]) ERR(`mkdir: cannot create directory '${t}': File exists`);
+        par.k[nm] = D();
+      }
+      return "";
+    },
+    touch: a => { for (const t of a) { const [par, nm] = parentOf(resolve(t)); if (!par) ERR(`touch: cannot touch '${t}': No such file or directory`); par.k[nm] ??= F(""); } return ""; },
+    cat: (a, input) => a.length ? a.map(t => { const n = needFile(t, "cat"); if (n.t === "d") ERR(`cat: ${t}: Is a directory`); return n.c.replace(/\n$/, ""); }).join("\n") : input,
+    echo: a => a.join(" "),
+    rm: a => {
+      const r = a.some(x => /^-\w*r/.test(x));
+      for (const t of a.filter(x => !x.startsWith("-"))) {
+        const full = resolve(t), [par, nm] = parentOf(full), n = par?.k[nm];
+        if (!n) ERR(`rm: cannot remove '${t}': No such file or directory`);
+        if (n.t === "d" && !r) ERR(`rm: cannot remove '${t}': Is a directory`);
+        if (full === "/" || full === HOME) ERR("rm: 🛑 Simulator មិនអនុញ្ញាតលុប / ឬ Home 😉");
+        delete par.k[nm];
+      }
+      return "";
+    },
+    cp: a => { const r = a.includes("-r"); const [s, d] = a.filter(x => x !== "-r"); const n = needFile(s, "cp"); if (n.t === "d" && !r) ERR(`cp: -r not specified; omitting directory '${s}'`);
+      let dest = resolve(d), dn = node(dest); if (dn?.t === "d") dest += "/" + s.split("/").pop();
+      const [par, nm] = parentOf(dest); if (!par) ERR(`cp: cannot create '${d}'`); par.k[nm] = JSON.parse(JSON.stringify(n)); return ""; },
+    mv: a => { const [s, d] = a; const full = resolve(s), [sp, sn] = parentOf(full), n = sp?.k[sn]; if (!n) ERR(`mv: cannot stat '${s}': No such file or directory`);
+      let dest = resolve(d); if (node(dest)?.t === "d") dest += "/" + sn; const [par, nm] = parentOf(dest); if (!par) ERR(`mv: cannot move to '${d}'`); par.k[nm] = n; delete sp.k[sn]; return ""; },
+    head: (a, input) => { const n = +(a.find(x => /^-\d+$/.test(x))?.slice(1) ?? (a.includes("-n") ? a[a.indexOf("-n") + 1] : 10)); const f = a.filter(x => !x.startsWith("-") && !/^\d+$/.test(x))[0]; return (f ? C.cat([f]) : input).split("\n").slice(0, n).join("\n"); },
+    tail: (a, input) => { const n = +(a.find(x => /^-\d+$/.test(x))?.slice(1) ?? (a.includes("-n") ? a[a.indexOf("-n") + 1] : 10)); const f = a.filter(x => !x.startsWith("-") && !/^\d+$/.test(x))[0]; return (f ? C.cat([f]) : input).split("\n").slice(-n).join("\n"); },
+    wc: (a, input) => { const f = a.filter(x => !x.startsWith("-"))[0]; const txt = f ? C.cat([f]) : input; const lines = txt ? txt.split("\n").length : 0; return a.includes("-l") ? `${lines}${f ? " " + f : ""}` : `${lines} ${txt.split(/\s+/).filter(Boolean).length} ${txt.length}`; },
+    grep: (a, input) => {
+      const flags = a.filter(x => x.startsWith("-")).join(""), rest = a.filter(x => !x.startsWith("-"));
+      const [pat, ...files] = rest; if (!pat) ERR("Usage: grep [-rnic] PATTERN [FILE]");
+      const re = new RegExp(pat.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), flags.includes("i") ? "i" : "");
+      const hits = [];
+      const scan = (txt, name) => txt.replace(/\n$/, "").split("\n").forEach((l, i) => { if (re.test(l)) hits.push((name ? name + ":" : "") + (flags.includes("n") ? (i + 1) + ":" : "") + l); });
+      if (!files.length) scan(input ?? "", "");
+      for (const f of files) {
+        const n = needFile(f, "grep");
+        if (n.t === "d") { if (!flags.includes("r")) ERR(`grep: ${f}: Is a directory`);
+          const walk = (d, p) => Object.entries(d.k).forEach(([nm, k]) => k.t === "d" ? walk(k, p + "/" + nm) : scan(k.c, p + "/" + nm)); walk(n, f.replace(/\/$/, "")); }
+        else scan(n.c, files.length > 1 ? f : "");
+      }
+      if (flags.includes("c")) return String(hits.length);
+      return hits.join("\n");
+    },
+    chmod: a => { const [mode, t] = a; const n = needFile(t, "chmod"); if (/^[0-7]{3}$/.test(mode)) n.m = mode; else if (mode === "+x") n.m = [...n.m].map((c, i) => String(+c | 1)).join(""); else ERR(`chmod: invalid mode: '${mode}'`); return ""; },
+    curl: a => {
+      const url = a.find(x => !x.startsWith("-")) ?? "";
+      if (/localhost:3000|127\.0\.0\.1:3000/.test(url)) return sys.kafe ? '{"ok":true,"time":"' + new Date().toISOString() + '"}' : ERR("curl: (7) Failed to connect to localhost port 3000: Connection refused");
+      if (/localhost(:80)?\/?$|127\.0\.0\.1\/?$/.test(url)) return sys.nginx ? "<!DOCTYPE html><title>Welcome to nginx!</title>…" : ERR("curl: (7) Failed to connect to localhost port 80: Connection refused");
+      ERR("curl: (6) Simulator មិនមាន Internet — សាក curl localhost:3000/api/health");
+    },
+    nginx: a => { if (!sys.nginxInstalled) ERR("nginx: command not found (sudo apt install nginx)"); if (a.includes("-t")) return "nginx: configuration file /etc/nginx/nginx.conf test is successful"; return ""; },
+    apt: (a, _i, sudo) => {
+      if (!sudo) ERR("E: Could not open lock file - are you root? (ប្រើ sudo)");
+      if (a[0] === "update") return "Hit:1 http://archive.ubuntu.com/ubuntu resolute InRelease\nReading package lists... Done\nAll packages are up to date.";
+      if (a[0] === "install") { const pk = a.filter(x => !x.startsWith("-")).slice(1); if (!pk.length) ERR("E: No packages specified");
+        pk.forEach(p => { if (p === "nginx") { sys.nginxInstalled = true; sys.nginx = true; } });
+        return pk.map(p => `Setting up ${p} ... ✅`).join("\n"); }
+      ERR("apt: សាក 'sudo apt update' ឬ 'sudo apt install nginx'");
+    },
+    ufw: (a, _i, sudo) => {
+      if (!sudo) ERR("ERROR: You need to be root to run this script (ប្រើ sudo)");
+      if (a[0] === "allow") { const r = a.slice(1).join(" ").replace(/'/g, ""); sys.ufwRules.add(r); return "Rules updated\nRules updated (v6)"; }
+      if (a[0] === "enable") { sys.ufw = true; return sys.ufwRules.has("OpenSSH") || sys.ufwRules.has("22") ? "Firewall is active and enabled on system startup" : { html: '<span class="w">⚠ Command may disrupt existing ssh connections.</span>\n<span class="e">💥 អ្នកបើក Firewall ដោយមិនទាន់ allow OpenSSH — ក្នុង Server ពិត SSH អាចជាប់សោ!</span>\nFirewall is active' }; }
+      if (a[0] === "status") return sys.ufw ? "Status: active\n\nTo                         Action      From\n" + [...sys.ufwRules].map(r => r.padEnd(27) + "ALLOW       Anywhere").join("\n") : "Status: inactive";
+      ERR("ufw: allow | enable | status");
+    },
+    systemctl: (a, _i, sudo) => {
+      const [verb, ...rest] = a.filter(x => x !== "--now" && x !== "--no-pager"); const svc = rest[0]?.replace(".service", ""); const now = a.includes("--now");
+      if (!["kafe", "nginx", "ssh"].includes(svc)) ERR(`Unit ${svc ?? ""}.service could not be found.`);
+      if (svc === "nginx" && !sys.nginxInstalled) ERR("Unit nginx.service could not be found. (sudo apt install nginx)");
+      const key = svc === "kafe" ? "kafe" : svc === "nginx" ? "nginx" : "ssh";
+      if (verb === "status") { const on = key === "ssh" || sys[key];
+        return { html: `${on ? '<span class="ok">●</span>' : "○"} ${svc}.service\n     Active: ${on ? '<span class="ok">active (running)</span>' : "inactive (dead)"}${svc === "kafe" && sys.kafeEnabled ? "\n     Loaded: enabled" : ""}` }; }
+      if (!sudo) ERR(`Failed to ${verb} ${svc}.service: Access denied (ប្រើ sudo)`);
+      if (["start", "restart"].includes(verb)) { sys[key] = true; return ""; }
+      if (verb === "stop") { sys[key] = false; return ""; }
+      if (verb === "enable") { if (key === "kafe") sys.kafeEnabled = true; if (now) sys[key] = true; return `Created symlink /etc/systemd/system/multi-user.target.wants/${svc}.service`; }
+      ERR("systemctl: status | start | stop | restart | enable [--now]");
+    },
+  };
+
+  /* ===== Missions ===== */
+  const MISSIONS = [
+    { t: "បង្កើត Folder <code>~/apps</code> ហើយចូលទៅក្នុង", hint: "mkdir ~/apps  →  cd ~/apps", ok: () => cwd === HOME + "/apps" },
+    { t: "អាន <code>~/kafe/README.md</code>", hint: "cat ~/kafe/README.md", ok: (c) => /^cat\s+.*kafe\/README\.md/.test(c) },
+    { t: "រក TODO ក្នុង <code>~/kafe/src</code>", hint: "grep -rn TODO ~/kafe/src", ok: (c, out) => /^grep/.test(c) && /TODO/.test(out) && (out.match(/TODO/g) || []).length >= 2 },
+    { t: "រាប់ Login បរាជ័យ (401) ក្នុង access.log", hint: "grep 401 ~/kafe/logs/access.log | wc -l", ok: (c, out) => /401/.test(c) && out.trim() === "2" },
+    { t: "ការពារ <code>.env</code> (Owner តែប៉ុណ្ណោះ)", hint: "chmod 600 ~/kafe/.env", ok: () => node(HOME + "/kafe/.env")?.m === "600" },
+    { t: "ដំឡើង Nginx", hint: "sudo apt update  →  sudo apt install nginx", ok: () => sys.nginxInstalled },
+    { t: "Firewall៖ allow OpenSSH + Nginx ហើយ enable", hint: "sudo ufw allow OpenSSH · sudo ufw allow 'Nginx Full' · sudo ufw enable", ok: () => sys.ufw && sys.ufwRules.has("OpenSSH") && [...sys.ufwRules].some(r => /Nginx/.test(r)) },
+    { t: "ចាប់ផ្តើម Kafe API ជា Service (Boot ផង)", hint: "sudo systemctl enable --now kafe", ok: () => sys.kafe && sys.kafeEnabled },
+    { t: "សាក Health check របស់ API", hint: "curl localhost:3000/api/health", ok: (c, out) => /^curl/.test(c) && /"ok":true/.test(out) },
+  ];
+  let done;
+  function renderMissions() {
+    const cur = done.findIndex(d => !d);
+    $("missions").innerHTML = MISSIONS.map((m, i) => `<div class="m ${done[i] ? "done" : i === cur ? "cur" : ""}"><b>${done[i] ? "✅" : i === cur ? "👉" : "▫️"}</b><span>${m.t}</span></div>`).join("");
+    $("prog").style.width = (done.filter(Boolean).length / MISSIONS.length * 100) + "%";
+    if (cur === -1) $("hint").innerHTML = "🎉 <b>អបអរសាទរ!</b> អ្នក Deploy Kafe បានហើយ — ឥឡូវសាកលើ Server ពិត (ផ្នែកខាងលើ)។";
+  }
+  function check(cmd, out) {
+    MISSIONS.forEach((m, i) => { if (!done[i] && done.slice(0, i).every(Boolean)) { try { if (m.ok(cmd, out)) { done[i] = true; print({ html: `<span class="ok">✅ បេសកកម្ម ${i + 1} សម្រេច!</span>` }); } } catch {} } });
+    renderMissions();
+  }
+
+  /* ===== Shell ===== */
+  function tokenize(s) { const out = []; s.replace(/"([^"]*)"|'([^']*)'|(\S+)/g, (_, a, b, c) => out.push(a ?? b ?? c)); return out; }
+  function print(x) { if (x === null || x === undefined || x === "") return; const d = document.createElement("div"); if (typeof x === "object") d.innerHTML = x.html; else d.textContent = x; $("out").appendChild(d); }
+  function promptHtml() { return `<span class="p">deploy@kafe-server</span>:<span class="d">${esc(short(cwd))}</span>$`; }
+  function run(line) {
+    const echoLine = document.createElement("div"); echoLine.innerHTML = promptHtml() + " " + esc(line); $("out").appendChild(echoLine);
+    if (!line.trim()) return;
+    hist.push(line); hi = hist.length;
+    let text = "";
+    try {
+      let redirect = null, target = line;
+      const m = line.match(/^(.*?)\s*(>>?)\s*(\S+)\s*$/);
+      if (m && !/^\s*(grep|awk)/.test(m[1]) || (m && /^\s*(echo|cat)/.test(m[1]))) { target = m[1]; redirect = { mode: m[2], file: m[3] }; }
+      let input = null, result;
+      for (const seg of target.split("|").map(s => s.trim())) {
+        let args = tokenize(seg), sudo = false;
+        if (args[0] === "sudo") { sudo = true; args = args.slice(1); }
+        const fn = C[args[0]];
+        if (!fn) ERR(`${args[0]}: command not found (វាយ help)`);
+        result = fn(args.slice(1), input, sudo);
+        input = typeof result === "object" && result ? result.html.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">") : result ?? "";
+      }
+      if (redirect) {
+        const full = resolve(redirect.file), [par, nm] = parentOf(full);
+        if (!par) ERR(`bash: ${redirect.file}: No such file or directory`);
+        const prev = redirect.mode === ">>" && par.k[nm]?.t === "f" ? par.k[nm].c : "";
+        par.k[nm] = F(prev + input + "\n", par.k[nm]?.m ?? "644");
+      } else print(result);
+      text = input ?? "";
+    } catch (e) { print({ html: `<span class="e">${esc(e.message)}</span>` }); }
+    check(line.trim(), text);
+  }
+  function reset() {
+    fs = freshFs(); cwd = HOME; hist = []; hi = 0; done = MISSIONS.map(() => false);
+    sys = { kafe: false, kafeEnabled: false, nginx: false, nginxInstalled: false, ufw: false, ufwRules: new Set() };
+    $("out").innerHTML = ""; $("hint").textContent = "";
+    print({ html: 'Welcome to <b>Ubuntu 26.04 LTS</b> (Simulator) · វាយ <span class="w">help</span> ដើម្បីចាប់ផ្តើម\n' });
+    $("prompt").innerHTML = promptHtml(); renderMissions();
+  }
+  $("cmd").addEventListener("keydown", e => {
+    const inp = $("cmd");
+    if (e.key === "Enter") { run(inp.value); inp.value = ""; $("prompt").innerHTML = promptHtml(); $("screen").scrollTop = 1e9; }
+    else if (e.key === "ArrowUp") { if (hi > 0) inp.value = hist[--hi]; e.preventDefault(); }
+    else if (e.key === "ArrowDown") { hi = Math.min(hist.length, hi + 1); inp.value = hist[hi] ?? ""; e.preventDefault(); }
+    else if (e.key === "Tab") {
+      e.preventDefault();
+      const parts = inp.value.split(" "), last = parts.pop() ?? "";
+      const dir = last.includes("/") ? last.slice(0, last.lastIndexOf("/") + 1) : "", base = last.slice(dir.length);
+      const n = node(resolve(dir || "."));
+      if (parts.length === 0 && !dir) { const c = Object.keys(C).filter(k => k.startsWith(base)); if (c.length === 1) inp.value = c[0] + " "; return; }
+      if (n?.t === "d") { const c = Object.keys(n.k).filter(k => k.startsWith(base)); if (c.length === 1) inp.value = [...parts, dir + c[0] + (n.k[c[0]].t === "d" ? "/" : "")].join(" "); else if (c.length > 1) print(c.join("  ")); }
+    }
+    else if (e.key === "l" && e.ctrlKey) { e.preventDefault(); $("out").innerHTML = ""; }
+  });
+  $("screen").addEventListener("click", () => $("cmd").focus({ preventScroll: true }));
+  $("showHint").onclick = () => { const i = done.findIndex(d => !d); if (i >= 0) $("hint").innerHTML = `💡 សាក៖ <code>${esc(MISSIONS[i].hint)}</code>`; };
+  $("reset").onclick = reset;
+  reset();
+<\/script>
+</script>
+</section>
+
+<section id="pro-check">
+  <h2>✅ Server Checklist & គម្រោងចុងក្រោយ</h2>
+  <table>
+    <tr><th>ពិនិត្យ</th><th>✔</th></tr>
+    <tr><td>User ធម្មតា + sudo · Login ដោយ SSH key · បិទ Password/root login</td><td>☐</td></tr>
+    <tr><td>ufw៖ តែ 22, 80, 443 · App/DB ស្តាប់ localhost</td><td>☐</td></tr>
+    <tr><td>unattended-upgrades បើក</td><td>☐</td></tr>
+    <tr><td>App ជា systemd service (Restart=on-failure, User មិនមែន root)</td><td>☐</td></tr>
+    <tr><td>Nginx + HTTPS (certbot) · Secrets ក្នុង /etc/kafe.env (600)</td><td>☐</td></tr>
+    <tr><td>Backup ប្រចាំថ្ងៃ + ចម្លងទៅក្រៅ + សាក Restore</td><td>☐</td></tr>
+    <tr><td>Logs៖ journalctl, /var/log/nginx · Health check (cron/Uptime monitor)</td><td>☐</td></tr>
+  </table>
+  <div class="ex"><h4>🏁 លំហាត់គម្រោងចុងក្រោយ</h4>
+    <ol>
+      <li>ជួល VPS តូច (ឬប្រើ Multipass/VirtualBox) ដំឡើង Ubuntu LTS</li>
+      <li>ធ្វើជំហាន 1–4 ហើយបើក <code class="i">https://your-domain/api/health</code> បាន</li>
+      <li>សរសេរ <code class="i">deploy.sh</code> ហើយ Deploy Update មួយពីកុំព្យូទ័រដោយ <code class="i">ssh kafe 'bin/deploy.sh'</code></li>
+      <li>Backup + Cron + សាក Restore ទៅ Folder ថ្មី</li>
+      <li>Script <code class="i">report.sh</code> វិភាគ <code class="i">/var/log/nginx/access.log</code> ប្រចាំថ្ងៃ</li>
+      <li>(បន្ថែម) GitHub Actions ហៅ deploy តាម SSH ពេល Push ទៅ main</li>
+    </ol>
+  </div>
+</section>
+
+<section id="roadmap">
+  <h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+  <ol class="steps">
+    <li><b>Linux & CLI</b> — មេរៀន ១–១៤ ✅</li>
+    <li><b>Docker</b> — Container, Dockerfile, Docker Compose (Kafe + Postgres)</li>
+    <li><b>CI/CD</b> — GitHub Actions Deploy ដោយស្វ័យប្រវត្តិ</li>
+    <li><b>PostgreSQL</b> លើ Server · Backup/Restore</li>
+    <li><b>Monitoring</b> — Uptime Kuma, Grafana, Logs</li>
+    <li><b>Cloud</b> — AWS/GCP មូលដ្ឋាន, Terraform</li>
+  </ol>
+  <p><b>ប្រភពរៀនបន្ថែម:</b> <a href="https://ubuntu.com/tutorials/command-line-for-beginners" target="_blank">Ubuntu: Command line for beginners</a> · <a href="https://linuxjourney.com" target="_blank">Linux Journey</a> · <a href="https://overthewire.org/wargames/bandit/" target="_blank">OverTheWire Bandit</a> · <a href="https://explainshell.com" target="_blank">explainshell.com</a> · <a href="https://www.shellcheck.net" target="_blank">ShellCheck</a></p>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="linux"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

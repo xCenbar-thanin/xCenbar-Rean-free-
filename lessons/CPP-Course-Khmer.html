@@ -1,0 +1,2718 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន C/C++ ពីដើមដល់ចប់</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f4f7fb; --panel:#ffffff; --text:#18233a; --muted:#5b6b61; --line:#dce4ee;
+  --accent:#00599c; --accent2:#659ad2; --accent-soft:#e6f0f9;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#7fb6ea; --accent2:#659ad2; --accent-soft:#122236;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#7fb6ea; --accent2:#659ad2; --accent-soft:#122236;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:42px;height:34px;font-size:13px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#004482,#659ad2);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.tok-pre{color:#ffa657}
+.hint{font-size:14px;color:var(--muted);margin:6px 0}
+
+</style>
+<link rel="icon" href="../assets/icons/cpp.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/cpp.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>វគ្គសិក្សា C/C++ ពីដើមដល់កម្រិតអាជីព</h1>
+  <button class="btn" id="themeBtn">🌓</button>
+</header>
+
+<div class="layout">
+<nav class="side" id="side">
+  <h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+  <a href="#intro">១. C/C++ ជាអ្វី?</a>
+  <a href="#history">២. អ្នកបង្កើត និងប្រវត្តិ</a>
+  <a href="#uses">៣. គេប្រើធ្វើអ្វី?</a>
+  <a href="#install">៤. ដំឡើង Compiler + VS Code</a>
+  <a href="#debug">៥. Debugging ក្នុង VS Code</a>
+  <a href="#elements">៦. ធាតុនីមួយៗរបស់ C/C++</a>
+  <h4>ផ្នែកទី ២ – មេរៀនមូលដ្ឋាន (១–១៥)</h4>
+  <a href="#l1">មេរៀន ១: Hello World និង Output</a>
+  <a href="#l2">មេរៀន ២: អថេរ និងប្រភេទទិន្នន័យ</a>
+  <a href="#l3">មេរៀន ៣: Input</a>
+  <a href="#l4">មេរៀន ៤: Operators</a>
+  <a href="#l5">មេរៀន ៥: លក្ខខណ្ឌ if / switch</a>
+  <a href="#l6">មេរៀន ៦: Loops</a>
+  <a href="#l7">មេរៀន ៧: Array</a>
+  <a href="#l8">មេរៀន ៨: String</a>
+  <a href="#l9">មេរៀន ៩: Function</a>
+  <a href="#l10">មេរៀន ១០: Pointer</a>
+  <a href="#l11">មេរៀន ១១: Struct</a>
+  <a href="#l12">មេរៀន ១២: Dynamic Memory</a>
+  <a href="#l13">មេរៀន ១៣: File I/O</a>
+  <a href="#l14">មេរៀន ១៤: Class និង OOP</a>
+  <a href="#l15">មេរៀន ១៥: STL</a>
+  <h4>មេរៀនកម្រិតខ្ពស់ (១៦–២៤)</h4>
+  <a href="#l16">មេរៀន ១៦: Header files, Multi-file, enum</a>
+  <a href="#l17">មេរៀន ១៧: Exception Handling</a>
+  <a href="#l18">មេរៀន ១៨: Template</a>
+  <a href="#l19">មេរៀន ១៩: Smart Pointer និង Lambda (C++11+)</a>
+  <a href="#l20">មេរៀន ២០: Linked List</a>
+  <a href="#l21">មេរៀន ២១: Stack និង Queue</a>
+  <a href="#l22">មេរៀន ២២: Algorithm៖ Binary Search និង Big-O</a>
+  <a href="#l23">មេរៀន ២៣: Operator Overloading</a>
+  <a href="#l24">មេរៀន ២៤: Multithreading (មូលដ្ឋាន)</a>
+  <h4>Modern C++ & អាជីព (២៥–៣៥)</h4>
+  <a href="#l25">មេរៀន ២៥: Modern C++ — auto, range-for និង optional</a>
+  <a href="#l26">មេរៀន ២៦: STL Containers — vector, map, set និង unordered_map</a>
+  <a href="#l27">មេរៀន ២៧: Binary Search Tree (BST)</a>
+  <a href="#l28">មេរៀន ២៨: Graph, BFS និង DFS</a>
+  <a href="#l29">មេរៀន ២៩: Recursion, Dynamic Programming និង Memoization</a>
+  <a href="#l30">មេរៀន ៣០: RAII និង Smart Pointers</a>
+  <a href="#l31">មេរៀន ៣១: SOLID Principles និង Design Patterns</a>
+  <a href="#l32">មេរៀន ៣២: File Handling និង Database (SQLite/SQL)</a>
+  <a href="#l33">មេរៀន ៣៣: Git, GitHub និង CMake</a>
+  <a href="#l34">មេរៀន ៣៤: Unit Testing, Debugging និង Compiler Warnings</a>
+  <a href="#l35">មេរៀន ៣៥: រៀបចំគម្រោង C++ ពេញលេញ</a>
+  <h4>គម្រោងអនុវត្ត</h4>
+  <a href="#p1">គម្រោង ១: ហ្គេម Tic-Tac-Toe</a>
+  <a href="#p2">គម្រោង ២: ប្រព័ន្ធគ្រប់គ្រងធនាគារ</a>
+  <a href="#p3">គម្រោង ៣: ប្រព័ន្ធគ្រប់គ្រងសិស្ស</a>
+  <a href="#cheat">Cheat Sheet</a>
+  <h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+  <a href="#pro">App កម្រិតអាជីព</a>
+  <a href="#pro-structure">រចនាសម្ព័ន្ធ Project</a>
+  <a href="#pro-code">កូដ App ពេញលេញ</a>
+  <a href="#pro-build">CMake, Build & Test</a>
+  <a href="#pro-quality">Code Quality Checklist</a>
+  <a href="#roadmap">ផែនទីបន្តការសិក្សា</a>
+</nav>
+
+<main>
+
+<section class="hero" id="intro">
+  <h2>១. C/C++ ជាអ្វី?</h2>
+  <p><b>C</b> គឺជាភាសាសរសេរកម្មវិធីកម្រិតទាប-មធ្យម ដែលដំណើរការជិត Hardware និងលឿនខ្លាំង។ <b>C++</b> គឺជាភាសាដែលពង្រីកពី C ដោយបន្ថែម <b>Class / OOP</b>, <b>Template</b> និង <b>STL</b> ខណៈរក្សាល្បឿនដដែល។</p>
+  <p>ទាំងពីរជាភាសា <b>Compiled</b> — កូដត្រូវ Compile ជា Machine Code មុនរត់។ មេរៀននីមួយៗមាន <b>ការពន្យល់ → កូដគំរូ → ចំណាំសំខាន់ → លំហាត់ (មានចម្លើយ)</b>។ មេរៀនទី ១–១៥ ជាមូលដ្ឋាន, ១៦–២៤ កម្រិតខ្ពស់ និង ២៥–៣៥ Modern C++ កម្រិតអាជីព។</p>
+</section>
+
+<section id="history">
+  <h2>២. អ្នកបង្កើត និងប្រវត្តិ</h2>
+  <div class="grid">
+    <div class="card"><b>អ្នកបង្កើត C</b><br><b style="font-size:20px">Dennis Ritchie</b><br>Bell Labs (AT&amp;T) សហរដ្ឋអាមេរិក</div>
+    <div class="card"><b>អ្នកបង្កើត C++</b><br><b style="font-size:20px">Bjarne Stroustrup</b><br>Bell Labs (AT&amp;T) សហរដ្ឋអាមេរិក</div>
+    <div class="card"><b>ឆ្នាំ C</b><br><b style="font-size:20px">1972</b><br>អភិវឌ្ឍ 1969–1973 ដើម្បីសរសេរ UNIX ឡើងវិញ</div>
+    <div class="card"><b>ឆ្នាំ C++</b><br><b style="font-size:20px">1979</b><br>ជា «C with Classes» ដាក់ឈ្មោះ C++ ឆ្នាំ 1983</div>
+  </div>
+  <h3>ពេលវេលាសំខាន់ៗ</h3>
+  <table>
+    <tr><th>ឆ្នាំ</th><th>ព្រឹត្តិការណ៍</th></tr>
+    <tr><td>1972</td><td>Dennis Ritchie បង្កើតភាសា C នៅ Bell Labs</td></tr>
+    <tr><td>1978</td><td>សៀវភៅ «The C Programming Language» (K&amp;R) ដោយ Kernighan និង Ritchie</td></tr>
+    <tr><td>1979</td><td>Bjarne Stroustrup ចាប់ផ្តើម «C with Classes»</td></tr>
+    <tr><td>1983</td><td>ប្តូរឈ្មោះជា C++ (<code class="i">++</code> = បង្កើនមួយកម្រិតពី C)</td></tr>
+    <tr><td>1985</td><td>C++ ចេញពាណិជ្ជកម្ម និងសៀវភៅ «The C++ Programming Language»</td></tr>
+    <tr><td>1989 / 1998</td><td>ស្តង់ដារ C89 (ANSI C) និង C++98</td></tr>
+    <tr><td>2011</td><td>C++11 — ចាប់ផ្តើមសម័យ «Modern C++» (auto, lambda, smart pointer)</td></tr>
+    <tr><td>បច្ចុប្បន្ន</td><td>ស្តង់ដារថ្មីចេញរៀងរាល់ ៣ ឆ្នាំ៖ C++14, 17, 20, 23 · C11, C17, C23</td></tr>
+  </table>
+  <div class="note">💡 <b>ហេតុអ្វីនៅតែប្រើ?</b> ល្បឿនលឿន គ្រប់គ្រង Memory បានដោយផ្ទាល់ និងដំណើរការជិត Hardware។ ភាសាជាច្រើនដូចជា Python និង Java ក៏ត្រូវបានសរសេរដោយ C/C++ នៅខាងក្រោយដែរ។</div>
+</section>
+
+<section id="uses">
+  <h2>៣. គេប្រើប្រាស់ C/C++ សម្រាប់ធ្វើអ្វី?</h2>
+  <div class="grid">
+    <div class="card">🖥️ <b>ប្រព័ន្ធប្រតិបត្តិការ</b><br>Linux kernel (C), ផ្នែកធំនៃ Windows និង macOS</div>
+    <div class="card">🔌 <b>Embedded & IoT</b><br>Arduino, ESP32, Microcontroller, ឧបករណ៍ក្នុងឡាន</div>
+    <div class="card">🎮 <b>ហ្គេម</b><br>Unreal Engine និង Game Engine ជាច្រើន (C++)</div>
+    <div class="card">🌐 <b>Browser & កម្មវិធីធំ</b><br>Chrome, Firefox, Adobe Photoshop</div>
+    <div class="card">🗄️ <b>Database & Server</b><br>MySQL, PostgreSQL, MongoDB, Redis</div>
+    <div class="card">💹 <b>ហិរញ្ញវត្ថុ</b><br>ប្រព័ន្ធជួញដូរដែលត្រូវការល្បឿនខ្ពស់</div>
+    <div class="card">🧠 <b>AI & Graphics</b><br>ស្នូលនៃ TensorFlow, PyTorch, OpenCV</div>
+    <div class="card">⚙️ <b>Compiler & Driver</b><br>GCC, LLVM, Driver ឧបករណ៍, Network stack</div>
+  </div>
+</section>
+
+<section id="install">
+  <h2>៤. របៀបដំឡើង Compiler និងប្រើក្នុង VS Code</h2>
+  <div class="note">💡 VS Code គ្រាន់តែជា Editor ប៉ុណ្ណោះ — យើងត្រូវដំឡើង <b>Compiler</b> (GCC/G++ ឬ Clang) ដាច់ដោយឡែក ដើម្បីបំប្លែងកូដជាកម្មវិធី។</div>
+  <ol><li>ទាញយក VS Code ពី <code class="i">code.visualstudio.com</code> ហើយដំឡើង។</li><li>ដំឡើង Compiler (មើលខាងក្រោម)។</li><li>ក្នុង VS Code → Extensions (Ctrl+Shift+X) → ស្វែងរក <b>C/C++</b> (Microsoft) → Install។ (ជម្រើស៖ <b>Code Runner</b>)</li><li>បង្កើត Folder ហើយ File Open Folder → បង្កើត <code class="i">hello.cpp</code> → Compile/Run ក្នុង Terminal។</li></ol>
+<p><b>Windows (MSYS2/MinGW-w64)៖</b> ដំឡើង MSYS2 ពី <code class="i">msys2.org</code> បើក MSYS2 UCRT64 ហើយវាយ៖</p>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain</code></pre></div>
+<p>បន្ថែម <code class="i">C:\msys64\ucrt64\bin</code> ទៅ Path រួចបើក Terminal ថ្មី ហើយពិនិត្យ៖</p>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">gcc --version
+g++ --version
+gdb --version</code></pre></div>
+<p><b>macOS៖</b></p>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">xcode-select --install</code></pre></div>
+<p><b>Linux (Ubuntu/Debian)៖</b></p>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">sudo apt update
+sudo apt install build-essential gdb</code></pre></div>
+<p><b>Compile និង Run៖</b></p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">g++ hello.cpp -o hello
+./hello          # Windows: hello.exe
+
+gcc hello.c -o hello   # សម្រាប់ C</code></pre></div>
+<div class="note">💡 បើ <code class="i">gcc</code> រកមិនឃើញ មានន័យថា Path មិនទាន់ត្រូវ ឬមិនទាន់បិទបើក Terminal/VS Code ឡើងវិញ។ ភាពខុសគ្នា៖ C ជាភាសា procedural, C++ បន្ថែម Class/OOP/STL។</div>
+  <h3>Extensions ណែនាំ</h3>
+  <table>
+    <tr><th>Extension</th><th>មុខងារ</th></tr>
+    <tr><td><b>C/C++</b> (Microsoft)</td><td>IntelliSense, Debug, រកកំហុស</td></tr>
+    <tr><td><b>CMake Tools</b></td><td>Build Project ធំៗជាមួយ CMake (មេរៀនទី ៣៣)</td></tr>
+    <tr><td><b>Code Runner</b></td><td>រត់ File តែមួយដោយចុច ▶ (ល្អសម្រាប់ហាត់)</td></tr>
+    <tr><td><b>Error Lens</b></td><td>បង្ហាញ Error ផ្ទាល់នៅលើបន្ទាត់កូដ</td></tr>
+  </table>
+</section>
+
+<section id="debug">
+  <h2>៥. Debugging ក្នុង VS Code</h2>
+  <p>Debugger ជួយឱ្យឃើញតម្លៃអថេរ និងលំដាប់ដំណើរការកម្មវិធីបន្ទាត់ម្តងមួយ។</p>
+<ol><li>បើក file <code class="i">.cpp</code> ហើយ <b>ចុចនៅខាងឆ្វេងលេខបន្ទាត់</b> (ឬ F9) ដាក់ <b>Breakpoint</b> (ចំណុចក្រហម)។</li><li>ចុច <b>F5</b> (ឬ Run → Start Debugging) ជ្រើស <code class="i">C++ (GDB/LLDB)</code> ហើយជ្រើស <code class="i">g++ build and debug active file</code>។ VS Code បង្កើត <code class="i">tasks.json</code> និង <code class="i">launch.json</code> ឱ្យស្វ័យប្រវត្តិ។</li><li>កម្មវិធីឈប់នៅ Breakpoint។ មើលតម្លៃអថេរក្នុង <b>Variables</b>, បន្ថែមកន្សោមក្នុង <b>Watch</b>, មើលលំដាប់ហៅអនុគមន៍ក្នុង <b>Call Stack</b>។</li><li>ប្រើប៊ូតុងគ្រប់គ្រង៖ <b>F5</b> បន្ត, <b>F10</b> Step Over (រំលងចូលអនុគមន៍), <b>F11</b> Step Into (ចូលក្នុងអនុគមន៍), <b>Shift+F11</b> Step Out, <b>Shift+F5</b> បញ្ឈប់។</li></ol>
+<p>បើ Debug ដោយដៃ ត្រូវ Compile ជាមួយ <code class="i">-g</code> (បន្ថែមព័ត៌មាន debug)៖</p>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">g++ -g -Wall -Wextra -std=c++17 main.cpp -o main
+gdb ./main</code></pre></div>
+<p><b>Error ញឹកញាប់ និងដំណោះស្រាយ៖</b></p>
+<table><tr><th>Error</th><th>មូលហេតុ / ដំណោះស្រាយ</th></tr><tr><td><code class="i">Segmentation fault</code></td><td>ចូល memory ខុស (pointer null, array ហួសទំហំ)។ Debug រកបន្ទាត់ដែល crash ឬ compile ជាមួយ <code class="i">-fsanitize=address -g</code>។</td></tr><tr><td><code class="i">undefined reference to ...</code></td><td>Linker រកមិនឃើញ definition។ ភ្លេចដាក់ file <code class="i">.cpp</code> ក្នុង g++ ឬភ្លេចសរសេរអនុគមន៍។</td></tr><tr><td><code class="i">expected ';'</code></td><td>ភ្លេច <code class="i">;</code> ត្រូវមើលបន្ទាត់មុននោះផង។</td></tr><tr><td><code class="i">was not declared in this scope</code></td><td>ប្រើអថេរ/អនុគមន៍មុនប្រកាស ឬភ្លេច <code class="i">#include</code>/<code class="i">std::</code>។</td></tr><tr><td><code class="i">gcc is not recognized</code></td><td>Path មិនទាន់ដាក់ ឬមិនទាន់បើក Terminal ថ្មី។</td></tr><tr><td>ចម្លើយខុស តែមិន error</td><td>ដាក់ Breakpoint ហើយ Step តាមបន្ទាត់ ប្រៀបធៀបតម្លៃអថេរជាមួយអ្វីដែលរំពឹង។</td></tr></table>
+</section>
+
+<section id="elements">
+  <h2>៦. ធាតុ (Components) នីមួយៗរបស់ C/C++</h2>
+  <h3>ដំណើរការពីកូដទៅកម្មវិធី</h3>
+<div class="codebox"><span class="label">Compilation Pipeline</span><pre><code class="txt"> main.cpp ──► [1] Preprocessor ──► [2] Compiler ──► [3] Assembler ──► [4] Linker ──► main.exe
+              (#include, #define)   (C++ → Assembly)  (→ Object .o)    (ភ្ជាប់ .o + Library)</code></pre></div>
+  <table>
+    <tr><th>ធាតុ</th><th>ពន្យល់</th></tr>
+    <tr><td><b>Compiler</b></td><td>GCC (<code class="i">gcc</code>/<code class="i">g++</code>), Clang, MSVC — បំប្លែងកូដជា Machine Code</td></tr>
+    <tr><td><b>Preprocessor</b></td><td>ដំណើរការ <code class="i">#include</code>, <code class="i">#define</code>, <code class="i">#pragma once</code> មុនពេល Compile</td></tr>
+    <tr><td><b>Header (.h) & Source (.cpp)</b></td><td>Header ប្រកាស (Declaration) · Source អនុវត្ត (Definition)</td></tr>
+    <tr><td><b>Linker</b></td><td>ភ្ជាប់ Object files និង Library ចូលគ្នាជាកម្មវិធីមួយ</td></tr>
+    <tr><td><b>main()</b></td><td>ចំណុចចាប់ផ្តើមរបស់កម្មវិធីគ្រប់ប្រភេទ</td></tr>
+    <tr><td><b>Namespace</b></td><td>ក្រុមឈ្មោះ ការពារការជាន់ឈ្មោះ ឧ. <code class="i">std::cout</code></td></tr>
+    <tr><td><b>Static Typing</b></td><td>ត្រូវប្រកាសប្រភេទអថេរ (<code class="i">int</code>, <code class="i">double</code>...) ឬប្រើ <code class="i">auto</code></td></tr>
+    <tr><td><b>Pointer & Reference</b></td><td>Pointer រក្សាអាសយដ្ឋាន Memory · Reference ជាឈ្មោះក្លែងរបស់អថេរ</td></tr>
+    <tr><td><b>Stack & Heap</b></td><td>Stack = អថេរធម្មតា (លុបស្វ័យប្រវត្តិ) · Heap = <code class="i">new</code>/<code class="i">malloc</code> (ត្រូវដោះខ្លួនឯង ឬប្រើ Smart Pointer)</td></tr>
+    <tr><td><b>Standard Library & STL</b></td><td><code class="i">iostream</code>, <code class="i">string</code>, <code class="i">vector</code>, <code class="i">map</code>, <code class="i">algorithm</code>...</td></tr>
+    <tr><td><b>Undefined Behavior (UB)</b></td><td>កូដខុសច្បាប់ (ឧ. ចូល Array ហួស) ដែលអាចធ្វើអ្វីក៏បាន — ត្រូវជៀសវាងជានិច្ច</td></tr>
+  </table>
+  <h3>Data Types សំខាន់ៗ</h3>
+  <div class="grid">
+    <div class="card"><b>int</b><br>ចំនួនគត់ (±2.1 ពាន់លាន)</div>
+    <div class="card"><b>long long</b><br>ចំនួនគត់ធំ</div>
+    <div class="card"><b>double</b><br>ទសភាគ (ត្រឹមត្រូវជាង float)</div>
+    <div class="card"><b>char</b><br>អក្សរមួយ <code class="i">'A'</code></div>
+    <div class="card"><b>bool</b><br><code class="i">true</code> / <code class="i">false</code></div>
+    <div class="card"><b>std::string</b><br>អក្សរ (C++)</div>
+    <div class="card"><b>array / vector</b><br>បញ្ជីតម្លៃ</div>
+    <div class="card"><b>struct / class</b><br>ប្រភេទផ្ទាល់ខ្លួន</div>
+  </div>
+</section>
+
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>Hello World និង Output</h2>
+<p><code class="i">#include</code> ហៅ library, <code class="i">main()</code> ជាចំណុចចាប់ផ្តើម, <code class="i">;</code> បញ្ចប់ប្រយោគ, <code class="i">//</code> ជា comment។</p>
+<div class="codebox"><span class="label">C</span><pre><code class="cpp">#include &lt;stdio.h&gt;
+int main() {
+    printf(&quot;Hello, World!\n&quot;);
+    return 0;
+}</code></pre></div>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    cout &lt;&lt; &quot;Hello, World!&quot; &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li><code class="i">main</code> ត្រូវតែប្រកាសជា <code class="i">int main()</code>។ <code class="i">return 0;</code> មានន័យថាបញ្ចប់ដោយជោគជ័យ (ក្នុង C++ និង C99+ បើមិនសរសេរ <code class="i">main</code> នឹង return 0 ដោយស្វ័យប្រវត្តិ)។</li><li>C/C++ ញែកអក្សរតូចធំ៖ <code class="i">Main</code> ≠ <code class="i">main</code>។</li><li>ភ្លេច <code class="i">;</code> ជាកំហុសញឹកញាប់បំផុតរបស់អ្នកចាប់ផ្តើម។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><ol><li>បោះពុម្ពឈ្មោះ និងអាយុរបស់អ្នក ២ បន្ទាត់។</li><li>បោះពុម្ពរូបផ្កាយ ៣ បន្ទាត់ (*, **, ***)។</li></ol><details><summary>មើលចម្លើយ</summary><p class="hint">💡 កូដខាងក្រោមសន្មតថាមាន <code class="i">#include</code> ចាំបាច់ និង <code class="i">using namespace std;</code> ហើយនៅក្នុង <code class="i">main()</code>។</p><div class="codebox"><span class="label">answer1.cpp</span><pre><code class="cpp">cout &lt;&lt; &quot;Sokha&quot; &lt;&lt; endl;
+cout &lt;&lt; 20 &lt;&lt; endl;
+cout &lt;&lt; &quot;*\n**\n***&quot; &lt;&lt; endl;</code></pre></div></details></div>
+</section>
+
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>អថេរ និងប្រភេទទិន្នន័យ</h2>
+<p><code class="i">int</code> ចំនួនគត់, <code class="i">float/double</code> ទសភាគ, <code class="i">char</code> អក្សរមួយ, <code class="i">bool</code> ពិត/មិនពិត, <code class="i">const</code> ថេរ។ ឈ្មោះអថេរចាប់ផ្តើមដោយអក្សរ ឬ <code class="i">_</code> ហើយមិនដូចពាក្យបម្រុង។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    int age = 20;
+    double gpa = 3.75;
+    char grade = &#x27;A&#x27;;
+    bool passed = true;
+    const double PI = 3.14159;
+    cout &lt;&lt; age &lt;&lt; &quot; &quot; &lt;&lt; gpa &lt;&lt; &quot; &quot; &lt;&lt; grade &lt;&lt; &quot; &quot; &lt;&lt; passed &lt;&lt; endl;
+    cout &lt;&lt; &quot;Area = &quot; &lt;&lt; PI * 5 * 5 &lt;&lt; endl;   // ក្រឡាផ្ទៃរង្វង់កាំ 5
+    return 0;
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>អថេរដែលមិនទាន់ដាក់តម្លៃ មានតម្លៃសំរាម (garbage) ដូច្នេះគួរដាក់តម្លៃដំបូងជានិច្ច។</li><li><code class="i">int</code> មានដែនកំណត់ (ប្រហែល ±2.1 ពាន់លាន)៖ បើលើស នឹងខុសលទ្ធផល (overflow) ត្រូវប្រើ <code class="i">long long</code>។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><ol><li>ប្រកាសអថេរ ឈ្មោះ អាយុ កម្ពស់ ហើយបង្ហាញលទ្ធផល។</li><li>គណនាក្រឡាផ្ទៃរង្វង់កាំ = 5 (PI * r * r)។</li></ol><details><summary>មើលចម្លើយ</summary><p class="hint">💡 កូដខាងក្រោមសន្មតថាមាន <code class="i">#include</code> ចាំបាច់ និង <code class="i">using namespace std;</code> ហើយនៅក្នុង <code class="i">main()</code>។</p><div class="codebox"><span class="label">answer2.cpp</span><pre><code class="cpp">double r = 5;
+cout &lt;&lt; 3.14159 * r * r &lt;&lt; endl;   // 78.5397</code></pre></div></details></div>
+</section>
+
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Input</h2>
+<p>C++ ប្រើ <code class="i">cin</code>/<code class="i">getline</code>, C ប្រើ <code class="i">scanf</code> (<code class="i">%d</code> int, <code class="i">%f</code> float, <code class="i">%lf</code> double, <code class="i">%c</code> char, <code class="i">%s</code> string)។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+int main() {
+    string name; int age;
+    cout &lt;&lt; &quot;Name: &quot;;
+    getline(cin, name);
+    cout &lt;&lt; &quot;Age: &quot;;
+    cin &gt;&gt; age;
+    cout &lt;&lt; &quot;Hello &quot; &lt;&lt; name &lt;&lt; &quot;, &quot; &lt;&lt; age &lt;&lt; endl;
+}</code></pre></div>
+<div class="codebox"><span class="label">C</span><pre><code class="cpp">#include &lt;stdio.h&gt;
+int main() {
+    int a, b;
+    scanf(&quot;%d %d&quot;, &amp;a, &amp;b);
+    printf(&quot;Sum = %d\n&quot;, a + b);
+    return 0;
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li><code class="i">cin &gt;&gt;</code> ទុក <code class="i">\n</code> ក្នុង buffer។ បើប្រើ <code class="i">getline</code> ពីក្រោយ ត្រូវដាក់ <code class="i">cin.ignore();</code> មុន។</li><li><code class="i">scanf</code> ត្រូវការ <code class="i">&amp;</code> មុនអថេរ (លើកលែង char array ដូចជា <code class="i">char name[20]</code>)។</li><li><code class="i">%s</code> មិនអានដកឃ្លា ហើយអាច overflow — ដាក់ទំហំកំណត់ដូចជា <code class="i">scanf("%19s", name);</code>។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><ol><li>អានលេខពីរ បង្ហាញ + − × ÷។</li><li>អានប្រវែង និងទទឹង គណនាក្រឡាផ្ទៃ និងបរិមាត្រចតុកោណកែង។</li></ol><details><summary>មើលចម្លើយ</summary><p class="hint">💡 កូដខាងក្រោមសន្មតថាមាន <code class="i">#include</code> ចាំបាច់ និង <code class="i">using namespace std;</code> ហើយនៅក្នុង <code class="i">main()</code>។</p><div class="codebox"><span class="label">answer3.cpp</span><pre><code class="cpp">int a, b; cin &gt;&gt; a &gt;&gt; b;
+cout &lt;&lt; a + b &lt;&lt; &quot; &quot; &lt;&lt; a - b &lt;&lt; &quot; &quot; &lt;&lt; a * b &lt;&lt; &quot; &quot; &lt;&lt; (double)a / b &lt;&lt; endl;
+
+double w, h; cin &gt;&gt; w &gt;&gt; h;
+cout &lt;&lt; &quot;Area=&quot; &lt;&lt; w * h &lt;&lt; &quot; Perimeter=&quot; &lt;&lt; 2 * (w + h) &lt;&lt; endl;</code></pre></div></details></div>
+</section>
+
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Operators</h2>
+<p>Arithmetic <code class="i">+ - * / %</code>, Comparison <code class="i">== != &gt; &lt; &gt;= &lt;=</code>, Logical <code class="i">&amp;&amp; || !</code>។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    int a = 10, b = 3;
+    cout &lt;&lt; a / b &lt;&lt; endl;   // 3
+    cout &lt;&lt; a % b &lt;&lt; endl;   // 1
+    a += 5; a++;
+    cout &lt;&lt; (a &gt; b &amp;&amp; b &lt; 5) &lt;&lt; endl;  // 1
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li><code class="i">=</code> ជាការដាក់តម្លៃ ហើយ <code class="i">==</code> ជាការប្រៀបធៀប។ <code class="i">if (a = 5)</code> ជាកំហុសដ៏ពេញនិយម។</li><li><code class="i">10 / 3 = 3</code> ព្រោះជាចំនួនគត់។ ចង់បានទសភាគ ប្រើ <code class="i">10 / 3.0</code>។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><ol><li>ពិនិត្យលេខគូ ឬសេស (ប្រើ %)។</li><li>បម្លែង Celsius ទៅ Fahrenheit៖ F = C * 9 / 5 + 32។</li></ol><details><summary>មើលចម្លើយ</summary><p class="hint">💡 កូដខាងក្រោមសន្មតថាមាន <code class="i">#include</code> ចាំបាច់ និង <code class="i">using namespace std;</code> ហើយនៅក្នុង <code class="i">main()</code>។</p><div class="codebox"><span class="label">answer4.cpp</span><pre><code class="cpp">int n; cin &gt;&gt; n;
+cout &lt;&lt; (n % 2 == 0 ? &quot;even&quot; : &quot;odd&quot;) &lt;&lt; endl;
+
+double c; cin &gt;&gt; c;
+cout &lt;&lt; c * 9 / 5 + 32 &lt;&lt; endl;</code></pre></div></details></div>
+</section>
+
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>លក្ខខណ្ឌ if / switch</h2>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    int score; cin &gt;&gt; score;
+    if (score &gt;= 90)      cout &lt;&lt; &quot;A&quot;;
+    else if (score &gt;= 80) cout &lt;&lt; &quot;B&quot;;
+    else if (score &gt;= 50) cout &lt;&lt; &quot;Pass&quot;;
+    else                  cout &lt;&lt; &quot;Fail&quot;;
+
+    int day = 3;
+    switch (day) {
+        case 1: cout &lt;&lt; &quot;Mon&quot;; break;
+        case 3: cout &lt;&lt; &quot;Wed&quot;; break;
+        default: cout &lt;&lt; &quot;Other&quot;;
+    }
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li><code class="i">switch</code> ភ្លេច <code class="i">break</code> នឹងធ្លាក់ចូល case បន្ទាប់ (fall-through)។</li><li>ប្រើ <code class="i">{ }</code> ជានិច្ច ទោះ if មានតែមួយបន្ទាត់ ដើម្បីជៀសកំហុស។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><ol><li>អានលេខបី រកលេខធំជាងគេ។</li><li>ពិនិត្យឆ្នាំបង្គ្រប់ ឬអត់។</li><li>ម៉ាស៊ីនគិតលេខសាមញ្ញដោយ switch (+ - * /)។</li></ol><details><summary>មើលចម្លើយ</summary><p class="hint">💡 កូដខាងក្រោមសន្មតថាមាន <code class="i">#include</code> ចាំបាច់ និង <code class="i">using namespace std;</code> ហើយនៅក្នុង <code class="i">main()</code>។</p><div class="codebox"><span class="label">answer5.cpp</span><pre><code class="cpp">int a, b, c;
+cin &gt;&gt; a &gt;&gt; b &gt;&gt; c;
+int m = a;
+if (b &gt; m) m = b;
+if (c &gt; m) m = c;
+cout &lt;&lt; &quot;Max = &quot; &lt;&lt; m &lt;&lt; endl;
+
+int y;
+cin &gt;&gt; y;
+bool leap = (y % 4 == 0 &amp;&amp; y % 100 != 0) || (y % 400 == 0);
+cout &lt;&lt; (leap ? &quot;Leap year&quot; : &quot;Not leap year&quot;) &lt;&lt; endl;
+
+double x, z; char op;
+cin &gt;&gt; x &gt;&gt; op &gt;&gt; z;          // ឧ. 6 * 7
+switch (op) {
+    case &#x27;+&#x27;: cout &lt;&lt; x + z; break;
+    case &#x27;-&#x27;: cout &lt;&lt; x - z; break;
+    case &#x27;*&#x27;: cout &lt;&lt; x * z; break;
+    case &#x27;/&#x27;:
+        if (z == 0) cout &lt;&lt; &quot;Cannot divide by zero&quot;;
+        else        cout &lt;&lt; x / z;
+        break;
+    default: cout &lt;&lt; &quot;Unknown operator&quot;;
+}</code></pre></div></details></div>
+</section>
+
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Loops</h2>
+<p><code class="i">for</code>, <code class="i">while</code>, <code class="i">do-while</code>, <code class="i">break</code> (ឈប់), <code class="i">continue</code> (រំលង)។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    for (int i = 1; i &lt;= 5; i++) cout &lt;&lt; i &lt;&lt; &quot; &quot;;
+    int n = 3;
+    while (n &gt; 0) { cout &lt;&lt; n &lt;&lt; &quot; &quot;; n--; }
+    int x = 0;
+    do { cout &lt;&lt; x &lt;&lt; &quot; &quot;; x++; } while (x &lt; 3);
+    for (int i = 1; i &lt;= 10; i++) {
+        if (i == 3) continue;
+        if (i == 6) break;
+        cout &lt;&lt; i &lt;&lt; &quot; &quot;;
+    }
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>ប្រយ័ត្ន infinite loop (ភ្លេចបង្កើន/បន្ថយអថេរ)។</li><li><code class="i">for (...);</code> ដាក់ <code class="i">;</code> ខុសកន្លែង ធ្វើឱ្យ loop មិនធ្វើអ្វីសោះ។</li><li>Off-by-one៖ ពិនិត្យ <code class="i">&lt;</code> ឬ <code class="i">&lt;=</code> ឱ្យត្រូវ។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><ol><li>បង្ហាញតារាងគុណនៃលេខមួយ។</li><li>គណនា 1 + 2 + ... + 100។</li><li>បោះពុម្ពត្រីកោណផ្កាយ។</li><li>ពិនិត្យលេខបឋម។</li></ol><details><summary>មើលចម្លើយ</summary><p class="hint">💡 កូដខាងក្រោមសន្មតថាមាន <code class="i">#include</code> ចាំបាច់ និង <code class="i">using namespace std;</code> ហើយនៅក្នុង <code class="i">main()</code>។</p><div class="codebox"><span class="label">answer6.cpp</span><pre><code class="cpp">for (int i = 1; i &lt;= 12; i++)
+    cout &lt;&lt; n &lt;&lt; &quot; x &quot; &lt;&lt; i &lt;&lt; &quot; = &quot; &lt;&lt; n * i &lt;&lt; endl;
+
+int sum = 0;
+for (int i = 1; i &lt;= 100; i++) sum += i;   // 5050
+
+for (int i = 1; i &lt;= 4; i++) {
+    for (int j = 0; j &lt; i; j++) cout &lt;&lt; &quot;*&quot;;
+    cout &lt;&lt; endl;
+}
+
+bool prime = n &gt; 1;
+for (int i = 2; i * i &lt;= n; i++)
+    if (n % i == 0) { prime = false; break; }</code></pre></div></details></div>
+</section>
+
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Array</h2>
+<p>index ចាប់ផ្តើមពី <b>0</b>។ ការចូលហួសទំហំ array បង្កកំហុសគ្រោះថ្នាក់។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    int s[5] = {80, 65, 90, 72, 55};
+    int sum = 0;
+    for (int i = 0; i &lt; 5; i++) sum += s[i];
+    cout &lt;&lt; &quot;Avg = &quot; &lt;&lt; sum / 5.0 &lt;&lt; endl;
+
+    int m[2][3] = {{1, 2, 3}, {4, 5, 6}};
+    for (int r = 0; r &lt; 2; r++) {
+        for (int c = 0; c &lt; 3; c++) cout &lt;&lt; m[r][c] &lt;&lt; &quot; &quot;;
+        cout &lt;&lt; endl;
+    }
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>Array index ចាប់ពី 0 ហើយ index ចុងក្រោយគឺ <code class="i">size - 1</code>។ ចូលហួសទំហំ គ្មានការព្រមាន ប៉ុន្តែគ្រោះថ្នាក់ (undefined behavior)។</li><li>ក្នុង C++ ពេលទំហំមិនថេរ គួរប្រើ <code class="i">vector</code> ជាជាង array។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><ol><li>រកធំបំផុត និងតូចបំផុតក្នុង array។</li><li>តម្រៀប array (Bubble Sort)។</li><li>ស្វែងរកលេខក្នុង array (Linear Search)។</li></ol><details><summary>មើលចម្លើយ</summary><p class="hint">💡 កូដខាងក្រោមសន្មតថាមាន <code class="i">#include</code> ចាំបាច់ និង <code class="i">using namespace std;</code> ហើយនៅក្នុង <code class="i">main()</code>។</p><div class="codebox"><span class="label">answer7.cpp</span><pre><code class="cpp">int mx = a[0], mn = a[0];
+for (int i = 1; i &lt; n; i++) {
+    if (a[i] &gt; mx) mx = a[i];
+    if (a[i] &lt; mn) mn = a[i];
+}
+
+// Bubble Sort
+for (int i = 0; i &lt; n - 1; i++)
+    for (int j = 0; j &lt; n - 1 - i; j++)
+        if (a[j] &gt; a[j + 1]) swap(a[j], a[j + 1]);
+
+// Linear Search
+int pos = -1;
+for (int i = 0; i &lt; n; i++)
+    if (a[i] == key) { pos = i; break; }</code></pre></div></details></div>
+</section>
+
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>String</h2>
+<p>ក្នុង C string ជា array នៃ <code class="i">char</code> បញ្ចប់ដោយ <code class="i">'\0'</code>។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+int main() {
+    string s = &quot;Hello&quot;;
+    s += &quot; World&quot;;
+    cout &lt;&lt; s.length() &lt;&lt; endl;       // 11
+    cout &lt;&lt; s.substr(0, 5) &lt;&lt; endl;   // Hello
+    cout &lt;&lt; s.find(&quot;World&quot;) &lt;&lt; endl;  // 6
+}</code></pre></div>
+<div class="codebox"><span class="label">C</span><pre><code class="cpp">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+int main() {
+    char name[20] = &quot;Sok&quot;;
+    printf(&quot;%s: %d\n&quot;, name, (int)strlen(name));
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>ក្នុង C ប្រៀបធៀប string ដោយ <code class="i">strcmp(a, b) == 0</code> មិនមែន <code class="i">==</code> ទេ។</li><li><code class="i">strcpy</code> មិនពិនិត្យទំហំ អាចធ្វើឱ្យ buffer overflow ត្រូវប្រើ <code class="i">snprintf(dst, sizeof dst, "%s", src)</code> ឬ <code class="i">std::string</code> (<code class="i">strncpy</code> មិនធានាថាមាន <code class="i">'\0'</code> នៅចុង)។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><ol><li>បញ្ច្រាស string (abc → cba)។</li><li>រាប់ស្រៈក្នុង string។</li><li>ពិនិត្យ Palindrome។</li></ol><details><summary>មើលចម្លើយ</summary><p class="hint">💡 កូដខាងក្រោមសន្មតថាមាន <code class="i">#include</code> ចាំបាច់ និង <code class="i">using namespace std;</code> ហើយនៅក្នុង <code class="i">main()</code>។</p><div class="codebox"><span class="label">answer8.cpp</span><pre><code class="cpp">// បញ្ច្រាស
+reverse(s.begin(), s.end());   // #include &lt;algorithm&gt;
+
+// រាប់ស្រៈ
+int cnt = 0;
+for (char ch : s) {
+    ch = tolower(ch);
+    if (ch==&#x27;a&#x27;||ch==&#x27;e&#x27;||ch==&#x27;i&#x27;||ch==&#x27;o&#x27;||ch==&#x27;u&#x27;) cnt++;
+}
+
+// Palindrome
+string r = s;
+reverse(r.begin(), r.end());
+bool pal = (s == r);</code></pre></div></details></div>
+</section>
+
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Function</h2>
+<p><code class="i">void</code> មិនត្រឡប់តម្លៃ។ <code class="i">int &amp;x</code> ជា pass by reference កែតម្លៃដើមបាន។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int add(int a, int b) { return a + b; }
+
+int factorial(int n) {
+    if (n &lt;= 1) return 1;       // recursion
+    return n * factorial(n - 1);
+}
+
+void swapValue(int &amp;a, int &amp;b) {
+    int t = a; a = b; b = t;
+}
+
+int main() {
+    cout &lt;&lt; add(3, 4) &lt;&lt; &quot; &quot; &lt;&lt; factorial(5) &lt;&lt; endl;
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>Pass by value ចម្លងតម្លៃ ដូច្នេះកែក្នុងអនុគមន៍ មិនប៉ះពាល់តម្លៃដើមទេ (ត្រូវប្រើ <code class="i">&amp;</code> ឬ pointer)។</li><li>Recursion ត្រូវតែមាន <b>base case</b> ប្រសិនបើអត់ នឹងគាំងដោយ stack overflow។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><ol><li>សរសេរ <code class="i">isPrime(n)</code>។</li><li>សរសេរ <code class="i">max3(a,b,c)</code>។</li><li>Fibonacci ដោយ recursion។</li></ol><details><summary>មើលចម្លើយ</summary><p class="hint">💡 កូដខាងក្រោមសន្មតថាមាន <code class="i">#include</code> ចាំបាច់ និង <code class="i">using namespace std;</code> ហើយនៅក្នុង <code class="i">main()</code>។</p><div class="codebox"><span class="label">answer9.cpp</span><pre><code class="cpp">bool isPrime(int n) {
+    if (n &lt; 2) return false;
+    for (int i = 2; i * i &lt;= n; i++)
+        if (n % i == 0) return false;
+    return true;
+}
+int max3(int a, int b, int c) { return max(a, max(b, c)); }
+int fib(int n) { return n &lt;= 1 ? n : fib(n - 1) + fib(n - 2); }</code></pre></div></details></div>
+</section>
+
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>Pointer</h2>
+<p>Pointer រក្សាអាសយដ្ឋាន memory។ <code class="i">&amp;</code> យកអាសយដ្ឋាន, <code class="i">*</code> ចូលទៅតម្លៃ។ ប្រើ <code class="i">nullptr</code> បើមិនទាន់ចង្អុល។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    int x = 10;
+    int *p = &amp;x;
+    cout &lt;&lt; *p &lt;&lt; endl;   // 10
+    *p = 20;
+    cout &lt;&lt; x &lt;&lt; endl;    // 20
+
+    int arr[3] = {1, 2, 3};
+    int *q = arr;
+    cout &lt;&lt; *(q + 1) &lt;&lt; endl;  // 2
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>កុំប្រើ pointer ដែលមិនទាន់កំណត់ ឬជា <code class="i">nullptr</code> (<code class="i">*p</code> ធ្វើឱ្យ crash)។</li><li>Dangling pointer៖ pointer ចង្អុលទៅ memory ដែលត្រូវបានលុបរួច ហាមប្រើ។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><ol><li>swap ដោយ pointer (<code class="i">void swap(int *a, int *b)</code>)។</li><li>ប្រើ pointer រត់ឆ្លងកាត់ array។</li></ol><details><summary>មើលចម្លើយ</summary><p class="hint">💡 កូដខាងក្រោមសន្មតថាមាន <code class="i">#include</code> ចាំបាច់ និង <code class="i">using namespace std;</code> ហើយនៅក្នុង <code class="i">main()</code>។</p><div class="codebox"><span class="label">answer10.cpp</span><pre><code class="cpp">void swapPtr(int *a, int *b) {   // ដាក់ឈ្មោះខុសពី std::swap
+    int t = *a; *a = *b; *b = t;
+}
+// ហៅ៖ swapPtr(&amp;x, &amp;y);
+
+int *p = arr;
+for (int i = 0; i &lt; n; i++) cout &lt;&lt; *(p + i) &lt;&lt; &quot; &quot;;</code></pre></div></details></div>
+</section>
+
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>Struct</h2>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+struct Student {
+    string name;
+    int age;
+    double gpa;
+};
+
+int main() {
+    Student list[2] = {{&quot;Sophea&quot;, 19, 3.8}, {&quot;Dara&quot;, 20, 3.2}};
+    for (const Student &amp;s : list)
+        cout &lt;&lt; s.name &lt;&lt; &quot; - &quot; &lt;&lt; s.gpa &lt;&lt; endl;
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li><code class="i">struct</code> ជាលំនាំដើម public ហើយ <code class="i">class</code> ជាលំនាំដើម private — នេះជាភាពខុសគ្នាសំខាន់ (ការទទួលមរតកលំនាំដើមក៏ public/private តាមនោះដែរ)។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><ol><li>struct <code class="i">Book</code> (title, price) ៣ក្បាល បង្ហាញក្បាលថ្លៃបំផុត។</li><li>រកសិស្ស GPA ខ្ពស់បំផុត។</li></ol><details><summary>មើលចម្លើយ</summary><p class="hint">💡 កូដខាងក្រោមសន្មតថាមាន <code class="i">#include</code> ចាំបាច់ និង <code class="i">using namespace std;</code> ហើយនៅក្នុង <code class="i">main()</code>។</p><div class="codebox"><span class="label">answer11.cpp</span><pre><code class="cpp">struct Book { string title; double price; };
+Book b[3];
+int best = 0;
+for (int i = 1; i &lt; 3; i++)
+    if (b[i].price &gt; b[best].price) best = i;
+cout &lt;&lt; b[best].title;</code></pre></div></details></div>
+</section>
+
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>Dynamic Memory</h2>
+<p>C ប្រើ <code class="i">malloc/free</code>, C++ ប្រើ <code class="i">new/delete</code>។ ភ្លេចដោះ នឹងកើត memory leak។</p>
+<div class="codebox"><span class="label">C</span><pre><code class="cpp">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+int main() {
+    int n = 5;
+    int *a = (int *)malloc(n * sizeof(int));
+    if (a == NULL) return 1;
+    for (int i = 0; i &lt; n; i++) a[i] = i * i;
+    free(a);
+}</code></pre></div>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">int *p = new int(42);
+int *arr = new int[5];
+delete p;
+delete[] arr;</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>រាល់ <code class="i">malloc</code> ត្រូវមាន <code class="i">free</code> ហើយ <code class="i">new[]</code> ត្រូវ <code class="i">delete[]</code> (មិនលាយគ្នា)។</li><li>ហាម <code class="i">free</code> ពីរដង (double free) និងហាមប្រើ memory ក្រោយ free។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><ol><li>សួរ n បង្កើត array ដោយ <code class="i">new</code> គណនាមធ្យមភាគ។</li></ol><details><summary>មើលចម្លើយ</summary><p class="hint">💡 កូដខាងក្រោមសន្មតថាមាន <code class="i">#include</code> ចាំបាច់ និង <code class="i">using namespace std;</code> ហើយនៅក្នុង <code class="i">main()</code>។</p><div class="codebox"><span class="label">answer12.cpp</span><pre><code class="cpp">int n; cin &gt;&gt; n;
+if (n &lt;= 0) { cout &lt;&lt; &quot;n must be &gt; 0&quot;; return 1; }
+int *a = new int[n];
+double sum = 0;
+for (int i = 0; i &lt; n; i++) { cin &gt;&gt; a[i]; sum += a[i]; }
+cout &lt;&lt; sum / n;
+delete[] a;</code></pre></div></details></div>
+</section>
+
+<section id="l13">
+<h2><span class="badge">មេរៀន ១៣</span>File I/O</h2>
+<p>C++ ប្រើ <code class="i">ofstream</code> (សរសេរ), <code class="i">ifstream</code> (អាន) ក្នុង <code class="i">&lt;fstream&gt;</code>។ C ប្រើ <code class="i">fopen, fprintf, fscanf, fclose</code>។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+using namespace std;
+int main() {
+    ofstream out(&quot;data.txt&quot;);
+    out &lt;&lt; &quot;Line 1&quot; &lt;&lt; endl &lt;&lt; &quot;Line 2&quot; &lt;&lt; endl;
+    out.close();
+
+    ifstream in(&quot;data.txt&quot;);
+    string line;
+    while (getline(in, line)) cout &lt;&lt; line &lt;&lt; endl;
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>ពិនិត្យថាបើក file បានឬអត់៖ <code class="i">if (!in) { cout &lt;&lt; "cannot open"; }</code>។</li><li>ត្រូវ <code class="i">close()</code> ឱ្យទិន្នន័យត្រូវបានសរសេរពិតប្រាកដ។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣</h4><ol><li>រក្សាទុកឈ្មោះ និងពិន្ទុសិស្ស ៣នាក់ក្នុង file ហើយអានមកវិញ។</li><li>រាប់បន្ទាត់ក្នុង file។</li></ol><details><summary>មើលចម្លើយ</summary><p class="hint">💡 កូដខាងក្រោមសន្មតថាមាន <code class="i">#include</code> ចាំបាច់ និង <code class="i">using namespace std;</code> ហើយនៅក្នុង <code class="i">main()</code>។</p><div class="codebox"><span class="label">answer13.cpp</span><pre><code class="cpp">ofstream out(&quot;scores.txt&quot;);
+out &lt;&lt; &quot;Dara 85\nSophea 92\nVanna 78\n&quot;;
+out.close();
+
+ifstream in(&quot;scores.txt&quot;);
+string name; int score;
+while (in &gt;&gt; name &gt;&gt; score) cout &lt;&lt; name &lt;&lt; &quot;: &quot; &lt;&lt; score &lt;&lt; endl;
+
+// រាប់បន្ទាត់
+ifstream in2(&quot;scores.txt&quot;);
+int lines = 0; string line;
+while (getline(in2, line)) lines++;</code></pre></div></details></div>
+</section>
+
+<section id="l14">
+<h2><span class="badge">មេរៀន ១៤</span>Class និង OOP</h2>
+<p>OOP ៤ គោលការណ៍៖ Encapsulation, Abstraction, Inheritance, Polymorphism។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Account {
+private:
+    string owner;
+    double balance;
+public:
+    Account(string o, double b) : owner(o), balance(b) {}
+    void deposit(double a) { if (a &gt; 0) balance += a; }
+    bool withdraw(double a) {
+        if (a &gt; balance) return false;
+        balance -= a;
+        return true;
+    }
+    void show() const { cout &lt;&lt; owner &lt;&lt; &quot;: $&quot; &lt;&lt; balance &lt;&lt; endl; }
+};
+
+class Animal {
+public:
+    virtual void speak() { cout &lt;&lt; &quot;...&quot; &lt;&lt; endl; }
+    virtual ~Animal() {}
+};
+class Dog : public Animal {
+public:
+    void speak() override { cout &lt;&lt; &quot;Woof!&quot; &lt;&lt; endl; }
+};
+
+int main() {
+    Account a(&quot;Vanna&quot;, 100);
+    a.deposit(50); a.withdraw(30); a.show();
+    Animal *d = new Dog();
+    d-&gt;speak();
+    delete d;
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>Base class ត្រូវមាន <code class="i">virtual</code> destructor បើប្រើ polymorphism ដោយ pointer។</li><li>ដាក់ data ជា <code class="i">private</code> ហើយចូលតាម method (Encapsulation)។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៤</h4><ol><li>class <code class="i">Rectangle</code> មាន <code class="i">area()</code> និង <code class="i">perimeter()</code>។</li><li><code class="i">Shape</code> base, <code class="i">Circle</code>/<code class="i">Square</code> derived override <code class="i">area()</code>។</li></ol><details><summary>មើលចម្លើយ</summary><p class="hint">💡 កូដខាងក្រោមសន្មតថាមាន <code class="i">#include</code> ចាំបាច់ និង <code class="i">using namespace std;</code> ហើយនៅក្នុង <code class="i">main()</code>។</p><div class="codebox"><span class="label">answer14.cpp</span><pre><code class="cpp">class Rectangle {
+    double w, h;
+public:
+    Rectangle(double w, double h) : w(w), h(h) {}
+    double area() const { return w * h; }
+    double perimeter() const { return 2 * (w + h); }
+};
+
+class Shape {
+public:
+    virtual double area() const = 0;
+    virtual ~Shape() {}
+};
+class Circle : public Shape {
+    double r;
+public:
+    Circle(double r) : r(r) {}
+    double area() const override { return 3.14159 * r * r; }
+};</code></pre></div></details></div>
+</section>
+
+<section id="l15">
+<h2><span class="badge">មេរៀន ១៥</span>STL</h2>
+<p><code class="i">vector</code> array ទំហំប្តូរបាន, <code class="i">map</code> គូ key→value, <code class="i">sort/find/reverse</code> ជា algorithm។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;map&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+int main() {
+    vector&lt;int&gt; v = {5, 2, 8, 1};
+    v.push_back(9);
+    sort(v.begin(), v.end());
+    for (int x : v) cout &lt;&lt; x &lt;&lt; &quot; &quot;;
+
+    map&lt;string, int&gt; score;
+    score[&quot;Dara&quot;] = 85;
+    score[&quot;Sophea&quot;] = 92;
+    for (auto &amp;p : score) cout &lt;&lt; p.first &lt;&lt; &quot;=&quot; &lt;&lt; p.second &lt;&lt; endl;
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li><code class="i">v[i]</code> មិនពិនិត្យ range ប្រើ <code class="i">v.at(i)</code> ដើម្បីបាន exception។</li><li>ការ <code class="i">push_back</code>/<code class="i">erase</code> ក្នុងពេល loop អាចធ្វើឱ្យ iterator អសុពលភាព។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៥</h4><ol><li>អានលេខចូល vector រហូតដល់ 0 រួចតម្រៀប។</li><li>រាប់ភាពញឹកញាប់នៃពាក្យ ដោយ <code class="i">map&lt;string,int&gt;</code>។</li></ol><details><summary>មើលចម្លើយ</summary><p class="hint">💡 កូដខាងក្រោមសន្មតថាមាន <code class="i">#include</code> ចាំបាច់ និង <code class="i">using namespace std;</code> ហើយនៅក្នុង <code class="i">main()</code>។</p><div class="codebox"><span class="label">answer15.cpp</span><pre><code class="cpp">vector&lt;int&gt; v; int x;
+while (cin &gt;&gt; x &amp;&amp; x != 0) v.push_back(x);
+sort(v.begin(), v.end());
+
+map&lt;string, int&gt; freq;
+string w;
+while (cin &gt;&gt; w) freq[w]++;
+for (auto &amp;p : freq) cout &lt;&lt; p.first &lt;&lt; &quot;: &quot; &lt;&lt; p.second &lt;&lt; endl;</code></pre></div></details></div>
+</section>
+
+<section id="l16">
+<h2><span class="badge">មេរៀន ១៦</span>Header files, Multi-file, enum</h2>
+<p>បំបែកកម្មវិធីជាច្រើន file៖ <code class="i">.h</code> ប្រកាស (declaration), <code class="i">.cpp</code> អនុវត្ត (definition)។ <code class="i">enum class</code> កំណត់ឈ្មោះជាក្រុម។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">// mathutils.h
+#pragma once
+int square(int x);
+
+// mathutils.cpp
+#include &quot;mathutils.h&quot;
+int square(int x) { return x * x; }
+
+// main.cpp
+#include &lt;iostream&gt;
+#include &quot;mathutils.h&quot;
+int main() {
+    std::cout &lt;&lt; square(5) &lt;&lt; std::endl;   // 25
+}</code></pre></div>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">g++ main.cpp mathutils.cpp -o app</code></pre></div>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">enum class Color { Red, Green, Blue };
+Color c = Color::Green;
+
+using Score = int;        // ឈ្មោះក្លែង (alias)
+const int MAX_SIZE = 100; // ល្អជាង #define</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>ប្រើ <code class="i">#pragma once</code> (ឬ include guard) ការពារ include ម្តងហើយម្តងទៀត។</li><li>កុំដាក់ <code class="i">using namespace std;</code> ក្នុង header file។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៦</h4><ol><li>បំបែកអនុគមន៍ add, sub, mul ទៅ file <code class="i">calc.h/.cpp</code> ហើយហៅពី main។</li><li>បង្កើត <code class="i">enum class Day</code> ហើយបោះពុម្ពឈ្មោះថ្ងៃដោយ switch។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer16.cpp</span><pre><code class="cpp">// calc.h
+#pragma once
+int add(int a, int b);
+int sub(int a, int b);
+int mul(int a, int b);
+
+// calc.cpp
+#include &quot;calc.h&quot;
+int add(int a, int b) { return a + b; }
+int sub(int a, int b) { return a - b; }
+int mul(int a, int b) { return a * b; }
+
+// main.cpp
+#include &lt;iostream&gt;
+#include &quot;calc.h&quot;
+using namespace std;
+
+enum class Day { Mon, Tue, Wed, Thu, Fri, Sat, Sun };
+
+const char *dayName(Day d) {
+    switch (d) {
+        case Day::Mon: return &quot;Monday&quot;;
+        case Day::Tue: return &quot;Tuesday&quot;;
+        case Day::Wed: return &quot;Wednesday&quot;;
+        case Day::Thu: return &quot;Thursday&quot;;
+        case Day::Fri: return &quot;Friday&quot;;
+        case Day::Sat: return &quot;Saturday&quot;;
+        case Day::Sun: return &quot;Sunday&quot;;
+    }
+    return &quot;?&quot;;
+}
+
+int main() {
+    cout &lt;&lt; add(5, 3) &lt;&lt; &quot; &quot; &lt;&lt; sub(5, 3) &lt;&lt; &quot; &quot; &lt;&lt; mul(5, 3) &lt;&lt; endl;   // 8 2 15
+    cout &lt;&lt; dayName(Day::Fri) &lt;&lt; endl;                                   // Friday
+}
+// Compile: g++ main.cpp calc.cpp -o app</code></pre></div></details></div>
+</section>
+
+<section id="l17">
+<h2><span class="badge">មេរៀន ១៧</span>Exception Handling</h2>
+<p>ប្រើ <code class="i">throw</code> បោះកំហុស, <code class="i">try</code> សាកល្បង, <code class="i">catch</code> ចាប់កំហុស។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;stdexcept&gt;
+using namespace std;
+
+double divide(double a, double b) {
+    if (b == 0) throw runtime_error(&quot;Divide by zero&quot;);
+    return a / b;
+}
+
+int main() {
+    try {
+        cout &lt;&lt; divide(10, 2) &lt;&lt; endl;   // 5
+        cout &lt;&lt; divide(1, 0) &lt;&lt; endl;    // throw
+    } catch (const exception &amp;e) {
+        cout &lt;&lt; &quot;Error: &quot; &lt;&lt; e.what() &lt;&lt; endl;
+    }
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>Catch ដោយ <code class="i">const exception &amp;</code> (reference) កុំចម្លង។</li><li>Exception សម្រាប់ស្ថានភាពមិនធម្មតា កុំប្រើជំនួស if ធម្មតា។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៧</h4><ol><li>អានលេខពីរ ហើយចែក ដោយចាប់កំហុសចែកនឹងសូន្យ។</li><li>សរសេរអនុគមន៍ <code class="i">getAge()</code> ដែល throw បើអាយុ &lt; 0។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer17.cpp</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;stdexcept&gt;
+using namespace std;
+
+double divide(double a, double b) {
+    if (b == 0) throw runtime_error(&quot;Cannot divide by zero&quot;);
+    return a / b;
+}
+
+int getAge(int age) {
+    if (age &lt; 0) throw invalid_argument(&quot;Age cannot be negative&quot;);
+    return age;
+}
+
+int main() {
+    double a, b;
+    cout &lt;&lt; &quot;a b: &quot;;
+    cin &gt;&gt; a &gt;&gt; b;
+    try {
+        cout &lt;&lt; &quot;Result: &quot; &lt;&lt; divide(a, b) &lt;&lt; endl;
+        cout &lt;&lt; &quot;Age: &quot; &lt;&lt; getAge(-5) &lt;&lt; endl;
+    } catch (const exception &amp;e) {
+        cout &lt;&lt; &quot;Error: &quot; &lt;&lt; e.what() &lt;&lt; endl;
+    }
+}</code></pre></div></details></div>
+</section>
+
+<section id="l18">
+<h2><span class="badge">មេរៀន ១៨</span>Template</h2>
+<p>Template ឱ្យសរសេរកូដម្តង ប្រើបានជាមួយប្រភេទទិន្នន័យណាក៏បាន។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+template &lt;typename T&gt;
+T maxOf(T a, T b) { return (a &gt; b) ? a : b; }
+
+template &lt;typename T&gt;
+class Box {
+    T value;
+public:
+    Box(T v) : value(v) {}
+    T get() const { return value; }
+};
+
+int main() {
+    cout &lt;&lt; maxOf(3, 7) &lt;&lt; endl;          // 7
+    cout &lt;&lt; maxOf(2.5, 1.5) &lt;&lt; endl;      // 2.5
+    cout &lt;&lt; maxOf&lt;string&gt;(&quot;a&quot;, &quot;b&quot;) &lt;&lt; endl;
+    Box&lt;int&gt; b(10);
+    cout &lt;&lt; b.get() &lt;&lt; endl;
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>Template ជាទូទៅត្រូវសរសេរទាំងអស់ក្នុង header file (<code class="i">.h</code>)។</li><li>កំហុសរបស់ template ពិបាកអានជាងធម្មតា សូមមើលបន្ទាត់ដំបូងនៃ error។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៨</h4><ol><li>សរសេរ template <code class="i">swapValue&lt;T&gt;</code>។</li><li>សរសេរ template class <code class="i">Stack&lt;T&gt;</code> (push, pop, top) ដោយប្រើ vector។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer18.cpp</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;stdexcept&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+template &lt;typename T&gt;
+void swapValue(T &amp;a, T &amp;b) {
+    T t = a;
+    a = b;
+    b = t;
+}
+
+template &lt;typename T&gt;
+class Stack {
+    vector&lt;T&gt; data;
+public:
+    void push(const T &amp;v) { data.push_back(v); }
+    void pop() {
+        if (data.empty()) throw out_of_range(&quot;Stack is empty&quot;);
+        data.pop_back();
+    }
+    const T &amp;top() const {
+        if (data.empty()) throw out_of_range(&quot;Stack is empty&quot;);
+        return data.back();
+    }
+    bool empty() const { return data.empty(); }
+    size_t size() const { return data.size(); }
+};
+
+int main() {
+    int x = 1, y = 2;
+    swapValue(x, y);
+    cout &lt;&lt; x &lt;&lt; &quot; &quot; &lt;&lt; y &lt;&lt; endl;          // 2 1
+
+    Stack&lt;string&gt; s;
+    s.push(&quot;a&quot;);
+    s.push(&quot;b&quot;);
+    cout &lt;&lt; s.top() &lt;&lt; &quot; &quot; &lt;&lt; s.size() &lt;&lt; endl;   // b 2
+    s.pop();
+    cout &lt;&lt; s.top() &lt;&lt; endl;                      // a
+}</code></pre></div></details></div>
+</section>
+
+<section id="l19">
+<h2><span class="badge">មេរៀន ១៩</span>Smart Pointer និង Lambda (C++11+)</h2>
+<p>Smart pointer លុប memory ដោយស្វ័យប្រវត្តិ មិនចាំបាច់ <code class="i">delete</code>។ Lambda ជាអនុគមន៍គ្មានឈ្មោះ។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;memory&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+int main() {
+    auto p = make_unique&lt;int&gt;(42);        // owner តែមួយ
+    auto s = make_shared&lt;string&gt;(&quot;hi&quot;);   // owner ច្រើន
+    cout &lt;&lt; *p &lt;&lt; &quot; &quot; &lt;&lt; *s &lt;&lt; endl;
+
+    auto square = [](int x) { return x * x; };
+    cout &lt;&lt; square(6) &lt;&lt; endl;            // 36
+
+    vector&lt;int&gt; v = {3, 1, 4, 1, 5};
+    sort(v.begin(), v.end(), [](int a, int b) { return a &gt; b; });
+    for (int x : v) cout &lt;&lt; x &lt;&lt; &quot; &quot;;     // 5 4 3 1 1
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>C++ ទំនើបគួរចៀសវាង <code class="i">new/delete</code> ដោយដៃ ហើយប្រើ <code class="i">make_unique</code> ឬ <code class="i">vector</code> ជំនួស។</li><li><code class="i">unique_ptr</code> ចម្លងមិនបាន ត្រូវប្រើ <code class="i">std::move</code>។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៩</h4><ol><li>តម្រៀប vector នៃ string តាមប្រវែងពាក្យ ដោយ lambda។</li><li>បង្កើត <code class="i">unique_ptr</code> នៃ class <code class="i">Student</code> ហើយហៅ method។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer19.cpp</span><pre><code class="cpp">#include &lt;algorithm&gt;
+#include &lt;iostream&gt;
+#include &lt;memory&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+class Student {
+    string name;
+public:
+    explicit Student(string n) : name(move(n)) {}
+    void hello() const { cout &lt;&lt; &quot;Hi, I&#x27;m &quot; &lt;&lt; name &lt;&lt; endl; }
+};
+
+int main() {
+    vector&lt;string&gt; words = {&quot;banana&quot;, &quot;fig&quot;, &quot;apple&quot;, &quot;kiwi&quot;};
+    sort(words.begin(), words.end(), [](const string &amp;a, const string &amp;b) {
+        return a.size() &lt; b.size();
+    });
+    for (const auto &amp;w : words) cout &lt;&lt; w &lt;&lt; &quot; &quot;;   // fig kiwi apple banana
+    cout &lt;&lt; endl;
+
+    auto st = make_unique&lt;Student&gt;(&quot;Dara&quot;);
+    st-&gt;hello();                                    // Hi, I&#x27;m Dara
+}   // st ត្រូវបានលុបដោយស្វ័យប្រវត្តិ</code></pre></div></details></div>
+</section>
+
+<section id="l20">
+<h2><span class="badge">មេរៀន ២០</span>Linked List</h2>
+<p>Node នីមួយៗមាន data និង pointer ទៅ node បន្ទាប់។ បន្ថែម/លុបនៅដើម ឬនៅកន្លែងដែលមាន pointer រួច បានលឿន O(1) ប៉ុន្តែការចូលដល់ធាតុទី i យឺត O(n) មិនដូច array។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+struct Node {
+    int data;
+    Node *next;
+};
+
+void pushFront(Node *&amp;head, int v) {
+    Node *n = new Node{v, head};
+    head = n;
+}
+
+void printList(Node *head) {
+    for (Node *p = head; p != nullptr; p = p-&gt;next)
+        cout &lt;&lt; p-&gt;data &lt;&lt; &quot; -&gt; &quot;;
+    cout &lt;&lt; &quot;null&quot; &lt;&lt; endl;
+}
+
+void freeList(Node *&amp;head) {
+    while (head) {
+        Node *t = head;
+        head = head-&gt;next;
+        delete t;
+    }
+}
+
+int main() {
+    Node *head = nullptr;
+    pushFront(head, 3);
+    pushFront(head, 2);
+    pushFront(head, 1);
+    printList(head);     // 1 -&gt; 2 -&gt; 3 -&gt; null
+    freeList(head);
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>ពិនិត្យ list ទទេ (<code class="i">head == nullptr</code>) មុនចូលប្រើ <code class="i">head-&gt;next</code>។</li><li>ត្រូវ <code class="i">delete</code> node ទាំងអស់ ដើម្បីជៀស memory leak។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ២០</h4><ol><li>បន្ថែមអនុគមន៍ <code class="i">pushBack</code>។</li><li>សរសេរអនុគមន៍រាប់ node និងរកតម្លៃក្នុង list។</li><li>សរសេរអនុគមន៍ <code class="i">reverse</code> list។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer20.cpp</span><pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+struct Node {
+    int data;
+    Node *next;
+};
+
+void pushBack(Node *&amp;head, int v) {
+    Node *n = new Node{v, nullptr};
+    if (head == nullptr) { head = n; return; }
+    Node *p = head;
+    while (p-&gt;next != nullptr) p = p-&gt;next;
+    p-&gt;next = n;
+}
+
+int countNodes(Node *head) {
+    int c = 0;
+    for (Node *p = head; p; p = p-&gt;next) c++;
+    return c;
+}
+
+bool contains(Node *head, int v) {
+    for (Node *p = head; p; p = p-&gt;next)
+        if (p-&gt;data == v) return true;
+    return false;
+}
+
+void reverseList(Node *&amp;head) {
+    Node *prev = nullptr, *cur = head;
+    while (cur) {
+        Node *next = cur-&gt;next;
+        cur-&gt;next = prev;
+        prev = cur;
+        cur = next;
+    }
+    head = prev;
+}
+
+void printList(Node *head) {
+    for (Node *p = head; p; p = p-&gt;next) cout &lt;&lt; p-&gt;data &lt;&lt; &quot; -&gt; &quot;;
+    cout &lt;&lt; &quot;null&quot; &lt;&lt; endl;
+}
+
+void freeList(Node *&amp;head) {
+    while (head) { Node *t = head; head = head-&gt;next; delete t; }
+}
+
+int main() {
+    Node *head = nullptr;
+    for (int v : {1, 2, 3, 4}) pushBack(head, v);
+    printList(head);                                     // 1 -&gt; 2 -&gt; 3 -&gt; 4 -&gt; null
+    cout &lt;&lt; countNodes(head) &lt;&lt; &quot; &quot; &lt;&lt; contains(head, 3) &lt;&lt; endl;   // 4 1
+    reverseList(head);
+    printList(head);                                     // 4 -&gt; 3 -&gt; 2 -&gt; 1 -&gt; null
+    freeList(head);
+}</code></pre></div></details></div>
+</section>
+
+<section id="l21">
+<h2><span class="badge">មេរៀន ២១</span>Stack និង Queue</h2>
+<p>Stack៖ ចូលក្រោយចេញមុន (LIFO)។ Queue៖ ចូលមុនចេញមុន (FIFO)។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;stack&gt;
+#include &lt;queue&gt;
+using namespace std;
+
+int main() {
+    stack&lt;int&gt; st;
+    st.push(1); st.push(2); st.push(3);
+    while (!st.empty()) {
+        cout &lt;&lt; st.top() &lt;&lt; &quot; &quot;;   // 3 2 1
+        st.pop();
+    }
+    cout &lt;&lt; endl;
+
+    queue&lt;int&gt; q;
+    q.push(1); q.push(2); q.push(3);
+    while (!q.empty()) {
+        cout &lt;&lt; q.front() &lt;&lt; &quot; &quot;;  // 1 2 3
+        q.pop();
+    }
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li><code class="i">top()</code>/<code class="i">front()</code>/<code class="i">pop()</code> លើ container ទទេ ជា undefined behavior ត្រូវពិនិត្យ <code class="i">empty()</code> មុន។</li><li><code class="i">pop()</code> មិនត្រឡប់តម្លៃ ត្រូវ <code class="i">top()</code> មុន ហើយ <code class="i">pop()</code>។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ២១</h4><ol><li>ពិនិត្យវង់ក្រចក <code class="i">( ) [ ] { }</code> ត្រឹមត្រូវ ឬអត់ ដោយ stack។</li><li>ក្លែងធ្វើជួរអតិថិជនធនាគារដោយ queue។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer21.cpp</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;queue&gt;
+#include &lt;stack&gt;
+#include &lt;string&gt;
+using namespace std;
+
+bool balanced(const string &amp;s) {
+    stack&lt;char&gt; st;
+    for (char c : s) {
+        if (c == &#x27;(&#x27; || c == &#x27;[&#x27; || c == &#x27;{&#x27;) {
+            st.push(c);
+        } else if (c == &#x27;)&#x27; || c == &#x27;]&#x27; || c == &#x27;}&#x27;) {
+            if (st.empty()) return false;
+            char open = st.top();
+            st.pop();
+            if ((c == &#x27;)&#x27; &amp;&amp; open != &#x27;(&#x27;) || (c == &#x27;]&#x27; &amp;&amp; open != &#x27;[&#x27;) ||
+                (c == &#x27;}&#x27; &amp;&amp; open != &#x27;{&#x27;)) return false;
+        }
+    }
+    return st.empty();
+}
+
+int main() {
+    cout &lt;&lt; balanced(&quot;{[()]}&quot;) &lt;&lt; &quot; &quot; &lt;&lt; balanced(&quot;([)]&quot;) &lt;&lt; endl;   // 1 0
+
+    queue&lt;string&gt; line;
+    for (string name : {&quot;Dara&quot;, &quot;Sophea&quot;, &quot;Vanna&quot;}) line.push(name);
+    int ticket = 1;
+    while (!line.empty()) {
+        cout &lt;&lt; &quot;Counter serves #&quot; &lt;&lt; ticket++ &lt;&lt; &quot;: &quot; &lt;&lt; line.front() &lt;&lt; endl;
+        line.pop();
+    }
+}</code></pre></div></details></div>
+</section>
+
+<section id="l22">
+<h2><span class="badge">មេរៀន ២២</span>Algorithm៖ Binary Search និង Big-O</h2>
+<p>Binary Search ចែកពាក់កណ្តាលរាល់ជំហាន ល្បឿន <code class="i">O(log n)</code> ប្រៀបធៀប Linear Search <code class="i">O(n)</code>។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int binarySearch(const vector&lt;int&gt; &amp;a, int target) {
+    int lo = 0, hi = (int)a.size() - 1;
+    while (lo &lt;= hi) {
+        int mid = lo + (hi - lo) / 2;
+        if (a[mid] == target) return mid;
+        if (a[mid] &lt; target) lo = mid + 1;
+        else                 hi = mid - 1;
+    }
+    return -1;   // រកមិនឃើញ
+}
+
+int main() {
+    vector&lt;int&gt; a = {1, 3, 5, 7, 9, 11};
+    cout &lt;&lt; binarySearch(a, 7) &lt;&lt; endl;   // 3
+    cout &lt;&lt; binarySearch(a, 4) &lt;&lt; endl;   // -1
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>Binary Search ដំណើរការតែលើ array ដែលតម្រៀបរួច។</li><li>គណនា <code class="i">mid = lo + (hi - lo) / 2</code> ជៀសវាង overflow។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ២២</h4><ol><li>សរសេរ Binary Search ដោយ recursion។</li><li>សរសេរ Selection Sort ហើយប្រៀបធៀបជាមួយ <code class="i">sort()</code>។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer22.cpp</span><pre><code class="cpp">#include &lt;algorithm&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int bs(const vector&lt;int&gt; &amp;a, int lo, int hi, int t) {
+    if (lo &gt; hi) return -1;                 // base case
+    int mid = lo + (hi - lo) / 2;
+    if (a[mid] == t) return mid;
+    if (a[mid] &lt; t) return bs(a, mid + 1, hi, t);
+    return bs(a, lo, mid - 1, t);
+}
+
+void selectionSort(vector&lt;int&gt; &amp;a) {        // O(n²)
+    for (size_t i = 0; i + 1 &lt; a.size(); i++) {
+        size_t minIdx = i;
+        for (size_t j = i + 1; j &lt; a.size(); j++)
+            if (a[j] &lt; a[minIdx]) minIdx = j;
+        swap(a[i], a[minIdx]);
+    }
+}
+
+int main() {
+    vector&lt;int&gt; a = {1, 3, 5, 7, 9, 11};
+    cout &lt;&lt; bs(a, 0, (int)a.size() - 1, 9) &lt;&lt; endl;   // 4
+
+    vector&lt;int&gt; v = {5, 2, 9, 1, 7}, w = v;
+    selectionSort(v);
+    sort(w.begin(), w.end());                // O(n log n) — លឿនជាងសម្រាប់ទិន្នន័យធំ
+    cout &lt;&lt; (v == w ? &quot;same result&quot; : &quot;different&quot;) &lt;&lt; endl;
+}</code></pre></div></details></div>
+</section>
+
+<section id="l23">
+<h2><span class="badge">មេរៀន ២៣</span>Operator Overloading</h2>
+<p>កំណត់ឱ្យ <code class="i">+</code>, <code class="i">==</code>, <code class="i">&lt;&lt;</code> ដំណើរការជាមួយ class របស់យើង។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Vec2 {
+public:
+    double x, y;
+    Vec2(double x = 0, double y = 0) : x(x), y(y) {}
+
+    Vec2 operator+(const Vec2 &amp;o) const {
+        return Vec2(x + o.x, y + o.y);
+    }
+    bool operator==(const Vec2 &amp;o) const {
+        return x == o.x &amp;&amp; y == o.y;
+    }
+};
+
+ostream &amp;operator&lt;&lt;(ostream &amp;os, const Vec2 &amp;v) {
+    return os &lt;&lt; &quot;(&quot; &lt;&lt; v.x &lt;&lt; &quot;, &quot; &lt;&lt; v.y &lt;&lt; &quot;)&quot;;
+}
+
+int main() {
+    Vec2 a(1, 2), b(3, 4);
+    cout &lt;&lt; a + b &lt;&lt; endl;          // (4, 6)
+    cout &lt;&lt; (a == b) &lt;&lt; endl;       // 0
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>Overload ឱ្យមានន័យធម្មជាតិ (<code class="i">+</code> សម្រាប់បូក)។ កុំធ្វើឱ្យសាំញ៉ាំ។</li><li><code class="i">operator&lt;&lt;</code> ជាអនុគមន៍ខាងក្រៅ class ហើយត្រឡប់ <code class="i">ostream&amp;</code>។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ២៣</h4><ol><li>បន្ថែម <code class="i">operator-</code> និង <code class="i">operator*</code> (គុណនឹងចំនួន) ដល់ Vec2។</li><li>បង្កើត class <code class="i">Fraction</code> ហើយ overload <code class="i">+</code> និង <code class="i">&lt;&lt;</code>។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer23.cpp</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;numeric&gt;
+#include &lt;stdexcept&gt;
+using namespace std;
+
+class Vec2 {
+public:
+    double x, y;
+    Vec2(double x = 0, double y = 0) : x(x), y(y) {}
+    Vec2 operator+(const Vec2 &amp;o) const { return Vec2(x + o.x, y + o.y); }
+    Vec2 operator-(const Vec2 &amp;o) const { return Vec2(x - o.x, y - o.y); }
+    Vec2 operator*(double k) const { return Vec2(x * k, y * k); }
+};
+
+ostream &amp;operator&lt;&lt;(ostream &amp;os, const Vec2 &amp;v) {
+    return os &lt;&lt; &quot;(&quot; &lt;&lt; v.x &lt;&lt; &quot;, &quot; &lt;&lt; v.y &lt;&lt; &quot;)&quot;;
+}
+
+class Fraction {
+    long long num, den;
+    void reduce() {
+        long long g = gcd(num, den);         // C++17 &lt;numeric&gt;
+        num /= g; den /= g;
+        if (den &lt; 0) { num = -num; den = -den; }
+    }
+public:
+    Fraction(long long n, long long d = 1) : num(n), den(d) {
+        if (d == 0) throw invalid_argument(&quot;Denominator cannot be zero&quot;);
+        reduce();
+    }
+    Fraction operator+(const Fraction &amp;o) const {
+        return Fraction(num * o.den + o.num * den, den * o.den);
+    }
+    friend ostream &amp;operator&lt;&lt;(ostream &amp;os, const Fraction &amp;f) {
+        return os &lt;&lt; f.num &lt;&lt; &quot;/&quot; &lt;&lt; f.den;
+    }
+};
+
+int main() {
+    Vec2 a(1, 2), b(3, 4);
+    cout &lt;&lt; b - a &lt;&lt; &quot; &quot; &lt;&lt; a * 3 &lt;&lt; endl;            // (2, 2) (3, 6)
+    cout &lt;&lt; Fraction(1, 2) + Fraction(1, 3) &lt;&lt; endl;  // 5/6
+    cout &lt;&lt; Fraction(1, 4) + Fraction(1, 4) &lt;&lt; endl;  // 1/2
+}</code></pre></div></details></div>
+</section>
+
+<section id="l24">
+<h2><span class="badge">មេរៀន ២៤</span>Multithreading (មូលដ្ឋាន)</h2>
+<p>Thread ឱ្យកម្មវិធីធ្វើការច្រើនក្នុងពេលតែមួយ។ ប្រើ <code class="i">std::thread</code> និង <code class="i">mutex</code> ការពារទិន្នន័យរួម។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;mutex&gt;
+using namespace std;
+
+int counter = 0;
+mutex m;
+
+void work(int id) {
+    for (int i = 0; i &lt; 1000; i++) {
+        lock_guard&lt;mutex&gt; lock(m);   // ការពារ data race
+        counter++;
+    }
+    cout &lt;&lt; &quot;thread &quot; &lt;&lt; id &lt;&lt; &quot; done&quot; &lt;&lt; endl;
+}
+
+int main() {
+    thread t1(work, 1);
+    thread t2(work, 2);
+    t1.join();
+    t2.join();
+    cout &lt;&lt; counter &lt;&lt; endl;   // 2000
+}</code></pre></div>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">g++ -std=c++17 -pthread main.cpp -o app</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>មុនបញ្ចប់ <code class="i">main</code> ត្រូវ <code class="i">join()</code> (ឬ <code class="i">detach()</code>) thread ទាំងអស់។</li><li>ទិន្នន័យរួមដែលកែក្នុងពេលតែមួយ ត្រូវការ <code class="i">mutex</code> (បើអត់ កើត data race)។</li><li>Compile ត្រូវបន្ថែម <code class="i">-pthread</code> លើ Linux/macOS/MinGW។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ២៤</h4><ol><li>យកចេញ <code class="i">lock_guard</code> ហើយសង្កេតលទ្ធផល <code class="i">counter</code> (ប្រៀបធៀប)។</li><li>ប្រើ ៤ thread គណនាផលបូកនៃ array ធំ ដោយចែកជាផ្នែក។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer24.cpp</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;numeric&gt;
+#include &lt;thread&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    vector&lt;int&gt; data(1&#x27;000&#x27;000, 1);              // array ធំ (តម្លៃ 1 ទាំងអស់)
+    const int T = 4;
+    vector&lt;long long&gt; partial(T, 0);             // thread នីមួយៗសរសេរកន្លែងខ្លួនឯង → គ្មាន data race
+    vector&lt;thread&gt; threads;
+    size_t chunk = data.size() / T;
+
+    for (int t = 0; t &lt; T; t++) {
+        size_t begin = t * chunk;
+        size_t end = (t == T - 1) ? data.size() : begin + chunk;
+        threads.emplace_back([&amp;, t, begin, end] {
+            partial[t] = accumulate(data.begin() + begin, data.begin() + end, 0LL);
+        });
+    }
+    for (auto &amp;th : threads) th.join();
+
+    cout &lt;&lt; accumulate(partial.begin(), partial.end(), 0LL) &lt;&lt; endl;   // 1000000
+}
+// Compile: g++ -std=c++17 -pthread main.cpp -o app</code></pre></div></details></div>
+</section>
+
+<section id="l25">
+<h2><span class="badge">មេរៀន ២៥</span>Modern C++ — auto, range-for និង optional</h2>
+<p><b>Modern C++</b> គឺជារបៀបសរសេរ C++ សម័យថ្មី ដែលផ្តោតលើសុវត្ថិភាព កូដខ្លី និងងាយថែទាំ។ <code class="i">auto</code> អនុញ្ញាតឱ្យ compiler កំណត់ប្រភេទទិន្នន័យដោយស្វ័យប្រវត្តិ។ <code class="i">range-for</code> ជួយដើរឆ្លងកាត់ធាតុក្នុង container។ <code class="i">optional</code> តំណាងឱ្យតម្លៃដែលអាចមាន ឬមិនមាន។</p>
+<div class="codebox"><span class="label">C++17</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;optional&gt;
+using namespace std;
+
+optional&lt;int&gt; findAge(bool found) {
+    if (found) return 20;
+    return nullopt;
+}
+
+int main() {
+    auto name = string(&quot;Dara&quot;);
+    vector&lt;int&gt; scores = {80, 90, 75};
+
+    for (const auto score : scores) {
+        cout &lt;&lt; score &lt;&lt; &quot; &quot;;
+    }
+
+    auto age = findAge(true);
+    if (age.has_value()) {
+        cout &lt;&lt; &quot;\n&quot; &lt;&lt; name &lt;&lt; &quot; &quot; &lt;&lt; *age &lt;&lt; endl;
+    }
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li><code class="i">auto</code> មិនមានន័យថាគ្មានប្រភេទទិន្នន័យទេ; compiler នៅតែកំណត់ type ជាក់លាក់។</li><li>ប្រើ <code class="i">const auto&amp;</code> ពេលចង់អានធាតុដោយមិនចម្លងវា។</li><li>ពិនិត្យ <code class="i">optional</code> មុនប្រើតម្លៃខាងក្នុង។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ២៥</h4><ol><li>បង្កើត vector ពិន្ទុ ៥ ហើយប្រើ range-for បង្ហាញពិន្ទុទាំងអស់។</li><li>សរសេរអនុគមន៍រកលេខធំបំផុតក្នុង vector ហើយប្រើ <code class="i">optional</code> សម្រាប់ករណី vector ទទេ។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer25.cpp</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;optional&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+optional&lt;int&gt; findMax(const vector&lt;int&gt; &amp;v) {
+    if (v.empty()) return nullopt;
+    int best = v[0];
+    for (int x : v)
+        if (x &gt; best) best = x;
+    return best;
+}
+
+int main() {
+    vector&lt;int&gt; scores = {80, 95, 70, 88, 91};
+    for (const auto &amp;s : scores) cout &lt;&lt; s &lt;&lt; &quot; &quot;;
+    cout &lt;&lt; &quot;\n&quot;;
+
+    if (auto m = findMax(scores)) cout &lt;&lt; &quot;Max: &quot; &lt;&lt; *m &lt;&lt; &quot;\n&quot;;    // Max: 95
+    if (!findMax({}).has_value()) cout &lt;&lt; &quot;Empty vector\n&quot;;
+}</code></pre></div></details></div>
+</section>
+
+<section id="l26">
+<h2><span class="badge">មេរៀន ២៦</span>STL Containers — vector, map, set និង unordered_map</h2>
+<p><b>STL (Standard Template Library)</b> ផ្តល់ container សម្រាប់រក្សាទុកទិន្នន័យ។ <code class="i">vector</code> ជាបញ្ជីអាចពង្រីកបាន និងមានលំដាប់។ <code class="i">map</code> រក្សាទុក key-value តាមលំដាប់ key។ <code class="i">set</code> រក្សាតម្លៃមិនស្ទួន។ <code class="i">unordered_map</code> ជា key-value ដែលមិនធានាលំដាប់ ហើយជាមធ្យមអាចស្វែងរកបានលឿន។</p>
+<div class="codebox"><span class="label">C++17</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;map&gt;
+#include &lt;set&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+int main() {
+    vector&lt;int&gt; nums = {5, 2, 8, 2, 1};
+    sort(nums.begin(), nums.end());
+
+    set&lt;int&gt; uniqueNums(nums.begin(), nums.end());
+
+    map&lt;string, int&gt; scores;
+    scores[&quot;Dara&quot;] = 90;
+    scores[&quot;Sokha&quot;] = 85;
+
+    for (const auto&amp; [name, score] : scores) {
+        cout &lt;&lt; name &lt;&lt; &quot;: &quot; &lt;&lt; score &lt;&lt; endl;
+    }
+
+    cout &lt;&lt; &quot;Unique count: &quot; &lt;&lt; uniqueNums.size();
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li><code class="i">vector</code> ប្រើ index ចាប់ពី 0។</li><li><code class="i">map</code> និង <code class="i">set</code> រៀបចំតាមលំដាប់; <code class="i">unordered_map</code> មិនធានាលំដាប់ទេ។</li><li>ជ្រើស container តាមការងារ មិនមែនប្រើតែមួយប្រភេទគ្រប់ករណីទេ។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ២៦</h4><ol><li>រាប់ចំនួនដងដែលពាក្យនីមួយៗកើតឡើងក្នុងប្រយោគ ដោយប្រើ <code class="i">map</code>។</li><li>ទទួលលេខ ១០ ពីអ្នកប្រើ ហើយបង្ហាញតែលេខដែលមិនស្ទួន ដោយប្រើ <code class="i">set</code>។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer26.cpp</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;map&gt;
+#include &lt;set&gt;
+#include &lt;sstream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    string sentence = &quot;to be or not to be&quot;;
+    map&lt;string, int&gt; freq;
+    istringstream iss(sentence);
+    string word;
+    while (iss &gt;&gt; word) freq[word]++;
+    for (const auto &amp;[w, c] : freq) cout &lt;&lt; w &lt;&lt; &quot;: &quot; &lt;&lt; c &lt;&lt; &quot;\n&quot;;
+
+    set&lt;int&gt; unique;
+    cout &lt;&lt; &quot;Enter 10 numbers: &quot;;
+    for (int i = 0, x; i &lt; 10 &amp;&amp; cin &gt;&gt; x; i++) unique.insert(x);
+    for (int x : unique) cout &lt;&lt; x &lt;&lt; &quot; &quot;;
+    cout &lt;&lt; &quot;\n&quot;;
+}</code></pre></div></details></div>
+</section>
+
+<section id="l27">
+<h2><span class="badge">មេរៀន ២៧</span>Binary Search Tree (BST)</h2>
+<p><b>Tree</b> ជារចនាសម្ព័ន្ធទិន្នន័យដែលមាន node និងការតភ្ជាប់រវាង node។ ក្នុង <b>Binary Search Tree (BST)</b> តម្លៃតូចជាង node បច្ចុប្បន្នស្ថិតនៅខាងឆ្វេង ហើយតម្លៃធំជាងស្ថិតនៅខាងស្តាំ។ ការដើរតាម <b>inorder traversal</b> នឹងបង្ហាញតម្លៃតាមលំដាប់ពីតូចទៅធំ ប្រសិនបើ BST ត្រឹមត្រូវ។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+struct Node {
+    int value;
+    Node* left;
+    Node* right;
+    Node(int v) : value(v), left(nullptr), right(nullptr) {}
+};
+
+void insert(Node*&amp; root, int value) {
+    if (root == nullptr) {
+        root = new Node(value);
+    } else if (value &lt; root-&gt;value) {
+        insert(root-&gt;left, value);
+    } else if (value &gt; root-&gt;value) {
+        insert(root-&gt;right, value);
+    }
+}
+
+void inorder(Node* root) {
+    if (root == nullptr) return;
+    inorder(root-&gt;left);
+    cout &lt;&lt; root-&gt;value &lt;&lt; &quot; &quot;;
+    inorder(root-&gt;right);
+}
+
+void destroy(Node* root) {
+    if (!root) return;
+    destroy(root-&gt;left);
+    destroy(root-&gt;right);
+    delete root;
+}
+
+int main() {
+    Node* root = nullptr;
+    insert(root, 8);
+    insert(root, 3);
+    insert(root, 10);
+    insert(root, 1);
+    inorder(root); // 1 3 8 10
+    destroy(root);
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>ត្រូវគ្រប់គ្រង memory និងលុប node ទាំងអស់នៅពេលប្រើ pointer ដោយដៃ។</li><li>BST ដែលមានតុល្យភាពអាចស្វែងរកបានលឿន; BST ដែលលំអៀងអាចយឺតដល់ O(n)។</li><li>កូដខាងលើមិនបញ្ចូលតម្លៃស្ទួនទេ។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ២៧</h4><ol><li>បន្ថែមអនុគមន៍ <code class="i">search()</code> ដើម្បីរកលេខក្នុង BST។</li><li>បន្ថែមអនុគមន៍រាប់ចំនួន node និងរកតម្លៃតូចបំផុត។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer27.cpp</span><pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+struct Node {
+    int value;
+    Node *left = nullptr, *right = nullptr;
+    Node(int v) : value(v) {}
+};
+
+void insert(Node *&amp;root, int v) {
+    if (!root) root = new Node(v);
+    else if (v &lt; root-&gt;value) insert(root-&gt;left, v);
+    else if (v &gt; root-&gt;value) insert(root-&gt;right, v);
+}
+
+bool search(Node *root, int v) {
+    while (root) {
+        if (v == root-&gt;value) return true;
+        root = (v &lt; root-&gt;value) ? root-&gt;left : root-&gt;right;
+    }
+    return false;
+}
+
+int countNodes(Node *root) {
+    return root ? 1 + countNodes(root-&gt;left) + countNodes(root-&gt;right) : 0;
+}
+
+int minValue(Node *root) {          // សន្មតថា root មិនទទេ
+    while (root-&gt;left) root = root-&gt;left;
+    return root-&gt;value;
+}
+
+void destroy(Node *root) {
+    if (!root) return;
+    destroy(root-&gt;left);
+    destroy(root-&gt;right);
+    delete root;
+}
+
+int main() {
+    Node *root = nullptr;
+    for (int v : {8, 3, 10, 1, 6, 14}) insert(root, v);
+    cout &lt;&lt; search(root, 6) &lt;&lt; &quot; &quot; &lt;&lt; search(root, 7) &lt;&lt; endl;   // 1 0
+    cout &lt;&lt; countNodes(root) &lt;&lt; &quot; &quot; &lt;&lt; minValue(root) &lt;&lt; endl;   // 6 1
+    destroy(root);
+}</code></pre></div></details></div>
+</section>
+
+<section id="l28">
+<h2><span class="badge">មេរៀន ២៨</span>Graph, BFS និង DFS</h2>
+<p><b>Graph</b> មាន vertex (កំពូល) និង edge (ខ្សែភ្ជាប់)។ វាអាចតំណាងឱ្យទីក្រុង និងផ្លូវ មិត្តភាព ឬបណ្តាញកុំព្យូទ័រ។ <b>BFS (Breadth-First Search)</b> ស្វែងរកតាមកម្រិតដោយប្រើ queue។ <b>DFS (Depth-First Search)</b> ស្វែងរកជ្រៅដោយប្រើ recursion ឬ stack។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;queue&gt;
+using namespace std;
+
+int main() {
+    vector&lt;vector&lt;int&gt;&gt; graph = {
+        {1, 2}, {0, 3}, {0}, {1}
+    };
+    vector&lt;bool&gt; seen(4, false);
+    queue&lt;int&gt; q;
+
+    q.push(0);
+    seen[0] = true;
+
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+        cout &lt;&lt; u &lt;&lt; &quot; &quot;;
+
+        for (int v : graph[u]) {
+            if (!seen[v]) {
+                seen[v] = true;
+                q.push(v);
+            }
+        }
+    }
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>ត្រូវប្រើ <code class="i">seen</code> ឬ visited ដើម្បីកុំឱ្យដើរជារង្វង់គ្មានទីបញ្ចប់។</li><li>BFS អាចរកផ្លូវខ្លីបំផុតក្នុង graph ដែលគ្រប់ edge មានទម្ងន់ស្មើគ្នា។</li><li>Graph មានទម្ងន់ត្រូវការក្បួនដោះស្រាយផ្សេង ដូចជា Dijkstra។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ២៨</h4><ol><li>បង្កើត graph តំណាងឱ្យទីក្រុង ៥ និងផ្លូវរវាងទីក្រុង។</li><li>សរសេរ DFS ហើយប្រៀបធៀបលទ្ធផលជាមួយ BFS។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer28.cpp</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;queue&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+vector&lt;string&gt; city = {&quot;Phnom Penh&quot;, &quot;Kampot&quot;, &quot;Siem Reap&quot;, &quot;Battambang&quot;, &quot;Kep&quot;};
+vector&lt;vector&lt;int&gt;&gt; road = {
+    {1, 2},     // Phnom Penh – Kampot, Siem Reap
+    {0, 4},     // Kampot – Phnom Penh, Kep
+    {0, 3},     // Siem Reap – Phnom Penh, Battambang
+    {2},        // Battambang – Siem Reap
+    {1}         // Kep – Kampot
+};
+
+void dfs(int u, vector&lt;bool&gt; &amp;seen) {
+    seen[u] = true;
+    cout &lt;&lt; city[u] &lt;&lt; &quot; | &quot;;
+    for (int v : road[u])
+        if (!seen[v]) dfs(v, seen);
+}
+
+void bfs(int start) {
+    vector&lt;bool&gt; seen(city.size(), false);
+    queue&lt;int&gt; q;
+    q.push(start);
+    seen[start] = true;
+    while (!q.empty()) {
+        int u = q.front(); q.pop();
+        cout &lt;&lt; city[u] &lt;&lt; &quot; | &quot;;
+        for (int v : road[u])
+            if (!seen[v]) { seen[v] = true; q.push(v); }
+    }
+}
+
+int main() {
+    cout &lt;&lt; &quot;BFS: &quot;; bfs(0); cout &lt;&lt; &quot;\n&quot;;       // តាមកម្រិត (ជិតមុន)
+    vector&lt;bool&gt; seen(city.size(), false);
+    cout &lt;&lt; &quot;DFS: &quot;; dfs(0, seen); cout &lt;&lt; &quot;\n&quot;; // ទៅជ្រៅមុន
+}</code></pre></div></details></div>
+</section>
+
+<section id="l29">
+<h2><span class="badge">មេរៀន ២៩</span>Recursion, Dynamic Programming និង Memoization</h2>
+<p><b>Recursion</b> គឺអនុគមន៍ហៅខ្លួនឯង។ ត្រូវមាន <b>base case</b> ដើម្បីបញ្ឈប់ការហៅ។ <b>Dynamic Programming (DP)</b> រក្សាទុកចម្លើយរង ដើម្បីកុំគណនាដដែលៗ។ <b>Memoization</b> គឺការរក្សាទុកលទ្ធផលដែលបានគណនារួច។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+long long fibonacci(int n) {
+    if (n &lt;= 1) return n;
+
+    vector&lt;long long&gt; dp(n + 1, 0);
+    dp[1] = 1;
+
+    for (int i = 2; i &lt;= n; ++i) {
+        dp[i] = dp[i - 1] + dp[i - 2];
+    }
+    return dp[n];
+}
+
+int main() {
+    cout &lt;&lt; fibonacci(10); // 55
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>Recursion ត្រូវមាន base case មិនដូច្នោះអាច stack overflow។</li><li>DP មានប្រយោជន៍ពេលបញ្ហាមាន subproblems ដែលកើតឡើងដដែលៗ។</li><li>គិតពីទំហំ memory និងព្រំដែន input មុនប្រើ array DP។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ២៩</h4><ol><li>សរសេរ factorial ដោយ recursion និង loop រួចប្រៀបធៀប។</li><li>ដោះស្រាយ Fibonacci ដោយ recursion ធម្មតា និង DP រួចប្រៀបធៀបល្បឿន។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer29.cpp</span><pre><code class="cpp">#include &lt;chrono&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+long long factRec(int n)  { return n &lt;= 1 ? 1 : n * factRec(n - 1); }
+long long factLoop(int n) { long long r = 1; for (int i = 2; i &lt;= n; i++) r *= i; return r; }
+
+long long fibRec(int n) { return n &lt;= 1 ? n : fibRec(n - 1) + fibRec(n - 2); }   // O(2^n)
+
+long long fibDP(int n) {                                                          // O(n)
+    if (n &lt;= 1) return n;
+    vector&lt;long long&gt; dp(n + 1);
+    dp[0] = 0; dp[1] = 1;
+    for (int i = 2; i &lt;= n; i++) dp[i] = dp[i - 1] + dp[i - 2];
+    return dp[n];
+}
+
+template &lt;typename F&gt;
+void timeIt(const char *name, F f) {
+    auto t0 = chrono::steady_clock::now();
+    long long r = f();
+    auto ms = chrono::duration_cast&lt;chrono::milliseconds&gt;(chrono::steady_clock::now() - t0).count();
+    cout &lt;&lt; name &lt;&lt; &quot; = &quot; &lt;&lt; r &lt;&lt; &quot; (&quot; &lt;&lt; ms &lt;&lt; &quot; ms)\n&quot;;
+}
+
+int main() {
+    cout &lt;&lt; factRec(10) &lt;&lt; &quot; &quot; &lt;&lt; factLoop(10) &lt;&lt; &quot;\n&quot;;   // 3628800 3628800
+    timeIt(&quot;fibRec(35)&quot;, [] { return fibRec(35); });      // យឺត
+    timeIt(&quot;fibDP(35) &quot;, [] { return fibDP(35); });       // ស្ទើរតែ 0 ms
+}</code></pre></div></details></div>
+</section>
+
+<section id="l30">
+<h2><span class="badge">មេរៀន ៣០</span>RAII និង Smart Pointers</h2>
+<p><b>RAII (Resource Acquisition Is Initialization)</b> គឺគោលការណ៍ដែលភ្ជាប់អាយុកាល resource ជាមួយអាយុកាល object ដើម្បីឱ្យការសម្អាតធនធានកើតឡើងដោយស្វ័យប្រវត្តិ។ Smart pointer ជួយគ្រប់គ្រង memory។ ជាទូទៅគួរជ្រើស <code class="i">unique_ptr</code> ឬ <code class="i">shared_ptr</code> ជំនួសការប្រើ <code class="i">new/delete</code> ដោយដៃ។</p>
+<div class="codebox"><span class="label">C++11+</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;memory&gt;
+using namespace std;
+
+struct Player {
+    Player()  { cout &lt;&lt; &quot;Created\n&quot;; }
+    ~Player() { cout &lt;&lt; &quot;Destroyed\n&quot;; }
+};
+
+int main() {
+    auto player = make_unique&lt;Player&gt;();
+    cout &lt;&lt; &quot;Player is ready\n&quot;;
+} // player ត្រូវបានបំផ្លាញដោយស្វ័យប្រវត្តិនៅទីនេះ</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li><code class="i">unique_ptr</code> មានម្ចាស់តែមួយ ហើយមិនអាច copy បាន។</li><li><code class="i">shared_ptr</code> អាចមានម្ចាស់ច្រើន និងប្រើ reference count។</li><li>ជៀសវាង reference cycle ជាមួយ <code class="i">weak_ptr</code> នៅពេលចាំបាច់។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣០</h4><ol><li>បង្កើត <code class="i">unique_ptr&lt;int&gt;</code> ហើយបង្ហាញតម្លៃ។</li><li>ប្រៀបធៀប <code class="i">unique_ptr</code> និង <code class="i">shared_ptr</code>។ ពន្យល់ថាហេតុអ្វីមិនគួរ delete pointer ដដែលពីរដង។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer30.cpp</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;memory&gt;
+using namespace std;
+
+int main() {
+    unique_ptr&lt;int&gt; u = make_unique&lt;int&gt;(42);
+    cout &lt;&lt; *u &lt;&lt; &quot;\n&quot;;                          // 42
+
+    // unique_ptr&lt;int&gt; u2 = u;                   // ❌ compile error: copy មិនបាន
+    unique_ptr&lt;int&gt; u2 = move(u);                // ✅ ផ្ទេរម្ចាស់
+    cout &lt;&lt; (u ? &quot;u has value&quot; : &quot;u is empty&quot;) &lt;&lt; &quot;\n&quot;;
+
+    shared_ptr&lt;int&gt; s1 = make_shared&lt;int&gt;(7);
+    shared_ptr&lt;int&gt; s2 = s1;                     // ម្ចាស់ពីរនាក់
+    cout &lt;&lt; &quot;use_count = &quot; &lt;&lt; s1.use_count() &lt;&lt; &quot;\n&quot;;   // 2
+}
+// ហេតុអ្វីមិនគួរ delete ពីរដង? memory ដដែលនឹងត្រូវបានដោះលែងម្តងទៀត
+// → undefined behavior (crash ឬខូចទិន្នន័យ)។ Smart pointer លុបតែម្តងគត់ដោយស្វ័យប្រវត្តិ។</code></pre></div></details></div>
+</section>
+
+<section id="l31">
+<h2><span class="badge">មេរៀន ៣១</span>SOLID Principles និង Design Patterns</h2>
+<p><b>SOLID</b> ជាគោលការណ៍ ៥ សម្រាប់រចនាកម្មវិធីដែលងាយថែទាំ៖ Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation និង Dependency Inversion។ <b>Design Pattern</b> ជាគំរូដោះស្រាយបញ្ហារចនាដែលកើតឡើងញឹកញាប់។</p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class PaymentMethod {
+public:
+    virtual void pay(double amount) = 0;
+    virtual ~PaymentMethod() = default;
+};
+
+class CashPayment : public PaymentMethod {
+public:
+    void pay(double amount) override {
+        cout &lt;&lt; &quot;Paid by cash: &quot; &lt;&lt; amount &lt;&lt; endl;
+    }
+};
+
+class CardPayment : public PaymentMethod {
+public:
+    void pay(double amount) override {
+        cout &lt;&lt; &quot;Paid by card: &quot; &lt;&lt; amount &lt;&lt; endl;
+    }
+};
+
+int main() {
+    CashPayment cash;
+    CardPayment card;
+    PaymentMethod* method = &amp;cash;
+    method-&gt;pay(10.0);
+    method = &amp;card;
+    method-&gt;pay(20.0);
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>កុំបង្កើត class មួយឱ្យធ្វើការងារច្រើនពេក។</li><li>ពឹងផ្អែកលើ abstraction/interface ដើម្បីងាយបន្ថែមមុខងារថ្មី។</li><li>ប្រើ design pattern តែពេលវាជួយដោះស្រាយបញ្ហាពិត មិនមែនប្រើដើម្បីឱ្យកូដស្មុគស្មាញទេ។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣១</h4><ol><li>រចនាប្រព័ន្ធបង់ប្រាក់ដែលអាចបន្ថែម Cash, Card និង QR Payment ដោយមិនចាំបាច់កែ logic ស្នូល។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer31.cpp</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;memory&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+class PaymentMethod {                     // Abstraction (Open/Closed + Dependency Inversion)
+public:
+    virtual void pay(double amount) = 0;
+    virtual ~PaymentMethod() = default;
+};
+
+class CashPayment : public PaymentMethod {
+public:
+    void pay(double amount) override { cout &lt;&lt; &quot;Cash: $&quot; &lt;&lt; amount &lt;&lt; &quot;\n&quot;; }
+};
+
+class CardPayment : public PaymentMethod {
+public:
+    void pay(double amount) override { cout &lt;&lt; &quot;Card: $&quot; &lt;&lt; amount &lt;&lt; &quot;\n&quot;; }
+};
+
+class QrPayment : public PaymentMethod {  // បន្ថែមថ្មី ដោយមិនកែ Checkout
+public:
+    void pay(double amount) override { cout &lt;&lt; &quot;KHQR: $&quot; &lt;&lt; amount &lt;&lt; &quot;\n&quot;; }
+};
+
+class Checkout {                          // Logic ស្នូល ពឹងលើ interface តែប៉ុណ្ណោះ
+public:
+    void process(PaymentMethod &amp;method, double amount) {
+        if (amount &lt;= 0) { cout &lt;&lt; &quot;Invalid amount\n&quot;; return; }
+        method.pay(amount);
+    }
+};
+
+int main() {
+    vector&lt;unique_ptr&lt;PaymentMethod&gt;&gt; methods;
+    methods.push_back(make_unique&lt;CashPayment&gt;());
+    methods.push_back(make_unique&lt;CardPayment&gt;());
+    methods.push_back(make_unique&lt;QrPayment&gt;());
+
+    Checkout checkout;
+    for (auto &amp;m : methods) checkout.process(*m, 12.5);
+}</code></pre></div></details></div>
+</section>
+
+<section id="l32">
+<h2><span class="badge">មេរៀន ៣២</span>File Handling និង Database (SQLite/SQL)</h2>
+<p><b>File Handling</b> រក្សាទុកទិន្នន័យក្នុង file ដើម្បីអាចប្រើបន្តក្រោយបិទកម្មវិធី។ <b>Database</b> ជួយគ្រប់គ្រងទិន្នន័យមានរចនាសម្ព័ន្ធ។ SQL មូលដ្ឋានរួមមាន CREATE, INSERT, SELECT, UPDATE និង DELETE។</p>
+<div class="codebox"><span class="label">SQL example</span><pre><code class="sql">CREATE TABLE accounts (
+    id INTEGER PRIMARY KEY,
+    owner TEXT NOT NULL,
+    balance REAL NOT NULL
+);
+
+INSERT INTO accounts (id, owner, balance)
+VALUES (1001, &#x27;Dara&#x27;, 250.00);
+
+SELECT id, owner, balance
+FROM accounts;</code></pre></div>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;fstream&gt;
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    ofstream out(&quot;notes.txt&quot;);
+    out &lt;&lt; &quot;Learn C++ every day\n&quot;;
+    out.close();
+
+    ifstream in(&quot;notes.txt&quot;);
+    string line;
+    while (getline(in, line)) {
+        cout &lt;&lt; line &lt;&lt; endl;
+    }
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>ពិនិត្យថា file បានបើកជោគជ័យមុនអាន ឬសរសេរ។</li><li>ប្រើ SQL parameterized queries ដើម្បីការពារ SQL injection។</li><li>កុំរក្សាទុក password ឬ secret ជាអត្ថបទធម្មតា។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣២</h4><ol><li>បង្កើត file សម្រាប់រក្សាទុកឈ្មោះ និងពិន្ទុសិស្ស។</li><li>បង្កើតតារាង Students និង Scores ក្នុង SQLite ហើយសាកល្បងបញ្ចូល និងស្វែងរកទិន្នន័យ។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer32.cpp</span><pre><code class="cpp">#include &lt;fstream&gt;
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    {
+        ofstream out(&quot;students.txt&quot;);
+        if (!out) { cerr &lt;&lt; &quot;Cannot open file\n&quot;; return 1; }
+        out &lt;&lt; &quot;Dara 85\nSophea 92\nVanna 78\n&quot;;
+    }   // out បិទដោយស្វ័យប្រវត្តិ (RAII)
+
+    ifstream in(&quot;students.txt&quot;);
+    if (!in) { cerr &lt;&lt; &quot;Cannot open file\n&quot;; return 1; }
+    string name;
+    int score;
+    while (in &gt;&gt; name &gt;&gt; score) cout &lt;&lt; name &lt;&lt; &quot;: &quot; &lt;&lt; score &lt;&lt; &quot;\n&quot;;
+}</code></pre></div><div class="codebox"><span class="label">SQL</span><pre><code class="sql">CREATE TABLE students (
+    id    INTEGER PRIMARY KEY AUTOINCREMENT,
+    name  TEXT NOT NULL
+);
+
+CREATE TABLE scores (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id  INTEGER NOT NULL REFERENCES students(id),
+    subject     TEXT NOT NULL,
+    score       REAL CHECK (score BETWEEN 0 AND 100)
+);
+
+INSERT INTO students (name) VALUES (&#x27;Dara&#x27;), (&#x27;Sophea&#x27;);
+INSERT INTO scores (student_id, subject, score) VALUES (1, &#x27;Math&#x27;, 85), (2, &#x27;Math&#x27;, 92), (1, &#x27;Khmer&#x27;, 78);
+
+SELECT s.name, sc.subject, sc.score
+FROM students s
+JOIN scores sc ON sc.student_id = s.id
+WHERE sc.score &gt;= 80
+ORDER BY sc.score DESC;</code></pre></div></details></div>
+</section>
+
+<section id="l33">
+<h2><span class="badge">មេរៀន ៣៣</span>Git, GitHub និង CMake</h2>
+<p><b>Git</b> ជាប្រព័ន្ធគ្រប់គ្រងប្រវត្តិកូដ (Version Control)។ <b>GitHub</b> ជាកន្លែងផ្ទុក repository លើអ៊ីនធឺណិត និងធ្វើការជាក្រុម។ <b>CMake</b> ជួយរៀបចំការបង្កើតកម្មវិធីលើប្រព័ន្ធផ្សេងៗ។</p>
+<div class="codebox"><span class="label">Git commands</span><pre><code class="bash">git init
+git status
+git add .
+git commit -m &quot;first version&quot;
+git branch
+git remote add origin YOUR_REPOSITORY_URL
+git push -u origin main</code></pre></div>
+<div class="codebox"><span class="label">CMakeLists.txt</span><pre><code class="txt">cmake_minimum_required(VERSION 3.16)
+project(MyApp)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+add_executable(myapp main.cpp)</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>Commit តូចៗ និងមានសារពន្យល់ច្បាស់។</li><li>កុំ upload password, API key ឬ file សម្ងាត់ទៅ GitHub។</li><li>សាកល្បង build ក្នុង folder build ដាច់ដោយឡែក ពេលប្រើ CMake។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣៣</h4><ol><li>បង្កើត repository សម្រាប់ C++ project របស់អ្នក។</li><li>ធ្វើការកែប្រែយ៉ាងហោចណាស់ ៥ ដង និងបង្កើត commit រាល់ដង។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">Terminal</span><pre><code class="bash"># 1) បង្កើត repository
+mkdir my-cpp-app
+cd my-cpp-app
+git init
+echo &quot;build/&quot; &gt; .gitignore
+
+# 2) Commit រាល់ការកែប្រែមួយៗ (ធ្វើ ៥ ដង)
+git add .
+git commit -m &quot;Add main.cpp with hello world&quot;
+git commit -am &quot;Add Account class&quot;
+git commit -am &quot;Add deposit and withdraw&quot;
+git commit -am &quot;Handle invalid input&quot;
+git commit -am &quot;Add README&quot;
+
+# 3) មើលប្រវត្តិ ហើយ Push ទៅ GitHub
+git log --oneline
+git remote add origin https://github.com/YOUR_NAME/my-cpp-app.git
+git push -u origin main</code></pre></div></details></div>
+</section>
+
+<section id="l34">
+<h2><span class="badge">មេរៀន ៣៤</span>Unit Testing, Debugging និង Compiler Warnings</h2>
+<p><b>Unit Testing</b> គឺការសាកល្បង function ឬផ្នែកតូចៗដោយឡែក។ <b>Debugging</b> គឺស្វែងរកមូលហេតុនៃបញ្ហា។ Compiler warnings ជួយរកកំហុសដែលអាចកើតឡើងមុនពេលកម្មវិធីដំណើរការ។</p>
+<div class="codebox"><span class="label">Compile with useful warnings</span><pre><code class="bash">g++ -std=c++17 -Wall -Wextra -Wpedantic main.cpp -o app</code></pre></div>
+<div class="codebox"><span class="label">Simple test with assert</span><pre><code class="cpp">#include &lt;cassert&gt;
+
+int add(int a, int b) {
+    return a + b;
+}
+
+int main() {
+    assert(add(2, 3) == 5);
+    assert(add(-1, 1) == 0);
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>សាកល្បងករណីធម្មតា ករណីព្រំដែន (edge cases) និង input មិនត្រឹមត្រូវ។</li><li>ប្រើ warning ដើម្បីកែលម្អកូដ មិនគួរមើលរំលង warning ទាំងអស់ទេ។</li><li>ប្រើ breakpoint, Variables និង Call Stack ក្នុង VS Code ដើម្បីតាមដានបញ្ហា។</li></ul></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣៤</h4><ol><li>សរសេរ test សម្រាប់ function ដក និងចែក រួមទាំងករណីចំនួនអវិជ្ជមាន និងចែកនឹងសូន្យ។</li><li>សាកល្បង input ទទេ និងតម្លៃធំៗ ហើយកត់ត្រាលទ្ធផល។</li></ol><details><summary>មើលចម្លើយ</summary><div class="codebox"><span class="label">answer34.cpp</span><pre><code class="cpp">#include &lt;cassert&gt;
+#include &lt;cmath&gt;
+#include &lt;iostream&gt;
+#include &lt;stdexcept&gt;
+using namespace std;
+
+int sub(int a, int b) { return a - b; }
+
+double divide(double a, double b) {
+    if (b == 0) throw invalid_argument(&quot;divide by zero&quot;);
+    return a / b;
+}
+
+int main() {
+    assert(sub(5, 3) == 2);
+    assert(sub(-2, -3) == 1);        // ចំនួនអវិជ្ជមាន
+    assert(sub(0, 7) == -7);
+
+    assert(fabs(divide(1, 3) - 0.333333) &lt; 1e-5);
+    assert(divide(-6, 2) == -3);
+
+    bool threw = false;
+    try { divide(1, 0); } catch (const invalid_argument &amp;) { threw = true; }
+    assert(threw);                   // ត្រូវតែ throw
+
+    cout &lt;&lt; &quot;All tests passed\n&quot;;
+}
+// ចំណាំ: assert ត្រូវបានបិទពេល compile ជាមួយ -DNDEBUG (Release build)</code></pre></div></details></div>
+</section>
+
+<section id="l35">
+<h2><span class="badge">មេរៀន ៣៥</span>រៀបចំគម្រោង C++ ពេញលេញ</h2>
+<p>មុនចាប់ផ្តើមគម្រោងពេញលេញ ត្រូវកំណត់តម្រូវការ បែងចែកមុខងារ រៀបចំ folder structure សរសេរកូដ ប្រើ Git និងសរសេរ README។ កម្មវិធីពិតត្រូវគិតពីសុវត្ថិភាព ការផ្ទៀងផ្ទាត់ input និងការរក្សាទុកទិន្នន័យ។</p>
+<div class="codebox"><span class="label">Project structure</span><pre><code class="txt">BankApp/
+  include/
+    Account.h
+    Bank.h
+  src/
+    Account.cpp
+    Bank.cpp
+    main.cpp
+  tests/
+    AccountTests.cpp
+  CMakeLists.txt
+  README.md</code></pre></div>
+<p><b>ផែនការសាងសង់គម្រោង Bank Management System</b></p>
+<ol><li>កំណត់មុខងារ៖ បង្កើតគណនី បញ្ចូលប្រាក់ ដកប្រាក់ ផ្ទេរប្រាក់ និងមើលសមតុល្យ។</li><li>បង្កើត class <code class="i">Account</code> និង <code class="i">Bank</code> ដោយបែងចែក header និង source files។</li><li>ពិនិត្យ input៖ ចំនួនប្រាក់ត្រូវតែធំជាងសូន្យ ហើយមិនអាចដកលើសសមតុល្យ។</li><li>រក្សាទុកទិន្នន័យក្នុង file ឬ database ដោយមានការត្រួតពិនិត្យកំហុស។</li><li>សរសេរ unit tests សម្រាប់ការបញ្ចូល ដក និងផ្ទេរប្រាក់។</li><li>ប្រើ Git រក្សាប្រវត្តិកូដ និងសរសេរ README ពន្យល់ពីការដំឡើង និងប្រើប្រាស់។</li></ol>
+<div class="warn"><b>⚠️ Checklist មុនចាត់ទុកថាគម្រោងរួចរាល់</b><ul><li>កម្មវិធី compile ដោយគ្មាន error និងពិនិត្យ warnings។</li><li>មានការផ្ទៀងផ្ទាត់ input និងមិនបំបែកកម្មវិធីពេលទទួលទិន្នន័យខុស។</li><li>មានការគ្រប់គ្រងទិន្នន័យ និងការរក្សាទុកក្រោយបិទ។</li><li>មាន tests សម្រាប់មុខងារសំខាន់ៗ។</li><li>មាន README ដែលពន្យល់ពីការដំឡើង និងប្រើប្រាស់។</li><li>មាន Git history និង folder structure ច្បាស់លាស់។</li></ul></div>
+<div class="ex"><h4>🧩 គម្រោងបញ្ចប់</h4><p>បង្កើត Bank Management System ដែលមានមុខងារ Create Account, Deposit, Withdraw, Transfer, View Balance និង Transaction History។</p><p>👉 មើលដំណោះស្រាយពេញលេញនៅ <a href="#pro">ផ្នែកទី ៣: App កម្រិតអាជីព</a></p></div>
+</section>
+
+<section id="p1">
+<h2><span class="badge">គម្រោង ១</span>ហ្គេម Tic-Tac-Toe</h2>
+<p>ហ្គេមអ្នកលេង ២ នាក់ លើ Console។ ប្រើ <code class="i">array 2 វិមាត្រ</code>, អនុគមន៍ និង loop។ វាយ <b>1-9</b> ដើម្បីជ្រើសប្រអប់។ Compile៖ <code class="i">g++ tictactoe.cpp -o ttt</code></p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+char board[3][3];
+
+void reset() {
+    char c = &#x27;1&#x27;;
+    for (int r = 0; r &lt; 3; r++)
+        for (int k = 0; k &lt; 3; k++)
+            board[r][k] = c++;
+}
+
+void show() {
+    cout &lt;&lt; endl;
+    for (int r = 0; r &lt; 3; r++) {
+        cout &lt;&lt; &quot; &quot; &lt;&lt; board[r][0] &lt;&lt; &quot; | &quot; &lt;&lt; board[r][1] &lt;&lt; &quot; | &quot; &lt;&lt; board[r][2] &lt;&lt; endl;
+        if (r &lt; 2) cout &lt;&lt; &quot;---+---+---&quot; &lt;&lt; endl;
+    }
+    cout &lt;&lt; endl;
+}
+
+bool place(int pos, char player) {
+    if (pos &lt; 1 || pos &gt; 9) return false;
+    int r = (pos - 1) / 3, c = (pos - 1) % 3;
+    if (board[r][c] == &#x27;X&#x27; || board[r][c] == &#x27;O&#x27;) return false;
+    board[r][c] = player;
+    return true;
+}
+
+bool win(char p) {
+    for (int i = 0; i &lt; 3; i++) {
+        if (board[i][0] == p &amp;&amp; board[i][1] == p &amp;&amp; board[i][2] == p) return true;
+        if (board[0][i] == p &amp;&amp; board[1][i] == p &amp;&amp; board[2][i] == p) return true;
+    }
+    if (board[0][0] == p &amp;&amp; board[1][1] == p &amp;&amp; board[2][2] == p) return true;
+    if (board[0][2] == p &amp;&amp; board[1][1] == p &amp;&amp; board[2][0] == p) return true;
+    return false;
+}
+
+int main() {
+    reset();
+    char player = &#x27;X&#x27;;
+    for (int turn = 0; turn &lt; 9; turn++) {
+        show();
+        int pos;
+        cout &lt;&lt; &quot;Player &quot; &lt;&lt; player &lt;&lt; &quot; (1-9): &quot;;
+        if (!(cin &gt;&gt; pos)) return 0;
+        if (!place(pos, player)) {
+            cout &lt;&lt; &quot;Invalid move, try again.&quot; &lt;&lt; endl;
+            turn--;
+            continue;
+        }
+        if (win(player)) {
+            show();
+            cout &lt;&lt; &quot;Player &quot; &lt;&lt; player &lt;&lt; &quot; wins!&quot; &lt;&lt; endl;
+            return 0;
+        }
+        player = (player == &#x27;X&#x27;) ? &#x27;O&#x27; : &#x27;X&#x27;;
+    }
+    show();
+    cout &lt;&lt; &quot;Draw!&quot; &lt;&lt; endl;
+    return 0;
+}</code></pre></div>
+<div class="ex"><h4>🧩 បន្ថែមខ្លួនឯង</h4><ol><li>ឱ្យលេងបន្តបានច្រើនជុំ ដោយសួរ y/n នៅចុង។</li><li>បន្ថែមអ្នកលេងជាកុំព្យូទ័រ (ជ្រើសប្រអប់ទំនេរដោយចៃដន្យ ដោយ <code class="i">rand()</code>)។</li><li>រាប់ពិន្ទុឈ្នះរបស់ X និង O។</li></ol></div>
+</section>
+
+<section id="p2">
+<h2><span class="badge">គម្រោង ២</span>ប្រព័ន្ធគ្រប់គ្រងធនាគារ</h2>
+<p>ប្រើ <code class="i">class</code>, <code class="i">vector</code>, <code class="i">exception</code> និង menu។ ក្នុង <code class="i">Account</code> មិនឱ្យដកលើសសមតុល្យ។ Compile៖ <code class="i">g++ -std=c++17 bank.cpp -o bank</code></p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;stdexcept&gt;
+using namespace std;
+
+class Account {
+    int id;
+    string owner;
+    double balance;
+public:
+    Account(int id, string owner, double balance = 0)
+        : id(id), owner(owner), balance(balance) {}
+
+    int getId() const { return id; }
+    string getOwner() const { return owner; }
+    double getBalance() const { return balance; }
+
+    void deposit(double amount) {
+        if (amount &lt;= 0) throw invalid_argument(&quot;Amount must be positive&quot;);
+        balance += amount;
+    }
+    void withdraw(double amount) {
+        if (amount &lt;= 0) throw invalid_argument(&quot;Amount must be positive&quot;);
+        if (amount &gt; balance) throw runtime_error(&quot;Insufficient funds&quot;);
+        balance -= amount;
+    }
+};
+
+class Bank {
+    vector&lt;Account&gt; accounts;
+    int nextId = 1001;
+
+    Account *find(int id) {
+        for (Account &amp;a : accounts)
+            if (a.getId() == id) return &amp;a;
+        return nullptr;
+    }
+public:
+    int open(const string &amp;owner, double initial) {
+        accounts.push_back(Account(nextId, owner, initial));
+        return nextId++;
+    }
+    void deposit(int id, double amt) {
+        Account *a = find(id);
+        if (!a) throw runtime_error(&quot;Account not found&quot;);
+        a-&gt;deposit(amt);
+    }
+    void withdraw(int id, double amt) {
+        Account *a = find(id);
+        if (!a) throw runtime_error(&quot;Account not found&quot;);
+        a-&gt;withdraw(amt);
+    }
+    void list() const {
+        for (const Account &amp;a : accounts)
+            cout &lt;&lt; a.getId() &lt;&lt; &quot;  &quot; &lt;&lt; a.getOwner() &lt;&lt; &quot;  $&quot; &lt;&lt; a.getBalance() &lt;&lt; endl;
+    }
+};
+
+int main() {
+    Bank bank;
+    int choice;
+    do {
+        cout &lt;&lt; &quot;\n1.Open  2.Deposit  3.Withdraw  4.List  0.Exit\n&gt; &quot;;
+        cin &gt;&gt; choice;
+        try {
+            if (choice == 1) {
+                string name; double init;
+                cout &lt;&lt; &quot;Name: &quot;; cin &gt;&gt; name;
+                cout &lt;&lt; &quot;Initial: &quot;; cin &gt;&gt; init;
+                cout &lt;&lt; &quot;Account ID: &quot; &lt;&lt; bank.open(name, init) &lt;&lt; endl;
+            } else if (choice == 2 || choice == 3) {
+                int id; double amt;
+                cout &lt;&lt; &quot;ID: &quot;; cin &gt;&gt; id;
+                cout &lt;&lt; &quot;Amount: &quot;; cin &gt;&gt; amt;
+                if (choice == 2) bank.deposit(id, amt);
+                else bank.withdraw(id, amt);
+                cout &lt;&lt; &quot;Done.&quot; &lt;&lt; endl;
+            } else if (choice == 4) {
+                bank.list();
+            }
+        } catch (const exception &amp;e) {
+            cout &lt;&lt; &quot;Error: &quot; &lt;&lt; e.what() &lt;&lt; endl;
+        }
+    } while (choice != 0 &amp;&amp; cin);
+    return 0;
+}</code></pre></div>
+<div class="warn"><b>⚠️ ចំណាំសំខាន់</b><ul><li>ឈ្មោះក្នុង <code class="i">cin &gt;&gt; name</code> មិនទទួលដកឃ្លា (ប្រើ <code class="i">getline</code> បើចង់បានឈ្មោះពេញ)។</li><li><code class="i">find()</code> ត្រឡប់ <code class="i">nullptr</code> បើរកមិនឃើញ ត្រូវពិនិត្យមុនប្រើ។</li><li>ទិន្នន័យបាត់ពេលបិទកម្មវិធី។ ដំណោះស្រាយ៖ រក្សាទុកក្នុង file (មេរៀនទី ១៣)។</li></ul></div>
+<div class="ex"><h4>🧩 បន្ថែមខ្លួនឯង</h4><ol><li>បន្ថែមមុខងារផ្ទេរប្រាក់រវាងគណនី (transfer)។</li><li>រក្សាទុក និងអានគណនីពី file។</li><li>បន្ថែមលេខសម្ងាត់ (PIN) សម្រាប់ដកប្រាក់។</li></ol></div>
+</section>
+
+<section id="p3">
+<h2><span class="badge">គម្រោង ៣</span>ប្រព័ន្ធគ្រប់គ្រងសិស្ស</h2>
+<p>Console menu៖ ១ បន្ថែម, ២ បង្ហាញបញ្ជី, ៣ ស្វែងរកតាមឈ្មោះ, ៤ លុប, ៥ រក្សាទុកក្នុង file, ០ ចាកចេញ។ ប្រើ <code class="i">struct/class</code>, <code class="i">vector</code>, <code class="i">switch</code> ក្នុង <code class="i">while</code>, អនុគមន៍ដាច់ដោយឡែក និង File I/O។</p>
+<div class="ex"><h4>🧩 ធ្វើដោយខ្លួនឯង</h4><p>ប្រើរចនាសម្ព័ន្ធដូច <a href="#p2">គម្រោង ២</a> និង <a href="#pro">App កម្រិតអាជីព</a>៖ <code class="i">struct Student</code> + <code class="i">vector</code> + <code class="i">switch</code> ក្នុង <code class="i">while</code> + រក្សាទុកជា CSV។</p></div>
+</section>
+
+<section id="cheat">
+  <h2>📋 Cheat Sheet (សង្ខេបមួយទំព័រ)</h2>
+  <table><tr><th>ប្រធានបទ</th><th>C</th><th>C++</th></tr><tr><td>Output</td><td><code class="i">printf("%d\n", x);</code></td><td><code class="i">cout &lt;&lt; x &lt;&lt; endl;</code></td></tr><tr><td>Input</td><td><code class="i">scanf("%d", &amp;x);</code></td><td><code class="i">cin &gt;&gt; x;</code> / <code class="i">getline(cin, s);</code></td></tr><tr><td>String</td><td><code class="i">char s[20];</code> + <code class="i">strcmp/strcpy</code></td><td><code class="i">string s;</code> + <code class="i">==</code>, <code class="i">+</code></td></tr><tr><td>Memory</td><td><code class="i">malloc / free</code></td><td><code class="i">new / delete</code>, <code class="i">make_unique</code></td></tr><tr><td>Array ទំហំប្តូរ</td><td>ធ្វើដោយដៃ</td><td><code class="i">vector&lt;int&gt;</code></td></tr><tr><td>Boolean</td><td><code class="i">#include &lt;stdbool.h&gt;</code> (C23 មានស្រាប់)</td><td><code class="i">bool</code> មានស្រាប់</td></tr><tr><td>ប្រភេទ composite</td><td><code class="i">struct</code></td><td><code class="i">struct</code> / <code class="i">class</code></td></tr><tr><td>Reference</td><td>មិនមាន (ប្រើ pointer)</td><td><code class="i">int &amp;r = x;</code></td></tr><tr><td>File</td><td><code class="i">fopen / fprintf / fclose</code></td><td><code class="i">ifstream / ofstream</code></td></tr><tr><td>Compile</td><td><code class="i">gcc a.c -o a</code></td><td><code class="i">g++ a.cpp -o a</code></td></tr></table>
+<p><b>Syntax សំខាន់ៗ</b></p>
+<div class="codebox"><span class="label">C++</span><pre><code class="cpp">// ប្រភេទ:  int  double  char  bool  string  long long
+// លក្ខខណ្ឌ:  if (...) {...} else if (...) {...} else {...}
+// loop:      for (int i = 0; i &lt; n; i++) {...}
+//            while (...) {...}    do {...} while (...);
+// អនុគមន៍:   int add(int a, int b) { return a + b; }
+// array:     int a[5] = {1,2,3,4,5};     vector&lt;int&gt; v;
+// pointer:   int *p = &amp;x;   *p = 5;      nullptr
+// class:     class A { private: int x; public: A(int x):x(x){} };
+// STL:       sort(v.begin(), v.end());   map&lt;string,int&gt; m;
+// error:     try { throw runtime_error(&quot;x&quot;); } catch (const exception &amp;e) {}</code></pre></div>
+<table><tr><th>Operator</th><th>ន័យ</th></tr><tr><td><code class="i">= == !=</code></td><td>ដាក់តម្លៃ / ស្មើ / មិនស្មើ</td></tr><tr><td><code class="i">&amp;&amp; || !</code></td><td>និង / ឬ / មិន</td></tr><tr><td><code class="i">&amp;x  *p</code></td><td>អាសយដ្ឋាន / តម្លៃក្នុង pointer</td></tr><tr><td><code class="i">a.b  p-&gt;b</code></td><td>សមាជិក object / តាម pointer</td></tr><tr><td><code class="i">%  /</code></td><td>សំណល់ / ចែក (int ចែក int = int)</td></tr></table>
+</section>
+
+<section class="hero" id="pro">
+  <h2>🏆 ផ្នែកទី ៣: App កម្រិតអាជីព (Professional Upgrade)</h2>
+  <p>យើងនឹងសាងសង់ <b>Bank Management System</b> តាមផែនការក្នុងមេរៀនទី ៣៥៖ បែងចែក Header/Source, ប្រើ <b>CMake</b>, គ្រប់គ្រងកំហុសដោយ Exception, រក្សាទុកទិន្នន័យក្នុង File, ប្រវត្តិប្រតិបត្តិការ, ផ្ទេរប្រាក់ និង <b>Unit Tests</b>។</p>
+  <p><span class="badge">✔ Build & Test រួច</span> Compile ដោយគ្មាន Warning (<code>-Wall -Wextra -Wpedantic</code>) ហើយ Test ទាំងអស់ឆ្លងកាត់ (រួមទាំង AddressSanitizer)។</p>
+</section>
+
+<section id="pro-structure">
+  <h2>📁 រចនាសម្ព័ន្ធ Project</h2>
+<div class="codebox"><span class="label">Folder Structure</span><pre><code class="txt">BankApp/
+├── include/
+│   ├── Money.h          # ប្រាក់ជា &quot;សេន&quot; (ចំនួនគត់)
+│   ├── Account.h        # គណនី + ប្រវត្តិប្រតិបត្តិការ
+│   └── Bank.h           # គ្រប់គ្រងគណនីទាំងអស់ + Save/Load
+├── src/
+│   ├── Money.cpp
+│   ├── Account.cpp
+│   ├── Bank.cpp
+│   └── main.cpp         # Console menu
+├── tests/
+│   └── BankTests.cpp
+└── CMakeLists.txt</code></pre></div>
+  <div class="note">💡 <b>គោលការណ៍អាជីព៖</b> Logic (Account, Bank) ដាច់ពី UI (main.cpp) ដូច្នេះអាចសរសេរ Test បាន ហើយថ្ងៃក្រោយអាចប្តូរ UI ទៅជា GUI ឬ Web ដោយមិនកែ Logic។ <b>ប្រាក់រក្សាទុកជាចំនួនគត់ (សេន)</b> ព្រោះ <code class="i">double</code> មានកំហុសបង្គត់ (0.1 + 0.2 ≠ 0.3)។</div>
+</section>
+
+<section id="pro-code">
+  <h2>🧱 កូដ App ពេញលេញ</h2>
+  <h3>1) Money – ប្រាក់គ្មានកំហុសទសភាគ</h3>
+  <div class="codebox"><span class="label">include/Money.h</span><pre><code class="cpp">#pragma once
+#include &lt;cstdint&gt;
+#include &lt;string&gt;
+
+// រក្សាទុកប្រាក់ជា &quot;សេន&quot; (cents) ដោយប្រើចំនួនគត់ ដើម្បីជៀសកំហុស double (0.1 + 0.2 ≠ 0.3)
+using Cents = std::int64_t;
+
+Cents parseMoney(const std::string &amp;text);   // &quot;12.50&quot; → 1250 (throw បើខុសទម្រង់)
+std::string formatMoney(Cents value);        // 1250 → &quot;12.50&quot;</code></pre></div>
+  <div class="codebox"><span class="label">src/Money.cpp</span><pre><code class="cpp">#include &quot;Money.h&quot;
+
+#include &lt;cctype&gt;
+#include &lt;stdexcept&gt;
+
+Cents parseMoney(const std::string &amp;text) {
+    Cents whole = 0, frac = 0;
+    int fracDigits = 0;
+    bool seenDot = false, seenDigit = false;
+    for (char c : text) {
+        if (c == &#x27;.&#x27; &amp;&amp; !seenDot) { seenDot = true; continue; }
+        if (!std::isdigit(static_cast&lt;unsigned char&gt;(c))) throw std::invalid_argument(&quot;Invalid amount: &quot; + text);
+        seenDigit = true;
+        if (!seenDot) {
+            whole = whole * 10 + (c - &#x27;0&#x27;);
+            if (whole &gt; 1&#x27;000&#x27;000&#x27;000) throw std::invalid_argument(&quot;Amount too large&quot;);
+        } else if (++fracDigits &lt;= 2) {
+            frac = frac * 10 + (c - &#x27;0&#x27;);
+        } else {
+            throw std::invalid_argument(&quot;Max 2 decimal places&quot;);
+        }
+    }
+    if (!seenDigit) throw std::invalid_argument(&quot;Invalid amount: &quot; + text);
+    if (fracDigits == 1) frac *= 10;
+    return whole * 100 + frac;
+}
+
+std::string formatMoney(Cents value) {
+    std::string sign = value &lt; 0 ? &quot;-&quot; : &quot;&quot;;
+    if (value &lt; 0) value = -value;
+    std::string cents = std::to_string(value % 100);
+    if (cents.size() == 1) cents = &quot;0&quot; + cents;
+    return sign + std::to_string(value / 100) + &quot;.&quot; + cents;
+}</code></pre></div>
+  <h3>2) Account – គណនី និងប្រវត្តិ</h3>
+  <div class="codebox"><span class="label">include/Account.h</span><pre><code class="cpp">#pragma once
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+#include &quot;Money.h&quot;
+
+enum class TxType { Deposit, Withdraw, TransferIn, TransferOut };
+
+struct Transaction {
+    TxType type;
+    Cents amount;
+    Cents balanceAfter;
+};
+
+class Account {
+public:
+    Account(int id, std::string owner, Cents initial = 0);
+
+    int id() const { return id_; }
+    const std::string &amp;owner() const { return owner_; }
+    Cents balance() const { return balance_; }
+    const std::vector&lt;Transaction&gt; &amp;history() const { return history_; }
+
+    void deposit(Cents amount, TxType type = TxType::Deposit);
+    void withdraw(Cents amount, TxType type = TxType::Withdraw);
+
+private:
+    int id_;
+    std::string owner_;
+    Cents balance_;
+    std::vector&lt;Transaction&gt; history_;
+};
+
+const char *toString(TxType type);</code></pre></div>
+  <div class="codebox"><span class="label">src/Account.cpp</span><pre><code class="cpp">#include &quot;Account.h&quot;
+
+#include &lt;stdexcept&gt;
+#include &lt;utility&gt;
+
+Account::Account(int id, std::string owner, Cents initial)
+    : id_(id), owner_(std::move(owner)), balance_(0) {
+    if (owner_.empty()) throw std::invalid_argument(&quot;Owner name is required&quot;);
+    if (initial &lt; 0) throw std::invalid_argument(&quot;Initial balance cannot be negative&quot;);
+    if (initial &gt; 0) deposit(initial);
+}
+
+void Account::deposit(Cents amount, TxType type) {
+    if (amount &lt;= 0) throw std::invalid_argument(&quot;Amount must be positive&quot;);
+    balance_ += amount;
+    history_.push_back({type, amount, balance_});
+}
+
+void Account::withdraw(Cents amount, TxType type) {
+    if (amount &lt;= 0) throw std::invalid_argument(&quot;Amount must be positive&quot;);
+    if (amount &gt; balance_) throw std::runtime_error(&quot;Insufficient funds&quot;);
+    balance_ -= amount;
+    history_.push_back({type, amount, balance_});
+}
+
+const char *toString(TxType type) {
+    switch (type) {
+        case TxType::Deposit:     return &quot;Deposit&quot;;
+        case TxType::Withdraw:    return &quot;Withdraw&quot;;
+        case TxType::TransferIn:  return &quot;Transfer in&quot;;
+        case TxType::TransferOut: return &quot;Transfer out&quot;;
+    }
+    return &quot;?&quot;;
+}</code></pre></div>
+  <h3>3) Bank – គ្រប់គ្រង ផ្ទេរប្រាក់ និងរក្សាទុក</h3>
+  <div class="codebox"><span class="label">include/Bank.h</span><pre><code class="cpp">#pragma once
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+#include &quot;Account.h&quot;
+
+class Bank {
+public:
+    int open(const std::string &amp;owner, Cents initial);
+    void deposit(int id, Cents amount);
+    void withdraw(int id, Cents amount);
+    void transfer(int fromId, int toId, Cents amount);
+
+    const Account &amp;get(int id) const;
+    const std::vector&lt;Account&gt; &amp;accounts() const { return accounts_; }
+
+    void save(const std::string &amp;path) const;
+    void load(const std::string &amp;path);
+
+private:
+    Account &amp;find(int id);
+    std::vector&lt;Account&gt; accounts_;
+    int nextId_ = 1001;
+};</code></pre></div>
+  <div class="codebox"><span class="label">src/Bank.cpp</span><pre><code class="cpp">#include &quot;Bank.h&quot;
+
+#include &lt;cstdio&gt;
+#include &lt;fstream&gt;
+#include &lt;sstream&gt;
+#include &lt;stdexcept&gt;
+
+int Bank::open(const std::string &amp;owner, Cents initial) {
+    accounts_.emplace_back(nextId_, owner, initial);
+    return nextId_++;
+}
+
+Account &amp;Bank::find(int id) {
+    for (Account &amp;a : accounts_)
+        if (a.id() == id) return a;
+    throw std::runtime_error(&quot;Account &quot; + std::to_string(id) + &quot; not found&quot;);
+}
+
+const Account &amp;Bank::get(int id) const {
+    for (const Account &amp;a : accounts_)
+        if (a.id() == id) return a;
+    throw std::runtime_error(&quot;Account &quot; + std::to_string(id) + &quot; not found&quot;);
+}
+
+void Bank::deposit(int id, Cents amount) { find(id).deposit(amount); }
+void Bank::withdraw(int id, Cents amount) { find(id).withdraw(amount); }
+
+void Bank::transfer(int fromId, int toId, Cents amount) {
+    if (fromId == toId) throw std::invalid_argument(&quot;Cannot transfer to the same account&quot;);
+    Account &amp;from = find(fromId);
+    Account &amp;to = find(toId);                 // ពិនិត្យថាទាំងពីរមាន មុនកែប្រែអ្វីទាំងអស់
+    from.withdraw(amount, TxType::TransferOut);
+    to.deposit(amount, TxType::TransferIn);
+}
+
+// ទម្រង់ file (CSV): id,owner,balance_cents  — ឈ្មោះមិនអនុញ្ញាតឱ្យមាន &#x27;,&#x27;
+void Bank::save(const std::string &amp;path) const {
+    const std::string tmp = path + &quot;.tmp&quot;;
+    {
+        std::ofstream out(tmp);
+        if (!out) throw std::runtime_error(&quot;Cannot write &quot; + tmp);
+        out &lt;&lt; nextId_ &lt;&lt; &quot;\n&quot;;
+        for (const Account &amp;a : accounts_)
+            out &lt;&lt; a.id() &lt;&lt; &quot;,&quot; &lt;&lt; a.owner() &lt;&lt; &quot;,&quot; &lt;&lt; a.balance() &lt;&lt; &quot;\n&quot;;
+        if (!out) throw std::runtime_error(&quot;Write failed&quot;);
+    }
+    std::remove(path.c_str());                // សរសេរ file ថ្មីរួចហើយ ទើបជំនួស (ការពារ file ខូចពាក់កណ្តាល)
+    if (std::rename(tmp.c_str(), path.c_str()) != 0) throw std::runtime_error(&quot;Cannot save &quot; + path);
+}
+
+void Bank::load(const std::string &amp;path) {
+    std::ifstream in(path);
+    if (!in) return;                          // គ្មាន file = ចាប់ផ្តើមថ្មី
+    std::vector&lt;Account&gt; loaded;
+    int nextId = 1001;
+    std::string line;
+    if (std::getline(in, line)) nextId = std::stoi(line);
+    while (std::getline(in, line)) {
+        std::stringstream ss(line);
+        std::string id, owner, balance;
+        if (!std::getline(ss, id, &#x27;,&#x27;) || !std::getline(ss, owner, &#x27;,&#x27;) || !std::getline(ss, balance))
+            throw std::runtime_error(&quot;Corrupted line: &quot; + line);
+        loaded.emplace_back(std::stoi(id), owner, std::stoll(balance));
+    }
+    accounts_ = std::move(loaded);
+    nextId_ = nextId;
+}</code></pre></div>
+  <h3>4) main.cpp – Console Menu ដែលការពារ Input ខុស</h3>
+  <div class="codebox"><span class="label">src/main.cpp</span><pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;limits&gt;
+#include &lt;string&gt;
+
+#include &quot;Bank.h&quot;
+
+namespace {
+
+const std::string DATA_FILE = &quot;bank_data.csv&quot;;
+
+std::string ask(const std::string &amp;prompt) {
+    std::cout &lt;&lt; prompt;
+    std::string s;
+    if (!std::getline(std::cin, s)) throw std::runtime_error(&quot;Input closed&quot;);
+    return s;
+}
+
+int askInt(const std::string &amp;prompt) {
+    while (true) {
+        std::string s = ask(prompt);
+        try {
+            size_t used = 0;
+            int v = std::stoi(s, &amp;used);
+            if (used == s.size()) return v;
+        } catch (const std::exception &amp;) {}
+        std::cout &lt;&lt; &quot;  Please enter a whole number.\n&quot;;
+    }
+}
+
+Cents askMoney(const std::string &amp;prompt) {
+    while (true) {
+        try { return parseMoney(ask(prompt)); }
+        catch (const std::invalid_argument &amp;e) { std::cout &lt;&lt; &quot;  &quot; &lt;&lt; e.what() &lt;&lt; &quot;\n&quot;; }
+    }
+}
+
+void showHistory(const Account &amp;a) {
+    std::cout &lt;&lt; &quot;History of &quot; &lt;&lt; a.id() &lt;&lt; &quot; (&quot; &lt;&lt; a.owner() &lt;&lt; &quot;)\n&quot;;
+    for (const Transaction &amp;t : a.history())
+        std::cout &lt;&lt; &quot;  &quot; &lt;&lt; toString(t.type) &lt;&lt; &quot;  $&quot; &lt;&lt; formatMoney(t.amount)
+                  &lt;&lt; &quot;  → balance $&quot; &lt;&lt; formatMoney(t.balanceAfter) &lt;&lt; &quot;\n&quot;;
+}
+
+}  // namespace
+
+int main() {
+    Bank bank;
+    try {
+        bank.load(DATA_FILE);
+    } catch (const std::exception &amp;e) {
+        std::cerr &lt;&lt; &quot;Could not load data: &quot; &lt;&lt; e.what() &lt;&lt; &quot;\n&quot;;
+        return 1;
+    }
+
+    while (true) {
+        std::cout &lt;&lt; &quot;\n1.Open 2.Deposit 3.Withdraw 4.Transfer 5.Balance 6.History 7.List 0.Save &amp; Exit\n&quot;;
+        try {
+            int choice = askInt(&quot;&gt; &quot;);
+            switch (choice) {
+                case 1: {
+                    std::string name = ask(&quot;Owner name: &quot;);
+                    if (name.find(&#x27;,&#x27;) != std::string::npos) throw std::invalid_argument(&quot;Name cannot contain &#x27;,&#x27;&quot;);
+                    int id = bank.open(name, askMoney(&quot;Initial deposit: &quot;));
+                    std::cout &lt;&lt; &quot;Account created: &quot; &lt;&lt; id &lt;&lt; &quot;\n&quot;;
+                    break;
+                }
+                case 2: { int id = askInt(&quot;Account ID: &quot;); bank.deposit(id, askMoney(&quot;Amount: &quot;)); std::cout &lt;&lt; &quot;Done.\n&quot;; break; }
+                case 3: { int id = askInt(&quot;Account ID: &quot;); bank.withdraw(id, askMoney(&quot;Amount: &quot;)); std::cout &lt;&lt; &quot;Done.\n&quot;; break; }
+                case 4: {
+                    int from = askInt(&quot;From ID: &quot;);
+                    int to = askInt(&quot;To ID: &quot;);
+                    bank.transfer(from, to, askMoney(&quot;Amount: &quot;));
+                    std::cout &lt;&lt; &quot;Transferred.\n&quot;;
+                    break;
+                }
+                case 5: { const Account &amp;a = bank.get(askInt(&quot;Account ID: &quot;)); std::cout &lt;&lt; &quot;$&quot; &lt;&lt; formatMoney(a.balance()) &lt;&lt; &quot;\n&quot;; break; }
+                case 6: showHistory(bank.get(askInt(&quot;Account ID: &quot;))); break;
+                case 7:
+                    for (const Account &amp;a : bank.accounts())
+                        std::cout &lt;&lt; a.id() &lt;&lt; &quot;  &quot; &lt;&lt; a.owner() &lt;&lt; &quot;  $&quot; &lt;&lt; formatMoney(a.balance()) &lt;&lt; &quot;\n&quot;;
+                    break;
+                case 0:
+                    bank.save(DATA_FILE);
+                    std::cout &lt;&lt; &quot;Saved. Goodbye!\n&quot;;
+                    return 0;
+                default:
+                    std::cout &lt;&lt; &quot;Choose 0-7\n&quot;;
+            }
+        } catch (const std::runtime_error &amp;e) {
+            if (std::string(e.what()) == &quot;Input closed&quot;) { bank.save(DATA_FILE); return 0; }
+            std::cout &lt;&lt; &quot;Error: &quot; &lt;&lt; e.what() &lt;&lt; &quot;\n&quot;;
+        } catch (const std::exception &amp;e) {
+            std::cout &lt;&lt; &quot;Error: &quot; &lt;&lt; e.what() &lt;&lt; &quot;\n&quot;;
+        }
+    }
+}</code></pre></div>
+</section>
+
+<section id="pro-build">
+  <h2>🔧 CMake, Build & Test</h2>
+  <div class="codebox"><span class="label">CMakeLists.txt</span><pre><code class="txt">cmake_minimum_required(VERSION 3.16)
+project(BankApp LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Library រួម (ប្រើទាំង App និង Tests)
+add_library(bankcore src/Money.cpp src/Account.cpp src/Bank.cpp)
+target_include_directories(bankcore PUBLIC include)
+if (MSVC)
+    target_compile_options(bankcore PRIVATE /W4)
+else()
+    target_compile_options(bankcore PRIVATE -Wall -Wextra -Wpedantic)
+endif()
+
+add_executable(bankapp src/main.cpp)
+target_link_libraries(bankapp PRIVATE bankcore)
+
+enable_testing()
+add_executable(bank_tests tests/BankTests.cpp)
+target_link_libraries(bank_tests PRIVATE bankcore)
+add_test(NAME bank_tests COMMAND bank_tests)</code></pre></div>
+  <div class="codebox"><span class="label">tests/BankTests.cpp</span><pre><code class="cpp">#include &lt;cstdio&gt;
+#include &lt;functional&gt;
+#include &lt;iostream&gt;
+#include &lt;stdexcept&gt;
+#include &lt;string&gt;
+
+#include &quot;Bank.h&quot;
+
+// Test framework តូចមួយ (ដំណើរការទាំង Debug និង Release មិនដូច assert)
+static int failures = 0;
+#define CHECK(cond)                                                                \
+    do {                                                                           \
+        if (!(cond)) {                                                             \
+            std::cerr &lt;&lt; &quot;FAIL &quot; &lt;&lt; __FILE__ &lt;&lt; &quot;:&quot; &lt;&lt; __LINE__ &lt;&lt; &quot;  &quot; #cond &quot;\n&quot;; \
+            failures++;                                                            \
+        }                                                                          \
+    } while (0)
+
+template &lt;typename E&gt;
+bool throws(const std::function&lt;void()&gt; &amp;f) {
+    try { f(); } catch (const E &amp;) { return true; } catch (...) {}
+    return false;
+}
+
+void testMoney() {
+    CHECK(parseMoney(&quot;12.5&quot;) == 1250);
+    CHECK(parseMoney(&quot;0.05&quot;) == 5);
+    CHECK(parseMoney(&quot;100&quot;) == 10000);
+    CHECK(formatMoney(1205) == &quot;12.05&quot;);
+    CHECK(throws&lt;std::invalid_argument&gt;([] { parseMoney(&quot;1.234&quot;); }));
+    CHECK(throws&lt;std::invalid_argument&gt;([] { parseMoney(&quot;-5&quot;); }));
+    CHECK(throws&lt;std::invalid_argument&gt;([] { parseMoney(&quot;abc&quot;); }));
+}
+
+void testDepositWithdraw() {
+    Bank b;
+    int id = b.open(&quot;Dara&quot;, 10000);
+    b.deposit(id, 2550);
+    b.withdraw(id, 550);
+    CHECK(b.get(id).balance() == 12000);
+    CHECK(b.get(id).history().size() == 3);
+    CHECK(throws&lt;std::runtime_error&gt;([&amp;] { b.withdraw(id, 999999); }));
+    CHECK(throws&lt;std::invalid_argument&gt;([&amp;] { b.deposit(id, 0); }));
+    CHECK(b.get(id).balance() == 12000);                 // មិនប្រែប្រួលក្រោយ error
+}
+
+void testTransfer() {
+    Bank b;
+    int a = b.open(&quot;A&quot;, 5000), c = b.open(&quot;C&quot;, 0);
+    b.transfer(a, c, 2000);
+    CHECK(b.get(a).balance() == 3000);
+    CHECK(b.get(c).balance() == 2000);
+    CHECK(throws&lt;std::runtime_error&gt;([&amp;] { b.transfer(a, 9999, 100); }));
+    CHECK(b.get(a).balance() == 3000);                   // គណនីគោលដៅមិនមាន → មិនដកប្រាក់
+    CHECK(throws&lt;std::invalid_argument&gt;([&amp;] { b.transfer(a, a, 100); }));
+}
+
+void testSaveLoad() {
+    const std::string path = &quot;test_bank.csv&quot;;
+    {
+        Bank b;
+        b.open(&quot;Sophea&quot;, 12345);
+        b.open(&quot;Vanna&quot;, 0);
+        b.save(path);
+    }
+    Bank loaded;
+    loaded.load(path);
+    CHECK(loaded.accounts().size() == 2);
+    CHECK(loaded.get(1001).owner() == &quot;Sophea&quot;);
+    CHECK(loaded.get(1001).balance() == 12345);
+    CHECK(loaded.open(&quot;New&quot;, 0) == 1003);                // nextId ត្រូវបានរក្សា
+    std::remove(path.c_str());
+}
+
+int main() {
+    testMoney();
+    testDepositWithdraw();
+    testTransfer();
+    testSaveLoad();
+    if (failures) { std::cerr &lt;&lt; failures &lt;&lt; &quot; test(s) failed\n&quot;; return 1; }
+    std::cout &lt;&lt; &quot;All tests passed\n&quot;;
+    return 0;
+}</code></pre></div>
+<div class="codebox"><span class="label">Terminal</span><pre><code class="bash">cmake -S . -B build
+cmake --build build
+ctest --test-dir build --output-on-failure
+./build/bankapp          # Windows: build\bankapp.exe (ឬ build\Debug\bankapp.exe)</code></pre></div>
+<div class="codebox"><span class="label">លទ្ធផល (ឧទាហរណ៍)</span><pre><code class="txt">100% tests passed, 0 tests failed out of 1
+
+1.Open 2.Deposit 3.Withdraw 4.Transfer 5.Balance 6.History 7.List 0.Save &amp; Exit
+&gt; 6
+Account ID: 1002
+History of 1002 (Sok)
+  Deposit  $5.50  → balance $5.50
+  Transfer in  $20.25  → balance $25.75</code></pre></div>
+</section>
+
+<section id="pro-quality">
+  <h2>🛡️ Code Quality Checklist</h2>
+  <table>
+    <tr><th>ផ្នែក</th><th>ឧបករណ៍ / វិធី</th></tr>
+    <tr><td>Warnings</td><td><code class="i">-Wall -Wextra -Wpedantic</code> និងចាត់ទុក Warning ជា Error (<code class="i">-Werror</code>) ក្នុង CI</td></tr>
+    <tr><td>Memory bugs</td><td><code class="i">-fsanitize=address,undefined</code> ឬ Valgrind</td></tr>
+    <tr><td>Format</td><td><code class="i">clang-format</code> រក្សាទម្រង់កូដដូចគ្នាទាំងក្រុម</td></tr>
+    <tr><td>Static analysis</td><td><code class="i">clang-tidy</code>, cppcheck</td></tr>
+    <tr><td>Memory management</td><td>RAII + Smart Pointer + Container — ជៀសវាង <code class="i">new/delete</code> ដោយដៃ</td></tr>
+    <tr><td>Input</td><td>អានជា <code class="i">getline</code> រួចពិនិត្យ — មិនទុកចិត្ត Input ពី User</td></tr>
+    <tr><td>Testing</td><td>Test framework ដូចជា GoogleTest ឬ Catch2 សម្រាប់ Project ធំ</td></tr>
+    <tr><td>Version control</td><td>Git + <code class="i">.gitignore</code> (<code class="i">build/</code>) + README</td></tr>
+  </table>
+  <div class="ex"><h4>🏁 លំហាត់គម្រោងចុងក្រោយ</h4>
+    <ol>
+      <li>រក្សាទុក <b>ប្រវត្តិប្រតិបត្តិការ</b> ក្នុង File ផងដែរ (បច្ចុប្បន្នរក្សាតែសមតុល្យ)</li>
+      <li>បន្ថែម PIN សម្រាប់ដកប្រាក់ និងផ្ទេរប្រាក់ (កុំរក្សាទុក PIN ជាអក្សរធម្មតា — Hash វា)</li>
+      <li>បន្ថែមការស្វែងរកគណនីតាមឈ្មោះ</li>
+      <li>ប្តូរការរក្សាទុកពី CSV ទៅ SQLite (មេរៀនទី ៣២)</li>
+      <li>ប្រើ GoogleTest ជំនួស Test framework តូច ហើយដំណើរការ Test ដោយ GitHub Actions</li>
+    </ol>
+  </div>
+</section>
+
+<section id="roadmap">
+  <h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+  <ol class="steps">
+    <li><b>ដំណាក់កាលទី ១៖</b> រំលឹកមេរៀន ១–១៥ និងធ្វើលំហាត់ដោយមិនមើលចម្លើយ</li>
+    <li><b>ដំណាក់កាលទី ២៖</b> រំលឹកមេរៀន ១៦–២៤ ហើយសរសេរ Project តូចៗ (គម្រោង ១–៣)</li>
+    <li><b>ដំណាក់កាលទី ៣៖</b> រៀនមេរៀន ២៥–៣៥ តាមលំដាប់ (Modern C++, DSA, Design)</li>
+    <li><b>ដំណាក់កាលទី ៤៖</b> សាងសង់ App កម្រិតអាជីព ហើយដាក់កូដលើ GitHub</li>
+    <li><b>ដំណាក់កាលទី ៥៖</b> ធ្វើ Tests, Debugging និងកែ Bugs មុនបង្ហាញគម្រោង</li>
+    <li><b>ជ្រើសផ្លូវបន្ត៖</b> Game (Unreal/SFML) · Embedded (Arduino/ESP32) · Competitive Programming · Systems (Linux)</li>
+  </ol>
+  <h3>គន្លឹះរៀនឱ្យពូកែ</h3>
+  <ul>
+    <li>វាយកូដដោយដៃ ហើយធ្វើលំហាត់រាល់មេរៀន — កុំគ្រាន់តែចម្លង។</li>
+    <li>អានសារ Error ពីបន្ទាត់ដំបូង ហើយមើលលេខបន្ទាត់។</li>
+    <li>ប្រើ Debugger ក្នុង VS Code (F5 + Breakpoint)។</li>
+    <li>Compile ជាមួយ <code class="i">g++ -Wall -Wextra -std=c++17</code> ជានិច្ច។</li>
+    <li>ហាត់បន្ថែមលើ LeetCode, HackerRank, Codeforces។</li>
+  </ul>
+  <p><b>ឯកសារយោង:</b> <a href="https://en.cppreference.com" target="_blank">cppreference.com</a> · <a href="https://isocpp.github.io/CppCoreGuidelines/" target="_blank">C++ Core Guidelines</a> · <a href="https://www.learncpp.com" target="_blank">learncpp.com</a></p>
+</section>
+
+</main>
+</div>
+
+<script>
+// ===== Syntax highlighter (គ្មាន Library ខាងក្រៅ) =====
+const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const span = (cls, s) => `<span class="${cls}">${esc(s)}</span>`;
+
+const CPP_KW = "auto|break|case|catch|class|const|constexpr|continue|default|delete|do|else|enum|explicit|extern|false|for|friend|goto|if|inline|namespace|new|noexcept|nullptr|operator|override|private|protected|public|return|sizeof|static|static_cast|struct|switch|template|this|throw|true|try|typedef|typename|using|virtual|void|volatile|while|NULL";
+const CPP_TYPE = "int|long|short|unsigned|signed|char|bool|float|double|size_t|string|vector|map|set|unordered_map|stack|queue|pair|optional|unique_ptr|shared_ptr|weak_ptr|thread|mutex|lock_guard|ostream|istream|ifstream|ofstream|exception|runtime_error|invalid_argument|out_of_range|FILE|int64_t";
+const CPP_BI = "std|cout|cin|cerr|endl|printf|scanf|getline|make_unique|make_shared|move|sort|reverse|find|max|min|swap|malloc|free|strlen|strcmp|nullopt|accumulate";
+const cppRe = new RegExp(
+  "(\\/\\/.*$|\\/\\*[\\s\\S]*?\\*\\/)" +                                  // 1 comment
+  "|(\"(?:\\\\.|[^\"\\\\\\n])*\"|'(?:\\\\.|[^'\\\\\\n])')" +             // 2 string / char
+  "|(^[ \\t]*#\\s*\\w+(?:[ \\t]*<[^>\\n]*>)?)" +                          // 3 preprocessor
+  "|\\b(" + CPP_KW + ")\\b" +                                             // 4 keyword
+  "|\\b(" + CPP_TYPE + ")\\b" +                                           // 5 type
+  "|\\b(\\d[\\d']*(?:\\.\\d+)?(?:[eE]-?\\d+)?[uUlLfF]*)\\b" +             // 6 number
+  "|\\b(" + CPP_BI + ")\\b" +                                             // 7 std / builtin
+  "|([A-Za-z_]\\w*)(?=\\s*\\()",                                         // 8 function
+  "gm"
+);
+const SQL_KW = "CREATE|TABLE|INSERT|INTO|VALUES|SELECT|FROM|WHERE|JOIN|ON|ORDER|BY|DESC|ASC|PRIMARY|KEY|NOT|NULL|INTEGER|TEXT|REAL|AUTOINCREMENT|REFERENCES|CHECK|BETWEEN|AND";
+const sqlRe = new RegExp("(--.*$)|('(?:''|[^'])*')|\\b(" + SQL_KW + ")\\b|\\b(\\d+(?:\\.\\d+)?)\\b", "gmi");
+const bashRe = /(#.*$)|("(?:\\.|[^"\\])*"|'[^']*')|^(\s*)(g\+\+|gcc|gdb|clang\+\+|pacman|xcode-select|sudo|git|cmake|ctest|mkdir|cd|echo|\.\/\S+)/gm;
+
+function highlight(text, re, map) {
+  let out = "", last = 0, m;
+  re.lastIndex = 0;
+  while ((m = re.exec(text))) {
+    if (m[0] === "") { re.lastIndex++; continue; }
+    out += esc(text.slice(last, m.index)) + map(m);
+    last = re.lastIndex;
+  }
+  return out + esc(text.slice(last));
+}
+
+document.querySelectorAll("pre code").forEach((el) => {
+  const src = el.textContent;
+  if (el.classList.contains("cpp")) {
+    el.innerHTML = highlight(src, cppRe, (m) => {
+      if (m[1]) return span("tok-com", m[0]);
+      if (m[2]) return span("tok-str", m[0]);
+      if (m[3]) return span("tok-pre", m[0]);
+      if (m[4]) return span("tok-kw", m[0]);
+      if (m[5]) return span("tok-bi", m[0]);
+      if (m[6]) return span("tok-num", m[0]);
+      if (m[7]) return span("tok-cmd", m[0]);
+      if (m[8]) return span("tok-fn", m[0]);
+      return esc(m[0]);
+    });
+  } else if (el.classList.contains("sql")) {
+    el.innerHTML = highlight(src, sqlRe, (m) =>
+      m[1] ? span("tok-com", m[0]) : m[2] ? span("tok-str", m[0]) : m[3] ? span("tok-kw", m[0]) : m[4] ? span("tok-num", m[0]) : esc(m[0]));
+  } else if (el.classList.contains("bash")) {
+    el.innerHTML = highlight(src, bashRe, (m) => {
+      if (m[1]) return span("tok-com", m[0]);
+      if (m[2]) return span("tok-str", m[0]);
+      if (m[4]) return esc(m[3]) + span("tok-cmd", m[4]);
+      return esc(m[0]);
+    });
+  }
+});
+
+// ===== Copy buttons =====
+document.querySelectorAll(".codebox").forEach((box) => {
+  const btn = document.createElement("button");
+  btn.className = "btn copy";
+  btn.textContent = "ចម្លង";
+  btn.onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(box.querySelector("code").textContent);
+      btn.textContent = "✔ បានចម្លង";
+    } catch { btn.textContent = "បរាជ័យ"; }
+    setTimeout(() => (btn.textContent = "ចម្លង"), 1500);
+  };
+  box.appendChild(btn);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="cpp"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

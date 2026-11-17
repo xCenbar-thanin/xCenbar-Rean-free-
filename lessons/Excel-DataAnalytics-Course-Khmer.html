@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន Excel & Data Analytics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f5f9f6; --panel:#ffffff; --text:#18261d; --muted:#5b6b61; --line:#d9e7de;
+  --accent:#107c41; --accent2:#33a165; --accent-soft:#e3f4ea;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#6fd39b; --accent2:#33a165; --accent-soft:#14281d;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#6fd39b; --accent2:#33a165; --accent-soft:#14281d;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#0b5a2f,#33a165);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+</style>
+<link rel="icon" href="../assets/icons/excel.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/excel.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>វគ្គសិក្សា Excel + Data Analytics ពីដើមដល់កម្រិតអាជីព</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Excel ជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#install">២. របៀបដំឡើង Excel (និងភ្ជាប់ជាមួយ VS Code)</a>
+<a href="#elements">៣. ធាតុនីមួយៗរបស់ Excel</a>
+<h4>ផ្នែកទី ២ – Excel មូលដ្ឋាន ដល់ មធ្យម</h4>
+<a href="#l1">មេរៀន ១: ផ្ទៃ Excel, វាយទិន្នន័យ, AutoFill, Flash Fill</a>
+<a href="#l2">មេរៀន ២: Formatting, Number Format &amp; Conditional Formatting</a>
+<a href="#l3">មេរៀន ៣: Formula, Operators &amp; Cell References ($)</a>
+<a href="#l4">មេរៀន ៤: Function មូលដ្ឋាន: SUM, AVERAGE, COUNT, MIN, MAX, ROUND</a>
+<a href="#l5">មេរៀន ៥: Logical: IF, IFS, AND, OR, IFERROR</a>
+<a href="#l6">មេរៀន ៦: SUMIFS, COUNTIFS, AVERAGEIFS — សរុបតាមលក្ខខណ្ឌ</a>
+<a href="#l7">មេរៀន ៧: Lookup: XLOOKUP, VLOOKUP, INDEX + MATCH</a>
+<a href="#l8">មេរៀន ៨: Text &amp; Date Functions</a>
+<a href="#l9">មេរៀន ៩: Excel Table, Structured References &amp; Data Validation</a>
+<a href="#l10">មេរៀន ១០: Dynamic Arrays: FILTER, SORT, UNIQUE, LET, LAMBDA</a>
+<a href="#l11">មេរៀន ១១: Charts: ជ្រើសក្រាហ្វឱ្យត្រូវ</a>
+<h4>ផ្នែកទី ៣ – Data Analytics</h4>
+<a href="#l12">មេរៀន ១២: Data Analytics ជាអ្វី? ដំណើរការ ៦ ជំហាន</a>
+<a href="#l13">មេរៀន ១៣: Data Cleaning — សម្អាតទិន្នន័យ</a>
+<a href="#l14">មេរៀន ១៤: Power Query — នាំចូល និងសម្អាតដោយស្វ័យប្រវត្តិ</a>
+<a href="#l15">មេរៀន ១៥: PivotTable, PivotChart, Slicer &amp; Timeline</a>
+<a href="#l16">មេរៀន ១៦: Descriptive Statistics, Correlation &amp; Forecast</a>
+<a href="#l17">មេរៀន ១៧: What-If Analysis: Goal Seek, Scenario, Data Table</a>
+<a href="#l18">មេរៀន ១៨: Data Model, Power Pivot &amp; DAX</a>
+<a href="#l19">មេរៀន ១៩: Python in Excel &amp; Copilot</a>
+<a href="#l20">មេរៀន ២០: Macro &amp; VBA — ស្វ័យប្រវត្តិកម្ម</a>
+<a href="#cheat">📋 Cheat Sheet: Function ដែល Data Analyst ប្រើរាល់ថ្ងៃ</a>
+<h4>ផ្នែកទី ៤ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងអាជីព: Sales Analytics Dashboard</a>
+<a href="#pro-build">🛠️ ជំហានសាងសង់ក្នុង Excel</a>
+<a href="#pro-app">📊 Dashboard ផ្ទាល់ (សាកល្បងបាន)</a>
+<a href="#pro-check">✅ Checklist Dashboard អាជីព &amp; គម្រោងចុងក្រោយ</a>
+<a href="#roadmap">🗺️ ផែនទីក្លាយជា Data Analyst</a>
+
+</nav>
+<main>
+<section class="hero">
+  <h2>📊 Microsoft Excel + Data Analytics ពីដើមដល់ចប់</h2>
+  <p>រៀន Excel ពីការវាយទិន្នន័យដំបូង រហូតដល់ <b>វិភាគទិន្នន័យ (Data Analytics)</b> កម្រិតអាជីព៖ Formula, XLOOKUP, Dynamic Arrays, Power Query, PivotTable, Statistics, Power Pivot/DAX, Python in Excel, VBA និង <b>Dashboard</b>។ រូបមន្ត (Formula) ទាំងអស់មាន <b>ពណ៌</b> ងាយអាន។</p>
+  <p><span class="badge">📘 ២០ មេរៀន</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">📈 Data Analytics</span><span class="badge">🏆 Sales Dashboard</span></p>
+</section>
+
+<!-- NAV: ផ្នែកទី ១ – មូលដ្ឋាន -->
+<section id="intro">
+  <h2>១. Excel ជាអ្វី? អ្នកណាបង្កើត?</h2>
+  <p><b>Microsoft Excel</b> គឺជាកម្មវិធី <b>Spreadsheet</b> (តារាងគណនា) ដែលរៀបទិន្នន័យជា <b>ជួរដេក (Row)</b> និង <b>ជួរឈរ (Column)</b> ហើយគណនាដោយស្វ័យប្រវត្តិតាម <b>Formula</b>។ វាជាឧបករណ៍វិភាគទិន្នន័យដែលគេប្រើច្រើនបំផុតក្នុងពិភពលោក។</p>
+  <div class="grid">
+    <div class="card"><b>ក្រុមហ៊ុន</b><br><b style="font-size:19px">Microsoft</b><br>Bill Gates & Paul Allen ជាស្ថាបនិក</div>
+    <div class="card"><b>អ្នកអភិវឌ្ឍន៍ដើម</b><br><b>Doug Klunder</b> (Lead developer) ក្រោមការដឹកនាំក្រុម Applications របស់ <b>Charles Simonyi</b></div>
+    <div class="card"><b>ចេញដំបូង</b><br><b>1985</b> សម្រាប់ Apple Macintosh<br><b>1987</b> សម្រាប់ Windows (Excel 2.0)</div>
+    <div class="card"><b>បុព្វបុរស</b><br><b>VisiCalc</b> (1979, Dan Bricklin & Bob Frankston), <b>Multiplan</b> (Microsoft 1982), <b>Lotus 1-2-3</b> (1983)</div>
+  </div>
+  <h3>ប្រវត្តិសង្ខេប</h3>
+  <table>
+    <tr><th>ឆ្នាំ</th><th>ព្រឹត្តិការណ៍</th></tr>
+    <tr><td>1985</td><td>Excel 1.0 សម្រាប់ Mac — Spreadsheet ដំបូងៗដែលមាន GUI និង Mouse</td></tr>
+    <tr><td>1987</td><td>Excel 2.0 សម្រាប់ Windows</td></tr>
+    <tr><td>1993</td><td>Excel 5.0 មាន <b>VBA</b> (Macro) · Microsoft Office ក្លាយជាកញ្ចប់ Word + Excel + PowerPoint</td></tr>
+    <tr><td>1997</td><td>Excel 97៖ VBA Editor ទំនើប (Alt+F11)</td></tr>
+    <tr><td>2007</td><td>Ribbon, ទម្រង់ <b>.xlsx</b>, 1,048,576 ជួរ × 16,384 ជួរឈរ</td></tr>
+    <tr><td>2010–2016</td><td>Power Pivot, Power Query (Get & Transform), Slicer</td></tr>
+    <tr><td>2018–2020</td><td><b>Dynamic Arrays</b> (FILTER, SORT, UNIQUE), <b>XLOOKUP</b>, LET</td></tr>
+    <tr><td>2022–បច្ចុប្បន្ន</td><td>LAMBDA, <b>Python in Excel</b>, <b>Copilot</b> (AI) ក្នុង Microsoft 365</td></tr>
+  </table>
+  <h3>គេប្រើ Excel សម្រាប់ធ្វើអ្វី?</h3>
+  <div class="grid">
+    <div class="card">💰 <b>គណនេយ្យ & ហិរញ្ញវត្ថុ</b><br>ថវិកា, ប្រាក់ខែ, របាយការណ៍ចំណេញ</div>
+    <div class="card">📦 <b>ស្តុក & លក់</b><br>តាមដានទំនិញ, Invoice, ការលក់ប្រចាំថ្ងៃ</div>
+    <div class="card">📈 <b>Data Analytics</b><br>សម្អាតទិន្នន័យ, PivotTable, Dashboard</div>
+    <div class="card">🏫 <b>សាលា</b><br>ពិន្ទុសិស្ស, វត្តមាន, ចំណាត់ថ្នាក់</div>
+    <div class="card">🗓️ <b>គ្រប់គ្រងគម្រោង</b><br>Gantt chart, Checklist, កាលវិភាគ</div>
+    <div class="card">🔬 <b>ស្ថិតិ & ស្រាវជ្រាវ</b><br>Survey, មធ្យម, គម្លាតស្តង់ដារ, ទំនាក់ទំនង</div>
+  </div>
+</section>
+
+<section id="install">
+  <h2>២. របៀបដំឡើង Excel (និងភ្ជាប់ជាមួយ VS Code)</h2>
+  <div class="warn">⚠️ <b>Excel មិនដំឡើងក្នុង VS Code ទេ</b> — Excel ជាកម្មវិធីដាច់ដោយឡែករបស់ Microsoft។ VS Code ប្រើសម្រាប់ <b>អ្នកសរសេរកូដ</b> ដែលចង់៖ បង្កើត <b>Office Add-in</b>, វិភាគ File Excel ដោយ <b>Python</b>, ឬមើល CSV។ អ្នកប្រើធម្មតាគ្រាន់តែដំឡើង Excel។</div>
+  <h3>ជំហានទី ១: ដំឡើង Excel</h3>
+  <ol class="steps">
+    <li><b>ឥតគិតថ្លៃ៖</b> ចូល <a href="https://www.office.com" target="_blank">office.com</a> → Sign in ដោយគណនី Microsoft → ប្រើ <b>Excel for the web</b> ក្នុង Browser</li>
+    <li><b>ពេញលេញ៖</b> ទិញ/ជាវ <b>Microsoft 365</b> (Personal/Family/Business) ឬប្រើគណនីសាលា (សិស្សជាច្រើនបានឥតគិតថ្លៃ) → ចូល <b>office.com</b> → <b>Install apps</b></li>
+    <li>បើក File ដំឡើង → រង់ចាំ → បើក Excel → Sign in ដើម្បីបើកដំណើរការ (Activate)</li>
+    <li>ទូរស័ព្ទ៖ ទាញ <b>Microsoft Excel</b> ឬ <b>Microsoft 365 Copilot</b> app ពី Play Store / App Store</li>
+    <li>បើក <b>Developer tab</b>៖ File → Options → Customize Ribbon → ធីក <b>Developer</b> (សម្រាប់ Macro/VBA)</li>
+  </ol>
+  <h3>ជំហានទី ២ (ជម្រើសសម្រាប់អ្នកសរសេរកូដ): VS Code</h3>
+  <ol class="steps">
+    <li>ដំឡើង <b>VS Code</b> ពី <a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a> និង <b>Node.js LTS</b></li>
+    <li>Extensions (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>) → ស្វែងរក <b>Office Add-ins Development Kit</b> (Microsoft) → Install → បង្កើតគម្រោង Add-in សម្រាប់ Excel</li>
+    <li>សម្រាប់ Data Analytics៖ ដំឡើង Extension <b>Python</b> + <b>Jupyter</b> + <b>Data Wrangler</b> → អាន File .xlsx ដោយ pandas</li>
+    <li>មើល CSV ជាតារាង៖ Extension <b>Rainbow CSV</b> ឬ <b>Excel Viewer</b></li>
+  </ol>
+  <script type="text/x-code" data-lang="js" data-label="Excel Add-in (Office.js) · src/taskpane.js">
+// ចុចប៊ូតុងក្នុង Add-in → សរសេរទិន្នន័យចូល Excel ហើយធ្វើជា Table
+async function insertSales() {
+  await Excel.run(async (context) => {
+    const sheet = context.workbook.worksheets.getActiveWorksheet();
+    const range = sheet.getRange("A1:C3");
+    range.values = [["ផលិតផល", "ចំនួន", "តម្លៃ"], ["Latte", 3, 2.5], ["Tea", 4, 2.2]];
+    sheet.tables.add("A1:C3", true).name = "Sales";
+    sheet.getRange("D1").values = [["សរុប"]];
+    sheet.getRange("D2:D3").formulas = [["=B2*C2"], ["=B3*C3"]];
+    await context.sync();
+  });
+}
+</script>
+  <script type="text/x-code" data-lang="py" data-label="analysis.ipynb (VS Code + Jupyter)">
+import pandas as pd
+
+df = pd.read_excel("sales.xlsx", sheet_name="Data")   # pip install pandas openpyxl
+print(df.groupby("Branch")["Total"].sum().sort_values(ascending=False))
+</script>
+</section>
+
+<section id="elements">
+  <h2>៣. ធាតុនីមួយៗរបស់ Excel</h2>
+  <table>
+    <tr><th>ធាតុ</th><th>ពន្យល់</th></tr>
+    <tr><td><b>Workbook</b></td><td>File Excel មួយ (.xlsx) មាន Sheet ច្រើន</td></tr>
+    <tr><td><b>Worksheet (Sheet)</b></td><td>ផ្ទាំងតារាងមួយ (Tab ខាងក្រោម) · 1,048,576 ជួរ × 16,384 ជួរឈរ (A … XFD)</td></tr>
+    <tr><td><b>Cell</b></td><td>ក្រឡាមួយ មានអាសយដ្ឋាន ជួរឈរ+ជួរដេក ឧ. <code class="i">B3</code></td></tr>
+    <tr><td><b>Range</b></td><td>ក្រុមក្រឡា ឧ. <code class="i">A1:D10</code></td></tr>
+    <tr><td><b>Ribbon</b></td><td>របារពាក្យបញ្ជាខាងលើ៖ Home, Insert, Page Layout, Formulas, Data, Review, View, Developer</td></tr>
+    <tr><td><b>Name Box</b></td><td>បង្ហាញ/វាយ អាសយដ្ឋាន Cell ឬឈ្មោះ Range (ខាងឆ្វេង Formula bar)</td></tr>
+    <tr><td><b>Formula Bar</b> (fx)</td><td>បង្ហាញ/កែ Formula នៃ Cell ដែលជ្រើស</td></tr>
+    <tr><td><b>Status Bar</b></td><td>ខាងក្រោម៖ បង្ហាញ Sum, Average, Count ពេលជ្រើស Range</td></tr>
+    <tr><td><b>Formula / Function</b></td><td>Formula ចាប់ផ្តើមដោយ <code class="i">=</code> · Function ជារូបមន្តស្រាប់ ឧ. <code class="i">SUM()</code></td></tr>
+    <tr><td><b>Table</b></td><td>ទិន្នន័យដែលធ្វើជា Table (<kbd>Ctrl</kbd>+<kbd>T</kbd>) ពង្រីកដោយខ្លួនឯង មាន Filter</td></tr>
+    <tr><td><b>Chart</b></td><td>ក្រាហ្វ៖ Column, Line, Pie, Combo…</td></tr>
+    <tr><td><b>PivotTable</b></td><td>សង្ខេបទិន្នន័យរាប់ពាន់ជួរ ដោយអូសទាញ</td></tr>
+    <tr><td><b>Power Query / Power Pivot</b></td><td>នាំចូល សម្អាត និងភ្ជាប់ទិន្នន័យច្រើនតារាង</td></tr>
+    <tr><td><b>Macro / VBA</b></td><td>កូដស្វ័យប្រវត្តិកម្មការងារដដែលៗ</td></tr>
+  </table>
+  <h3>ទិន្នន័យគំរូដែលប្រើក្នុងមេរៀន (Sheet «Sales»)</h3>
+  <table class="sheet">
+    <tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th></tr>
+    <tr><th>1</th><td class="hd">Date</td><td class="hd">Branch</td><td class="hd">Product</td><td class="hd">Category</td><td class="hd">Qty</td><td class="hd">Price</td><td class="hd">Total</td></tr>
+    <tr><th>2</th><td>05/01/2026</td><td>ភ្នំពេញ</td><td>Latte</td><td>Coffee</td><td class="r">3</td><td class="r">2.50</td><td class="r">7.50</td></tr>
+    <tr><th>3</th><td>05/01/2026</td><td>សៀមរាប</td><td>Americano</td><td>Coffee</td><td class="r">2</td><td class="r">2.00</td><td class="r">4.00</td></tr>
+    <tr><th>4</th><td>06/01/2026</td><td>ភ្នំពេញ</td><td>Green Tea</td><td>Tea</td><td class="r">4</td><td class="r">2.20</td><td class="r">8.80</td></tr>
+    <tr><th>5</th><td>06/01/2026</td><td>បាត់ដំបង</td><td>Latte</td><td>Coffee</td><td class="r">5</td><td class="r">2.50</td><td class="r">12.50</td></tr>
+    <tr><th>6</th><td>07/01/2026</td><td>សៀមរាប</td><td>Croissant</td><td>Bakery</td><td class="r">6</td><td class="r">1.50</td><td class="r">9.00</td></tr>
+    <tr><th>7</th><td>07/01/2026</td><td>ភ្នំពេញ</td><td>Americano</td><td>Coffee</td><td class="r">1</td><td class="r">2.00</td><td class="r">2.00</td></tr>
+    <tr><th>8</th><td>08/01/2026</td><td>បាត់ដំបង</td><td>Green Tea</td><td>Tea</td><td class="r">2</td><td class="r">2.20</td><td class="r">4.40</td></tr>
+    <tr><th>9</th><td>08/01/2026</td><td>ភ្នំពេញ</td><td>Croissant</td><td>Bakery</td><td class="r">3</td><td class="r">1.50</td><td class="r">4.50</td></tr>
+  </table>
+  <div class="note">💡 <b>ពណ៌ក្នុង Formula៖</b> <span style="color:#d2a8ff;background:#0f1720;padding:0 4px;border-radius:4px">Function</span> · <span style="color:#ffa657;background:#0f1720;padding:0 4px;border-radius:4px">Cell/Range</span> · <span style="color:#a5d6ff;background:#0f1720;padding:0 4px;border-radius:4px">"អក្សរ"</span> · <span style="color:#79c0ff;background:#0f1720;padding:0 4px;border-radius:4px">លេខ</span> · <span style="color:#7ee787;background:#0f1720;padding:0 4px;border-radius:4px">Sheet!</span> · <span style="color:#ffd580;background:#0f1720;padding:0 4px;border-radius:4px">Table[Column]</span>។ បន្ទាត់ <code class="i">// ...</code> ជាការពន្យល់ប៉ុណ្ណោះ — កុំវាយចូល Excel។</div>
+</section>
+
+<!-- NAV: ផ្នែកទី ២ – Excel មូលដ្ឋាន ដល់ មធ្យម -->
+<section id="l1">
+  <h2><span class="badge">មេរៀន ១</span>ផ្ទៃ Excel, វាយទិន្នន័យ, AutoFill, Flash Fill</h2>
+  <ul>
+    <li><b>ប្រភេទទិន្នន័យ៖</b> លេខ (តម្រឹមស្តាំ), អក្សរ (តម្រឹមឆ្វេង), កាលបរិច្ឆេទ (តាមពិតជាលេខ), Boolean (TRUE/FALSE)</li>
+    <li><b>AutoFill៖</b> វាយ «មករា» ហើយអូសចំណុចការ៉េតូចជ្រុងស្តាំក្រោម (Fill handle) → «កុម្ភៈ, មីនា…» · វាយ 1, 2 ជ្រើសទាំងពីរ ហើយអូស → 3, 4, 5…</li>
+    <li><b>Flash Fill</b> (<kbd>Ctrl</kbd>+<kbd>E</kbd>)៖ វាយគំរូ ១–២ ជួរ Excel ទាយនៅសល់ ឧ. បំបែកឈ្មោះ «Sok Dara» → «Sok»</li>
+  </ul>
+  <script type="text/x-code" data-lang="keys" data-label="Shortcuts សំខាន់ៗ">
+Ctrl + S              # រក្សាទុក
+Ctrl + Z / Ctrl + Y   # Undo / Redo
+Ctrl + Arrow          # លោតទៅចុងទិន្នន័យ
+Ctrl + Shift + Arrow  # ជ្រើសដល់ចុងទិន្នន័យ
+Ctrl + Space          # ជ្រើសជួរឈរទាំងមូល
+Shift + Space         # ជ្រើសជួរដេកទាំងមូល
+F2                    # កែ Cell
+Ctrl + ;              # វាយថ្ងៃនេះ
+Alt + Enter           # ចុះបន្ទាត់ក្នុង Cell តែមួយ
+Ctrl + D              # ចម្លងពី Cell ខាងលើ
+Ctrl + T              # ធ្វើជា Table
+Ctrl + Shift + L      # បើក/បិទ Filter
+F4                    # ប្តូរ $ (Absolute reference) ពេលវាយ Formula
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១</h4>
+    <p>(ក) បង្កើតលេខរៀង 1–100 ក្នុង A2:A101 ឱ្យលឿនបំផុត។ (ខ) ជួរឈរ B មានឈ្មោះពេញ «Chan Sokha» — យកតែនាមត្រកូលទៅ C ដោយមិនប្រើ Formula។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p>(ក) វាយ <b>1</b> ក្នុង A2 → Home → <b>Fill → Series</b> → Columns, Step 1, Stop 100។ ឬវាយ <code class="i">=SEQUENCE(100)</code> ក្នុង A2 (Excel 365)។<br>(ខ) វាយ «Chan» ក្នុង C2 → ចុះទៅ C3 → <kbd>Ctrl</kbd>+<kbd>E</kbd> (Flash Fill)។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l2">
+  <h2><span class="badge">មេរៀន ២</span>Formatting, Number Format & Conditional Formatting</h2>
+  <table>
+    <tr><th>Format</th><th>តម្លៃដើម</th><th>បង្ហាញ</th></tr>
+    <tr><td>Currency / Accounting</td><td>1250</td><td>$1,250.00</td></tr>
+    <tr><td>Percentage</td><td>0.256</td><td>25.6%</td></tr>
+    <tr><td>Date (Custom <code class="i">dd/mm/yyyy</code>)</td><td>46027</td><td>05/01/2026</td></tr>
+    <tr><td>Custom <code class="i">#,##0 "៛"</code></td><td>4100</td><td>4,100 ៛</td></tr>
+    <tr><td>Custom <code class="i">0.0,,"M"</code></td><td>2500000</td><td>2.5M</td></tr>
+  </table>
+  <p><b>Conditional Formatting</b> (Home → Conditional Formatting)៖ ប្តូរពណ៌ដោយស្វ័យប្រវត្តិ — Highlight rules, Data Bars, Color Scales, Icon Sets ឬ <b>Formula</b>។</p>
+  <script type="text/x-code" data-lang="xl" data-label="Conditional Formatting → Use a formula">
+// ជ្រើស A2:G9 ហើយដាក់ Rule ខាងក្រោម → ជួរដែល Total ≥ 9 មានពណ៌បៃតង
+=$G2>=9
+// ដាក់ពណ៌ជួរឆ្លាស់គ្នា (Zebra)
+=MOD(ROW(),2)=0
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ២</h4>
+    <p>ក្នុងតារាង Sales ធ្វើឱ្យជួរទាំងមូលនៃសាខា «ភ្នំពេញ» មានផ្ទៃពណ៌លឿងស្រាល។ តើត្រូវប្រើ Formula អ្វី ហើយហេតុអ្វីត្រូវមាន <code class="i">$</code>?</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="xl" data-label="Answer">
+// ជ្រើស A2:G9 → New Rule → Use a formula
+=$B2="ភ្នំពេញ"
+</script>
+      <p><code class="i">$B</code> ចាក់សោជួរឈរ B ដើម្បីឱ្យគ្រប់ Cell ក្នុងជួរដេក (A–G) ពិនិត្យតែ B ដដែល; <code class="i">2</code> គ្មាន $ ដើម្បីឱ្យជួរដេកប្តូរតាម (3, 4, 5…)។ <b>ជួរដែលត្រូវពណ៌៖</b> 2, 4, 7, 9។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l3">
+  <h2><span class="badge">មេរៀន ៣</span>Formula, Operators & Cell References ($)</h2>
+  <table>
+    <tr><th>Operator</th><th>ន័យ</th><th>ឧទាហរណ៍</th></tr>
+    <tr><td><code class="i">+ - * /</code></td><td>បូក ដក គុណ ចែក</td><td><code class="i">=E2*F2</code> → 7.5</td></tr>
+    <tr><td><code class="i">^</code></td><td>ស្វ័យគុណ</td><td><code class="i">=2^3</code> → 8</td></tr>
+    <tr><td><code class="i">&amp;</code></td><td>ភ្ជាប់អក្សរ</td><td><code class="i">=C2&amp;" - "&amp;B2</code> → Latte - ភ្នំពេញ</td></tr>
+    <tr><td><code class="i">= &lt;&gt; &gt; &lt; &gt;= &lt;=</code></td><td>ប្រៀបធៀប → TRUE/FALSE</td><td><code class="i">=G2&gt;5</code> → TRUE</td></tr>
+  </table>
+  <p>លំដាប់គណនា៖ <b>( ) → ^ → * / → + − → &amp; → ប្រៀបធៀប</b>។</p>
+  <h3>Relative vs Absolute vs Mixed Reference</h3>
+  <table>
+    <tr><th>ប្រភេទ</th><th>សរសេរ</th><th>ពេល Copy</th></tr>
+    <tr><td>Relative</td><td><code class="i">A1</code></td><td>ប្តូរទាំងជួរឈរ និងជួរដេក</td></tr>
+    <tr><td>Absolute</td><td><code class="i">$A$1</code></td><td>មិនប្តូរ</td></tr>
+    <tr><td>Mixed</td><td><code class="i">$A1</code> / <code class="i">A$1</code></td><td>ចាក់សោតែជួរឈរ / តែជួរដេក</td></tr>
+  </table>
+  <script type="text/x-code" data-lang="xl" data-label="ឧទាហរណ៍: VAT 10% នៅ J1">
+// G2: Total
+=E2*F2
+// H2: VAT — ត្រូវចាក់សោ J1 ដើម្បី Copy ចុះក្រោមបាន
+=G2*$J$1
+// I2: តម្លៃរួម VAT
+=G2+H2
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ៣</h4>
+    <p>បង្កើតតារាងគុណ 1–9 (B1:J1 = 1..9, A2:A10 = 1..9) ដោយវាយ Formula <b>តែមួយ</b> ក្នុង B2 ហើយ Copy ទៅ B2:J10។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="xl" data-label="B2">
+=$A2*B$1
+// $A = ចាក់សោជួរឈរ A (លេខខាងឆ្វេង) · $1 = ចាក់សោជួរដេក 1 (លេខខាងលើ)
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l4">
+  <h2><span class="badge">មេរៀន ៤</span>Function មូលដ្ឋាន: SUM, AVERAGE, COUNT, MIN, MAX, ROUND</h2>
+  <script type="text/x-code" data-lang="xl" data-label="លើទិន្នន័យ Sales">
+=SUM(G2:G9)            // 52.7   ចំណូលសរុប
+=AVERAGE(G2:G9)        // 6.5875 មធ្យមក្នុងមួយការលក់
+=ROUND(AVERAGE(G2:G9),2)  // 6.59
+=COUNT(E2:E9)          // 8   រាប់ Cell ជាលេខ
+=COUNTA(B2:B9)         // 8   រាប់ Cell មិនទទេ
+=COUNTBLANK(A2:G9)     // 0   រាប់ Cell ទទេ
+=MAX(G2:G9)            // 12.5
+=MIN(G2:G9)            // 2
+=SUM(E2:E9)            // 26  ចំនួនកែវ/នំសរុប
+</script>
+  <div class="note">💡 <kbd>Alt</kbd>+<kbd>=</kbd> = AutoSum ភ្លាមៗ។ ជ្រើស Range ហើយមើល <b>Status Bar</b> ខាងក្រោម ដើម្បីឃើញ Sum/Average ដោយមិនចាំបាច់វាយ Formula។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៤</h4>
+    <p>គណនា៖ (ក) Qty មធ្យម (ខ) ភាគរយនៃការលក់ជួរទី 5 ធៀបនឹងសរុប (គ) ចំណូលសរុបបង្គត់ទៅលេខគត់។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="xl" data-label="Answer">
+=AVERAGE(E2:E9)          // 3.25
+=G5/SUM($G$2:$G$9)       // 0.237… → Format ជា % = 23.7%
+=ROUND(SUM(G2:G9),0)     // 53
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l5">
+  <h2><span class="badge">មេរៀន ៥</span>Logical: IF, IFS, AND, OR, IFERROR</h2>
+  <script type="text/x-code" data-lang="xl" data-label="H2">
+=IF(G2>=9,"ធំ","តូច")
+=IF(AND(B2="ភ្នំពេញ",E2>=3),"VIP","ធម្មតា")
+=IF(OR(D2="Tea",D2="Bakery"),"មិនមែនកាហ្វេ","កាហ្វេ")
+// IFS: លក្ខខណ្ឌច្រើន (Excel 2019+)
+=IFS(G2>=10,"A",G2>=5,"B",TRUE,"C")
+// IFERROR: បង្ហាញសារ ជំនួស #DIV/0!
+=IFERROR(G2/E2,0)
+</script>
+  <h3>Error ដែលគួរស្គាល់</h3>
+  <table>
+    <tr><th>Error</th><th>មូលហេតុ</th></tr>
+    <tr><td><code class="i">#DIV/0!</code></td><td>ចែកនឹង 0</td></tr>
+    <tr><td><code class="i">#N/A</code></td><td>Lookup រកមិនឃើញ</td></tr>
+    <tr><td><code class="i">#NAME?</code></td><td>សរសេរឈ្មោះ Function ខុស ឬភ្លេច "" លើអក្សរ</td></tr>
+    <tr><td><code class="i">#REF!</code></td><td>Cell ដែលយោងត្រូវបានលុប</td></tr>
+    <tr><td><code class="i">#VALUE!</code></td><td>ប្រភេទទិន្នន័យខុស (អក្សរ + លេខ)</td></tr>
+    <tr><td><code class="i">#SPILL!</code></td><td>Dynamic array គ្មានកន្លែងទំនេរ</td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ៥</h4>
+    <p>តារាងពិន្ទុសិស្ស (B2 = ពិន្ទុ 0–100)៖ ≥ 90 = «A», ≥ 80 = «B», ≥ 65 = «C», ≥ 50 = «D», ផ្សេងៗ = «F»។ បើ B2 ទទេ បង្ហាញ «អវត្តមាន»។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="xl" data-label="C2">
+=IF(B2="","អវត្តមាន",IFS(B2>=90,"A",B2>=80,"B",B2>=65,"C",B2>=50,"D",TRUE,"F"))
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l6">
+  <h2><span class="badge">មេរៀន ៦</span>SUMIFS, COUNTIFS, AVERAGEIFS — សរុបតាមលក្ខខណ្ឌ</h2>
+  <p>ទាំងនេះជា Function សំខាន់បំផុតសម្រាប់ <b>វិភាគទិន្នន័យ</b>។ ទម្រង់៖ <code class="i">SUMIFS(ជួរដែលត្រូវបូក, ជួរលក្ខខណ្ឌ1, លក្ខខណ្ឌ1, …)</code></p>
+  <script type="text/x-code" data-lang="xl" data-label="Sales">
+=SUMIFS(G2:G9,B2:B9,"ភ្នំពេញ")                    // 22.8
+=SUMIFS(G2:G9,B2:B9,"ភ្នំពេញ",D2:D9,"Coffee")     // 9.5
+=COUNTIFS(B2:B9,"សៀមរាប")                          // 2
+=COUNTIFS(G2:G9,">=5")                              // 4
+=AVERAGEIFS(G2:G9,D2:D9,"Coffee")                   // 6.5
+=SUMIFS(G2:G9,A2:A9,">="&DATE(2026,1,6),A2:A9,"<="&DATE(2026,1,7))  // 32.3
+// យកលក្ខខណ្ឌពី Cell (ងាយប្តូរ)
+=SUMIFS($G$2:$G$9,$B$2:$B$9,J2)
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ៦</h4>
+    <p>បង្កើតតារាងសង្ខេប៖ J2:J4 = ភ្នំពេញ, សៀមរាប, បាត់ដំបង។ K = ចំណូល, L = ចំនួនការលក់, M = % នៃចំណូលសរុប។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="xl" data-label="K2:M2 (Copy ចុះ)">
+K2  =SUMIFS($G$2:$G$9,$B$2:$B$9,J2)
+L2  =COUNTIFS($B$2:$B$9,J2)
+M2  =K2/SUM($K$2:$K$4)
+</script>
+      <table class="sheet"><tr><th></th><th>J</th><th>K</th><th>L</th><th>M</th></tr>
+        <tr><th>2</th><td>ភ្នំពេញ</td><td class="r">22.80</td><td class="r">4</td><td class="r">43.3%</td></tr>
+        <tr><th>3</th><td>សៀមរាប</td><td class="r">13.00</td><td class="r">2</td><td class="r">24.7%</td></tr>
+        <tr><th>4</th><td>បាត់ដំបង</td><td class="r">16.90</td><td class="r">2</td><td class="r">32.1%</td></tr></table>
+    </details>
+  </div>
+</section>
+
+<section id="l7">
+  <h2><span class="badge">មេរៀន ៧</span>Lookup: XLOOKUP, VLOOKUP, INDEX + MATCH</h2>
+  <p>តារាងផលិតផល (Sheet <b>Products</b>, A2:C5)៖ Latte $2.50 · Americano $2.00 · Green Tea $2.20 · Croissant $1.50 ហើយ C = ថ្លៃដើម (Cost)។</p>
+  <script type="text/x-code" data-lang="xl" data-label="Lookup">
+// XLOOKUP (Excel 2021/365) ⭐ — ល្អបំផុត
+=XLOOKUP(C2,Products!A2:A5,Products!B2:B5,"រកមិនឃើញ")
+// VLOOKUP (ចាស់ តែគ្រប់ Version) — FALSE = ត្រូវគ្នាពិតប្រាកដ
+=VLOOKUP(C2,Products!$A$2:$C$5,2,FALSE)
+// INDEX + MATCH (បត់បែន រកទៅឆ្វេងក៏បាន)
+=INDEX(Products!$B$2:$B$5,MATCH(C2,Products!$A$2:$A$5,0))
+// XLOOKUP ត្រឡប់ច្រើនជួរឈរ (Price + Cost)
+=XLOOKUP(C2,Products!A2:A5,Products!B2:C5)
+</script>
+  <table>
+    <tr><th></th><th>VLOOKUP</th><th>XLOOKUP</th></tr>
+    <tr><td>រកទៅខាងឆ្វេង</td><td>❌</td><td>✅</td></tr>
+    <tr><td>Default</td><td>Approximate (គ្រោះថ្នាក់)</td><td>Exact</td></tr>
+    <tr><td>បញ្ចូលជួរឈរថ្មី</td><td>លេខ col_index ខុស</td><td>មិនប៉ះពាល់</td></tr>
+    <tr><td>សារពេលរកមិនឃើញ</td><td>ត្រូវការ IFERROR</td><td>មាន Argument ស្រាប់</td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ៧</h4>
+    <p>តារាងកម្រៃជើងសារ (Commission)៖ $0 → 0%, $1000 → 2%, $5000 → 5%, $10000 → 8%។ បើបុគ្គលិកលក់បាន $6,200 តើទទួលបានប៉ុន្មាន %? សរសេរ XLOOKUP (Approximate match)។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="xl" data-label="Answer (A2:A5 = 0,1000,5000,10000 · B2:B5 = 0%,2%,5%,8%)">
+=XLOOKUP(6200,A2:A5,B2:B5,,-1)   // -1 = ត្រូវគ្នា ឬតូចជាងបន្ទាប់ → 5%
+=6200*XLOOKUP(6200,A2:A5,B2:B5,,-1)   // $310
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l8">
+  <h2><span class="badge">មេរៀន ៨</span>Text & Date Functions</h2>
+  <script type="text/x-code" data-lang="xl" data-label="Text">
+=TRIM("  Latte   Hot ")         // "Latte Hot"  លុបដកឃ្លាលើស
+=UPPER(C2) / =LOWER(C2) / =PROPER("sok dara")   // "Sok Dara"
+=LEFT("KH-PP-001",2)             // "KH"
+=MID("KH-PP-001",4,2)            // "PP"
+=RIGHT("KH-PP-001",3)            // "001"
+=LEN(C2)                         // 5
+=TEXTSPLIT("KH-PP-001","-")      // KH | PP | 001  (Excel 365)
+=TEXTJOIN(", ",TRUE,C2:C4)       // "Latte, Americano, Green Tea"
+=SUBSTITUTE("012-345-678","-","")  // "012345678"
+=TEXT(G2,"$#,##0.00")            // "$7.50"
+</script>
+  <script type="text/x-code" data-lang="xl" data-label="Date">
+=TODAY()                          // ថ្ងៃនេះ
+=YEAR(A2) / =MONTH(A2) / =DAY(A2)
+=TEXT(A2,"mmm yyyy")              // "Jan 2026"
+=EOMONTH(A2,0)                    // 31/01/2026  ថ្ងៃចុងខែ
+=DATEDIF(DATE(2000,5,1),TODAY(),"Y")   // អាយុ (ឆ្នាំ)
+=NETWORKDAYS(DATE(2026,1,1),DATE(2026,1,31))   // ថ្ងៃធ្វើការ (ច័ន្ទ–សុក្រ)
+=WEEKDAY(A2,2)                    // 1 = ច័ន្ទ … 7 = អាទិត្យ
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ៨</h4>
+    <p>A2 មានអ៊ីមែល «dara.sok@kafe.com»។ (ក) យកឈ្មោះមុន @ (ខ) យក Domain (គ) បង្កើតលេខកូដវិក្កយបត្រ «INV-2026-01-0007» ពីថ្ងៃក្នុង B2 និងលេខ 7 ក្នុង C2។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="xl" data-label="Answer">
+=LEFT(A2,FIND("@",A2)-1)              // "dara.sok"
+=MID(A2,FIND("@",A2)+1,100)           // "kafe.com"
+=TEXTBEFORE(A2,"@") / =TEXTAFTER(A2,"@")   // Excel 365 ងាយជាង
+="INV-"&TEXT(B2,"yyyy-mm")&"-"&TEXT(C2,"0000")   // "INV-2026-01-0007"
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l9">
+  <h2><span class="badge">មេរៀន ៩</span>Excel Table, Structured References & Data Validation</h2>
+  <ol class="steps">
+    <li>ចុចក្នុងទិន្នន័យ → <kbd>Ctrl</kbd>+<kbd>T</kbd> → ធីក «My table has headers»</li>
+    <li>Table Design → Table Name៖ <b>tblSales</b></li>
+    <li>បន្ថែមជួរថ្មីខាងក្រោម → Table ពង្រីក ហើយ Formula/Chart/Pivot ទទួលទិន្នន័យថ្មីដោយខ្លួនឯង</li>
+  </ol>
+  <script type="text/x-code" data-lang="xl" data-label="Structured References">
+// ក្នុង Table: [@Qty] = Qty នៃជួរដដែល
+=[@Qty]*[@Price]
+// ពីក្រៅ Table: ឈ្មោះ Table[ជួរឈរ] — អានងាយជាង G2:G9
+=SUM(tblSales[Total])
+=SUMIFS(tblSales[Total],tblSales[Branch],"ភ្នំពេញ")
+</script>
+  <h3>Data Validation (Dropdown)</h3>
+  <ol class="steps">
+    <li>ជ្រើស B2:B100 → Data → <b>Data Validation</b></li>
+    <li>Allow៖ <b>List</b> · Source៖ <code class="i">ភ្នំពេញ,សៀមរាប,បាត់ដំបង</code> (ឬ Range ឈ្មោះ)</li>
+    <li>Tab Error Alert៖ សារ «សូមជ្រើសសាខាពីបញ្ជី»</li>
+    <li>Qty៖ Allow <b>Whole number</b> between 1 and 100</li>
+  </ol>
+  <div class="ex"><h4>✍️ លំហាត់ ៩</h4>
+    <p>បង្កើត Dropdown «Product» ដែលទាញពីតារាង Products ហើយពេលបន្ថែមផលិតផលថ្មី Dropdown ក៏មានផលិតផលថ្មីដោយស្វ័យប្រវត្តិ។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ol>
+        <li>ធ្វើតារាង Products ជា Table ឈ្មោះ <b>tblProducts</b></li>
+        <li>Formulas → <b>Name Manager</b> → New៖ Name = <code class="i">ProductList</code>, Refers to = <code class="i">=tblProducts[Product]</code></li>
+        <li>Data Validation → List → Source៖ <code class="i">=ProductList</code></li>
+      </ol>
+      <p>(Data Validation មិនទទួល Structured reference ផ្ទាល់ ទើបត្រូវឆ្លងកាត់ Named range។ Excel 365 ក៏អាចប្រើ <code class="i">=INDIRECT("tblProducts[Product]")</code> បាន។)</p>
+    </details>
+  </div>
+</section>
+
+<section id="l10">
+  <h2><span class="badge">មេរៀន ១០</span>Dynamic Arrays: FILTER, SORT, UNIQUE, LET, LAMBDA</h2>
+  <p>Excel 365/2021៖ Formula មួយ «<b>ហៀរ (Spill)</b>» លទ្ធផលទៅ Cell ច្រើន។</p>
+  <script type="text/x-code" data-lang="xl" data-label="Dynamic Arrays">
+=UNIQUE(B2:B9)                         // ភ្នំពេញ, សៀមរាប, បាត់ដំបង
+=SORT(UNIQUE(C2:C9))                   // បញ្ជីផលិតផល តម្រៀប A→Z
+=FILTER(A2:G9,B2:B9="ភ្នំពេញ")         // ជួរទាំង 4 របស់ភ្នំពេញ
+=FILTER(A2:G9,(D2:D9="Coffee")*(G2:G9>5),"គ្មាន")   // * = AND
+=SORTBY(C2:C9,G2:G9,-1)                // ផលិតផល តម្រៀបតាម Total ធំ→តូច
+=TAKE(SORTBY(A2:G9,G2:G9,-1),3)        // Top 3 ការលក់
+=SEQUENCE(12,1,1,1)                    // 1..12
+// LET: ដាក់ឈ្មោះឱ្យ Formula អានងាយ
+=LET(total,SUM(G2:G9), pp,SUMIFS(G2:G9,B2:B9,"ភ្នំពេញ"), pp/total)   // 0.433
+// LAMBDA: បង្កើត Function ផ្ទាល់ខ្លួន (Name Manager → Name: VAT)
+=LAMBDA(amount, amount*0.1)
+=VAT(G2)                               // 0.75
+// ចំណូលតាមសាខា ក្នុង Formula តែមួយ
+=HSTACK(UNIQUE(B2:B9),SUMIFS(G2:G9,B2:B9,UNIQUE(B2:B9)))
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១០</h4>
+    <p>សរសេរ Formula តែមួយ ដែលបង្ហាញ <b>ប្រភេទ (Category)</b> និង <b>ចំណូល</b> តម្រៀបពីធំទៅតូច។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="xl" data-label="Answer">
+=LET(cat,UNIQUE(D2:D9),
+     rev,SUMIFS(G2:G9,D2:D9,cat),
+     SORTBY(HSTACK(cat,rev),rev,-1))
+// Bakery 13.5 · Tea 13.2 · Coffee 26 → តម្រៀប៖ Coffee 26 · Bakery 13.5 · Tea 13.2
+// Excel 365 ថ្មីក៏មាន GROUPBY: =GROUPBY(D2:D9,G2:G9,SUM,,,-2)
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l11">
+  <h2><span class="badge">មេរៀន ១១</span>Charts: ជ្រើសក្រាហ្វឱ្យត្រូវ</h2>
+  <table>
+    <tr><th>ចង់បង្ហាញ</th><th>ក្រាហ្វ</th></tr>
+    <tr><td>ប្រៀបធៀបក្រុម</td><td><b>Column / Bar</b> (Bar ពេលឈ្មោះវែង)</td></tr>
+    <tr><td>និន្នាការតាមពេល</td><td><b>Line</b></td></tr>
+    <tr><td>ផ្នែកនៃទាំងមូល (≤ 5 ផ្នែក)</td><td><b>Pie / Doughnut</b> ឬ 100% Stacked bar</td></tr>
+    <tr><td>ទំនាក់ទំនងអថេរពីរ</td><td><b>Scatter</b></td></tr>
+    <tr><td>ការចែកចាយទិន្នន័យ</td><td><b>Histogram / Box & Whisker</b></td></tr>
+    <tr><td>ចំណូល + ភាគរយកំណើន</td><td><b>Combo</b> (Column + Line លើ Secondary axis)</td></tr>
+    <tr><td>ការប្រែប្រួលពីតម្លៃមួយទៅមួយ</td><td><b>Waterfall</b></td></tr>
+    <tr><td>និន្នាការតូចក្នុង Cell</td><td><b>Sparklines</b> (Insert → Sparklines)</td></tr>
+  </table>
+  <ol class="steps">
+    <li>ជ្រើសទិន្នន័យ (ឧ. តារាងសង្ខេប J1:K4) → <kbd>Alt</kbd>+<kbd>F1</kbd> (Chart ភ្លាម) ឬ Insert → Recommended Charts</li>
+    <li>Chart Elements (+)៖ Title, Data Labels, Axis titles · លុប Gridlines ដែលមិនចាំបាច់</li>
+    <li>ដាក់ចំណងជើងប្រាប់ <b>សារ</b>៖ «ភ្នំពេញរកចំណូលបាន 43%» ជាជាង «Chart 1»</li>
+  </ol>
+  <script type="text/x-code" data-lang="html" data-label="Column chart: ចំណូលតាមសាខា" data-demo>
+<style>
+  .ch { max-width:460px; } h4 { margin:0 0 10px; }
+  .bar { display:grid; grid-template-columns:80px 1fr 50px; align-items:center; gap:8px; margin:6px 0; }
+  .fill { height:26px; background:#107c41; border-radius:0 6px 6px 0; }
+  .fill.lo { background:#9cc7ad; } .v { font-weight:700; }
+</style>
+<div class="ch">
+  <h4>ភ្នំពេញរកចំណូលបាន 43% នៃសរុប</h4>
+  <div class="bar"><span>ភ្នំពេញ</span><div class="fill" style="width:100%"></div><span class="v">$22.8</span></div>
+  <div class="bar"><span>បាត់ដំបង</span><div class="fill lo" style="width:74%"></div><span class="v">$16.9</span></div>
+  <div class="bar"><span>សៀមរាប</span><div class="fill lo" style="width:57%"></div><span class="v">$13.0</span></div>
+</div>
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១១</h4>
+    <p>អ្នកមានចំណូលប្រចាំខែ 12 ខែ និង % កំណើនធៀបខែមុន។ តើប្រើក្រាហ្វអ្វី ហើយកំណត់ដូចម្តេច?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p><b>Combo chart</b>៖ ចំណូល = Clustered Column (Primary axis), % កំណើន = Line with markers (<b>Secondary axis</b>)។ Insert → Combo → Create Custom Combo Chart → ធីក Secondary Axis សម្រាប់ % ។ Format axis ទី ២ ជា 0%។</p>
+    </details>
+  </div>
+</section>
+
+<!-- NAV: ផ្នែកទី ៣ – Data Analytics -->
+<section id="l12">
+  <h2><span class="badge">មេរៀន ១២</span>Data Analytics ជាអ្វី? ដំណើរការ ៦ ជំហាន</h2>
+  <p><b>Data Analytics</b> = ការប្រមូល សម្អាត វិភាគ និងបង្ហាញទិន្នន័យ ដើម្បីជួយ <b>សម្រេចចិត្ត</b>។ Excel ជាឧបករណ៍ទី ១ ដែល Data Analyst ប្រើ មុន SQL, Power BI និង Python។</p>
+  <ol class="steps">
+    <li><b>Ask</b> — សួរសំណួរអាជីវកម្មឱ្យច្បាស់៖ «សាខាណា ផលិតផលណា រកចំណូលច្រើនបំផុតក្នុងត្រីមាសទី ១?»</li>
+    <li><b>Prepare</b> — ប្រមូលទិន្នន័យ (POS, CSV, Database, Google Form)</li>
+    <li><b>Process</b> — សម្អាត៖ ដកស្ទួន, ដកឃ្លា, កែប្រភេទទិន្នន័យ (មេរៀន ១៣–១៤)</li>
+    <li><b>Analyze</b> — PivotTable, SUMIFS, Statistics (មេរៀន ១៥–១៨)</li>
+    <li><b>Share</b> — Chart និង Dashboard (គម្រោងចុងក្រោយ)</li>
+    <li><b>Act</b> — ផ្តល់អនុសាសន៍៖ «បន្ថែមស្តុក Latte នៅបាត់ដំបង»</li>
+  </ol>
+  <h3>ប្រភេទការវិភាគ</h3>
+  <table>
+    <tr><th>ប្រភេទ</th><th>សំណួរ</th><th>ឧបករណ៍ Excel</th></tr>
+    <tr><td><b>Descriptive</b></td><td>មានអ្វីកើតឡើង?</td><td>SUM, PivotTable, Chart</td></tr>
+    <tr><td><b>Diagnostic</b></td><td>ហេតុអ្វី?</td><td>Drill-down, Slicer, CORREL</td></tr>
+    <tr><td><b>Predictive</b></td><td>នឹងមានអ្វីកើតឡើង?</td><td>FORECAST, Trendline, Forecast Sheet</td></tr>
+    <tr><td><b>Prescriptive</b></td><td>គួរធ្វើអ្វី?</td><td>Goal Seek, Solver, Scenario</td></tr>
+  </table>
+  <h3>Tidy Data — ទម្រង់ទិន្នន័យត្រឹមត្រូវ</h3>
+  <ul>
+    <li>មួយជួរឈរ = អថេរមួយ (Date, Branch, Qty…) · មួយជួរដេក = កំណត់ត្រាមួយ (ការលក់មួយ)</li>
+    <li>Header តែមួយជួរ · គ្មាន Merge cells · គ្មានជួរទទេ ឬ Subtotal នៅកណ្តាល</li>
+    <li>កុំដាក់ខែជាជួរឈរ (មករា | កុម្ភៈ | …) — ដាក់ជាជួរឈរ «Month» មួយ (Unpivot)</li>
+  </ul>
+  <div class="ex"><h4>✍️ លំហាត់ ១២</h4>
+    <p>ម្ចាស់ហាងនិយាយថា «ចំណូលធ្លាក់ខែនេះ»។ សរសេរសំណួរវិភាគ ៣ (Descriptive, Diagnostic, Prescriptive)។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ol>
+        <li><b>Descriptive៖</b> ចំណូលខែនេះធ្លាក់ប៉ុន្មាន % ធៀបខែមុន និងខែដដែលឆ្នាំមុន?</li>
+        <li><b>Diagnostic៖</b> ធ្លាក់នៅសាខាណា ផលិតផលណា ថ្ងៃណា? ចំនួនការកុម្ម៉ង់ធ្លាក់ ឬតម្លៃមធ្យមក្នុងមួយការកុម្ម៉ង់ធ្លាក់?</li>
+        <li><b>Prescriptive៖</b> ត្រូវលក់បន្ថែមប៉ុន្មានកែវក្នុងមួយថ្ងៃ ដើម្បីត្រឡប់ទៅគោលដៅ $X (Goal Seek)? Promotion ណាគួរសាក?</li>
+      </ol>
+    </details>
+  </div>
+</section>
+
+<section id="l13">
+  <h2><span class="badge">មេរៀន ១៣</span>Data Cleaning — សម្អាតទិន្នន័យ</h2>
+  <p>Data Analyst ចំណាយពេល <b>ប្រហែល 60–80%</b> លើការសម្អាតទិន្នន័យ។ ទិន្នន័យកខ្វក់ → លទ្ធផលខុស (<i>Garbage in, garbage out</i>)។</p>
+  <table class="sheet">
+    <tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+    <tr><th>1</th><td class="hd">Name</td><td class="hd">Branch</td><td class="hd">Phone</td><td class="hd">Amount</td></tr>
+    <tr><th>2</th><td>  sok dara</td><td>Phnom Penh</td><td>012 345 678</td><td class="r">$12.50</td></tr>
+    <tr><th>3</th><td>SOK DARA</td><td>phnom penh </td><td>012345678</td><td>12.5</td></tr>
+    <tr><th>4</th><td>Chan Lina</td><td>PP</td><td>(+855)98765432</td><td>N/A</td></tr>
+  </table>
+  <p>បញ្ហា៖ ដកឃ្លាលើស, អក្សរធំ/តូចមិនដូចគ្នា, ឈ្មោះសាខាខុសៗ, លេខទូរស័ព្ទច្រើនទម្រង់, លេខជាអក្សរ, ទិន្នន័យស្ទួន។</p>
+  <script type="text/x-code" data-lang="xl" data-label="Formula សម្អាត">
+=PROPER(TRIM(A2))                                 // "Sok Dara"
+=TRIM(CLEAN(SUBSTITUTE(A2,CHAR(160)," ")))        // ដកឃ្លាពី Web (non-breaking space)
+=XLOOKUP(TRIM(UPPER(B2)),{"PHNOM PENH","PP"},{"ភ្នំពេញ","ភ្នំពេញ"},TRIM(B2))
+="0"&RIGHT(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(C2," ",""),"(+855)",""),"+855",""),8)   // "012345678"
+=IFERROR(VALUE(SUBSTITUTE(D2,"$","")),"")         // 12.5 ជាលេខ ហើយ N/A → ទទេ
+=COUNTIFS(A:A,A2)>1                               // TRUE = ស្ទួន
+</script>
+  <h3>ឧបករណ៍ក្នុង Ribbon</h3>
+  <ul>
+    <li><b>Data → Remove Duplicates</b> (ចម្លង Sheet ទុកមុន!)</li>
+    <li><b>Data → Text to Columns</b>៖ បំបែក «Sok,Dara,PP» តាមសញ្ញាក្បៀស</li>
+    <li><b>Home → Find & Select → Go To Special → Blanks</b>៖ រក Cell ទទេ</li>
+    <li><b>Ctrl+H</b> Find & Replace · Filter ដើម្បីរកតម្លៃចម្លែក</li>
+    <li>ពិនិត្យ <b>Outlier</b>៖ Qty = 500 ក្នុងហាងកាហ្វេ? ទំនងជាវាយខុស</li>
+  </ul>
+  <div class="ex"><h4>✍️ លំហាត់ ១៣</h4>
+    <p>ជួរឈរ A មានថ្ងៃជាអក្សរ «2026.01.05» ដែល Excel មិនស្គាល់ជាថ្ងៃ។ បំប្លែងវាជាថ្ងៃពិត ២ វិធី។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="xl" data-label="Answer">
+// វិធី ១: Formula
+=DATE(LEFT(A2,4),MID(A2,6,2),RIGHT(A2,2))
+// វិធី ២: Ctrl+H ប្តូរ "." ជា "-" → Excel ស្គាល់ "2026-01-05" ជាថ្ងៃ
+// វិធី ៣: Data → Text to Columns → Step 3: Column data format = Date (YMD)
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l14">
+  <h2><span class="badge">មេរៀន ១៤</span>Power Query — នាំចូល និងសម្អាតដោយស្វ័យប្រវត្តិ</h2>
+  <p><b>Power Query</b> (Data → Get Data) កត់ត្រាជំហានសម្អាតរបស់អ្នក។ ខែក្រោយមាន File ថ្មី → ចុច <b>Refresh</b> → ជំហានទាំងអស់រត់ម្តងទៀតដោយខ្លួនឯង។</p>
+  <ol class="steps">
+    <li>Data → Get Data → From File → <b>From Folder</b> (បញ្ចូល CSV ទាំង 12 ខែជាតារាងតែមួយ) ឬ From Workbook / From Web</li>
+    <li>ក្នុង Power Query Editor៖ <b>Remove Columns</b>, <b>Trim</b>, <b>Capitalize Each Word</b>, <b>Change Type</b>, <b>Replace Values</b>, <b>Remove Duplicates</b></li>
+    <li><b>Unpivot Columns</b>៖ ប្តូរ «មករា | កុម្ភៈ | …» ទៅជា Month + Value</li>
+    <li><b>Merge Queries</b> (ដូច XLOOKUP/SQL JOIN) ភ្ជាប់ Products ដើម្បីយកថ្លៃដើម</li>
+    <li><b>Close & Load To…</b> → Table ឬ PivotTable ឬ Data Model</li>
+  </ol>
+  <script type="text/x-code" data-lang="m" data-label="Advanced Editor (M code ដែល Power Query បង្កើត)">
+let
+    Source   = Folder.Files("C:\Data\Sales"),
+    Csv      = Table.SelectRows(Source, each [Extension] = ".csv"),
+    Combined = Table.Combine(List.Transform(Csv[Content], each Table.PromoteHeaders(Csv.Document(_)))),
+    Trimmed  = Table.TransformColumns(Combined, {{"Branch", Text.Trim}, {"Product", Text.Proper}}),
+    Typed    = Table.TransformColumnTypes(Trimmed, {{"Date", type date}, {"Qty", Int64.Type}, {"Price", type number}}),
+    Total    = Table.AddColumn(Typed, "Total", each [Qty] * [Price], type number),
+    NoDup    = Table.Distinct(Total)
+in
+    NoDup
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១៤</h4>
+    <p>អ្នកមាន Sheet ពិន្ទុ ដែលមានជួរឈរ «Name | Math | Khmer | English»។ តើត្រូវធ្វើអ្វីក្នុង Power Query ដើម្បីបាន «Name | Subject | Score» សម្រាប់ PivotTable?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p>ជ្រើសជួរឈរ <b>Name</b> → Transform → <b>Unpivot Other Columns</b> → ប្តូរឈ្មោះ Attribute → <b>Subject</b>, Value → <b>Score</b> → Change Type ជា Whole Number → Close & Load។</p>
+<script type="text/x-code" data-lang="m" data-label="M">
+Table.UnpivotOtherColumns(Source, {"Name"}, "Subject", "Score")
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l15">
+  <h2><span class="badge">មេរៀន ១៥</span>PivotTable, PivotChart, Slicer & Timeline</h2>
+  <ol class="steps">
+    <li>ចុចក្នុង tblSales → Insert → <b>PivotTable</b> → New Worksheet</li>
+    <li>អូស <b>Branch</b> → Rows · <b>Category</b> → Columns · <b>Total</b> → Values (Sum)</li>
+    <li>Values → Value Field Settings → <b>Show Values As → % of Grand Total</b></li>
+    <li>Group ថ្ងៃ៖ ចុចស្តាំលើ Date → Group → Months / Quarters / Years</li>
+    <li>PivotTable Analyze → <b>Insert Slicer</b> (Branch) និង <b>Insert Timeline</b> (Date) → ចុចដើម្បី Filter</li>
+    <li>Data ថ្មី → ចុចស្តាំ → <b>Refresh</b> (ឬ Data → Refresh All <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>F5</kbd>)</li>
+  </ol>
+  <table class="sheet">
+    <tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+    <tr><th>3</th><td class="hd">Sum of Total</td><td class="hd">Bakery</td><td class="hd">Coffee</td><td class="hd">Tea</td><td class="hd">Grand Total</td></tr>
+    <tr><th>4</th><td>បាត់ដំបង</td><td class="r"></td><td class="r">12.50</td><td class="r">4.40</td><td class="r">16.90</td></tr>
+    <tr><th>5</th><td>ភ្នំពេញ</td><td class="r">4.50</td><td class="r">9.50</td><td class="r">8.80</td><td class="r">22.80</td></tr>
+    <tr><th>6</th><td>សៀមរាប</td><td class="r">9.00</td><td class="r">4.00</td><td class="r"></td><td class="r">13.00</td></tr>
+    <tr><th>7</th><td class="hd">Grand Total</td><td class="r hl">13.50</td><td class="r hl">26.00</td><td class="r hl">13.20</td><td class="r hl">52.70</td></tr>
+  </table>
+  <script type="text/x-code" data-lang="xl" data-label="យកលេខពី PivotTable ទៅប្រើក្នុង Dashboard">
+=GETPIVOTDATA("Total",$A$3,"Branch","ភ្នំពេញ","Category","Coffee")   // 9.5
+// Excel 365: PIVOTBY = PivotTable ជា Formula
+=PIVOTBY(B2:B9,D2:D9,G2:G9,SUM)
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១៥</h4>
+    <p>ចង់ដឹង <b>ផលិតផលណាលក់បានចំនួនកែវ (Qty) ច្រើនបំផុត</b> ក្នុងសាខានីមួយៗ។ រៀប PivotTable ដូចម្តេច? ចម្លើយពីទិន្នន័យគំរូ?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p>Rows៖ <b>Branch</b> ហើយ <b>Product</b> (ក្រោម Branch) · Values៖ <b>Sum of Qty</b> · ចុចស្តាំលើ Product → Sort → Largest to Smallest (by Sum of Qty) → Filter → Top 10 → <b>Top 1</b>។</p>
+      <p>លទ្ធផល៖ ភ្នំពេញ = Green Tea (4) · សៀមរាប = Croissant (6) · បាត់ដំបង = Latte (5)។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l16">
+  <h2><span class="badge">មេរៀន ១៦</span>Descriptive Statistics, Correlation & Forecast</h2>
+  <script type="text/x-code" data-lang="xl" data-label="Statistics លើ G2:G9">
+=AVERAGE(G2:G9)          // 6.59  មធ្យម (ប៉ះពាល់ដោយ Outlier)
+=MEDIAN(G2:G9)           // 6.0   តម្លៃកណ្តាល (ធន់នឹង Outlier)
+=MODE.SNGL(E2:E9)        // 3     តម្លៃញឹកញាប់បំផុត
+=STDEV.S(G2:G9)          // 3.45  គម្លាតស្តង់ដារ (Sample)
+=QUARTILE.INC(G2:G9,1)   // 4.3   Q1
+=QUARTILE.INC(G2:G9,3)   // 8.85  Q3
+=PERCENTILE.INC(G2:G9,0.9)   // 10.05
+=CORREL(E2:E9,G2:G9)     // 0.87  Qty និង Total មានទំនាក់ទំនងខ្លាំង (+)
+// ព្យាករចំណូលខែទី 13 ពីខែ 1–12 (A2:A13 = លេខខែ, B2:B13 = ចំណូល)
+=FORECAST.LINEAR(13,B2:B13,A2:A13)
+=TREND(B2:B13,A2:A13,13)
+</script>
+  <table>
+    <tr><th>CORREL</th><th>ន័យ</th></tr>
+    <tr><td>+0.7 ដល់ +1</td><td>ទំនាក់ទំនងវិជ្ជមានខ្លាំង (មួយឡើង មួយទៀតឡើង)</td></tr>
+    <tr><td>−0.3 ដល់ +0.3</td><td>ស្ទើរគ្មានទំនាក់ទំនងបន្ទាត់</td></tr>
+    <tr><td>−1 ដល់ −0.7</td><td>អវិជ្ជមានខ្លាំង (មួយឡើង មួយទៀតចុះ)</td></tr>
+  </table>
+  <div class="warn">⚠️ <b>Correlation ≠ Causation</b> — ការលក់ការ៉េម និងចំនួនមនុស្សលង់ទឹកឡើងព្រមគ្នា ព្រោះ <b>រដូវក្តៅ</b> មិនមែនការ៉េមបណ្តាលឱ្យលង់ទឹកទេ។</div>
+  <ul>
+    <li><b>Analysis ToolPak</b>៖ File → Options → Add-ins → Excel Add-ins → ធីក Analysis ToolPak → Data → <b>Data Analysis</b> → Descriptive Statistics, Histogram, Regression, t-Test</li>
+    <li><b>Forecast Sheet</b>៖ ជ្រើស Date + Value → Data → Forecast Sheet (ព្យាករជាមួយ Confidence interval)</li>
+  </ul>
+  <div class="ex"><h4>✍️ លំហាត់ ១៦</h4>
+    <p>ប្រាក់ខែបុគ្គលិក ៧ នាក់៖ 300, 320, 350, 360, 380, 400, 3000 ($)។ គណនា Average និង Median។ តើគួររាយការណ៍មួយណាជា «ប្រាក់ខែធម្មតា»? ហេតុអ្វី?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p>Average = 5110 ÷ 7 = <b>$730</b> · Median = <b>$360</b>។ គួររាយការណ៍ <b>Median</b> ព្រោះប្រាក់ខែ $3000 (អ្នកគ្រប់គ្រង) ជា <b>Outlier</b> ដែលទាញ Average ឡើងខ្ពស់ជាងបុគ្គលិក ៦ នាក់ក្នុងចំណោម ៧។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l17">
+  <h2><span class="badge">មេរៀន ១៧</span>What-If Analysis: Goal Seek, Scenario, Data Table</h2>
+  <table class="sheet">
+    <tr><th></th><th>A</th><th>B</th></tr>
+    <tr><th>1</th><td>តម្លៃលក់/កែវ</td><td class="r">2.50</td></tr>
+    <tr><th>2</th><td>ថ្លៃដើម/កែវ</td><td class="r">1.00</td></tr>
+    <tr><th>3</th><td>ចំនួនកែវ/ខែ</td><td class="r">1500</td></tr>
+    <tr><th>4</th><td>ថ្លៃថេរ/ខែ (ជួល ប្រាក់ខែ)</td><td class="r">1800</td></tr>
+    <tr><th>5</th><td class="hd">ចំណេញ</td><td class="r hl">450</td></tr>
+  </table>
+  <script type="text/x-code" data-lang="xl" data-label="B5">
+=(B1-B2)*B3-B4        // (2.5-1)*1500-1800 = 450
+// Break-even (ចំណុចរួចខ្លួន) = ថ្លៃថេរ ÷ ចំណេញក្នុងមួយកែវ
+=B4/(B1-B2)           // 1200 កែវ
+</script>
+  <ul>
+    <li><b>Goal Seek</b> (Data → What-If Analysis)៖ Set cell <b>B5</b> To value <b>1000</b> By changing <b>B3</b> → ត្រូវលក់ <b>1867</b> កែវ (1866.67)</li>
+    <li><b>Scenario Manager</b>៖ រក្សាទុក «ល្អ / ធម្មតា / អាក្រក់» (តម្លៃ ចំនួន ផ្សេងគ្នា) ហើយ Summary ប្រៀបធៀប</li>
+    <li><b>Data Table</b>៖ តារាងចំណេញ តាមតម្លៃលក់ (ជួរដេក) × ចំនួនកែវ (ជួរឈរ)</li>
+    <li><b>Solver</b> (Add-in)៖ រកលទ្ធផលល្អបំផុតដែលមានលក្ខខណ្ឌ (ឧ. ចែកថវិកាផ្សាយពាណិជ្ជកម្ម)</li>
+  </ul>
+  <div class="ex"><h4>✍️ លំហាត់ ១៧</h4>
+    <p>បើតម្លៃលក់ឡើងទៅ $2.80 ហើយចំនួនកែវនៅ 1500 តើចំណេញប៉ុន្មាន? ហើយ Break-even ថ្មីប៉ុន្មានកែវ?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p>ចំណេញ = (2.8 − 1) × 1500 − 1800 = <b>$900</b> · Break-even = 1800 ÷ 1.8 = <b>1000 កែវ</b>។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l18">
+  <h2><span class="badge">មេរៀន ១៨</span>Data Model, Power Pivot & DAX</h2>
+  <p>ពេលមានតារាងច្រើន (Sales, Products, Branches, Calendar) កុំបញ្ចូលគ្នាដោយ XLOOKUP រាប់សែនជួរ — ប្រើ <b>Data Model</b> ហើយភ្ជាប់ <b>Relationship</b> ដូច Database (Star schema)។</p>
+  <script type="text/x-code" data-lang="txt" data-label="Star Schema">
+            Products (Product, Category, Cost)
+                   │ 1
+                   │
+Calendar ─1────*─ Sales (Date, Branch, Product, Qty, Price) ─*────1─ Branches (Branch, Province, Manager)
+(Date, Month, Year)        ← Fact table (ការលក់)          Dimension tables →
+</script>
+  <ol class="steps">
+    <li>Load Table នីមួយៗទៅ Data Model (Power Query → Close & Load To → ធីក <b>Add this data to the Data Model</b>)</li>
+    <li>Power Pivot → Manage → <b>Diagram View</b> → អូស Products[Product] ទៅ Sales[Product]</li>
+    <li>បង្កើត <b>Measures</b> ដោយ DAX (Power Pivot → Measures → New Measure)</li>
+    <li>PivotTable ពី Data Model → ប្រើ Field ពីតារាងផ្សេងៗរួមគ្នា</li>
+  </ol>
+  <script type="text/x-code" data-lang="dax" data-label="DAX Measures (ដូចគ្នានឹង Power BI)">
+Revenue := SUMX(Sales, Sales[Qty] * Sales[Price])
+Cost := SUMX(Sales, Sales[Qty] * RELATED(Products[Cost]))
+Profit := [Revenue] - [Cost]
+Margin % := DIVIDE([Profit], [Revenue])
+Revenue PP := CALCULATE([Revenue], Branches[Branch] = "ភ្នំពេញ")
+Revenue LM := CALCULATE([Revenue], DATEADD(Calendar[Date], -1, MONTH))
+MoM % := DIVIDE([Revenue] - [Revenue LM], [Revenue LM])
+</script>
+  <div class="note">💡 រៀន DAX ក្នុង Excel = ត្រៀមខ្លួនសម្រាប់ <b>Power BI</b> ព្រោះប្រើភាសា និង Data Model ដូចគ្នា។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ១៨</h4>
+    <p>សរសេរ Measure ៖ (ក) ចំនួនការកុម្ម៉ង់ (ខ) តម្លៃមធ្យមក្នុងមួយការកុម្ម៉ង់ (Average Order Value)។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="dax" data-label="Answer">
+Orders := COUNTROWS(Sales)
+AOV := DIVIDE([Revenue], [Orders])
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l19">
+  <h2><span class="badge">មេរៀន ១៩</span>Python in Excel & Copilot</h2>
+  <p>Microsoft 365៖ វាយ <code class="i">=PY(</code> ក្នុង Cell (ឬ <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>) ដើម្បីសរសេរ <b>Python</b> (pandas, matplotlib, seaborn) ដែលរត់លើ Cloud របស់ Microsoft — មិនចាំបាច់ដំឡើង Python។ <code class="i">xl()</code> អានទិន្នន័យពី Excel។</p>
+  <script type="text/x-code" data-lang="py" data-label="=PY( ... )">
+df = xl("tblSales[#All]", headers=True)
+
+# ចំណូលតាមសាខា + ប្រភេទ
+df.pivot_table(index="Branch", columns="Category", values="Total", aggfunc="sum", fill_value=0)
+</script>
+  <script type="text/x-code" data-lang="py" data-label="=PY( ... ) → Chart">
+import seaborn as sns
+df = xl("tblSales[#All]", headers=True)
+sns.barplot(data=df, x="Branch", y="Total", estimator=sum)
+</script>
+  <p><b>Copilot in Excel</b> (Microsoft 365 Copilot)៖ សួរជាភាសាធម្មតា «Show revenue by branch as a chart», «Highlight top 10%», ឬ «Analyze this data» ហើយ Copilot បង្កើត Formula/Pivot/Chart (អាចប្រើ Python ក្នុងការវិភាគកម្រិតខ្ពស់)។ <b>ពិនិត្យលទ្ធផលជានិច្ច</b> — AI អាចខុស។</p>
+  <div class="ex"><h4>✍️ លំហាត់ ១៩</h4>
+    <p>សរសេរ Python in Excel ដើម្បីរក Top 3 ផលិតផលតាមចំណូល។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="py" data-label="Answer">
+df = xl("tblSales[#All]", headers=True)
+df.groupby("Product")["Total"].sum().nlargest(3)
+# Latte 20.0 · Croissant 13.5 · Green Tea 13.2
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l20">
+  <h2><span class="badge">មេរៀន ២០</span>Macro & VBA — ស្វ័យប្រវត្តិកម្ម</h2>
+  <ol class="steps">
+    <li><b>Record Macro</b>៖ Developer → Record Macro → ធ្វើការងារ → Stop · រក្សាទុកជា <b>.xlsm</b></li>
+    <li>កែកូដ៖ <kbd>Alt</kbd>+<kbd>F11</kbd> → VBA Editor → Insert → Module</li>
+    <li>រត់៖ <kbd>F5</kbd> ក្នុង Editor ឬ Developer → Macros ឬភ្ជាប់ទៅប៊ូតុង (Insert → Shapes → ចុចស្តាំ → Assign Macro)</li>
+  </ol>
+  <script type="text/x-code" data-lang="vba" data-label="Module1 · បង្កើតរបាយការណ៍តាមសាខា">
+Option Explicit
+
+Sub BranchReport()
+    Dim ws As Worksheet, rpt As Worksheet
+    Dim lastRow As Long, r As Long
+    Dim branches As Variant, i As Long
+
+    Set ws = ThisWorkbook.Worksheets("Sales")
+    lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row
+
+    Application.DisplayAlerts = False
+    On Error Resume Next
+    ThisWorkbook.Worksheets("Report").Delete     ' លុបរបាយការណ៍ចាស់
+    On Error GoTo 0
+    Application.DisplayAlerts = True
+
+    Set rpt = ThisWorkbook.Worksheets.Add(After:=ws)
+    rpt.Name = "Report"
+    rpt.Range("A1:C1").Value = Array("Branch", "Revenue", "Orders")
+
+    branches = Array("ភ្នំពេញ", "សៀមរាប", "បាត់ដំបង")
+    For i = 0 To UBound(branches)
+        r = i + 2
+        rpt.Cells(r, 1).Value = branches(i)
+        rpt.Cells(r, 2).Value = WorksheetFunction.SumIfs(ws.Range("G2:G" & lastRow), ws.Range("B2:B" & lastRow), branches(i))
+        rpt.Cells(r, 3).Value = WorksheetFunction.CountIfs(ws.Range("B2:B" & lastRow), branches(i))
+    Next i
+
+    rpt.Range("B2:B4").NumberFormat = "$#,##0.00"
+    rpt.Range("A1:C1").Font.Bold = True
+    rpt.Columns("A:C").AutoFit
+    MsgBox "របាយការណ៍រួចរាល់!", vbInformation
+End Sub
+</script>
+  <div class="warn">⚠️ បើក Macro តែពី File ដែលអ្នកទុកចិត្តប៉ុណ្ណោះ — Macro អាចជាមេរោគ។ Windows បិទ Macro ពី File ដែលទាញពី Internet ដោយស្វ័យប្រវត្តិ។ Excel for the web មិនរត់ VBA ទេ (ប្រើ <b>Office Scripts</b> ជំនួស)។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ២០</h4>
+    <p>សរសេរ Macro ដែលលាបពណ៌លឿងលើ Cell ក្នុង G2:G9 ដែលតម្លៃ ≥ 9។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="vba" data-label="Answer">
+Sub HighlightBig()
+    Dim c As Range
+    For Each c In Worksheets("Sales").Range("G2:G9")
+        If c.Value >= 9 Then
+            c.Interior.Color = RGB(255, 242, 153)
+        Else
+            c.Interior.Pattern = xlNone
+        End If
+    Next c
+End Sub
+' លទ្ធផល៖ G4 (8.8 មិនដល់), G5 = 12.5 ✓, G6 = 9 ✓
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="cheat">
+  <h2>📋 Cheat Sheet: Function ដែល Data Analyst ប្រើរាល់ថ្ងៃ</h2>
+  <table>
+    <tr><th>ក្រុម</th><th>Function</th></tr>
+    <tr><td>សរុប</td><td>SUM · SUMIFS · COUNTIFS · AVERAGEIFS · SUBTOTAL · AGGREGATE</td></tr>
+    <tr><td>Lookup</td><td>XLOOKUP · INDEX/MATCH · XMATCH · FILTER</td></tr>
+    <tr><td>Logic</td><td>IF · IFS · AND · OR · IFERROR · SWITCH</td></tr>
+    <tr><td>Text</td><td>TRIM · PROPER · TEXTSPLIT · TEXTBEFORE · TEXTJOIN · SUBSTITUTE · TEXT</td></tr>
+    <tr><td>Date</td><td>TODAY · EOMONTH · DATEDIF · NETWORKDAYS · WEEKDAY</td></tr>
+    <tr><td>Dynamic</td><td>UNIQUE · SORT · SORTBY · TAKE · HSTACK · GROUPBY · PIVOTBY · LET · LAMBDA</td></tr>
+    <tr><td>Stats</td><td>MEDIAN · STDEV.S · QUARTILE.INC · CORREL · FORECAST.LINEAR</td></tr>
+  </table>
+</section>
+
+<!-- NAV: ផ្នែកទី ៤ – កម្រិតអាជីព -->
+<section class="hero" id="pro">
+  <h2>🏆 គម្រោងអាជីព: Sales Analytics Dashboard</h2>
+  <p>ករណីសិក្សា៖ ហាងកាហ្វេ <b>Kafe</b> មាន ៣ សាខា។ ម្ចាស់ចង់ដឹង៖ <b>ចំណូល ចំណេញ និន្នាការ ៦ ខែ ផលិតផលល្អបំផុត និងសាខាណាត្រូវការជំនួយ</b>។ យើងធ្វើតាម ៦ ជំហាន Data Analytics ពី CSV ឆៅ រហូតដល់ Dashboard មួយទំព័រដែលមាន Slicer។</p>
+</section>
+
+<section id="pro-build">
+  <h2>🛠️ ជំហានសាងសង់ក្នុង Excel</h2>
+  <table>
+    <tr><th>Sheet</th><th>មាតិកា</th></tr>
+    <tr><td><b>Data</b></td><td>tblSales (ពី Power Query — Folder CSV ១២ ខែ) · tblProducts · tblBranches</td></tr>
+    <tr><td><b>Calc</b></td><td>PivotTables (លាក់) · Measures · តារាង KPI</td></tr>
+    <tr><td><b>Dashboard</b></td><td>KPI Cards · Line chart (ខែ) · Bar chart (ផលិតផល) · Matrix (សាខា × ប្រភេទ) · Slicers</td></tr>
+  </table>
+  <ol class="steps">
+    <li><b>Ask៖</b> កំណត់ KPI៖ Revenue, Profit, Margin %, Orders, AOV, MoM %</li>
+    <li><b>Prepare & Process៖</b> Power Query → Folder → Combine → Trim/Type → Merge Products (Cost) → Load ទៅ Data Model</li>
+    <li><b>Model៖</b> Relationship Sales–Products–Branches–Calendar · Measures DAX (មេរៀន ១៨)</li>
+    <li><b>Analyze៖</b> PivotTables ពី Data Model · Group by Month</li>
+    <li><b>Visualize៖</b> PivotCharts · Conditional formatting · Sparklines</li>
+    <li><b>Interact៖</b> Slicer (Branch, Category) + Timeline → <b>Report Connections</b> ភ្ជាប់គ្រប់ Pivot</li>
+    <li><b>Polish៖</b> View → បិទ Gridlines · ពណ៌ ២–៣ · Freeze Panes · Protect Sheet · Refresh All</li>
+  </ol>
+  <script type="text/x-code" data-lang="xl" data-label="KPI Cards (Sheet Dashboard)">
+// ចំណូលសរុប (តាម Slicer ព្រោះយកពី Pivot)
+=GETPIVOTDATA("[Measures].[Revenue]",Calc!$A$3)
+// MoM % ជាមួយសញ្ញា ▲▼
+=LET(m,Calc!B5, IF(m>=0,"▲ ","▼ ")&TEXT(ABS(m),"0.0%"))
+// Top product
+=INDEX(SORTBY(tblSales[Product],tblSales[Total],-1),1)
+// Margin %
+=IFERROR(Calc!B4/Calc!B3,0)
+</script>
+</section>
+
+<section id="pro-app">
+  <h2>📊 Dashboard ផ្ទាល់ (សាកល្បងបាន)</h2>
+  <p>ទិន្នន័យ ៦ ខែ (មករា–មិថុនា 2026) ៣ សាខា ៥ ផលិតផល។ ចុច <b>Slicer</b> សាខា ឬប្រភេទ ហើយ KPI, ក្រាហ្វ និង Matrix ប្តូរតាម — ដូច Dashboard ក្នុង Excel។ ក្រោម KPI នីមួយៗមាន Formula Excel ដែលស្មើគ្នា។</p>
+  <script type="text/x-code" data-lang="html" data-label="Kafe Sales Dashboard" data-demo>
+<style>
+  :root { --g:#107c41; --g2:#33a165; --soft:#e3f4ea; --line:#dde5df; --muted:#5b6b61; --bg:#f5f8f6; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:#18261d; font-family:"Kantumruy Pro",system-ui,sans-serif; }
+  .dash { padding:14px; display:grid; gap:12px; }
+  .top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+  .top h1 { margin:0; font-size:20px; } .top small { color:var(--muted); }
+  .slicers { display:flex; gap:14px; flex-wrap:wrap; }
+  .slicer { background:#fff; border:1px solid var(--line); border-radius:10px; padding:6px 8px; }
+  .slicer b { font-size:12px; color:var(--muted); display:block; margin-bottom:4px; }
+  .slicer button { min-height:34px; border:1px solid var(--line); background:#fff; border-radius:7px; padding:0 10px; font:inherit; font-size:13px; cursor:pointer; margin:2px; }
+  .slicer button[aria-pressed="true"] { background:var(--g); color:#fff; border-color:var(--g); }
+  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; }
+  .kpi { background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px 12px; }
+  .kpi .l { font-size:13px; color:var(--muted); } .kpi .v { font-size:24px; font-weight:700; line-height:1.3; }
+  .kpi .d { font-size:13px; font-weight:600; } .up { color:#107c41; } .down { color:#c0392b; }
+  .kpi code { display:block; margin-top:4px; font:11px/1.4 "JetBrains Mono",monospace; color:#7a5af8; background:#f4f1ff; padding:2px 5px; border-radius:4px; overflow-wrap:anywhere; }
+  .row { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; }
+  .panel { background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px 12px; min-width:0; }
+  .panel h2 { margin:0 0 6px; font-size:15px; }
+  svg text { font-family:inherit; font-size:11px; fill:#5b6b61; }
+  .bar { display:grid; grid-template-columns:86px 1fr 62px; gap:8px; align-items:center; margin:5px 0; font-size:13px; }
+  .bar .t { height:20px; background:var(--soft); border-radius:4px; overflow:hidden; }
+  .bar .f { height:100%; background:var(--g2); transition:width .3s; } .bar .f.top { background:var(--g); }
+  .bar span:last-child { text-align:right; font-weight:600; }
+  table { border-collapse:collapse; width:100%; font-size:13px; }
+  th, td { border:1px solid var(--line); padding:4px 8px; text-align:right; }
+  th:first-child, td:first-child { text-align:left; } th { background:var(--soft); }
+  tr.total td { font-weight:700; background:#f1f5f2; }
+  .insight { background:#fffbe6; border-left:4px solid #e5b000; padding:8px 12px; border-radius:8px; font-size:14px; }
+  @media (prefers-reduced-motion: reduce) { .bar .f { transition:none; } }
+</style>
+
+<div class="dash">
+  <div class="top">
+    <div><h1>☕ Kafe · Sales Dashboard</h1><small>មករា – មិថុនា 2026 · ទិន្នន័យពី tblSales</small></div>
+    <div class="slicers">
+      <div class="slicer" id="sBranch"><b>Branch</b></div>
+      <div class="slicer" id="sCat"><b>Category</b></div>
+    </div>
+  </div>
+  <div class="kpis" id="kpis"></div>
+  <div class="row">
+    <div class="panel"><h2>ចំណូលតាមខែ</h2><svg id="line" viewBox="0 0 420 200" width="100%" role="img" aria-label="Line chart ចំណូលតាមខែ"></svg></div>
+    <div class="panel"><h2>ចំណូលតាមផលិតផល</h2><div id="bars"></div></div>
+  </div>
+  <div class="row">
+    <div class="panel"><h2>Matrix: សាខា × ប្រភេទ (Revenue)</h2><div id="matrix" style="overflow-x:auto"></div></div>
+    <div class="panel"><h2>💡 Insight</h2><div class="insight" id="insight"></div></div>
+  </div>
+</div>
+
+<script>
+  // ===== Data: បង្កើតទិន្នន័យថេរ (Seeded) — ដូចជា tblSales ពី Power Query =====
+  let seed = 7;
+  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const BR = ["ភ្នំពេញ", "សៀមរាប", "បាត់ដំបង"];
+  const PR = [
+    { p: "Latte", c: "Coffee", price: 2.5, cost: 0.9 }, { p: "Americano", c: "Coffee", price: 2.0, cost: 0.6 },
+    { p: "Iced Coffee", c: "Coffee", price: 1.8, cost: 0.7 }, { p: "Green Tea", c: "Tea", price: 2.2, cost: 0.8 },
+    { p: "Croissant", c: "Bakery", price: 1.5, cost: 0.7 },
+  ];
+  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+  const BW = { "ភ្នំពេញ": 1.6, "សៀមរាប": 1.0, "បាត់ដំបង": 0.8 };
+  const DATA = [];
+  for (let m = 0; m < 6; m++) for (const b of BR) for (const pr of PR) {
+    const growth = 1 + m * (b === "សៀមរាប" ? 0.09 : b === "បាត់ដំបង" ? -0.02 : 0.05);
+    const orders = Math.round((18 + rnd() * 14) * BW[b] * growth);
+    for (let i = 0; i < orders; i++) {
+      const qty = 1 + Math.floor(rnd() * 3);
+      DATA.push({ m, b, p: pr.p, c: pr.c, qty, total: qty * pr.price, cost: qty * pr.cost });
+    }
+  }
+
+  // ===== Slicers =====
+  const state = { b: new Set(BR), c: new Set(["Coffee", "Tea", "Bakery"]) };
+  function slicer(id, items, key) {
+    const el = document.getElementById(id);
+    items.forEach(v => {
+      const btn = document.createElement("button");
+      btn.textContent = v; btn.setAttribute("aria-pressed", "true");
+      btn.onclick = () => {
+        const s = state[key];
+        if (s.has(v) && s.size === 1) return;          // ត្រូវមានយ៉ាងហោចណាស់ ១
+        s.has(v) ? s.delete(v) : s.add(v);
+        btn.setAttribute("aria-pressed", s.has(v));
+        render();
+      };
+      el.appendChild(btn);
+    });
+  }
+  slicer("sBranch", BR, "b"); slicer("sCat", ["Coffee", "Tea", "Bakery"], "c");
+
+  // ===== Helpers (ដូច SUMIFS / COUNTIFS) =====
+  const money = n => "$" + n.toLocaleString("en-US", { maximumFractionDigits: 0 });
+  const sum = (rows, f) => rows.reduce((a, r) => a + r[f], 0);
+  const groupSum = (rows, key, f = "total") => rows.reduce((o, r) => (o[r[key]] = (o[r[key]] || 0) + r[f], o), {});
+  const pct = n => (n * 100).toFixed(1) + "%";
+
+  function render() {
+    const rows = DATA.filter(r => state.b.has(r.b) && state.c.has(r.c));
+    const rev = sum(rows, "total"), cost = sum(rows, "cost"), orders = rows.length;
+    const byM = MONTHS.map((_, i) => sum(rows.filter(r => r.m === i), "total"));
+    const mom = (byM[5] - byM[4]) / byM[4];
+    const branchList = [...state.b].map(b => `"${b}"`).join(",");
+
+    document.getElementById("kpis").innerHTML = [
+      ["ចំណូល (Revenue)", money(rev), `▲▼ ${pct(mom)} MoM`, mom, `=SUM(SUMIFS(tblSales[Total],tblSales[Branch],{${branchList}}))`],
+      ["ចំណេញ (Profit)", money(rev - cost), "", 0, "=[Revenue]-SUMX(Sales,[Qty]*RELATED(Products[Cost]))"],
+      ["Margin %", pct((rev - cost) / rev), "", 0, "=DIVIDE([Profit],[Revenue])"],
+      ["ការកុម្ម៉ង់ (Orders)", orders.toLocaleString(), "", 0, "=ROWS(FILTER(tblSales[Total],…))"],
+      ["AOV", "$" + (rev / orders).toFixed(2), "", 0, "=[Revenue]/[Orders]"],
+    ].map(([l, v, d, s, f]) => `<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div>
+      ${d ? `<div class="d ${s >= 0 ? "up" : "down"}">${s >= 0 ? "▲" : "▼"} ${pct(Math.abs(s))} ធៀបខែមុន</div>` : ""}<code>${f}</code></div>`).join("");
+
+    // Line chart (SVG)
+    const max = Math.max(...byM) * 1.15, W = 420, H = 200, L = 44, B = 24, T = 10;
+    const x = i => L + i * ((W - L - 14) / 5), y = v => T + (H - T - B) * (1 - v / max);
+    let svg = "";
+    for (let k = 0; k <= 4; k++) { const v = max * k / 4; svg += `<line x1="${L}" x2="${W - 8}" y1="${y(v)}" y2="${y(v)}" stroke="#eef2ef"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${money(v)}</text>`; }
+    svg += `<polyline fill="none" stroke="#107c41" stroke-width="3" points="${byM.map((v, i) => x(i) + "," + y(v)).join(" ")}"/>`;
+    byM.forEach((v, i) => { svg += `<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="#107c41"><title>${MONTHS[i]}: ${money(v)}</title></circle><text x="${x(i)}" y="${H - 6}" text-anchor="middle">${MONTHS[i]}</text>`; });
+    document.getElementById("line").innerHTML = svg;
+
+    // Bars by product
+    const byP = Object.entries(groupSum(rows, "p")).sort((a, b) => b[1] - a[1]);
+    const pmax = byP[0] ? byP[0][1] : 1;
+    document.getElementById("bars").innerHTML = byP.map(([p, v], i) =>
+      `<div class="bar"><span>${p}</span><div class="t"><div class="f ${i === 0 ? "top" : ""}" style="width:${v / pmax * 100}%"></div></div><span>${money(v)}</span></div>`).join("");
+
+    // Matrix (PivotTable)
+    const cats = ["Coffee", "Tea", "Bakery"].filter(c => state.c.has(c));
+    const brs = BR.filter(b => state.b.has(b));
+    const cell = (b, c) => sum(rows.filter(r => r.b === b && r.c === c), "total");
+    let t = `<table><tr><th>Branch</th>${cats.map(c => `<th>${c}</th>`).join("")}<th>Total</th></tr>`;
+    brs.forEach(b => { t += `<tr><td>${b}</td>${cats.map(c => `<td>${money(cell(b, c))}</td>`).join("")}<td><b>${money(sum(rows.filter(r => r.b === b), "total"))}</b></td></tr>`; });
+    t += `<tr class="total"><td>Grand Total</td>${cats.map(c => `<td>${money(sum(rows.filter(r => r.c === c), "total"))}</td>`).join("")}<td>${money(rev)}</td></tr></table>`;
+    document.getElementById("matrix").innerHTML = t;
+
+    // Insight (ដូច Text box ដែល Analyst សរសេរ)
+    const growthBy = brs.map(b => { const r = rows.filter(z => z.b === b); const a = sum(r.filter(z => z.m === 0), "total"), z = sum(r.filter(z => z.m === 5), "total"); return [b, (z - a) / a]; }).sort((a, b) => b[1] - a[1]);
+    const best = growthBy[0], worst = growthBy[growthBy.length - 1];
+    document.getElementById("insight").innerHTML =
+      `<p style="margin:0 0 6px">① <b>${byP[0][0]}</b> ជាផលិតផលចំណូលខ្ពស់បំផុត (${pct(byP[0][1] / rev)} នៃចំណូល)។</p>
+       <p style="margin:0 0 6px">② <b>${best[0]}</b> កើនលឿនបំផុត ${pct(best[1])} ពីមករា ដល់មិថុនា។</p>` +
+      (brs.length > 1 ? `<p style="margin:0">③ <b>${worst[0]}</b> ${worst[1] < 0 ? "ធ្លាក់ " + pct(-worst[1]) + " → ពិនិត្យ Promotion និងបុគ្គលិក" : "កើនយឺតបំផុត " + pct(worst[1])}។</p>` : "");
+  }
+  render();
+<\/script>
+</script>
+</section>
+
+<section id="pro-check">
+  <h2>✅ Checklist Dashboard អាជីព & គម្រោងចុងក្រោយ</h2>
+  <table>
+    <tr><th>ផ្នែក</th><th>ល្អ</th></tr>
+    <tr><td>សារ</td><td>ចំណងជើងប្រាប់ Insight («ភ្នំពេញ +12% MoM») មិនមែន «Chart 1»</td></tr>
+    <tr><td>KPI</td><td>៣–៥ ខាងលើ ធៀបនឹងគោលដៅ ឬខែមុន (▲▼)</td></tr>
+    <tr><td>ក្រាហ្វ</td><td>ត្រូវប្រភេទ · គ្មាន 3D · ពណ៌ Accent តែលើអ្វីសំខាន់</td></tr>
+    <tr><td>អន្តរកម្ម</td><td>Slicer/Timeline ភ្ជាប់គ្រប់ Pivot</td></tr>
+    <tr><td>ទិន្នន័យ</td><td>Power Query + Refresh · គ្មានការ Copy/Paste ដោយដៃ</td></tr>
+    <tr><td>ភាពត្រឹមត្រូវ</td><td>ផ្ទៀងផ្ទាត់សរុបជាមួយទិន្នន័យដើម (SUM ធៀប Pivot)</td></tr>
+  </table>
+  <div class="ex"><h4>🏁 លំហាត់គម្រោងចុងក្រោយ</h4>
+    <ol>
+      <li>បង្កើតទិន្នន័យលក់ ៥០០ ជួរ (ឬទាញ Dataset ពី Kaggle «Coffee Shop Sales»)</li>
+      <li>សម្អាតដោយ Power Query ហើយ Load ទៅ Data Model</li>
+      <li>បង្កើត Measures៖ Revenue, Profit, Margin %, Orders, AOV, MoM %</li>
+      <li>Dashboard មួយទំព័រ៖ KPI ៤, Line chart, Bar chart, Matrix, Slicer ២, Timeline</li>
+      <li>សរសេរ Insight ៣ និងអនុសាសន៍ ២ ក្នុង Text box លើ Dashboard</li>
+      <li>(បន្ថែម) Python in Excel៖ CORREL រវាងអាកាសធាតុ និងការលក់ទឹកកក</li>
+      <li>(បន្ថែម) Macro ប៊ូតុង «Refresh & Export PDF»</li>
+    </ol>
+  </div>
+</section>
+
+<section id="roadmap">
+  <h2>🗺️ ផែនទីក្លាយជា Data Analyst</h2>
+  <ol class="steps">
+    <li><b>Excel</b> — មេរៀន ១–២០ ក្នុងឯកសារនេះ ✅</li>
+    <li><b>ស្ថិតិមូលដ្ឋាន</b> — Mean, Median, Std, Distribution, Sampling, A/B Test</li>
+    <li><b>SQL</b> — SELECT, JOIN, GROUP BY (វគ្គ SQL)</li>
+    <li><b>Power BI</b> — Power Query + DAX ដូច Excel តែខ្លាំងជាង (Data ធំ, Share Online)</li>
+    <li><b>Python</b> — pandas, matplotlib, Jupyter (វគ្គ Python)</li>
+    <li><b>Portfolio</b> — Dashboard ២–៣ ជាមួយ Insight ដាក់លើ GitHub / LinkedIn</li>
+  </ol>
+  <p><b>ប្រភពរៀនបន្ថែម:</b> <a href="https://support.microsoft.com/excel" target="_blank">Excel Help & Learning</a> · <a href="https://learn.microsoft.com/office/dev/add-ins/" target="_blank">Office Add-ins docs</a> · <a href="https://exceljet.net" target="_blank">Exceljet</a> · <a href="https://www.kaggle.com/datasets" target="_blank">Kaggle Datasets</a></p>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]*'|`[^`]*`", 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|await|async|new|try|catch|import|from|export|default)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console)\\b', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], lang === 'bash' ? 'm' : '') : esc(code);
+
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.append(label, res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="excel"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

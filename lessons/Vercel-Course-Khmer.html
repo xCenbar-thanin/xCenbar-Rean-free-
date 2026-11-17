@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន Vercel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#fafafa; --panel:#ffffff; --text:#171717; --muted:#5b6b61; --line:#e5e5e5;
+  --accent:#111111; --accent2:#444444; --accent-soft:#f2f2f2;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#2563eb; --accent2:#60a5fa; --accent-soft:#1a1a1a;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#2563eb; --accent2:#60a5fa; --accent-soft:#1a1a1a;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#000000,#444444);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+</style>
+<link rel="icon" href="../assets/icons/vercel.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/vercel.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>វគ្គសិក្សា Vercel ពីដើមដល់ Deploy កម្រិតអាជីព</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Vercel ជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#install">២. របៀបដំឡើង (VS Code + Vercel CLI)</a>
+<a href="#elements">៣. ធាតុនីមួយៗរបស់ Vercel</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Deploy Website ស្តាទិកដំបូង (HTML)</a>
+<a href="#l2">មេរៀន ២: Git Workflow: Preview &amp; Production Deployments</a>
+<a href="#l3">មេរៀន ៣: Deploy React (Vite) + SPA Routing</a>
+<a href="#l4">មេរៀន ៤: Environment Variables</a>
+<a href="#l5">មេរៀន ៥: Vercel Functions: API ក្នុង Folder api/</a>
+<a href="#l6">មេរៀន ៦: Deploy Express API (Zero config)</a>
+<a href="#l7">មេរៀន ៧: vercel.json: Rewrites, Redirects, Headers</a>
+<a href="#l8">មេរៀន ៨: Custom Domain &amp; DNS</a>
+<a href="#l9">មេរៀន ៩: Storage: Postgres (Neon), Blob, Global Config</a>
+<a href="#l10">មេរៀន ១០: Cron Jobs, Logs, Analytics &amp; Speed Insights</a>
+<a href="#l11">មេរៀន ១១: Rollback, Security &amp; Limits</a>
+<a href="#l12">មេរៀន ១២: Next.js, v0 &amp; AI SDK (ទិដ្ឋភាពទូទៅ)</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងអាជីព: Deploy Kafe Admin (React + REST API) លើ Vercel</a>
+<a href="#pro-arch">🧭 Architecture</a>
+<a href="#pro-steps">🛠️ ជំហាន Deploy</a>
+<a href="#pro-app">🎮 Vercel Simulator (ចុចសាកបាន)</a>
+<a href="#pro-check">✅ Production Checklist &amp; គម្រោងចុងក្រោយ</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+
+</nav>
+<main>
+<section class="hero">
+  <h2>▲ Vercel ពីដើមដល់ចប់: Deploy Website & Full-stack App</h2>
+  <p>រៀនដាក់ Website និង App របស់អ្នកឱ្យ <b>Online</b> ជាមួយ <b>Vercel</b>៖ Static site, React (Vite), Functions, Express API, Environment Variables, vercel.json, Domain, Storage, Cron, Logs, Rollback រហូតដល់ Deploy <b>Kafe Admin (React + REST API)</b> កម្រិតអាជីព។ កូដ និងពាក្យបញ្ជាមានពណ៌ ហើយមាន <b>Simulator</b> ចុចសាកបាន។</p>
+  <p><span class="badge">📘 ១២ មេរៀន</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">🚀 CLI + Git</span><span class="badge">🏆 Full-stack Deploy</span></p>
+</section>
+
+<!-- NAV: ផ្នែកទី ១ – មូលដ្ឋាន -->
+<section id="intro">
+  <h2>១. Vercel ជាអ្វី? អ្នកណាបង្កើត?</h2>
+  <p><b>Vercel</b> គឺជា <b>Cloud platform</b> សម្រាប់ Deploy (ដាក់ឱ្យដំណើរការលើ Internet) នូវ Website និង Web App។ អ្នកគ្រាន់តែ <b>Push កូដទៅ GitHub</b> ហើយ Vercel នឹង <b>Build</b>, ដាក់លើ <b>CDN</b> ទូទាំងពិភពលោក, រត់ <b>Functions</b> (Backend) និងផ្តល់ <b>URL + HTTPS</b> ដោយស្វ័យប្រវត្តិ — មិនចាំបាច់គ្រប់គ្រង Server ខ្លួនឯង។</p>
+  <div class="grid">
+    <div class="card"><b>ស្ថាបនិក</b><br><b style="font-size:19px">Guillermo Rauch</b><br>អ្នកសរសេរកម្មវិធីជនជាតិអាហ្សង់ទីន · អ្នកបង្កើត <b>Socket.IO</b> និង <b>Next.js</b></div>
+    <div class="card"><b>បង្កើត</b><br><b>2015</b> ក្រោមឈ្មោះ <b>ZEIT</b><br>ប្តូរឈ្មោះជា <b>Vercel</b> ខែមេសា <b>2020</b></div>
+    <div class="card"><b>Next.js</b><br>Framework React ដែលក្រុមហ៊ុននេះបង្កើតក្នុងឆ្នាំ <b>2016</b> — ពេញនិយមបំផុតមួយសម្រាប់ React</div>
+    <div class="card"><b>ទីស្នាក់ការ</b><br>San Francisco, សហរដ្ឋអាមេរិក · ផលិតផល AI៖ <b>v0</b> និង <b>AI SDK</b> (2023)</div>
+  </div>
+  <h3>គេប្រើ Vercel សម្រាប់ធ្វើអ្វី?</h3>
+  <div class="grid">
+    <div class="card">🌐 <b>Website ស្តាទិក</b><br>Portfolio, Landing page, ឯកសាររៀន HTML (ដូចវគ្គទាំងនេះ!)</div>
+    <div class="card">⚛️ <b>Frontend App</b><br>React (Vite), Next.js, Vue, Svelte, Astro…</div>
+    <div class="card">🔌 <b>Backend / API</b><br>Vercel Functions, Express, Hono, FastAPI (Python)</div>
+    <div class="card">👀 <b>Preview Deployments</b><br>Branch/PR នីមួយៗមាន URL ផ្ទាល់ខ្លួន សម្រាប់ Review មុនដាក់ពិត</div>
+    <div class="card">🤖 <b>AI Apps</b><br>Chatbot ជាមួយ AI SDK, Streaming</div>
+    <div class="card">🏢 <b>ក្រុមហ៊ុនធំ</b><br>Website ដែលត្រូវការលឿន ទូទាំងពិភពលោក (CDN)</div>
+  </div>
+  <h3>Vercel ធៀបនឹងសេវាផ្សេង</h3>
+  <table>
+    <tr><th>សេវា</th><th>ល្អសម្រាប់</th></tr>
+    <tr><td><b>Vercel</b></td><td>Frontend + Functions, Next.js, Preview deployments, Git workflow</td></tr>
+    <tr><td>Netlify / Cloudflare Pages</td><td>Static site + Functions (ស្រដៀងគ្នា)</td></tr>
+    <tr><td>GitHub Pages</td><td>Static site តែប៉ុណ្ណោះ (គ្មាន Backend)</td></tr>
+    <tr><td>Render / Railway / Fly.io</td><td>Server ដែលរត់ជានិច្ច, WebSocket, Database ផ្ទាល់</td></tr>
+    <tr><td>VPS (DigitalOcean…)</td><td>គ្រប់គ្រងខ្លួនឯងទាំងអស់ (Nginx, PM2, Security)</td></tr>
+  </table>
+</section>
+
+<section id="install">
+  <h2>២. របៀបដំឡើង (VS Code + Vercel CLI)</h2>
+  <div class="note">💡 Vercel ជាសេវា Cloud — មិនដំឡើងជាកម្មវិធីក្នុង VS Code ទេ។ អ្នកប្រើវាតាម <b>Website (Dashboard)</b> និង <b>Vercel CLI</b> ក្នុង Terminal របស់ VS Code។</div>
+  <h3>ជំហានទី ១: គណនី</h3>
+  <ol class="steps">
+    <li>បង្កើតគណនី <b>GitHub</b> ពី <a href="https://github.com" target="_blank">github.com</a></li>
+    <li>ចូល <a href="https://vercel.com/signup" target="_blank">vercel.com/signup</a> → ជ្រើស <b>Hobby</b> (ឥតគិតថ្លៃ សម្រាប់គម្រោងផ្ទាល់ខ្លួន) → <b>Continue with GitHub</b></li>
+    <li>អនុញ្ញាត Vercel ចូលប្រើ Repository (All ឬតែ Repo ដែលជ្រើស)</li>
+  </ol>
+  <h3>ជំហានទី ២: ឧបករណ៍ក្នុងកុំព្យូទ័រ</h3>
+  <ol class="steps">
+    <li>ដំឡើង <b>Node.js LTS</b> (nodejs.org), <b>Git</b> (git-scm.com) និង <b>VS Code</b></li>
+    <li>បើក Terminal ក្នុង VS Code (<kbd>Ctrl</kbd>+<kbd>`</kbd>) ហើយដំឡើង <b>Vercel CLI</b></li>
+    <li>VS Code Extensions ដែលមានប្រយោជន៍៖ <b>GitHub Pull Requests</b>, <b>ESLint</b>, <b>Prettier</b>, <b>DotENV</b> (ពណ៌ File .env) · VS Code ផ្តល់ IntelliSense ដល់ <code class="i">vercel.json</code> ពី JSON Schema ដោយស្វ័យប្រវត្តិ</li>
+  </ol>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal (VS Code)">
+node -v                     # v22.x ឬ v24.x
+git --version
+npm install -g vercel       # ដំឡើង Vercel CLI
+vercel --version
+vercel login                # Login តាម Browser (GitHub)
+vercel whoami               # ពិនិត្យថា Login ហើយ
+</script>
+  <h3>ពាក្យបញ្ជា CLI សំខាន់ៗ</h3>
+  <script type="text/x-code" data-lang="bash" data-label="Vercel CLI Cheat Sheet">
+vercel                      # Deploy ជា Preview (ម្តងដំបូងសួរ Setup)
+vercel --prod               # Deploy ជា Production
+vercel dev                  # រត់ក្នុងកុំព្យូទ័រ ដូចលើ Vercel (Functions + vercel.json)
+vercel link                 # ភ្ជាប់ Folder ទៅ Project ដែលមានរួច
+vercel env add NAME         # បន្ថែម Environment variable
+vercel env pull .env.local  # ទាញ Env ពី Vercel មកកុំព្យូទ័រ
+vercel ls                   # បញ្ជី Deployments
+vercel logs <deployment-url> # មើល Runtime logs
+vercel promote <url>        # ដំឡើង Preview ទៅ Production
+vercel rollback             # ត្រឡប់ទៅ Production មុន
+vercel domains add kafe.com # បន្ថែម Domain
+vercel install neon         # ដំឡើង Database ពី Marketplace (ឧ. Neon Postgres)
+</script>
+</section>
+
+<section id="elements">
+  <h2>៣. ធាតុនីមួយៗរបស់ Vercel</h2>
+  <table>
+    <tr><th>ធាតុ</th><th>ពន្យល់</th></tr>
+    <tr><td><b>Account / Team</b></td><td>គណនីផ្ទាល់ខ្លួន (Hobby) ឬក្រុម (Pro/Enterprise)</td></tr>
+    <tr><td><b>Project</b></td><td>គម្រោងមួយ = Repository មួយ (ឬ Folder មួយក្នុង Monorepo — <b>Root Directory</b>)</td></tr>
+    <tr><td><b>Deployment</b></td><td>កំណែមួយនៃ Website ដែលមិនអាចប្តូរ (Immutable) មាន URL ផ្ទាល់ខ្លួន</td></tr>
+    <tr><td><b>Production</b> vs <b>Preview</b></td><td>Branch <code class="i">main</code> → Production (Domain ពិត) · Branch/PR ផ្សេង → Preview URL</td></tr>
+    <tr><td><b>Build</b></td><td><b>Framework preset</b> + Install Command + Build Command + <b>Output Directory</b> (ឧ. Vite → <code class="i">dist</code>)</td></tr>
+    <tr><td><b>CDN</b></td><td>File ស្តាទិក (HTML/CSS/JS/រូប) ចែកចាយពីទីតាំងជិតអ្នកប្រើ</td></tr>
+    <tr><td><b>Vercel Functions</b></td><td>កូដ Backend (Node.js, Python…) រត់ពេលមាន Request · ប្រើ <b>Fluid compute</b> (Scale ដោយខ្លួនឯង)</td></tr>
+    <tr><td><b>Environment Variables</b></td><td>Secret/Config សម្រាប់ Development, Preview, Production</td></tr>
+    <tr><td><b>vercel.json</b></td><td>Config៖ rewrites, redirects, headers, crons, functions</td></tr>
+    <tr><td><b>Domains</b></td><td><code class="i">*.vercel.app</code> ឥតគិតថ្លៃ ឬ Domain ផ្ទាល់ខ្លួន + HTTPS ស្វ័យប្រវត្តិ</td></tr>
+    <tr><td><b>Storage</b></td><td><b>Blob</b> (File), <b>Global Config</b> (Feature flags), <b>Marketplace</b> (Neon Postgres, Upstash Redis…)</td></tr>
+    <tr><td><b>Logs & Observability</b></td><td>Build logs, Runtime logs, Analytics, Speed Insights</td></tr>
+    <tr><td><b>Instant Rollback</b></td><td>ត្រឡប់ទៅ Deployment មុនក្នុងពេលភ្លាម</td></tr>
+    <tr><td><b>Firewall / Deployment Protection</b></td><td>ការពារ DDoS, WAF rules, បិទ Preview សម្រាប់តែក្រុម</td></tr>
+    <tr><td><b>Cron Jobs</b></td><td>ហៅ Function តាមកាលវិភាគ</td></tr>
+  </table>
+  <h3>Git → Vercel Workflow</h3>
+  <script type="text/x-code" data-lang="txt" data-label="Flow">
+ git push (branch feature/menu)  ──▶  Vercel Build  ──▶  Preview URL   kafe-git-feature-menu-you.vercel.app
+                                                          │  Review / Comment / Test
+ Merge Pull Request → main       ──▶  Vercel Build  ──▶  Production    kafe.vercel.app  (ឬ kafe.com)
+                                                          │  បញ្ហា? → Instant Rollback ⏪
+</script>
+</section>
+
+<!-- NAV: ផ្នែកទី ២ – មេរៀន -->
+<section id="l1">
+  <h2><span class="badge">មេរៀន ១</span>Deploy Website ស្តាទិកដំបូង (HTML)</h2>
+  <p>ឧទាហរណ៍៖ ដាក់វគ្គរៀន HTML ទាំងអស់ដែលអ្នកមាន (NodeJS-Course-Khmer.html, SQL-Course-Khmer.html…) ជា Website តែមួយ។</p>
+  <script type="text/x-code" data-lang="txt" data-label="រចនាសម្ព័ន្ធ Folder">
+khmer-courses/
+├── index.html                 ← ទំព័រដើម (បញ្ជីវគ្គ)
+├── NodeJS-Course-Khmer.html
+├── SQL-Course-Khmer.html
+├── React-RESTAPI-Course-Khmer.html
+└── vercel.json                ← (ជម្រើស) cleanUrls
+</script>
+  <h3>វិធី ១: Vercel CLI</h3>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+cd khmer-courses
+vercel
+# ? Set up and deploy "khmer-courses"? yes
+# ? Which scope? your-name
+# ? Link to existing project? no
+# ? What's your project's name? khmer-courses
+# ? In which directory is your code located? ./
+# 🔍 Preview: https://khmer-courses-abc123-you.vercel.app
+vercel --prod
+# ✅ Production: https://khmer-courses.vercel.app
+</script>
+  <h3>វិធី ២: GitHub (ណែនាំ)</h3>
+  <ol class="steps">
+    <li>Push Folder ទៅ GitHub Repository</li>
+    <li>Vercel Dashboard → <b>Add New… → Project</b> → <b>Import</b> Repository</li>
+    <li>Framework Preset៖ <b>Other</b> · Build Command៖ ទទេ · Output Directory៖ <code class="i">.</code> (Root)</li>
+    <li>ចុច <b>Deploy</b> → រាល់ពេល <code class="i">git push</code> ទៅ main = Deploy ថ្មីដោយស្វ័យប្រវត្តិ</li>
+  </ol>
+  <script type="text/x-code" data-lang="json" data-label="vercel.json">
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true
+}
+</script>
+  <p><code class="i">cleanUrls</code>៖ <code class="i">/SQL-Course-Khmer.html</code> → <code class="i">/SQL-Course-Khmer</code> (ស្អាតជាង)។</p>
+  <div class="ex"><h4>✍️ លំហាត់ ១</h4>
+    <p>សរសេរ <code class="i">index.html</code> សាមញ្ញ ដែលមាន Link ទៅវគ្គ ៣ ហើយពន្យល់ថាហេតុអ្វី Link គួរសរសេរ <code class="i">/SQL-Course-Khmer</code> មិនមែន <code class="i">SQL-Course-Khmer.html</code> ពេលបើក cleanUrls។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="html" data-label="index.html" data-demo>
+<style>
+  body { max-width:560px; margin:auto; padding:16px; }
+  a { display:block; padding:12px 16px; margin:8px 0; border:1px solid #e5e5e5; border-radius:10px; color:#111; text-decoration:none; }
+  a:hover { border-color:#111; }
+</style>
+<h1>📚 វគ្គរៀនជាភាសាខ្មែរ</h1>
+<a href="/NodeJS-Course-Khmer">🟢 Node.js</a>
+<a href="/SQL-Course-Khmer">🗄️ SQL</a>
+<a href="/React-RESTAPI-Course-Khmer">⚛️ React + REST API</a>
+</script>
+      <p>ពេល <code class="i">cleanUrls: true</code> Vercel Redirect <code class="i">.html</code> → URL គ្មាន .html (308)។ Link ផ្ទាល់ទៅ URL ស្អាត ជៀសវាង Redirect មួយជុំ ហើយ URL ស្របគ្នា (ល្អសម្រាប់ SEO)។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l2">
+  <h2><span class="badge">មេរៀន ២</span>Git Workflow: Preview & Production Deployments</h2>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+git checkout -b feature/dark-mode
+# ... កែកូដ ...
+git add . && git commit -m "Add dark mode"
+git push -u origin feature/dark-mode
+# → Vercel Bot comment លើ Pull Request៖ ✅ Preview: https://kafe-git-feature-dark-mode-you.vercel.app
+# → Review លើ Preview (ក្រុម/អតិថិជនអាច Comment លើទំព័រ)
+# → Merge PR ទៅ main → Production Deploy ដោយស្វ័យប្រវត្តិ
+</script>
+  <ul>
+    <li><b>Deployment ជា Immutable៖</b> URL នីមួយៗរក្សាកំណែនោះជារៀងរហូត (ដរាបណាមិនលុប)</li>
+    <li><b>Production Branch</b> (Settings → Git)៖ ជាធម្មតា <code class="i">main</code></li>
+    <li><b>Ignored Build Step</b>៖ រំលង Build ពេលប្តូរតែ Folder ដែលមិនពាក់ព័ន្ធ (Monorepo)</li>
+    <li><b>Deployment Protection</b>៖ Preview តម្រូវឱ្យ Login Vercel (Vercel Authentication) — កុំឱ្យសាធារណៈឃើញ</li>
+  </ul>
+  <div class="ex"><h4>✍️ លំហាត់ ២</h4>
+    <p>ក្រុមអ្នកមាន ៣ Branch៖ <code class="i">main</code>, <code class="i">develop</code>, <code class="i">feature/cart</code>។ ចង់ឱ្យ develop មាន URL ថេរ «staging» សម្រាប់អតិថិជនសាក។ ធ្វើដូចម្តេច?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p>Project → Settings → <b>Domains</b> → Add <code class="i">staging.kafe.com</code> (ឬ <code class="i">kafe-staging.vercel.app</code>) → ជ្រើស <b>Git Branch: develop</b>។ រាល់ Push ទៅ develop → Domain staging បង្ហាញកំណែថ្មីបំផុត។ ដាក់ Environment variables «Preview» សម្រាប់ Branch develop (ឧ. Database staging)។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l3">
+  <h2><span class="badge">មេរៀន ៣</span>Deploy React (Vite) + SPA Routing</h2>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+npm create vite@latest kafe-web -- --template react
+cd kafe-web && npm install
+npm run build          # សាក Build ក្នុងកុំព្យូទ័រមុន → dist/
+vercel                 # Vercel ស្គាល់ Vite ដោយខ្លួនឯង
+</script>
+  <table>
+    <tr><th>Setting</th><th>Vite (React)</th><th>Next.js</th></tr>
+    <tr><td>Framework Preset</td><td>Vite</td><td>Next.js</td></tr>
+    <tr><td>Build Command</td><td><code class="i">npm run build</code></td><td><code class="i">next build</code></td></tr>
+    <tr><td>Output Directory</td><td><code class="i">dist</code></td><td>(ស្វ័យប្រវត្តិ)</td></tr>
+    <tr><td>Install Command</td><td>npm / pnpm / yarn / bun ស្គាល់ពី Lock file</td><td>ដូចគ្នា</td></tr>
+  </table>
+  <h3>SPA + React Router: ការពារ 404 ពេល Refresh</h3>
+  <p>React Router បង្កើតទំព័រ <code class="i">/products/5</code> ក្នុង Browser ប៉ុន្តែគ្មាន File នោះលើ Server។ ពេល Refresh → <b>404</b>។ ដោះស្រាយដោយ <b>Rewrite</b> គ្រប់ Path ទៅ <code class="i">index.html</code>៖</p>
+  <script type="text/x-code" data-lang="json" data-label="kafe-web/vercel.json">
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
+</script>
+  <div class="note">💡 Rewrite អនុវត្តតែពេល <b>គ្មាន File ពិត</b> ត្រូវនឹង Path ប៉ុណ្ណោះ — <code class="i">/assets/index-abc.js</code> នៅតែបម្រើ File JS ធម្មតា។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៣</h4>
+    <p>Build បរាជ័យលើ Vercel ជាមួយ «Error: Could not resolve "./components/Header"» ប៉ុន្តែដំណើរការក្នុង Windows ធម្មតា។ File ពិតឈ្មោះ <code class="i">header.jsx</code>។ មូលហេតុ?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p>Vercel Build លើ <b>Linux</b> ដែលបែងចែក <b>អក្សរធំ/តូច</b> (Case-sensitive)។ Windows/macOS មិនបែងចែក។ កែ៖ ប្តូរឈ្មោះ File ជា <code class="i">Header.jsx</code> (ប្រើ <code class="i">git mv header.jsx Header.jsx</code> ដើម្បីឱ្យ Git ដឹង) ឬកែ Import ឱ្យត្រូវ។ ទម្លាប់ល្អ៖ រត់ <code class="i">npm run build</code> មុន Push។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l4">
+  <h2><span class="badge">មេរៀន ៤</span>Environment Variables</h2>
+  <table>
+    <tr><th>Environment</th><th>ប្រើពេល</th></tr>
+    <tr><td><b>Production</b></td><td>Deploy ពី main (Domain ពិត)</td></tr>
+    <tr><td><b>Preview</b></td><td>Branch/PR ផ្សេង (អាចកំណត់តាម Branch)</td></tr>
+    <tr><td><b>Development</b></td><td><code class="i">vercel dev</code> / <code class="i">vercel env pull</code> ក្នុងកុំព្យូទ័រ</td></tr>
+  </table>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+vercel env add JWT_SECRET production        # វាយតម្លៃ (Secret មិនបង្ហាញ)
+vercel env add VITE_API_URL production      # https://kafe-api.vercel.app/api
+vercel env ls
+vercel env pull .env.local                   # ទាញមក Dev (ដាក់ .env.local ក្នុង .gitignore!)
+# ⚠ ប្តូរ Env រួច → ត្រូវ Redeploy ទើបមានផល
+</script>
+  <div class="warn">⚠️ <b>Frontend (Vite)៖</b> តែ Variable ដែលមាន Prefix <code class="i">VITE_</code> ទើបចូលក្នុង JavaScript របស់ Browser — ហើយ <b>អ្នកណាក៏មើលឃើញ</b>។ កុំដាក់ Secret (JWT_SECRET, Database password, API key ឯកជន) ក្នុង <code class="i">VITE_*</code>។ Secret ដាក់តែក្នុង Functions/Backend។</div>
+  <script type="text/x-code" data-lang="js" data-label="src/api/client.js (React)">
+// Dev: ប្រើ Vite proxy "/api" · Production: URL ពី Env
+const API = import.meta.env.VITE_API_URL || "/api";
+export const api = (path, opts) => fetch(API + path, opts).then(r => r.json());
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ៤</h4>
+    <p>ចាត់ថ្នាក់ Variable ខាងក្រោម៖ ដាក់ Frontend (VITE_) ឬ Backend តែប៉ុណ្ណោះ? <code class="i">API_URL</code>, <code class="i">DATABASE_URL</code>, <code class="i">JWT_SECRET</code>, <code class="i">GOOGLE_MAPS_PUBLIC_KEY</code>, <code class="i">STRIPE_SECRET_KEY</code>, <code class="i">APP_NAME</code>។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <table>
+        <tr><th>Frontend (<code class="i">VITE_</code>)</th><th>Backend តែប៉ុណ្ណោះ</th></tr>
+        <tr><td>VITE_API_URL, VITE_GOOGLE_MAPS_PUBLIC_KEY (កំណត់ Domain restriction), VITE_APP_NAME</td><td>DATABASE_URL, JWT_SECRET, STRIPE_SECRET_KEY</td></tr>
+      </table>
+    </details>
+  </div>
+</section>
+
+<section id="l5">
+  <h2><span class="badge">មេរៀន ៥</span>Vercel Functions: API ក្នុង Folder <code class="i">api/</code></h2>
+  <p>File ក្នុង Folder <code class="i">api/</code> ក្លាយជា Endpoint ដោយស្វ័យប្រវត្តិ៖ <code class="i">api/hello.js</code> → <code class="i">/api/hello</code>។ Functions ប្រើ Web standard <code class="i">Request</code> / <code class="i">Response</code>។</p>
+  <script type="text/x-code" data-lang="js" data-label="api/hello.js → GET /api/hello?name=Dara">
+export function GET(request) {
+  const url = new URL(request.url);
+  const name = url.searchParams.get("name") || "ពិភពលោក";
+  return Response.json({ message: `សួស្តី ${name}!`, time: new Date().toISOString() });
+}
+</script>
+  <script type="text/x-code" data-lang="js" data-label="api/products/[id].js → GET /api/products/7 (Dynamic route)">
+const PRODUCTS = { 1: { id: 1, name: "Latte", price: 2.5 }, 7: { id: 7, name: "Croissant", price: 1.5 } };
+
+export function GET(request) {
+  const id = new URL(request.url).pathname.split("/").pop();
+  const p = PRODUCTS[id];
+  return p ? Response.json(p) : Response.json({ error: { message: "រកមិនឃើញ" } }, { status: 404 });
+}
+
+export async function POST(request) {
+  const body = await request.json();
+  return Response.json({ received: body }, { status: 201 });
+}
+</script>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+vercel dev                                  # http://localhost:3000/api/hello?name=Dara
+curl http://localhost:3000/api/products/7    # {"id":7,"name":"Croissant","price":1.5}
+</script>
+  <ul>
+    <li><b>Fluid compute</b> (Default)៖ Instance មួយទទួល Request ច្រើនព្រមគ្នា, កាត់បន្ថយ Cold start, គិតប្រាក់តាម <b>Active CPU</b></li>
+    <li><b>Stateless</b>៖ កុំទុកទិន្នន័យក្នុង Variable/File ក្នុង Function — វាអាចបាត់ពេលណាក៏បាន → ប្រើ Database</li>
+    <li>Max duration (Hobby)៖ <b>300 វិនាទី</b> · ភាសា៖ Node.js, Python, Go, Ruby, Bun…</li>
+  </ul>
+  <div class="ex"><h4>✍️ លំហាត់ ៥</h4>
+    <p>សរសេរ Function <code class="i">api/convert.js</code>៖ <code class="i">GET /api/convert?usd=10</code> → <code class="i">{ usd: 10, khr: 41000 }</code> ហើយ 400 បើ usd មិនត្រឹមត្រូវ។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="js" data-label="api/convert.js">
+export function GET(request) {
+  const usd = Number(new URL(request.url).searchParams.get("usd"));
+  if (!(usd > 0)) return Response.json({ error: { message: "usd ត្រូវជាលេខ > 0" } }, { status: 400 });
+  return Response.json({ usd, rate: 4100, khr: usd * 4100 });
+}
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l6">
+  <h2><span class="badge">មេរៀន ៦</span>Deploy Express API (Zero config)</h2>
+  <p>Vercel ស្គាល់ Express ដោយខ្លួនឯង បើមាន File <code class="i">app.js</code>, <code class="i">index.js</code>, <code class="i">server.js</code> (ឬក្នុង <code class="i">src/</code>) ដែល import express ហើយ <b>export default app</b> (ឬប្រើ <code class="i">app.listen</code>)។ Express App ទាំងមូលក្លាយជា <b>Vercel Function មួយ</b>។</p>
+  <script type="text/x-code" data-lang="js" data-label="server/src/index.js">
+import express from "express";
+import cors from "cors";
+
+const app = express();
+app.use(cors({ origin: process.env.CLIENT_URL }));
+app.use(express.json());
+
+app.get("/api/health", (req, res) => res.json({ ok: true, region: process.env.VERCEL_REGION }));
+app.get("/api/products", (req, res) => res.json({ data: [{ id: 1, name: "Latte" }] }));
+
+// Error handler ច្បាស់លាស់ (សំខាន់លើ Serverless)
+app.use((err, req, res, next) => res.status(err.status || 500).json({ error: { message: err.message } }));
+
+export default app;          // ✅ Vercel ប្រើ default export
+</script>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+cd server
+vercel dev                   # សាកក្នុងកុំព្យូទ័រ
+vercel --prod                # → https://kafe-api.vercel.app/api/health
+</script>
+  <table>
+    <tr><th>ចំណុចត្រូវចាំ</th><th>មូលហេតុ</th></tr>
+    <tr><td><code class="i">express.static()</code> មិនដំណើរការ</td><td>ដាក់ File ស្តាទិកក្នុង <code class="i">public/</code> → Vercel CDN បម្រើ</td></tr>
+    <tr><td>កុំប្រើ SQLite File / ទុក File លើ Disk</td><td>Function គ្មាន Disk អចិន្ត្រៃយ៍ → ប្រើ Postgres (Neon) ឬ Blob</td></tr>
+    <tr><td>WebSocket ដែលភ្ជាប់យូរ</td><td>មិនសមស្រប → ប្រើ Pusher/Ably ឬ Server ជានិច្ច (Render/Fly)</td></tr>
+    <tr><td>Bundle ≤ 250MB</td><td>ដែនកំណត់ Function</td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ៦</h4>
+    <p>API Kafe (វគ្គ React + REST API) ប្រើ <code class="i">node:sqlite</code> File <code class="i">kafe.db</code>។ Deploy លើ Vercel ហើយ POST បានជោគជ័យ ប៉ុន្តែ ៥ នាទីក្រោយ ទិន្នន័យថ្មីបាត់។ ហេតុអ្វី? ដោះស្រាយដូចម្តេច?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p>Function រត់លើ Instance បណ្តោះអាសន្ន — File ដែលសរសេរ (kafe.db) មិនរក្សាទុកជាប់ ហើយ Instance ផ្សេងៗមិនចែក File គ្នា។ ដោះស្រាយ៖ ប្តូរទៅ <b>Database ក្រៅ</b> ដូចជា <b>Neon Postgres</b> (<code class="i">vercel install neon</code> → <code class="i">DATABASE_URL</code>) ឬ Turso (SQLite លើ Cloud)។ មើលផ្នែកអាជីព។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l7">
+  <h2><span class="badge">មេរៀន ៧</span>vercel.json: Rewrites, Redirects, Headers</h2>
+  <script type="text/x-code" data-lang="json" data-label="vercel.json">
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/menu", "destination": "/products", "permanent": true },
+    { "source": "/blog/:slug", "destination": "https://blog.kafe.com/:slug", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://kafe-api.vercel.app/api/:path*" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ]
+}
+</script>
+  <table>
+    <tr><th></th><th>Redirect</th><th>Rewrite</th></tr>
+    <tr><td>URL ក្នុង Browser</td><td>ប្តូរ (308/307)</td><td>មិនប្តូរ</td></tr>
+    <tr><td>ប្រើពេល</td><td>ប្តូរ URL ចាស់ → ថ្មី (SEO)</td><td>SPA, Proxy API (គ្មាន CORS)</td></tr>
+  </table>
+  <p>👉 សាក <b>Rewrite/Redirect Tester</b> ក្នុង Simulator ផ្នែកអាជីព។</p>
+  <div class="ex"><h4>✍️ លំហាត់ ៧</h4>
+    <p>Frontend នៅ <code class="i">kafe.vercel.app</code> ហើយ API នៅ <code class="i">kafe-api.vercel.app</code>។ ចង់ឱ្យ React ហៅ <code class="i">/api/products</code> (Domain ដដែល) ដើម្បីកុំមានបញ្ហា CORS។ សរសេរ vercel.json របស់ Frontend។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="json" data-label="Answer">
+{
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://kafe-api.vercel.app/api/:path*" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
+</script>
+      <p>លំដាប់សំខាន់៖ Rule <code class="i">/api/</code> ត្រូវនៅមុន Rule SPA <code class="i">/(.*)</code>។ Browser ឃើញតែ Domain តែមួយ → មិនមែន Cross-origin។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l8">
+  <h2><span class="badge">មេរៀន ៨</span>Custom Domain & DNS</h2>
+  <ol class="steps">
+    <li>ទិញ Domain (ឧ. Namecheap, Cloudflare, ឬ Vercel Domains)</li>
+    <li>Project → Settings → <b>Domains</b> → Add <code class="i">kafe.com</code> និង <code class="i">www.kafe.com</code></li>
+    <li>Vercel បង្ហាញ DNS Records ដែលត្រូវដាក់ — <b>ចម្លងតម្លៃពី Dashboard</b> (ឧទាហរណ៍ធម្មតា៖ <code class="i">A @ 76.76.21.21</code> និង <code class="i">CNAME www cname.vercel-dns.com</code>)</li>
+    <li>ដាក់ Records នៅអ្នកផ្តល់ Domain → រង់ចាំ DNS (ពីប៉ុន្មាននាទី ដល់ ៤៨ ម៉ោង)</li>
+    <li>Vercel ចេញ <b>SSL (HTTPS)</b> ដោយស្វ័យប្រវត្តិ · កំណត់ Redirect <code class="i">www</code> → apex (ឬផ្ទុយ)</li>
+  </ol>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+vercel domains add kafe.com
+vercel domains inspect kafe.com      # ពិនិត្យស្ថានភាព DNS
+nslookup kafe.com                     # ពិនិត្យ IP
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ៨</h4>
+    <p>ចង់ដាក់ API នៅ <code class="i">api.kafe.com</code> (Project ផ្សេង) និង Frontend នៅ <code class="i">kafe.com</code>។ ត្រូវដាក់ DNS និង Domain យ៉ាងដូចម្តេច?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ul>
+        <li>Project <b>kafe-web</b> → Domains៖ <code class="i">kafe.com</code> (+ www) → DNS៖ A record សម្រាប់ apex តាម Dashboard</li>
+        <li>Project <b>kafe-api</b> → Domains៖ <code class="i">api.kafe.com</code> → DNS៖ <b>CNAME</b> <code class="i">api</code> → តម្លៃដែល Vercel បង្ហាញ</li>
+        <li>API Env៖ <code class="i">CLIENT_URL=https://kafe.com</code> (CORS) · Web Env៖ <code class="i">VITE_API_URL=https://api.kafe.com/api</code> → Redeploy ទាំងពីរ</li>
+      </ul>
+    </details>
+  </div>
+</section>
+
+<section id="l9">
+  <h2><span class="badge">មេរៀន ៩</span>Storage: Postgres (Neon), Blob, Global Config</h2>
+  <table>
+    <tr><th>ត្រូវការ</th><th>ប្រើ</th></tr>
+    <tr><td>Database (តារាង, SQL)</td><td><b>Marketplace</b>៖ Neon (Postgres), Supabase, Turso… → <code class="i">vercel install neon</code></td></tr>
+    <tr><td>Cache / Rate limit / Session</td><td>Marketplace៖ Upstash Redis</td></tr>
+    <tr><td>File (រូប Upload, PDF)</td><td><b>Vercel Blob</b></td></tr>
+    <tr><td>Feature flags / Config អានលឿន</td><td><b>Global Config</b></td></tr>
+  </table>
+  <script type="text/x-code" data-lang="js" data-label="Neon Postgres (npm i @neondatabase/serverless)">
+import { neon } from "@neondatabase/serverless";
+const sql = neon(process.env.DATABASE_URL);        // DATABASE_URL ដាក់ដោយ Marketplace
+
+export async function GET(request) {
+  const search = new URL(request.url).searchParams.get("search") || "";
+  // Tagged template = Parameterized query (ការពារ SQL injection)
+  const rows = await sql`SELECT id, name, price FROM products WHERE name ILIKE ${"%" + search + "%"} ORDER BY id LIMIT 20`;
+  return Response.json({ data: rows });
+}
+</script>
+  <script type="text/x-code" data-lang="js" data-label="Vercel Blob: Upload រូប (npm i @vercel/blob)">
+import { put } from "@vercel/blob";               // ប្រើ BLOB_READ_WRITE_TOKEN ពី Env
+
+export async function POST(request) {
+  const form = await request.formData();
+  const file = form.get("image");
+  if (!file || !file.type.startsWith("image/")) return Response.json({ error: { message: "ត្រូវការរូបភាព" } }, { status: 422 });
+  const blob = await put(`products/${Date.now()}-${file.name}`, file, { access: "public" });
+  return Response.json({ url: blob.url }, { status: 201 });
+}
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ៩</h4>
+    <p>បំប្លែង Query SQLite នេះទៅ Neon (Postgres)៖ <code class="i">db.prepare("SELECT * FROM products WHERE id = ?").get(id)</code>។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="js" data-label="Answer">
+const [row] = await sql`SELECT * FROM products WHERE id = ${Number(id)}`;
+if (!row) throw new HttpError(404, "រកមិនឃើញផលិតផល");
+// ចំណាំ: Neon ជា async (await) · SQLite node:sqlite ជា sync
+// INSERT ... RETURNING * ដើម្បីបាន Row ថ្មីភ្លាម (ជំនួស lastInsertRowid)
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l10">
+  <h2><span class="badge">មេរៀន ១០</span>Cron Jobs, Logs, Analytics & Speed Insights</h2>
+  <script type="text/x-code" data-lang="json" data-label="vercel.json — Cron">
+{
+  "crons": [
+    { "path": "/api/cron/daily-report", "schedule": "0 1 * * *" }
+  ]
+}
+</script>
+  <script type="text/x-code" data-lang="js" data-label="api/cron/daily-report.js">
+export async function GET(request) {
+  // ការពារ៖ មានតែ Vercel Cron (ផ្ញើ CRON_SECRET) ទើបហៅបាន
+  if (request.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+  console.log("📊 Daily report", new Date().toISOString());   // ឃើញក្នុង Runtime Logs
+  // ... គណនាចំណូលម្សិលមិញ ហើយផ្ញើ Telegram/Email ...
+  return Response.json({ ok: true });
+}
+</script>
+  <div class="note">💡 Cron ប្រើម៉ោង <b>UTC</b>៖ <code class="i">0 1 * * *</code> = 01:00 UTC = <b>08:00 ព្រឹកនៅកម្ពុជា</b> (UTC+7)។ Hobby plan មានដែនកំណត់ចំនួន និងភាពញឹកញាប់ Cron — ពិនិត្យ Docs ។</div>
+  <script type="text/x-code" data-lang="jsx" data-label="Analytics + Speed Insights ក្នុង React (npm i @vercel/analytics @vercel/speed-insights)">
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
+
+export default function App() {
+  return (
+    <>
+      <Routes />
+      <Analytics />          {/* ចំនួនអ្នកចូល ទំព័រពេញនិយម */}
+      <SpeedInsights />      {/* ល្បឿនពិត (Core Web Vitals) */}
+    </>
+  );
+}
+</script>
+  <ul>
+    <li><b>Build Logs</b>៖ Deployment → Building (មើល Error ពេល Build បរាជ័យ)</li>
+    <li><b>Runtime Logs</b>៖ Project → Logs (console.log/console.error ពី Functions) · Hobby រក្សា <b>1 ម៉ោង</b></li>
+    <li><b>Observability</b>៖ ពេល Response, Error rate តាម Route</li>
+  </ul>
+  <div class="ex"><h4>✍️ លំហាត់ ១០</h4>
+    <p>សរសេរ Cron schedule ៖ (ក) រៀងរាល់ថ្ងៃច័ន្ទ ម៉ោង 7:00 ព្រឹក ម៉ោងកម្ពុជា (ខ) ថ្ងៃទី 1 រៀងរាល់ខែ ម៉ោង 00:00 UTC។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash" data-label="Answer">
+# (ក) 07:00 ICT = 00:00 UTC ថ្ងៃច័ន្ទ  →  minute hour day month weekday
+0 0 * * 1
+# (ខ)
+0 0 1 * *
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l11">
+  <h2><span class="badge">មេរៀន ១១</span>Rollback, Security & Limits</h2>
+  <ul>
+    <li><b>Instant Rollback</b>៖ Deployments → ជ្រើស Production មុន → <b>Instant Rollback</b> (ឬ <code class="i">vercel rollback</code>) — ភ្លាមៗ ព្រោះ Deployment ចាស់នៅមានស្រាប់</li>
+    <li><b>Promote</b>៖ យក Preview ដែល Test រួច → Production (<code class="i">vercel promote &lt;url&gt;</code>)</li>
+    <li><b>Deployment Protection</b>៖ Vercel Authentication លើ Preview</li>
+    <li><b>Firewall</b>៖ DDoS mitigation (Default), WAF custom rules, IP blocking, Attack Mode</li>
+    <li><b>Secrets</b>៖ តែក្នុង Environment Variables · Rotate ពេលលេចធ្លាយ</li>
+  </ul>
+  <h3>Hobby (ឥតគិតថ្លៃ) — ដែនកំណត់សំខាន់ៗ</h3>
+  <table>
+    <tr><th>ធនធាន</th><th>Hobby (ក្នុងមួយខែ)</th></tr>
+    <tr><td>ការប្រើប្រាស់</td><td><b>តែផ្ទាល់ខ្លួន មិនមែនពាណិជ្ជកម្ម</b> (Non-commercial)</td></tr>
+    <tr><td>Fast Data Transfer</td><td>100 GB</td></tr>
+    <tr><td>Function Invocations</td><td>1,000,000</td></tr>
+    <tr><td>Active CPU</td><td>4 CPU-hours</td></tr>
+    <tr><td>Function max duration</td><td>300 វិនាទី</td></tr>
+    <tr><td>Deployments / ថ្ងៃ</td><td>100</td></tr>
+    <tr><td>Projects</td><td>200</td></tr>
+    <tr><td>Runtime Logs</td><td>1 ម៉ោង</td></tr>
+  </table>
+  <p>ប្រើលើសកម្រិត Hobby → ត្រូវរង់ចាំ ៣០ ថ្ងៃ ឬដំឡើងទៅ <b>Pro</b> ($20/អ្នកអភិវឌ្ឍន៍/ខែ)។ តួលេខអាចប្តូរ — ពិនិត្យ vercel.com/docs/plans/hobby ។</p>
+  <div class="ex"><h4>✍️ លំហាត់ ១១</h4>
+    <p>ម៉ោង 9 យប់ Deploy ថ្មីធ្វើឱ្យ Checkout ខូច។ សរសេរជំហាន ៤ ដើម្បីដោះស្រាយដោយមិនប៉ះពាល់អតិថិជនយូរ។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ol>
+        <li><b>Instant Rollback</b> ទៅ Production មុនភ្លាម (វិនាទី)</li>
+        <li>មើល <b>Runtime Logs</b> / Build logs របស់ Deployment ខូច ដើម្បីរកមូលហេតុ</li>
+        <li>កែនៅ Branch ថ្មី → Push → សាកលើ <b>Preview URL</b></li>
+        <li>Merge (ឬ <b>Promote</b> Preview) → Production · បន្ថែម Test ការពារកុំឱ្យកើតម្តងទៀត</li>
+      </ol>
+    </details>
+  </div>
+</section>
+
+<section id="l12">
+  <h2><span class="badge">មេរៀន ១២</span>Next.js, v0 & AI SDK (ទិដ្ឋភាពទូទៅ)</h2>
+  <ul>
+    <li><b>Next.js</b>៖ Framework React ពី Vercel — Frontend + Backend ក្នុងគម្រោងតែមួយ (Server Components, Route Handlers <code class="i">app/api/*/route.js</code>, Server Actions)</li>
+    <li><b>v0</b>៖ AI បង្កើត UI/App ពីការពិពណ៌នា ហើយ Deploy ទៅ Vercel</li>
+    <li><b>AI SDK</b>៖ បណ្ណាល័យ JavaScript/TypeScript សម្រាប់ Chat, Streaming ជាមួយ AI models ផ្សេងៗ</li>
+  </ul>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+npx create-next-app@latest kafe-next
+cd kafe-next && vercel
+</script>
+  <script type="text/x-code" data-lang="js" data-label="Next.js: app/api/products/route.js">
+export async function GET() {
+  return Response.json({ data: [{ id: 1, name: "Latte", price: 2.5 }] });
+}
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១២</h4>
+    <p>ប្រៀបធៀប៖ Kafe ជា <b>Vite + Express (2 Projects)</b> ធៀបនឹង <b>Next.js (1 Project)</b> លើ Vercel។ សរសេរគុណសម្បត្តិ ២ នីមួយៗ។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <table>
+        <tr><th>Vite + Express</th><th>Next.js</th></tr>
+        <tr><td>Backend ដាច់ដោយឡែក ប្រើជាមួយ Mobile App ផ្សេងបានងាយ · Express ផ្លាស់ទៅ Host ណាក៏បាន (Render, VPS)</td><td>Project/Deploy តែមួយ គ្មាន CORS · SEO ល្អ (Server rendering) និងមុខងារ Vercel ពេញលេញ</td></tr>
+      </table>
+    </details>
+  </div>
+</section>
+
+<!-- NAV: ផ្នែកទី ៣ – កម្រិតអាជីព -->
+<section class="hero" id="pro">
+  <h2>🏆 គម្រោងអាជីព: Deploy Kafe Admin (React + REST API) លើ Vercel</h2>
+  <p>យកគម្រោង Full-stack ពីវគ្គ React + REST API ទៅ Production៖ <b>Monorepo</b> មួយ → <b>Project ២</b> (Web + API), Database <b>Neon Postgres</b>, Environment variables, Rewrites, Custom domain, <b>GitHub Actions</b> រត់ Test, Preview deployments, Cron និង Rollback។ ខាងក្រោមមាន <b>Vercel Simulator</b> ចុចសាកបាន។</p>
+</section>
+
+<section id="pro-arch">
+  <h2>🧭 Architecture</h2>
+  <script type="text/x-code" data-lang="txt" data-label="Production">
+                        ┌────────────────────────────── Vercel ──────────────────────────────┐
+  អ្នកប្រើ ──HTTPS──▶  │  kafe.com          Project: kafe-web   (client/, Vite → CDN)         │
+                        │     │  /api/* rewrite                                                │
+                        │     ▼                                                                │
+                        │  api.kafe.com      Project: kafe-api   (server/, Express → Function) │
+                        └─────┬──────────────────────────────────────────────────────────────┘
+                              │ DATABASE_URL (TLS)
+                              ▼
+                        Neon Postgres (Marketplace)        GitHub: push → Test (Actions) → Deploy
+</script>
+  <table>
+    <tr><th></th><th>kafe-web</th><th>kafe-api</th></tr>
+    <tr><td>Root Directory</td><td><code class="i">client</code></td><td><code class="i">server</code></td></tr>
+    <tr><td>Framework</td><td>Vite</td><td>Express (auto)</td></tr>
+    <tr><td>Env (Production)</td><td><code class="i">VITE_API_URL=/api</code></td><td><code class="i">DATABASE_URL</code>, <code class="i">JWT_SECRET</code>, <code class="i">CLIENT_URL=https://kafe.com</code>, <code class="i">CRON_SECRET</code></td></tr>
+    <tr><td>Domain</td><td>kafe.com, www</td><td>api.kafe.com</td></tr>
+  </table>
+</section>
+
+<section id="pro-steps">
+  <h2>🛠️ ជំហាន Deploy</h2>
+  <h3>1) កែ API ពី SQLite → Neon Postgres</h3>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal (server/)">
+npm install @neondatabase/serverless
+vercel link                     # ភ្ជាប់ទៅ Project kafe-api
+vercel install neon             # បង្កើត Database + ដាក់ DATABASE_URL ដោយស្វ័យប្រវត្តិ
+vercel env pull .env.local
+</script>
+  <script type="text/x-code" data-lang="js" data-label="server/src/db.js (Postgres)">
+import { neon } from "@neondatabase/serverless";
+export const sql = neon(process.env.DATABASE_URL);
+
+// រត់ម្តង (Migration) — ឧ. node scripts/migrate.js ឬក្នុង Neon SQL Editor
+export const schema = `
+  CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY, name TEXT NOT NULL, email TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL, role TEXT NOT NULL DEFAULT 'staff');
+  CREATE TABLE IF NOT EXISTS products (
+    id SERIAL PRIMARY KEY, name TEXT NOT NULL,
+    category TEXT NOT NULL CHECK (category IN ('coffee','tea','bakery')),
+    price NUMERIC(10,2) NOT NULL CHECK (price > 0),
+    stock INTEGER NOT NULL DEFAULT 0, created_at TIMESTAMPTZ DEFAULT now());`;
+</script>
+  <script type="text/x-code" data-lang="js" data-label="server/src/routes/products.js (ផ្នែក)">
+r.get("/:id", async (req, res) => {
+  const [row] = await sql`SELECT * FROM products WHERE id = ${Number(req.params.id)}`;
+  if (!row) throw new HttpError(404, "រកមិនឃើញផលិតផល");
+  res.json({ ...row, price: Number(row.price) });          // NUMERIC → string ក្នុង Postgres
+});
+
+r.post("/", requireAuth, requireRole("admin"), validate(productCreate), async (req, res) => {
+  const { name, category, price, stock } = req.valid.body;
+  const [row] = await sql`INSERT INTO products (name, category, price, stock)
+                          VALUES (${name}, ${category}, ${price}, ${stock}) RETURNING *`;
+  res.status(201).location(`/api/products/${row.id}`).json({ ...row, price: Number(row.price) });
+});
+</script>
+  <h3>2) Entry ពេលលើ Vercel</h3>
+  <script type="text/x-code" data-lang="js" data-label="server/src/index.js">
+import { createApp } from "./app.js";
+const app = createApp();           // គ្មាន app.listen → Vercel ហៅ App ដោយផ្ទាល់
+export default app;
+// Local: node --env-file=.env.local src/dev.js (dev.js: createApp().listen(3000))  ឬ  vercel dev
+</script>
+  <h3>3) Frontend</h3>
+  <script type="text/x-code" data-lang="json" data-label="client/vercel.json">
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://api.kafe.com/api/:path*" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "headers": [
+    { "source": "/assets/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] }
+  ]
+}
+</script>
+  <h3>4) CI: Test មុន Merge (GitHub Actions)</h3>
+  <script type="text/x-code" data-lang="bash" data-label=".github/workflows/test.yml">
+name: test
+on: [pull_request, push]
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: server } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci
+      - run: npm test
+# GitHub → Settings → Branches → Require status check "test" មុន Merge ទៅ main
+</script>
+  <h3>5) Deploy & ពិនិត្យ</h3>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+# Dashboard: Import repo ម្តង 2 ដង → Root Directory: client / server
+vercel env add JWT_SECRET production         # (ក្នុង server/)
+vercel env add CLIENT_URL production         # https://kafe.com
+git push origin main                          # → Deploy ទាំងពីរ
+curl https://api.kafe.com/api/health          # {"ok":true,...}
+</script>
+</section>
+
+<section id="pro-app">
+  <h2>🎮 Vercel Simulator (ចុចសាកបាន)</h2>
+  <p>Tab <b>Deployments</b>៖ Push ទៅ Branch → មើល Build log → Preview URL → Merge/Promote ទៅ Production → Rollback។ Tab <b>vercel.json Tester</b>៖ វាយ Path ហើយមើលថា Rule ណា (Redirect/Rewrite/Headers) ត្រូវអនុវត្ត។ Tab <b>Env</b>៖ មើលថា Variable ណាចូល Browser។</p>
+  <script type="text/x-code" data-lang="html" data-label="Vercel Simulator" data-demo>
+<style>
+  :root { --ink:#171717; --muted:#666; --line:#e5e5e5; --soft:#f5f5f5; --ok:#0a7d33; --err:#d1242f; --blue:#0070f3; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#fafafa; color:var(--ink); font-family:"Kantumruy Pro",system-ui,sans-serif; }
+  .top { display:flex; align-items:center; gap:10px; padding:10px 14px; border-bottom:1px solid var(--line); background:#fff; }
+  .top b { font-size:15px; } .top .tri { font-size:18px; }
+  .tabs { display:flex; gap:2px; padding:0 14px; background:#fff; border-bottom:1px solid var(--line); overflow-x:auto; }
+  .tabs button { border:0; background:none; padding:10px 12px; font:inherit; font-size:14px; color:var(--muted); cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; }
+  .tabs button[aria-selected="true"] { color:var(--ink); border-bottom-color:var(--ink); font-weight:600; }
+  .pane { padding:14px; display:grid; gap:12px; }
+  .pane[hidden] { display:none; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:10px; padding:12px; }
+  .row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  input, select, textarea { font:inherit; font-size:14px; min-height:36px; border:1px solid var(--line); border-radius:6px; padding:0 10px; background:#fff; }
+  textarea { font-family:"JetBrains Mono",monospace; font-size:12px; padding:8px; width:100%; min-height:220px; }
+  button.b { min-height:36px; padding:0 14px; border-radius:6px; border:1px solid var(--ink); background:var(--ink); color:#fff; font:inherit; font-size:14px; cursor:pointer; }
+  button.b.ghost { background:#fff; color:var(--ink); border-color:var(--line); }
+  button.b:disabled { opacity:.4; cursor:not-allowed; }
+  .prod { display:flex; gap:12px; align-items:center; }
+  .shot { width:120px; aspect-ratio:16/10; border-radius:6px; border:1px solid var(--line); display:grid; place-items:center; font-size:12px; text-align:center; padding:4px; }
+  .muted { color:var(--muted); font-size:13px; }
+  .dep { display:grid; grid-template-columns:auto 1fr auto; gap:10px; align-items:center; padding:10px 0; border-top:1px solid var(--line); font-size:13px; }
+  .dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
+  .dot.Ready { background:var(--ok); } .dot.Error { background:var(--err); } .dot.Building, .dot.Queued { background:#f5a623; animation:p 1s infinite; }
+  @keyframes p { 50% { opacity:.3; } }
+  .pill { font-size:11px; padding:1px 8px; border-radius:99px; border:1px solid var(--line); margin-left:6px; }
+  .pill.cur { background:var(--ink); color:#fff; border-color:var(--ink); }
+  code { font-family:"JetBrains Mono",monospace; font-size:12px; }
+  .url { color:var(--blue); word-break:break-all; }
+  .log { background:#0a0a0a; color:#d4d4d4; font:12px/1.6 "JetBrains Mono",monospace; border-radius:8px; padding:10px; min-height:120px; max-height:220px; overflow:auto; white-space:pre-wrap; }
+  .log .e { color:#ff6b6b; } .log .s { color:#5fd38d; } .log .w { color:#f5c26b; }
+  .res { font-size:14px; display:grid; gap:6px; }
+  .step { padding:6px 10px; border-left:3px solid var(--line); background:var(--soft); border-radius:0 6px 6px 0; }
+  .step.hit { border-left-color:var(--blue); background:#eef5ff; }
+  .step.fin { border-left-color:var(--ok); background:#ecf8f0; font-weight:600; }
+  table { border-collapse:collapse; width:100%; font-size:13px; }
+  th, td { border-bottom:1px solid var(--line); padding:6px; text-align:left; } th { color:var(--muted); font-weight:600; }
+  .yes { color:var(--err); font-weight:700; } .no { color:var(--ok); }
+  @media (prefers-reduced-motion: reduce) { .dot { animation:none; } }
+</style>
+
+<div class="top"><span class="tri">▲</span><b>you / kafe-web</b><span class="muted">Hobby</span></div>
+<div class="tabs" role="tablist">
+  <button role="tab" aria-selected="true" data-t="dep">Deployments</button>
+  <button role="tab" aria-selected="false" data-t="cfg">vercel.json Tester</button>
+  <button role="tab" aria-selected="false" data-t="env">Env Variables</button>
+</div>
+
+<!-- ===== Deployments ===== -->
+<div class="pane" id="dep">
+  <div class="card">
+    <div class="muted">Production Deployment</div>
+    <div class="prod" style="margin-top:6px"><div class="shot" id="shot"></div>
+      <div><div class="url" id="prodUrl">https://kafe.vercel.app</div><div class="muted" id="prodInfo"></div></div></div>
+  </div>
+  <div class="card">
+    <b>git push</b>
+    <div class="row" style="margin-top:8px">
+      <select id="branch" aria-label="Branch"><option>main</option><option selected>feature/dark-mode</option><option>fix/checkout</option></select>
+      <input id="msg" aria-label="Commit message" value="Add dark mode" style="flex:1;min-width:160px">
+      <label class="muted"><input type="checkbox" id="bug"> ធ្វើឱ្យ Build បរាជ័យ (Header.jsx ≠ header.jsx)</label>
+      <button class="b" id="push">Push ⏎</button>
+    </div>
+    <div class="log" id="log" aria-live="polite" style="margin-top:10px">$ waiting for git push…</div>
+  </div>
+  <div class="card"><b>Deployments</b><div id="list"></div></div>
+</div>
+
+<!-- ===== vercel.json Tester ===== -->
+<div class="pane" id="cfg" hidden>
+  <div class="card">
+    <div class="row" style="justify-content:space-between"><b>vercel.json</b><span class="muted">File មានក្នុង Output៖ <code>/index.html /about.html /assets/index-abc.js /favicon.svg</code></span></div>
+    <textarea id="json" aria-label="vercel.json" spellcheck="false"></textarea>
+  </div>
+  <div class="card">
+    <div class="row"><input id="path" aria-label="Path" value="/products/7" style="flex:1"><button class="b" id="test">សាក Request</button></div>
+    <div class="row" style="margin-top:6px">
+      <span class="muted">សាក៖</span>
+      <button class="b ghost ex">/menu</button><button class="b ghost ex">/about.html</button><button class="b ghost ex">/about/</button>
+      <button class="b ghost ex">/api/products?page=2</button><button class="b ghost ex">/assets/index-abc.js</button><button class="b ghost ex">/blog/hello</button>
+    </div>
+    <div class="res" id="out" style="margin-top:10px" aria-live="polite"></div>
+  </div>
+</div>
+
+<!-- ===== Env ===== -->
+<div class="pane" id="env" hidden>
+  <div class="card">
+    <b>Environment Variables (Vite project)</b>
+    <p class="muted">តែ Variable ដែលចាប់ផ្តើមដោយ <code>VITE_</code> ទើបត្រូវ Vite បញ្ចូលក្នុង JavaScript ដែល Browser ទាញ — អ្នកណាក៏អាចអានបានតាម DevTools។</p>
+    <table id="envTable"></table>
+    <div class="row" style="margin-top:10px"><input id="envName" aria-label="Name" placeholder="NAME" style="width:200px"><input id="envVal" aria-label="Value" placeholder="value" style="flex:1"><button class="b" id="envAdd">Add</button></div>
+  </div>
+  <div class="card"><b>dist/assets/index-abc.js</b> <span class="muted">(អ្វីដែល Browser ឃើញបន្ទាប់ពី Build)</span><div class="log" id="bundle"></div></div>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  document.querySelectorAll("[role=tab]").forEach(t => t.onclick = () => {
+    document.querySelectorAll("[role=tab]").forEach(x => x.setAttribute("aria-selected", x === t));
+    ["dep", "cfg", "env"].forEach(id => $(id).hidden = id !== t.dataset.t);
+  });
+
+  /* ================= Deployments ================= */
+  const rid = () => Math.random().toString(36).slice(2, 9);
+  const deps = [{ id: "a1b2c3d", branch: "main", msg: "Initial menu page", env: "production", status: "Ready", theme: "light", when: "2 ថ្ងៃមុន" }];
+  let current = "a1b2c3d";
+  const urlOf = d => d.env === "production" ? `https://kafe-${d.id}-you.vercel.app` : `https://kafe-git-${d.branch.replace(/\W+/g, "-")}-you.vercel.app`;
+
+  function renderDeps() {
+    const cur = deps.find(d => d.id === current);
+    $("shot").style.background = cur.theme === "dark" ? "#111" : "#fff";
+    $("shot").style.color = cur.theme === "dark" ? "#fff" : "#111";
+    $("shot").textContent = "☕ Kafe · " + cur.msg;
+    $("prodInfo").textContent = `${cur.id} · ${cur.branch} · “${cur.msg}”`;
+    $("list").innerHTML = deps.map(d => {
+      const isCur = d.id === current;
+      const act = d.status !== "Ready" ? "" :
+        d.env === "preview" ? `<button class="b ghost" data-promote="${d.id}">Promote → Production</button>` :
+        !isCur ? `<button class="b ghost" data-rollback="${d.id}">⏪ Instant Rollback</button>` : "";
+      return `<div class="dep"><span class="dot ${d.status}" title="${d.status}"></span>
+        <div><b>${d.msg}</b><span class="pill ${isCur ? "cur" : ""}">${isCur ? "Current · " : ""}${d.env === "production" ? "Production" : "Preview"}</span>
+        <div class="muted"><code>${d.branch}</code> · ${d.id} · ${d.status} · ${d.when}</div>
+        ${d.status === "Ready" ? `<div class="url">${urlOf(d)}</div>` : ""}</div><div>${act}</div></div>`;
+    }).join("");
+  }
+  function log(line, cls = "") { const el = $("log"); el.innerHTML += `\n<span class="${cls}">${line}</span>`; el.scrollTop = el.scrollHeight; }
+
+  $("push").onclick = () => {
+    const branch = $("branch").value, msg = $("msg").value.trim() || "Update", bug = $("bug").checked;
+    const d = { id: rid(), branch, msg, env: branch === "main" ? "production" : "preview", status: "Queued", theme: /dark/i.test(msg) ? "dark" : "light", when: "ឥឡូវ" };
+    deps.unshift(d); renderDeps(); $("push").disabled = true;
+    $("log").textContent = `$ git push origin ${branch}`;
+    const steps = [
+      ["Cloning github.com/you/kafe (Branch: " + branch + ", Commit: " + d.id + ")", ""],
+      ["Detected Framework: Vite · Root Directory: client", ""],
+      ["Running \"npm install\"… added 214 packages in 6s", ""],
+      ["Running \"npm run build\"", ""],
+      ["vite v7 building for production…", ""],
+    ];
+    const fail = [["✗ [vite]: Rollup failed to resolve import \"./components/Header\" from \"src/App.jsx\"", "e"], ["Error: Command \"npm run build\" exited with 1", "e"]];
+    const ok = [["✓ 48 modules transformed. dist/index.html 0.46 kB · dist/assets/index-abc.js 196 kB", "s"],
+                ["Deploying outputs… Build Completed in /vercel/output [14s]", ""],
+                [d.env === "production" ? "✅ Production: https://kafe.vercel.app" : "🔍 Preview: " + urlOf(d), "s"]];
+    const all = [...steps, ...(bug ? fail : ok)];
+    d.status = "Building"; renderDeps();
+    all.forEach(([l, c], i) => setTimeout(() => {
+      log(l, c);
+      if (i === all.length - 1) {
+        d.status = bug ? "Error" : "Ready";
+        if (!bug && d.env === "production") current = d.id;
+        if (bug) log("ℹ Production មិនប៉ះពាល់ — នៅតែបង្ហាញ Deployment មុន", "w");
+        $("push").disabled = false; renderDeps();
+      }
+    }, 350 * (i + 1)));
+  };
+  $("list").onclick = e => {
+    const p = e.target.dataset.promote, r = e.target.dataset.rollback;
+    if (p) { const d = deps.find(x => x.id === p); d.env = "production"; current = p; log(`$ vercel promote ${urlOf(d)}`, ""); log("✅ Promoted to Production", "s"); }
+    if (r) { current = r; log(`$ vercel rollback ${r}`, ""); log("⏪ Rolled back — Production ឥឡូវបង្ហាញ " + r, "w"); }
+    renderDeps();
+  };
+  renderDeps();
+
+  /* ================= vercel.json Tester ================= */
+  $("json").value = JSON.stringify({
+    cleanUrls: true, trailingSlash: false,
+    redirects: [{ source: "/menu", destination: "/products", permanent: true }, { source: "/blog/:slug", destination: "https://blog.kafe.com/:slug", permanent: false }],
+    rewrites: [{ source: "/api/:path*", destination: "https://api.kafe.com/api/:path*" }, { source: "/(.*)", destination: "/index.html" }],
+    headers: [{ source: "/assets/(.*)", headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }] }],
+  }, null, 2);
+  const FILES = ["/index.html", "/about.html", "/assets/index-abc.js", "/favicon.svg"];
+
+  function compile(src) {                                  // "/api/:path*" → RegExp + names
+    const names = [];
+    let re = "";
+    for (let i = 0; i < src.length; ) {
+      const m = src.slice(i).match(/^:(\w+)(\*)?/);
+      if (m) { names.push(m[1]); re += m[2] ? "(.*)" : "([^/]+)"; i += m[0].length; continue; }
+      if (src.slice(i, i + 4) === "(.*)") { names.push(String(names.length + 1)); re += "(.*)"; i += 4; continue; }
+      re += src[i].replace(/[.+?^${}()*|[\]\\]/g, "\\$&"); i++;
+    }
+    return { re: new RegExp("^" + re + "$"), names };
+  }
+  function match(src, path) {
+    const { re, names } = compile(src), m = path.match(re);
+    if (!m) return null;
+    const p = {}; names.forEach((n, i) => { p[n] = m[i + 1]; p["$" + (i + 1)] = m[i + 1]; });
+    return p;
+  }
+  const fill = (dest, p) => dest.replace(/:(\w+)\*?|\$(\d+)/g, (_, n, d) => (n ? p[n] : p["$" + d]) ?? "");
+
+  function test() {
+    const out = [], step = (t, cls = "") => out.push(`<div class="step ${cls}">${t}</div>`);
+    let cfg;
+    try { cfg = JSON.parse($("json").value); } catch (e) { $("out").innerHTML = `<div class="step" style="color:#d1242f">⚠ JSON មិនត្រឹមត្រូវ: ${e.message}</div>`; return; }
+    const full = $("path").value.trim() || "/";
+    const [path, qs] = full.split("?");
+    step(`➡ Request: <code>GET ${full}</code>`);
+    const finish = t => { step(t, "fin"); $("out").innerHTML = out.join(""); };
+    // 1. Headers (ត្រូវគ្នាប៉ុន្មានក៏ដោយ បន្ថែមទាំងអស់)
+    (cfg.headers || []).forEach(h => { if (match(h.source, path)) step(`🧾 Headers ពី <code>${h.source}</code>: ${h.headers.map(x => `<code>${x.key}: ${x.value}</code>`).join(", ")}`, "hit"); });
+    // 2. trailingSlash / cleanUrls (Redirect ស្វ័យប្រវត្តិ)
+    if (cfg.trailingSlash === false && path.length > 1 && path.endsWith("/")) return finish(`↪ 308 Redirect → <code>${path.slice(0, -1)}</code> (trailingSlash: false)`);
+    if (cfg.cleanUrls && path.endsWith(".html")) return finish(`↪ 308 Redirect → <code>${path.replace(/(index)?\.html$/, "") || "/"}</code> (cleanUrls)`);
+    // 3. redirects
+    for (const r of cfg.redirects || []) {
+      const p = match(r.source, path);
+      if (p) return finish(`↪ ${r.permanent ? "308 Permanent" : "307 Temporary"} Redirect → <code>${fill(r.destination, p)}</code> (Rule <code>${r.source}</code>) · URL ក្នុង Browser ប្តូរ`);
+    }
+    // 4. Filesystem (File ពិតមុន Rewrites)
+    const asFile = cfg.cleanUrls && !path.includes(".") && path !== "/" ? path + ".html" : path === "/" ? "/index.html" : path;
+    if (FILES.includes(asFile)) return finish(`📄 200 បម្រើ File ពិត <code>${asFile}</code> ពី CDN`);
+    step(`🔍 គ្មាន File <code>${path}</code> → ពិនិត្យ rewrites`);
+    // 5. rewrites
+    for (const r of cfg.rewrites || []) {
+      const p = match(r.source, path);
+      if (!p) { step(`✗ មិនត្រូវ <code>${r.source}</code>`); continue; }
+      const dest = fill(r.destination, p) + (qs ? "?" + qs : "");
+      return finish(/^https?:/.test(dest)
+        ? `🔁 Rewrite (Proxy) → <code>${dest}</code> · URL ក្នុង Browser នៅដដែល · គ្មាន CORS`
+        : `🔁 Rewrite → <code>${dest}</code> (200) · URL ក្នុង Browser នៅដដែល — React Router គ្រប់គ្រង <code>${path}</code>`);
+    }
+    finish("❌ 404 NOT_FOUND");
+  }
+  $("test").onclick = test;
+  $("path").onkeydown = e => e.key === "Enter" && test();
+  document.querySelectorAll(".ex").forEach(b => b.onclick = () => { $("path").value = b.textContent; test(); });
+  test();
+
+  /* ================= Env ================= */
+  const ENV = [["VITE_API_URL", "/api"], ["VITE_APP_NAME", "Kafe"], ["JWT_SECRET", "s3cr3t-9f8a…"], ["DATABASE_URL", "postgres://user:pass@neon…"]];
+  function renderEnv() {
+    $("envTable").innerHTML = `<tr><th>Name</th><th>Value</th><th>ចូល Browser?</th></tr>` + ENV.map(([k, v]) =>
+      `<tr><td><code>${k}</code></td><td><code>${k.startsWith("VITE_") ? v : "••••••••"}</code></td><td>${k.startsWith("VITE_") ? '<span class="yes">⚠ បាទ (សាធារណៈ)</span>' : '<span class="no">✓ ទេ (Server only)</span>'}</td></tr>`).join("");
+    const pub = ENV.filter(([k]) => k.startsWith("VITE_"));
+    $("bundle").textContent = `const env = {${pub.map(([k, v]) => `\n  ${k}: "${v}"`).join(",")}\n};\n// JWT_SECRET, DATABASE_URL … មិនមាននៅទីនេះ ✓`;
+    const leak = pub.find(([k]) => /SECRET|PASSWORD|DATABASE|PRIVATE/i.test(k));
+    if (leak) $("bundle").innerHTML += `\n<span class="e">🚨 ${leak[0]} លេចធ្លាយទៅ Browser! ដក Prefix VITE_ ហើយប្រើតែក្នុង Function/API</span>`;
+  }
+  $("envAdd").onclick = () => {
+    const k = $("envName").value.trim().toUpperCase().replace(/[^A-Z0-9_]/g, "_"), v = $("envVal").value;
+    if (!k) return;
+    ENV.push([k, v || "value"]); $("envName").value = $("envVal").value = ""; renderEnv();
+  };
+  renderEnv();
+<\/script>
+</script>
+</section>
+
+<section id="pro-check">
+  <h2>✅ Production Checklist & គម្រោងចុងក្រោយ</h2>
+  <table>
+    <tr><th>ពិនិត្យ</th><th>✔</th></tr>
+    <tr><td><code class="i">npm run build</code> និង <code class="i">npm test</code> ជាប់ក្នុងកុំព្យូទ័រ និង CI</td><td>☐</td></tr>
+    <tr><td>Secret ទាំងអស់ក្នុង Env (Production/Preview) — គ្មាន Secret ក្នុង <code class="i">VITE_*</code> ឬ Git</td><td>☐</td></tr>
+    <tr><td>Database ក្រៅ (Neon) · គ្មានការសរសេរ File លើ Function</td><td>☐</td></tr>
+    <tr><td>SPA rewrite · Cache headers សម្រាប់ <code class="i">/assets</code></td><td>☐</td></tr>
+    <tr><td>CORS = Domain ពិត · Custom domain + HTTPS</td><td>☐</td></tr>
+    <tr><td>Deployment Protection លើ Preview · Firewall rules</td><td>☐</td></tr>
+    <tr><td>Analytics + Speed Insights · Runtime logs ពិនិត្យ</td><td>☐</td></tr>
+    <tr><td>ដឹងពីរបៀប Rollback · Hobby = មិនមែនពាណិជ្ជកម្ម</td><td>☐</td></tr>
+  </table>
+  <div class="ex"><h4>🏁 លំហាត់គម្រោងចុងក្រោយ</h4>
+    <ol>
+      <li>Deploy Website វគ្គរៀនខ្មែរទាំងអស់ (index.html + វគ្គ) ជាមួយ <code class="i">cleanUrls</code></li>
+      <li>Deploy Kafe Admin៖ Project ២ (client/server) ពី Monorepo តែមួយ</li>
+      <li>ប្តូរ Database ទៅ Neon Postgres ហើយ Migration + Seed</li>
+      <li>Upload រូបផលិតផលទៅ Vercel Blob</li>
+      <li>Cron ផ្ញើរបាយការណ៍ប្រចាំថ្ងៃ (CRON_SECRET)</li>
+      <li>GitHub Actions + Required checks · Preview សម្រាប់គ្រប់ PR</li>
+      <li>Custom domain (ឬ subdomain .vercel.app) + Analytics</li>
+    </ol>
+  </div>
+</section>
+
+<section id="roadmap">
+  <h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+  <ol class="steps">
+    <li><b>Git & GitHub</b> (វគ្គ Git) — Branch, PR, Actions</li>
+    <li><b>Vercel</b> — មេរៀន ១–១២ ✅</li>
+    <li><b>Next.js</b> — App Router, Server Components, Server Actions</li>
+    <li><b>Postgres</b> — Neon, Migrations (Drizzle/Prisma)</li>
+    <li><b>Observability</b> — Logs, Monitoring, Alerts</li>
+    <li><b>Docker & Cloud</b> — ពេលត្រូវការ Server ជានិច្ច (Render, Fly.io, AWS)</li>
+  </ol>
+  <p><b>ប្រភពរៀនបន្ថែម:</b> <a href="https://vercel.com/docs" target="_blank">vercel.com/docs</a> · <a href="https://vercel.com/docs/frameworks/backend/express" target="_blank">Express on Vercel</a> · <a href="https://vercel.com/docs/project-configuration" target="_blank">vercel.json</a> · <a href="https://vercel.com/templates" target="_blank">Templates</a> · <a href="https://nextjs.org/learn" target="_blank">Next.js Learn</a></p>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http') ? 'm' : '') : esc(code);
+
+const RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="vercel"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

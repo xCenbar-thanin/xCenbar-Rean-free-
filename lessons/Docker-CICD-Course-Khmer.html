@@ -1,0 +1,1923 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន Docker + CI/CD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#0f1a2e; --muted:#5b6b61; --line:#dde4f0;
+  --accent:#1d63ed; --accent2:#3b82f6; --accent-soft:#e8f0fe;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#7aa7ff; --accent2:#3b82f6; --accent-soft:#111c33;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#7aa7ff; --accent2:#3b82f6; --accent-soft:#111c33;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#0b3d91,#3b82f6);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .te{color:#ff8b8b}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+</style>
+<link rel="icon" href="../assets/icons/docker.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/docker.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>វគ្គសិក្សា Docker + CI/CD (GitHub Actions) ពីដើមដល់ Deploy</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Docker និង CI/CD ជាអ្វី? អ្នកណាបង្កើត?</a>
+<a href="#install">២. របៀបដំឡើងក្នុង VS Code</a>
+<a href="#elements">៣. ពន្យល់ធាតុនីមួយៗ (Elements)</a>
+<h4>ផ្នែកទី ២ – Docker</h4>
+<a href="#l1">មេរៀន ១: Container ដំបូង: run, ps, logs, exec, stop</a>
+<a href="#l2">មេរៀន ២: Dockerfile ដំបូង: Build &amp; Run Kafe API</a>
+<a href="#l3">មេរៀន ៣: Layers, Build cache &amp; .dockerignore</a>
+<a href="#l4">មេរៀន ៤: Multi-stage build, Non-root user &amp; HEALTHCHECK</a>
+<a href="#l5">មេរៀន ៥: Configuration: ENV, ARG, --env-file</a>
+<a href="#l6">មេរៀន ៦: Volumes &amp; Bind mounts: ទិន្នន័យដែលមិនបាត់</a>
+<a href="#l7">មេរៀន ៧: Networks: Containers និយាយគ្នា</a>
+<a href="#l8">មេរៀន ៨: Docker Compose: App + PostgreSQL</a>
+<a href="#l9">មេរៀន ៩: Debug &amp; Operations: inspect, stats, restart, prune</a>
+<h4>ផ្នែកទី ៣ – CI/CD</h4>
+<a href="#l10">មេរៀន ១០: CI/CD Workflow ជាមួយ Git: Branch, PR, Tag</a>
+<a href="#l11">មេរៀន ១១: GitHub Actions: CI Workflow ដំបូង</a>
+<a href="#l12">មេរៀន ១២: Build &amp; Push Image ទៅ Registry (GHCR)</a>
+<a href="#l13">មេរៀន ១៣: Continuous Deployment: Staging, Production, Rollback</a>
+<a href="#l14">មេរៀន ១៤: សុវត្ថិភាព: Secrets, Scanning, Supply chain</a>
+<h4>គម្រោងអាជីព</h4>
+<a href="#pro-app">🚀 Kafe CI/CD Pipeline Simulator</a>
+<a href="#pro-code">📁 Pipeline ពេញ: .github/workflows/pipeline.yml</a>
+<a href="#pro-check">✅ Checklist &amp; គម្រោងចុងក្រោយ</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+
+</nav>
+<main>
+<section class="hero">
+  <h2>🐳 Docker + CI/CD ពីដើមដល់ Deploy</h2>
+  <p>រៀនវេចខ្ចប់ App ជា <b>Container</b> ដែលរត់ដូចគ្នានៅគ្រប់កន្លែង (កុំព្យូទ័រអ្នក, Server, Cloud) និងបង្កើត <b>Pipeline CI/CD</b> ជាមួយ GitHub Actions ដែល Test → Build → Deploy ដោយស្វ័យប្រវត្តិរាល់ពេល Push។ ពាក្យបញ្ជា Docker ក្នុងវគ្គនេះ <b>ត្រូវបានរត់ពិត</b> លើ Docker Engine 29.9 ហើយលទ្ធផលបង្ហាញក្រោមកូដ។</p>
+  <p><span class="badge">📘 ១៤ មេរៀន</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">🐳 Docker ពិត</span><span class="badge">🚀 Pipeline Simulator</span></p>
+</section>
+
+<!-- NAV: ផ្នែកទី ១ – មូលដ្ឋាន -->
+<section id="intro">
+  <h2>១. Docker និង CI/CD ជាអ្វី? អ្នកណាបង្កើត?</h2>
+  <p><b>Docker</b> វេចខ្ចប់ App + Node.js + Library + ការកំណត់ ទៅក្នុង <b>Image</b> តែមួយ។ ពេលរត់ Image វាក្លាយជា <b>Container</b> — ដំណើរការដាច់ដោយឡែក ស្រាលជាង Virtual Machine ច្រើន ព្រោះប្រើ Kernel រួមជាមួយ Host។ លែងមានពាក្យ «វាដើរលើម៉ាស៊ីនខ្ញុំ តែមិនដើរលើ Server»។</p>
+  <p><b>CI/CD</b> = <b>Continuous Integration</b> (រាល់ Push → Build + Test ស្វ័យប្រវត្តិ) និង <b>Continuous Delivery/Deployment</b> (កូដដែលជាប់ Test → Deploy ស្វ័យប្រវត្តិ)។</p>
+  <div class="grid">
+    <div class="card"><b>Docker</b><br><b style="font-size:19px">Solomon Hykes</b><br>ក្រុមហ៊ុន dotCloud (ក្រោយមកជា Docker, Inc.) · បង្ហាញលើកដំបូងនៅ PyCon ខែមីនា <b>2013</b> · Open source</div>
+    <div class="card"><b>Continuous Integration</b><br><b>Kent Beck</b> (Extreme Programming, ចុង 1990s) · <b>Martin Fowler</b> អត្ថបទ «Continuous Integration» (2000/2006)</div>
+    <div class="card"><b>Continuous Delivery</b><br><b>Jez Humble</b> និង <b>David Farley</b> — សៀវភៅ <i>Continuous Delivery</i> (2010)</div>
+    <div class="card"><b>GitHub Actions</b><br><b>GitHub</b> (Microsoft) — ប្រកាស 2018, CI/CD ពេញលេញ ខែវិច្ឆិកា <b>2019</b></div>
+  </div>
+  <h3>ប្រើសម្រាប់អ្វី?</h3>
+  <div class="grid">
+    <div class="card">💻 <b>បរិស្ថាន Dev ដូចគ្នា</b><br>Postgres, Redis រត់ក្នុង ១ ពាក្យបញ្ជា — មិនបាច់ដំឡើងលើម៉ាស៊ីន</div>
+    <div class="card">🚀 <b>Deploy</b><br>Image ដដែល៖ Dev → Staging → Production</div>
+    <div class="card">☁️ <b>Cloud</b><br>AWS ECS, Google Cloud Run, Azure, Fly.io, Railway, Kubernetes</div>
+    <div class="card">🧪 <b>CI</b><br>រាល់ Pull Request រត់ Lint + Test + Build មុន Merge</div>
+    <div class="card">🔁 <b>Rollback</b><br>Image មាន Tag (v1.2.0) → ត្រឡប់កំណែចាស់ក្នុងប៉ុន្មានវិនាទី</div>
+    <div class="card">🧩 <b>Microservices</b><br>Service នីមួយៗក្នុង Container ផ្ទាល់ខ្លួន</div>
+  </div>
+  <table>
+    <tr><th>Virtual Machine</th><th>Container</th></tr>
+    <tr><td>មាន OS ពេញ (GB) · Boot ប៉ុន្មាននាទី</td><td>មានតែ App + Libraries (MB) · ចាប់ផ្តើមក្នុង ms–វិនាទី</td></tr>
+    <tr><td>Hypervisor បំបែក Hardware</td><td>Linux namespaces + cgroups បំបែក Process</td></tr>
+    <tr><td>រត់បានតិច (១០–២០ ក្នុង Server)</td><td>រត់បានរាប់រយ</td></tr>
+  </table>
+</section>
+
+<section id="install">
+  <h2>២. របៀបដំឡើងក្នុង VS Code</h2>
+  <ol class="steps">
+    <li><b>Windows/macOS</b>៖ ដំឡើង <b>Docker Desktop</b> ពី docker.com (Windows ត្រូវបើក <b>WSL 2</b>) · <b>Linux</b>៖ ដំឡើង Docker Engine (<code class="i">sudo apt install docker-ce</code> តាមឯកសារផ្លូវការ) ហើយ <code class="i">sudo usermod -aG docker $USER</code></li>
+    <li>ពិនិត្យ៖ <code class="i">docker version</code> និង <code class="i">docker run hello-world</code></li>
+    <li>VS Code Extensions៖ <b>Container Tools</b> (Microsoft — មើល Containers/Images, Logs, Attach Shell) · <b>Docker DX</b> (Docker Inc. — ពិនិត្យ Dockerfile/Compose) · <b>GitHub Actions</b> (GitHub — Autocomplete + មើល Workflow runs) · <b>Dev Containers</b> (បើកគម្រោងនៅក្នុង Container)</li>
+    <li>បង្កើតគណនី <b>GitHub</b> (CI/CD) និងអាចប្រើ <b>GitHub Container Registry</b> (ghcr.io) ដោយឥតគិតថ្លៃសម្រាប់ Repo សាធារណៈ</li>
+  </ol>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+docker version --format 'Client {{.Client.Version}} · Server {{.Server.Version}}'
+docker compose version
+docker images
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker version --format &#x27;Client {{.Client.Version}} · Server {{.Server.Version}}&#x27;</span>
+Client 29.9.3 · Server 29.9.3
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker compose version</span>
+Docker Compose version v5.7.0
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker images</span>
+IMAGE                ID             DISK USAGE   CONTENT SIZE   EXTRA
+node:22-alpine       220996cbd11e        216MB         55.2MB        
+postgres:16-alpine   f2c3f4443d30        332MB         88.2MB        </pre></div>
+  <div class="note">ℹ️ <b>ចំណាំអំពីបរិស្ថានបង្កើតវគ្គ</b>៖ ម៉ាស៊ីនដែលរត់ឧទាហរណ៍មិនអាចភ្ជាប់ Docker Hub បានទេ ដូច្នេះ Image <code class="i">node:22-alpine</code> និង <code class="i">postgres:16-alpine</code> ខាងលើ ជា <b>Image ជំនួសដែលបង្កើតក្នុងម៉ាស៊ីន</b> ពី Node.js 22 និង PostgreSQL 16 ពិត (មិនមែន Alpine ពិតទេ — គ្មាន <code class="i">apk</code> ហើយទំហំខុសពី Image ផ្លូវការ)។ ពាក្យបញ្ជា Docker, Build, Compose, Volume, Network ទាំងអស់រត់ពិត។ នៅលើម៉ាស៊ីនអ្នក Docker នឹង Pull Image ផ្លូវការពី Docker Hub ដោយស្វ័យប្រវត្តិ។</div>
+</section>
+
+<section id="elements">
+  <h2>៣. ពន្យល់ធាតុនីមួយៗ (Elements)</h2>
+  <script type="text/x-code" data-lang="txt" data-label="Docker ដំណើរការយ៉ាងដូចម្តេច">
+  Dockerfile ──docker build──▶  Image (kafe:1.2)  ──docker run──▶  Container (api)
+  (រូបមន្ត)                    (ថ្នាលកូដ, Read-only)              (Process ដែលកំពុងរត់)
+                                    │  ▲
+                        docker push │  │ docker pull
+                                    ▼  │
+                         Registry (Docker Hub, ghcr.io, ECR)
+</script>
+  <table>
+    <tr><th>ធាតុ</th><th>អត្ថន័យ</th></tr>
+    <tr><td><b>Image</b></td><td>កញ្ចប់ Read-only (Filesystem + ការកំណត់) — ដូច Class</td></tr>
+    <tr><td><b>Container</b></td><td>Instance ដែលកំពុងរត់នៃ Image — ដូច Object · មាន Layer សរសេរបាន តែបាត់ពេលលុប</td></tr>
+    <tr><td><b>Dockerfile</b></td><td>ឯកសារណែនាំជំហានបង្កើត Image</td></tr>
+    <tr><td><b>Layer</b></td><td>ជំហាននីមួយៗ (RUN, COPY) = Layer មួយ · Cache ហើយប្រើឡើងវិញ</td></tr>
+    <tr><td><b>Tag</b></td><td>ឈ្មោះកំណែ៖ <code class="i">kafe:1.2.0</code>, <code class="i">kafe:latest</code>, <code class="i">kafe:sha-3f2a1c9</code></td></tr>
+    <tr><td><b>Registry</b></td><td>ឃ្លាំងរក្សា Images (Docker Hub, GitHub Container Registry, AWS ECR)</td></tr>
+    <tr><td><b>Volume</b></td><td>ទិន្នន័យដែលនៅរស់ ទោះលុប Container (Database files)</td></tr>
+    <tr><td><b>Network</b></td><td>Containers ក្នុង Network ដូចគ្នា ហៅគ្នាតាមឈ្មោះ (DNS)</td></tr>
+    <tr><td><b>Port mapping</b></td><td><code class="i">-p 8080:3000</code> = Host 8080 → Container 3000</td></tr>
+    <tr><td><b>Docker Compose</b></td><td>ឯកសារ YAML ពិពណ៌នា Services ច្រើន (App + DB) រត់ក្នុង ១ ពាក្យបញ្ជា</td></tr>
+  </table>
+  <h3>Dockerfile Instructions</h3>
+  <table>
+    <tr><th>Instruction</th><th>តួនាទី</th></tr>
+    <tr><td><code class="i">FROM node:22-alpine</code></td><td>Base image (ចាប់ផ្តើមពីណា)</td></tr>
+    <tr><td><code class="i">WORKDIR /app</code></td><td>Folder ការងារ (បង្កើតបើមិនទាន់មាន)</td></tr>
+    <tr><td><code class="i">COPY src ./src</code></td><td>ចម្លងឯកសារពី Build context ចូល Image</td></tr>
+    <tr><td><code class="i">RUN npm ci</code></td><td>រត់ពាក្យបញ្ជាពេល <b>Build</b></td></tr>
+    <tr><td><code class="i">ENV NODE_ENV=production</code></td><td>Environment variable (ពេល Build និង Run)</td></tr>
+    <tr><td><code class="i">ARG VERSION</code></td><td>Variable ពេល Build ប៉ុណ្ណោះ (<code class="i">--build-arg</code>)</td></tr>
+    <tr><td><code class="i">EXPOSE 3000</code></td><td>ឯកសារថា App ស្តាប់ Port នេះ (មិនបើក Port ដោយខ្លួនឯង)</td></tr>
+    <tr><td><code class="i">USER node</code></td><td>រត់ជាអ្នកប្រើធម្មតា (មិនមែន root) — សុវត្ថិភាព</td></tr>
+    <tr><td><code class="i">HEALTHCHECK</code></td><td>ពិនិត្យថា App នៅរស់ (healthy / unhealthy)</td></tr>
+    <tr><td><code class="i">CMD ["node","src/server.js"]</code></td><td>ពាក្យបញ្ជាលំនាំដើម ពេល <b>Run</b></td></tr>
+  </table>
+  <h3>ពាក្យគន្លឹះ CI/CD</h3>
+  <table>
+    <tr><th>ពាក្យ</th><th>អត្ថន័យ</th></tr>
+    <tr><td><b>Pipeline</b></td><td>លំដាប់ជំហាន៖ Lint → Test → Build → Push → Deploy</td></tr>
+    <tr><td><b>Workflow / Job / Step</b></td><td>GitHub Actions៖ Workflow (ឯកសារ YAML) មាន Jobs, Job មាន Steps</td></tr>
+    <tr><td><b>Runner</b></td><td>ម៉ាស៊ីនដែលរត់ Job (ubuntu-latest របស់ GitHub ឬ Self-hosted)</td></tr>
+    <tr><td><b>Artifact</b></td><td>លទ្ធផល Build (Image, Test report, Coverage)</td></tr>
+    <tr><td><b>Environment</b></td><td>staging / production — មាន Secrets និង Approval ផ្ទាល់ខ្លួន</td></tr>
+    <tr><td><b>Secret</b></td><td>ពាក្យសម្ងាត់ (Token, Password) ដែលលាក់ក្នុង GitHub</td></tr>
+  </table>
+</section>
+
+<!-- NAV: ផ្នែកទី ២ – Docker -->
+<section id="l1">
+  <h2>មេរៀន ១ Container ដំបូង: run, ps, logs, exec, stop</h2>
+  <p>ចាប់ផ្តើមដោយរត់ Container ពី Image ដែលមានស្រាប់។ <code class="i">--rm</code> លុប Container ពេលចប់ · <code class="i">-d</code> រត់នៅខាងក្រោយ (Detached) · <code class="i">--name</code> ដាក់ឈ្មោះ · <code class="i">-p HOST:CONTAINER</code> បើក Port។</p>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+docker run --rm node:22-alpine node -e 'console.log("សួស្តី ពី Container!", process.version)'
+docker run -d --name hello -p 8080:3000 node:22-alpine node -e 'require("http").createServer((q,s)=>{console.log(q.method,q.url);s.end("Hello Kafe\n")}).listen(3000)'
+docker ps
+curl -s localhost:8080
+docker logs hello
+docker exec hello sh -c 'whoami; hostname; ls -C /'
+docker rm -f hello
+docker ps -a
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run --rm node:22-alpine node -e &#x27;console.log(&quot;សួស្តី ពី Container!&quot;, process.version)&#x27;</span>
+សួស្តី ពី Container! v22.23.4
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run -d --name hello -p 8080:3000 node:22-alpine node -e &#x27;require(&quot;http&quot;).createServer((q,s)=&gt;{console.log(q.method,q.url);s.end(&quot;Hello Kafe\n&quot;)}).listen(3000)&#x27;</span>
+20c2bfc847a20ff931fa49a478344fd2790ffe35f1244a6a6dff86362c27d158
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker ps</span>
+CONTAINER ID   IMAGE            COMMAND                   CREATED                  STATUS                  PORTS                    NAMES
+20c2bfc847a2   node:22-alpine   &quot;node -e &#x27;require(\&quot;h…&quot;   Less than a second ago   Up Less than a second   0.0.0.0:8080-&gt;3000/tcp   hello
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">curl -s localhost:8080</span>
+Hello Kafe
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker logs hello</span>
+GET /
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker exec hello sh -c &#x27;whoami; hostname; ls -C /&#x27;</span>
+root
+20c2bfc847a2
+bin  dev  etc  home  lib  lib64  proc  root  run  sys  tmp  usr  var
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker rm -f hello</span>
+hello
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker ps -a</span>
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES</pre></div>
+  <table>
+    <tr><th>ពាក្យបញ្ជា</th><th>ធ្វើអ្វី</th></tr>
+    <tr><td><code class="i">docker run IMAGE CMD</code></td><td>បង្កើត + ចាប់ផ្តើម Container</td></tr>
+    <tr><td><code class="i">docker ps</code> / <code class="i">ps -a</code></td><td>Container ដែលកំពុងរត់ / ទាំងអស់</td></tr>
+    <tr><td><code class="i">docker logs -f NAME</code></td><td>មើល stdout/stderr (<code class="i">-f</code> តាមដានផ្ទាល់)</td></tr>
+    <tr><td><code class="i">docker exec -it NAME sh</code></td><td>ចូល Shell ក្នុង Container</td></tr>
+    <tr><td><code class="i">docker stop</code> / <code class="i">start</code> / <code class="i">restart</code></td><td>បញ្ឈប់ (SIGTERM, រួច SIGKILL ក្រោយ 10s) / ចាប់ផ្តើមឡើងវិញ</td></tr>
+    <tr><td><code class="i">docker rm -f NAME</code></td><td>លុប (<code class="i">-f</code> = បញ្ឈប់ហើយលុប)</td></tr>
+  </table>
+  <div class="note">💡 មើលការ <code class="i">hostname</code> = Container ID ខ្លី ហើយ <code class="i">whoami</code> = <b>root</b> — Container ពី Image ធម្មតារត់ជា root តាម Default (មេរៀន ៤ នឹងកែ)។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ១</h4>
+    <p>រត់ Container ឈ្មោះ <code class="i">clock</code> នៅខាងក្រោយ ដែលបោះពុម្ពម៉ោងរៀងរាល់វិនាទី រួចមើល Logs ៣ បន្ទាត់ចុងក្រោយ ហើយលុបវា។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+docker run -d --name clock node:22-alpine node -e 'setInterval(() => console.log(new Date().toISOString()), 1000)'
+sleep 4
+docker logs --tail 3 clock
+docker rm -f clock
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run -d --name clock node:22-alpine node -e &#x27;setInterval(() =&gt; console.log(new Date().toISOString()), 1000)&#x27;</span>
+d86bbdf4b3bbf5e453614afcfb2b5fc6db03f17c9562c7f8d18cc4660d1ca3b2
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">sleep 4</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker logs --tail 3 clock</span>
+2026-11-13T07:49:41.303Z
+2026-11-13T07:49:42.304Z
+2026-11-13T07:49:43.306Z
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker rm -f clock</span>
+clock</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l2">
+  <h2>មេរៀន ២ Dockerfile ដំបូង: Build & Run Kafe API</h2>
+  <p>គម្រោង <b>Kafe API</b> (Node.js គ្មាន Dependencies) មាន <code class="i">src/server.js</code> ដែលមាន <code class="i">/health</code>, <code class="i">/api/products</code>, <code class="i">/api/visits</code>។ ចូរមើលឯកសារក្នុង Folder ជាមុនសិន៖</p>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+ls -A
+cat package.json
+du -sh node_modules
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">ls -A</span>
+.env
+README.md
+node_modules
+npm-debug.log
+package-lock.json
+package.json
+src
+tests
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">cat package.json</span>
+{
+  &quot;name&quot;: &quot;kafe-api&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;type&quot;: &quot;module&quot;,
+  &quot;scripts&quot;: {
+    &quot;start&quot;: &quot;node src/server.js&quot;,
+    &quot;test&quot;: &quot;node --test --test-reporter=spec&quot;
+  }
+}
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">du -sh node_modules</span>
+20M	node_modules</pre></div>
+  <p>Dockerfile «សាមញ្ញ» (មានបញ្ហា — យើងនឹងកែក្នុងមេរៀនបន្ទាប់)៖</p>
+  <script type="text/x-code" data-lang="docker" data-label="Dockerfile (v1)" data-file="Dockerfile" data-cmd="docker build -t kafe:1.0 .\ndocker images kafe\ndocker run -d --name api -p 8080:3000 kafe:1.0\nsleep 1\ncurl -s localhost:8080/health\ncurl -s localhost:8080/api/products\ndocker exec api ls -A /app\ndocker exec api cat /app/.env">
+FROM node:22-alpine
+WORKDIR /app
+COPY . .
+EXPOSE 3000
+CMD ["node", "src/server.js"]
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker build -t kafe:1.0 .</span>
+#0 building with &quot;default&quot; instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 121B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:22-alpine
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/3] FROM docker.io/library/node:22-alpine@sha256:220996cbd11e49f6d5c2f1b04ebec14629f10b26aa861765210a689b73a7fb4a
+#4 resolve docker.io/library/node:22-alpine@sha256:220996cbd11e49f6d5c2f1b04ebec14629f10b26aa861765210a689b73a7fb4a 0.0s done
+#4 extracting sha256:305969af12a00c6ecf86e18fdad497f17b77695f6f193ec342567c4e9b66978a
+#4 ...
+
+#5 [internal] load build context
+#5 transferring context: 20.01MB 0.1s done
+#5 DONE 0.1s
+
+#4 [1/3] FROM docker.io/library/node:22-alpine@sha256:220996cbd11e49f6d5c2f1b04ebec14629f10b26aa861765210a689b73a7fb4a
+#4 extracting sha256:305969af12a00c6ecf86e18fdad497f17b77695f6f193ec342567c4e9b66978a 1.0s done
+#4 DONE 1.0s
+
+#6 [2/3] WORKDIR /app
+#6 DONE 0.2s
+
+#7 [3/3] COPY . .
+#7 DONE 0.0s
+
+#8 exporting to image
+#8 exporting layers
+#8 exporting layers 0.5s done
+#8 exporting manifest sha256:04560c7d8f07921cc8ab01a33e6ba1a363f54823c1df4812bd848e4cac52ffd2
+#8 exporting manifest sha256:04560c7d8f07921cc8ab01a33e6ba1a363f54823c1df4812bd848e4cac52ffd2 done
+#8 exporting config sha256:d936842c1dbcefa8a3ed37398f83152db3d6753473d407b9830d261d2a4fdcf5 done
+#8 exporting attestation manifest sha256:26faa4c8d87ef027fa0b612e87a6b3b1e1cfc23c0c4a763557b1aa222831e569 done
+#8 exporting manifest list sha256:3e9c228f0e1bfe9f5d19ba6a488775c2b10baf00461e6e3f17f094733327fff8 done
+#8 naming to docker.io/library/kafe:1.0 done
+#8 unpacking to docker.io/library/kafe:1.0 0.0s done
+#8 DONE 0.6s
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker images kafe</span>
+IMAGE      ID             DISK USAGE   CONTENT SIZE   EXTRA
+kafe:1.0   3e9c228f0e1b        257MB         75.2MB        
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run -d --name api -p 8080:3000 kafe:1.0</span>
+2a543e1360c26e8e4429192e5d60cedd7213858cae0bebf4e2febddecc9d2832
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">sleep 1</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">curl -s localhost:8080/health</span>
+{&quot;ok&quot;:true,&quot;version&quot;:&quot;dev&quot;,&quot;host&quot;:&quot;2a543e1360c2&quot;,&quot;db&quot;:&quot;not configured&quot;}
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">curl -s localhost:8080/api/products</span>
+[{&quot;id&quot;:1,&quot;name&quot;:&quot;Iced Latte&quot;,&quot;priceCents&quot;:250},{&quot;id&quot;:2,&quot;name&quot;:&quot;Matcha Latte&quot;,&quot;priceCents&quot;:300},{&quot;id&quot;:3,&quot;name&quot;:&quot;Mocha&quot;,&quot;priceCents&quot;:275}]
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker exec api ls -A /app</span>
+.env
+Dockerfile
+README.md
+node_modules
+npm-debug.log
+package-lock.json
+package.json
+src
+tests
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker exec api cat /app/.env</span>
+SECRET=do-not-ship</pre></div>
+  <div class="warn">⚠️ មើលលទ្ធផល៖ <code class="i">COPY . .</code> បានចម្លង <b>ទាំងអស់</b> — <code class="i">node_modules/.cache</code> (20MB មិនចាំបាច់), <code class="i">npm-debug.log</code> និង <b><code class="i">.env</code> ដែលមាន Secret</b> ចូលក្នុង Image! អ្នកណាដែលទាញ Image អាចអានវាបាន។</div>
+  <ul>
+    <li><b>Build context</b> (<code class="i">.</code> ចុងក្រោយ) = Folder ដែលផ្ញើទៅ Docker ពេល Build</li>
+    <li>Build output បង្ហាញជំហាន <code class="i">#1, #2...</code> — ជំហាននីមួយៗជា Layer</li>
+    <li><code class="i">-t kafe:1.0</code> = ឈ្មោះ:Tag (គ្មាន Tag → <code class="i">latest</code>)</li>
+  </ul>
+  <div class="ex"><h4>✍️ លំហាត់ ២</h4>
+    <p>រត់ Image <code class="i">kafe:1.0</code> ពីរ Containers ក្នុង Port 8081 និង 8082 ហើយបង្ហាញថា <code class="i">host</code> ក្នុង <code class="i">/health</code> ខុសគ្នា។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+docker run -d --name a1 -p 8081:3000 kafe:1.0 >/dev/null
+docker run -d --name a2 -p 8082:3000 kafe:1.0 >/dev/null
+sleep 1
+curl -s localhost:8081/health
+curl -s localhost:8082/health
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run -d --name a1 -p 8081:3000 kafe:1.0 &gt;/dev/null</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run -d --name a2 -p 8082:3000 kafe:1.0 &gt;/dev/null</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">sleep 1</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">curl -s localhost:8081/health</span>
+{&quot;ok&quot;:true,&quot;version&quot;:&quot;dev&quot;,&quot;host&quot;:&quot;590ec5c77cab&quot;,&quot;db&quot;:&quot;not configured&quot;}
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">curl -s localhost:8082/health</span>
+{&quot;ok&quot;:true,&quot;version&quot;:&quot;dev&quot;,&quot;host&quot;:&quot;4812f2764cec&quot;,&quot;db&quot;:&quot;not configured&quot;}</pre></div>
+    <p>Image ដដែល → Containers ច្រើន ដាច់ពីគ្នា (Hostname = Container ID)។ នេះជាមូលដ្ឋាននៃការ Scale។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l3">
+  <h2>មេរៀន ៣ Layers, Build cache & .dockerignore</h2>
+  <p>Docker Cache Layer នីមួយៗ។ បើឯកសារដែល <code class="i">COPY</code> មិនប្តូរ ជំហាននោះ និងជំហានមុនៗប្រើ Cache (<b>CACHED</b>)។ ប៉ុន្តែពេល Layer មួយប្តូរ <b>រាល់ Layer បន្ទាប់ត្រូវ Build ឡើងវិញ</b>។ ដូច្នេះ៖ ដាក់អ្វីដែលប្តូរតិច (package.json, npm ci) <b>មុន</b> អ្វីដែលប្តូរញឹកញាប់ (src)។</p>
+  <script type="text/x-code" data-lang="txt" data-label=".dockerignore" data-file=".dockerignore">
+node_modules
+npm-debug.log
+.env
+.env.*
+.git
+Dockerfile
+*.md
+</script>
+  <script type="text/x-code" data-lang="docker" data-label="Dockerfile (v2)" data-file="Dockerfile" data-cmd="docker build -q -t kafe:1.1 .\necho '// change' &gt;&gt; src/server.js\ndocker build --progress=plain -t kafe:1.1 . 2&gt;&amp;1 | grep -E '^#[0-9]+ (\[|CACHED|DONE)'\ndocker images kafe\ndocker run --rm kafe:1.1 ls -A /app\ndocker history kafe:1.1 --format '{{.Size}}\t{{.CreatedBy}}' | head -5">
+FROM node:22-alpine
+WORKDIR /app
+# 1) ឯកសារ Dependencies (ប្តូរតិច) → Cache ជំហាន npm ci
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
+# 2) Source code (ប្តូរញឹកញាប់) នៅចុងក្រោយ
+COPY src ./src
+EXPOSE 3000
+CMD ["node", "src/server.js"]
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker build -q -t kafe:1.1 .</span>
+sha256:4c091d24e8c34f767c23e8803a622a83a8654f968754e3750b96949bdb5866f0
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">echo &#x27;// change&#x27; &gt;&gt; src/server.js</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker build --progress=plain -t kafe:1.1 . 2&gt;&amp;1 | grep -E &#x27;^#[0-9]+ (\[|CACHED|DONE)&#x27;</span>
+#1 [internal] load build definition from Dockerfile
+#1 DONE 0.0s
+#2 [internal] load metadata for docker.io/library/node:22-alpine
+#2 DONE 0.0s
+#3 [internal] load .dockerignore
+#3 DONE 0.0s
+#4 [internal] load build context
+#4 DONE 0.0s
+#5 [1/5] FROM docker.io/library/node:22-alpine@sha256:220996cbd11e49f6d5c2f1b04ebec14629f10b26aa861765210a689b73a7fb4a
+#5 DONE 0.0s
+#6 [2/5] WORKDIR /app
+#6 CACHED
+#7 [3/5] COPY package.json package-lock.json ./
+#7 CACHED
+#8 [4/5] RUN npm ci --omit=dev
+#8 CACHED
+#9 [5/5] COPY src ./src
+#9 DONE 0.0s
+#10 DONE 0.1s
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker images kafe</span>
+IMAGE      ID             DISK USAGE   CONTENT SIZE   EXTRA
+kafe:1.0   3e9c228f0e1b        257MB         75.2MB        
+kafe:1.1   25b48d3dedb3        220MB         55.7MB        
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run --rm kafe:1.1 ls -A /app</span>
+package-lock.json
+package.json
+src
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker history kafe:1.1 --format &#x27;{{.Size}}\t{{.CreatedBy}}&#x27; | head -5</span>
+0B	CMD [&quot;node&quot; &quot;src/server.js&quot;]
+0B	EXPOSE [3000/tcp]
+20.5kB	COPY src ./src # buildkit
+2.7MB	RUN /bin/sh -c npm ci --omit=dev # buildkit
+16.4kB	COPY package.json package-lock.json ./ # bui…</pre></div>
+  <p>មើល៖ បន្ទាប់ពីកែ <code class="i">src/server.js</code> ជំហាន <code class="i">npm ci</code> នៅតែ <b>CACHED</b> មានតែ <code class="i">COPY src</code> ដែល Build ថ្មី។ Image ក៏តូចជាង v1 (គ្មាន 20MB junk) ហើយ <b>គ្មាន .env</b>។ ក្នុងគម្រោងពិតដែលមាន Dependencies រាប់រយ នេះសន្សំពេលច្រើននាទី។</p>
+  <div class="ex"><h4>✍️ លំហាត់ ៣</h4>
+    <p>Dockerfile ខាងក្រោមយឺតពេល Build ឡើងវិញ។ ហេតុអ្វី? កែយ៉ាងដូចម្តេច?</p>
+<script type="text/x-code" data-lang="docker" data-label="Dockerfile (យឺត)">
+FROM node:22-alpine
+WORKDIR /app
+COPY . .
+RUN npm ci
+CMD ["node", "src/server.js"]
+</script>
+    <details><summary>មើលចម្លើយ</summary>
+    <p><code class="i">COPY . .</code> នៅមុន <code class="i">npm ci</code> → កែឯកសារណាមួយ (សូម្បី README) ធ្វើឱ្យ Cache ខូច ហើយ <code class="i">npm ci</code> រត់ឡើងវិញរាល់ដង។ កែ៖ <code class="i">COPY package*.json ./</code> → <code class="i">RUN npm ci</code> → <code class="i">COPY . .</code> និងបន្ថែម <code class="i">.dockerignore</code>។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l4">
+  <h2>មេរៀន ៤ Multi-stage build, Non-root user & HEALTHCHECK</h2>
+  <p><b>Multi-stage</b>៖ Dockerfile មួយមាន <code class="i">FROM</code> ច្រើន។ Stage មុនៗសម្រាប់ Build/Test (មាន DevDependencies) ហើយ Stage ចុងក្រោយយកតែអ្វីចាំបាច់ → Image តូច និងសុវត្ថិភាព។ BuildKit Build តែ Stages ដែលត្រូវការ (<code class="i">--target</code> ជ្រើស Stage)។</p>
+  <script type="text/x-code" data-lang="docker" data-label="Dockerfile (v3 — Production)" data-file="Dockerfile" data-save="v3" data-cmd="docker build --target test --progress=plain -t kafe:test . 2&gt;&amp;1 | grep -E '✔|ℹ (tests|pass|fail)|DONE|ERROR' | tail -8\ndocker build -q -t kafe:1.2 .\ndocker images kafe\ndocker run -d --name api -p 8080:3000 kafe:1.2 &gt;/dev/null\nsleep 7\ndocker ps --format 'table {{.Names}}\t{{.Status}}'\ndocker exec api whoami">
+# ---------- Stage 1: dependencies ----------
+FROM node:22-alpine AS deps
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# ---------- Stage 2: test (CI: docker build --target test) ----------
+FROM deps AS test
+COPY . .
+RUN npm test
+
+# ---------- Stage 3: runtime (Default — Stage ចុងក្រោយ) ----------
+FROM node:22-alpine AS runtime
+ENV NODE_ENV=production
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev && mkdir -p /data && chown node:node /data
+COPY --chown=node:node src ./src
+USER node
+EXPOSE 3000
+HEALTHCHECK --interval=3s --timeout=2s --retries=3 \
+  CMD node -e "fetch('http://localhost:3000/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+CMD ["node", "src/server.js"]
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker build --target test --progress=plain -t kafe:test . 2&gt;&amp;1 | grep -E &#x27;✔|ℹ (tests|pass|fail)|DONE|ERROR&#x27; | tail -8</span>
+#9 DONE 0.0s
+#10 0.220 ✔ មានផលិតផល ៣ (0.47688ms)
+#10 0.221 ✔ formatUSD (0.084574ms)
+#10 0.226 ℹ tests 2
+#10 0.226 ℹ pass 2
+#10 0.226 ℹ fail 0
+#10 DONE 0.3s
+#11 DONE 0.5s
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker build -q -t kafe:1.2 .</span>
+sha256:6c0426caa525a0db6916abdd0f11406c971e5704b8655ec0eda8cf9db2a899a0
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker images kafe</span>
+IMAGE       ID             DISK USAGE   CONTENT SIZE   EXTRA
+kafe:1.0    3e9c228f0e1b        257MB         75.2MB        
+kafe:1.1    25b48d3dedb3        220MB         55.7MB        
+kafe:1.2    6c0426caa525        220MB         55.7MB        
+kafe:test   9712392550c1        260MB         75.7MB        
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run -d --name api -p 8080:3000 kafe:1.2 &gt;/dev/null</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">sleep 7</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker ps --format &#x27;table {{.Names}}\t{{.Status}}&#x27;</span>
+NAMES     STATUS
+api       Up 7 seconds (healthy)
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker exec api whoami</span>
+node</pre></div>
+  <table>
+    <tr><th>Best practice</th><th>ហេតុអ្វី</th></tr>
+    <tr><td><code class="i">USER node</code></td><td>បើ App ត្រូវ Hack អ្នកវាយប្រហារមិនមែន root ក្នុង Container</td></tr>
+    <tr><td><code class="i">npm ci --omit=dev</code></td><td>គ្មាន DevDependencies (TypeScript, Vitest) ក្នុង Production</td></tr>
+    <tr><td>Base image តូច (alpine/slim/distroless)</td><td>Download លឿន · ចំណុចងាយរងគ្រោះតិច</td></tr>
+    <tr><td>Tag ច្បាស់ (<code class="i">node:22-alpine</code> មិនមែន <code class="i">node:latest</code>)</td><td>Build ដដែលៗផ្តល់លទ្ធផលដូចគ្នា</td></tr>
+    <tr><td><code class="i">CMD ["node", ...]</code> (exec form)</td><td>Node ជា PID 1 ទទួល SIGTERM → Graceful shutdown (<code class="i">npm start</code> មិនបញ្ជូន Signal ល្អ)</td></tr>
+    <tr><td><code class="i">HEALTHCHECK</code></td><td>Docker/Compose/Orchestrator ដឹងថា App ពិតជាដំណើរការ</td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ៤</h4>
+    <p>ធ្វើឱ្យ Test មួយបរាជ័យ (ឧ. ប្តូរ 3 → 4) ហើយមើលថា <code class="i">docker build --target test</code> បរាជ័យ (Exit code ≠ 0) — នេះជាអ្វីដែលបញ្ឈប់ Pipeline CI។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh data-stage="Dockerfile">
+sed -i 's/products.length, 3/products.length, 4/' tests/products.test.js
+docker build --target test --progress=plain . > build.log 2>&1 || echo "❌ Build បរាជ័យ (exit code $?)"
+grep -E '✖|expected|actual|ERROR' build.log | head -6
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">sed -i &#x27;s/products.length, 3/products.length, 4/&#x27; tests/products.test.js</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker build --target test --progress=plain . &gt; build.log 2&gt;&amp;1 || echo &quot;❌ Build បរាជ័យ (exit code $?)&quot;</span>
+❌ Build បរាជ័យ (exit code 1)
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">grep -E &#x27;✖|expected|actual|ERROR&#x27; build.log | head -6</span>
+#10 0.280 ✖ មានផលិតផល ៣ (0.9061ms)
+#10 0.287 ✖ failing tests:
+#10 0.287 ✖ មានផលិតផល ៣ (0.9061ms)
+#10 0.287     actual: 3,
+#10 0.287     expected: 4,
+#10 ERROR: process &quot;/bin/sh -c npm test&quot; did not complete successfully: exit code: 1</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l5">
+  <h2>មេរៀន ៥ Configuration: ENV, ARG, --env-file</h2>
+  <p>ច្បាប់ <b>12-Factor App</b>៖ ការកំណត់ដែលប្តូរតាមបរិស្ថាន (Port, Database URL, Secrets) ត្រូវមកពី <b>Environment variables</b> — Image ដដែលប្រើបាននៅ Dev, Staging, Production។</p>
+  <script type="text/x-code" data-lang="bash" data-label="prod.env" data-file="prod.env" data-cmd="docker run -d --name dev -p 8080:3000 -e APP_VERSION=dev-local kafe:1.2 &gt;/dev/null\ndocker run -d --name prod -p 8090:4000 --env-file prod.env kafe:1.2 &gt;/dev/null\nsleep 1\ncurl -s localhost:8080/health\ncurl -s localhost:8090/health\ndocker exec prod sh -c 'echo PORT=$PORT APP_VERSION=$APP_VERSION NODE_ENV=$NODE_ENV'">
+PORT=4000
+APP_VERSION=1.2.0-prod
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run -d --name dev -p 8080:3000 -e APP_VERSION=dev-local kafe:1.2 &gt;/dev/null</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run -d --name prod -p 8090:4000 --env-file prod.env kafe:1.2 &gt;/dev/null</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">sleep 1</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">curl -s localhost:8080/health</span>
+{&quot;ok&quot;:true,&quot;version&quot;:&quot;dev-local&quot;,&quot;host&quot;:&quot;84f89e1754f6&quot;,&quot;db&quot;:&quot;not configured&quot;}
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">curl -s localhost:8090/health</span>
+{&quot;ok&quot;:true,&quot;version&quot;:&quot;1.2.0-prod&quot;,&quot;host&quot;:&quot;7e2d4eb39d93&quot;,&quot;db&quot;:&quot;not configured&quot;}
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker exec prod sh -c &#x27;echo PORT=$PORT APP_VERSION=$APP_VERSION NODE_ENV=$NODE_ENV&#x27;</span>
+PORT=4000 APP_VERSION=1.2.0-prod NODE_ENV=production</pre></div>
+  <p><b>ARG</b> = តម្លៃពេល Build (ឧ. Version ពី Git)។ បម្លែងទៅ <b>ENV</b> បើចង់ឱ្យ App អានពេលរត់៖</p>
+  <script type="text/x-code" data-lang="docker" data-label="Dockerfile (+ ARG)" data-file="Dockerfile" data-cmd="docker build -q --build-arg APP_VERSION=1.3.0 -t kafe:1.3.0 . &gt;/dev/null\ndocker run -d --name api -p 8080:3000 kafe:1.3.0 &gt;/dev/null\nsleep 1\ncurl -s localhost:8080/health\ndocker inspect kafe:1.3.0 --format '{{range .Config.Env}}{{println .}}{{end}}'">
+FROM node:22-alpine
+ARG APP_VERSION=dev
+ENV NODE_ENV=production APP_VERSION=$APP_VERSION
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev && mkdir -p /data && chown node:node /data
+COPY --chown=node:node src ./src
+USER node
+EXPOSE 3000
+CMD ["node", "src/server.js"]
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker build -q --build-arg APP_VERSION=1.3.0 -t kafe:1.3.0 . &gt;/dev/null</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run -d --name api -p 8080:3000 kafe:1.3.0 &gt;/dev/null</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">sleep 1</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">curl -s localhost:8080/health</span>
+{&quot;ok&quot;:true,&quot;version&quot;:&quot;1.3.0&quot;,&quot;host&quot;:&quot;2458e0b6f82c&quot;,&quot;db&quot;:&quot;not configured&quot;}
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker inspect kafe:1.3.0 --format &#x27;{{range .Config.Env}}{{println .}}{{end}}&#x27;</span>
+PATH=/usr/local/bin:/usr/bin:/bin
+NODE_VERSION=22.23.4
+NODE_ENV=production
+APP_VERSION=1.3.0</pre></div>
+  <div class="warn">⚠️ <b>កុំ</b> ដាក់ Secrets ក្នុង <code class="i">ENV</code> ឬ <code class="i">ARG</code> របស់ Dockerfile — វានៅក្នុង Image ជារៀងរហូត (<code class="i">docker inspect</code> / <code class="i">docker history</code> មើលឃើញ)។ ផ្តល់ Secrets ពេល <b>Run</b> (<code class="i">-e</code>, <code class="i">--env-file</code>, Secrets manager) — មេរៀន ១៤។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៥</h4>
+    <p>តើ <code class="i">ARG</code> និង <code class="i">ENV</code> ខុសគ្នាដូចម្តេច? ហើយ <code class="i">-e PORT=5000</code> ពេល Run ប៉ះពាល់ <code class="i">EXPOSE 3000</code> ឬទេ?</p>
+    <details><summary>មើលចម្លើយ</summary>
+    <p><code class="i">ARG</code> មានតែពេល Build (<code class="i">--build-arg</code>) ហើយបាត់នៅពេល Run · <code class="i">ENV</code> នៅក្នុង Image ហើយ App អានបានពេល Run (អាចជំនួសដោយ <code class="i">-e</code>)។ <code class="i">EXPOSE</code> គ្រាន់តែជាឯកសារ — App ស្តាប់ 5000 ពិតប្រាកដ ដូច្នេះត្រូវ <code class="i">-p 8080:5000</code>។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l6">
+  <h2>មេរៀន ៦ Volumes & Bind mounts: ទិន្នន័យដែលមិនបាត់</h2>
+  <p>Filesystem របស់ Container <b>បាត់</b> ពេលលុប Container។ ទិន្នន័យសំខាន់ (Database, Uploads) ត្រូវដាក់ក្នុង <b>Volume</b>។</p>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+docker volume create kafe-data
+docker run -d --name api -p 8080:3000 -e DATA_DIR=/data -v kafe-data:/data kafe:1.2 >/dev/null
+sleep 1
+curl -s localhost:8080/api/visits
+curl -s localhost:8080/api/visits
+docker rm -f api
+docker run -d --name api2 -p 8080:3000 -e DATA_DIR=/data -v kafe-data:/data kafe:1.2 >/dev/null
+sleep 1
+curl -s localhost:8080/api/visits
+docker volume ls
+docker run --rm -v kafe-data:/data node:22-alpine ls -l /data
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker volume create kafe-data</span>
+kafe-data
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run -d --name api -p 8080:3000 -e DATA_DIR=/data -v kafe-data:/data kafe:1.2 &gt;/dev/null</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">sleep 1</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">curl -s localhost:8080/api/visits</span>
+{&quot;visits&quot;:1}
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">curl -s localhost:8080/api/visits</span>
+{&quot;visits&quot;:2}
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker rm -f api</span>
+api
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run -d --name api2 -p 8080:3000 -e DATA_DIR=/data -v kafe-data:/data kafe:1.2 &gt;/dev/null</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">sleep 1</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">curl -s localhost:8080/api/visits</span>
+{&quot;visits&quot;:3}
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker volume ls</span>
+DRIVER    VOLUME NAME
+local     kafe-data
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run --rm -v kafe-data:/data node:22-alpine ls -l /data</span>
+total 8
+-rw-r--r-- 1 node node 8192 Nov 13 07:50 kafe.db</pre></div>
+  <p>Container ថ្មី (<code class="i">api2</code>) បន្តរាប់ពី 3 — ទិន្នន័យនៅក្នុង Volume <code class="i">kafe-data</code>។</p>
+  <table>
+    <tr><th>ប្រភេទ</th><th>Syntax</th><th>ប្រើពេល</th></tr>
+    <tr><td><b>Named volume</b></td><td><code class="i">-v kafe-data:/data</code></td><td>Database, ទិន្នន័យ Production (Docker គ្រប់គ្រង)</td></tr>
+    <tr><td><b>Bind mount</b></td><td><code class="i">-v "$PWD/src":/app/src</code></td><td>Dev៖ កែកូដលើម៉ាស៊ីន → ឃើញក្នុង Container ភ្លាម</td></tr>
+    <tr><td><b>tmpfs</b></td><td><code class="i">--tmpfs /tmp</code></td><td>ទិន្នន័យបណ្តោះអាសន្នក្នុង RAM</td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ៦</h4>
+    <p>ប្រើ <b>Bind mount</b> ដើម្បីរត់ <code class="i">src/</code> ពីម៉ាស៊ីន (Read-only) ក្នុង Container <code class="i">kafe:1.2</code> ហើយបង្ហាញថាការកែឯកសារលើម៉ាស៊ីនឃើញក្នុង Container។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+docker run -d --name dev -v "$PWD/src":/app/src:ro kafe:1.2 >/dev/null
+echo '// edited on host' >> src/products.js
+docker exec dev tail -1 /app/src/products.js
+docker exec dev sh -c 'echo x >> /app/src/products.js'
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run -d --name dev -v &quot;$PWD/src&quot;:/app/src:ro kafe:1.2 &gt;/dev/null</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">echo &#x27;// edited on host&#x27; &gt;&gt; src/products.js</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker exec dev tail -1 /app/src/products.js</span>
+// edited on host
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker exec dev sh -c &#x27;echo x &gt;&gt; /app/src/products.js&#x27;</span>
+sh: 1: cannot create /app/src/products.js: Permission denied</pre></div>
+    <p><code class="i">:ro</code> = Read-only — Container មិនអាចសរសេរ (Read-only file system)។ ក្នុង Dev ពិត ប្រើ <code class="i">node --watch</code> ដើម្បី Restart ពេលកូដប្តូរ។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l7">
+  <h2>មេរៀន ៧ Networks: Containers និយាយគ្នា</h2>
+  <p>Containers ក្នុង <b>User-defined network</b> តែមួយ ស្គាល់គ្នាតាម <b>ឈ្មោះ</b> (Docker មាន DNS ខាងក្នុង)។ App ភ្ជាប់ Database តាម <code class="i">DB_HOST=db</code> មិនមែន IP។</p>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+docker network create kafe-net
+docker run -d --name db --network kafe-net -e POSTGRES_PASSWORD=secret postgres:16-alpine >/dev/null
+docker run -d --name api --network kafe-net -p 8080:3000 -e DB_HOST=db kafe:1.2 >/dev/null
+docker run -d --name lonely -p 8081:3000 -e DB_HOST=db kafe:1.2 >/dev/null
+sleep 4
+curl -s localhost:8080/health
+curl -s localhost:8081/health
+docker network inspect kafe-net --format '{{range .Containers}}{{.Name}} → {{.IPv4Address}}{{println}}{{end}}'
+docker exec api node -e 'require("dns").lookup("db", (e, a) => console.log("db =", a))'
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker network create kafe-net</span>
+e0da04d92d94d7827dfd4e1b9a626dacd108b1fbd409afee2d8d34670b2c8d7b
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run -d --name db --network kafe-net -e POSTGRES_PASSWORD=secret postgres:16-alpine &gt;/dev/null</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run -d --name api --network kafe-net -p 8080:3000 -e DB_HOST=db kafe:1.2 &gt;/dev/null</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run -d --name lonely -p 8081:3000 -e DB_HOST=db kafe:1.2 &gt;/dev/null</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">sleep 4</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">curl -s localhost:8080/health</span>
+{&quot;ok&quot;:true,&quot;version&quot;:&quot;dev&quot;,&quot;host&quot;:&quot;6a57b65b2ec8&quot;,&quot;db&quot;:&quot;up&quot;}
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">curl -s localhost:8081/health</span>
+{&quot;ok&quot;:true,&quot;version&quot;:&quot;dev&quot;,&quot;host&quot;:&quot;ae94eb8cd63f&quot;,&quot;db&quot;:&quot;down: ENOTFOUND&quot;}
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker network inspect kafe-net --format &#x27;{{range .Containers}}{{.Name}} → {{.IPv4Address}}{{println}}{{end}}&#x27;</span>
+db → 172.18.0.2/16
+api → 172.18.0.3/16
+
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker exec api node -e &#x27;require(&quot;dns&quot;).lookup(&quot;db&quot;, (e, a) =&gt; console.log(&quot;db =&quot;, a))&#x27;</span>
+db = 172.18.0.2</pre></div>
+  <p><code class="i">lonely</code> នៅ Network Default → រកឈ្មោះ <code class="i">db</code> មិនឃើញ (<code class="i">ENOTFOUND</code>)។ ចំណាំ៖ <code class="i">db</code> <b>មិនបាន</b> <code class="i">-p</code> — Database មិនបើកទៅខាងក្រៅ តែ <code class="i">api</code> ចូលបានតាម Network ខាងក្នុង (សុវត្ថិភាពជាង)។</p>
+  <div class="ex"><h4>✍️ លំហាត់ ៧</h4>
+    <p>ភ្ជាប់ Container <code class="i">lonely</code> ទៅ <code class="i">kafe-net</code> ដោយមិនបាច់ Restart ហើយពិនិត្យ <code class="i">/health</code> ម្តងទៀត។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+docker network create kafe-net >/dev/null
+docker run -d --name db --network kafe-net -e POSTGRES_PASSWORD=secret postgres:16-alpine >/dev/null
+docker run -d --name lonely -p 8081:3000 -e DB_HOST=db kafe:1.2 >/dev/null
+sleep 4
+curl -s localhost:8081/health
+docker network connect kafe-net lonely
+curl -s localhost:8081/health
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker network create kafe-net &gt;/dev/null</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run -d --name db --network kafe-net -e POSTGRES_PASSWORD=secret postgres:16-alpine &gt;/dev/null</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run -d --name lonely -p 8081:3000 -e DB_HOST=db kafe:1.2 &gt;/dev/null</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">sleep 4</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">curl -s localhost:8081/health</span>
+{&quot;ok&quot;:true,&quot;version&quot;:&quot;dev&quot;,&quot;host&quot;:&quot;f1e9699b0519&quot;,&quot;db&quot;:&quot;down: ENOTFOUND&quot;}
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker network connect kafe-net lonely</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">curl -s localhost:8081/health</span>
+{&quot;ok&quot;:true,&quot;version&quot;:&quot;dev&quot;,&quot;host&quot;:&quot;f1e9699b0519&quot;,&quot;db&quot;:&quot;up&quot;}</pre></div>
+    </details>
+  </div>
+</section>
+
+<section id="l8">
+  <h2>មេរៀន ៨ Docker Compose: App + PostgreSQL</h2>
+  <p>ជំនួសឱ្យការវាយ <code class="i">docker network create</code>, <code class="i">docker run ...</code> វែងៗ — ពិពណ៌នា Services ទាំងអស់ក្នុង <code class="i">compose.yaml</code> ហើយ <code class="i">docker compose up</code>។ Compose បង្កើត Network សម្រាប់គម្រោងដោយស្វ័យប្រវត្តិ។</p>
+  <script type="text/x-code" data-lang="sql" data-label="db/init.sql" data-file="db/init.sql">
+CREATE TABLE products (id serial PRIMARY KEY, name text NOT NULL, price_cents int NOT NULL);
+INSERT INTO products (name, price_cents) VALUES ('Iced Latte', 250), ('Matcha Latte', 300), ('Mocha', 275);
+</script>
+  <script type="text/x-code" data-lang="docker" data-label="Dockerfile" data-file="Dockerfile">
+FROM node:22-alpine
+ENV NODE_ENV=production
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev && mkdir -p /data && chown node:node /data
+COPY --chown=node:node src ./src
+USER node
+EXPOSE 3000
+CMD ["node", "src/server.js"]
+</script>
+  <script type="text/x-code" data-lang="yaml" data-label="compose.yaml" data-file="compose.yaml" data-cmd="docker compose --progress quiet up -d --build --wait\ndocker compose ps --format 'table {{.Service}}\t{{.Status}}\t{{.Ports}}'\ncurl -s localhost:8080/health\ndocker compose exec db psql -U kafe -d kafe -c 'SELECT * FROM products'\ndocker compose logs api --no-log-prefix --tail 3\ndocker compose down 2&gt;&amp;1 | tail -3">
+services:
+  api:
+    build: .                      # Build ពី Dockerfile ក្នុង Folder នេះ
+    ports:
+      - "8080:3000"
+    environment:
+      APP_VERSION: "1.2.0"
+      DB_HOST: db                 # ឈ្មោះ Service = Hostname
+      DATA_DIR: /data
+    volumes:
+      - api-data:/data
+    depends_on:
+      db:
+        condition: service_healthy   # រង់ចាំ DB ត្រៀមរួច
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: kafe
+      POSTGRES_PASSWORD: secret       # Production: ប្រើ secrets / .env មិនមែនសរសេរផ្ទាល់
+      POSTGRES_DB: kafe
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "kafe"]
+      interval: 2s
+      retries: 15
+
+volumes:
+  pgdata:
+  api-data:
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker compose --progress quiet up -d --build --wait</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker compose ps --format &#x27;table {{.Service}}\t{{.Status}}\t{{.Ports}}&#x27;</span>
+SERVICE   STATUS                   PORTS
+api       Up Less than a second    0.0.0.0:8080-&gt;3000/tcp
+db        Up 3 seconds (healthy)   5432/tcp
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">curl -s localhost:8080/health</span>
+{&quot;ok&quot;:true,&quot;version&quot;:&quot;1.2.0&quot;,&quot;host&quot;:&quot;3bbfc3418a2c&quot;,&quot;db&quot;:&quot;up&quot;}
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker compose exec db psql -U kafe -d kafe -c &#x27;SELECT * FROM products&#x27;</span>
+ id |     name     | price_cents 
+----+--------------+-------------
+  1 | Iced Latte   |         250
+  2 | Matcha Latte |         300
+  3 | Mocha        |         275
+(3 rows)
+
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker compose logs api --no-log-prefix --tail 3</span>
+(Use `node --trace-warnings ...` to show where the warning was created)
+☕ Kafe API 1.2.0 listening on :3000
+2026-11-13T07:50:25.352Z GET /health
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker compose down 2&gt;&amp;1 | tail -3</span>
+ Container kafe-db-1 Removed 
+ Network kafe_default Removing 
+ Network kafe_default Removed </pre></div>
+  <table>
+    <tr><th>ពាក្យបញ្ជា</th><th>ធ្វើអ្វី</th></tr>
+    <tr><td><code class="i">docker compose up -d --build</code></td><td>Build + ចាប់ផ្តើមទាំងអស់</td></tr>
+    <tr><td><code class="i">docker compose ps</code> / <code class="i">logs -f api</code></td><td>ស្ថានភាព / Logs</td></tr>
+    <tr><td><code class="i">docker compose exec db psql -U kafe</code></td><td>រត់ពាក្យបញ្ជាក្នុង Service</td></tr>
+    <tr><td><code class="i">docker compose down</code></td><td>បញ្ឈប់ + លុប Containers & Network (Volumes នៅដដែល)</td></tr>
+    <tr><td><code class="i">docker compose down -v</code></td><td>លុប Volumes ផង (⚠️ ទិន្នន័យ DB បាត់)</td></tr>
+    <tr><td><code class="i">docker compose watch</code></td><td>Dev៖ Sync/Rebuild ពេលកូដប្តូរ</td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ៨</h4>
+    <p>បន្ថែម Service <code class="i">adminer</code> (Image <code class="i">adminer</code>, Port 8081:8080) សម្រាប់មើល Database តាម Browser ហើយឱ្យវាចាប់ផ្តើមក្រោយ <code class="i">db</code>។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="yaml" data-label="compose.yaml (បន្ថែម)">
+  adminer:
+    image: adminer
+    ports:
+      - "8081:8080"
+    depends_on:
+      - db
+    profiles: ["tools"]      # ចាប់ផ្តើមតែពេល: docker compose --profile tools up
+</script>
+    <p>បើកមើល <code class="i">http://localhost:8081</code> → Server៖ <code class="i">db</code>, User៖ <code class="i">kafe</code>។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l9">
+  <h2>មេរៀន ៩ Debug & Operations: inspect, stats, restart, prune</h2>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+docker run -d --name api -p 8080:3000 --restart unless-stopped --memory 128m --cpus 0.5 kafe:1.2 >/dev/null
+sleep 7
+docker inspect api --format 'Health={{.State.Health.Status}} Restart={{.HostConfig.RestartPolicy.Name}} Mem={{.HostConfig.Memory}}'
+docker stats --no-stream --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}'
+docker exec api ps -eo pid,user,args
+docker exec api kill 1
+sleep 2
+docker ps --format 'table {{.Names}}\t{{.Status}}'
+docker logs api 2>&1 | grep -E 'SIGTERM|listening'
+docker system df
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run -d --name api -p 8080:3000 --restart unless-stopped --memory 128m --cpus 0.5 kafe:1.2 &gt;/dev/null</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">sleep 7</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker inspect api --format &#x27;Health={{.State.Health.Status}} Restart={{.HostConfig.RestartPolicy.Name}} Mem={{.HostConfig.Memory}}&#x27;</span>
+Health=healthy Restart=unless-stopped Mem=134217728
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker stats --no-stream --format &#x27;table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}&#x27;</span>
+NAME      CPU %     MEM USAGE / LIMIT
+api       0.00%     13.98MiB / 128MiB
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker exec api ps -eo pid,user,args</span>
+    PID USER     COMMAND
+      1 node     node src/server.js
+     52 node     ps -eo pid,user,args
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker exec api kill 1</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">sleep 2</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker ps --format &#x27;table {{.Names}}\t{{.Status}}&#x27;</span>
+NAMES     STATUS
+api       Up 1 second (health: starting)
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker logs api 2&gt;&amp;1 | grep -E &#x27;SIGTERM|listening&#x27;</span>
+☕ Kafe API dev listening on :3000
+SIGTERM → shutting down
+☕ Kafe API dev listening on :3000
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker system df</span>
+TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
+Images          8         1         642.1MB   422.4MB (65%)
+Containers      1         1         4.096kB   0B (0%)
+Local Volumes   0         0         0B        0B
+Build Cache     33        0         370MB     60.38MB</pre></div>
+  <p>មើល៖ <code class="i">kill 1</code> ផ្ញើ SIGTERM ទៅ Node → App បិទដោយស្អាត (Graceful) → <code class="i">--restart unless-stopped</code> ចាប់ផ្តើមវាឡើងវិញដោយស្វ័យប្រវត្តិ (Log មាន «listening» ពីរដង)។</p>
+  <table>
+    <tr><th>បញ្ហា</th><th>ពិនិត្យដោយ</th></tr>
+    <tr><td>Container ចេញភ្លាម (Exited)</td><td><code class="i">docker logs NAME</code> · <code class="i">docker ps -a</code> (Exit code)</td></tr>
+    <tr><td>Exit code 137</td><td>ត្រូវ Kill (ច្រើនតែអស់ Memory — OOM) → <code class="i">docker inspect --format '{{.State.OOMKilled}}'</code></td></tr>
+    <tr><td>ចូល Port មិនបាន</td><td>App ស្តាប់ <code class="i">0.0.0.0</code> (មិនមែន 127.0.0.1)? <code class="i">-p</code> ត្រឹមត្រូវ?</td></tr>
+    <tr><td>Disk ពេញ</td><td><code class="i">docker system df</code> → <code class="i">docker image prune</code>, <code class="i">docker builder prune</code></td></tr>
+    <tr><td>មើលខាងក្នុង</td><td><code class="i">docker exec -it NAME sh</code> · <code class="i">docker cp NAME:/app/x .</code></td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ៩</h4>
+    <p>Container រត់ App ដែល Crash ភ្លាម។ សរសេរពាក្យបញ្ជាដើម្បីរក Exit code និងសារ Error។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+docker run -d --name broken node:22-alpine node -e 'throw new Error("DATABASE_URL is missing")' >/dev/null
+sleep 1
+docker ps -a --format '{{.Names}}: {{.Status}}'
+docker inspect broken --format 'ExitCode={{.State.ExitCode}}'
+docker logs broken 2>&1 | grep Error
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run -d --name broken node:22-alpine node -e &#x27;throw new Error(&quot;DATABASE_URL is missing&quot;)&#x27; &gt;/dev/null</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">sleep 1</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker ps -a --format &#x27;{{.Names}}: {{.Status}}&#x27;</span>
+broken: Exited (1) 1 second ago
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker inspect broken --format &#x27;ExitCode={{.State.ExitCode}}&#x27;</span>
+ExitCode=1
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker logs broken 2&gt;&amp;1 | grep Error</span>
+throw new Error(&quot;DATABASE_URL is missing&quot;)
+Error: DATABASE_URL is missing</pre></div>
+    </details>
+  </div>
+</section>
+<!-- NAV: ផ្នែកទី ៣ – CI/CD -->
+<section id="l10">
+  <h2>មេរៀន ១០ CI/CD Workflow ជាមួយ Git: Branch, PR, Tag</h2>
+  <p>CI/CD ចាប់ផ្តើមពី Git។ Workflow ពេញនិយម (<b>GitHub Flow / Trunk-based</b>)៖ <code class="i">main</code> តែងតែ Deploy បាន → បង្កើត <b>Branch</b> តូចៗ → បើក <b>Pull Request</b> → CI រត់ Test → Review → Merge → CD Deploy → ដាក់ <b>Tag</b> កំណែ (<code class="i">v1.2.0</code>)។</p>
+  <script type="text/x-code" data-lang="txt" data-label=".gitignore" data-file=".gitignore" data-cmd="git config --global user.name 'Dara'\ngit config --global user.email 'dara@kafe.dev'\ngit config --global init.defaultBranch main\ngit init -q\ngit add .\ngit commit -q -m 'feat: kafe api v1'\ngit switch -q -c feat/visits\necho '// visits counter' &gt;&gt; src/server.js\ngit commit -q -am 'feat(api): add /api/visits'\ngit switch -q main\ngit merge -q --no-ff feat/visits -m 'Merge pull request #1 from feat/visits'\ngit tag -a v1.0.0 -m 'Release 1.0.0'\ngit log --oneline --graph --decorate\ngit ls-files | head -8\ngit describe --tags\ngit rev-parse --short HEAD">
+node_modules/
+.env
+*.log
+coverage/
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">git config --global user.name &#x27;Dara&#x27;</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">git config --global user.email &#x27;dara@kafe.dev&#x27;</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">git config --global init.defaultBranch main</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">git init -q</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">git add .</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">git commit -q -m &#x27;feat: kafe api v1&#x27;</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">git switch -q -c feat/visits</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">echo &#x27;// visits counter&#x27; &gt;&gt; src/server.js</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">git commit -q -am &#x27;feat(api): add /api/visits&#x27;</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">git switch -q main</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">git merge -q --no-ff feat/visits -m &#x27;Merge pull request #1 from feat/visits&#x27;</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">git tag -a v1.0.0 -m &#x27;Release 1.0.0&#x27;</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">git log --oneline --graph --decorate</span>
+*   ccde23b (HEAD -&gt; main, tag: v1.0.0) Merge pull request #1 from feat/visits
+|\  
+| * 40e640d (feat/visits) feat(api): add /api/visits
+|/  
+* 49f2346 feat: kafe api v1
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">git ls-files | head -8</span>
+.gitignore
+README.md
+package-lock.json
+package.json
+src/products.js
+src/server.js
+tests/products.test.js
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">git describe --tags</span>
+v1.0.0
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">git rev-parse --short HEAD</span>
+ccde23b</pre></div>
+  <table>
+    <tr><th>Conventional Commit</th><th>អត្ថន័យ</th><th>Version (SemVer)</th></tr>
+    <tr><td><code class="i">fix: ...</code></td><td>កែ Bug</td><td>1.2.<b>3</b> → Patch</td></tr>
+    <tr><td><code class="i">feat: ...</code></td><td>មុខងារថ្មី</td><td>1.<b>3</b>.0 → Minor</td></tr>
+    <tr><td><code class="i">feat!: ...</code> / <code class="i">BREAKING CHANGE</code></td><td>បំបែក API ចាស់</td><td><b>2</b>.0.0 → Major</td></tr>
+    <tr><td><code class="i">docs:</code> <code class="i">chore:</code> <code class="i">ci:</code> <code class="i">test:</code></td><td>មិនប៉ះ Production</td><td>—</td></tr>
+  </table>
+  <div class="note">💡 <b>Branch protection</b> លើ <code class="i">main</code> (GitHub → Settings → Rules)៖ ហាម Push ផ្ទាល់, តម្រូវ PR + Review ១ នាក់ + CI ត្រូវតែ ✅ មុន Merge។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ១០</h4>
+    <p>កំណែបច្ចុប្បន្ន <code class="i">v1.4.2</code>។ PR ថ្មីមាន Commits៖ <code class="i">fix: rounding</code>, <code class="i">feat: KHR price</code>, <code class="i">docs: README</code>។ កំណែបន្ទាប់ជាអ្វី?</p>
+    <details><summary>មើលចម្លើយ</summary><p><b>v1.5.0</b> — មាន <code class="i">feat</code> → Minor (Patch reset ទៅ 0)។ បើមាន <code class="i">feat!</code> វានឹងជា v2.0.0។</p></details>
+  </div>
+</section>
+
+<section id="l11">
+  <h2>មេរៀន ១១ GitHub Actions: CI Workflow ដំបូង</h2>
+  <p>GitHub Actions រត់ឯកសារ YAML ក្នុង <code class="i">.github/workflows/</code>។ <b>Workflow</b> → <b>Jobs</b> (រត់ស្របគ្នាតាម Default លើ Runner ផ្សេងៗ) → <b>Steps</b> (ពាក្យបញ្ជា <code class="i">run:</code> ឬ Action ដែលគេសរសេររួច <code class="i">uses:</code>)។</p>
+  <script type="text/x-code" data-lang="yaml" data-label=".github/workflows/ci.yml" data-file=".github/workflows/ci.yml" data-stage="Dockerfile=v3,.dockerignore" data-cmd="python3 -c &quot;import yaml; w = yaml.safe_load(open('.github/workflows/ci.yml')); [print(j, '→', [s.get('name') or s.get('uses') for s in w['jobs'][j]['steps']]) for j in w['jobs']]&quot;\nnpm ci --no-audit --no-fund\nnpm test 2&gt;&amp;1 | grep -E '✔|✖|ℹ (pass|fail)'\ndocker build -q --target test . &gt;/dev/null &amp;&amp; echo '✅ docker build --target test: OK'">
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:                 # រាល់ PR ទៅ main
+
+permissions:
+  contents: read                # សិទ្ធិតិចបំផុត
+
+concurrency:                    # Push ថ្មី → បោះបង់ Run ចាស់នៃ Branch ដដែល
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [22, 24]          # សាកលើ Node ពីរកំណែ
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Test
+        run: npm test
+
+  docker:
+    needs: test                 # រង់ចាំ test ✅ ទើបរត់
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: docker/setup-buildx-action@v3
+      - name: Build test stage
+        run: docker build --target test .
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">python3 -c &quot;import yaml; w = yaml.safe_load(open(&#x27;.github/workflows/ci.yml&#x27;)); [print(j, &#x27;→&#x27;, [s.get(&#x27;name&#x27;) or s.get(&#x27;uses&#x27;) for s in w[&#x27;jobs&#x27;][j][&#x27;steps&#x27;]]) for j in w[&#x27;jobs&#x27;]]&quot;</span>
+test → [&#x27;actions/checkout@v5&#x27;, &#x27;actions/setup-node@v5&#x27;, &#x27;Install&#x27;, &#x27;Test&#x27;]
+docker → [&#x27;actions/checkout@v5&#x27;, &#x27;docker/setup-buildx-action@v3&#x27;, &#x27;Build test stage&#x27;]
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npm ci --no-audit --no-fund</span>
+
+up to date in 157ms
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">npm test 2&gt;&amp;1 | grep -E &#x27;✔|✖|ℹ (pass|fail)&#x27;</span>
+✔ មានផលិតផល ៣ (0.670943ms)
+✔ formatUSD (0.145354ms)
+ℹ pass 2
+ℹ fail 0
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker build -q --target test . &gt;/dev/null &amp;&amp; echo &#x27;✅ docker build --target test: OK&#x27;</span>
+✅ docker build --target test: OK</pre></div>
+  <p>Terminal ខាងលើ៖ ពិនិត្យថា YAML ត្រឹមត្រូវ (Python) ហើយរត់ <b>ជំហានដូចគ្នានឹង CI</b> នៅលើម៉ាស៊ីន — វិធីល្អដើម្បីដឹងមុន Push ថា CI នឹងជាប់ឬអត់។</p>
+  <table>
+    <tr><th>Key</th><th>អត្ថន័យ</th></tr>
+    <tr><td><code class="i">on</code></td><td>Trigger៖ <code class="i">push</code>, <code class="i">pull_request</code>, <code class="i">schedule</code> (cron), <code class="i">workflow_dispatch</code> (ចុចដៃ), <code class="i">release</code></td></tr>
+    <tr><td><code class="i">runs-on</code></td><td>Runner៖ <code class="i">ubuntu-latest</code>, <code class="i">windows-latest</code>, <code class="i">macos-latest</code>, Self-hosted</td></tr>
+    <tr><td><code class="i">needs</code></td><td>Job dependency (លំដាប់)</td></tr>
+    <tr><td><code class="i">strategy.matrix</code></td><td>រត់ Job ច្រើនដងតាមតម្លៃ (Node 22, 24...)</td></tr>
+    <tr><td><code class="i">${{ ... }}</code></td><td>Expressions៖ <code class="i">github.sha</code>, <code class="i">secrets.X</code>, <code class="i">matrix.node</code></td></tr>
+    <tr><td><code class="i">if:</code></td><td>លក្ខខណ្ឌ៖ <code class="i">if: github.ref == 'refs/heads/main'</code></td></tr>
+  </table>
+  <div class="note">💡 ក្នុងឧទាហរណ៍ Actions ប្រើកំណែ Major (<code class="i">@v5</code>)។ សម្រាប់សុវត្ថិភាពខ្ពស់ (Supply chain) Pin ទៅ Commit SHA ពេញ ហើយឱ្យ Dependabot ធ្វើបច្ចុប្បន្នភាព។ ពិនិត្យកំណែចុងក្រោយនៅ GitHub Marketplace។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ១១</h4>
+    <p>បន្ថែម Job <code class="i">lint</code> ដែលរត់ <code class="i">npm run lint</code> ស្របគ្នាជាមួយ <code class="i">test</code> ហើយធ្វើឱ្យ <code class="i">docker</code> រង់ចាំទាំងពីរ។ ក៏ឱ្យ Workflow អាចចុចរត់ដោយដៃផង។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="yaml" data-label=".github/workflows/ci.yml (កែ)">
+on:
+  push: { branches: [main] }
+  pull_request:
+  workflow_dispatch:            # ប៊ូតុង "Run workflow"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npm run lint
+  # test: ... (ដដែល)
+  docker:
+    needs: [lint, test]         # រង់ចាំទាំងពីរ
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: docker build --target test .
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l12">
+  <h2>មេរៀន ១២ Build & Push Image ទៅ Registry (GHCR)</h2>
+  <p>បន្ទាប់ពី Test ជាប់ CI Build Image ហើយ <b>Push</b> ទៅ Registry ជាមួយ Tags ច្បាស់លាស់។ <b>Tag ល្អ</b>៖ <code class="i">sha-3f2a1c9</code> (មិនប្តូរ — ដឹងច្បាស់ថាជាកូដមួយណា) + <code class="i">1.2.0</code> (SemVer) + <code class="i">latest</code> (ងាយ តែកុំប្រើក្នុង Production)។</p>
+  <script type="text/x-code" data-lang="yaml" data-label=".github/workflows/release.yml">
+name: Release image
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: read
+  packages: write               # ត្រូវការដើម្បី Push ទៅ ghcr.io
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}     # Token ស្វ័យប្រវត្តិ — មិនបាច់បង្កើត
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=sha,prefix=sha-
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=latest,enable={{is_default_branch}}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: APP_VERSION=${{ steps.meta.outputs.version }}
+          cache-from: type=gha                       # Layer cache រវាង Runs
+          cache-to: type=gha,mode=max
+</script>
+  <p>អ្វីដែល Action ទាំងនោះធ្វើ — ធ្វើដោយដៃលើម៉ាស៊ីន (Tag ជាច្រើនចង្អុល Image <b>តែមួយ</b> — ID ដូចគ្នា)៖</p>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+SHA=sha-3f2a1c9
+docker tag kafe:1.2 ghcr.io/dara/kafe:$SHA
+docker tag kafe:1.2 ghcr.io/dara/kafe:1.2.0
+docker tag kafe:1.2 ghcr.io/dara/kafe:1.2
+docker images ghcr.io/dara/kafe
+docker image inspect ghcr.io/dara/kafe:1.2.0 --format 'ID={{.Id}}'
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">SHA=sha-3f2a1c9</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker tag kafe:1.2 ghcr.io/dara/kafe:$SHA</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker tag kafe:1.2 ghcr.io/dara/kafe:1.2.0</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker tag kafe:1.2 ghcr.io/dara/kafe:1.2</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker images ghcr.io/dara/kafe</span>
+IMAGE                           ID             DISK USAGE   CONTENT SIZE   EXTRA
+ghcr.io/dara/kafe:1.2           6c0426caa525        220MB         55.7MB        
+ghcr.io/dara/kafe:1.2.0         6c0426caa525        220MB         55.7MB        
+ghcr.io/dara/kafe:sha-3f2a1c9   6c0426caa525        220MB         55.7MB        
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker image inspect ghcr.io/dara/kafe:1.2.0 --format &#x27;ID={{.Id}}&#x27;</span>
+ID=sha256:6c0426caa525a0db6916abdd0f11406c971e5704b8655ec0eda8cf9db2a899a0</pre></div>
+  <script type="text/x-code" data-lang="bash" data-label="Push ពីម៉ាស៊ីន (ត្រូវការ Personal Access Token)">
+echo $CR_PAT | docker login ghcr.io -u dara --password-stdin
+docker push ghcr.io/dara/kafe:1.2.0
+docker push --all-tags ghcr.io/dara/kafe
+</script>
+  <div class="note">ℹ️ ពាក្យបញ្ជា <code class="i">docker push</code> មិនបានរត់ក្នុងវគ្គនេះទេ (ម៉ាស៊ីនបង្កើតវគ្គមិនអាចភ្ជាប់ Registry ខាងក្រៅ)។ ពាក្យបញ្ជា <code class="i">docker tag</code> ខាងលើរត់ពិត។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ១២</h4>
+    <p>ហេតុអ្វី Deploy ដោយ Tag <code class="i">latest</code> ក្នុង Production ជាគំនិតមិនល្អ?</p>
+    <details><summary>មើលចម្លើយ</summary><p><code class="i">latest</code> ប្តូររាល់ Push → Server ពីរអាចរត់កូដខុសគ្នា ទោះ Tag ដូចគ្នា, មិនដឹងច្បាស់ថាកំណែណាកំពុងរត់ ហើយ Rollback ពិបាក (latest ចាស់បាត់)។ ប្រើ Tag មិនប្តូរ (<code class="i">sha-...</code> ឬ <code class="i">1.2.0</code>) ឬ Digest (<code class="i">@sha256:...</code>)។</p></details>
+  </div>
+</section>
+
+<section id="l13">
+  <h2>មេរៀន ១៣ Continuous Deployment: Staging, Production, Rollback</h2>
+  <p>CD យក Image ដែល CI បាន Build ហើយ Deploy ទៅ Server។ <b>Environments</b> ក្នុង GitHub (Settings → Environments) មាន Secrets ផ្ទាល់ខ្លួន និង <b>Required reviewers</b> (ត្រូវមានអ្នកអនុម័តមុន Production)។</p>
+  <script type="text/x-code" data-lang="yaml" data-label=".github/workflows/deploy.yml">
+name: Deploy
+
+on:
+  workflow_run:                       # រត់ក្រោយ "Release image" ជោគជ័យ
+    workflows: ["Release image"]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  staging:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://staging.kafe.example.com
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: deploy
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /srv/kafe
+            export TAG=sha-${GITHUB_SHA::7}
+            docker compose pull api
+            docker compose up -d --wait api
+      - name: Smoke test
+        run: curl -fsS https://staging.kafe.example.com/health
+
+  production:
+    needs: staging
+    runs-on: ubuntu-latest
+    environment:
+      name: production                # ⏸ រង់ចាំអ្នកអនុម័ត (Required reviewers)
+      url: https://kafe.example.com
+    steps:
+      - run: echo "deploy same image to production …"
+</script>
+  <p>Deploy និង <b>Rollback</b> ដោយ Compose + Image tag (រត់ពិត)៖ Deploy v1.0.0 → Upgrade v1.1.0 → មានបញ្ហា → Rollback ទៅ v1.0.0 ក្នុងប៉ុន្មានវិនាទី។</p>
+  <script type="text/x-code" data-lang="docker" data-label="Dockerfile" data-file="Dockerfile">
+FROM node:22-alpine
+ARG APP_VERSION=dev
+ENV NODE_ENV=production APP_VERSION=$APP_VERSION
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
+COPY --chown=node:node src ./src
+USER node
+CMD ["node", "src/server.js"]
+</script>
+  <script type="text/x-code" data-lang="yaml" data-label="compose.prod.yaml" data-file="compose.prod.yaml">
+services:
+  api:
+    image: kafe:${TAG:?TAG is required}     # Tag មកពី CD
+    ports: ["8080:3000"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/health').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))"]
+      interval: 2s
+      retries: 10
+</script>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh data-stage="Dockerfile,compose.prod.yaml">
+docker build -q --build-arg APP_VERSION=1.0.0 -t kafe:1.0.0 . >/dev/null
+docker build -q --build-arg APP_VERSION=1.1.0 -t kafe:1.1.0 . >/dev/null
+docker compose -f compose.prod.yaml --progress quiet up -d --wait
+TAG=1.0.0 docker compose -f compose.prod.yaml --progress quiet up -d --wait
+curl -s localhost:8080/health
+TAG=1.1.0 docker compose -f compose.prod.yaml --progress quiet up -d --wait
+curl -s localhost:8080/health
+TAG=1.0.0 docker compose -f compose.prod.yaml --progress quiet up -d --wait
+curl -s localhost:8080/health
+TAG=1.0.0 docker compose -f compose.prod.yaml ps --format '{{.Image}} {{.Status}}'
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker build -q --build-arg APP_VERSION=1.0.0 -t kafe:1.0.0 . &gt;/dev/null</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker build -q --build-arg APP_VERSION=1.1.0 -t kafe:1.1.0 . &gt;/dev/null</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker compose -f compose.prod.yaml --progress quiet up -d --wait</span>
+error while interpolating services.api.image: required variable TAG is missing a value: TAG is required
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">TAG=1.0.0 docker compose -f compose.prod.yaml --progress quiet up -d --wait</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">curl -s localhost:8080/health</span>
+{&quot;ok&quot;:true,&quot;version&quot;:&quot;1.0.0&quot;,&quot;host&quot;:&quot;88f85c41ba5c&quot;,&quot;db&quot;:&quot;not configured&quot;}
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">TAG=1.1.0 docker compose -f compose.prod.yaml --progress quiet up -d --wait</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">curl -s localhost:8080/health</span>
+{&quot;ok&quot;:true,&quot;version&quot;:&quot;1.1.0&quot;,&quot;host&quot;:&quot;262224ddf5f2&quot;,&quot;db&quot;:&quot;not configured&quot;}
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">TAG=1.0.0 docker compose -f compose.prod.yaml --progress quiet up -d --wait</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">curl -s localhost:8080/health</span>
+{&quot;ok&quot;:true,&quot;version&quot;:&quot;1.0.0&quot;,&quot;host&quot;:&quot;ec91467b5472&quot;,&quot;db&quot;:&quot;not configured&quot;}
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">TAG=1.0.0 docker compose -f compose.prod.yaml ps --format &#x27;{{.Image}} {{.Status}}&#x27;</span>
+kafe:1.0.0 Up 2 seconds (healthy)</pre></div>
+  <p>បន្ទាត់ទី ៣ (គ្មាន <code class="i">TAG</code>) បរាជ័យភ្លាមដោយ <code class="i">${TAG:?...}</code> — ការពារ Deploy ដោយច្រឡំ។</p>
+  <table>
+    <tr><th>យុទ្ធសាស្ត្រ Deploy</th><th>របៀប</th></tr>
+    <tr><td><b>Recreate</b></td><td>បញ្ឈប់ចាស់ → ចាប់ផ្តើមថ្មី (មាន Downtime ខ្លី) — ដូចខាងលើ</td></tr>
+    <tr><td><b>Rolling</b></td><td>ប្តូរ Instance ម្តងមួយៗ (Kubernetes, ECS Default)</td></tr>
+    <tr><td><b>Blue-Green</b></td><td>រត់ថ្មី (Green) ក្បែរចាស់ (Blue) → ប្តូរ Traffic ភ្លាម → Rollback = ប្តូរត្រឡប់</td></tr>
+    <tr><td><b>Canary</b></td><td>ផ្ញើ 5% Traffic ទៅថ្មី → មើល Errors → បង្កើនបន្តិចម្តងៗ</td></tr>
+  </table>
+  <div class="note">💡 សម្រាប់ Frontend/Next.js៖ <b>Vercel</b> ធ្វើ CD ឱ្យស្វ័យប្រវត្តិ (Preview URL រាល់ PR, Production ពេល Merge, Instant rollback) — មើលវគ្គ Vercel។ Docker + GitHub Actions សមសម្រាប់ API/Backend លើ VPS, Cloud Run, ECS, Kubernetes។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ១៣</h4>
+    <p>សរសេរ Job ដែលអាច <b>Rollback ដោយដៃ</b>៖ ចុច Run workflow ហើយវាយ Tag ដែលចង់ត្រឡប់ទៅ។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="yaml" data-label=".github/workflows/rollback.yml">
+name: Rollback
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Image tag (ឧ. 1.0.0 ឬ sha-3f2a1c9)"
+        required: true
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: appleboy/ssh-action@v1
+        env:
+          TAG: ${{ inputs.tag }}
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: deploy
+          key: ${{ secrets.SSH_KEY }}
+          envs: TAG
+          script: cd /srv/kafe && docker compose pull api && docker compose up -d --wait api
+</script>
+    <p>ផ្ញើ Input តាម <code class="i">env</code> (មិនមែនដាក់ <code class="i">${{ inputs.tag }}</code> ផ្ទាល់ក្នុង Script) — ការពារ Script injection។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l14">
+  <h2>មេរៀន ១៤ សុវត្ថិភាព: Secrets, Scanning, Supply chain</h2>
+  <p>កំហុសធ្ងន់បំផុត៖ ដាក់ Secret ក្នុង Dockerfile។ សូម្បីតែ <code class="i">rm</code> ក្នុង Layer ក្រោយ Secret នៅតែមាននៅក្នុង <b>History/Layer ចាស់</b>។ មើលដោយផ្ទាល់៖</p>
+  <script type="text/x-code" data-lang="docker" data-label="Dockerfile.bad ❌" data-file="Dockerfile.bad">
+FROM node:22-alpine
+ENV STRIPE_KEY=sk_live_51KafeSecret
+RUN echo "//registry.npmjs.org/:_authToken=ghp_Kafe123" > /root/.npmrc && npm config list > /dev/null && rm /root/.npmrc
+</script>
+  <script type="text/x-code" data-lang="docker" data-label="Dockerfile.good ✅ (BuildKit secret)" data-file="Dockerfile.good" data-cmd="docker build -q -f Dockerfile.bad -t leaky . &gt;/dev/null\ndocker history leaky --no-trunc --format '{{.CreatedBy}}' | grep -oE 'sk_live_\w+|ghp_\w+'\ndocker inspect leaky --format '{{json .Config.Env}}'\nprintf 'ghp_Kafe123' &gt; npm_token.txt\ndocker build --progress=plain --secret id=npm_token,src=npm_token.txt -f Dockerfile.good -t safe . 2&gt;&amp;1 | grep 'token length'\ndocker history safe --no-trunc --format '{{.CreatedBy}}' | grep -q ghp_ &amp;&amp; echo '❌ Secret leaked' || echo '✅ គ្មាន Secret ក្នុង Image'">
+FROM node:22-alpine
+# Secret មានតែពេល RUN នេះ — មិនសរសេរចូល Layer ឬ History
+RUN --mount=type=secret,id=npm_token,env=NPM_TOKEN \
+    echo "token length: ${#NPM_TOKEN}"
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker build -q -f Dockerfile.bad -t leaky . &gt;/dev/null</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker history leaky --no-trunc --format &#x27;{{.CreatedBy}}&#x27; | grep -oE &#x27;sk_live_\w+|ghp_\w+&#x27;</span>
+ghp_Kafe123
+sk_live_51KafeSecret
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker inspect leaky --format &#x27;{{json .Config.Env}}&#x27;</span>
+[&quot;PATH=/usr/local/bin:/usr/bin:/bin&quot;,&quot;NODE_VERSION=22.23.4&quot;,&quot;STRIPE_KEY=sk_live_51KafeSecret&quot;]
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">printf &#x27;ghp_Kafe123&#x27; &gt; npm_token.txt</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker build --progress=plain --secret id=npm_token,src=npm_token.txt -f Dockerfile.good -t safe . 2&gt;&amp;1 | grep &#x27;token length&#x27;</span>
+#5 [stage-0 2/2] RUN --mount=type=secret,id=npm_token,env=NPM_TOKEN     echo &quot;token length: ${#NPM_TOKEN}&quot;
+#5 0.120 token length: 11
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker history safe --no-trunc --format &#x27;{{.CreatedBy}}&#x27; | grep -q ghp_ &amp;&amp; echo &#x27;❌ Secret leaked&#x27; || echo &#x27;✅ គ្មាន Secret ក្នុង Image&#x27;</span>
+✅ គ្មាន Secret ក្នុង Image</pre></div>
+  <h3>Checklist សុវត្ថិភាព Pipeline</h3>
+  <table>
+    <tr><th>ការពារ</th><th>របៀប</th></tr>
+    <tr><td>Secrets</td><td>GitHub Secrets / Environments · <code class="i">--secret</code> ពេល Build · Env ពេល Run · កុំ <code class="i">echo</code> Secret ក្នុង Logs</td></tr>
+    <tr><td>Cloud credentials</td><td><b>OIDC</b> (<code class="i">permissions: id-token: write</code>) — គ្មាន Long-lived keys ក្នុង GitHub</td></tr>
+    <tr><td>Vulnerabilities ក្នុង Image</td><td>Scan ដោយ <b>Trivy</b> ឬ <b>Docker Scout</b> ក្នុង CI · បរាជ័យពេលមាន CRITICAL</td></tr>
+    <tr><td>Dependencies</td><td><b>Dependabot</b> / Renovate · <code class="i">npm audit</code> · Lockfile + <code class="i">npm ci</code></td></tr>
+    <tr><td>Third-party Actions</td><td>Pin ទៅ SHA · <code class="i">permissions:</code> តិចបំផុត · ប្រុងប្រយ័ត្ន <code class="i">pull_request_target</code></td></tr>
+    <tr><td>Runtime</td><td>Non-root · <code class="i">--read-only</code> · <code class="i">--cap-drop ALL</code> · Resource limits</td></tr>
+    <tr><td>Provenance</td><td>SBOM + Attestations (<code class="i">provenance: true</code>, <code class="i">sbom: true</code> ក្នុង build-push-action)</td></tr>
+  </table>
+  <script type="text/x-code" data-lang="yaml" data-label="CI step: Trivy scan + .github/dependabot.yml">
+      - name: Scan image
+        uses: aquasecurity/trivy-action@0.33.1      # ពិនិត្យកំណែចុងក្រោយ
+        with:
+          image-ref: ghcr.io/${{ github.repository }}:sha-${{ github.sha }}
+          severity: CRITICAL,HIGH
+          exit-code: "1"                             # Pipeline បរាជ័យបើរកឃើញ
+
+# .github/dependabot.yml
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule: { interval: weekly }
+  - package-ecosystem: docker
+    directory: /
+    schedule: { interval: weekly }
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: weekly }
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១៤</h4>
+    <p>រត់ <code class="i">kafe:1.2</code> ឱ្យមានសុវត្ថិភាពបំផុត៖ Filesystem read-only (លើកលែង /tmp), គ្មាន Linux capabilities, ហាមបង្កើនសិទ្ធិ, Memory 128MB។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash" data-label="Terminal" data-sh>
+docker run -d --name hardened -p 8080:3000 --read-only --tmpfs /tmp --cap-drop ALL --security-opt no-new-privileges --memory 128m kafe:1.2 >/dev/null
+sleep 1
+curl -s localhost:8080/health
+docker exec hardened sh -c 'touch /app/hack.txt'
+docker inspect hardened --format 'ReadOnly={{.HostConfig.ReadonlyRootfs}} CapDrop={{.HostConfig.CapDrop}} User={{.Config.User}}'
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Docker Engine 29.9 (Linux)</span></div><pre><span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker run -d --name hardened -p 8080:3000 --read-only --tmpfs /tmp --cap-drop ALL --security-opt no-new-privileges --memory 128m kafe:1.2 &gt;/dev/null</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">sleep 1</span>
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">curl -s localhost:8080/health</span>
+{&quot;ok&quot;:true,&quot;version&quot;:&quot;dev&quot;,&quot;host&quot;:&quot;4d7b15447982&quot;,&quot;db&quot;:&quot;not configured&quot;}
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker exec hardened sh -c &#x27;touch /app/hack.txt&#x27;</span>
+touch: cannot touch &#x27;/app/hack.txt&#x27;: Read-only file system
+<span class="tp">dara@kafe:~/kafe$</span> <span class="tc">docker inspect hardened --format &#x27;ReadOnly={{.HostConfig.ReadonlyRootfs}} CapDrop={{.HostConfig.CapDrop}} User={{.Config.User}}&#x27;</span>
+ReadOnly=true CapDrop=[ALL] User=node</pre></div>
+    </details>
+  </div>
+</section>
+
+<!-- NAV: គម្រោងអាជីព -->
+<section id="pro-app">
+  <h2>🚀 Kafe CI/CD Pipeline Simulator</h2>
+  <p>ក្លែងធ្វើ Pipeline ពេញលេញរបស់ Kafe API ដូចក្នុង GitHub Actions៖ Trigger ខុសគ្នា រត់ Jobs ខុសគ្នា។</p>
+  <ol class="steps">
+    <li><b>Push → feat/menu</b>៖ មានតែ lint + test (មិន Deploy)</li>
+    <li><b>Pull Request</b>៖ + docker build + Trivy scan (ពិនិត្យមុន Merge)</li>
+    <li><b>Merge → main</b>៖ Push image <code class="i">sha-…</code> → Staging → Smoke test → ⏸ <b>Approve</b> → Production</li>
+    <li><b>Release tag</b>៖ Image <code class="i">1.1.0</code> + <code class="i">1.1</code> → Production</li>
+    <li>បើក 🐞 / 🛡️ / 🔥 ហើយរត់ម្តងទៀត — មើល Job ណាបរាជ័យ ហើយ Jobs បន្ទាប់ត្រូវ <b>skipped</b> · ចុច <b>↩ Rollback</b> ដើម្បីត្រឡប់កំណែមុន</li>
+  </ol>
+  <script type="text/x-code" data-lang="html" data-label="Kafe CI/CD Pipeline Simulator" data-demo>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Kantumruy Pro", system-ui, sans-serif; color: #0f1a2e; background: #f6f8fc; font-size: 14px; }
+  .app { display: grid; gap: 10px; padding: 10px; }
+  .bar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  button { font: inherit; border: 1px solid #c9d5ea; background: #fff; color: #0f1a2e; border-radius: 8px; padding: 6px 10px; cursor: pointer; min-height: 36px; }
+  button.primary { background: #1d63ed; border-color: #1d63ed; color: #fff; }
+  button.ok { background: #16a34a; border-color: #16a34a; color: #fff; }
+  button.bad { background: #dc2626; border-color: #dc2626; color: #fff; }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  label.tog { display: inline-flex; gap: 5px; align-items: center; background: #fff; border: 1px solid #e3e9f5; border-radius: 8px; padding: 4px 8px; font-size: 13px; cursor: pointer; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 10px; }
+  @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
+  .card { background: #fff; border: 1px solid #dde4f0; border-radius: 12px; padding: 10px; min-width: 0; }
+  .card h4 { margin: 0 0 8px; font-size: 14px; display: flex; justify-content: space-between; gap: 6px; align-items: center; }
+  .run-title { font-size: 13px; color: #475569; margin-bottom: 8px; }
+  .stages { display: flex; flex-wrap: wrap; gap: 6px; align-items: stretch; }
+  .stage { flex: 1 1 120px; border: 1px solid #e3e9f5; border-radius: 10px; padding: 7px 8px; background: #fbfcfe; cursor: pointer; min-width: 0; }
+  .stage .n { font-weight: 600; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .stage .s { font-size: 12px; color: #64748b; }
+  .stage.running { border-color: #f59e0b; background: #fffbeb; }
+  .stage.success { border-color: #86efac; background: #f0fdf4; }
+  .stage.failure { border-color: #fca5a5; background: #fef2f2; }
+  .stage.skipped { opacity: .5; }
+  .stage.waiting { border-color: #a5b4fc; background: #eef2ff; }
+  .stage.sel { outline: 2px solid #1d63ed; outline-offset: 1px; }
+  .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #cbd5e1; margin-right: 4px; }
+  .running .dot { background: #f59e0b; animation: p 0.8s infinite alternate; } .success .dot { background: #16a34a; } .failure .dot { background: #dc2626; } .waiting .dot { background: #6366f1; }
+  @keyframes p { to { opacity: .3; } }
+  pre.log { margin: 8px 0 0; background: #0b0e14; color: #d6deeb; border-radius: 8px; padding: 8px 10px; font: 12px/1.55 "JetBrains Mono", monospace; white-space: pre-wrap; max-height: 210px; overflow: auto; min-height: 80px; }
+  .log .e { color: #ff8b8b; } .log .g { color: #7fd962; } .log .y { color: #ffd580; }
+  .env { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; align-items: center; }
+  .tag { font-family: "JetBrains Mono", monospace; font-size: 12px; background: #e8f0fe; color: #0b3d91; border-radius: 6px; padding: 1px 6px; }
+  .tag.prod { background: #dcfce7; color: #166534; }
+  ul.hist { list-style: none; padding: 0; margin: 6px 0 0; font-size: 12.5px; max-height: 130px; overflow: auto; }
+  ul.hist li { display: flex; justify-content: space-between; gap: 6px; padding: 3px 0; border-bottom: 1px solid #f1f5f9; }
+  .runs { font-size: 12.5px; max-height: 150px; overflow: auto; }
+  .runs div { display: flex; gap: 6px; padding: 3px 0; border-bottom: 1px solid #f1f5f9; }
+  .approve { display: none; gap: 6px; margin-top: 8px; align-items: center; flex-wrap: wrap; background: #eef2ff; border-radius: 8px; padding: 8px; }
+  .approve.on { display: flex; }
+  small.mut { color: #64748b; }
+</style>
+
+<div class="app">
+  <div class="bar">
+    <button id="evPush">📤 Push → feat/menu</button>
+    <button id="evPR">🔀 Pull Request</button>
+    <button id="evMerge" class="primary">✅ Merge → main</button>
+    <button id="evTag">🏷️ Release tag</button>
+  </div>
+  <div class="bar">
+    <label class="tog"><input type="checkbox" id="bugTest"> 🐞 Test បរាជ័យ</label>
+    <label class="tog"><input type="checkbox" id="bugCve"> 🛡️ CVE CRITICAL ក្នុង Image</label>
+    <label class="tog"><input type="checkbox" id="bugSmoke"> 🔥 Staging smoke test ខូច</label>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h4><span>⚙️ Workflow run</span><small class="mut" id="runStatus">—</small></h4>
+      <div class="run-title" id="runTitle">ចុចប៊ូតុងខាងលើ ដើម្បីចាប់ផ្តើម Pipeline</div>
+      <div class="stages" id="stages"></div>
+      <div class="approve" id="approve">⏸ <b>production</b> តម្រូវការអនុម័ត៖
+        <button class="ok" id="btnApprove">Approve & deploy</button><button id="btnReject">Reject</button></div>
+      <pre class="log" id="log">Logs នឹងបង្ហាញនៅទីនេះ…</pre>
+    </div>
+    <div style="display:grid; gap:10px; align-content:start; min-width:0">
+      <div class="card">
+        <h4>🌍 Environments</h4>
+        <div class="env">
+          <span>staging</span><span><span class="tag" id="vStaging">—</span></span>
+          <span>production</span><span><span class="tag prod" id="vProd">—</span></span>
+        </div>
+        <ul class="hist" id="hist"></ul>
+      </div>
+      <div class="card">
+        <h4>📦 ghcr.io/kafe/api</h4>
+        <div id="registry" class="runs"><small class="mut">(មិនទាន់មាន Image)</small></div>
+      </div>
+      <div class="card">
+        <h4>🕘 Runs</h4>
+        <div id="runs" class="runs"><small class="mut">(ទទេ)</small></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = s => document.getElementById(s);
+const S = { version: [1, 0, 0], sha: 0, prNum: 0, staging: null, prod: null, history: [], registry: [], runs: [], busy: false, sel: 0, stages: [], approveResolve: null };
+const sha = () => (0x3f2a1c9 + S.sha * 7919).toString(16).slice(-7);
+const ver = () => S.version.join(".");
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+const STAGES = {
+  lint:    { n: "lint", logs: () => ["$ npm ci", "added 212 packages in 3s", "$ npm run lint", "✔ 0 problems"] },
+  test22:  { n: "test (node 22)", fail: () => $("bugTest").checked, logs: f => ["$ npm test", "✔ មានផលិតផល ៣", f ? "<e>✖ formatUSD — expected '$2.50', actual '$2.5'</e>" : "✔ formatUSD", f ? "<e>ℹ pass 1 · fail 1</e>" : "<g>ℹ pass 2 · fail 0</g>", ...(f ? ["<e>Error: Process completed with exit code 1.</e>"] : [])] },
+  test24:  { n: "test (node 24)", fail: () => $("bugTest").checked, logs: f => STAGES.test22.logs(f) },
+  build:   { n: "docker build", logs: () => ["$ docker buildx build --target runtime .", "#8 [deps 4/4] RUN npm ci  CACHED", "#11 [runtime 6/6] COPY src ./src  0.1s", "#12 exporting to image  DONE", `<g>✔ image ghcr.io/kafe/api:sha-${sha()}</g>`] },
+  scan:    { n: "trivy scan", fail: () => $("bugCve").checked, logs: f => ["$ trivy image --severity CRITICAL,HIGH --exit-code 1", f ? "<e>CVE-2026-XXXX  openssl  CRITICAL  fixed in 3.5.4</e>" : "<g>Total: 0 (HIGH: 0, CRITICAL: 0)</g>", ...(f ? ["<e>Error: vulnerabilities found — ធ្វើបច្ចុប្បន្នភាព Base image</e>"] : [])] },
+  push:    { n: "push image", logs: () => [`$ docker push ghcr.io/kafe/api (tags: ${S.curTags.join(", ")})`, "<g>✔ pushed digest sha256:" + (S.sha * 99991 + 12345).toString(16).padStart(12, "a") + "…</g>"] },
+  staging: { n: "deploy staging", logs: () => ["$ ssh deploy@staging 'docker compose pull api && docker compose up -d --wait api'", `Container kafe-api-1  Recreated (${S.curTags[0]})`, "<g>✔ Container healthy</g>"], after: () => { S.staging = S.curTags[0]; } },
+  smoke:   { n: "smoke test", fail: () => $("bugSmoke").checked, logs: f => ["$ curl -fsS https://staging.kafe.example.com/health", f ? "<e>curl: (22) The requested URL returned error: 500</e>" : `<g>{"ok":true,"version":"${S.curTags[0]}"}</g>`] },
+  approve: { n: "⏸ approval", approval: true, logs: () => ["Waiting for review: production requires approval from @kafe/leads"] },
+  prod:    { n: "deploy production", logs: () => ["$ ssh deploy@prod 'docker compose pull api && docker compose up -d --wait api'", "<g>✔ https://kafe.example.com — " + S.curTags[0] + "</g>"], after: () => { if (S.prod) S.history.unshift(S.prod); S.prod = S.curTags[0]; } },
+};
+const PLANS = {
+  push:  { title: () => `push → feat/menu (${sha()})`, keys: ["lint", "test22", "test24"] },
+  pr:    { title: () => `pull_request #${S.prNum}: feat/menu → main`, keys: ["lint", "test22", "test24", "build", "scan"] },
+  merge: { title: () => `push → main (Merge #${S.prNum || 1}) · ${sha()}`, keys: ["lint", "test22", "test24", "build", "scan", "push", "staging", "smoke", "approve", "prod"] },
+  tag:   { title: () => `push tag v${ver()}`, keys: ["test22", "build", "scan", "push", "approve", "prod"] },
+};
+
+function render() {
+  $("stages").innerHTML = S.stages.map((s, i) => `<div class="stage ${s.st} ${i === S.sel ? "sel" : ""}" data-i="${i}"><div class="n"><span class="dot"></span>${s.n}</div><div class="s">${{ queued: "queued", running: "running…", success: "✓ " + s.t + "s", failure: "✗ failed", skipped: "skipped", waiting: "waiting" }[s.st]}</div></div>`).join("");
+  const s = S.stages[S.sel];
+  $("log").innerHTML = s ? (s.lines.length ? s.lines.map(l => l.replace(/^<e>(.*)<\/e>$/, '<span class="e">$1</span>').replace(/^<g>(.*)<\/g>$/, '<span class="g">$1</span>')).join("\n") : "(queued)") : "Logs នឹងបង្ហាញនៅទីនេះ…";
+  $("vStaging").textContent = S.staging || "—";
+  $("vProd").textContent = S.prod || "—";
+  $("hist").innerHTML = S.history.map(t => `<li><span class="tag">${t}</span><button data-rb="${t}" ${S.busy ? "disabled" : ""}>↩ Rollback</button></li>`).join("");
+  $("registry").innerHTML = S.registry.length ? S.registry.map(r => `<div><span class="tag">${r}</span></div>`).join("") : '<small class="mut">(មិនទាន់មាន Image)</small>';
+  $("runs").innerHTML = S.runs.length ? S.runs.map(r => `<div><span>${r.ok === null ? "🟡" : r.ok ? "✅" : "❌"}</span><span>${r.title}</span></div>`).join("") : '<small class="mut">(ទទេ)</small>';
+  ["evPush", "evPR", "evMerge", "evTag"].forEach(id => $(id).disabled = S.busy);
+}
+
+async function run(kind) {
+  if (S.busy) return;
+  S.busy = true;
+  if (kind === "pr") S.prNum++;
+  if (kind !== "tag") S.sha++;
+  if (kind === "tag") { S.version[1]++; S.version[2] = 0; }
+  const plan = PLANS[kind];
+  S.curTags = kind === "tag" ? [ver(), S.version.slice(0, 2).join(".")] : [`sha-${sha()}`, ...(kind === "merge" ? ["latest"] : [])];
+  const run = { title: plan.title(), ok: null };
+  S.runs.unshift(run);
+  $("runTitle").textContent = "▶ " + run.title;
+  $("runStatus").textContent = "in progress";
+  S.stages = plan.keys.map(k => ({ k, n: STAGES[k].n, st: "queued", lines: [], t: 0 }));
+  S.sel = 0; render();
+  let failed = false;
+  for (let i = 0; i < S.stages.length; i++) {
+    const st = S.stages[i], def = STAGES[st.k];
+    if (failed) { st.st = "skipped"; continue; }
+    S.sel = i; st.st = def.approval ? "waiting" : "running"; render();
+    if (def.approval) {
+      st.lines = def.logs(); render();
+      $("approve").classList.add("on");
+      const ok = await new Promise(r => S.approveResolve = r);
+      $("approve").classList.remove("on");
+      st.lines.push(ok ? "<g>✔ Approved by @dara</g>" : "<e>✗ Rejected by @dara</e>");
+      st.st = ok ? "success" : "failure"; st.t = 0;
+      if (!ok) failed = true;
+      render(); continue;
+    }
+    const f = def.fail ? def.fail() : false;
+    const lines = def.logs(f);
+    for (const l of lines) { await sleep(260); st.lines.push(l); render(); }
+    st.t = (1 + Math.random() * 20).toFixed(0);
+    st.st = f ? "failure" : "success";
+    if (!f && st.k === "push") S.curTags.forEach(t => { if (!S.registry.includes(t)) S.registry.unshift(t); });
+    if (!f && def.after) def.after();
+    if (f) failed = true;
+    render();
+  }
+  run.ok = !failed;
+  $("runStatus").textContent = failed ? "❌ failure" : "✅ success";
+  S.busy = false; render();
+}
+
+async function rollback(tag) {
+  if (S.busy) return;
+  S.busy = true;
+  const run = { title: `workflow_dispatch: rollback → ${tag}`, ok: null };
+  S.runs.unshift(run);
+  S.curTags = [tag];
+  $("runTitle").textContent = "▶ " + run.title;
+  S.stages = [{ k: "prod", n: "rollback production", st: "running", lines: [], t: 0 }];
+  S.sel = 0; render();
+  for (const l of [`$ TAG=${tag} docker compose up -d --wait api`, `Container kafe-api-1  Recreated (${tag})`, `<g>✔ production → ${tag} (ក្នុង 8 វិនាទី)</g>`]) { await sleep(300); S.stages[0].lines.push(l); render(); }
+  S.history = S.history.filter(t => t !== tag);
+  if (S.prod) S.history.unshift(S.prod);
+  S.prod = tag; S.stages[0].st = "success"; S.stages[0].t = 8;
+  run.ok = true; $("runStatus").textContent = "✅ success";
+  S.busy = false; render();
+}
+
+$("evPush").onclick = () => run("push");
+$("evPR").onclick = () => run("pr");
+$("evMerge").onclick = () => run("merge");
+$("evTag").onclick = () => run("tag");
+$("btnApprove").onclick = () => S.approveResolve && S.approveResolve(true);
+$("btnReject").onclick = () => S.approveResolve && S.approveResolve(false);
+document.addEventListener("click", e => {
+  const st = e.target.closest(".stage"); if (st) { S.sel = +st.dataset.i; render(); }
+  const rb = e.target.closest("[data-rb]"); if (rb) rollback(rb.dataset.rb);
+});
+render();
+<\/script>
+</script>
+</section>
+
+<section id="pro-code">
+  <h2>📁 Pipeline ពេញ: <code class="i">.github/workflows/pipeline.yml</code></h2>
+  <p>Workflow តែមួយដែល Simulator ខាងលើតំណាង (Lint/Test → Build → Scan → Push → Staging → Approval → Production)។</p>
+  <script type="text/x-code" data-lang="yaml" data-label=".github/workflows/pipeline.yml">
+name: Pipeline
+
+on:
+  push:
+    branches: [main, "feat/**"]
+    tags: ["v*.*.*"]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pipeline-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  IMAGE: ghcr.io/${{ github.repository }}
+
+jobs:
+  # ---------- CI: គ្រប់ Push / PR ----------
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: { node: [22, 24] }
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with: { node-version: "${{ matrix.node }}", cache: npm }
+      - run: npm ci
+      - run: npm run lint --if-present
+      - run: npm test
+
+  # ---------- Build + Scan: PR, main, tags ----------
+  image:
+    needs: test
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      tag: ${{ steps.meta.outputs.version }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        if: github.event_name != 'pull_request'
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE }}
+          tags: |
+            type=sha,prefix=sha-
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true                                   # ផ្ទុកក្នុង Runner សម្រាប់ Scan
+          tags: ${{ steps.meta.outputs.tags }}
+          build-args: APP_VERSION=${{ steps.meta.outputs.version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Trivy scan
+        uses: aquasecurity/trivy-action@0.33.1         # Pin ទៅកំណែ/SHA ចុងក្រោយ
+        with:
+          image-ref: ${{ env.IMAGE }}:${{ steps.meta.outputs.version }}
+          severity: CRITICAL,HIGH
+          exit-code: "1"
+      - name: Push
+        if: github.event_name != 'pull_request'
+        run: docker push --all-tags ${{ env.IMAGE }}
+
+  # ---------- CD ----------
+  staging:
+    needs: image
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: { name: staging, url: "https://staging.kafe.example.com" }
+    steps:
+      - uses: appleboy/ssh-action@v1
+        env: { TAG: "${{ needs.image.outputs.tag }}" }
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: deploy
+          key: ${{ secrets.SSH_KEY }}
+          envs: TAG
+          script: cd /srv/kafe && docker compose pull api && docker compose up -d --wait api
+      - name: Smoke test
+        run: curl -fsS --retry 5 --retry-delay 3 https://staging.kafe.example.com/health
+
+  production:
+    needs: [image, staging]
+    if: ${{ !failure() && !cancelled() && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')) }}
+    runs-on: ubuntu-latest
+    environment: { name: production, url: "https://kafe.example.com" }   # Required reviewers
+    steps:
+      - uses: appleboy/ssh-action@v1
+        env: { TAG: "${{ needs.image.outputs.tag }}" }
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: deploy
+          key: ${{ secrets.SSH_KEY }}
+          envs: TAG
+          script: cd /srv/kafe && docker compose pull api && docker compose up -d --wait api
+</script>
+  <div class="warn">⚠️ Workflow YAML ក្នុងវគ្គនេះ <b>មិនត្រូវបានរត់លើ GitHub ពិតទេ</b> (មិនអាចភ្ជាប់ GitHub/Registry ពីម៉ាស៊ីនបង្កើតវគ្គ)។ ពាក្យបញ្ជា Docker, Compose និង Git ក្នុងមេរៀនរត់ពិត។ កំណែ Actions (<code class="i">@v5</code>, <code class="i">@v6</code> ...) គួរពិនិត្យនៅ GitHub Marketplace មុនប្រើ។</div>
+</section>
+
+<section id="pro-check">
+  <h2>✅ Checklist & គម្រោងចុងក្រោយ</h2>
+  <table>
+    <tr><th>Docker</th><th>✔</th></tr>
+    <tr><td>Multi-stage · Base image តូច + Tag ច្បាស់ · <code class="i">.dockerignore</code></td><td>☐</td></tr>
+    <tr><td>Layer order (Dependencies មុន Source) · <code class="i">npm ci --omit=dev</code></td><td>☐</td></tr>
+    <tr><td><code class="i">USER node</code> · HEALTHCHECK · Exec-form CMD · Graceful SIGTERM</td><td>☐</td></tr>
+    <tr><td>គ្មាន Secrets ក្នុង Image · Config តាម ENV</td><td>☐</td></tr>
+    <tr><td>Compose៖ healthcheck + depends_on · Volumes សម្រាប់ទិន្នន័យ · DB មិនបើក Port</td><td>☐</td></tr>
+    <tr><th>CI/CD</th><th>✔</th></tr>
+    <tr><td>Branch protection · PR តម្រូវ CI ✅ + Review</td><td>☐</td></tr>
+    <tr><td>Test matrix · Cache (npm, Docker layers)</td><td>☐</td></tr>
+    <tr><td>Image tag មិនប្តូរ (sha / semver) · Scan · SBOM</td><td>☐</td></tr>
+    <tr><td>Staging → Smoke test → Approval → Production · Rollback ១ ចុច</td><td>☐</td></tr>
+    <tr><td><code class="i">permissions:</code> តិចបំផុត · Secrets/OIDC · Dependabot</td><td>☐</td></tr>
+  </table>
+  <div class="ex"><h4>🏁 លំហាត់គម្រោងចុងក្រោយ</h4>
+    <ol>
+      <li>Dockerize Kafe API (TypeScript + Postgres ពីវគ្គមុនៗ)៖ Multi-stage (build → test → runtime) ក្រោម 150MB</li>
+      <li><code class="i">compose.yaml</code> សម្រាប់ Dev (API + Postgres + Adminer) និង <code class="i">compose.prod.yaml</code></li>
+      <li>GitHub Actions៖ CI (lint, typecheck, unit, Playwright E2E ក្នុង Compose) លើរាល់ PR</li>
+      <li>Release៖ Push ទៅ GHCR ជាមួយ <code class="i">sha-*</code> + SemVer · Trivy · SBOM</li>
+      <li>CD ទៅ VPS (SSH + Compose) ឬ Cloud Run · Environment approvals · Workflow rollback</li>
+      <li>Frontend Next.js Deploy ដោយ Vercel (Preview លើ PR)</li>
+    </ol>
+  </div>
+</section>
+
+<section id="roadmap">
+  <h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+  <ol class="steps">
+    <li><b>Docker + CI/CD</b> — មេរៀន ១–១៤ ✅</li>
+    <li><b>Kubernetes</b> — Deployments, Services, Ingress, Helm (ពេល Scale ធំ)</li>
+    <li><b>Infrastructure as Code</b> — Terraform / OpenTofu</li>
+    <li><b>Observability</b> — Logs, Metrics (Prometheus/Grafana), Tracing (OpenTelemetry)</li>
+    <li><b>AI Integration</b> (វគ្គបន្ទាប់)</li>
+  </ol>
+  <p><b>ប្រភពរៀនបន្ថែម:</b> <a href="https://docs.docker.com" target="_blank">docs.docker.com</a> · <a href="https://docs.github.com/actions" target="_blank">GitHub Actions docs</a> · <a href="https://12factor.net" target="_blank">12factor.net</a> · <a href="https://martinfowler.com/articles/continuousIntegration.html" target="_blank">Martin Fowler — Continuous Integration</a></p>
+</section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  css: [['/\\*[\\s\\S]*?\\*/', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['@[\\w-]+', 'kw'], ['--[\\w-]+', 'attr'], ['#[0-9a-fA-F]{3,8}\\b', 'n'], ['\\b[\\w-]+(?=\\()', 'f'], ['[.:][\\w\\\\:-]+(?=[^;{}]*\\{)', 'tag'], ['\\b\\d+(?:\\.\\d+)?(?:px|rem|em|%|s|ms|vh|vw)?', 'n']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^']|'')*'", 's'], ['\\$\\$[\\s\\S]*?\\$\\$', 's'],
+        ['\\b(?:SELECT|FROM|WHERE|AND|OR|NOT|IN|IS|NULL|AS|ON|JOIN|LEFT|RIGHT|INNER|FULL|OUTER|CROSS|GROUP|BY|ORDER|HAVING|LIMIT|OFFSET|INSERT|INTO|VALUES|UPDATE|SET|DELETE|RETURNING|CREATE|TABLE|INDEX|UNIQUE|PRIMARY|KEY|FOREIGN|REFERENCES|CASCADE|CHECK|DEFAULT|CONSTRAINT|ALTER|ADD|DROP|COLUMN|IF|EXISTS|BEGIN|COMMIT|ROLLBACK|SAVEPOINT|TRANSACTION|WITH|RECURSIVE|CASE|WHEN|THEN|ELSE|END|DISTINCT|UNION|ALL|EXCEPT|INTERSECT|OVER|PARTITION|ROWS|BETWEEN|LIKE|ILIKE|ASC|DESC|NULLS|FIRST|LAST|EXPLAIN|ANALYZE|VIEW|MATERIALIZED|FUNCTION|RETURNS|LANGUAGE|TRIGGER|FOR|EACH|ROW|EXECUTE|GRANT|REVOKE|ROLE|USER|TO|CONFLICT|DO|NOTHING|USING|FILTER|TRUE|FALSE|LATERAL|ANY|SOME|EXCLUDED|GENERATED|ALWAYS|IDENTITY|TYPE|ENUM|SCHEMA|EXTENSION|COPY|FORMAT|OF|CURRENT_DATE|NOW)\\b', 'kw'],
+        ['\\b(?:serial|bigserial|integer|int|bigint|smallint|numeric|decimal|real|text|varchar|char|boolean|bool|date|timestamptz|timestamp|interval|uuid|jsonb|json|bytea|tsvector)\\b', 'hook'],
+        ['\\b[a-z_][a-z0-9_]*(?=\\()', 'f'], ['\\\\[a-z]+\\+?', 'attr'], NUM, ['::|<>|!=|>=|<=|->>|->|\\|\\||[=<>*+/-]', 'op']],
+  prisma: [['//[^\\n]*', 'c'], STR, ['\\b(?:model|enum|generator|datasource|type|view)\\b', 'kw'],
+        ['@@?[a-zA-Z.]+', 'hook'], ['\\b(?:String|Int|BigInt|Float|Decimal|Boolean|DateTime|Json|Bytes)\\b', 'attr'], ['\\b[a-z_][A-Za-z0-9_]*(?=\\()', 'f'], NUM],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  docker: [['#[^\\n]*', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'[^\'\\n]*\'', 's'], ['^\\s*(?:FROM|RUN|CMD|LABEL|EXPOSE|ENV|ADD|COPY|ENTRYPOINT|VOLUME|USER|WORKDIR|ARG|ONBUILD|STOPSIGNAL|HEALTHCHECK|SHELL)\\b', 'kw'], ['\\bAS\\b', 'kw'], ['--[\\w-]+(?:=[^\\s]+)?', 'attr'], ['\\$\\{?\\w+\\}?', 'hook']],
+  yaml: [['#[^\\n]*', 'c'], ['\\$\\{\\{[^}]*\\}\\}', 'hook'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'[^\'\\n]*\'', 's'], ['^\\s*-?\\s*[\\w./-]+(?=:(?:\\s|$))', 'attr'], ['\\b(?:true|false|null)\\b', 'kw'], ['^\\s*-(?=\\s)', 'op'], ['[|>](?=\\s*$)', 'op'], ['\\b\\d+(?:\\.\\d+)*\\b', 'n']],
+};
+LANGS.tsx = LANGS.jsx.map((r, i) => i === 3 ? ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof|type|interface|as|satisfies|readonly|keyof)\\b', 'kw'] : r);
+LANGS.tsx.splice(4, 0, ['\\b(?:string|number|boolean|void|unknown|Promise|React)\\b', 'sh']);
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'docker' || lang === 'yaml') ? 'm' : lang === 'sql' ? 'i' : '') : esc(code);
+
+const TW = [], TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', sql: 'SQL', prisma: 'Prisma Schema', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', tsx: 'TSX', css: 'CSS', docker: 'Dockerfile', yaml: 'YAML' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else { fr.srcdoc = FRAME_HEAD + (sc.dataset.twrun !== undefined ? '<style>' + TW[+sc.dataset.twrun] + '</style>' : '') + raw; if (sc.dataset.twrun !== undefined && !sc.hasAttribute('data-noshow')) { const pre = document.createElement('pre'), code = document.createElement('code'); code.innerHTML = highlight(raw, lang); pre.appendChild(code); box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'HTML') + ' · ▶ លទ្ធផល (Tailwind CSS ពិត)'; box.append(pre); } }
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="docker"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

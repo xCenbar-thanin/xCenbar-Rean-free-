@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន UX/UI Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f8f7fc; --panel:#ffffff; --text:#1f1a30; --muted:#5b6b61; --line:#e4e0f0;
+  --accent:#6d28d9; --accent2:#8b5cf6; --accent-soft:#f0eafe;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#c4b5fd; --accent2:#a78bfa; --accent-soft:#211a36;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#c4b5fd; --accent2:#a78bfa; --accent-soft:#211a36;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#6d28d9,#db2777);color:#fff;font-size:12px;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#5b21b6,#8b5cf6);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.c{color:#8b949e;font-style:italic}.sel{color:#ffa657}.at{color:#ff7b72}.pr{color:#79c0ff}
+.s{color:#a5d6ff}.n{color:#79c0ff}.f{color:#d2a8ff}.v{color:#a5d6ff}.tg{color:#7ee787}.pn{color:#8b949e}.at2{color:#79c0ff}
+.sw{display:inline-block;width:.9em;height:.9em;border-radius:3px;border:1px solid #888;margin-right:4px;vertical-align:-1px}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+.codebox.diagram pre{background:var(--accent-soft);color:var(--text)}
+.codebox.diagram pre code{color:inherit}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em}
+
+</style>
+<link rel="icon" href="../assets/icons/uxui.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/uxui.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>វគ្គសិក្សា UX/UI Design ពីដើមដល់កម្រិតអាជីព (Figma)</h1>
+  <button class="btn" id="themeBtn">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. UX/UI Design ជាអ្វី?</a>
+<a href="#tools">២. ឧបករណ៍ និងរបៀបដំឡើង (Figma + VS Code)</a>
+<a href="#elements">៣. ធាតុនីមួយៗរបស់ UX/UI Design</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Design Thinking &amp; Double Diamond</a>
+<a href="#l2">មេរៀន ២: User Research: Interview, Persona, Journey Map</a>
+<a href="#l3">មេរៀន ៣: Information Architecture &amp; User Flow</a>
+<a href="#l4">មេរៀន ៤: Wireframe: Low-fi → Mid-fi → High-fi</a>
+<a href="#l5">មេរៀន ៥: Visual Design Principles &amp; Gestalt</a>
+<a href="#l6">មេរៀន ៦: Color: Palette, 60-30-10, Contrast</a>
+<a href="#l7">មេរៀន ៧: Typography: Font, Type Scale, Hierarchy</a>
+<a href="#l8">មេរៀន ៨: Layout, Grid &amp; 8pt Spacing</a>
+<a href="#l9">មេរៀន ៩: Components &amp; States</a>
+<a href="#l10">មេរៀន ១០: Form UX &amp; UX Writing</a>
+<a href="#l11">មេរៀន ១១: Accessibility (A11y) — Design សម្រាប់មនុស្សគ្រប់គ្នា</a>
+<a href="#l12">មេរៀន ១២: Responsive &amp; Mobile Design</a>
+<a href="#l13">មេរៀន ១៣: 10 Usability Heuristics (Jakob Nielsen)</a>
+<a href="#l14">មេរៀន ១៤: Prototyping &amp; Micro-interactions</a>
+<a href="#l15">មេរៀន ១៥: Usability Testing &amp; Metrics</a>
+<a href="#l16">មេរៀន ១៦: Design Handoff: ប្រគល់ Design ឱ្យ Developer</a>
+<a href="#cheat">📋 Cheat Sheet: លេខ និងច្បាប់ដែលគួរចាំ</a>
+<h4>ផ្នែកទី ៣ – Figma កម្រិតអាជីព</h4>
+<a href="#pro">Kafe App: ទិដ្ឋភាពទូទៅ</a>
+<a href="#pro-figma">🧩 ជំហាន Figma កម្រិតអាជីព</a>
+<a href="#pro-tokens">🌗 Variables + Modes: Light &amp; Dark ក្នុង Figma</a>
+<a href="#pro-app">📱 Kafe App — Prototype ដែលចុចសាកបាន</a>
+<a href="#pro-check">✅ Checklist កម្រិតអាជីព &amp; Case Study</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+
+</nav>
+<main>
+<section class="hero">
+  <h2>🎨 មេរៀន UX/UI Design ពីដើមដល់ចប់</h2>
+  <p>រៀនរចនា App និង Website ដែល <b>ងាយប្រើ (UX)</b> និង <b>ស្អាត (UI)</b>៖ ពី Research, Wireframe, ពណ៌, អក្សរ, Component, Accessibility រហូតដល់ <b>Figma កម្រិតអាជីព</b> និងបំប្លែង Design ទៅជាកូដ។ មេរៀននីមួយៗមាន <b>រូបភាពឧទាហរណ៍</b> ដែលអាចមើល និងចុចសាកបាន — <b>មិនចាំបាច់ចេះសរសេរកូដទេ</b>។</p>
+  <p><span class="badge">🚫 មិនចាំបាច់ចេះកូដ</span><span class="badge">📘 ១៦ មេរៀន</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">🧩 Figma</span><span class="badge">🏆 App កម្រិតអាជីព</span></p>
+</section>
+
+<!-- ===================== PART 1 ===================== -->
+<section id="intro">
+  <h2>១. UX/UI Design ជាអ្វី?</h2>
+  <div class="grid">
+    <div class="card"><b>UX = User Experience</b><br>បទពិសោធន៍អ្នកប្រើ — តើ App <b>ងាយប្រើ មានប្រយោជន៍</b> ហើយដោះស្រាយបញ្ហាពិតឬទេ? (Research, Flow, Wireframe, Testing)</div>
+    <div class="card"><b>UI = User Interface</b><br>ផ្ទៃប្រើប្រាស់ — អ្វីដែលអ្នកប្រើ <b>មើលឃើញ និងចុច</b>៖ ពណ៌ អក្សរ ប៊ូតុង Icon ប្លង់ ចលនា</div>
+  </div>
+  <div class="note">💡 <b>ឧទាហរណ៍ងាយ៖</b> ផ្ទះមួយ — <b>UX</b> គឺការរៀបចំបន្ទប់ឱ្យរស់នៅស្រួល (ផ្លូវដើរ, ទីតាំងបង្គន់, ពន្លឺ) ហើយ <b>UI</b> គឺពណ៌ជញ្ជាំង, គ្រឿងសង្ហារិម, កុងតាក់ភ្លើង។ ផ្ទះស្អាតតែរស់នៅលំបាក = UI ល្អ UX អាក្រក់។</div>
+  <h3>អ្នកបង្កើត និងអ្នកត្រួសត្រាយ</h3>
+  <div class="grid">
+    <div class="card"><b>Don Norman</b><br>បង្កើតពាក្យ <b>«User Experience»</b> ពេលធ្វើការនៅ <b>Apple</b> ឆ្នាំ 1993 (តំណែង User Experience Architect) · អ្នកនិពន្ធ <i>The Design of Everyday Things</i></div>
+    <div class="card"><b>Xerox PARC</b><br>កុំព្យូទ័រ <b>Xerox Alto</b> (1973) មាន GUI ដំបូង៖ បង្អួច, Icon, Mouse — គំរូនៃ UI សព្វថ្ងៃ</div>
+    <div class="card"><b>Apple Macintosh</b> (1984)<br>នាំ GUI មកដល់មនុស្សទូទៅ បន្ទាប់មក <b>Windows</b> (1985)</div>
+    <div class="card"><b>Jakob Nielsen</b><br>បង្កើត <b>10 Usability Heuristics</b> (ចុងក្រោយឆ្នាំ 1994) និងសហស្ថាបនិក Nielsen Norman Group ជាមួយ Don Norman</div>
+  </div>
+  <h3>គេប្រើ UX/UI Design ដើម្បីធ្វើអ្វី?</h3>
+  <div class="grid">
+    <div class="card">📱 <b>Mobile App</b><br>ABA, Wing, Grab, Facebook…</div>
+    <div class="card">🌐 <b>Website</b><br>ហាងអនឡាញ, ព័ត៌មាន, ក្រុមហ៊ុន</div>
+    <div class="card">📊 <b>Dashboard / SaaS</b><br>ប្រព័ន្ធគ្រប់គ្រង, POS, ERP</div>
+    <div class="card">🏧 <b>ឧបករណ៍</b><br>ATM, ម៉ាស៊ីនលក់ទំនិញ, ផ្ទាំងក្នុងឡាន, Smart TV</div>
+    <div class="card">🎮 <b>ហ្គេម</b><br>Menu, HUD, Onboarding</div>
+    <div class="card">💼 <b>អាជីវកម្ម</b><br>បង្កើនការលក់ (Conversion) កាត់បន្ថយការសួរ Support</div>
+  </div>
+  <h3>មុខតំណែងការងារ</h3>
+  <table>
+    <tr><th>តំណែង</th><th>ការងារ</th></tr>
+    <tr><td><b>UX Designer</b></td><td>Research, User flow, Wireframe, Usability testing</td></tr>
+    <tr><td><b>UI / Visual Designer</b></td><td>ពណ៌ អក្សរ Icon Layout រចនាស្អាត</td></tr>
+    <tr><td><b>Product Designer</b></td><td>ធ្វើទាំង UX និង UI ហើយគិតពីគោលដៅអាជីវកម្ម (ពេញនិយមបំផុត)</td></tr>
+    <tr><td><b>UX Researcher</b></td><td>សម្ភាសន៍ ការសាកល្បង វិភាគទិន្នន័យអ្នកប្រើ</td></tr>
+    <tr><td><b>UX Writer</b></td><td>សរសេរពាក្យលើប៊ូតុង សារ Error ការណែនាំ</td></tr>
+    <tr><td><b>Design System Designer</b></td><td>បង្កើត និងថែរក្សា Components, ពណ៌, អក្សរ ដែលក្រុមទាំងមូលប្រើ</td></tr>
+  </table>
+</section>
+
+<section id="tools">
+  <h2>២. ឧបករណ៍ និងរបៀបដំឡើង (Figma + VS Code)</h2>
+  <div class="warn">⚠️ <b>UX/UI Design មិនសរសេរកូដ ហើយមិនដំឡើងក្នុង VS Code ទេ</b> — វាជាជំនាញគិត និងរចនា។ ឧបករណ៍ចម្បងគឺ <b>Figma</b> (រចនា) និង <b>FigJam</b> (គូរគំនិត)។ VS Code ជាឧបករណ៍របស់ <b>Developer</b> — Designer គ្រាន់តែដឹងថា Developer ប្រើវាដើម្បីមើល Design របស់អ្នក (ជំហានទី ២ ជាជម្រើស)។</div>
+
+  <h3>ជំហានទី ១: បង្កើតគណនី Figma</h3>
+  <ol class="steps">
+    <li>ចូល <a href="https://www.figma.com" target="_blank">figma.com</a> → <b>Get started for free</b> → ចុះឈ្មោះដោយ Google ឬអ៊ីមែល</li>
+    <li>សិស្ស/គ្រូ អាចស្នើ <b>Figma for Education</b> (ឥតគិតថ្លៃ) នៅ figma.com/education</li>
+    <li>ប្រើក្នុង Browser បានភ្លាម ឬទាញយក <b>Figma Desktop App</b> (Windows/macOS) ពី figma.com/downloads</li>
+    <li>បើកដំណើរការ <b>Khmer font</b>៖ Desktop App ប្រើ Font ក្នុងកុំព្យូទ័របាន; ក្នុង Browser ដំឡើង <b>Figma Font Installer</b> ដើម្បីប្រើ Font ក្នុងម៉ាស៊ីន (ឧ. Kantumruy Pro, Noto Sans Khmer)</li>
+  </ol>
+
+  <h3>ជំហានទី ២ (ជម្រើស): ភ្ជាប់ Figma ជាមួយ VS Code សម្រាប់ Developer</h3>
+  <ol class="steps">
+    <li>ដំឡើង <b>VS Code</b> ពី <a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a></li>
+    <li>ស្វែងរក <b>Figma for VS Code</b> (ផ្សាយដោយ Figma) → Install → ចុច Icon Figma ខាងឆ្វេង → <b>Sign in</b></li>
+    <li>បើក File Figma ក្នុង VS Code៖ មើល Layer, <b>Inspect</b> ពណ៌/ទំហំ/CSS, អាន Comment ហើយភ្ជាប់ទៅកូដ។ មុខងារពេញលេញត្រូវការ <b>Dev Mode</b> (គម្រោងបង់ប្រាក់)</li>
+    <li>(កម្រិតខ្ពស់) ភ្ជាប់ <b>Figma MCP server</b> ទៅ AI ក្នុង VS Code ដើម្បីឱ្យ Developer/AI អាន Design របស់អ្នកបានត្រឹមត្រូវ</li>
+  </ol>
+  
+
+  <h3>ឧបករណ៍ផ្សេងៗ</h3>
+  <table>
+    <tr><th>ឧបករណ៍</th><th>ប្រើសម្រាប់</th></tr>
+    <tr><td><b>Figma</b> ⭐</td><td>UI Design, Prototype, Design System, ធ្វើការជាក្រុមពេលជាក់ស្តែង</td></tr>
+    <tr><td><b>FigJam</b></td><td>Whiteboard៖ Brainstorm, User flow, Journey map</td></tr>
+    <tr><td><b>Penpot</b></td><td>Open-source ស្រដៀង Figma (ឥតគិតថ្លៃ)</td></tr>
+    <tr><td><b>Adobe XD / Sketch</b></td><td>ឧបករណ៍ចាស់ៗ (Sketch តែ macOS)</td></tr>
+    <tr><td><b>Maze / Lyssna</b></td><td>Usability testing ពីចម្ងាយ</td></tr>
+    <tr><td><b>WebAIM Contrast Checker</b></td><td>ពិនិត្យកម្រិត Contrast ពណ៌ (Accessibility)</td></tr>
+    <tr><td><b>Unsplash / Iconify (Plugin)</b></td><td>រូបភាព និង Icon ឥតគិតថ្លៃក្នុង Figma</td></tr>
+  </table>
+
+  <h3>Figma Shortcuts សំខាន់ៗ</h3>
+  <table>
+    <tr><th>Shortcut</th><th>មុខងារ</th></tr>
+    <tr><td><kbd>F</kbd> ឬ <kbd>A</kbd></td><td>Frame (ផ្ទាំងអេក្រង់ ឧ. iPhone)</td></tr>
+    <tr><td><kbd>R</kbd> / <kbd>O</kbd> / <kbd>T</kbd></td><td>Rectangle / Ellipse / Text</td></tr>
+    <tr><td><kbd>Shift</kbd>+<kbd>A</kbd></td><td><b>Auto Layout</b> ⭐ (ដូច Flexbox)</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>K</kbd></td><td>បង្កើត <b>Component</b> (Mac: <kbd>Cmd</kbd>+<kbd>Option</kbd>+<kbd>K</kbd>)</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>D</kbd></td><td>Duplicate</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>G</kbd></td><td>Group</td></tr>
+    <tr><td><kbd>Shift</kbd>+<kbd>1</kbd> / <kbd>Shift</kbd>+<kbd>2</kbd></td><td>Zoom ឱ្យឃើញទាំងអស់ / Zoom ទៅអ្វីដែលជ្រើស</td></tr>
+    <tr><td>សង្កត់ <kbd>Alt</kbd> + Hover</td><td>វាស់ចម្ងាយរវាង Layer</td></tr>
+    <tr><td><kbd>Shift</kbd>+<kbd>E</kbd></td><td>បើក/បិទ Prototype panel</td></tr>
+  </table>
+</section>
+
+<section id="elements">
+  <h2>៣. ធាតុនីមួយៗរបស់ UX/UI Design</h2>
+  <h3>ក) ៥ ស្រទាប់នៃ UX — Jesse James Garrett</h3>
+  <p>ពីសៀវភៅ <i>The Elements of User Experience</i>៖ ចាប់ពីខាងក្រោម (អរូបី) ឡើងទៅខាងលើ (អ្វីដែលមើលឃើញ)។</p>
+  <script type="text/x-code" data-lang="html" data-label="5 Planes of UX" data-demo>
+<style>
+  .planes { display:grid; gap:6px; max-width:520px; font-family:inherit; }
+  .plane { display:grid; grid-template-columns:110px 1fr; gap:10px; align-items:center; padding:10px 14px; border-radius:10px; color:#fff; }
+  .plane b { font-size:15px; } .plane span { font-size:14px; }
+  .p5 { background:#7c3aed; } .p4 { background:#6d28d9; } .p3 { background:#5b21b6; } .p2 { background:#4c1d95; } .p1 { background:#2e1065; }
+  .axis { display:flex; justify-content:space-between; font-size:12px; color:#475569; max-width:520px; }
+</style>
+<div class="axis"><span>▲ មើលឃើញ (UI)</span><span>Concrete</span></div>
+<div class="planes">
+  <div class="plane p5"><b>5 · Surface</b><span>UI៖ ពណ៌ អក្សរ រូបភាព</span></div>
+  <div class="plane p4"><b>4 · Skeleton</b><span>Wireframe, ទីតាំងធាតុ, Navigation</span></div>
+  <div class="plane p3"><b>3 · Structure</b><span>User flow, Information Architecture</span></div>
+  <div class="plane p2"><b>2 · Scope</b><span>មុខងារ និងខ្លឹមសារដែលត្រូវមាន</span></div>
+  <div class="plane p1"><b>1 · Strategy</b><span>គោលដៅអ្នកប្រើ + គោលដៅអាជីវកម្ម</span></div>
+</div>
+<div class="axis"><span>▼ អរូបី (UX)</span><span>Abstract</span></div>
+</script>
+  <h3>ខ) UX Honeycomb — Peter Morville (លក្ខណៈ ៧ នៃ UX ល្អ)</h3>
+  <div class="grid">
+    <div class="card"><b>Useful</b><br>មានប្រយោជន៍ ដោះស្រាយបញ្ហាពិត</div>
+    <div class="card"><b>Usable</b><br>ងាយប្រើ</div>
+    <div class="card"><b>Desirable</b><br>ស្អាត គួរឱ្យចង់ប្រើ</div>
+    <div class="card"><b>Findable</b><br>រកអ្វីដែលចង់បានឃើញងាយ</div>
+    <div class="card"><b>Accessible</b><br>មនុស្សគ្រប់គ្នា (រួមទាំងជនពិការ) ប្រើបាន</div>
+    <div class="card"><b>Credible</b><br>គួរឱ្យទុកចិត្ត</div>
+    <div class="card"><b>Valuable</b><br>មានតម្លៃសម្រាប់អ្នកប្រើ និងអាជីវកម្ម</div>
+  </div>
+  <h3>គ) ធាតុនៃ UI</h3>
+  <table>
+    <tr><th>ធាតុ</th><th>ពន្យល់</th><th>មេរៀន</th></tr>
+    <tr><td><b>Layout & Grid</b></td><td>ការរៀបចំទីតាំង, Column, គម្លាត 8pt</td><td>៨</td></tr>
+    <tr><td><b>Color</b></td><td>ពណ៌ម៉ាក, ពណ៌ស្ថានភាព (Success/Error), Contrast</td><td>៦</td></tr>
+    <tr><td><b>Typography</b></td><td>Font, ទំហំ, Line height, Hierarchy</td><td>៧</td></tr>
+    <tr><td><b>Iconography & Imagery</b></td><td>Icon ដែលមានន័យច្បាស់, រូបភាពគុណភាព</td><td>៩</td></tr>
+    <tr><td><b>Components</b></td><td>Button, Input, Card, Navbar, Modal… ដែលប្រើឡើងវិញ</td><td>៩</td></tr>
+    <tr><td><b>States</b></td><td>Default, Hover, Pressed, Focus, Disabled, Loading, Error, Empty</td><td>៩</td></tr>
+    <tr><td><b>Interaction & Motion</b></td><td>Feedback ពេលចុច, Transition, Micro-interaction</td><td>១៤</td></tr>
+    <tr><td><b>Content / UX Writing</b></td><td>ពាក្យខ្លី ច្បាស់ ជាសកម្មភាព («ទូទាត់ $12» ជាជាង «OK»)</td><td>១០</td></tr>
+    <tr><td><b>Accessibility</b></td><td>Contrast, ទំហំចុច, Label, Keyboard</td><td>១១</td></tr>
+  </table>
+  <h3>ឃ) ច្បាប់ UX ដែលគួរចាំ (Laws of UX)</h3>
+  <table>
+    <tr><th>ច្បាប់</th><th>ន័យ</th><th>អនុវត្ត</th></tr>
+    <tr><td><b>Jakob's Law</b></td><td>អ្នកប្រើចំណាយពេលភាគច្រើនលើ App ផ្សេង ហើយរំពឹងថា App អ្នកដំណើរការដូចគ្នា</td><td>Logo ខាងឆ្វេងលើ, Cart ខាងស្តាំលើ</td></tr>
+    <tr><td><b>Fitts's Law</b></td><td>គោលដៅធំ និងជិត ចុចលឿនជាង</td><td>ប៊ូតុងសំខាន់ធំ នៅជិតមេដៃលើទូរស័ព្ទ</td></tr>
+    <tr><td><b>Hick's Law</b></td><td>ជម្រើសកាន់តែច្រើន សម្រេចចិត្តកាន់តែយូរ</td><td>Menu ខ្លី, បំបែកជាជំហាន</td></tr>
+    <tr><td><b>Miller's Law</b></td><td>Memory រយៈខ្លីចាំបានប្រហែល 7±2 ធាតុ</td><td>បំបែកលេខទូរស័ព្ទជាក្រុម 012 345 678</td></tr>
+    <tr><td><b>Aesthetic-Usability</b></td><td>អ្វីដែលស្អាត ត្រូវគេគិតថាងាយប្រើជាង</td><td>UI ស្អាតជួយ ប៉ុន្តែមិនលាក់បញ្ហា UX</td></tr>
+  </table>
+</section>
+
+<!-- ===================== PART 2 ===================== -->
+<section id="l1">
+  <h2><span class="badge">មេរៀន ១</span>Design Thinking & Double Diamond</h2>
+  <p>ដំណើរការរចនាដែលផ្តោតលើ <b>មនុស្ស</b> (Human-centered)។ Design Thinking ៥ ដំណាក់កាល (Stanford d.school)៖</p>
+  <ol class="steps">
+    <li><b>Empathize</b> (យល់ចិត្ត) — សង្កេត សម្ភាសន៍អ្នកប្រើពិត</li>
+    <li><b>Define</b> (កំណត់បញ្ហា) — សរសេរ Problem statement ឱ្យច្បាស់</li>
+    <li><b>Ideate</b> (បង្កើតគំនិត) — Brainstorm គំនិតច្រើន មិនទាន់វិនិច្ឆ័យ</li>
+    <li><b>Prototype</b> (គំរូ) — ធ្វើគំរូលឿនៗ ថោកៗ (ក្រដាស ឬ Figma)</li>
+    <li><b>Test</b> (សាកល្បង) — ឱ្យអ្នកប្រើពិតសាក ហើយត្រឡប់ទៅកែ (Iterate)</li>
+  </ol>
+  <script type="text/x-code" data-lang="html" data-label="Double Diamond (UK Design Council)" data-demo>
+<style>
+  .dd { display:flex; max-width:560px; font-family:inherit; }
+  .d { flex:1; position:relative; aspect-ratio:2/1; }
+  .d::before { content:""; position:absolute; inset:8% 22%; background:var(--c); transform:scaleX(2.2) rotate(45deg) scale(.62); border-radius:6px; opacity:.9; }
+  .half { position:absolute; inset:0; display:flex; }
+  .half div { flex:1; display:grid; place-items:center; color:#fff; font-size:13px; font-weight:600; z-index:1; text-align:center; }
+  .cap { display:flex; max-width:560px; font-size:12px; color:#475569; text-align:center; }
+  .cap div { flex:1; }
+</style>
+<div class="dd">
+  <div class="d" style="--c:#7c3aed"><div class="half"><div>Discover<br>ពង្រីក</div><div>Define<br>បង្រួម</div></div></div>
+  <div class="d" style="--c:#db2777"><div class="half"><div>Develop<br>ពង្រីក</div><div>Deliver<br>បង្រួម</div></div></div>
+</div>
+<div class="cap"><div>Diamond 1៖ រកបញ្ហាត្រឹមត្រូវ</div><div>Diamond 2៖ រកដំណោះស្រាយត្រឹមត្រូវ</div></div>
+</script>
+  <h3>Problem Statement & "How Might We"</h3>
+  <script type="text/x-code" data-lang="txt" data-label="Template">
+[អ្នកប្រើ] ត្រូវការ [តម្រូវការ] ដោយសារ [មូលហេតុ/Insight]។
+
+ឧ. និស្សិតនៅភ្នំពេញ ត្រូវការកុម្ម៉ង់កាហ្វេមុនមកដល់ហាង
+    ដោយសារពួកគេមានពេលសម្រាកខ្លី ហើយមិនចង់ឈរតម្រង់ជួរ។
+
+How might we... (យើងអាចធ្វើដូចម្តេច...)
+→ យើងអាចធ្វើដូចម្តេចឱ្យនិស្សិតទទួលកាហ្វេបានក្នុងរយៈពេល ២ នាទីក្រោយមកដល់?
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១</h4>
+    <p>សរសេរ Problem statement និង How Might We ចំនួន ២ សម្រាប់ App «កក់តុភោជនីយដ្ឋាន»។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p><b>Problem:</b> គ្រួសារដែលចង់ញ៉ាំអាហារចុងសប្តាហ៍ ត្រូវការដឹងថាហាងនៅតុទំនេរឬអត់ ដោយសារពួកគេមិនចង់ធ្វើដំណើរឆ្ងាយហើយរង់ចាំយូរជាមួយកូនតូច។</p>
+      <p><b>HMW 1:</b> យើងអាចធ្វើដូចម្តេចឱ្យគ្រួសារឃើញតុទំនេរពេលជាក់ស្តែងមុនចេញពីផ្ទះ?<br><b>HMW 2:</b> យើងអាចធ្វើដូចម្តេចឱ្យការកក់តុចប់ក្នុងការចុចតិចជាង ៣ ដង?</p>
+    </details>
+  </div>
+</section>
+
+<section id="l2">
+  <h2><span class="badge">មេរៀន ២</span>User Research: Interview, Persona, Journey Map</h2>
+  <table>
+    <tr><th>វិធី</th><th>ពេលប្រើ</th><th>លទ្ធផល</th></tr>
+    <tr><td><b>User Interview</b></td><td>ចង់យល់ «ហេតុអ្វី» (Qualitative)</td><td>Insight, ការឈឺចាប់ (Pain points)</td></tr>
+    <tr><td><b>Survey</b></td><td>ចង់បានលេខពីមនុស្សច្រើន (Quantitative)</td><td>ភាគរយ, និន្នាការ</td></tr>
+    <tr><td><b>Competitor Analysis</b></td><td>មុនរចនា</td><td>ចំណុចខ្លាំង/ខ្សោយរបស់គូប្រជែង</td></tr>
+    <tr><td><b>Analytics</b></td><td>App មានអ្នកប្រើហើយ</td><td>កន្លែងដែលអ្នកប្រើចាកចេញ</td></tr>
+  </table>
+  <h3>សំណួរ Interview ល្អ vs អាក្រក់</h3>
+  <table>
+    <tr><th>❌ ជៀសវាង</th><th>✅ ល្អ</th></tr>
+    <tr><td>«តើអ្នកចូលចិត្ត App យើងទេ?» (នាំឱ្យឆ្លើយ)</td><td>«សូមប្រាប់ពីលើកចុងក្រោយដែលអ្នកកុម្ម៉ង់កាហ្វេ»</td></tr>
+    <tr><td>«តើអ្នកនឹងប្រើមុខងារ X ទេ?» (ទាយអនាគត)</td><td>«តើអ្នកធ្វើវាដោយរបៀបណាសព្វថ្ងៃ?»</td></tr>
+    <tr><td>សំណួរ បាទ/ទេ</td><td>សំណួរបើកចំហ៖ «ហេតុអ្វី?», «បន្ទាប់មក?»</td></tr>
+  </table>
+  <h3>Persona — តំណាងអ្នកប្រើ (ផ្អែកលើ Research ពិត)</h3>
+  <script type="text/x-code" data-lang="html" data-label="Persona" data-demo>
+<style>
+  .persona { display:grid; grid-template-columns:90px 1fr; gap:14px; max-width:520px; padding:16px; border:1px solid #e2e8f0; border-radius:14px; font-family:inherit; }
+  .avatar { width:90px; height:90px; border-radius:50%; background:linear-gradient(135deg,#a78bfa,#f472b6); display:grid; place-items:center; color:#fff; font-size:32px; }
+  h3 { margin:0; } .role { color:#64748b; margin:0 0 8px; }
+  .tag { display:inline-block; font-size:12px; padding:0 8px; border-radius:99px; background:#ede9fe; color:#5b21b6; margin-right:4px; }
+  ul { margin:6px 0 0; padding-left:18px; } .label { font-weight:600; margin-top:8px; }
+</style>
+<div class="persona">
+  <div class="avatar" aria-hidden="true">ស</div>
+  <div>
+    <h3>សុភា, អាយុ 21</h3>
+    <p class="role">និស្សិតឆ្នាំទី ៣ · ភ្នំពេញ</p>
+    <span class="tag">ទូរស័ព្ទ Android</span><span class="tag">ប្រើ KHQR</span>
+    <div class="label">🎯 គោលដៅ</div>
+    <ul><li>ទិញកាហ្វេលឿនមុនចូលរៀន</li></ul>
+    <div class="label">😣 ការឈឺចាប់</div>
+    <ul><li>រង់ចាំជួរ ១០ នាទី</li><li>មិនដឹងតម្លៃមុន</li></ul>
+    <div class="label">💬 សម្ដី</div>
+    <p>«ខ្ញុំមានពេលសម្រាកតែ ១៥ នាទីប៉ុណ្ណោះ»</p>
+  </div>
+</div>
+</script>
+  <h3>User Journey Map</h3>
+  <table>
+    <tr><th>ដំណាក់កាល</th><th>ដឹងពីហាង</th><th>មើល Menu</th><th>កុម្ម៉ង់</th><th>បង់ប្រាក់</th><th>ទទួលកាហ្វេ</th></tr>
+    <tr><td><b>សកម្មភាព</b></td><td>ឃើញលើ Facebook</td><td>បើក App</td><td>ជ្រើស Size</td><td>ស្កេន KHQR</td><td>ដើរទៅយក</td></tr>
+    <tr><td><b>អារម្មណ៍</b></td><td>😊</td><td>😐</td><td>😕 ជម្រើសច្រើនពេក</td><td>😊</td><td>😡 មិនទាន់រួច</td></tr>
+    <tr><td><b>ឱកាស</b></td><td>—</td><td>រូបភាពច្បាស់</td><td>«កុម្ម៉ង់ដដែល»</td><td>—</td><td>ជូនដំណឹងពេលរួច</td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ២</h4>
+    <p>សរសេរសំណួរ Interview បើកចំហ ៥ សម្រាប់ App «ជួលម៉ូតូ»។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ol>
+        <li>សូមប្រាប់ពីលើកចុងក្រោយដែលអ្នកត្រូវការម៉ូតូ តែគ្មាន។</li>
+        <li>អ្នកធ្វើដូចម្តេចដើម្បីរកម៉ូតូជួលសព្វថ្ងៃ?</li>
+        <li>អ្វីដែលពិបាកបំផុតក្នុងការជួលម៉ូតូ?</li>
+        <li>អ្នកសម្រេចចិត្តជ្រើសហាងមួយ ដោយផ្អែកលើអ្វី?</li>
+        <li>បើអ្នកអាចប្តូររឿងមួយក្នុងការជួល តើអ្នកប្តូរអ្វី? ហេតុអ្វី?</li>
+      </ol>
+    </details>
+  </div>
+</section>
+
+<section id="l3">
+  <h2><span class="badge">មេរៀន ៣</span>Information Architecture & User Flow</h2>
+  <p><b>IA</b> = ការរៀបចំខ្លឹមសារ និង Menu ឱ្យអ្នកប្រើរកឃើញ។ <b>User Flow</b> = ជំហានដែលអ្នកប្រើដើរដើម្បីសម្រេចគោលដៅមួយ។</p>
+  <script type="text/x-code" data-lang="txt" data-label="Sitemap (IA)">
+App កាហ្វេ
+├── 🏠 ទំព័រដើម
+│   ├── ផ្តល់ជូនពិសេស
+│   └── កុម្ម៉ង់ដដែល
+├── ☕ Menu
+│   ├── កាហ្វេ
+│   ├── តែ
+│   └── នំ
+├── 🛒 កន្ត្រក
+│   └── ទូទាត់ → ជោគជ័យ
+└── 👤 គណនី
+    ├── ប្រវត្តិកុម្ម៉ង់
+    └── ការកំណត់
+</script>
+  <script type="text/x-code" data-lang="txt" data-label="User Flow: កុម្ម៉ង់កាហ្វេ">
+ ( ចាប់ផ្តើម ) → [ បើក App ] → [ ជ្រើសកាហ្វេ ] → [ ជ្រើស Size/ស្ករ ]
+                                                      │
+                                                      ▼
+ ( ចប់ ) ← [ ជោគជ័យ + ម៉ោងរួច ] ← < បង់ប្រាក់ជោគជ័យ? > ← [ ទូទាត់ KHQR ]
+                                        │ ទេ
+                                        ▼
+                               [ សារ Error + ព្យាយាមម្តងទៀត ]
+
+ ( ) = ចាប់ផ្តើម/ចប់   [ ] = អេក្រង់/សកម្មភាព   < > = ការសម្រេចចិត្ត
+</script>
+  <div class="note">💡 <b>Card Sorting៖</b> ឱ្យអ្នកប្រើ ១៥–២០ នាក់ដាក់ក្រដាសឈ្មោះខ្លឹមសារជាក្រុមតាមការយល់របស់គេ — ជួយរចនា Menu តាមរបៀបគិតរបស់អ្នកប្រើ មិនមែនរបស់ក្រុមហ៊ុន។ គូរ Flow ក្នុង <b>FigJam</b>។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៣</h4>
+    <p>គូរ User Flow សម្រាប់ «ប្តូរពាក្យសម្ងាត់ពេលភ្លេច» (រួមទាំងករណីអ៊ីមែលមិនមានក្នុងប្រព័ន្ធ)។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="txt" data-label="Answer">
+( ចាប់ផ្តើម ) → [ Login ] → [ ចុច «ភ្លេចពាក្យសម្ងាត់?» ] → [ វាយអ៊ីមែល ]
+   → [ បង្ហាញ «បើអ៊ីមែលនេះមាន យើងបានផ្ញើ Link» ]   ← សារដូចគ្នាជានិច្ច (សុវត្ថិភាព)
+   → [ បើក Email → ចុច Link ] → < Link ផុតកំណត់? > ─ បាទ → [ ស្នើ Link ថ្មី ]
+                                      │ ទេ
+                                      ▼
+   [ វាយពាក្យសម្ងាត់ថ្មី ×2 ] → < ត្រូវគ្នា & រឹងមាំ? > ─ ទេ → [ សារ Error ក្បែរប្រអប់ ]
+                                      │ បាទ
+                                      ▼
+   [ ជោគជ័យ → Login ] → ( ចប់ )
+</script>
+      <p>ចំណាំ៖ មិនប្រាប់ថា «អ៊ីមែលនេះមិនមាន» ទេ ព្រោះជួយឱ្យ Hacker ដឹងថាគណនីណាមាន។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l4">
+  <h2><span class="badge">មេរៀន ៤</span>Wireframe: Low-fi → Mid-fi → High-fi</h2>
+  <table>
+    <tr><th>កម្រិត</th><th>រូបរាង</th><th>គោលបំណង</th></tr>
+    <tr><td><b>Low-fidelity</b></td><td>គូរលើក្រដាស ប្រអប់ប្រផេះ</td><td>សាកគំនិតលឿន ថោក ងាយបោះចោល</td></tr>
+    <tr><td><b>Mid-fidelity</b></td><td>Figma ស-ខ្មៅ ពាក្យពិត</td><td>កំណត់ Layout និង Hierarchy</td></tr>
+    <tr><td><b>High-fidelity</b></td><td>ពណ៌ អក្សរ រូបភាពពិត</td><td>ដូចផលិតផលចុងក្រោយ សម្រាប់ Test និង Handoff</td></tr>
+  </table>
+  <script type="text/x-code" data-lang="html" data-label="Wireframe (Mid-fi)" data-demo>
+<style>
+  .phone { width:240px; border:3px solid #334155; border-radius:28px; padding:14px; font-family:inherit; font-size:12px; }
+  .box { background:#e2e8f0; border-radius:6px; margin-bottom:8px; display:grid; place-items:center; color:#475569; }
+  .row { display:flex; gap:8px; } .row .box { flex:1; height:70px; }
+  .line { height:8px; background:#cbd5e1; border-radius:4px; margin:6px 0; }
+  .btn { height:34px; background:#334155; color:#fff; border-radius:8px; display:grid; place-items:center; }
+  .wrap { display:flex; gap:20px; flex-wrap:wrap; align-items:flex-start; }
+</style>
+<div class="wrap">
+  <div class="phone" aria-label="Wireframe ទំព័រដើម">
+    <div class="box" style="height:24px">🔍 ស្វែងរក</div>
+    <div class="box" style="height:90px">[ Banner រូបភាព ]</div>
+    <div class="line" style="width:50%"></div>
+    <div class="row"><div class="box">☕</div><div class="box">☕</div></div>
+    <div class="row"><div class="box">☕</div><div class="box">☕</div></div>
+    <div class="btn">កុម្ម៉ង់ឥឡូវ</div>
+  </div>
+  <p style="max-width:260px">Wireframe បង្ហាញ <b>ទីតាំង</b> និង <b>លំដាប់សំខាន់</b> តែប៉ុណ្ណោះ — គ្មានពណ៌ ដើម្បីឱ្យក្រុមផ្តោតលើរចនាសម្ព័ន្ធ មិនមែនជជែកពីពណ៌។</p>
+</div>
+</script>
+  <div class="note">💡 <b>ក្នុង Figma៖</b> ចុច <kbd>F</kbd> → ជ្រើស <b>iPhone 16</b> ឬ <b>Android Compact</b> ពីបញ្ជីខាងស្តាំ → គូរប្រអប់ដោយ <kbd>R</kbd> និងអក្សរដោយ <kbd>T</kbd>។ ប្រើ Community kit «Wireframe kit» ដើម្បីលឿន។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៤</h4>
+    <p>គូរ Low-fi wireframe ៣ អេក្រង់សម្រាប់ App កក់តុ៖ ស្វែងរកហាង → ព័ត៌មានហាង → បញ្ជាក់ការកក់។ សរសេរសកម្មភាពចម្បងរបស់អេក្រង់នីមួយៗ។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ol>
+        <li><b>ស្វែងរក៖</b> Search bar + Filter (ថ្ងៃ ម៉ោង ចំនួនមនុស្ស) + បញ្ជីហាង (រូប, ឈ្មោះ, ⭐, ចម្ងាយ)។ <i>សកម្មភាពចម្បង៖</i> ចុចហាង</li>
+        <li><b>ព័ត៌មានហាង៖</b> រូបធំ, ម៉ោងបើក, ផែនទី, ម៉ោងទំនេរជាប៊ូតុងតូចៗ។ <i>សកម្មភាពចម្បង៖</i> ប៊ូតុង «កក់តុ» នៅខាងក្រោម (ជិតមេដៃ)</li>
+        <li><b>បញ្ជាក់៖</b> សង្ខេប (ហាង ថ្ងៃ ម៉ោង មនុស្ស), ឈ្មោះ/លេខទូរស័ព្ទ។ <i>សកម្មភាពចម្បង៖</i> «បញ្ជាក់ការកក់» + តំណ «កែ»</li>
+      </ol>
+    </details>
+  </div>
+</section>
+
+<section id="l5">
+  <h2><span class="badge">មេរៀន ៥</span>Visual Design Principles & Gestalt</h2>
+  <table>
+    <tr><th>គោលការណ៍</th><th>ន័យ</th></tr>
+    <tr><td><b>Hierarchy</b></td><td>អ្វីសំខាន់បំផុតត្រូវលេចធ្លោបំផុត (ទំហំ ពណ៌ កម្រាស់ ទីតាំង)</td></tr>
+    <tr><td><b>Contrast</b></td><td>ភាពខុសគ្នាធ្វើឱ្យលេចធ្លោ (ពណ៌ ទំហំ រូបរាង)</td></tr>
+    <tr><td><b>Alignment</b></td><td>តម្រឹមធាតុតាមបន្ទាត់មើលមិនឃើញ → មើលទៅមានរបៀប</td></tr>
+    <tr><td><b>Proximity</b> (Gestalt)</td><td>ធាតុនៅជិតគ្នា = ក្រុមតែមួយ</td></tr>
+    <tr><td><b>Similarity</b> (Gestalt)</td><td>ធាតុមើលទៅដូចគ្នា = មុខងារដូចគ្នា</td></tr>
+    <tr><td><b>Repetition / Consistency</b></td><td>ប្រើរចនាប័ទ្មដដែលទូទាំង App</td></tr>
+    <tr><td><b>White space</b></td><td>ចន្លោះទំនេរជួយឱ្យដកដង្ហើម និងផ្តោតអារម្មណ៍</td></tr>
+  </table>
+  <h3>Proximity: ចន្លោះប្រាប់ថាអ្វីជាក្រុមតែមួយ</h3>
+  <script type="text/x-code" data-lang="html" data-label="Proximity" data-demo>
+<style>
+  .wrap { display:flex; gap:24px; flex-wrap:wrap; font-family:inherit; }
+  .card { width:220px; padding:14px; border:1px solid #e2e8f0; border-radius:12px; }
+  .card h4 { margin:0; } .card p { margin:0; color:#475569; font-size:14px; }
+  .bad h4, .bad p, .bad .price { margin-bottom:14px; }          /* ចន្លោះស្មើគ្នា = ច្រឡំ */
+  .good .price { margin-top:16px; font-weight:700; color:#7c3aed; }   /* ក្រុមច្បាស់ */
+  .good p { margin-top:2px; }
+  .lbl { font-size:12px; font-weight:700; margin-bottom:6px; }
+</style>
+<div class="wrap">
+  <div><div class="lbl">❌ ចន្លោះស្មើគ្នាគ្រប់កន្លែង</div>
+    <div class="card bad"><h4>ឡាតេ</h4><p>ទឹកដោះគោស្រស់ ស្រទាប់ពពុះ</p><div class="price">$2.50</div></div></div>
+  <div><div class="lbl">✅ ចំណងជើង + ការពិពណ៌នា នៅជិតគ្នា</div>
+    <div class="card good"><h4>ឡាតេ</h4><p>ទឹកដោះគោស្រស់ ស្រទាប់ពពុះ</p><div class="price">$2.50</div></div></div>
+</div>
+</script>
+  <h3>Visual Hierarchy: ប៊ូតុង Primary vs Secondary</h3>
+  <script type="text/x-code" data-lang="html" data-label="Hierarchy: ប៊ូតុង ៣ កម្រិត" data-demo>
+<style>
+  .actions { display:flex; gap:10px; flex-wrap:wrap; font-family:inherit; }
+  button { min-height:44px; padding:0 20px; border-radius:10px; font:inherit; cursor:pointer; }
+  .primary   { background:#6d28d9; color:#fff; border:0; font-weight:600; }   /* សកម្មភាពសំខាន់ ១ */
+  .secondary { background:#fff; color:#6d28d9; border:2px solid #6d28d9; }
+  .tertiary  { background:none; color:#475569; border:0; text-decoration:underline; }
+</style>
+<div class="actions">
+  <button class="primary">ទូទាត់ $5.00</button>
+  <button class="secondary">បន្ថែមទៀត</button>
+  <button class="tertiary">បោះបង់</button>
+</div>
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ៥</h4>
+    <p>មើល App ធនាគារ ឬ Delivery ដែលអ្នកប្រើរាល់ថ្ងៃ។ រកឧទាហរណ៍ Hierarchy, Proximity និង Consistency មួយៗ ហើយពន្យល់។</p>
+    <details><summary>មើលចម្លើយគំរូ</summary>
+      <ul>
+        <li><b>Hierarchy៖</b> សមតុល្យគណនីអក្សរធំបំផុតនៅខាងលើ ព្រោះជាអ្វីដែលអ្នកប្រើចង់ដឹងមុនគេ។</li>
+        <li><b>Proximity៖</b> ឈ្មោះអ្នកទទួល និងលេខគណនីនៅជិតគ្នា ហើយឃ្លាតពីចំនួនប្រាក់ → មើលដឹងថាជាក្រុមព័ត៌មានផ្សេងគ្នា។</li>
+        <li><b>Consistency៖</b> ប៊ូតុង «បន្ត» ពណ៌ដដែល និងនៅទីតាំងដដែល (ខាងក្រោម) គ្រប់ជំហានផ្ទេរប្រាក់។</li>
+      </ul>
+    </details>
+  </div>
+</section>
+
+<section id="l6">
+  <h2><span class="badge">មេរៀន ៦</span>Color: Palette, 60-30-10, Contrast</h2>
+  <table>
+    <tr><th>ប្រភេទពណ៌</th><th>តួនាទី</th></tr>
+    <tr><td><b>Primary</b></td><td>ពណ៌ម៉ាក · ប៊ូតុងសំខាន់</td></tr>
+    <tr><td><b>Neutral</b> (ប្រផេះ)</td><td>អក្សរ ផ្ទៃ បន្ទាត់ — ប្រើច្រើនបំផុត</td></tr>
+    <tr><td><b>Semantic</b></td><td>Success (បៃតង), Warning (លឿង), Error (ក្រហម), Info (ខៀវ)</td></tr>
+  </table>
+  <p><b>ច្បាប់ 60-30-10៖</b> 60% ពណ៌ចម្បង (ផ្ទៃ), 30% ពណ៌បន្ទាប់បន្សំ, 10% ពណ៌ Accent (ប៊ូតុង Call-to-action)។</p>
+  <h3>Contrast (WCAG)</h3>
+  <table>
+    <tr><th>ប្រភេទ</th><th>កម្រិតអប្បបរមា (AA)</th></tr>
+    <tr><td>អក្សរធម្មតា</td><td><b>4.5 : 1</b></td></tr>
+    <tr><td>អក្សរធំ (≥ 24px ឬ ≥ 19px ដិត)</td><td><b>3 : 1</b></td></tr>
+    <tr><td>Icon, ព្រំប្រអប់ Input, Focus ring</td><td><b>3 : 1</b></td></tr>
+  </table>
+  <script type="text/x-code" data-lang="html" data-label="Contrast" data-demo>
+<style>
+  .row { display:flex; gap:10px; flex-wrap:wrap; font-family:inherit; }
+  .chip { width:160px; padding:14px; border-radius:12px; font-size:15px; }
+  .chip small { display:block; font-size:12px; opacity:.9; }
+</style>
+<div class="row">
+  <div class="chip" style="background:#fff;color:#cbd5e1;border:1px solid #e2e8f0">ពណ៌ប្រផេះស្រាល<small>❌ 1.5 : 1 — អានមិនច្បាស់</small></div>
+  <div class="chip" style="background:#fff;color:#64748b;border:1px solid #e2e8f0">ពណ៌ប្រផេះមធ្យម<small>✅ 4.8 : 1 — AA</small></div>
+  <div class="chip" style="background:#a78bfa;color:#fff">ស លើស្វាយស្រាល<small>❌ 2.7 : 1</small></div>
+  <div class="chip" style="background:#6d28d9;color:#fff">ស លើស្វាយដិត<small>✅ 7.1 : 1 — AAA</small></div>
+</div>
+</script>
+  <h3>Color Variables ក្នុង Figma</h3>
+  <table>
+    <tr><th>Collection</th><th>Variable</th><th>តម្លៃ</th><th>ប្រើសម្រាប់</th></tr>
+    <tr><td rowspan="3"><b>Primitives</b><br><small>ពណ៌ឆៅ</small></td><td>violet/700</td><td><span class="sw" style="background:#6d28d9"></span>#6D28D9</td><td>—</td></tr>
+    <tr><td>slate/900</td><td><span class="sw" style="background:#0f172a"></span>#0F172A</td><td>—</td></tr>
+    <tr><td>red/600</td><td><span class="sw" style="background:#dc2626"></span>#DC2626</td><td>—</td></tr>
+    <tr><td rowspan="3"><b>Semantic</b><br><small>តួនាទី</small></td><td>color/primary</td><td>→ violet/700</td><td>ប៊ូតុងសំខាន់</td></tr>
+    <tr><td>color/text</td><td>→ slate/900</td><td>អក្សរ</td></tr>
+    <tr><td>color/error</td><td>→ red/600</td><td>សារ Error</td></tr>
+  </table>
+  <p>Layer ក្នុង Design ប្រើតែ <b>Semantic</b> → ពេលប្តូរពណ៌ម៉ាក កែតែ Primitive មួយ ហើយ Screen ទាំងអស់ប្តូរតាម។</p>
+  <div class="warn">⚠️ <b>កុំប្រើតែពណ៌ដើម្បីប្រាប់ព័ត៌មាន</b> — ប្រហែល 1 ក្នុង 12 បុរសមានបញ្ហាមើលពណ៌។ Error ត្រូវមាន Icon ⚠️ និងអក្សរ មិនមែនតែព្រំក្រហម។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៦</h4>
+    <p>បង្កើត Palette សម្រាប់ App «ហាងផ្កា»៖ Primary, Neutral ២, Success, Error ហើយបង្ហាញប៊ូតុង Primary ដែលមាន Contrast ≥ 4.5:1។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="html" data-label="ចម្លើយ: Palette ហាងផ្កា" data-demo>
+<style>
+  :root { --primary:#be185d; --bg:#fdf2f8; --text:#1f2937; --muted:#4b5563; --success:#15803d; --error:#b91c1c; }
+  body { background:var(--bg); color:var(--text); }
+  .sw { display:inline-flex; flex-direction:column; width:96px; margin:4px; font-size:12px; }
+  .sw span { height:44px; border-radius:8px; margin-bottom:4px; border:1px solid #0001; }
+  button { margin-top:12px; min-height:44px; padding:0 22px; border:0; border-radius:99px; background:var(--primary); color:#fff; font:inherit; }
+</style>
+<div class="sw"><span style="background:#be185d"></span>Primary #be185d</div>
+<div class="sw"><span style="background:#1f2937"></span>Text #1f2937</div>
+<div class="sw"><span style="background:#4b5563"></span>Muted #4b5563</div>
+<div class="sw"><span style="background:#15803d"></span>Success</div>
+<div class="sw"><span style="background:#b91c1c"></span>Error</div><br>
+<button>🌸 កុម្ម៉ង់ផ្កា</button>  <!-- ស លើ #be185d ≈ 6.0 : 1 ✅ -->
+</script>
+    </details>
+  </div>
+</section>
+
+<section id="l7">
+  <h2><span class="badge">មេរៀន ៧</span>Typography: Font, Type Scale, Hierarchy</h2>
+  <ul>
+    <li>ប្រើ Font <b>១–២</b> ប៉ុណ្ណោះ (ឧ. ចំណងជើង + អត្ថបទ)</li>
+    <li>អក្សរខ្មែរ៖ <b>Kantumruy Pro</b>, <b>Noto Sans Khmer</b>, <b>Battambang</b> (ទាំងអស់មាននៅ Google Fonts)</li>
+    <li>ទំហំអត្ថបទលើទូរស័ព្ទ ≥ <b>16px</b> · Line height ប្រហែល <b>1.5</b> (ខ្មែរ <b>1.7–1.9</b> ព្រោះមានជើង និងស្រៈលើ)</li>
+    <li>បន្ទាត់អត្ថបទមិនគួរវែងជាង ~<b>65–75</b> តួអក្សរ</li>
+  </ul>
+  <script type="text/x-code" data-lang="html" data-label="Type scale" data-demo>
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Type scale ផ្អែកលើសមាមាត្រ 1.25 (Major Third) */
+  :root { --base: 16px; }
+  body { font-family:"Kantumruy Pro", sans-serif; line-height:1.8; color:#0f172a; }
+  .display { font-size:39px; font-weight:700; line-height:1.3; margin:0; }
+  .h1 { font-size:31px; font-weight:700; line-height:1.35; margin:0; }
+  .h2 { font-size:25px; font-weight:600; margin:0; }
+  .h3 { font-size:20px; font-weight:600; margin:0; }
+  .body { font-size:16px; max-width:60ch; margin:4px 0; }
+  .caption { font-size:13px; color:#475569; }
+</style>
+<p class="display">Display 39px</p>
+<p class="h1">ចំណងជើង H1 · 31px</p>
+<p class="h2">ចំណងជើង H2 · 25px</p>
+<p class="h3">ចំណងជើង H3 · 20px</p>
+<p class="body">អត្ថបទ Body 16px — ការរចនាល្អ គឺពេលដែលអ្នកប្រើមិនបាច់គិត។ បន្ទាត់មិនវែងពេក ហើយ Line height ធំល្មមសម្រាប់អក្សរខ្មែរ។</p>
+<p class="caption">Caption 13px · អត្ថបទតូចសម្រាប់ព័ត៌មានបន្ថែម</p>
+</script>
+  <div class="note">💡 <b>ក្នុង Figma៖</b> បង្កើត <b>Text Styles</b> (Display, H1, Body, Caption…) នៅ Panel ខាងស្តាំ → ចុច ⋯ ក្បែរ Text → <b>Create style</b>។ ប្តូរ Style ម្តង → អក្សរទាំងអស់ក្នុង File ប្តូរតាម។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៧</h4>
+    <p>គណនា Type scale ដែលមាន Base 16px និងសមាមាត្រ 1.2 សម្រាប់ ៤ កម្រិតឡើងលើ (បង្គត់)។</p>
+    <details><summary>មើលចម្លើយ</summary>
+<table>
+      <tr><th>Style</th><th>គណនា</th><th>ទំហំ</th></tr>
+      <tr><td>Body</td><td>16</td><td><b>16</b></td></tr>
+      <tr><td>H4</td><td>16 × 1.2 = 19.2</td><td><b>19</b></td></tr>
+      <tr><td>H3</td><td>16 × 1.44 = 23.04</td><td><b>23</b></td></tr>
+      <tr><td>H2</td><td>16 × 1.728 = 27.65</td><td><b>28</b></td></tr>
+      <tr><td>H1</td><td>16 × 2.074 = 33.18</td><td><b>33</b></td></tr>
+    </table>
+    </details>
+  </div>
+</section>
+
+<section id="l8">
+  <h2><span class="badge">មេរៀន ៨</span>Layout, Grid & 8pt Spacing</h2>
+  <ul>
+    <li><b>8pt grid៖</b> គម្លាត និងទំហំទាំងអស់ជាពហុគុណនៃ 8 (4, 8, 16, 24, 32, 48…) → ស្អាត ស្របគ្នា និងងាយបំប្លែងជាកូដ</li>
+    <li><b>Column grid៖</b> ទូរស័ព្ទ 4 columns · Tablet 8 · Desktop 12</li>
+    <li><b>Margin ទូរស័ព្ទ៖</b> 16px ឬ 20px ទាំងសងខាង</li>
+  </ul>
+  <script type="text/x-code" data-lang="html" data-label="8pt spacing" data-demo>
+<style>
+  :root { --s1:4px; --s2:8px; --s3:16px; --s4:24px; --s5:32px; }
+  .scale { display:flex; align-items:flex-end; gap:var(--s3); font-family:inherit; font-size:12px; }
+  .scale div { background:#c4b5fd; border-radius:4px; text-align:center; }
+  .card { margin-top:var(--s4); padding:var(--s3); max-width:300px; border:1px solid #e2e8f0; border-radius:12px; display:grid; gap:var(--s2); }
+  .card h4 { margin:0; } .card p { margin:0; color:#475569; }
+  .card button { margin-top:var(--s2); min-height:40px; border:0; border-radius:8px; background:#6d28d9; color:#fff; font:inherit; }
+</style>
+<div class="scale">
+  <div style="width:4px;height:4px"></div>4
+  <div style="width:8px;height:8px"></div>8
+  <div style="width:16px;height:16px"></div>16
+  <div style="width:24px;height:24px"></div>24
+  <div style="width:32px;height:32px"></div>32
+</div>
+<div class="card">
+  <h4>Card ប្រើ 8pt</h4>
+  <p>Padding 16 · Gap 8 · ចន្លោះខាងលើ 24</p>
+  <button>ប៊ូតុង កម្ពស់ 40</button>
+</div>
+</script>
+  <h3>Auto Layout ក្នុង Figma (<kbd>Shift</kbd>+<kbd>A</kbd>)</h3>
+  <table>
+    <tr><th>ការកំណត់</th><th>ន័យ</th></tr>
+    <tr><td><b>Direction</b> ↓ / →</td><td>រៀបធាតុបញ្ឈរ ឬផ្តេក</td></tr>
+    <tr><td><b>Gap</b></td><td>ចន្លោះរវាងធាតុ (ឧ. 8)</td></tr>
+    <tr><td><b>Padding</b></td><td>ចន្លោះពីគែមប្រអប់ទៅខាងក្នុង (ឧ. 16)</td></tr>
+    <tr><td><b>Hug contents</b></td><td>ប្រអប់ធំតាមខ្លឹមសារ (ប៊ូតុងវែងតាមពាក្យ)</td></tr>
+    <tr><td><b>Fill container</b></td><td>ពង្រីកពេញប្រអប់មេ</td></tr>
+    <tr><td><b>Fixed</b></td><td>ទំហំថេរ</td></tr>
+  </table>
+  <div class="note">💡 រៀន Auto Layout ឱ្យស្ទាត់ ព្រោះវាជាគន្លឹះនៃ Figma អាជីព៖ ប្តូរពាក្យលើប៊ូតុង → ប៊ូតុងពង្រីកដោយខ្លួនឯង; បន្ថែមធាតុក្នុងបញ្ជី → ធាតុផ្សេងរុញចុះដោយខ្លួនឯង។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៨</h4>
+    <p>ក្នុង Figma បង្កើត <b>Toolbar</b> មួយ (Icon ថយក្រោយ + ចំណងជើង + Icon ចែករំលែក) ដោយ Auto Layout ដែលពង្រីកពេញទទឹងអេក្រង់។ តើត្រូវកំណត់អ្វីខ្លះ?</p>
+    <details><summary>មើលចម្លើយ</summary>
+<ol>
+      <li>ជ្រើសធាតុទាំង ៣ → <kbd>Shift</kbd>+<kbd>A</kbd></li>
+      <li>Direction៖ <b>Horizontal →</b> · Gap៖ <b>12</b> (ឬ Auto ដើម្បីរុញទៅគែម) · Padding៖ <b>16</b> ឡើងចុះ / <b>24</b> ឆ្វេងស្តាំ</li>
+      <li>Alignment៖ <b>កណ្តាលបញ្ឈរ</b></li>
+      <li>Toolbar៖ Width = <b>Fill container</b>, Height = <b>Hug contents</b></li>
+      <li>ចំណងជើង៖ Width = <b>Fill container</b> ដើម្បីរុញ Icon ទៅគែមសងខាង</li>
+    </ol>
+      <p>ចំណាំ៖ 12 មិនមែនពហុគុណ 8 តែជាពហុគុណ 4 — ប្រព័ន្ធ 8pt ច្រើនអនុញ្ញាត 4 សម្រាប់ចន្លោះតូចៗ។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l9">
+  <h2><span class="badge">មេរៀន ៩</span>Components & States</h2>
+  <p><b>Component</b> = ធាតុ UI ដែលប្រើឡើងវិញ។ Component ល្អត្រូវរចនា <b>គ្រប់ស្ថានភាព</b> មិនមែនតែស្ថានភាពស្អាតៗទេ។</p>
+  <script type="text/x-code" data-lang="html" data-label="Button states" data-demo>
+<style>
+  .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; font-family:inherit; }
+  .btn { min-height:44px; padding:0 20px; border:0; border-radius:10px; background:#6d28d9; color:#fff; font:inherit; cursor:pointer;
+         display:inline-flex; align-items:center; gap:8px; transition:background .15s, transform .1s; }
+  .btn:hover    { background:#5b21b6; }                        /* Hover */
+  .btn:active   { transform:scale(.97); }                      /* Pressed */
+  .btn:focus-visible { outline:3px solid #f59e0b; outline-offset:2px; }   /* Focus (Keyboard) */
+  .btn:disabled { background:#cbd5e1; color:#475569; cursor:not-allowed; }  /* Disabled */
+  .spin { width:16px; height:16px; border:2px solid #fff6; border-top-color:#fff; border-radius:50%; animation:r .8s linear infinite; }
+  @keyframes r { to { transform:rotate(1turn); } }
+  small { display:block; color:#64748b; margin-top:8px; }
+</style>
+<div class="row">
+  <button class="btn">Default</button>
+  <button class="btn" disabled>Disabled</button>
+  <button class="btn" aria-busy="true"><span class="spin" aria-hidden="true"></span>កំពុងផ្ញើ…</button>
+</div>
+<small>សាក៖ Hover, ចុចសង្កត់ (Pressed) និងចុច Tab (Focus)</small>
+</script>
+  <h3>Empty State — កុំទុកអេក្រង់ទទេ</h3>
+  <script type="text/x-code" data-lang="html" data-label="Empty state" data-demo>
+<style>
+  .empty { text-align:center; padding:24px; border:2px dashed #e2e8f0; border-radius:16px; max-width:320px; font-family:inherit; }
+  .empty .icon { font-size:40px; } .empty h4 { margin:8px 0 4px; } .empty p { color:#475569; margin:0 0 14px; }
+  .empty button { min-height:44px; padding:0 20px; border:0; border-radius:10px; background:#6d28d9; color:#fff; font:inherit; }
+</style>
+<div class="empty">
+  <div class="icon" aria-hidden="true">🛒</div>
+  <h4>កន្ត្រករបស់អ្នកនៅទទេ</h4>
+  <p>ជ្រើសកាហ្វេដែលអ្នកចូលចិត្ត ដើម្បីចាប់ផ្តើម</p>
+  <button>មើល Menu</button>
+</div>
+</script>
+  <div class="note">💡 <b>Variants ក្នុង Figma៖</b> ជ្រើស Component → ចុច <b>Add variant</b> → កំណត់ Property ដូចជា <code class="i">State = Default | Hover | Disabled</code> និង <code class="i">Size = S | M | L</code>។ ពេលប្រើ Instance អ្នកគ្រាន់តែប្តូរ Property ពី Panel ខាងស្តាំ មិនចាំបាច់គូរថ្មី។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ៩</h4>
+    <p>រាយស្ថានភាពទាំងអស់ដែលប្រអប់ Input ត្រូវមាន។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p>Default (ទទេ, មាន Placeholder) · Filled · Hover · <b>Focus</b> · <b>Error</b> (ព្រំ + Icon + សារ) · Success/Valid · <b>Disabled</b> · Read-only · Loading (ឧ. កំពុងពិនិត្យឈ្មោះអ្នកប្រើ)។ នីមួយៗត្រូវមាន <b>Label</b> និងអាចមាន <b>Helper text</b>។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l10">
+  <h2><span class="badge">មេរៀន ១០</span>Form UX & UX Writing</h2>
+  <table>
+    <tr><th>❌ ជៀសវាង</th><th>✅ ល្អ</th></tr>
+    <tr><td>Placeholder ជំនួស Label (បាត់ពេលវាយ)</td><td>Label ជានិច្ចនៅខាងលើប្រអប់</td></tr>
+    <tr><td>Error «Invalid input»</td><td>«លេខទូរស័ព្ទត្រូវចាប់ផ្តើមដោយ 0 និងមាន 9–10 ខ្ទង់»</td></tr>
+    <tr><td>បង្ហាញ Error ពេលកំពុងវាយ</td><td>បង្ហាញពេលចាកចេញពីប្រអប់ ឬពេលចុច Submit</td></tr>
+    <tr><td>ប៊ូតុង «OK», «Submit»</td><td>ប៊ូតុងប្រាប់សកម្មភាព៖ «បង្កើតគណនី», «ទូទាត់ $12»</td></tr>
+    <tr><td>Field ច្រើនពេក</td><td>សួរតែអ្វីចាំបាច់ · បំបែកជាជំហាន</td></tr>
+  </table>
+  <script type="text/x-code" data-lang="html" data-label="Form ល្អ (សាកវាយខុស)" data-demo>
+<style>
+  form { display:grid; gap:14px; max-width:340px; font-family:inherit; }
+  .field { display:grid; gap:4px; }
+  label { font-weight:600; }
+  .hint { font-size:13px; color:#475569; }
+  input { min-height:44px; padding:0 12px; border:2px solid #cbd5e1; border-radius:10px; font:inherit; }
+  input:focus-visible { outline:none; border-color:#6d28d9; box-shadow:0 0 0 3px #ede9fe; }
+  .error { display:none; color:#b91c1c; font-size:13px; }
+  .field:has(input:user-invalid) input { border-color:#b91c1c; }
+  .field:has(input:user-invalid) .error { display:block; }
+  button { min-height:48px; border:0; border-radius:10px; background:#6d28d9; color:#fff; font:inherit; font-weight:600; }
+</style>
+<form onsubmit="event.preventDefault(); this.querySelector('button').textContent='✅ បានបង្កើតគណនី'">
+  <div class="field">
+    <label for="phone">លេខទូរស័ព្ទ</label>
+    <input id="phone" type="tel" inputmode="numeric" autocomplete="tel" required pattern="0[0-9]{8,9}" aria-describedby="phone-hint phone-err">
+    <span id="phone-hint" class="hint">ឧ. 012345678</span>
+    <span id="phone-err" class="error">⚠️ ចាប់ផ្តើមដោយ 0 និងមាន 9–10 ខ្ទង់</span>
+  </div>
+  <div class="field">
+    <label for="pw">ពាក្យសម្ងាត់</label>
+    <input id="pw" type="password" autocomplete="new-password" required minlength="8" aria-describedby="pw-hint pw-err">
+    <span id="pw-hint" class="hint">យ៉ាងតិច ៨ តួ</span>
+    <span id="pw-err" class="error">⚠️ ពាក្យសម្ងាត់ខ្លីពេក</span>
+  </div>
+  <button>បង្កើតគណនី</button>
+</form>
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១០</h4>
+    <p>សរសេរសារ Error ឡើងវិញឱ្យជួយអ្នកប្រើ៖ (ក) «Error 403» (ខ) «Invalid date» (គ) «Payment failed»។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ol type="a">
+        <li>«អ្នកមិនមានសិទ្ធិមើលទំព័រនេះទេ។ សូមចូលគណនីម្តងទៀត ឬទាក់ទងអ្នកគ្រប់គ្រង។»</li>
+        <li>«សូមជ្រើសថ្ងៃខាងមុខ — មិនអាចកក់ថ្ងៃដែលកន្លងផុតបានទេ។»</li>
+        <li>«ការទូទាត់មិនជោគជ័យ — សមតុល្យមិនគ្រប់គ្រាន់។ ប្រាក់របស់អ្នកមិនត្រូវបានកាត់ទេ។ [ព្យាយាមម្តងទៀត] [ប្តូរវិធីបង់ប្រាក់]»</li>
+      </ol>
+      <p>រូបមន្ត៖ <b>មានអ្វីកើតឡើង + ហេតុអ្វី (បើដឹង) + អ្នកប្រើត្រូវធ្វើអ្វីបន្ត</b> · កុំបន្ទោសអ្នកប្រើ។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l11">
+  <h2><span class="badge">មេរៀន ១១</span>Accessibility (A11y) — Design សម្រាប់មនុស្សគ្រប់គ្នា</h2>
+  <table>
+    <tr><th>ច្បាប់</th><th>ហេតុអ្វី</th></tr>
+    <tr><td>Contrast ≥ 4.5:1</td><td>មនុស្សចាស់, អ្នកមើលខ្សោយ, ប្រើក្រៅថ្ងៃភ្លឺ</td></tr>
+    <tr><td>ទំហំចុចយ៉ាងតិច <b>44×44</b> (iOS) / <b>48×48dp</b> (Android); WCAG 2.2 អប្បបរមា 24×24px</td><td>មេដៃធំ, ដៃញ័រ</td></tr>
+    <tr><td>Focus ring ឃើញច្បាស់</td><td>អ្នកប្រើក្តារចុច</td></tr>
+    <tr><td>Label + alt text</td><td>អ្នកប្រើកម្មវិធីអានអេក្រង់ (Screen reader)</td></tr>
+    <tr><td>មិនប្រើតែពណ៌</td><td>អ្នកមើលពណ៌មិនច្បាស់</td></tr>
+    <tr><td>កុំប្រើចលនាខ្លាំងពេក · មានជម្រើសបិទចលនា</td><td>អ្នកវិលមុខដោយចលនា</td></tr>
+  </table>
+  <script type="text/x-code" data-lang="html" data-label="Accessibility" data-demo>
+<style>
+  .row { display:flex; gap:24px; flex-wrap:wrap; font-family:inherit; }
+  .col { display:grid; gap:8px; justify-items:start; }
+  .tiny { width:24px; height:24px; border:0; border-radius:6px; background:#94a3b8; }
+  .ok { min-width:44px; min-height:44px; border:0; border-radius:10px; background:#6d28d9; color:#fff; font-size:18px; }
+  .status { display:flex; gap:6px; align-items:center; }
+  .dot { width:10px; height:10px; border-radius:50%; }
+</style>
+<div class="row">
+  <div class="col"><b>❌ តូចពេក</b><button class="tiny" aria-label="លុប">×</button></div>
+  <div class="col"><b>✅ 44×44</b><button class="ok" aria-label="លុប">🗑</button></div>
+  <div class="col"><b>❌ ពណ៌តែម្យ៉ាង</b><span class="status"><span class="dot" style="background:#dc2626"></span>ការកុម្ម៉ង់ #12</span></div>
+  <div class="col"><b>✅ ពណ៌ + Icon + ពាក្យ</b><span class="status">⛔ <span style="color:#b91c1c">បានបោះបង់</span> · ការកុម្ម៉ង់ #12</span></div>
+</div>
+</script>
+  <div class="note">💡 <b>Plugin Figma ដែលមានប្រយោជន៍៖</b> <b>Stark</b> ឬ <b>Contrast</b> (ពិនិត្យ Contrast), <b>Color Blind</b> (មើល Design ដូចអ្នកមើលពណ៌ខុស)។ Figma ក៏មាន <b>Accessibility annotation</b> kits នៅ Community ដើម្បីប្រាប់ Developer ពីលំដាប់ Focus និង Label។</div>
+  <div class="ex"><h4>✍️ លំហាត់ ១១</h4>
+    <p>App មួយប្រើប៊ូតុង Icon «♡» ទំហំ 20×20 គ្មានអក្សរ ពណ៌ #d1d5db លើផ្ទៃស។ រកបញ្ហា ៣ ហើយកែ។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ol>
+        <li><b>តូចពេក</b> → ពង្រីកផ្ទៃចុចដល់ 44×44 (Icon អាចនៅ 24 តែ Padding បន្ថែម)។</li>
+        <li><b>Contrast ទាប</b> (#d1d5db លើស ≈ 1.5:1) → ប្រើ #4b5563 ឬពណ៌ Primary (≥ 3:1 សម្រាប់ Icon)។</li>
+        <li><b>គ្មាន Label</b> → សរសេរ Annotation ឱ្យ Developer៖ «Label សម្រាប់ Screen reader៖ បន្ថែមទៅចូលចិត្ត» ហើយរចនា State ពីរ ♡ (មិនទាន់) / ♥ (បានចូលចិត្ត ពណ៌ Primary)។</li>
+      </ol>
+    </details>
+  </div>
+</section>
+
+<section id="l12">
+  <h2><span class="badge">មេរៀន ១២</span>Responsive & Mobile Design</h2>
+  <table>
+    <tr><th>ឧបករណ៍</th><th>Frame ក្នុង Figma</th><th>Columns</th></tr>
+    <tr><td>Mobile</td><td>360–430 px (ឧ. 390×844)</td><td>4</td></tr>
+    <tr><td>Tablet</td><td>768–834 px</td><td>8</td></tr>
+    <tr><td>Desktop</td><td>1280–1440 px</td><td>12</td></tr>
+  </table>
+  <ul>
+    <li><b>Mobile-first៖</b> រចនាទូរស័ព្ទមុន → បង្ខំឱ្យផ្តោតលើអ្វីសំខាន់</li>
+    <li><b>Thumb zone៖</b> ប៊ូតុងសំខាន់នៅពាក់កណ្តាលខាងក្រោមអេក្រង់ (ងាយចុចដោយមេដៃ)</li>
+    <li><b>Navigation៖</b> Mobile ប្រើ Bottom tab bar (៣–៥ ធាតុ) · Desktop ប្រើ Top nav ឬ Sidebar</li>
+  </ul>
+  <script type="text/x-code" data-lang="html" data-label="Responsive grid" data-demo>
+<style>
+  .grid { display:grid; gap:12px; grid-template-columns:repeat(auto-fit, minmax(min(160px,100%),1fr)); font-family:inherit; }
+  .item { border:1px solid #e2e8f0; border-radius:12px; overflow:hidden; }
+  .img { aspect-ratio:4/3; background:linear-gradient(135deg,#c4b5fd,#f9a8d4); }
+  .item p { margin:8px 10px; }
+  small { color:#64748b; }
+</style>
+<div class="grid">
+  <div class="item"><div class="img"></div><p>ឡាតេ $2.5</p></div>
+  <div class="item"><div class="img"></div><p>កាពូឈីណូ $2.8</p></div>
+  <div class="item"><div class="img"></div><p>តែបៃតង $2.0</p></div>
+  <div class="item"><div class="img"></div><p>នំ Croissant $1.5</p></div>
+</div>
+<small>បង្រួម/ពង្រីកបង្អួច Browser — ចំនួន Column ប្តូរស្វ័យប្រវត្តិ</small>
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១២</h4>
+    <p>ក្នុង Figma ធ្វើ Card ផលិតផលមួយដោយ Auto Layout ហើយដាក់វាក្នុង Frame Mobile (390) និង Desktop (1440)។ តើ Card ត្រូវកំណត់ Resizing យ៉ាងដូចម្តេច?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ul>
+        <li>Card៖ Width = <b>Fill container</b>, Height = <b>Hug contents</b>។</li>
+        <li>Parent (Grid)៖ Auto Layout <b>Wrap</b> (Horizontal + Wrap) ឬ Layout grid 4/12 columns; កំណត់ Min width ≈ 160 និង Max width ≈ 320 លើ Card។</li>
+        <li>រូបភាព៖ Fill width ហើយ Fixed ratio (4:3) ដើម្បីកុំឱ្យខូចរាង។</li>
+      </ul>
+    </details>
+  </div>
+</section>
+
+<section id="l13">
+  <h2><span class="badge">មេរៀន ១៣</span>10 Usability Heuristics (Jakob Nielsen)</h2>
+  <table>
+    <tr><th>#</th><th>Heuristic</th><th>ឧទាហរណ៍</th></tr>
+    <tr><td>1</td><td><b>Visibility of system status</b> — ប្រាប់ថាកំពុងមានអ្វីកើតឡើង</td><td>Loading bar, «កាហ្វេនឹងរួចក្នុង ៥ នាទី»</td></tr>
+    <tr><td>2</td><td><b>Match the real world</b> — ប្រើពាក្យអ្នកប្រើ</td><td>«កន្ត្រក» មិនមែន «Order buffer»</td></tr>
+    <tr><td>3</td><td><b>User control & freedom</b> — Undo / ត្រឡប់ក្រោយ</td><td>«បានលុប · មិនធ្វើវិញ»</td></tr>
+    <tr><td>4</td><td><b>Consistency & standards</b></td><td>ប៊ូតុងដដែលនៅកន្លែងដដែល</td></tr>
+    <tr><td>5</td><td><b>Error prevention</b> — ការពារមុនកើតកំហុស</td><td>បិទថ្ងៃកន្លងផុតក្នុង Date picker</td></tr>
+    <tr><td>6</td><td><b>Recognition rather than recall</b> — ឱ្យឃើញ មិនឱ្យចាំ</td><td>«បានស្វែងរកថ្មីៗ»</td></tr>
+    <tr><td>7</td><td><b>Flexibility & efficiency</b> — ផ្លូវកាត់សម្រាប់អ្នកជំនាញ</td><td>«កុម្ម៉ង់ដដែល», Shortcut</td></tr>
+    <tr><td>8</td><td><b>Aesthetic & minimalist design</b></td><td>ដកព័ត៌មានមិនចាំបាច់</td></tr>
+    <tr><td>9</td><td><b>Help users recover from errors</b></td><td>សារ Error ច្បាស់ + ដំណោះស្រាយ</td></tr>
+    <tr><td>10</td><td><b>Help & documentation</b></td><td>Tooltip, FAQ, ការណែនាំខ្លី</td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ១៣</h4>
+    <p>ធ្វើ <b>Heuristic evaluation</b> លើ App មួយដែលអ្នកប្រើ៖ រកបញ្ហា ៣ ហើយសរសេរ (Heuristic #, ពិពណ៌នា, កម្រិតធ្ងន់ធ្ងរ 1–4, ដំណោះស្រាយ)។</p>
+    <details><summary>មើលចម្លើយគំរូ</summary>
+      <table>
+        <tr><th>#</th><th>បញ្ហា</th><th>ធ្ងន់</th><th>ដំណោះស្រាយ</th></tr>
+        <tr><td>1</td><td>ចុច «ផ្ញើ» ហើយគ្មានអ្វីកើតឡើង ៣ វិនាទី → អ្នកប្រើចុចម្តងទៀត បង់ ២ ដង</td><td>4</td><td>បង្ហាញ Loading + បិទប៊ូតុងពេលកំពុងដំណើរការ</td></tr>
+        <tr><td>3</td><td>លុបអាសយដ្ឋានដោយមិនសួរ ហើយមិនអាច Undo</td><td>3</td><td>Toast «បានលុប · មិនធ្វើវិញ» ៥ វិនាទី</td></tr>
+        <tr><td>4</td><td>ប៊ូតុង «បន្ត» ពណ៌ខៀវក្នុងទំព័រមួយ បៃតងក្នុងទំព័រមួយទៀត</td><td>2</td><td>ប្រើ Component Button តែមួយពី Design System</td></tr>
+      </table>
+    </details>
+  </div>
+</section>
+
+<section id="l14">
+  <h2><span class="badge">មេរៀន ១៤</span>Prototyping & Micro-interactions</h2>
+  <p><b>Prototype</b> = ភ្ជាប់អេក្រង់ចូលគ្នា ដើម្បីឱ្យចុចបានដូច App ពិត។ ក្នុង Figma៖ Tab <b>Prototype</b> → អូសសញ្ញា ⊕ ពីប៊ូតុងទៅ Frame គោលដៅ → <b>On tap → Navigate to → Smart animate</b> → ចុច ▶ Present។</p>
+  <table>
+    <tr><th>Duration</th><th>ប្រើសម្រាប់</th></tr>
+    <tr><td>100–150ms</td><td>Hover, ប៊ូតុងចុច, Toggle</td></tr>
+    <tr><td>200–300ms</td><td>បើក Menu, Modal, ប្តូរ Tab</td></tr>
+    <tr><td>300–500ms</td><td>ប្តូរអេក្រង់ធំៗ</td></tr>
+  </table>
+  <script type="text/x-code" data-lang="html" data-label="Micro-interactions (ចុចសាក)" data-demo>
+<style>
+  .row { display:flex; gap:20px; align-items:center; flex-wrap:wrap; font-family:inherit; }
+  /* ♥ Like */
+  .like { width:48px; height:48px; border-radius:50%; border:0; background:#f1f5f9; font-size:22px; cursor:pointer; transition:transform .15s ease-out; }
+  .like[aria-pressed="true"] { animation:pop .3s ease-out; background:#fee2e2; }
+  @keyframes pop { 50% { transform:scale(1.25); } }
+  /* Toggle switch */
+  .switch { width:52px; height:30px; border-radius:99px; border:0; background:#cbd5e1; position:relative; cursor:pointer; transition:background .2s; }
+  .switch::after { content:""; position:absolute; top:3px; left:3px; width:24px; height:24px; border-radius:50%; background:#fff; transition:transform .2s ease-out; box-shadow:0 1px 3px #0003; }
+  .switch[aria-checked="true"] { background:#6d28d9; }
+  .switch[aria-checked="true"]::after { transform:translateX(22px); }
+  /* Toast */
+  .toast { padding:10px 14px; border-radius:10px; background:#0f172a; color:#fff; opacity:0; transform:translateY(8px); transition:.25s ease-out; }
+  .toast.show { opacity:1; transform:none; }
+  @media (prefers-reduced-motion: reduce) { * { animation:none !important; transition:none !important; } }
+</style>
+<div class="row">
+  <button class="like" aria-pressed="false" aria-label="ចូលចិត្ត">♡</button>
+  <button class="switch" role="switch" aria-checked="false" aria-label="ការជូនដំណឹង"></button>
+  <div class="toast" role="status">✅ បានបន្ថែមទៅកន្ត្រក</div>
+</div>
+<script>
+  const like = document.querySelector(".like"), sw = document.querySelector(".switch"), toast = document.querySelector(".toast");
+  like.onclick = () => {
+    const on = like.getAttribute("aria-pressed") !== "true";
+    like.setAttribute("aria-pressed", on); like.textContent = on ? "♥" : "♡";
+    toast.classList.add("show"); setTimeout(() => toast.classList.remove("show"), 1800);
+  };
+  sw.onclick = () => sw.setAttribute("aria-checked", sw.getAttribute("aria-checked") !== "true");
+<\/script>
+</script>
+  <div class="ex"><h4>✍️ លំហាត់ ១៤</h4>
+    <p>ក្នុង Figma ធ្វើ Prototype ៣ អេក្រង់ (Menu → ព័ត៌មានកាហ្វេ → កន្ត្រក) ដែលមានប៊ូតុង Back។ កំណត់ Animation អ្វីសម្រាប់ទៅមុខ និងថយក្រោយ?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ul>
+        <li>ទៅមុខ៖ <b>On tap → Navigate to → Slide in (ពីស្តាំ)</b> ឬ <b>Smart animate</b> (បើរូបកាហ្វេដូចគ្នាទាំងពីរ Frame — ឈ្មោះ Layer ត្រូវដូចគ្នា), <b>Ease out, 300ms</b>។</li>
+        <li>ថយក្រោយ៖ <b>On tap → Back</b> (Figma ចាក់ Animation បញ្ច្រាសដោយស្វ័យប្រវត្តិ)។</li>
+        <li>បន្ថែម <b>Overlay</b> សម្រាប់ Toast «បានបន្ថែម» ជាមួយ <b>After delay 1500ms → Close overlay</b>។</li>
+      </ul>
+    </details>
+  </div>
+</section>
+
+<section id="l15">
+  <h2><span class="badge">មេរៀន ១៥</span>Usability Testing & Metrics</h2>
+  <ol class="steps">
+    <li><b>កំណត់គោលដៅ</b> — ឧ. «តើអ្នកប្រើអាចកុម្ម៉ង់កាហ្វេបានក្រោម ១ នាទីទេ?»</li>
+    <li><b>រៀបចំ Task</b> ជាស្ថានការណ៍ — «អ្នកចង់បានឡាតេទឹកកក Size ធំ ស្ករតិច»</li>
+    <li><b>ជ្រើសអ្នកចូលរួម ៥ នាក់</b> ដែលដូច Persona — ៥ នាក់រកឃើញបញ្ហាភាគច្រើន (ប្រហែល 85% តាម Nielsen)</li>
+    <li><b>Think aloud</b> — ឱ្យនិយាយអ្វីដែលគិតពេលប្រើ · អ្នកសង្កេតមិនជួយ មិនណែនាំ</li>
+    <li><b>កត់ត្រា</b> — ជោគជ័យ/បរាជ័យ, ពេលវេលា, កន្លែងដែលជាប់គាំង</li>
+    <li><b>វិភាគ & កែ</b> → សាកល្បងម្តងទៀត (Iterate)</li>
+  </ol>
+  <table>
+    <tr><th>Metric</th><th>ន័យ</th></tr>
+    <tr><td><b>Task success rate</b></td><td>% អ្នកដែលធ្វើ Task បានសម្រេច</td></tr>
+    <tr><td><b>Time on task</b></td><td>ពេលប្រើដើម្បីសម្រេច</td></tr>
+    <tr><td><b>Error rate</b></td><td>ចំនួនកំហុសក្នុង Task មួយ</td></tr>
+    <tr><td><b>SUS</b> (System Usability Scale)</td><td>កម្រងសំណួរ ១០ · ពិន្ទុ 0–100 · មធ្យម ≈ <b>68</b></td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ១៥</h4>
+    <p>អ្នកចូលរួម ៥ នាក់៖ ៣ នាក់កុម្ម៉ង់បាន ក្នុង 40s, 55s, 70s ហើយ ២ នាក់បរាជ័យ។ គណនា Success rate និងពេលមធ្យមរបស់អ្នកដែលជោគជ័យ។ តើគួរធ្វើអ្វីបន្ត?</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <p>Success rate = 3 ÷ 5 = <b>60%</b> · ពេលមធ្យម = (40 + 55 + 70) ÷ 3 = <b>55 វិនាទី</b>។</p>
+      <p>60% ទាបពេក → មើលវីដេអូ/កំណត់ត្រាថាអ្នកបរាជ័យជាប់គាំងនៅជំហានណា (ឧ. ជ្រើស Size) កែ Design ហើយ Test ម្តងទៀតជាមួយ ៥ នាក់ថ្មី។</p>
+    </details>
+  </div>
+</section>
+
+<section id="l16">
+  <h2><span class="badge">មេរៀន ១៦</span>Design Handoff: ប្រគល់ Design ឱ្យ Developer</h2>
+  <ol class="steps">
+    <li>ដាក់ឈ្មោះ Layer និង Frame ឱ្យច្បាស់ (<code class="i">Button/Primary</code> មិនមែន <code class="i">Rectangle 23</code>)</li>
+    <li>ប្រើ <b>Variables</b> (ពណ៌ គម្លាត) និង <b>Styles</b> (អក្សរ ស្រមោល) — កុំសរសេរតម្លៃផ្ទាល់</li>
+    <li>ប្រើ <b>Auto Layout</b> គ្រប់ទីកន្លែង → Developer ឃើញ Flexbox ច្បាស់</li>
+    <li>ចុច <b>Mark as ready for dev</b> លើ Frame ដែលរួចរាល់</li>
+    <li>Developer បើក <b>Dev Mode</b> (<kbd>Shift</kbd>+<kbd>D</kbd>) ឬ <b>Figma for VS Code</b> ដើម្បីមើលទំហំ ពណ៌ និង Export Asset — Designer មិនចាំបាច់សរសេរកូដទេ</li>
+    <li>បន្ថែម <b>Annotation</b> សម្រាប់អ្វីដែលមើលមិនឃើញ៖ Error state, Loading, Animation, Accessibility</li>
+  </ol>
+  <h3>ឧទាហរណ៍ Spec របស់ Button/Primary</h3>
+  <table>
+    <tr><th>Property</th><th>តម្លៃ</th><th>Variable</th></tr>
+    <tr><td>Auto Layout</td><td>Horizontal · Gap 8 · Padding 12/24 · Hug</td><td>space/2</td></tr>
+    <tr><td>កម្ពស់អប្បបរមា</td><td>48</td><td>—</td></tr>
+    <tr><td>ផ្ទៃ</td><td><span class="sw" style="background:#6d28d9"></span>#6D28D9</td><td>color/primary</td></tr>
+    <tr><td>អក្សរ</td><td>Kantumruy Pro SemiBold 16 · ស</td><td>Text style: Button</td></tr>
+    <tr><td>ជ្រុង</td><td>12</td><td>radius/md</td></tr>
+    <tr><td>States</td><td>Default · Hover · Pressed · Focus · Disabled · Loading</td><td>Variant: State</td></tr>
+  </table>
+  <div class="ex"><h4>✍️ លំហាត់ ១៦</h4>
+    <p>សរសេរ Checklist ៥ ចំណុចដែល Designer ត្រូវពិនិត្យមុនចុច «Ready for dev»។</p>
+    <details><summary>មើលចម្លើយ</summary>
+      <ol>
+        <li>Layer ទាំងអស់មានឈ្មោះច្បាស់ ហើយប្រើ Component (មិនមែន Detached)</li>
+        <li>ពណ៌/គម្លាត/អក្សរ ប្រើ Variables និង Styles ១០០%</li>
+        <li>មានគ្រប់ State (Hover, Focus, Error, Empty, Loading, Disabled)</li>
+        <li>មាន Breakpoint Mobile + Desktop និងបញ្ជាក់ Resizing</li>
+        <li>Contrast ឆ្លងកាត់ AA ហើយមាន Annotation សម្រាប់ Focus order / Label</li>
+      </ol>
+    </details>
+  </div>
+</section>
+
+<section id="cheat">
+  <h2>📋 Cheat Sheet: លេខ និងច្បាប់ដែលគួរចាំ</h2>
+  <table>
+    <tr><th>ប្រធានបទ</th><th>តម្លៃ</th></tr>
+    <tr><td>Contrast អក្សរ</td><td>≥ 4.5:1 (អក្សរធំ/Icon ≥ 3:1)</td></tr>
+    <tr><td>ទំហំចុច</td><td>44×44pt (iOS) · 48×48dp (Android) · ≥ 24×24px (WCAG 2.2)</td></tr>
+    <tr><td>អក្សរ Body ទូរស័ព្ទ</td><td>≥ 16px · Line height ខ្មែរ 1.7–1.9</td></tr>
+    <tr><td>Spacing</td><td>8pt grid (4, 8, 16, 24, 32, 48)</td></tr>
+    <tr><td>Columns</td><td>4 / 8 / 12</td></tr>
+    <tr><td>ពណ៌</td><td>60-30-10</td></tr>
+    <tr><td>Animation</td><td>150–300ms · Ease-out</td></tr>
+    <tr><td>Usability test</td><td>៥ នាក់ក្នុងមួយជុំ · SUS មធ្យម 68</td></tr>
+    <tr><td>Bottom nav</td><td>៣–៥ ធាតុ</td></tr>
+  </table>
+</section>
+
+<!-- ===================== PART 3: PRO ===================== -->
+<section class="hero" id="pro">
+  <h2>🏆 ផ្នែកទី ៣: App កម្រិតអាជីពជាមួយ Figma</h2>
+  <p>គម្រោង <b>Kafe — App កុម្ម៉ង់កាហ្វេ</b>៖ យើងធ្វើតាមដំណើរការការងាររបស់ Product Designer អាជីព — Research → Design System ក្នុង Figma (Variables, Components, Variants, Auto Layout) → Prototype → Test → <b>Handoff</b>។ ចុងក្រោយ <b>Prototype ដែលចុចបាន</b> (Dark mode, States, Accessibility) មាននៅខាងក្រោម។</p>
+  
+</section>
+
+<section id="pro-figma">
+  <h2>🧩 ជំហាន Figma កម្រិតអាជីព</h2>
+  <h3>1) រៀបចំ File ដូចក្រុមហ៊ុន</h3>
+  <script type="text/x-code" data-lang="txt" data-label="Figma file structure">
+📁 Kafe (Team project)
+├── 📄 00 · Cover           ← រូបតំណាង + ស្ថានភាព (In progress / Ready)
+├── 📄 01 · Research        ← Persona, Journey map, Insight (FigJam)
+├── 📄 02 · Flows           ← User flows + Wireframes
+├── 📄 03 · Design System   ← Variables, Text styles, Components
+├── 📄 04 · Screens         ← High-fi: Mobile 390 + Desktop 1440
+├── 📄 05 · Prototype       ← Flow សម្រាប់ Usability test
+└── 📄 99 · Archive         ← កំណែចាស់ (កុំលុប!)
+</script>
+  <h3>2) Variables (Design Tokens) — Primitive → Semantic + Modes</h3>
+  <ol class="steps">
+    <li>Panel ខាងស្តាំ (មិនជ្រើសអ្វី) → <b>Local variables</b> → <b>Create collection</b> «Primitives»៖ <code class="i">violet/700 = #6D28D9</code>, <code class="i">slate/900</code>…</li>
+    <li>Collection ទី ២ «Semantic»៖ <code class="i">color/primary</code> → Alias ទៅ <code class="i">violet/700</code></li>
+    <li>បន្ថែម <b>Mode</b> «Dark» ក្នុង Semantic៖ <code class="i">color/primary</code> → <code class="i">violet/300</code></li>
+    <li>ជ្រើស Frame → Layer panel → ប្តូរ Mode ជា Dark → Screen ទាំងមូលប្តូរពណ៌ភ្លាម</li>
+    <li>Collection «Spacing» និង «Radius» ជា Number variables (4, 8, 16…)</li>
+  </ol>
+  <h3>3) Components + Variants + Auto Layout</h3>
+  <table>
+    <tr><th>Component</th><th>Variant properties</th><th>Auto Layout</th></tr>
+    <tr><td>Button</td><td>Type = Primary/Secondary/Ghost · Size = S/M/L · State = Default/Hover/Pressed/Disabled/Loading</td><td>Horizontal, gap 8, padding 12/24, Hug</td></tr>
+    <tr><td>Chip (ប្រភេទ)</td><td>Selected = true/false</td><td>Horizontal, padding 8/16</td></tr>
+    <tr><td>Product card</td><td>Layout = Grid/List · In cart = true/false</td><td>Vertical, gap 8, Fill width</td></tr>
+    <tr><td>Tab bar item</td><td>Active = true/false · Icon (Instance swap)</td><td>Vertical, gap 4, Fill</td></tr>
+  </table>
+  <div class="note">💡 ប្រើ <b>Component properties</b>៖ <i>Text</i> (ឈ្មោះកាហ្វេ), <i>Boolean</i> (បង្ហាញ/លាក់ Badge), <i>Instance swap</i> (ប្តូរ Icon) → Component តែមួយប្រើបានគ្រប់ករណី ដោយមិនចាំបាច់ Detach។ Publish ជា <b>Team Library</b> ដើម្បីឱ្យ File ផ្សេងៗប្រើ Component ដដែល។</div>
+  <h3>4) Prototype & Test</h3>
+  <p>Flow «កុម្ម៉ង់ឡាតេ»៖ Home → ចុច Card (Smart animate) → ជ្រើស Size → Add to cart (Overlay toast) → Cart → Checkout។ Test ជាមួយ ៥ នាក់ (មេរៀនទី ១៥) ហើយ Iterate។</p>
+</section>
+
+<section id="pro-tokens">
+  <h2>🌗 Variables + Modes: Light & Dark ក្នុង Figma</h2>
+  <p>Variable មួយមានតម្លៃពីរ (Mode)។ ប្តូរ Mode លើ Frame → Screen ទាំងមូលប្តូរជា Dark ភ្លាម ដោយមិនចាំបាច់គូរ Screen ថ្មី។</p>
+  <table>
+    <tr><th>Variable (Semantic)</th><th>Light</th><th>Dark</th></tr>
+    <tr><td>color/bg</td><td><span class="sw" style="background:#f8fafc"></span>#F8FAFC</td><td><span class="sw" style="background:#0b1020"></span>#0B1020</td></tr>
+    <tr><td>color/surface</td><td><span class="sw" style="background:#ffffff"></span>#FFFFFF</td><td><span class="sw" style="background:#161b2e"></span>#161B2E</td></tr>
+    <tr><td>color/text</td><td><span class="sw" style="background:#0f172a"></span>#0F172A</td><td><span class="sw" style="background:#e2e8f0"></span>#E2E8F0</td></tr>
+    <tr><td>color/primary</td><td><span class="sw" style="background:#6d28d9"></span>#6D28D9</td><td><span class="sw" style="background:#a78bfa"></span>#A78BFA</td></tr>
+    <tr><td>color/accent</td><td><span class="sw" style="background:#db2777"></span>#DB2777</td><td><span class="sw" style="background:#f472b6"></span>#F472B6</td></tr>
+    <tr><td>space/2 · space/4</td><td colspan="2">8 · 16 (ដូចគ្នាទាំងពីរ Mode)</td></tr>
+    <tr><td>radius/md</td><td colspan="2">12</td></tr>
+  </table>
+  <div class="note">💡 ពេល Handoff, Developer យក Variables ទាំងនេះទៅប្រើដោយផ្ទាល់ (Dev Mode ឬ Plugin <b>Tokens Studio</b>) → Design និង App ពិតប្រើពណ៌ដូចគ្នាជានិច្ច។ Designer មិនចាំបាច់សរសេរកូដទេ។</div>
+</section>
+
+<section id="pro-app">
+  <h2>📱 Kafe App — Prototype ដែលចុចសាកបាន</h2>
+  <p>សាក៖ ជ្រើសប្រភេទ (Chip), ចុច <b>＋</b> បន្ថែមកាហ្វេ, ចុច 🌙 ប្តូរ Dark mode, ចុច Tab <b>កន្ត្រក</b> ដើម្បីមើល Empty state ឬបញ្ជី ហើយប្រើ <kbd>Tab</kbd> ដើម្បីមើល Focus។ នេះជាអ្វីដែល Prototype ក្នុង Figma របស់អ្នកគួរធ្វើបាន។</p>
+  <script type="text/x-code" data-lang="html" data-label="Kafe App Prototype" data-demo>
+<!-- Kafe App · សរសេរពី Figma Design System (Tokens + Components) -->
+<style>
+  /* ===== Tokens (ពី Figma Variables: Light + Dark mode) ===== */
+  :root {
+    --color-bg:#f8fafc; --color-surface:#ffffff; --color-text:#0f172a; --color-muted:#475569;
+    --color-border:#e2e8f0; --color-primary:#6d28d9; --color-on-primary:#ffffff; --color-primary-soft:#ede9fe;
+    --color-accent:#db2777;
+    --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-6:24px;
+    --radius-sm:8px; --radius-md:12px; --radius-lg:20px; --radius-full:999px;
+    --shadow-1:0 1px 3px #0f172a14, 0 4px 12px #0f172a0d;
+    --dur-fast:150ms; --ease-out:cubic-bezier(.2,.8,.2,1);
+  }
+  [data-mode="dark"] {
+    --color-bg:#0b1020; --color-surface:#161b2e; --color-text:#e2e8f0; --color-muted:#a3aec2;
+    --color-border:#283049; --color-primary:#a78bfa; --color-on-primary:#1e1036; --color-primary-soft:#2b2250;
+    --color-accent:#f472b6; --shadow-1:none;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#e2e8f0; font-family:"Kantumruy Pro","Noto Sans Khmer",sans-serif; }
+  button { font:inherit; color:inherit; cursor:pointer; }
+  :focus-visible { outline:3px solid #f59e0b; outline-offset:2px; }
+
+  /* ===== Phone frame (Figma: Frame 390 × 760) ===== */
+  .app { max-width:390px; height:760px; margin:var(--space-4) auto; background:var(--color-bg); color:var(--color-text);
+         border-radius:32px; overflow:hidden; display:flex; flex-direction:column; position:relative; box-shadow:0 10px 40px #0f172a33;
+         line-height:1.7; transition:background var(--dur-fast), color var(--dur-fast); }
+  .screen { flex:1; overflow-y:auto; padding:var(--space-4); display:flex; flex-direction:column; gap:var(--space-4); }
+  .visually-hidden { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+
+  /* Header: Auto layout Horizontal, space-between */
+  .header { display:flex; align-items:center; justify-content:space-between; gap:var(--space-3); }
+  .header p { margin:0; color:var(--color-muted); font-size:14px; }
+  .header h1 { margin:0; font-size:22px; line-height:1.4; }
+  .icon-btn { width:44px; height:44px; border-radius:var(--radius-full); border:1px solid var(--color-border); background:var(--color-surface); font-size:18px; }
+
+  /* Search */
+  .search { display:flex; align-items:center; gap:var(--space-2); min-height:48px; padding:0 var(--space-4); border-radius:var(--radius-md);
+            background:var(--color-surface); border:1px solid var(--color-border); }
+  .search input { flex:1; border:0; background:none; font:inherit; color:inherit; min-height:44px; }
+  .search input:focus { outline:none; }
+  .search:focus-within { border-color:var(--color-primary); box-shadow:0 0 0 3px var(--color-primary-soft); }
+
+  /* Promo card */
+  .promo { padding:var(--space-4); border-radius:var(--radius-lg); color:#fff; background:linear-gradient(135deg,#6d28d9,#db2777); }
+  .promo b { font-size:18px; display:block; } .promo span { font-size:14px; opacity:.95; }
+
+  /* Component: Chip (Selected = true/false) */
+  .chips { display:flex; gap:var(--space-2); overflow-x:auto; padding-bottom:2px; }
+  .chip { min-height:40px; padding:0 var(--space-4); border-radius:var(--radius-full); border:1px solid var(--color-border);
+          background:var(--color-surface); white-space:nowrap; transition:background var(--dur-fast) var(--ease-out); }
+  .chip[aria-pressed="true"] { background:var(--color-primary); color:var(--color-on-primary); border-color:var(--color-primary); font-weight:600; }
+
+  /* Component: Product card (Grid) */
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-3); }
+  .card { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-md); padding:var(--space-2);
+          box-shadow:var(--shadow-1); display:flex; flex-direction:column; gap:var(--space-1); }
+  .thumb { aspect-ratio:1; border-radius:var(--radius-sm); display:grid; place-items:center; font-size:40px; background:var(--color-primary-soft); }
+  .card h3 { margin:0; font-size:15px; line-height:1.5; }
+  .card .meta { margin:0; font-size:12px; color:var(--color-muted); }
+  .row { display:flex; align-items:center; justify-content:space-between; }
+  .price { font-weight:700; }
+  .add { width:44px; height:44px; border-radius:var(--radius-md); border:0; background:var(--color-primary); color:var(--color-on-primary);
+         font-size:22px; position:relative; transition:transform var(--dur-fast) var(--ease-out); }
+  .add:active { transform:scale(.92); }
+  .qty { position:absolute; top:-6px; right:-6px; min-width:20px; height:20px; padding:0 5px; border-radius:var(--radius-full);
+         background:var(--color-accent); color:#fff; font-size:12px; line-height:20px; font-weight:700; }
+
+  /* Empty state + cart list */
+  .empty { text-align:center; padding:var(--space-6) var(--space-4); border:2px dashed var(--color-border); border-radius:var(--radius-lg); }
+  .empty .big { font-size:44px; } .empty p { color:var(--color-muted); margin:0 0 var(--space-4); }
+  .btn { min-height:48px; padding:0 var(--space-6); border:0; border-radius:var(--radius-md); background:var(--color-primary); color:var(--color-on-primary); font-weight:600; }
+  .line { display:flex; align-items:center; gap:var(--space-3); padding:var(--space-3); background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-md); }
+  .line .e { font-size:28px; } .line .grow { flex:1; } .line small { color:var(--color-muted); display:block; }
+  .step { width:36px; height:36px; border-radius:var(--radius-full); border:1px solid var(--color-border); background:var(--color-surface); }
+  .total { display:flex; justify-content:space-between; font-size:18px; font-weight:700; padding:0 var(--space-1); }
+
+  /* Cart bar (Thumb zone) */
+  .cartbar { margin:0 var(--space-4) var(--space-3); min-height:52px; border:0; border-radius:var(--radius-md); background:var(--color-primary);
+             color:var(--color-on-primary); display:flex; align-items:center; justify-content:space-between; padding:0 var(--space-4); font-weight:600;
+             transform:translateY(0); transition:transform .25s var(--ease-out), opacity .25s; }
+  .cartbar[hidden] { display:flex; transform:translateY(120%); opacity:0; pointer-events:none; }
+
+  /* Tab bar (3 items) */
+  .tabs { display:flex; border-top:1px solid var(--color-border); background:var(--color-surface); padding-bottom:var(--space-2); }
+  .tab { flex:1; min-height:56px; border:0; background:none; display:flex; flex-direction:column; align-items:center; justify-content:center;
+         font-size:12px; color:var(--color-muted); gap:0; }
+  .tab span { font-size:20px; line-height:1.2; }
+  .tab[aria-current="page"] { color:var(--color-primary); font-weight:700; }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+
+<div class="app" id="app" data-mode="light">
+  <main class="screen" id="screen"></main>
+  <button class="cartbar" id="cartbar" hidden></button>
+  <nav class="tabs" aria-label="ម៉ឺនុយចម្បង">
+    <button class="tab" data-tab="home" aria-current="page"><span aria-hidden="true">🏠</span>ទំព័រដើម</button>
+    <button class="tab" data-tab="cart"><span aria-hidden="true">🛒</span>កន្ត្រក</button>
+    <button class="tab" data-tab="me"><span aria-hidden="true">👤</span>គណនី</button>
+  </nav>
+  <div class="visually-hidden" aria-live="polite" id="live"></div>
+</div>
+
+<script>
+  // ===== Data =====
+  const PRODUCTS = [
+    { id: 1, name: "ឡាតេ",        cat: "កាហ្វេ", price: 2.5, emoji: "☕", meta: "ទឹកដោះគោស្រស់" },
+    { id: 2, name: "អាមេរិកាណូ",   cat: "កាហ្វេ", price: 2.0, emoji: "☕", meta: "ខ្លាំង គ្មានស្ករ" },
+    { id: 3, name: "កាហ្វេទឹកដោះគោ", cat: "កាហ្វេ", price: 1.8, emoji: "🧋", meta: "បែបខ្មែរ ទឹកកក" },
+    { id: 4, name: "តែបៃតង",      cat: "តែ",    price: 2.2, emoji: "🍵", meta: "Matcha ជប៉ុន" },
+    { id: 5, name: "តែក្រូចឆ្មា",   cat: "តែ",    price: 1.5, emoji: "🍋", meta: "ស្រស់ ត្រជាក់" },
+    { id: 6, name: "Croissant",   cat: "នំ",    price: 1.5, emoji: "🥐", meta: "ប៊ឺបារាំង" },
+  ];
+  const CATS = ["ទាំងអស់", "កាហ្វេ", "តែ", "នំ"];
+  const state = { tab: "home", cat: "ទាំងអស់", query: "", cart: {} };
+
+  const $ = (s, r = document) => r.querySelector(s);
+  const money = n => "$" + n.toFixed(2);
+  const count = () => Object.values(state.cart).reduce((a, b) => a + b, 0);
+  const total = () => Object.entries(state.cart).reduce((s, [id, q]) => s + PRODUCTS.find(p => p.id == id).price * q, 0);
+  const announce = msg => { $("#live").textContent = ""; setTimeout(() => $("#live").textContent = msg, 50); };
+
+  // ===== Components =====
+  const Chip = c => `<button class="chip" data-cat="${c}" aria-pressed="${state.cat === c}">${c}</button>`;
+  const Card = p => {
+    const q = state.cart[p.id] || 0;
+    return `<article class="card">
+      <div class="thumb" aria-hidden="true">${p.emoji}</div>
+      <h3>${p.name}</h3><p class="meta">${p.meta}</p>
+      <div class="row"><span class="price">${money(p.price)}</span>
+        <button class="add" data-add="${p.id}" aria-label="បន្ថែម ${p.name} ទៅកន្ត្រក${q ? ", មាន " + q : ""}">＋${q ? `<span class="qty" aria-hidden="true">${q}</span>` : ""}</button>
+      </div></article>`;
+  };
+
+  // ===== Screens =====
+  function Home() {
+    const list = PRODUCTS.filter(p => (state.cat === "ទាំងអស់" || p.cat === state.cat) && p.name.toLowerCase().includes(state.query.toLowerCase()));
+    return `
+      <header class="header">
+        <div><p>អរុណសួស្តី 👋</p><h1>ថ្ងៃនេះផឹកអ្វី?</h1></div>
+        <button class="icon-btn" id="mode" aria-pressed="${$("#app").dataset.mode === "dark"}" aria-label="Dark mode">${$("#app").dataset.mode === "dark" ? "☀️" : "🌙"}</button>
+      </header>
+      <label class="search"><span aria-hidden="true">🔍</span><span class="visually-hidden">ស្វែងរក</span>
+        <input id="q" type="search" placeholder="ស្វែងរកភេសជ្ជៈ…" value="${state.query}"></label>
+      <div class="promo"><b>បញ្ចុះ 20% ✨</b><span>រាល់ព្រឹកម៉ោង 7–9 សម្រាប់និស្សិត</span></div>
+      <div class="chips" role="group" aria-label="ប្រភេទ">${CATS.map(Chip).join("")}</div>
+      ${list.length ? `<div class="grid">${list.map(Card).join("")}</div>`
+        : `<div class="empty"><div class="big" aria-hidden="true">🔎</div><p>រកមិនឃើញ «${state.query}»</p></div>`}`;
+  }
+  function Cart() {
+    const items = Object.entries(state.cart);
+    if (!items.length) return `<h1 style="margin:0;font-size:22px">កន្ត្រក</h1>
+      <div class="empty"><div class="big" aria-hidden="true">🛒</div><h2 style="margin:0;font-size:18px">កន្ត្រករបស់អ្នកនៅទទេ</h2>
+      <p>ជ្រើសភេសជ្ជៈដែលអ្នកចូលចិត្ត ដើម្បីចាប់ផ្តើម</p><button class="btn" data-go="home">មើល Menu</button></div>`;
+    return `<h1 style="margin:0;font-size:22px">កន្ត្រក (${count()})</h1>
+      ${items.map(([id, q]) => { const p = PRODUCTS.find(x => x.id == id); return `
+        <div class="line"><span class="e" aria-hidden="true">${p.emoji}</span>
+          <div class="grow"><b>${p.name}</b><small>${money(p.price)} × ${q}</small></div>
+          <button class="step" data-dec="${p.id}" aria-label="ដក ${p.name}">−</button><b aria-hidden="true">${q}</b>
+          <button class="step" data-add="${p.id}" aria-label="បន្ថែម ${p.name}">＋</button></div>`; }).join("")}
+      <div class="total"><span>សរុប</span><span>${money(total())}</span></div>
+      <button class="btn" id="pay">ទូទាត់ ${money(total())} ដោយ KHQR</button>`;
+  }
+  function Me() {
+    return `<h1 style="margin:0;font-size:22px">គណនី</h1>
+      <div class="line"><span class="e" aria-hidden="true">🧑‍🎓</span><div class="grow"><b>សុភា</b><small>សមាជិក Gold · 120 ពិន្ទុ</small></div></div>`;
+  }
+
+  // ===== Render =====
+  function render(focusSel) {
+    $("#screen").innerHTML = { home: Home, cart: Cart, me: Me }[state.tab]();
+    document.querySelectorAll(".tab").forEach(t => t.dataset.tab === state.tab ? t.setAttribute("aria-current", "page") : t.removeAttribute("aria-current"));
+    const bar = $("#cartbar"), n = count();
+    bar.hidden = !(n && state.tab === "home");
+    bar.innerHTML = `<span>🛒 ${n} មុខ</span><span>មើលកន្ត្រក · ${money(total())}</span>`;
+    if (focusSel) { const el = $(focusSel); if (el) { el.focus(); if (el.setSelectionRange) el.setSelectionRange(el.value.length, el.value.length); } }
+  }
+
+  // ===== Events (Event delegation) =====
+  document.addEventListener("click", e => {
+    const t = e.target.closest("button"); if (!t) return;
+    if (t.dataset.cat) { state.cat = t.dataset.cat; render(`[data-cat="${t.dataset.cat}"]`); }
+    else if (t.dataset.add) {
+      const p = PRODUCTS.find(x => x.id == t.dataset.add);
+      state.cart[p.id] = (state.cart[p.id] || 0) + 1;
+      render(`[data-add="${p.id}"]`); announce(`បានបន្ថែម ${p.name}។ កន្ត្រកមាន ${count()} មុខ`);
+    }
+    else if (t.dataset.dec) {
+      const id = t.dataset.dec; state.cart[id]--; if (!state.cart[id]) delete state.cart[id];
+      render(state.cart[id] ? `[data-dec="${id}"]` : ".btn"); announce(`កន្ត្រកមាន ${count()} មុខ`);
+    }
+    else if (t.dataset.tab || t.dataset.go) { state.tab = t.dataset.tab || t.dataset.go; render(); }
+    else if (t.id === "cartbar") { state.tab = "cart"; render(); }
+    else if (t.id === "mode") { const a = $("#app"); a.dataset.mode = a.dataset.mode === "dark" ? "light" : "dark"; render("#mode"); }
+    else if (t.id === "pay") { t.textContent = "✅ ទូទាត់ជោគជ័យ · រួចក្នុង ៥ នាទី"; t.disabled = true; state.cart = {}; announce("ទូទាត់ជោគជ័យ"); }
+  });
+  document.addEventListener("input", e => { if (e.target.id === "q") { state.query = e.target.value; render("#q"); } });
+  render();
+<\/script>
+</script>
+</section>
+
+<section id="pro-check">
+  <h2>✅ Checklist កម្រិតអាជីព & Case Study</h2>
+  <table>
+    <tr><th>ផ្នែក</th><th>ក្នុង Kafe App</th></tr>
+    <tr><td><b>Variables</b></td><td>ពណ៌ គម្លាត Radius ទាំងអស់ជា Variables (Light + Dark mode)</td></tr>
+    <tr><td><b>Components</b></td><td>Chip, Product card, Button, Cart bar, Tab bar — ប្រើឡើងវិញ</td></tr>
+    <tr><td><b>States</b></td><td>Selected chip, Quantity badge, Empty cart, Active tab, Focus</td></tr>
+    <tr><td><b>Hierarchy</b></td><td>ឈ្មោះ/តម្លៃលេចធ្លោ, Cart bar ពណ៌ Primary នៅ Thumb zone</td></tr>
+    <tr><td><b>Accessibility</b></td><td>ផ្ទៃចុច ≥ 44px, Contrast AA, Focus ring ច្បាស់, State មិនប្រើតែពណ៌, Annotation សម្រាប់ Screen reader</td></tr>
+    <tr><td><b>Feedback</b></td><td>Badge ចំនួនលើប៊ូតុង + Cart bar លេចឡើងពេលបន្ថែម</td></tr>
+  </table>
+  <h3>រចនាសម្ព័ន្ធ Case Study សម្រាប់ Portfolio</h3>
+  <ol class="steps">
+    <li><b>បញ្ហា</b> — និស្សិតរង់ចាំកាហ្វេ ១០ នាទី (ទិន្នន័យពី Interview ៨ នាក់)</li>
+    <li><b>តួនាទីខ្ញុំ</b> — Product designer · 4 សប្តាហ៍ · Figma, FigJam</li>
+    <li><b>Research</b> — Persona សុភា, Journey map, Insight សំខាន់ៗ</li>
+    <li><b>ដំណើរការ</b> — Flow, Wireframe, ការសម្រេចចិត្ត និងហេតុផល (បង្ហាញកំណែដែលបោះបង់ផង)</li>
+    <li><b>Design System</b> — Tokens, Components, Variants</li>
+    <li><b>Test & Iterate</b> — Success rate 60% → 100% បន្ទាប់ពីកែជំហានជ្រើស Size</li>
+    <li><b>លទ្ធផល & មេរៀន</b> — អ្វីដែលនឹងធ្វើខុសពីមុន</li>
+  </ol>
+  <div class="ex"><h4>🏁 លំហាត់គម្រោងចុងក្រោយ</h4>
+    <ol>
+      <li>សម្ភាសន៍អ្នកប្រើ ៥ នាក់ ហើយបង្កើត Persona + Journey map ក្នុង FigJam</li>
+      <li>បង្កើត Variables (Primitive + Semantic + Dark mode) ក្នុង Figma</li>
+      <li>រចនា Component Button, Chip, Card ជាមួយ Variants និង Auto Layout</li>
+      <li>រចនា ៤ អេក្រង់ Mobile (Home, Detail, Cart, Success) + Prototype</li>
+      <li>ធ្វើ Usability test ៥ នាក់ គណនា Success rate ហើយកែ</li>
+      <li>រៀបចំ Handoff៖ ដាក់ឈ្មោះ Layer, Annotation, ចុច <b>Mark as ready for dev</b></li>
+      <li>សរសេរ Case Study ហើយដាក់លើ Behance / Portfolio (GitHub Pages)</li>
+    </ol>
+  </div>
+</section>
+
+<section id="roadmap">
+  <h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+  <ol class="steps">
+    <li><b>មូលដ្ឋាន UX</b> — Design Thinking, Research, IA, Wireframe (មេរៀន ១–៤)</li>
+    <li><b>មូលដ្ឋាន UI</b> — Principles, Color, Type, Layout, Components (មេរៀន ៥–១០)</li>
+    <li><b>គុណភាព</b> — Accessibility, Responsive, Heuristics, Testing (មេរៀន ១១–១៥)</li>
+    <li><b>Figma ស្ទាត់</b> — Auto Layout, Components, Variants, Variables, Prototype</li>
+    <li><b>Design System</b> — រៀនពី Material Design 3, Apple HIG, និង Design System ធំៗ</li>
+    <li><b>ជម្រើស</b> — ស្គាល់ HTML/CSS បន្តិច (វគ្គមុនៗ) ជួយឱ្យនិយាយជាមួយ Developer ងាយ តែមិនមែនជាតម្រូវការទេ</li>
+    <li><b>Portfolio</b> — Case study ២–៣ ដែលបង្ហាញ <b>ដំណើរការគិត</b> មិនមែនតែរូបស្អាត</li>
+  </ol>
+  <p><b>ប្រភពរៀនបន្ថែម:</b> <a href="https://help.figma.com" target="_blank">help.figma.com</a> · <a href="https://www.nngroup.com/articles/" target="_blank">nngroup.com</a> · <a href="https://lawsofux.com" target="_blank">lawsofux.com</a> · <a href="https://m3.material.io" target="_blank">Material Design 3</a> · <a href="https://developer.apple.com/design/human-interface-guidelines/" target="_blank">Apple HIG</a> · <a href="https://www.w3.org/WAI/standards-guidelines/wcag/" target="_blank">WCAG</a></p>
+</section>
+
+</main>
+</div>
+<script>
+/* ---------- Syntax highlighter ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const sp = (c,t) => `<span class="${c}">${esc(t)}</span>`;
+function tok(s, re, fn){
+  let out='', last=0, m; re.lastIndex = 0;
+  while((m = re.exec(s))){
+    out += esc(s.slice(last, m.index)) + fn(m);
+    last = m.index + m[0].length;
+    if(m[0]==='') re.lastIndex++;
+  }
+  return out + esc(s.slice(last));
+}
+const NAMED = new Set('red green blue yellow orange purple pink black white gray grey tomato crimson royalblue skyblue teal navy gold coral salmon orchid violet indigo lime cyan magenta brown maroon olive silver aqua khaki plum turquoise'.split(' '));
+function hlValue(v){
+  const re = /(\/\*[\s\S]*?\*\/)|("[^"]*"|'[^']*')|(#[0-9a-fA-F]{3,8}\b)|((?<![\w#-])-?\d*\.?\d+(?:px|rem|em|%|vh|vw|s|ms|deg|fr|ch)?)|([a-zA-Z-]+)(?=\()|(!?[a-zA-Z][a-zA-Z-]*)/g;
+  return tok(v, re, m => {
+    if(m[1]) return sp('c', m[1]);
+    if(m[2]) return sp('s', m[2]);
+    if(m[3]) return `<span class="sw" style="background:${m[3]}"></span>` + sp('n', m[3]);
+    if(m[4]) return sp('n', m[4]);
+    if(m[5]) return sp('f', m[5]);
+    if(m[6]){
+      if(NAMED.has(m[6])) return `<span class="sw" style="background:${m[6]}"></span>` + sp('v', m[6]);
+      return sp('v', m[6]);
+    }
+    return esc(m[0]);
+  });
+}
+function hlSelector(s){
+  return tok(s, /\/\*[\s\S]*?\*\//g, m => sp('c', m[0])).replace(
+    /(^|<\/span>)([^<]+?)(?=<span|$)/g, (all, a, b) => {
+      if(!b.trim()) return all;
+      return a + (b.trim().startsWith('@') ? `<span class="at">${b}</span>` : `<span class="sel">${b}</span>`);
+    });
+}
+function hlCSS(code){
+  const re = /(\/\*[\s\S]*?\*\/)|([^{};]+?)(\s*\{)|([\w-]+)(\s*:\s*)([^;{}]*)(;?)|([{}])/g;
+  return tok(code, re, m => {
+    if(m[1]) return sp('c', m[1]);
+    if(m[2] !== undefined && m[3]) return hlSelector(m[2]) + sp('pn', m[3]);
+    if(m[4]) return sp('pr', m[4]) + sp('pn', m[5]) + hlValue(m[6]) + sp('pn', m[7]);
+    return sp('pn', m[0]);
+  });
+}
+function hlTag(tag){
+  const m = tag.match(/^(<\/?)([\w-]+)([\s\S]*?)(\/?>)$/);
+  if(!m) return esc(tag);
+  const attrs = tok(m[3], /([\w:@-]+)(=)("[^"]*"|'[^']*')|([\w-]+)/g, a =>
+    a[1] ? sp('at2', a[1]) + sp('pn', a[2]) + sp('s', a[3]) : sp('at2', a[4]));
+  return sp('pn', m[1]) + sp('tg', m[2]) + attrs + sp('pn', m[4]);
+}
+const JS_KW = new Set('const let var function return if else for while do switch case break continue new class extends import export from default async await try catch finally throw typeof instanceof of in this delete void yield static get set'.split(' '));
+const JS_LIT = new Set(['true','false','null','undefined','NaN','Infinity']);
+function hlJS(code){
+  const re = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|(`(?:\\[\s\S]|[^`\\])*`|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*')|(\b\d+\.?\d*\b)|([A-Za-z_$][\w$]*)(?=\s*\()|([A-Za-z_$][\w$]*)/g;
+  return tok(code, re, m => {
+    if(m[1]) return sp('c', m[1]);
+    if(m[2]) return sp('s', m[2]);
+    if(m[3]) return sp('n', m[3]);
+    if(m[4]) return JS_KW.has(m[4]) ? sp('at', m[4]) : sp('f', m[4]);
+    if(m[5]){
+      if(JS_KW.has(m[5])) return sp('at', m[5]);
+      if(JS_LIT.has(m[5])) return sp('tg', m[5]);
+      if(/^[A-Z]/.test(m[5])) return sp('sel', m[5]);
+      return sp('pr', m[5]);
+    }
+    return esc(m[0]);
+  });
+}
+function hlHTML(code){
+  const re = /(<!--[\s\S]*?-->)|(<style[^>]*>)([\s\S]*?)(<\/style>)|(<script[^>]*>)([\s\S]*?)(<\/script>)|(<!DOCTYPE[^>]*>)|(<\/?[a-zA-Z][^>]*>)/gi;
+  return tok(code, re, m => {
+    if(m[1]) return sp('c', m[1]);
+    if(m[2]) return hlTag(m[2]) + hlCSS(m[3]) + hlTag(m[4]);
+    if(m[5]) return hlTag(m[5]) + hlJS(m[6]) + hlTag(m[7]);
+    if(m[8]) return sp('pn', m[8]);
+    return hlTag(m[9]);
+  });
+}
+
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;600;800&display=swap" rel="stylesheet"><style>body{font-family:"Noto Sans Khmer",system-ui,sans-serif;margin:12px;line-height:1.7}</style>';
+const FRAME_JS = '<style>#out{background:#0f172a;color:#a7f3d0;font-family:"Fira Code",monospace;font-size:13px;line-height:1.6;padding:10px 12px;border-radius:8px;white-space:pre-wrap;margin:8px 0 0;min-height:36px}</style><script>function log(){var o=document.getElementById("out");if(!o){o=document.createElement("pre");o.id="out";document.body.appendChild(o);}var a=[].slice.call(arguments).map(function(x){return typeof x==="object"&&x!==null?JSON.stringify(x):String(x)});o.textContent+=a.join(" ")+"\\n";}window.onerror=function(m){log("❌",m)};window.addEventListener("unhandledrejection",function(e){log("❌",e.reason)});<\/script>';
+const FRAME_HEAD_FULL = FRAME_HEAD + FRAME_JS;
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'css';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || ({ js: 'JavaScript', html: 'HTML', css: 'CSS', bash: 'Terminal', txt: 'Text', json: 'JSON' }[lang] || lang.toUpperCase());
+  const pre = document.createElement('pre');
+  const code = document.createElement('code');
+  code.innerHTML = lang === 'html' ? hlHTML(raw) : lang === 'js' ? hlJS(raw) : lang === 'css' ? hlCSS(raw) : lang === 'json' ? hlJS(raw) : esc(raw);
+  pre.appendChild(code);
+  const btn = document.createElement('button');
+  btn.className = 'btn copy';
+  btn.textContent = 'ចម្លង';
+  btn.onclick = async () => {
+    try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+    catch { btn.textContent = 'បរាជ័យ'; }
+    setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+  };
+  const visual = sc.hasAttribute('data-demo');
+  if (visual) { box.classList.add('visual'); label.textContent = '🎨 ' + label.textContent; box.append(label); }
+  else { if (lang === 'txt') box.classList.add('diagram'); box.append(label, pre, btn); }
+  if (sc.hasAttribute('data-demo')) {
+    const res = document.createElement('div');
+    res.className = 'result';
+    
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = 'លទ្ធផល';
+    fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { fr.style.height = Math.max(90, fr.contentDocument.documentElement.scrollHeight + 4) + 'px'; }
+      catch (e) { fr.style.height = '240px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); };
+    res.appendChild(fr);
+    box.appendChild(res);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="uxui"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

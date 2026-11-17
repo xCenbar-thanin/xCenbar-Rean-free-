@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>រៀន Git និង GitHub ពីដើមដល់ចប់</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#faf7f5; --panel:#ffffff; --text:#241a16; --muted:#5b6b61; --line:#ece2dd;
+  --accent:#d0461d; --accent2:#f05033; --accent-soft:#fdece7;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#ff8a6b; --accent2:#f05033; --accent-soft:#2e1a14;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#ff8a6b; --accent2:#f05033; --accent-soft:#2e1a14;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:#f05033;color:#fff;font-size:12px;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#8f2d10,#f05033);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.c{color:#8b949e;font-style:italic}.sel{color:#ffa657}.at{color:#ff7b72}.pr{color:#79c0ff}
+.s{color:#a5d6ff}.n{color:#7ee787}.f{color:#d2a8ff}.v{color:#e6edf3}.tg{color:#7ee787}.pn{color:#8b949e}.at2{color:#79c0ff}
+.level{font-size:12px;background:#fde68a;color:#92400e;padding:1px 8px;border-radius:99px;margin-left:6px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em}
+
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:stretch;margin:16px 0}
+.flow .st{flex:1;min-width:120px;border-radius:12px;padding:12px 8px;color:#fff;text-align:center;font-size:.88rem;line-height:1.5}
+.flow .st b{display:block;font-size:1rem}
+.flow .ar{align-self:center;text-align:center;font-size:.78rem;color:var(--accent);font-weight:600;min-width:84px}
+.flow .ar code{display:block;font-family:"Fira Code",monospace;color:#b4235a;background:var(--accent-soft);border-radius:6px;padding:1px 6px;margin-top:2px}
+.s1{background:#f59e0b}.s2{background:#0ea5e9}.s3{background:#8b5cf6}.s4{background:#16a34a}
+.branches{background:#0f172a;border-radius:12px;padding:14px 16px;margin:12px 0;overflow:auto}
+.branches svg{display:block;min-width:520px;width:100%;height:auto}
+
+</style>
+<link rel="icon" href="../assets/icons/git.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/git.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>វគ្គសិក្សា Git និង GitHub ពីដើមដល់កម្រិតអាជីព</h1>
+  <button class="btn" id="themeBtn">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#g0">មេរៀន ០: Git និង GitHub ជាអ្វី?</a>
+<a href="#g1">មេរៀន ១: ដំឡើង Git និងបង្កើតគណនី GitHub</a>
+<a href="#g2">មេរៀន ២: គោលគំនិតសំខាន់ៗ</a>
+<a href="#elements">ធាតុនីមួយៗរបស់ Git</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#g3">មេរៀន ៣: Command មូលដ្ឋាន: init, status, add, commit, log</a>
+<a href="#g4">មេរៀន ៤: .gitignore និងការត្រឡប់ក្រោយ (Undo)</a>
+<a href="#g5">មេរៀន ៥: Branch និង Merge</a>
+<a href="#g6">មេរៀន ៦: GitHub: ភ្ជាប់ Remote, push, pull, clone</a>
+<a href="#g7">មេរៀន ៧: ធ្វើការជាក្រុម: Fork, Pull Request, Issues</a>
+<a href="#g8">មេរៀន ៨: GitHub Pages — ដាក់ Web ឲ្យអ្នកដទៃមើល (ឥតគិតថ្លៃ)</a>
+<a href="#g9">មេរៀន ៩: ប្រើ Git ក្នុង VS Code</a>
+<h4>សង្ខេប លំហាត់ & គម្រោង</h4>
+<a href="#cheat">📚 តារាងសង្ខេប Git Cheat Sheet</a>
+<a href="#exercises">✍️ លំហាត់ Git &amp; GitHub (មានចម្លើយ)</a>
+<a href="#project">🚀 គម្រោងចុងក្រោយ៖ ដាក់ Portfolio ឡើង GitHub Pages</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">Git កម្រិតអាជីព</a>
+<a href="#pro-flow">GitHub Flow & Rulesets</a>
+<a href="#pro-ssh">SSH Key</a>
+<a href="#pro-files">CI, Pages & Templates</a>
+<a href="#pro-advanced">Command កម្រិតខ្ពស់</a>
+<a href="#roadmap">ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🌿 មេរៀន Git និង GitHub ពីដើមដល់ចប់</h2>
+  <p>រៀនរក្សាទុកប្រវត្តិកូដ, Branch, Pull Request និងដាក់គេហទំព័រ HTML/CSS/JS របស់អ្នកឲ្យមនុស្សទាំងពិភពលោកមើលបានដោយឥតគិតថ្លៃជាមួយ GitHub Pages — រហូតដល់ Workflow កម្រិតអាជីព។</p>
+  <p><span class="badge">📘 ១០ មេរៀន</span><span class="badge">✍️ ៨ លំហាត់</span><span class="badge">🚀 GitHub Pages</span><span class="badge">🏆 កម្រិតអាជីព</span></p>
+</section>
+
+
+
+<!-- G0 -->
+<section id="g0">
+<h2><span class="badge">មេរៀន ០</span>Git និង GitHub ជាអ្វី?</h2>
+<p><b>Git</b> គឺជាប្រព័ន្ធ <b>ត្រួតពិនិត្យជំនាន់ (Version Control)</b> ដែលចងចាំប្រវត្តិនៃរាល់ការកែ code របស់អ្នក ដូចជា "ប៊ូតុង Undo ដ៏អស្ចារ្យ" ដែលអាចត្រឡប់ទៅជំនាន់ណាក៏បាន។ <b>GitHub</b> គឺជា website សម្រាប់ <b>ផ្ទុក Git repository លើអនឡាញ</b> (ដូចជា Google Drive សម្រាប់ code) ដើម្បីបម្រុងទុក ចែករំលែក និងធ្វើការជាក្រុម។</p>
+<div class="warn"><b>⚠️ កុំច្រលំ៖</b> Git = កម្មវិធីលើកុំព្យូទ័រអ្នក។ GitHub = សេវាអនឡាញដែលប្រើ Git។ មានសេវាស្រដៀងគ្នាផ្សេងទៀតដូចជា GitLab និង Bitbucket។</div>
+<h3>👤 ប្រវត្តិ</h3>
+<ul>
+<li><b>Git</b> ត្រូវបានបង្កើតដោយ <b>Linus Torvalds</b> (អ្នកបង្កើត Linux) នៅឆ្នាំ <b>2005</b> ដើម្បីគ្រប់គ្រង code របស់ Linux Kernel។</li>
+<li><b>GitHub</b> ចាប់ផ្តើមនៅឆ្នាំ <b>2008</b> ហើយក្រុមហ៊ុន <b>Microsoft</b> បានទិញនៅឆ្នាំ <b>2018</b>។</li>
+</ul>
+<h3>🎯 ហេតុអ្វីត្រូវប្រើ?</h3>
+<ul>
+<li>🕰️ <b>ត្រឡប់ក្រោយបាន</b>៖ កែខុស? ត្រឡប់ទៅជំនាន់ដែលដំណើរការ</li>
+<li>🌿 <b>សាកល្បងដោយសុវត្ថិភាព</b>៖ បង្កើត branch ដើម្បីសាកល្បង feature ថ្មីដោយមិនប៉ះពាល់ code ដើម</li>
+<li>☁️ <b>បម្រុងទុកលើ Cloud</b>៖ កុំព្យូទ័រខូច ក៏ code មិនបាត់</li>
+<li>👥 <b>ធ្វើការជាក្រុម</b>៖ មនុស្សច្រើននាក់កែ project តែមួយបានដោយមិនជាន់គ្នា</li>
+<li>💼 <b>Portfolio</b>៖ GitHub ជាប្រវត្តិរូបការងាររបស់អ្នកអភិវឌ្ឍន៍ ហើយនិយោជកតែងតែមើល</li>
+<li>🌍 <b>ដាក់ web ឲ្យអ្នកដទៃមើល</b> ឥតគិតថ្លៃដោយ GitHub Pages</li>
+</ul>
+</section>
+
+<!-- G1 -->
+<section id="g1">
+<h2><span class="badge">មេរៀន ១</span>ដំឡើង Git និងបង្កើតគណនី GitHub</h2>
+<ol class="steps">
+<li><b>ដំឡើង Git</b>៖ ទៅ <code class="i">git-scm.com/downloads</code> ជ្រើសប្រព័ន្ធរបស់អ្នក។
+ <br><b>Windows៖</b> ដំណើរការ installer ហើយចុច Next តាមលំនាំដើម (រួមមាន <i>Git Bash</i> និង <i>Git Credential Manager</i>)។
+ <br><b>macOS៖</b> វាយ <code class="i">xcode-select --install</code> ឬ <code class="i">brew install git</code>។
+ <br><b>Linux (Ubuntu/Debian)៖</b> <code class="i">sudo apt install git</code>។</li>
+<li><b>ពិនិត្យការដំឡើង</b>៖ បើក Terminal (ឬ Git Bash) ហើយវាយ <code class="i">git --version</code>។ ក្នុង VS Code អាចបើក Terminal ដោយ <kbd>Ctrl</kbd>+<kbd>`</kbd>។</li>
+<li><b>កំណត់អត្តសញ្ញាណ</b> (ធ្វើតែម្តង) ដូចក្នុងប្លុកខាងក្រោម។</li>
+<li><b>បង្កើតគណនី GitHub</b>៖ ចូល <code class="i">github.com</code> → Sign up (ប្រើអ៊ីមែលដូចដែលបានកំណត់ក្នុង Git ល្អបំផុត)។</li>
+<li><b>ភ្ជាប់ការចូល (Authentication)</b>៖ ពេល <code class="i">git push</code> លើកដំបូង Git Credential Manager នឹងបើក browser ឲ្យអ្នក Sign in ជាមួយ GitHub។ <b>GitHub លែងទទួលលេខសម្ងាត់ធម្មតាសម្រាប់ push ហើយ</b> — ត្រូវប្រើការចូលតាម browser, <b>Personal Access Token</b> ឬ <b>SSH key</b>។</li>
+</ol>
+<script type="text/x-code" data-lang="bash">
+# កំណត់ឈ្មោះ និងអ៊ីមែល (ប្រើក្នុងគ្រប់ commit)
+$ git config --global user.name "Sokha Chan"
+$ git config --global user.email "sokha@example.com"
+
+# ឲ្យ branch ដំបូងមានឈ្មោះ main
+$ git config --global init.defaultBranch main
+
+# ប្រើ VS Code ជា editor (ពេល merge/revert Git បើក editor ឱ្យសរសេរសារ)
+$ git config --global core.editor "code --wait"
+
+# ពិនិត្យការកំណត់
+$ git config --list
+user.name=Sokha Chan
+user.email=sokha@example.com
+init.defaultbranch=main
+core.editor=code --wait
+
+$ git --version
+git version 2.47.0
+</script>
+<div class="note"><b>💡 ជម្រើសងាយ៖</b> មិនចូលចិត្ត Terminal? <b>GitHub Desktop</b> (desktop.github.com) និងផ្ទាំង <b>Source Control</b> ក្នុង VS Code (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>G</kbd>) ធ្វើបានទាំងអស់ដោយចុចប៊ូតុង។ ប៉ុន្តែគួររៀន command ជាមុន ព្រោះស្រួលយល់ជាង។</div>
+<div class="warn"><b>⚠️ អ្នកប្រើ Windows៖</b> សូមវាយ command ក្នុង <b>Git Bash</b> (ឬកំណត់ Terminal របស់ VS Code ជា Git Bash)។ ក្នុង Windows PowerShell 5 ពាក្យបញ្ជា <code class="i">echo "..." &gt; file</code> បង្កើត File ជា UTF-16 ដែល Git មើលឃើញជា Binary ហើយ <code class="i">.gitignore</code> អាចលែងដំណើរការ។ បើ Git បើក editor <b>Vim</b> ដោយមិនដឹងខ្លួន៖ ចុច <kbd>Esc</kbd> វាយ <code class="i">:wq</code> ហើយ Enter ដើម្បីរក្សាទុក និងចេញ។</div>
+</section>
+
+<!-- G2 -->
+<section id="g2">
+<h2><span class="badge">មេរៀន ២</span>គោលគំនិតសំខាន់ៗ</h2>
+<p>Git មាន <b>៤ តំបន់</b>។ file ធ្វើដំណើរពីតំបន់មួយទៅតំបន់មួយ ដោយប្រើ command៖</p>
+<div class="flow">
+  <div class="st s1"><b>Working Directory</b>file ដែលអ្នកកំពុងកែ</div>
+  <div class="ar">git add<code>→</code></div>
+  <div class="st s2"><b>Staging Area</b>ត្រៀមដាក់ក្នុង commit</div>
+  <div class="ar">git commit<code>→</code></div>
+  <div class="st s3"><b>Local Repository</b>ប្រវត្តិ commit ក្នុងម៉ាស៊ីន</div>
+  <div class="ar">git push<code>→</code></div>
+  <div class="st s4"><b>Remote (GitHub)</b>លើអនឡាញ</div>
+</div>
+<table>
+<tr><th>ពាក្យ</th><th>ន័យ</th></tr>
+<tr><td><b>Repository (repo)</b></td><td>folder គម្រោងដែល Git តាមដាន (មាន folder លាក់ <code>.git</code>)</td></tr>
+<tr><td><b>Commit</b></td><td>"រូបថត" នៃគម្រោងនៅពេលណាមួយ ជាមួយសារពន្យល់ និងលេខ ID (hash)</td></tr>
+<tr><td><b>Branch</b></td><td>ខ្សែបន្ទាត់នៃការអភិវឌ្ឍដាច់ដោយឡែក (<code>main</code> ជា branch មេ)</td></tr>
+<tr><td><b>HEAD</b></td><td>ទីតាំងដែលអ្នកកំពុងឈរ (branch/commit បច្ចុប្បន្ន)</td></tr>
+<tr><td><b>Merge</b></td><td>បញ្ចូល branch មួយចូលទៅ branch មួយទៀត</td></tr>
+<tr><td><b>Remote / origin</b></td><td>repo លើ server (GitHub); <code>origin</code> ជាឈ្មោះលំនាំដើមរបស់វា</td></tr>
+<tr><td><b>Clone / Fork</b></td><td>ចម្លង repo មកម៉ាស៊ីន / ចម្លង repo អ្នកដទៃមកគណនីខ្លួន</td></tr>
+<tr><td><b>Pull Request (PR)</b></td><td>សំណើឲ្យបញ្ចូលការកែរបស់អ្នកទៅ branch មេ បន្ទាប់ពីត្រួតពិនិត្យ</td></tr>
+</table>
+</section>
+
+<!-- G3 -->
+
+<section id="elements">
+  <h2>🧩 ធាតុនីមួយៗរបស់ Git (នៅក្នុង Folder .git)</h2>
+  <p>រាល់ពេល <code class="i">git init</code> Git បង្កើត Folder លាក់ <code class="i">.git</code> ដែលជា «Database» នៃប្រវត្តិទាំងអស់។ យល់ធាតុទាំងនេះ ធ្វើឱ្យ Command ទាំងអស់ងាយយល់។</p>
+  <table>
+    <tr><th>ធាតុ</th><th>ពន្យល់</th></tr>
+    <tr><td><b>Blob</b></td><td>ខ្លឹមសាររបស់ File មួយ (មិនមានឈ្មោះ File)</td></tr>
+    <tr><td><b>Tree</b></td><td>Folder — បញ្ជីឈ្មោះ File/Folder ចង្អុលទៅ Blob និង Tree ផ្សេង</td></tr>
+    <tr><td><b>Commit</b></td><td>ចង្អុលទៅ Tree មួយ + អ្នកនិពន្ធ + ពេលវេលា + សារ + Commit មេ (parent)</td></tr>
+    <tr><td><b>Hash (SHA)</b></td><td>លេខសម្គាល់ ៤០ តួ (ឧ. <code class="i">3f2a9c1…</code>) គណនាពីខ្លឹមសារ — ប្តូរខ្លឹមសារ = Hash ថ្មី</td></tr>
+    <tr><td><b>Branch (ref)</b></td><td>គ្រាន់តែជា File តូចមួយដែលមាន Hash នៃ Commit ចុងក្រោយ (<code class="i">.git/refs/heads/main</code>)</td></tr>
+    <tr><td><b>HEAD</b></td><td>File <code class="i">.git/HEAD</code> ប្រាប់ថាអ្នកកំពុងនៅលើ Branch ណា</td></tr>
+    <tr><td><b>Index (Staging)</b></td><td>File <code class="i">.git/index</code> — បញ្ជី File ដែលត្រៀមសម្រាប់ Commit បន្ទាប់</td></tr>
+    <tr><td><b>Tag</b></td><td>ឈ្មោះថេរសម្រាប់ Commit សំខាន់ ឧ. <code class="i">v1.0.0</code></td></tr>
+    <tr><td><b>Reflog</b></td><td>កំណត់ត្រាគ្រប់ទីតាំង HEAD ធ្លាប់ទៅ — ជួយសង្គ្រោះ Commit ដែល «បាត់»</td></tr>
+  </table>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+$ git cat-file -t HEAD           # ប្រភេទ object
+commit
+$ git cat-file -p HEAD           # មើលខ្លឹមសារ commit
+tree 9c1e...
+author Sokha Chan <sokha@example.com> 1731430000 +0700
+committer Sokha Chan <sokha@example.com> 1731430000 +0700
+
+បន្ថែមទំព័រដើម
+$ cat .git/HEAD
+ref: refs/heads/main
+</script>
+  <div class="note">💡 <b>Commit មិនមែនរក្សាទុក «ការកែ» ទេ</b> — វារក្សាទុក <b>រូបថតពេញ</b> នៃ Project (File ដែលមិនប្តូរ ប្រើ Blob ដដែល ដូច្នេះមិនស៊ីទំហំ)។ Branch គ្រាន់តែជាស្លាកចង្អុលទៅ Commit ដូច្នេះការបង្កើត Branch លឿនខ្លាំង។</div>
+</section>
+
+<section id="g3">
+<h2><span class="badge">មេរៀន ៣</span>Command មូលដ្ឋាន: init, status, add, commit, log</h2>
+<p>បង្កើត folder គម្រោង ហើយសាកល្បងតាមដំណាក់កាលទាំងនេះ៖</p>
+<script type="text/x-code" data-lang="bash">
+$ mkdir my-site            # បង្កើត folder
+$ cd my-site               # ចូលក្នុង folder
+$ git init                 # ចាប់ផ្តើម Git
+Initialized empty Git repository in .../my-site/.git/
+
+$ echo "<h1>Hello Git</h1>" > index.html     # បង្កើត file
+$ git status               # មើលស្ថានភាព
+On branch main
+No commits yet
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        index.html
+
+$ git add index.html       # ដាក់ចូល staging  (ឬ git add . = ទាំងអស់)
+$ git commit -m "បន្ថែមទំព័រដើម"     # រក្សាទុកជា commit
+[main (root-commit) 3f2a9c1] បន្ថែមទំព័រដើម
+ 1 file changed, 1 insertion(+)
+
+$ git log --oneline        # មើលប្រវត្តិ
+3f2a9c1 (HEAD -> main) បន្ថែមទំព័រដើម
+</script>
+<h3>មើលការផ្លាស់ប្តូរ</h3>
+<script type="text/x-code" data-lang="bash">
+$ git diff                 # ការកែដែលមិនទាន់ git add
+$ git diff --staged        # ការកែដែលបាន add រួច (ត្រៀម commit)
+$ git log --oneline --graph --all     # ប្រវត្តិជារូបដើមឈើ
+$ git show 3f2a9c1         # មើលលម្អិត commit មួយ
+</script>
+<table>
+<tr><th>Command</th><th>ការងារ</th></tr>
+<tr><td><code>git init</code></td><td>ចាប់ផ្តើម repo ថ្មីក្នុង folder</td></tr>
+<tr><td><code>git status</code></td><td>មើល file ដែលកែ/មិនទាន់តាមដាន</td></tr>
+<tr><td><code>git add &lt;file&gt;</code> / <code>git add .</code></td><td>ដាក់ file ចូល staging</td></tr>
+<tr><td><code>git commit -m "សារ"</code></td><td>បង្កើត commit</td></tr>
+<tr><td><code>git log</code></td><td>មើលប្រវត្តិ</td></tr>
+<tr><td><code>git diff</code></td><td>មើលអ្វីដែលបានប្តូរ</td></tr>
+</table>
+<div class="note"><b>✅ សារ commit ល្អ៖</b> ខ្លី ច្បាស់ និងប្រាប់ថា "ធ្វើអ្វី" ឧ. <code class="i">"បន្ថែមប៊ូតុង Login"</code>, <code class="i">"កែ bug នៅ navbar លើទូរស័ព្ទ"</code> — មិនមែន <code class="i">"update"</code> ឬ <code class="i">"asdf"</code>។ Commit តិចៗ ញឹកញាប់ មួយ commit = មួយគំនិត។</div>
+</section>
+
+<!-- G4 -->
+<section id="g4">
+<h2><span class="badge">មេរៀន ៤</span>.gitignore និងការត្រឡប់ក្រោយ (Undo)</h2>
+<h3>.gitignore — មិនឲ្យ Git តាមដាន file ខ្លះ</h3>
+<p>បង្កើត file ឈ្មោះ <code class="i">.gitignore</code> នៅ root នៃ repo។ <b>កុំ commit លេខសម្ងាត់ (API key, .env)</b> ឡើង GitHub ដាច់ខាត!</p>
+<script type="text/x-code" data-lang="txt">
+# file .gitignore
+node_modules/
+.env
+*.log
+.DS_Store
+dist/
+.vscode/
+</script>
+<h3>Undo ក្នុងស្ថានភាពផ្សេងៗ</h3>
+<table>
+<tr><th>ស្ថានភាព</th><th>Command</th></tr>
+<tr><td>បោះបង់ការកែ file (មិនទាន់ add)</td><td><code>git restore index.html</code> ⚠️ ការកែបាត់ជារៀងរហូត</td></tr>
+<tr><td>ដក file ចេញពី staging (ក្រោយ add)</td><td><code>git restore --staged index.html</code></td></tr>
+<tr><td>កែសារ/បន្ថែម file ក្នុង commit ចុងក្រោយ (មិនទាន់ push)</td><td><code>git commit --amend -m "សារថ្មី"</code></td></tr>
+<tr><td>បង្កើត commit ថ្មីដែលលុបផល commit មួយ (សុវត្ថិភាព ប្រើបានក្រោយ push)</td><td><code>git revert &lt;hash&gt;</code></td></tr>
+<tr><td>ត្រឡប់ទៅ commit ចាស់ ហើយរក្សាការកែក្នុង staging</td><td><code>git reset --soft &lt;hash&gt;</code></td></tr>
+<tr><td>ត្រឡប់ទៅ commit ចាស់ ហើយលុបការកែទាំងអស់</td><td><code>git reset --hard &lt;hash&gt;</code> ⚠️ គ្រោះថ្នាក់</td></tr>
+<tr><td>រក្សាទុកការកែជាបណ្តោះអាសន្នមុនប្តូរ branch</td><td><code>git stash</code> / <code>git stash pop</code></td></tr>
+</table>
+<script type="text/x-code" data-lang="bash">
+$ git restore --staged style.css      # ដក style.css ចេញពី staging
+$ git revert 3f2a9c1                  # លុបផល commit 3f2a9c1 ដោយសុវត្ថិភាព
+$ git stash                           # ទុកការកែមួយអន្លើ
+Saved working directory and index state WIP on main: 3f2a9c1 បន្ថែមទំព័រដើម
+$ git stash pop                       # យកត្រឡប់មកវិញ
+</script>
+<div class="warn"><b>⚠️ ច្បាប់មាស៖</b> កុំប្រើ <code class="i">reset --hard</code> ឬ <code class="i">push --force</code> លើ branch ដែលអ្នកដទៃប្រើរួម។ បើមិនប្រាកដ សួរមុន ឬប្រើ <code class="i">git revert</code>។ បើបាន commit លេខសម្ងាត់ឡើង GitHub រួច ត្រូវ <b>ប្តូរលេខសម្ងាត់នោះភ្លាម</b> (ការលុបចេញពី commit មិនគ្រប់គ្រាន់ទេ)។</div>
+</section>
+
+<!-- G5 -->
+<section id="g5">
+<h2><span class="badge">មេរៀន ៥</span>Branch និង Merge</h2>
+<p>Branch ឲ្យអ្នកសាកល្បង feature ថ្មីដោយមិនប៉ះពាល់ <code class="i">main</code>។ ពេលចប់ ទើបបញ្ចូលត្រឡប់មកវិញ។</p>
+<div class="branches">
+<svg viewBox="0 0 560 150" xmlns="http://www.w3.org/2000/svg" font-family="monospace" font-size="12">
+  <line x1="40" y1="40" x2="520" y2="40" stroke="#38bdf8" stroke-width="3"/>
+  <line x1="160" y1="40" x2="220" y2="110" stroke="#a78bfa" stroke-width="3"/>
+  <line x1="220" y1="110" x2="340" y2="110" stroke="#a78bfa" stroke-width="3"/>
+  <line x1="340" y1="110" x2="400" y2="40" stroke="#a78bfa" stroke-width="3" stroke-dasharray="5 4"/>
+  <circle cx="40" cy="40" r="9" fill="#38bdf8"/><circle cx="100" cy="40" r="9" fill="#38bdf8"/><circle cx="160" cy="40" r="9" fill="#38bdf8"/>
+  <circle cx="400" cy="40" r="11" fill="#22c55e"/><circle cx="480" cy="40" r="9" fill="#38bdf8"/>
+  <circle cx="220" cy="110" r="9" fill="#a78bfa"/><circle cx="280" cy="110" r="9" fill="#a78bfa"/><circle cx="340" cy="110" r="9" fill="#a78bfa"/>
+  <text x="40" y="20" fill="#7dd3fc">main</text>
+  <text x="225" y="141" fill="#c4b5fd">feature/login</text>
+  <text x="372" y="20" fill="#86efac">merge</text>
+</svg>
+</div>
+<script type="text/x-code" data-lang="bash">
+$ git branch                         # បង្ហាញ branch ទាំងអស់ (* = បច្ចុប្បន្ន)
+* main
+
+$ git switch -c feature/login        # បង្កើត branch ថ្មី ហើយប្តូរទៅវា
+Switched to a new branch 'feature/login'
+
+# ... កែ code, git add, git commit ...
+
+$ git switch main                    # ត្រឡប់ទៅ main
+$ git merge feature/login            # បញ្ចូល feature ចូល main
+Updating 3f2a9c1..b81d4e2
+Fast-forward
+ login.html | 12 ++++++++++++
+
+$ git branch -d feature/login        # លុប branch ដែលចប់ហើយ
+</script>
+<div class="note"><b>💡 Fast-forward ឬ Merge commit?</b> បើ <code class="i">main</code> មិនមាន commit ថ្មីចាប់តាំងពីបង្កើត branch, Git គ្រាន់តែរំកិល <code class="i">main</code> ទៅមុខ (<b>Fast-forward</b>)។ បើ <code class="i">main</code> មាន commit ថ្មីដែរ (ដូចក្នុងរូបខាងលើ) Git បង្កើត <b>Merge commit</b> ថ្មី ហើយបើក editor ឱ្យសរសេរសារ។</div>
+<h3>⚔️ Merge Conflict (ជម្លោះ)</h3>
+<p>កើតឡើងពេល ២ branch កែបន្ទាត់តែមួយខុសគ្នា។ Git នឹងសួរអ្នកឲ្យជ្រើស៖</p>
+<script type="text/x-code" data-lang="bash">
+$ git merge feature/login
+Auto-merging index.html
+CONFLICT (content): Merge conflict in index.html
+Automatic merge failed; fix conflicts and then commit the result.
+
+# បើក index.html នឹងឃើញ៖
+<<<<<<< HEAD
+<h1>ស្វាគមន៍មកកាន់ហាង</h1>
+=======
+<h1>សួស្តី សូមស្វាគមន៍</h1>
+>>>>>>> feature/login
+</script>
+<ol class="steps">
+<li>បើក file ក្នុង VS Code — វាបង្ហាញប៊ូតុង <b>Accept Current / Accept Incoming / Accept Both</b></li>
+<li>ជ្រើស (ឬកែដោយដៃ) ហើយលុបសញ្ញា <code class="i">&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code class="i">=======</code>, <code class="i">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> ចេញ</li>
+<li>រត់ <code class="i">git add index.html</code> រួច <code class="i">git commit</code> ដើម្បីបញ្ចប់ merge</li>
+</ol>
+<div class="note"><b>💡</b> ចង់បោះបង់ merge? វាយ <code class="i">git merge --abort</code> ដើម្បីត្រឡប់ទៅមុនពេល merge។</div>
+</section>
+
+<!-- G6 -->
+<section id="g6">
+<h2><span class="badge">មេរៀន ៦</span>GitHub: ភ្ជាប់ Remote, push, pull, clone</h2>
+<h3>ដាក់ project ចូល GitHub (ជំហានដំបូង)</h3>
+<ol class="steps">
+<li>ចូល GitHub → ចុច <b>+ → New repository</b> → ដាក់ឈ្មោះ (ឧ. <code class="i">my-site</code>) → ជ្រើស Public/Private → <b>កុំធីក</b> "Add README" (ព្រោះយើងមាន repo ក្នុងម៉ាស៊ីនរួចហើយ) → Create repository</li>
+<li>GitHub បង្ហាញ URL របស់ repo (ឧ. <code class="i">https://github.com/USERNAME/my-site.git</code>) → copy វា</li>
+<li>រត់ command ខាងក្រោមក្នុង folder គម្រោង</li>
+</ol>
+<script type="text/x-code" data-lang="bash">
+$ git remote add origin https://github.com/USERNAME/my-site.git
+$ git branch -M main                   # ធានាឲ្យ branch ឈ្មោះ main
+$ git push -u origin main              # -u ចងចាំ ដើម្បីលើកក្រោយ git push ត្រឹមតែ
+Enumerating objects: 3, done.
+To https://github.com/USERNAME/my-site.git
+ * [new branch]      main -> main
+branch 'main' set up to track 'origin/main'.
+</script>
+<h3>ពាក្យបញ្ជាសំខាន់ៗជាមួយ Remote</h3>
+<table>
+<tr><th>Command</th><th>ការងារ</th></tr>
+<tr><td><code>git clone &lt;url&gt;</code></td><td>ចម្លង repo ពី GitHub មកម៉ាស៊ីន</td></tr>
+<tr><td><code>git push</code></td><td>ផ្ញើ commit ទៅ GitHub</td></tr>
+<tr><td><code>git pull</code></td><td>ទាញការផ្លាស់ប្តូរពី GitHub (fetch + merge)</td></tr>
+<tr><td><code>git fetch</code></td><td>ទាញព័ត៌មានថ្មី តែមិនទាន់ merge</td></tr>
+<tr><td><code>git remote -v</code></td><td>មើល remote ដែលភ្ជាប់</td></tr>
+<tr><td><code>git push -u origin feature/x</code></td><td>ផ្ញើ branch ថ្មីទៅ GitHub</td></tr>
+</table>
+<script type="text/x-code" data-lang="bash">
+$ git clone https://github.com/USERNAME/my-site.git
+Cloning into 'my-site'...
+
+$ cd my-site
+$ git pull                              # ទាញការកែថ្មីបំផុត មុនចាប់ផ្តើមធ្វើការ
+Already up to date.
+</script>
+<div class="note"><b>🔁 ទម្លាប់ប្រចាំថ្ងៃ៖</b> <code class="i">git pull</code> → កែ code → <code class="i">git add .</code> → <code class="i">git commit -m "..."</code> → <code class="i">git push</code>។</div>
+</section>
+
+<!-- G7 -->
+<section id="g7">
+<h2><span class="badge">មេរៀន ៧</span>ធ្វើការជាក្រុម: Fork, Pull Request, Issues</h2>
+<h3>🔀 Pull Request (PR)</h3>
+<ol class="steps">
+<li>បង្កើត branch ថ្មី៖ <code class="i">git switch -c fix/navbar</code></li>
+<li>កែ code ហើយ commit៖ <code class="i">git add . &amp;&amp; git commit -m "កែ navbar លើទូរស័ព្ទ"</code></li>
+<li>Push branch៖ <code class="i">git push -u origin fix/navbar</code></li>
+<li>នៅ GitHub ចុចប៊ូតុង <b>Compare &amp; pull request</b> → សរសេរចំណងជើង និងការពន្យល់ → <b>Create pull request</b></li>
+<li>សមាជិកក្រុមពិនិត្យ (review) និងបញ្ចេញមតិ → ពេលយល់ព្រម ចុច <b>Merge pull request</b></li>
+<li>ត្រឡប់ក្នុងម៉ាស៊ីន៖ <code class="i">git switch main &amp;&amp; git pull</code></li>
+</ol>
+<h3>🍴 Contribute ទៅ project អ្នកដទៃ (Open Source)</h3>
+<ol class="steps">
+<li>ចុច <b>Fork</b> លើ repo របស់គេ → ទទួលបានច្បាប់ចម្លងក្នុងគណនីអ្នក</li>
+<li><code class="i">git clone</code> fork របស់អ្នក → បង្កើត branch → កែ → push</li>
+<li>បើក <b>Pull Request</b> ពី fork ទៅ repo ដើម</li>
+<li>រក្សា fork ឱ្យទាន់សម័យ៖ <code class="i">git remote add upstream &lt;url-repo-ដើម&gt;</code> រួច <code class="i">git fetch upstream</code> និង <code class="i">git merge upstream/main</code> (ឬចុច <b>Sync fork</b> លើ GitHub)</li>
+</ol>
+<table>
+<tr><th>ឧបករណ៍ GitHub</th><th>ប្រើសម្រាប់</th></tr>
+<tr><td><b>Issues</b></td><td>កត់ត្រា bug, គំនិត, ការងារត្រូវធ្វើ</td></tr>
+<tr><td><b>Projects</b></td><td>ក្តារ Kanban គ្រប់គ្រងការងារ</td></tr>
+<tr><td><b>Actions</b></td><td>ដំណើរការស្វ័យប្រវត្តិ (តេស្ត, deploy)</td></tr>
+<tr><td><b>Releases</b></td><td>ចេញជំនាន់ផលិតផល (v1.0.0)</td></tr>
+<tr><td><b>Discussions / Wiki</b></td><td>ពិភាក្សា និងឯកសារ</td></tr>
+</table>
+<h3>📄 README.md — មុខមាត់នៃ repo</h3>
+<p>សរសេរដោយ <b>Markdown</b>។ គួរមាន៖ ឈ្មោះគម្រោង, ការពន្យល់ខ្លី, រូបថត/demo, របៀបដំឡើង និងប្រើ, ព័ត៌មានអ្នកបង្កើត។</p>
+<script type="text/x-code" data-lang="txt">
+# 🌐 My Portfolio
+
+គេហទំព័រ Portfolio ផ្ទាល់ខ្លួន សង់ដោយ HTML, CSS និង JavaScript។
+
+## ✨ មុខងារ
+- Responsive លើគ្រប់ទំហំអេក្រង់
+- Dark / Light mode
+- Animation រលូន
+
+## 🚀 របៀបប្រើ
+1. Clone repo: `git clone https://github.com/USERNAME/my-site.git`
+2. បើក `index.html` ក្នុង browser
+
+## 🔗 Demo
+https://USERNAME.github.io/my-site/
+
+## 👤 អ្នកបង្កើត
+**Sokha Chan** — [GitHub](https://github.com/USERNAME)
+</script>
+</section>
+
+<!-- G8 -->
+<section id="g8">
+<h2><span class="badge">មេរៀន ៨</span>GitHub Pages — ដាក់ Web ឲ្យអ្នកដទៃមើល (ឥតគិតថ្លៃ)</h2>
+<p>GitHub Pages ដាក់ <b>គេហទំព័រ static</b> (HTML/CSS/JS) ឲ្យមានអាសយដ្ឋានពិតប្រាកដ ដូចជា <code class="i">https://USERNAME.github.io/my-site/</code>។ ល្អសម្រាប់ដាក់ Portfolio និងគម្រោងដែលបានរៀនក្នុងមេរៀន CSS/JavaScript។</p>
+<ol class="steps">
+<li>ត្រូវប្រាកដថា repo មាន file <code class="i">index.html</code> នៅ root ហើយបាន push ឡើង GitHub (មេរៀនទី ៦)</li>
+<li>នៅលើ GitHub ចូលទៅ repo → tab <b>Settings</b> → ជ្រើស <b>Pages</b> នៅម៉ឺនុយខាងឆ្វេង</li>
+<li>ក្នុងផ្នែក <b>Build and deployment</b> → Source ជ្រើស <b>Deploy from a branch</b></li>
+<li>ជ្រើស branch <b>main</b> និង folder <b>/ (root)</b> → ចុច <b>Save</b></li>
+<li>រង់ចាំ ១-២ នាទី (មើលដំណើរការក្នុង tab <b>Actions</b>) រួចទៅ URL ដែលបង្ហាញលើទំព័រ Pages</li>
+<li>ពេលកែ code ក្រោយមក គ្រាន់តែ <code class="i">git push</code> — ទំព័រនឹងធ្វើបច្ចុប្បន្នភាពស្វ័យប្រវត្តិ</li>
+</ol>
+<div class="note"><b>🎁 គន្លឹះ Portfolio៖</b> បង្កើត repo ឈ្មោះ <code class="i">USERNAME.github.io</code> (ជំនួស USERNAME ដោយឈ្មោះគណនីអ្នកពិតប្រាកដ) នោះ URL ដែលបានគឺ <code class="i">https://USERNAME.github.io</code> ខ្លីល្អ។</div>
+<div class="warn"><b>⚠️ ត្រូវដឹង៖</b> (១) ឈ្មោះ file/folder ប្រកាន់អក្សរធំតូច — <code class="i">Style.css</code> ≠ <code class="i">style.css</code> នៅលើ server។ (២) ប្រើផ្លូវទាក់ទង ឧ. <code class="i">href="style.css"</code> មិនមែន <code class="i">C:\Users\...</code>។ (៣) repo Public ទើបប្រើ Pages ឥតគិតថ្លៃបានជាសាធារណៈ ហើយមនុស្សគ្រប់គ្នាមើល code បាន — កុំដាក់ទិន្នន័យឯកជន។ (៤) GitHub Pages មិនអាចដំណើរការ server code (Node/PHP) បានទេ។</div>
+<p>បើចង់ដាក់ web ជាមួយ Backend ឬ framework ស្មុគស្មាញ អាចរៀនបន្ត <b>Netlify</b>, <b>Vercel</b>, <b>Cloudflare Pages</b> ដែលភ្ជាប់ជាមួយ GitHub ដូចគ្នា។</p>
+</section>
+
+<!-- G9 -->
+<section id="g9">
+<h2><span class="badge">មេរៀន ៩</span>ប្រើ Git ក្នុង VS Code</h2>
+<ol class="steps">
+<li>បើក folder គម្រោង (<b>File → Open Folder</b>)</li>
+<li>ចុចរូប <b>Source Control</b> ខាងឆ្វេង (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>G</kbd>)។ បើមិនទាន់មាន repo ចុច <b>Initialize Repository</b></li>
+<li>file ដែលបានកែបង្ហាញក្នុងបញ្ជី — ចុច file ដើម្បីមើល <b>diff</b> (ខៀវ/បៃតង = បន្ថែម, ក្រហម = លុប)</li>
+<li>ចុច <b>＋</b> ក្បែរ file ដើម្បី <i>stage</i> (ដូច <code class="i">git add</code>)</li>
+<li>វាយសារក្នុងប្រអប់ Message ហើយចុច <b>Commit</b> (<kbd>Ctrl</kbd>+<kbd>Enter</kbd>)</li>
+<li>ចុច <b>Sync Changes</b> / <b>Publish Branch</b> ដើម្បី push (ពេលដំបូង VS Code នឹងស្នើឲ្យ Sign in GitHub)</li>
+</ol>
+<h3>🧩 Extension ណែនាំ</h3>
+<table>
+<tr><th>Extension</th><th>មុខងារ</th></tr>
+<tr><td><b>GitLens</b></td><td>បង្ហាញថាអ្នកណាកែបន្ទាត់នីមួយៗ និងពេលណា, ប្រវត្តិ file</td></tr>
+<tr><td><b>Git Graph</b></td><td>បង្ហាញដើមឈើ branch ជារូបភាព</td></tr>
+<tr><td><b>GitHub Pull Requests</b></td><td>មើល និង review PR ក្នុង VS Code</td></tr>
+</table>
+<div class="note"><b>✅ Conventional Commits (ទម្រង់សារពេញនិយម)៖</b> <code class="i">feat: បន្ថែម dark mode</code>, <code class="i">fix: កែ bug form</code>, <code class="i">docs: ធ្វើ README</code>, <code class="i">style: កែ CSS</code>, <code class="i">refactor: រៀបចំ code</code>។</div>
+</section>
+
+<!-- CHEAT -->
+<section id="cheat">
+<h2>📚 តារាងសង្ខេប Git Cheat Sheet</h2>
+<table>
+<tr><th>ក្រុម</th><th>Command</th></tr>
+<tr><td>ចាប់ផ្តើម</td><td><code>git init</code> · <code>git clone &lt;url&gt;</code></td></tr>
+<tr><td>មើលស្ថានភាព</td><td><code>git status</code> · <code>git log --oneline --graph</code> · <code>git diff</code></td></tr>
+<tr><td>រក្សាទុក</td><td><code>git add .</code> · <code>git commit -m "..."</code></td></tr>
+<tr><td>Branch</td><td><code>git branch</code> · <code>git switch -c x</code> · <code>git switch x</code> · <code>git merge x</code> · <code>git branch -d x</code></td></tr>
+<tr><td>Remote</td><td><code>git remote add origin &lt;url&gt;</code> · <code>git push -u origin main</code> · <code>git pull</code> · <code>git fetch</code></td></tr>
+<tr><td>Undo</td><td><code>git restore f</code> · <code>git restore --staged f</code> · <code>git revert &lt;h&gt;</code> · <code>git commit --amend</code></td></tr>
+<tr><td>ទុកបណ្តោះអាសន្ន</td><td><code>git stash</code> · <code>git stash pop</code></td></tr>
+<tr><td>ដឹងកំហុស</td><td><code>git status</code> ជានិច្ច — Git ប្រាប់ជំហានបន្ទាប់ឲ្យអ្នកតែងតែ</td></tr>
+</table>
+<h3>🆘 បញ្ហាជួបញឹកញាប់</h3>
+<table>
+<tr><th>សារកំហុស</th><th>ដំណោះស្រាយ</th></tr>
+<tr><td><code>fatal: not a git repository</code></td><td>អ្នកមិននៅក្នុង folder repo — <code>cd</code> ឲ្យត្រូវ ឬ <code>git init</code></td></tr>
+<tr><td><code>Author identity unknown</code></td><td>ភ្លេចកំណត់ <code>user.name</code> និង <code>user.email</code></td></tr>
+<tr><td><code>rejected ... non-fast-forward</code></td><td>មានការកែថ្មីលើ GitHub — <code>git pull</code> ជាមុន រួច push</td></tr>
+<tr><td><code>Authentication failed</code> / <code>403</code></td><td>ប្រើ Token/Sign in តាម browser មិនមែនលេខសម្ងាត់ធម្មតា; ពិនិត្យថាមានសិទ្ធិលើ repo</td></tr>
+<tr><td><code>remote origin already exists</code></td><td><code>git remote set-url origin &lt;url&gt;</code></td></tr>
+<tr><td>GitHub Pages បង្ហាញ 404</td><td>ពិនិត្យ <code>index.html</code> នៅ root, branch/folder ក្នុង Settings → Pages និងរង់ចាំបន្តិច</td></tr>
+</table>
+</section>
+
+<!-- EXERCISES -->
+<section id="exercises">
+<h2>✍️ លំហាត់ Git & GitHub (មានចម្លើយ)</h2>
+<div class="note"><b>📝</b> ធ្វើលើកុំព្យូទ័រអ្នកពិតប្រាកដ។ ចុច "មើលចម្លើយ" ដើម្បីប្រៀបធៀប។</div>
+
+<div class="ex"><h4>✍️ លំហាត់ ១ — កំណត់ Git <span class="level">ងាយ</span></h4>
+<p>កំណត់ឈ្មោះ អ៊ីមែល និង branch លំនាំដើម ហើយពិនិត្យលទ្ធផល។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash">
+$ git config --global user.name "ឈ្មោះអ្នក"
+$ git config --global user.email "you@example.com"
+$ git config --global init.defaultBranch main
+$ git config --list
+</script></details></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ២ — Commit ដំបូង <span class="level">ងាយ</span></h4>
+<p>បង្កើត folder <code class="i">hello-git</code> មាន <code class="i">index.html</code> ហើយ commit ដោយសារ "ទំព័រដំបូង"។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash">
+$ mkdir hello-git && cd hello-git
+$ git init
+$ echo "<h1>Hello</h1>" > index.html
+$ git add index.html
+$ git commit -m "ទំព័រដំបូង"
+$ git log --oneline
+</script></details></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៣ — ប្រវត្តិច្រើន commit <span class="level">ងាយ</span></h4>
+<p>បន្ថែម <code class="i">style.css</code> ហើយ commit ម្តងទៀត។ បន្ទាប់មកមើលប្រវត្តិជារូបភាព។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash">
+$ echo "body { background: #eef; }" > style.css
+$ git add .
+$ git commit -m "បន្ថែម CSS"
+$ git log --oneline --graph --all
+</script></details></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៤ — .gitignore <span class="level">មធ្យម</span></h4>
+<p>បង្កើត file <code class="i">secret.env</code> ហើយធ្វើឲ្យ Git មិនតាមដានវា។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash">
+$ echo "API_KEY=12345" > secret.env
+$ echo "secret.env" >> .gitignore
+$ git status              # នឹងឃើញតែ .gitignore ថ្មី មិនឃើញ secret.env
+$ git add .gitignore
+$ git commit -m "ព្រងើយ file សម្ងាត់"
+</script></details></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៥ — Branch <span class="level">មធ្យម</span></h4>
+<p>បង្កើត branch <code class="i">feature/about</code> បន្ថែម <code class="i">about.html</code> ហើយ merge ចូល main។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash">
+$ git switch -c feature/about
+$ echo "<h1>About</h1>" > about.html
+$ git add . && git commit -m "បន្ថែមទំព័រ About"
+$ git switch main
+$ git merge feature/about
+$ git branch -d feature/about
+</script></details></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៦ — Undo <span class="level">មធ្យម</span></h4>
+<p>កែ <code class="i">index.html</code> ខុស ហើយចង់បោះបង់ការកែ។ បន្ទាប់មកសាកល្បង revert commit ចុងក្រោយ។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash">
+$ git restore index.html            # បោះបង់ការកែដែលមិនទាន់ add
+$ git log --oneline                 # រកលេខ hash ចុងក្រោយ
+$ git revert HEAD                   # បង្កើត commit ថ្មីដែលលុបផល commit ចុងក្រោយ
+# Git បើក editor ឱ្យកែសារ → Save ហើយបិទ (ឬប្រើ git revert HEAD --no-edit)
+</script></details></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៧ — Push ទៅ GitHub <span class="level">មធ្យម</span></h4>
+<p>បង្កើត repo ថ្មីលើ GitHub ហើយ push គម្រោង <code class="i">hello-git</code> ឡើង។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash">
+# ១. បង្កើត repo ទទេលើ GitHub (កុំធីក README)
+# ២. ក្នុង folder គម្រោង៖
+$ git remote add origin https://github.com/USERNAME/hello-git.git
+$ git branch -M main
+$ git push -u origin main
+</script></details></div>
+
+<div class="ex"><h4>✍️ លំហាត់ ៨ — Pull Request ដំបូង <span class="level">ពិបាក</span></h4>
+<p>នៅ repo ខាងលើ បង្កើត branch កែ README ហើយបើក Pull Request រួច Merge ដោយខ្លួនឯង រួច <code class="i">git pull</code> ត្រឡប់មក។</p>
+<details><summary>មើលចម្លើយ</summary>
+<script type="text/x-code" data-lang="bash">
+$ git switch -c docs/readme
+$ echo "# Hello Git" > README.md
+$ git add . && git commit -m "docs: បន្ថែម README"
+$ git push -u origin docs/readme
+# នៅ GitHub: Compare & pull request → Create → Merge pull request
+$ git switch main
+$ git pull
+$ git branch -d docs/readme
+</script></details></div>
+</section>
+
+<!-- PROJECT -->
+<section id="project">
+<h2>🚀 គម្រោងចុងក្រោយ៖ ដាក់ Portfolio ឡើង GitHub Pages</h2>
+<p>យកគេហទំព័រ <b>Portfolio</b> របស់អ្នក (ឬ To-Do App ពីវគ្គ JavaScript) មកដាក់ឲ្យមនុស្សទូទាំងពិភពលោកមើលបាន។</p>
+<ol class="steps">
+<li>ក្នុង VS Code បង្កើត folder <code class="i">my-portfolio</code> ដាក់ <code class="i">index.html</code> (ហើយ <code class="i">style.css</code>, <code class="i">script.js</code> បើមាន) — ប្រើផ្លូវទាក់ទងដូច <code class="i">href="style.css"</code></li>
+<li>ចាប់ផ្តើម Git (<code class="i">git init</code>) ហើយ commit ដំបូង</li>
+<li>បង្កើត repo លើ GitHub ឈ្មោះ <code class="i">my-portfolio</code> (Public) ហើយ push</li>
+<li>បន្ថែម <code class="i">README.md</code> មាន Demo link</li>
+<li>បើក GitHub Pages (Settings → Pages → main / root)</li>
+<li>ចែករំលែក URL ទៅមិត្ត និងដាក់ក្នុង CV/Facebook/LinkedIn របស់អ្នក</li>
+</ol>
+<script type="text/x-code" data-lang="bash">
+$ mkdir my-portfolio && cd my-portfolio
+# (ដាក់ index.html, style.css, script.js ក្នុង folder នេះ)
+
+$ git init
+$ git add .
+$ git commit -m "feat: ទំព័រ Portfolio ដំបូង"
+
+$ git remote add origin https://github.com/USERNAME/my-portfolio.git
+$ git branch -M main
+$ git push -u origin main
+
+# នៅ GitHub: Settings → Pages → Deploy from a branch → main → /(root) → Save
+# រង់ចាំ 1–2 នាទី ហើយបើក៖
+# https://USERNAME.github.io/my-portfolio/
+
+# ពេលកែលើកក្រោយ៖
+$ git add .
+$ git commit -m "fix: កែពណ៌ប៊ូតុង"
+$ git push                       # Pages ធ្វើបច្ចុប្បន្នភាពស្វ័យប្រវត្តិ
+</script>
+<h3>✅ Checklist មុនចែករំលែក</h3>
+<ul>
+<li>☐ ទំព័រដំណើរការត្រឹមត្រូវលើទូរស័ព្ទ (Responsive)</li>
+<li>☐ គ្មានលេខសម្ងាត់/API key ក្នុង code</li>
+<li>☐ ឈ្មោះ file ត្រូវអក្សរធំ/តូច និងផ្លូវ link ត្រឹមត្រូវ</li>
+<li>☐ README មាន Demo link និងរូបថត</li>
+<li>☐ <code class="i">&lt;title&gt;</code> និង <code class="i">lang</code> ត្រឹមត្រូវ</li>
+</ul>
+<div class="note"><b>🏆 អបអរសាទរ!</b> ឥឡូវអ្នកមាន Portfolio នៅលើ internet ហើយ។ ជំហានបន្ទាប់៖ ចូលរួម <b>Open Source</b> (រក Issue ដែលមានស្លាក <i>good first issue</i>), រៀន <b>Node.js</b> ឬ <b>React</b>, ស្គាល់ <b>GitHub Actions</b> និងដាក់ project លើ <b>Netlify/Vercel</b>។</div>
+<h3>🔗 ប្រភពរៀនបន្ថែម</h3>
+<ul>
+<li>Pro Git (សៀវភៅឥតគិតថ្លៃ) — <code class="i">git-scm.com/book</code></li>
+<li>GitHub Docs — <code class="i">docs.github.com</code></li>
+<li>Learn Git Branching (ហ្គេមរៀន) — <code class="i">learngitbranching.js.org</code></li>
+<li>Oh My Git! — ហ្គេមរៀន Git ជាអន្តរកម្ម</li>
+</ul>
+</section>
+
+
+
+<section class="hero" id="pro">
+  <h2>🏆 ផ្នែកទី ៣: Git & GitHub កម្រិតអាជីព</h2>
+  <p>របៀបដែលក្រុមអ្នកអភិវឌ្ឍន៍ពិតប្រាកដធ្វើការ៖ <b>GitHub Flow</b>, ការពារ Branch, <b>SSH Key</b>, PR/Issue Templates, <b>GitHub Actions</b> (CI និង Deploy Pages ស្វ័យប្រវត្តិ), Rebase, Tag/Release និងការសង្គ្រោះពេលមានបញ្ហា (reflog, bisect)។</p>
+  <p><span class="badge">✔ សាកល្បងរួច</span> Command ទាំងអស់ក្នុងផ្នែកនេះ ត្រូវបានរត់សាកក្នុង Repository ពិត។</p>
+</section>
+
+<section id="pro-flow">
+  <h2>🔄 GitHub Flow — Workflow របស់ក្រុម</h2>
+  <ol class="steps">
+    <li><code class="i">main</code> ត្រូវតែដំណើរការបានជានិច្ច — <b>មិន Push ផ្ទាល់ទៅ main</b></li>
+    <li>ការងារថ្មីនីមួយៗ = Branch ថ្មី៖ <code class="i">feat/login</code>, <code class="i">fix/navbar</code></li>
+    <li>Commit តូចៗ ញឹកញាប់ ជាមួយសារ Conventional Commits</li>
+    <li>Push ហើយបើក <b>Pull Request</b> → CI រត់ Test ស្វ័យប្រវត្តិ</li>
+    <li>សមាជិកម្នាក់ទៀត <b>Review</b> → Approve</li>
+    <li>Merge → Deploy ស្វ័យប្រវត្តិ → លុប Branch</li>
+  </ol>
+  <h3>ការពារ Branch main (Rulesets)</h3>
+  <p>GitHub → repo → <b>Settings → Rules → Rulesets → New branch ruleset</b> → Target: <code class="i">main</code> → ធីក៖</p>
+  <ul>
+    <li>✅ <b>Require a pull request before merging</b> (+ ១ approval)</li>
+    <li>✅ <b>Require status checks to pass</b> (ជ្រើស Job <code class="i">test</code> ពី CI)</li>
+    <li>✅ <b>Block force pushes</b> និង <b>Restrict deletions</b></li>
+  </ul>
+</section>
+
+<section id="pro-ssh">
+  <h2>🔑 SSH Key — ចូល GitHub ដោយមិនវាយលេខសម្ងាត់</h2>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal (Git Bash)">
+# ១. បង្កើត key (ចុច Enter ទទួលទីតាំងលំនាំដើម ហើយកំណត់ passphrase)
+$ ssh-keygen -t ed25519 -C "sokha@example.com"
+
+# ២. Copy public key (.pub) — កុំចែកចាយ File ដែលគ្មាន .pub ដាច់ខាត!
+$ cat ~/.ssh/id_ed25519.pub
+
+# ៣. GitHub → Settings → SSH and GPG keys → New SSH key → Paste
+
+# ៤. សាកល្បង
+$ ssh -T git@github.com
+Hi USERNAME! You've successfully authenticated, but GitHub does not provide shell access.
+
+# ៥. ប្តូរ remote ពី HTTPS ទៅ SSH
+$ git remote set-url origin git@github.com:USERNAME/my-site.git
+</script>
+</section>
+
+<section id="pro-files">
+  <h2>📁 File ស្តង់ដាររបស់ Repository អាជីព</h2>
+  <script type="text/x-code" data-lang="txt" data-label="Folder Structure">
+my-project/
+├── .github/
+│   ├── workflows/
+│   │   ├── ci.yml                 # Test ស្វ័យប្រវត្តិ
+│   │   └── pages.yml              # Deploy GitHub Pages
+│   ├── ISSUE_TEMPLATE/
+│   │   └── bug_report.md
+│   └── pull_request_template.md
+├── .gitignore
+├── .gitattributes
+├── README.md
+├── LICENSE                        # ឧ. MIT
+└── src/ ...
+</script>
+  <h3>1) CI — រត់ Test រាល់ Pull Request</h3>
+  <script type="text/x-code" data-lang="txt" data-label=".github/workflows/ci.yml">
+# CI: រត់ Test ស្វ័យប្រវត្តិរាល់ Pull Request និងរាល់ Push ទៅ main
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+</script>
+  <h3>2) Deploy GitHub Pages ដោយ Actions</h3>
+  <p>ល្អជាង «Deploy from a branch» ពេល Project ត្រូវ Build មុន (ឧ. Vite → <code class="i">dist/</code>)។ កំណត់ <b>Settings → Pages → Source: GitHub Actions</b>។</p>
+  <script type="text/x-code" data-lang="txt" data-label=".github/workflows/pages.yml">
+# Deploy គេហទំព័រទៅ GitHub Pages ស្វ័យប្រវត្តិ ពេល Push ទៅ main
+# Settings → Pages → Source: "GitHub Actions"
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:        # អនុញ្ញាតចុច Run ដោយដៃនៅ tab Actions
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .             # Folder ដែលមាន index.html (ឧ. dist/ បើប្រើ Vite)
+      - id: deployment
+        uses: actions/deploy-pages@v4
+</script>
+  <h3>3) Templates សម្រាប់ PR និង Issue</h3>
+  <script type="text/x-code" data-lang="txt" data-label=".github/pull_request_template.md">
+## 📝 ការពិពណ៌នា
+<!-- PR នេះធ្វើអ្វី? ហេតុអ្វី? -->
+
+Closes #
+
+## ✅ Checklist
+- [ ] បានសាកល្បងលើកុំព្យូទ័រខ្លួនឯង
+- [ ] Test ឆ្លងកាត់ (`npm test`)
+- [ ] គ្មានលេខសម្ងាត់ ឬ API key ក្នុងកូដ
+- [ ] បានធ្វើបច្ចុប្បន្នភាព README (បើចាំបាច់)
+
+## 📸 រូបថត (បើមានការកែ UI)
+</script>
+  <script type="text/x-code" data-lang="txt" data-label=".github/ISSUE_TEMPLATE/bug_report.md">
+---
+name: 🐛 Bug report
+about: រាយការណ៍កំហុស
+labels: bug
+---
+
+## កើតអ្វីឡើង?
+
+## ជំហានដើម្បីឃើញកំហុស
+1. ចូលទៅ ...
+2. ចុច ...
+3. ឃើញកំហុស ...
+
+## គួរតែកើតអ្វី?
+
+## បរិស្ថាន
+- Browser / OS:
+</script>
+  <h3>4) .gitattributes — ការពារបញ្ហាចុងបន្ទាត់ Windows/Mac</h3>
+  <script type="text/x-code" data-lang="txt" data-label=".gitattributes">
+# ធ្វើឱ្យចុងបន្ទាត់ដូចគ្នាលើ Windows / macOS / Linux
+* text=auto eol=lf
+
+# File ប្រភេទ Binary — កុំប្តូរ
+*.png binary
+*.jpg binary
+*.pdf binary
+</script>
+</section>
+
+<section id="pro-advanced">
+  <h2>🛠️ Command កម្រិតខ្ពស់</h2>
+  <h3>Rebase — ធ្វើឱ្យប្រវត្តិស្អាតមុនបើក PR</h3>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+$ git fetch origin
+$ git rebase origin/main              # យក commit ថ្មីៗពី main មកមុន commit របស់អ្នក
+$ git rebase -i HEAD~3                # បញ្ចូល (squash) ឬកែសារ commit ៣ ចុងក្រោយ
+$ git push --force-with-lease         # Push ក្រោយ rebase (សុវត្ថិភាពជាង --force)
+</script>
+  <div class="warn"><b>⚠️ ច្បាប់៖</b> Rebase តែ Branch ផ្ទាល់ខ្លួនដែលគ្មានអ្នកដទៃប្រើប៉ុណ្ណោះ — កុំ Rebase <code class="i">main</code>។</div>
+  <h3>Tag & Release — ចេញ Version</h3>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+$ git tag -a v1.0.0 -m "First release"
+$ git push origin v1.0.0
+$ git tag                             # បញ្ជី tag
+v1.0.0
+# GitHub → Releases → Draft a new release → ជ្រើស v1.0.0 → Generate release notes
+</script>
+  <p><b>Semantic Versioning</b> <code class="i">MAJOR.MINOR.PATCH</code>៖ PATCH = កែ Bug · MINOR = មុខងារថ្មី · MAJOR = ប្តូរធំដែលខូចភាពត្រូវគ្នា។</p>
+  <h3>សង្គ្រោះ និងរក Bug</h3>
+  <script type="text/x-code" data-lang="bash" data-label="Terminal">
+# លុប commit ដោយ reset --hard ខុស? reflog ចងចាំទីតាំងចាស់
+$ git reflog
+4b6bd3e HEAD@{0}: reset: moving to HEAD~2
+b8a4ae3 HEAD@{1}: commit: commit 7
+$ git reset --hard HEAD@{1}           # ត្រឡប់មកវិញ
+
+# រក commit ណាដែលបង្កើត Bug (Binary search)
+$ git bisect start
+$ git bisect bad                      # commit បច្ចុប្បន្នមាន Bug
+$ git bisect good v1.0.0              # version នេះល្អ
+# Git ប្តូរទៅ commit កណ្តាល → សាកល្បង → វាយ git bisect good ឬ bad ... រហូតរកឃើញ
+$ git bisect reset                    # ចប់ ត្រឡប់មកវិញ
+
+# យក commit តែមួយពី branch ផ្សេង
+$ git cherry-pick a1b2c3d
+</script>
+  <div class="ex"><h4>🏁 លំហាត់គម្រោងចុងក្រោយ</h4>
+    <ol>
+      <li>បង្កើត SSH key ហើយប្តូរ Portfolio repo ទៅប្រើ SSH</li>
+      <li>បន្ថែម <code class="i">.github/</code> (CI, PR template, Issue template) ទៅ repo</li>
+      <li>បង្កើត Ruleset ការពារ <code class="i">main</code> ហើយសាក Push ផ្ទាល់ (ត្រូវតែបរាជ័យ)</li>
+      <li>ធ្វើការកែតាម Branch + Pull Request ហើយមើល CI រត់</li>
+      <li>ប្តូរ GitHub Pages ទៅប្រើ Workflow <code class="i">pages.yml</code></li>
+      <li>ចេញ Release <code class="i">v1.0.0</code> ដោយមាន Release notes</li>
+    </ol>
+  </div>
+</section>
+
+<section id="roadmap">
+  <h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+  <ol class="steps">
+    <li><b>មូលដ្ឋាន</b> – init, add, commit, log, .gitignore, undo (មេរៀន ១–៤)</li>
+    <li><b>Branch</b> – branch, merge, conflict (មេរៀន ៥)</li>
+    <li><b>GitHub</b> – remote, push/pull, PR, Pages, VS Code (មេរៀន ៦–៩)</li>
+    <li><b>Workflow ក្រុម</b> – GitHub Flow, Rulesets, Code review</li>
+    <li><b>Automation</b> – GitHub Actions (CI/CD)</li>
+    <li><b>Open Source</b> – រក Issue <i>good first issue</i> ហើយផ្ញើ PR ដំបូង</li>
+  </ol>
+</section>
+
+</main>
+</div>
+<script>
+/* ---------- Syntax highlighter ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const sp = (c,t) => `<span class="${c}">${esc(t)}</span>`;
+function tok(s, re, fn){
+  let out='', last=0, m; re.lastIndex = 0;
+  while((m = re.exec(s))){
+    out += esc(s.slice(last, m.index)) + fn(m);
+    last = m.index + m[0].length;
+    if(m[0]==='') re.lastIndex++;
+  }
+  return out + esc(s.slice(last));
+}
+const NAMED = new Set('red green blue yellow orange purple pink black white gray grey tomato crimson royalblue skyblue teal navy gold coral salmon orchid violet indigo lime cyan magenta brown maroon olive silver aqua khaki plum turquoise'.split(' '));
+function hlValue(v){
+  const re = /(\/\*[\s\S]*?\*\/)|("[^"]*"|'[^']*')|(#[0-9a-fA-F]{3,8}\b)|((?<![\w#-])-?\d*\.?\d+(?:px|rem|em|%|vh|vw|s|ms|deg|fr|ch)?)|([a-zA-Z-]+)(?=\()|(!?[a-zA-Z][a-zA-Z-]*)/g;
+  return tok(v, re, m => {
+    if(m[1]) return sp('c', m[1]);
+    if(m[2]) return sp('s', m[2]);
+    if(m[3]) return `<span class="sw" style="background:${m[3]}"></span>` + sp('n', m[3]);
+    if(m[4]) return sp('n', m[4]);
+    if(m[5]) return sp('f', m[5]);
+    if(m[6]){
+      if(NAMED.has(m[6])) return `<span class="sw" style="background:${m[6]}"></span>` + sp('v', m[6]);
+      return sp('v', m[6]);
+    }
+    return esc(m[0]);
+  });
+}
+function hlSelector(s){
+  return tok(s, /\/\*[\s\S]*?\*\//g, m => sp('c', m[0])).replace(
+    /(^|<\/span>)([^<]+?)(?=<span|$)/g, (all, a, b) => {
+      if(!b.trim()) return all;
+      return a + (b.trim().startsWith('@') ? `<span class="at">${b}</span>` : `<span class="sel">${b}</span>`);
+    });
+}
+function hlCSS(code){
+  const re = /(\/\*[\s\S]*?\*\/)|([^{};]+?)(\s*\{)|([\w-]+)(\s*:\s*)([^;{}]*)(;?)|([{}])/g;
+  return tok(code, re, m => {
+    if(m[1]) return sp('c', m[1]);
+    if(m[2] !== undefined && m[3]) return hlSelector(m[2]) + sp('pn', m[3]);
+    if(m[4]) return sp('pr', m[4]) + sp('pn', m[5]) + hlValue(m[6]) + sp('pn', m[7]);
+    return sp('pn', m[0]);
+  });
+}
+function hlTag(tag){
+  const m = tag.match(/^(<\/?)([\w-]+)([\s\S]*?)(\/?>)$/);
+  if(!m) return esc(tag);
+  const attrs = tok(m[3], /([\w:@-]+)(=)("[^"]*"|'[^']*')|([\w-]+)/g, a =>
+    a[1] ? sp('at2', a[1]) + sp('pn', a[2]) + sp('s', a[3]) : sp('at2', a[4]));
+  return sp('pn', m[1]) + sp('tg', m[2]) + attrs + sp('pn', m[4]);
+}
+const JS_KW = new Set('const let var function return if else for while do switch case break continue new class extends import export from default async await try catch finally throw typeof instanceof of in this delete void yield static get set'.split(' '));
+const JS_LIT = new Set(['true','false','null','undefined','NaN','Infinity']);
+function hlJS(code){
+  const re = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|(`(?:\\[\s\S]|[^`\\])*`|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*')|(\b\d+\.?\d*\b)|([A-Za-z_$][\w$]*)(?=\s*\()|([A-Za-z_$][\w$]*)/g;
+  return tok(code, re, m => {
+    if(m[1]) return sp('c', m[1]);
+    if(m[2]) return sp('s', m[2]);
+    if(m[3]) return sp('n', m[3]);
+    if(m[4]) return JS_KW.has(m[4]) ? sp('at', m[4]) : sp('f', m[4]);
+    if(m[5]){
+      if(JS_KW.has(m[5])) return sp('at', m[5]);
+      if(JS_LIT.has(m[5])) return sp('tg', m[5]);
+      if(/^[A-Z]/.test(m[5])) return sp('sel', m[5]);
+      return sp('pr', m[5]);
+    }
+    return esc(m[0]);
+  });
+}
+function hlSh(code){
+  return code.split('\n').map(line => {
+    if(/^\s*#/.test(line)) return sp('c', line);
+    const m = line.match(/^(\s*)(\$ )(.*)$/);
+    if(!m) return sp('pn', line);
+    const cm = m[3].match(/^(.*?)(\s+#.*)?$/);
+    let first = true;
+    const body = tok(cm[1], /("[^"]*"|'[^']*')|(--?[A-Za-z][\w-]*)|([^\s"']+)/g, x => {
+      if(x[1]) return sp('s', x[1]);
+      if(x[2]) return sp('pr', x[2]);
+      if(first){ first = false; return sp('f', x[3]); }
+      return sp('v', x[3]);
+    });
+    return sp('n', m[1] + m[2]) + body + (cm[2] ? sp('c', cm[2]) : '');
+  }).join('\n');
+}
+function hlTxt(code){
+  return code.split('\n').map(l => /^\s*#/.test(l) ? sp('sel', l) : esc(l)).join('\n');
+}
+function hlHTML(code){
+  const re = /(<!--[\s\S]*?-->)|(<style[^>]*>)([\s\S]*?)(<\/style>)|(<script[^>]*>)([\s\S]*?)(<\/script>)|(<!DOCTYPE[^>]*>)|(<\/?[a-zA-Z][^>]*>)/gi;
+  return tok(code, re, m => {
+    if(m[1]) return sp('c', m[1]);
+    if(m[2]) return hlTag(m[2]) + hlCSS(m[3]) + hlTag(m[4]);
+    if(m[5]) return hlTag(m[5]) + hlJS(m[6]) + hlTag(m[7]);
+    if(m[8]) return sp('pn', m[8]);
+    return hlTag(m[9]);
+  });
+}
+
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || (lang === 'bash' ? 'Terminal' : lang === 'txt' ? 'File' : lang.toUpperCase());
+  const pre = document.createElement('pre');
+  const code = document.createElement('code');
+  code.innerHTML = lang === 'html' ? hlHTML(raw) : lang === 'js' ? hlJS(raw) : lang === 'bash' ? hlSh(raw) : hlTxt(raw);
+  pre.appendChild(code);
+  // Terminal: ចម្លងតែ command (បន្ទាត់ "$ ") ដោយដក "$ " និងលទ្ធផលចេញ → Paste រត់បានភ្លាម
+  const cmds = raw.split('\n').filter(l => /^\s*\$ /.test(l)).map(l => l.replace(/^\s*\$ /, ''));
+  const toCopy = lang === 'bash' && cmds.length ? cmds.join('\n') : raw;
+  const btn = document.createElement('button');
+  btn.className = 'btn copy';
+  btn.textContent = 'ចម្លង';
+  btn.title = lang === 'bash' ? 'ចម្លងតែ command' : 'ចម្លង';
+  btn.onclick = async () => {
+    try { await navigator.clipboard.writeText(toCopy); btn.textContent = '✔ បានចម្លង'; }
+    catch { btn.textContent = 'បរាជ័យ'; }
+    setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+  };
+  box.append(label, pre, btn);
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="git"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>
