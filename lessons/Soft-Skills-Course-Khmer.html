@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soft Skills</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#d6336c; --accent2:#f783ac; --accent-soft:#fff0f6;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#faa2c1; --accent2:#fcc2d7; --accent-soft:#2b0d18;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#faa2c1; --accent2:#fcc2d7; --accent-soft:#2b0d18;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#2b0a1c,#d6336c 50%,#f59f00);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/soft.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/soft.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Soft Skills — ជំនាញទន់សម្រាប់សិក្សា និងការងារ</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Soft Skills ជាអ្វី? មកពីណា?</a>
+<a href="#setup">២. ត្រៀមខ្លួន</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Hard skills vs Soft skills</a>
+<a href="#l2">មេរៀន ២: ការទំនាក់ទំនង — និយាយ &amp; ស្តាប់សកម្ម</a>
+<a href="#l3">មេរៀន ៣: ការសរសេរ — អ៊ីមែល &amp; សារការងារ</a>
+<a href="#l4">មេរៀន ៤: បទបង្ហាញ &amp; និយាយជាសាធារណៈ</a>
+<a href="#l5">មេរៀន ៥: ការងារជាក្រុម</a>
+<a href="#l6">មេរៀន ៦: គ្រប់គ្រងពេលវេលា</a>
+<a href="#l7">មេរៀន ៧: ការគិតវិភាគ &amp; ដោះស្រាយបញ្ហា</a>
+<a href="#l8">មេរៀន ៨: បញ្ញាអារម្មណ៍ (EQ) &amp; គ្រប់គ្រងភាពតានតឹង</a>
+<a href="#l9">មេរៀន ៩: ដោះស្រាយជម្លោះ &amp; ការចរចា</a>
+<a href="#l10">មេរៀន ១០: ភាពជាអ្នកដឹកនាំ &amp; Feedback</a>
+<a href="#l11">មេរៀន ១១: អាជីព — CV · សម្ភាសន៍ · STAR</a>
+<a href="#l12">មេរៀន ១២: វិជ្ជាជីវៈ · ក្រមសីលធម៌ · Growth mindset</a>
+<a href="#cheat">📋 សង្ខេប (Cheat sheet)</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងចុងវគ្គ</a>
+<a href="#pro-app">💻 Soft Skills Lab (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🌱 Soft Skills — ទំនាក់ទំនង · ក្រុម · ពេលវេលា · អាជីព</h2>
+  <p><b>ស្តាប់សកម្ម</b>, សរសេរសារការងារ, <b>បទបង្ហាញ</b>, ការងារជាក្រុម (Tuckman), <b>គ្រប់គ្រងពេល</b> (Eisenhower · Pomodoro), ការគិតវិភាគ (5 Whys), <b>បញ្ញាអារម្មណ៍ EQ</b>, ដោះស្រាយជម្លោះ &amp; ចរចា, Feedback SBI, <b>CV &amp; សម្ភាសន៍ STAR</b>, វិជ្ជាជីវៈ — ឧទាហរណ៍ពិត គ្មាន Code។</p>
+  <p><span class="badge">📘 ១២ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">📊 ឧទាហរណ៍គណនា (គ្មាន Code)</span><span class="badge">🌱 Soft Skills Lab</span></p>
+</section>
+<section id="intro">
+<h2>១. Soft Skills ជាអ្វី? មកពីណា?</h2>
+
+
+<p><b>Soft skills</b> = ជំនាញធ្វើការជាមួយមនុស្ស និងគ្រប់គ្រងខ្លួនឯង — ការទំនាក់ទំនង ការងារជាក្រុម ការគ្រប់គ្រងពេល ការគិតដោះស្រាយបញ្ហា បញ្ញាអារម្មណ៍ ភាពជាអ្នកដឹកនាំ។ <b>Hard skills</b> (Code, គណនេយ្យ, ភាសា) ជួយឲ្យ <i>ទទួលបានការងារ</i> — Soft skills ជួយឲ្យ <i>រក្សាការងារ និងឡើងតំណែង</i>។ វគ្គនេះមានឧទាហរណ៍ក្នុងបរិបទសាលា និងកន្លែងធ្វើការនៅកម្ពុជា។</p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#868e96"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#868e96">1936</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Dale Carnegie</text><circle cx="200" cy="115" r="11" fill="#1c7ed6"/><text x="200" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#1c7ed6">1954</text><text x="200" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Eisenhower (urgent/important)</text><circle cx="320" cy="115" r="11" fill="#7048e8"/><text x="320" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#7048e8">1965</text><text x="320" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Tuckman team stages</text><circle cx="440" cy="115" r="11" fill="#0ca678"/><text x="440" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#0ca678">1970s</text><text x="440" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">«Soft skills» (US Army)</text><circle cx="560" cy="115" r="11" fill="#e8590c"/><text x="560" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#e8590c">1981</text><text x="560" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Getting to Yes</text><circle cx="680" cy="115" r="11" fill="#e03131"/><text x="680" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#e03131">1989</text><text x="680" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">7 Habits (Covey)</text><circle cx="800" cy="115" r="11" fill="#d6336c"/><text x="800" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#d6336c">1995</text><text x="800" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Emotional Intelligence</text><circle cx="920" cy="115" r="11" fill="#495057"/><text x="920" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#495057">2006</text><text x="920" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Growth mindset</text></svg><figcaption>🖼️ ប្រវត្តិ Soft Skills</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>1936</td><td><b>Dale Carnegie</b> — <i>How to Win Friends and Influence People</i></td><td>សៀវភៅទំនាក់ទំនងមនុស្សដ៏ល្បី</td></tr><tr><td>1965</td><td><b>Bruce Tuckman</b></td><td>ដំណាក់កាលក្រុម៖ Forming → Storming → Norming → Performing</td></tr><tr><td>ទសវត្សរ៍ 1960–70</td><td>កងទ័ពអាមេរិក (U.S. Army) — ការសិក្សាការបណ្តុះបណ្តាល</td><td>ប្រើពាក្យ «soft skills» សម្រាប់ជំនាញមិនពាក់ព័ន្ធម៉ាស៊ីន</td></tr><tr><td>1981</td><td><b>Roger Fisher &amp; William Ury</b> — <i>Getting to Yes</i></td><td>ការចរចាតាមផលប្រយោជន៍ · BATNA</td></tr><tr><td>1989</td><td><b>Stephen Covey</b> — <i>The 7 Habits of Highly Effective People</i></td><td>ទម្លាប់ ៧ · ម៉ាទ្រីសសំខាន់/បន្ទាន់</td></tr><tr><td>1990 · 1995</td><td><b>Salovey &amp; Mayer</b> · <b>Daniel Goleman</b></td><td>បញ្ញាអារម្មណ៍ (Emotional intelligence)</td></tr><tr><td>2006</td><td><b>Carol Dweck</b> — <i>Mindset</i></td><td>Growth mindset — សមត្ថភាពរីកចម្រើនតាមការខិតខំ</td></tr></table>
+
+<h3>ប្រើសម្រាប់អ្វី?</h3>
+<div class="grid"><div class="card"><b>🎓 សាលា</b><br>បទបង្ហាញ · គម្រោងក្រុម</div><div class="card"><b>💼 ការងារ</b><br>សម្ភាសន៍ · ធ្វើការជាមួយអតិថិជន</div><div class="card"><b>🏠 ជីវិត</b><br>គ្រួសារ · មិត្តភក្តិ</div><div class="card"><b>🚀 អាជីព</b><br>ឡើងតំណែង · ដឹកនាំក្រុម</div></div>
+
+</section>
+<section id="setup">
+<h2>២. ត្រៀមខ្លួន</h2>
+<ol class='steps'><li>សៀវភៅកំណត់ត្រា (Journal) — សរសេរ ៥ នាទីរៀងរាល់ល្ងាច អំពីអ្វីដែលបានរៀន។</li><li>ទូរស័ព្ទ ថតសំឡេង/វីដេអូខ្លួនឯង ពេលហាត់និយាយ។</li><li>ដៃគូហាត់ ១ នាក់ (មិត្ត/បងប្អូន) ដើម្បីផ្តល់ Feedback។</li><li>ហាត់ក្នុង <b>Soft Skills Lab</b> ចុងវគ្គ (Eisenhower, Pomodoro, STAR, CV, សារការងារ)។</li></ol></section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>Hard skills vs Soft skills</h2>
+<table><tr><th></th><th>Hard skills</th><th>Soft skills</th></tr><tr><td>ឧទាហរណ៍</td><td>Excel, Python, គណនេយ្យ</td><td>ទំនាក់ទំនង, ការងារជាក្រុម, ទទួលខុសត្រូវ</td></tr><tr><td>រៀនពី</td><td>វគ្គ សៀវភៅ</td><td>ការអនុវត្ត Feedback ការឆ្លុះបញ្ចាំង</td></tr><tr><td>វាស់</td><td>ប្រឡង វិញ្ញាបនបត្រ</td><td>ឥរិយាបថ ការវាយតម្លៃ 360°</td></tr></table>
+<div class="grid"><div class="card"><b>🗣️ Communication</b><br>និយាយ ស្តាប់ សរសេរ</div><div class="card"><b>🤝 Teamwork</b><br>សហការ ចែករំលែក</div><div class="card"><b>⏰ Time management</b><br>អាទិភាព ទាន់ពេល</div><div class="card"><b>🧠 Critical thinking</b><br>វិភាគ ដោះស្រាយ</div><div class="card"><b>❤️ EQ</b><br>យល់អារម្មណ៍ខ្លួន និងអ្នកដទៃ</div><div class="card"><b>🌱 Adaptability</b><br>រៀនថ្មី បត់បែន</div></div>
+<div class="note">💡 របាយការណ៍ <i>Future of Jobs</i> របស់ World Economic Forum ដាក់ការគិតវិភាគ ការគិតច្នៃប្រឌិត ភាពធន់ និងការរៀនពេញមួយជីវិត ក្នុងចំណោមជំនាញសំខាន់បំផុតសម្រាប់ការងារអនាគត។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>«ធ្វើ Pivot table ក្នុង Excel បាន» ជា Hard ឬ Soft skill?</p><details><summary>មើលចម្លើយ</summary><p><b>Hard skill</b> — ជំនាញបច្ចេកទេសដែលវាស់បានច្បាស់។</p></details></div>
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>ការទំនាក់ទំនង — និយាយ &amp; ស្តាប់សកម្ម</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="156.0" height="96" rx="14" fill="#1c7ed6"/><text x="98.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">អ្នកផ្ញើ</text><text x="98.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">គំនិត</text><line x1="178.0" y1="82" x2="204.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="206.0" y="34" width="156.0" height="96" rx="14" fill="#7048e8"/><text x="284.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Encode</text><text x="284.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ពាក្យ ទឹកមុខ</text><line x1="364.0" y1="82" x2="390.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="392.0" y="34" width="156.0" height="96" rx="14" fill="#0ca678"/><text x="470.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Channel</text><text x="470.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ផ្ទាល់ · Telegram</text><line x1="550.0" y1="82" x2="576.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="578.0" y="34" width="156.0" height="96" rx="14" fill="#e8590c"/><text x="656.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">អ្នកទទួល</text><text x="656.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Decode</text><line x1="736.0" y1="82" x2="762.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="764.0" y="34" width="156.0" height="96" rx="14" fill="#2f9e44"/><text x="842.0" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Feedback</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">ដំណើរការទំនាក់ទំនង — «សំឡេងរំខាន» អាចធ្វើឲ្យយល់ខុសគ្រប់ជំហាន</text></svg><figcaption>🖼️ ការទំនាក់ទំនង — និយាយ &amp; ស្តាប់សកម្ម</figcaption></figure>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li><b>ស្តាប់សកម្ម</b>៖ សម្លឹងភ្នែក · កុំកាត់សម្តី · សួរបញ្ជាក់ «មានន័យថា…?» · សង្ខេបវិញ «ខ្ញុំយល់ថា…»។</li><li>ភាសាកាយ៖ ឈរ/អង្គុយត្រង់ · ញញឹម · កុំឆែកទូរស័ព្ទពេលគេនិយាយ។</li><li>7C៖ Clear · Concise · Concrete · Correct · Coherent · Complete · Courteous។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>មិត្តកំពុងនិយាយពីបញ្ហា ហើយអ្នកឆែក Facebook។ ខុសត្រង់ណា?</p><details><summary>មើលចម្លើយ</summary><p>មិនមែនជា <b>ស្តាប់សកម្ម</b> — មិត្តមានអារម្មណ៍ថាមិនត្រូវបានគោរព។ ដាក់ទូរស័ព្ទចុះ ហើយសួរបញ្ជាក់។</p></details></div>
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>ការសរសេរ — អ៊ីមែល &amp; សារការងារ</h2>
+<table><tr><th>❌ ខ្សោយ</th><th>✅ ល្អ</th></tr><tr><td>«បង ធ្វើរួចអត់?»</td><td>«ជម្រាបសួរបង សុភា។ របាយការណ៍លក់ខែតុលា នឹងរួចថ្ងៃណា? ខ្ញុំត្រូវការមុនម៉ោង ៣ ថ្ងៃស្អែក ដើម្បីដាក់ក្នុងបទបង្ហាញ។ អរគុណបង!»</td></tr><tr><td>Voice message ៣ នាទី</td><td>សារខ្លី ១–៣ ប្រយោគ ច្បាស់</td></tr><tr><td>គ្មានចំណងជើងអ៊ីមែល</td><td>Subject៖ «សុំច្បាប់ឈប់ ថ្ងៃ ២០ វិច្ឆិកា — ដារ៉ា»</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>រចនាសម្ព័ន្ធ៖ សួរសុខទុក្ខ → គោលបំណង (ប្រយោគទី ១) → ព័ត៌មានចាំបាច់ → សំណើ/ពេលកំណត់ → អរគុណ។</li><li>ពិនិត្យអក្ខរាវិរុទ្ធ និងឈ្មោះអ្នកទទួលមុនផ្ញើ។</li><li>Telegram ការងារ៖ កុំផ្ញើយប់ជ្រៅ លុះត្រាបន្ទាន់ · ប្រើ Reply ឲ្យច្បាស់សារណា។</li><li>សាក <b>✉️ សារការងារ</b> ក្នុង Soft Skills Lab។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>ហេតុអ្វីគួរដាក់គោលបំណងនៅប្រយោគទីមួយ?</p><details><summary>មើលចម្លើយ</summary><p>អ្នកទទួលរវល់ — គេដឹងភ្លាមថា <b>ត្រូវធ្វើអ្វី</b> ដោយមិនចាំបាច់អានទាំងអស់។</p></details></div>
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>បទបង្ហាញ &amp; និយាយជាសាធារណៈ</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>បទបង្ហាញ 3 នាទី ≈ 390 ពាក្យ (English) · Slides ≈ 3 (ប្រហែល ១ Slide/នាទី)
+បទបង្ហាញ 5 នាទី ≈ 650 ពាក្យ (English) · Slides ≈ 5 (ប្រហែល ១ Slide/នាទី)
+បទបង្ហាញ 10 នាទី ≈ 1300 ពាក្យ (English) · Slides ≈ 10 (ប្រហែល ១ Slide/នាទី)
+ក្បួន 10/20/30 (Guy Kawasaki): Slides ≤10 · ≤20 នាទី · អក្សរ ≥30pt</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>រចនាសម្ព័ន្ធ៖ <b>Hook</b> (សំណួរ/រឿង/លេខ) → ចំណុចសំខាន់ ៣ → សេចក្តីសន្និដ្ឋាន + Call to action។</li><li>Slides ជារូបភាព និងពាក្យគន្លឹះ — កុំអានពី Slide។</li><li>ភ័យ? ដកដង្ហើមវែង ៤ វិនាទី · ហាត់ ៣ ដងខ្លាំងៗ · ថតខ្លួនឯង · មើលមុខមនុស្សញញឹម ២–៣ នាក់។</li><li>សាក <b>🎤 ល្បឿននិយាយ</b> ក្នុង Lab — រាប់ពាក្យ um/like។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>បទបង្ហាញ ៥ នាទី មាន Slides ៣០ អក្សរច្រើន។ កែយ៉ាងណា?</p><details><summary>មើលចម្លើយ</summary><p>កាត់មក <b>៥–១០ Slides</b> · ពាក្យគន្លឹះ + រូប · និយាយពន្យល់ជំនួសការអាន។</p></details></div>
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>ការងារជាក្រុម</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="156.0" height="96" rx="14" fill="#1c7ed6"/><text x="98.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Forming</text><text x="98.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ស្គាល់គ្នា</text><line x1="178.0" y1="82" x2="204.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="206.0" y="34" width="156.0" height="96" rx="14" fill="#e03131"/><text x="284.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Storming</text><text x="284.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ខ្វែងគំនិត</text><line x1="364.0" y1="82" x2="390.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="392.0" y="34" width="156.0" height="96" rx="14" fill="#f59f00"/><text x="470.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Norming</text><text x="470.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">បង្កើតច្បាប់</text><line x1="550.0" y1="82" x2="576.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="578.0" y="34" width="156.0" height="96" rx="14" fill="#2f9e44"/><text x="656.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Performing</text><text x="656.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ធ្វើការល្អ</text><line x1="736.0" y1="82" x2="762.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="764.0" y="34" width="156.0" height="96" rx="14" fill="#7048e8"/><text x="842.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Adjourning</text><text x="842.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">បញ្ចប់ · អបអរ</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">ដំណាក់កាលក្រុម (Tuckman 1965, 1977)</text></svg><figcaption>🖼️ ការងារជាក្រុម</figcaption></figure>
+<table><tr><th>តួនាទី</th><th>ធ្វើអ្វី</th></tr><tr><td>Leader/Coordinator</td><td>សម្របសម្រួល កំណត់គោលដៅ</td></tr><tr><td>Planner</td><td>កាលវិភាគ</td></tr><tr><td>Researcher</td><td>រកព័ត៌មាន</td></tr><tr><td>Creator</td><td>រចនា Slides/វីដេអូ</td></tr><tr><td>Checker</td><td>ពិនិត្យគុណភាព</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ថ្ងៃដំបូង៖ គោលដៅ · តួនាទី · Deadline · ឆានែលទំនាក់ទំនង (Telegram group)។</li><li>Storming ជារឿងធម្មតា — ពិភាក្សាដោយគោរព។</li><li>ទទួលស្គាល់ការងាររបស់អ្នកដទៃ។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>ក្រុមកំពុងឈ្លោះគ្នាអំពីប្រធានបទគម្រោង។ ជាដំណាក់កាលណា? ធ្វើអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Storming</b> — ស្តាប់គំនិតគ្រប់គ្នា ដាក់លក្ខណៈវិនិច្ឆ័យ ហើយបោះឆ្នោត/សម្រេចរួមគ្នា។</p></details></div>
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>គ្រប់គ្រងពេលវេលា</h2>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>គេង               56 ម៉ោង ████████████████████████████
+សាលា/ការងារ       40 ម៉ោង ████████████████████
+ទូរស័ព្ទ/Social   21 ម៉ោង ██████████
+គ្រួសារ/មិត្ត     14 ម៉ោង ███████
+ធ្វើដំណើរ          7 ម៉ោង ███
+រៀនផ្ទាល់ខ្លួន     5 ម៉ោង ██
+សល់ 25 ម៉ោង/សប្តាហ៍ · កាត់ Social 1 ម៉ោង/ថ្ងៃ → រៀនបន្ថែម 7 ម៉ោង/សប្តាហ៍ = 364 ម៉ោង/ឆ្នាំ</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li><b>Eisenhower matrix</b>៖ សំខាន់/បន្ទាន់ → ធ្វើ · កំណត់ពេល · ប្រគល់ · កាត់។</li><li><b>Pomodoro</b> (Francesco Cirillo)៖ ផ្តោត ២៥ នាទី + សម្រាក ៥ នាទី។</li><li>Eat the frog — ធ្វើការងារពិបាកបំផុតពេលព្រឹក។</li><li>សាក <b>🗂️ Eisenhower</b> និង <b>🍅 Pomodoro</b> ក្នុង Lab។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>ការងារ «រៀនភាសាអង់គ្លេសសម្រាប់អាហារូបករណ៍ឆ្នាំក្រោយ» ជាប្រអប់ណា?</p><details><summary>មើលចម្លើយ</summary><p><b>សំខាន់ តែមិនបន្ទាន់</b> → កំណត់ពេលជាប្រចាំ (ឧ. ៣០ នាទី/ថ្ងៃ)។</p></details></div>
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>ការគិតវិភាគ &amp; ដោះស្រាយបញ្ហា</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="156.0" height="96" rx="14" fill="#1c7ed6"/><text x="98.0" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">កំណត់បញ្ហា</text><line x1="178.0" y1="82" x2="204.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="206.0" y="34" width="156.0" height="96" rx="14" fill="#7048e8"/><text x="284.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">រកមូលហេតុ</text><text x="284.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">5 Whys</text><line x1="364.0" y1="82" x2="390.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="392.0" y="34" width="156.0" height="96" rx="14" fill="#0ca678"/><text x="470.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">គំនិតដំណោះស្រាយ</text><text x="470.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Brainstorm</text><line x1="550.0" y1="82" x2="576.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="578.0" y="34" width="156.0" height="96" rx="14" fill="#e8590c"/><text x="656.0" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">ជ្រើស &amp; អនុវត្ត</text><line x1="736.0" y1="82" x2="762.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="764.0" y="34" width="156.0" height="96" rx="14" fill="#2f9e44"/><text x="842.0" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">វាយតម្លៃ</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">ជំហានដោះស្រាយបញ្ហា</text></svg><figcaption>🖼️ ការគិតវិភាគ &amp; ដោះស្រាយបញ្ហា</figcaption></figure>
+<table><tr><th>5 Whys (Toyota)</th><th>ឧទាហរណ៍៖ ពិន្ទុគណិតធ្លាក់</th></tr><tr><td>ហេតុអ្វី ១</td><td>ធ្វើលំហាត់មិនទាន់ពេលប្រឡង</td></tr><tr><td>ហេតុអ្វី ២</td><td>មិនចេះរូបមន្តជំពូក ៣</td></tr><tr><td>ហេតុអ្វី ៣</td><td>អវត្តមានពេលគ្រូពន្យល់</td></tr><tr><td>ហេតុអ្វី ៤</td><td>ធ្វើការក្រៅម៉ោងរហូតយប់</td></tr><tr><td>ហេតុអ្វី ៥ → មូលហេតុ</td><td>មិនមានផែនការពេល — ដំណោះស្រាយ៖ កាលវិភាគ + សុំមេរៀនពីមិត្ត</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ពិនិត្យព័ត៌មាន៖ <b>អ្នកណាជាអ្នកនិយាយ? មានភស្តុតាង? ប្រភពផ្សេងនិយាយដូចគ្នាទេ?</b> — ការពារព័ត៌មានក្លែងក្លាយ។</li><li>បំបែកអង្គហេតុ (Fact) ពីមតិ (Opinion)។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>«ផឹកទឹកក្តៅជាមួយក្រូចឆ្មារព្យាបាលមហារីក» ចែករំលែកលើ Facebook។ ធ្វើអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>ពិនិត្យ <b>ប្រភព និងភស្តុតាង</b> (ក្រសួងសុខាភិបាល WHO គ្រូពេទ្យ) — កុំ Share មុនផ្ទៀងផ្ទាត់។</p></details></div>
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>បញ្ញាអារម្មណ៍ (EQ) &amp; គ្រប់គ្រងភាពតានតឹង</h2>
+<table><tr><th>ផ្នែក EQ (Goleman)</th><th>ការអនុវត្ត</th></tr><tr><td>Self-awareness</td><td>ស្គាល់អារម្មណ៍ខ្លួន «ខ្ញុំកំពុងខឹង ព្រោះ…»</td></tr><tr><td>Self-regulation</td><td>ផ្អាក ១០ វិនាទីមុនឆ្លើយ</td></tr><tr><td>Motivation</td><td>គោលដៅផ្ទាល់ខ្លួន</td></tr><tr><td>Empathy</td><td>«បើខ្ញុំជាគាត់…»</td></tr><tr><td>Social skills</td><td>ទំនាក់ទំនង ដោះស្រាយជម្លោះ</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ដកដង្ហើម 4-4-4 (ស្រូប ៤ · ទប់ ៤ · ដកចេញ ៤)។</li><li>គេងគ្រប់ ៧–៩ ម៉ោង · ហាត់ប្រាណ · កាត់ការប្រើទូរស័ព្ទមុនគេង។</li><li>និយាយជាមួយមនុស្សដែលទុកចិត្ត — ការសុំជំនួយ គឺជាកម្លាំង មិនមែនភាពខ្សោយ។</li></ol></div>
+<div class="note">💡 បើមានអារម្មណ៍សោកសៅ ឬតានតឹងខ្លាំងយូរ សូមនិយាយជាមួយឪពុកម្តាយ គ្រូ ឬអ្នកជំនាញសុខភាពផ្លូវចិត្ត។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>ថ្នាក់ដឹកនាំរិះគន់ការងារអ្នកមុខមនុស្សច្រើន។ ប្រតិកម្មដែលមាន EQ ខ្ពស់?</p><details><summary>មើលចម្លើយ</summary><p>រក្សាស្ងប់ · អរគុណចំពោះ Feedback · សុំពិភាក្សាលម្អិតឯកជនពេលក្រោយ — កុំឆ្លើយតបដោយកំហឹងភ្លាម។</p></details></div>
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>ដោះស្រាយជម្លោះ &amp; ការចរចា</h2>
+<table><tr><th>របៀប (Thomas–Kilmann)</th><th>ប្រើពេល</th></tr><tr><td>Collaborating (ឈ្នះ-ឈ្នះ)</td><td>បញ្ហាសំខាន់ ទំនាក់ទំនងសំខាន់</td></tr><tr><td>Compromising</td><td>ពេលតិច ចែកពាក់កណ្តាល</td></tr><tr><td>Accommodating</td><td>រឿងតូចសម្រាប់អ្នក សំខាន់សម្រាប់គេ</td></tr><tr><td>Competing</td><td>បន្ទាន់ សុវត្ថិភាព</td></tr><tr><td>Avoiding</td><td>រឿងតូចពេក ឬត្រូវការពេលស្ងប់</td></tr></table>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>ZOPA (ចន្លោះព្រមព្រៀងបាន) = $320 – $380 · កណ្តាល ≈ $350
+BATNA អ្នកទិញ: ម៉ូតូផ្សេងតម្លៃ $360 → កុំបង់លើស $360</pre></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>I-message៖ «ខ្ញុំព្រួយបារម្ភពេល… ព្រោះ… ខ្ញុំចង់ឲ្យ…» ជំនួស «ឯងតែងតែ…»។</li><li>ផ្តោតលើ <b>ផលប្រយោជន៍</b> មិនមែនជំហរ (Getting to Yes)។</li><li>ដឹង <b>BATNA</b> របស់ខ្លួន មុនចរចា។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>«ឯងមិនដែលធ្វើការងារចំណែកឯងសោះ!» ប្តូរជា I-message?</p><details><summary>មើលចម្លើយ</summary><p>«ខ្ញុំព្រួយបារម្ភ ព្រោះ Deadline ថ្ងៃសុក្រ ហើយផ្នែក Slides មិនទាន់រួច។ យើងអាចចែកការងារឡើងវិញបានទេ?»</p></details></div>
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>ភាពជាអ្នកដឹកនាំ &amp; Feedback</h2>
+<table><tr><th>❌</th><th>✅ SBI</th></tr><tr><td>«ឯងធ្វើបទបង្ហាញអាក្រក់»</td><td>«ក្នុងបទបង្ហាញព្រឹកនេះ (S) អ្នកអានពី Slide ទាំងអស់ (B) ធ្វើឲ្យអ្នកស្តាប់ពិបាកផ្តោតអារម្មណ៍ (I)។ សាកប្រើពាក្យគន្លឹះពេលក្រោយ?»</td></tr><tr><td>«ល្អណាស់!»</td><td>«ពេលប្រជុំ (S) អ្នកសង្ខេបគំនិតទាំងអស់ច្បាស់ (B) ធ្វើឲ្យក្រុមសម្រេចចិត្តបានលឿន (I)។ អរគុណ!»</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ដឹកនាំដោយ <b>គំរូ</b> — មកទាន់ពេល រក្សាពាក្យសន្យា។</li><li>Feedback <b>SBI</b>៖ Situation (ពេលណា) → Behaviour (ធ្វើអ្វី) → Impact (ផលប៉ះពាល់)។</li><li>សរសើរជាសាធារណៈ · រិះគន់ជាឯកជន។</li><li>ទទួល Feedback៖ ស្តាប់ → អរគុណ → សួរបញ្ជាក់ → កែលម្អ (កុំការពារខ្លួនភ្លាម)។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>ហេតុអ្វី Feedback «ល្អណាស់!» មិនសូវមានប្រយោជន៍?</p><details><summary>មើលចម្លើយ</summary><p>មិនប្រាប់ថា <b>អ្វីល្អ</b> — អ្នកទទួលមិនដឹងថាត្រូវធ្វើអ្វីដដែលៗ។</p></details></div>
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>អាជីព — CV · សម្ភាសន៍ · STAR</h2>
+<table><tr><th>សំណួរសម្ភាសន៍ទូទៅ</th><th>គន្លឹះឆ្លើយ</th></tr><tr><td>Tell me about yourself</td><td>បច្ចុប្បន្ន → អតីតកាល → អនាគត (១ នាទី)</td></tr><tr><td>ចំណុចខ្សោយរបស់អ្នក?</td><td>ចំណុចពិត + អ្វីដែលកំពុងកែ</td></tr><tr><td>ប្រាប់ពីពេលដែលអ្នកដោះស្រាយបញ្ហា</td><td><b>STAR</b></td></tr><tr><td>ហេតុអ្វីចង់ធ្វើការនៅទីនេះ?</td><td>ស្រាវជ្រាវក្រុមហ៊ុនមុន</td></tr><tr><td>មានសំណួរទេ?</td><td>សួរ ២ សំណួរជានិច្ច (ឧ. «ថ្ងៃធម្មតាមួយក្នុងតួនាទីនេះ ដូចម្តេច?»)</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>CV ១ ទំព័រ · ចំណុចចាប់ផ្តើមដោយកិរិយាសព្ទ + លេខ · កែតាមការងារនីមួយៗ។</li><li>LinkedIn/Portfolio · រូបថតស្អាត · Telegram/អ៊ីមែលផ្លូវការ។</li><li>មកដល់មុន ១០ នាទី · ស្លៀកពាក់សមរម្យ · ផ្ញើសារអរគុណក្រោយសម្ភាសន៍។</li><li>សាក <b>⭐ STAR</b> និង <b>📄 CV</b> ក្នុង Lab។</li></ol></div>
+<div class="warn">⚠️ ប្រុងប្រយ័ត្នការងារបោក៖ សុំលុយមុន · ប្រាក់ខែខ្ពស់មិនប្រក្រតី · ការងារក្រៅប្រទេសតាម Telegram គ្មានក្រុមហ៊ុនច្បាស់ — ពិនិត្យជាមួយគ្រួសារ និងប្រភពផ្លូវការ (មើលវគ្គ Cyber Security)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>CV សរសេរ «ទទួលខុសត្រូវ Facebook page»។ កែឲ្យខ្លាំងជាង?</p><details><summary>មើលចម្លើយ</summary><p>«<b>គ្រប់គ្រង</b> Facebook page ហាងកាហ្វេ — បង្កើន Followers ពី 1,200 ទៅ 4,500 ក្នុង ៦ ខែ»។</p></details></div>
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>វិជ្ជាជីវៈ · ក្រមសីលធម៌ · Growth mindset</h2>
+<table><tr><th>កន្លែងធ្វើការកម្ពុជា</th><th>ការអនុវត្តល្អ</th></tr><tr><td>ការគោរព</td><td>សំពះ/សួរសុខទុក្ខ · ប្រើពាក្យគួរសម (បង, លោក, លោកស្រី)</td></tr><tr><td>ពេលវេលា</td><td>មកទាន់ម៉ោង · ជូនដំណឹងមុនបើយឺត</td></tr><tr><td>ស្មោះត្រង់</td><td>និយាយពិត · ទទួលស្គាល់កំហុស</td></tr><tr><td>ឯកជនភាព</td><td>កុំបង្ហោះព័ត៌មានក្រុមហ៊ុន/អតិថិជនលើ Social</td></tr><tr><td>សំលៀកបំពាក់</td><td>តាមគោលការណ៍ក្រុមហ៊ុន</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li><b>Growth mindset</b> (Carol Dweck)៖ «ខ្ញុំ <b>មិនទាន់</b> ចេះ» ជំនួស «ខ្ញុំមិនចេះ»។</li><li>រៀនពេញមួយជីវិត៖ ២០ នាទី/ថ្ងៃ = ១២០ ម៉ោង/ឆ្នាំ។</li><li>កសាងបណ្តាញ (Network)៖ ជួយគេមុន ទើបសុំជំនួយ។</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>បុគ្គលិកថ្មីធ្វើខុសក្នុងរបាយការណ៍។ ប្រតិកម្មវិជ្ជាជីវៈ?</p><details><summary>មើលចម្លើយ</summary><p><b>ទទួលស្គាល់ភ្លាម</b> · ប្រាប់ថាកែរួច/នឹងកែពេលណា · រៀនពីកំហុស — កុំលាក់ ឬបន្ទោសអ្នកដទៃ។</p></details></div>
+</section>
+<section id="cheat">
+<h2>📋 សង្ខេប (Cheat sheet)</h2>
+<table><tr><th>ពាក្យ / រូបមន្ត</th><th>ន័យ</th></tr><tr><td>ស្តាប់សកម្ម</td><td>មិនកាត់សម្តី · សួរបញ្ជាក់ · សង្ខេប</td></tr><tr><td>7C</td><td>Clear · Concise · Concrete · Correct · Coherent · Complete · Courteous</td></tr><tr><td>Tuckman</td><td>Forming → Storming → Norming → Performing</td></tr><tr><td>Eisenhower</td><td>សំខាន់/បន្ទាន់ → ធ្វើ · កំណត់ពេល · ប្រគល់ · កាត់</td></tr><tr><td>Pomodoro</td><td>២៥ + ៥ នាទី</td></tr><tr><td>5 Whys</td><td>រកមូលហេតុពិត</td></tr><tr><td>I-message</td><td>ខ្ញុំមានអារម្មណ៍… ព្រោះ… ខ្ញុំចង់…</td></tr><tr><td>SBI</td><td>Situation · Behaviour · Impact</td></tr><tr><td>STAR</td><td>Situation · Task · Action · Result</td></tr></table>
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងចុងវគ្គ</h2>
+<ol class='steps'><li><b>សប្តាហ៍ ១</b>៖ Time audit ៧ ថ្ងៃ + Eisenhower + Pomodoro ៥ ដង/ថ្ងៃ។</li><li><b>សប្តាហ៍ ២</b>៖ បទបង្ហាញ ៣ នាទី អំពីប្រធានបទដែលចូលចិត្ត — ថតវីដេអូ ហើយសុំ Feedback SBI ពីមនុស្ស ២ នាក់។</li><li><b>សប្តាហ៍ ៣</b>៖ CV ១ ទំព័រ + ចម្លើយ STAR ៣ + សម្ភាសន៍សាកល្បងជាមួយមិត្ត។</li><li>Journal៖ រៀនអ្វី · ពិបាកត្រង់ណា · ជំហានបន្ទាប់។</li></ol></section>
+<section id="pro-app">
+<h2>💻 Soft Skills Lab (App)</h2>
+
+<p><b>🗂️ Eisenhower</b> (រៀបអាទិភាព — រក្សាទុក) · <b>🍅 Pomodoro</b> timer · <b>⭐ STAR</b> (ចម្លើយសម្ភាសន៍ + គន្លឹះ) · <b>📄 CV</b> builder (បោះពុម្ព/PDF) · <b>✉️ សារការងារ</b> ខ្មែរ/English · <b>🎤 ល្បឿននិយាយ</b> (រាប់ um/like) — ទិន្នន័យនៅក្នុង Browser របស់អ្នកតែប៉ុណ្ណោះ។</p>
+
+<div class="itk" id="ss">
+<div class="itk-tabs"><button class="on" data-t="em">🗂️ Eisenhower</button><button data-t="po">🍅 Pomodoro</button><button data-t="st">⭐ STAR</button><button data-t="cv">📄 CV</button><button data-t="ms">✉️ សារការងារ</button><button data-t="sp">🎤 ល្បឿននិយាយ</button></div>
+
+<div class="itk-p on" data-p="em">
+ <p class="vl-tip">វាយការងារម្តងមួយ ជ្រើស <b>បន្ទាន់?</b> និង <b>សំខាន់?</b> — App ដាក់ចូលប្រអប់ ៤ ដោយស្វ័យប្រវត្តិ។</p>
+ <div class="itk-row"><input id="em_t" placeholder="ឧ. ធ្វើកិច្ចការគណិតដាក់ស្អែក" style="flex:1;min-width:180px"><label><input type="checkbox" id="em_u"> បន្ទាន់</label><label><input type="checkbox" id="em_i" checked> សំខាន់</label><button class="btn" id="em_add">➕ បន្ថែម</button></div>
+ <div class="itk-out" id="em_out"></div>
+</div>
+
+<div class="itk-p" data-p="po">
+ <div class="itk-row"><label>ផ្តោតអារម្មណ៍ (នាទី)<input id="po_w" type="number" value="25" min="1" max="90" style="width:70px"></label><label>សម្រាក (នាទី)<input id="po_b" type="number" value="5" min="1" max="30" style="width:70px"></label><button class="btn" id="po_go">▶ ចាប់ផ្តើម</button><button class="btn ghost" id="po_rs">↺</button></div>
+ <div class="itk-out" id="po_out" style="text-align:center"></div>
+</div>
+
+<div class="itk-p" data-p="st">
+ <p class="vl-tip">ឆ្លើយសំណួរសម្ភាសន៍ «ប្រាប់ពីពេលដែលអ្នក…» ដោយវិធី <b>STAR</b>។</p>
+ <div class="itk-row"><label style="flex:1">S — Situation (ស្ថានភាព)<textarea id="st_s" rows="2" style="width:100%">ខ្ញុំជាប្រធានក្រុមគម្រោងវិទ្យាសាស្ត្រ ៥ នាក់ នៅថ្នាក់ទី១២។</textarea></label></div>
+ <div class="itk-row"><label style="flex:1">T — Task (ភារកិច្ច)<textarea id="st_t" rows="2" style="width:100%">យើងត្រូវបញ្ចប់គម្រោងក្នុង ២ សប្តាហ៍ តែសមាជិក ២ នាក់មិនសូវចូលរួម។</textarea></label></div>
+ <div class="itk-row"><label style="flex:1">A — Action (សកម្មភាពរបស់ <b>ខ្ញុំ</b>)<textarea id="st_a" rows="3" style="width:100%">ខ្ញុំបានជជែកផ្ទាល់ជាមួយពួកគេ ដើម្បីដឹងពីបញ្ហា បែងចែកការងារតាមចំណូលចិត្ត និងបង្កើតក្រុម Telegram ដើម្បីតាមដានការងាររៀងរាល់ថ្ងៃ។</textarea></label></div>
+ <div class="itk-row"><label style="flex:1">R — Result (លទ្ធផល — មានលេខកាន់តែល្អ)<textarea id="st_r" rows="2" style="width:100%">យើងបញ្ចប់មុនកំណត់ ២ ថ្ងៃ ហើយបានពិន្ទុ ៩២/១០០ — ខ្ញុំរៀនថាការស្តាប់សំខាន់ជាងការបញ្ជា។</textarea></label></div>
+ <div class="itk-out" id="st_out"></div>
+</div>
+
+<div class="itk-p" data-p="cv">
+ <div class="itk-row"><input id="cv_n" value="សុខ ដារ៉ា (Sok Dara)" placeholder="ឈ្មោះ" style="flex:1;min-width:160px"><input id="cv_j" value="Junior Web Developer" placeholder="តួនាទីចង់បាន" style="flex:1;min-width:160px"></div>
+ <div class="itk-row"><input id="cv_c" value="Phnom Penh · 012 345 678 · dara@example.com" style="flex:1" placeholder="ទីតាំង · ទូរស័ព្ទ · អ៊ីមែល"></div>
+ <div class="itk-row"><textarea id="cv_p" rows="2" style="width:100%" placeholder="សេចក្តីសង្ខេប">និស្សិតឆ្នាំទី៣ IT ចូលចិត្តបង្កើត Website ងាយប្រើ។ រៀនលឿន ធ្វើការជាក្រុមល្អ។</textarea></div>
+ <div class="itk-row"><textarea id="cv_e" rows="3" style="width:100%" placeholder="បទពិសោធន៍ (១ ជួរ = ១ ចំណុច)">2025–ឥឡូវ · Intern, ABC Digital — បង្កើត Landing page ៣ ដែលបង្កើនអ្នកចុះឈ្មោះ ២០%
+2024 · Volunteer, Youth Club — បង្រៀនកុំព្យូទ័រដល់សិស្ស ៣០ នាក់</textarea></div>
+ <div class="itk-row"><textarea id="cv_d" rows="2" style="width:100%" placeholder="ការសិក្សា">2023–2027 · បរិញ្ញាបត្រ IT, សាកលវិទ្យាល័យ…
+2023 · សញ្ញាបត្រមធ្យមសិក្សាទុតិយភូមិ — និទ្ទេស B</textarea></div>
+ <div class="itk-row"><input id="cv_s" value="HTML, CSS, JavaScript, Git, Figma, ភាសាអង់គ្លេស (B2), ការងារជាក្រុម" style="flex:1" placeholder="ជំនាញ (បំបែកដោយ ,)"></div>
+ <div class="itk-row"><button class="btn ghost" id="cv_pr">🖨️ បោះពុម្ព / Save PDF</button></div>
+ <div class="itk-out" id="cv_out"></div>
+</div>
+
+<div class="itk-p" data-p="ms">
+ <div class="itk-row"><label>ប្រភេទ<select id="ms_k"><option value="leave">សុំច្បាប់ឈប់</option><option value="late">ជូនដំណឹងមកយឺត</option><option value="follow">តាមដានបន្ទាប់ពីសម្ភាសន៍</option><option value="apply">ដាក់ពាក្យការងារ</option><option value="thanks">អរគុណគ្រូ/ថ្នាក់ដឹកនាំ</option></select></label><label>ភាសា<select id="ms_l"><option value="km">ខ្មែរ</option><option value="en">English</option></select></label></div>
+ <div class="itk-row"><input id="ms_to" value="លោកគ្រូ សុភ័ក្រ" placeholder="ផ្ញើទៅ" style="flex:1"><input id="ms_me" value="ដារ៉ា" placeholder="ឈ្មោះខ្ញុំ" style="flex:1"><input id="ms_x" value="ថ្ងៃព្រហស្បតិ៍ ទី២០" placeholder="ថ្ងៃ/តួនាទី" style="flex:1"></div>
+ <div class="itk-out" id="ms_out"></div>
+</div>
+
+<div class="itk-p" data-p="sp">
+ <p class="vl-tip">បិទភ្ជាប់អត្ថបទបទបង្ហាញ (English) — App ប៉ាន់ពេលនិយាយ (~130 ពាក្យ/នាទី) និងរាប់ពាក្យបំពេញចន្លោះ (um, like, actually…)។</p>
+ <textarea id="sp_t" rows="6" style="width:100%">Good morning everyone. Um, today I want to talk about, like, why soft skills actually matter. Basically, companies hire for hard skills but they promote for soft skills. So, let me share three simple habits you can start today.</textarea>
+ <div class="itk-out" id="sp_out"></div>
+</div>
+</div>
+<script>
+(() => {
+const $ = id => document.getElementById(id), root = $("ss");
+root.querySelectorAll(".itk-tabs button").forEach(b => b.onclick = () => { root.querySelectorAll(".itk-tabs button").forEach(x => x.classList.toggle("on", x === b)); root.querySelectorAll(".itk-p").forEach(p => p.classList.toggle("on", p.dataset.p === b.dataset.t)); });
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const store = { get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { } } };
+/* Eisenhower */
+let EM = store.get("xc_ss_em", [{ t: "ប្រឡងឆមាសថ្ងៃស្អែក", u: 1, i: 1 }, { t: "រៀនភាសាអង់គ្លេស ៣០ នាទី", u: 0, i: 1 }, { t: "ឆ្លើយសារក្រុម Telegram", u: 1, i: 0 }, { t: "មើល TikTok", u: 0, i: 0 }]);
+const Q = [["🔥 ធ្វើភ្លាម", "បន្ទាន់ + សំខាន់", "#ffe3e3", 1, 1], ["📅 កំណត់ពេលធ្វើ", "មិនបន្ទាន់ + សំខាន់", "#d3f9d8", 0, 1], ["🤝 ប្រគល់/ធ្វើលឿន", "បន្ទាន់ + មិនសំខាន់", "#fff3bf", 1, 0], ["🗑️ កាត់ចោល", "មិនបន្ទាន់ + មិនសំខាន់", "#e9ecef", 0, 0]];
+function em() { store.set("xc_ss_em", EM); $("em_out").innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${Q.map(q => `<div style="background:${q[2]};border-radius:10px;padding:8px;color:#0f172a;min-height:90px"><b>${q[0]}</b><div style="font-size:12px;color:#495057">${q[1]}</div>${EM.map((x, i) => [x, i]).filter(([x]) => x.u === q[3] && x.i === q[4]).map(([x, i]) => `<div style="display:flex;justify-content:space-between;gap:6px;background:#fff;border-radius:6px;padding:3px 6px;margin-top:4px">${esc(x.t)}<button data-del="${i}" style="border:0;background:none;cursor:pointer">✕</button></div>`).join("")}</div>`).join("")}</div><p>💡 ពេលភាគច្រើនគួរនៅក្នុង <b>📅 សំខាន់ តែមិនបន្ទាន់</b> — ការរៀន សុខភាព ការរៀបចំមុន។</p>`;
+  $("em_out").querySelectorAll("[data-del]").forEach(b => b.onclick = () => { EM.splice(+b.dataset.del, 1); em(); }); }
+$("em_add").onclick = () => { const t = $("em_t").value.trim(); if (!t) return; EM.push({ t, u: $("em_u").checked ? 1 : 0, i: $("em_i").checked ? 1 : 0 }); $("em_t").value = ""; em(); };
+$("em_t").onkeydown = e => { if (e.key === "Enter") $("em_add").click(); };
+/* Pomodoro */
+let P = { left: 25 * 60, mode: "work", run: false, done: store.get("xc_ss_po", 0) }, tmr = 0;
+function poDraw() { const m = Math.floor(P.left / 60), s = P.left % 60, tot = (P.mode === "work" ? +$("po_w").value : +$("po_b").value) * 60, pc = 1 - P.left / tot, R = 70, C = 2 * Math.PI * R;
+  $("po_out").innerHTML = `<svg viewBox="0 0 180 180" width="180" height="180"><circle cx="90" cy="90" r="${R}" fill="none" stroke="#e9ecef" stroke-width="12"/><circle cx="90" cy="90" r="${R}" fill="none" stroke="${P.mode === "work" ? "#e8590c" : "#2f9e44"}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - pc)}" transform="rotate(-90 90 90)"/><text x="90" y="88" text-anchor="middle" font-size="30" font-weight="800" fill="currentColor">${m}:${String(s).padStart(2, "0")}</text><text x="90" y="114" text-anchor="middle" font-size="13" fill="currentColor">${P.mode === "work" ? "🍅 ផ្តោតអារម្មណ៍" : "☕ សម្រាក"}</text></svg><div>Pomodoro ដែលបានបញ្ចប់៖ <b>${"🍅".repeat(Math.min(P.done, 12))} ${P.done}</b></div><div style="font-size:13px">ទូរស័ព្ទ → Silent · បិទ Tab ផ្សេង · ១ ការងារតែមួយ</div>`; }
+function tick() { if (P.left > 0) { P.left--; poDraw(); return; } if (P.mode === "work") { P.done++; store.set("xc_ss_po", P.done); P.mode = "break"; P.left = +$("po_b").value * 60; } else { P.mode = "work"; P.left = +$("po_w").value * 60; } try { const a = new (window.AudioContext || window.webkitAudioContext)(), o = a.createOscillator(); o.connect(a.destination); o.frequency.value = 880; o.start(); o.stop(a.currentTime + .3); } catch (e) { } poDraw(); }
+$("po_go").onclick = () => { P.run = !P.run; clearInterval(tmr); if (P.run) tmr = setInterval(tick, 1000); $("po_go").textContent = P.run ? "⏸ ផ្អាក" : "▶ បន្ត"; };
+$("po_rs").onclick = () => { clearInterval(tmr); P.run = false; P.mode = "work"; P.left = +$("po_w").value * 60; $("po_go").textContent = "▶ ចាប់ផ្តើម"; poDraw(); };
+["po_w", "po_b"].forEach(id => $(id).onchange = () => { if (!P.run) $("po_rs").click(); });
+/* STAR */
+function st() { const g = id => $(id).value.trim(), parts = [["S", g("st_s")], ["T", g("st_t")], ["A", g("st_a")], ["R", g("st_r")]];
+  const words = s => s.split(/\s+/).filter(Boolean).length, hasNum = /\d/.test(g("st_r")), iCount = (g("st_a").match(/ខ្ញុំ|\bI\b/g) || []).length, weCount = (g("st_a").match(/យើង|\bwe\b/gi) || []).length;
+  const tips = []; if (!hasNum) tips.push("បន្ថែម <b>លេខ</b> ក្នុង Result (%, ថ្ងៃ, ពិន្ទុ, ចំនួនមនុស្ស)"); if (weCount > iCount) tips.push("Action គួរនិយាយពី <b>«ខ្ញុំ»</b> ធ្វើអ្វី ច្រើនជាង «យើង»"); if (g("st_a").length < g("st_s").length) tips.push("Action គួរ <b>វែងជាង</b> Situation (៥០–៦០% នៃចម្លើយ)");
+  $("st_out").innerHTML = `<div style="background:#f8f9fa;color:#0f172a;border-radius:10px;padding:10px">${parts.map(p => `<p style="margin:4px 0"><b style="color:#7048e8">${p[0]}</b> ${esc(p[1])}</p>`).join("")}</div>${tips.length ? "💡 " + tips.join("<br>💡 ") : "✅ ចម្លើយល្អ៖ មាន Action ច្បាស់ និងលទ្ធផលជាលេខ — និយាយក្នុង ១–២ នាទី។"}`; }
+["st_s", "st_t", "st_a", "st_r"].forEach(id => $(id).oninput = st);
+/* CV */
+function cv() { const g = id => esc($(id).value.trim()), L = id => $(id).value.split(/\n/).map(s => s.trim()).filter(Boolean).map(esc);
+  $("cv_out").innerHTML = `<div id="cv_doc" style="background:#fff;color:#111;border-radius:10px;padding:18px 20px;font-family:'Kantumruy Pro',Inter,sans-serif;max-width:640px;border:1px solid #dee2e6"><div style="font-size:22px;font-weight:800">${g("cv_n")}</div><div style="color:#7048e8;font-weight:700">${g("cv_j")}</div><div style="font-size:13px;color:#495057;margin-bottom:8px">${g("cv_c")}</div>
+  <div style="border-top:2px solid #7048e8;padding-top:6px"><b>សេចក្តីសង្ខេប</b><div style="font-size:14px">${g("cv_p")}</div></div>
+  <div style="margin-top:8px"><b>បទពិសោធន៍</b><ul style="margin:4px 0 0 18px;padding:0;font-size:14px">${L("cv_e").map(x => `<li>${x}</li>`).join("")}</ul></div>
+  <div style="margin-top:8px"><b>ការសិក្សា</b><ul style="margin:4px 0 0 18px;padding:0;font-size:14px">${L("cv_d").map(x => `<li>${x}</li>`).join("")}</ul></div>
+  <div style="margin-top:8px"><b>ជំនាញ</b><div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:4px">${$("cv_s").value.split(",").map(s => s.trim()).filter(Boolean).map(s => `<span style="background:#f3f0ff;color:#5f3dc4;border-radius:99px;padding:2px 10px;font-size:13px">${esc(s)}</span>`).join("")}</div></div></div>
+  <p style="font-size:13px">💡 CV ១ ទំព័រ · ចាប់ផ្តើមដោយ <b>កិរិយាសព្ទ</b> (បង្កើត, ដឹកនាំ, កាត់បន្ថយ) · ដាក់ <b>លេខ</b> · កុំដាក់លេខអត្តសញ្ញាណប័ណ្ណ ឬព័ត៌មានឯកជនលើស។</p>`; }
+["cv_n", "cv_j", "cv_c", "cv_p", "cv_e", "cv_d", "cv_s"].forEach(id => $(id).oninput = cv);
+$("cv_pr").onclick = () => { const w = window.open("", "_blank"); if (!w) { alert("Browser បិទផ្ទាំងថ្មី — សូម Ctrl+P"); return; } w.document.write(`<!doctype html><meta charset="utf-8"><title>CV</title><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;700&display=swap" rel="stylesheet"><body style="margin:24px">${$("cv_doc").outerHTML}<script>setTimeout(()=>print(),600)<\/script></body>`); w.document.close(); };
+/* Messages */
+const MS = { km: {
+  leave: (t, m, x) => `ជម្រាបសួរ ${t}\n\nខ្ញុំបាទ/នាងខ្ញុំ ${m} សូមអនុញ្ញាតឈប់សម្រាក ${x} ដោយសារមានធុរៈចាំបាច់ក្នុងគ្រួសារ។ ខ្ញុំនឹងតាមមេរៀន/ការងារដែលខកខានឲ្យទាន់ ហើយបានផ្ញើកិច្ចការទៅមិត្តរួមក្រុមរួចហើយ។\n\nសូមអរគុណ ${t} ដែលបានយល់ចិត្ត។\n${m}`,
+  late: (t, m, x) => `ជម្រាបសួរ ${t}\n\nខ្ញុំ ${m} សូមជូនដំណឹងថា ${x} ខ្ញុំនឹងមកដល់យឺតប្រហែល ១៥ នាទី ដោយសារស្ទះចរាចរណ៍។ សូមអភ័យទោសចំពោះការរំខាន។\n\n${m}`,
+  follow: (t, m, x) => `ជម្រាបសួរ ${t}\n\nសូមអរគុណដែលបានផ្តល់ឱកាសឲ្យខ្ញុំ ${m} ចូលសម្ភាសន៍សម្រាប់តួនាទី ${x}។ ខ្ញុំចូលចិត្តការពិភាក្សាអំពីគម្រោងរបស់ក្រុមហ៊ុន ហើយមានការចាប់អារម្មណ៍ខ្លាំងចំពោះតួនាទីនេះ។ បើត្រូវការឯកសារបន្ថែម សូមប្រាប់ខ្ញុំ។\n\nដោយក្តីគោរព\n${m}`,
+  apply: (t, m, x) => `ជម្រាបសួរ ${t}\n\nខ្ញុំឈ្មោះ ${m} សូមដាក់ពាក្យសម្រាប់តួនាទី ${x} ដែលបានប្រកាស។ ខ្ញុំមានជំនាញ […] និងបទពិសោធន៍ […] ដែលអាចជួយក្រុមរបស់លោក/លោកស្រីបាន។ សូមភ្ជាប់ CV មកជាមួយ។\n\nសង្ឃឹមថានឹងមានឱកាសសម្ភាសន៍។\nដោយក្តីគោរព\n${m}`,
+  thanks: (t, m, x) => `ជម្រាបសួរ ${t}\n\nខ្ញុំ ${m} សូមថ្លែងអំណរគុណយ៉ាងជ្រាលជ្រៅ ចំពោះការណែនាំ និងការអត់ធ្មត់របស់ ${t} ក្នុង${x}។ ចំណេះដឹងទាំងនោះនឹងជួយខ្ញុំជានិច្ច។\n\nដោយក្តីគោរព\n${m}` },
+ en: {
+  leave: (t, m, x) => `Dear ${t},\n\nI would like to request leave on ${x} due to a family matter. I have shared my tasks with my teammates and will catch up on anything I miss.\n\nThank you for your understanding.\nBest regards,\n${m}`,
+  late: (t, m, x) => `Dear ${t},\n\nI'm writing to let you know that I will arrive about 15 minutes late on ${x} because of heavy traffic. I apologise for the inconvenience.\n\nBest regards,\n${m}`,
+  follow: (t, m, x) => `Dear ${t},\n\nThank you for the opportunity to interview for the ${x} position. I enjoyed learning about your team's projects and I am very excited about the role. Please let me know if you need any further information.\n\nKind regards,\n${m}`,
+  apply: (t, m, x) => `Dear ${t},\n\nI am writing to apply for the ${x} position. I have skills in […] and experience in […], which I believe will help your team. Please find my CV attached.\n\nI look forward to the opportunity to discuss my application.\nKind regards,\n${m}`,
+  thanks: (t, m, x) => `Dear ${t},\n\nI would like to sincerely thank you for your guidance and patience during ${x}. What I learned from you will stay with me.\n\nWith gratitude,\n${m}` } };
+function ms() { const txt = MS[$("ms_l").value][$("ms_k").value]($("ms_to").value.trim() || "…", $("ms_me").value.trim() || "…", $("ms_x").value.trim() || "…");
+  $("ms_out").innerHTML = `<pre style="white-space:pre-wrap;background:#f8f9fa;color:#0f172a;border-radius:10px;padding:10px;font-family:inherit">${esc(txt)}</pre><button class="btn ghost" id="ms_cp">📋 Copy</button> <span style="font-size:13px">ពិនិត្យ និងកែឲ្យត្រូវស្ថានភាពពិត មុនផ្ញើ។</span>`;
+  $("ms_cp").onclick = () => { try { navigator.clipboard.writeText(txt); $("ms_cp").textContent = "✅ Copied"; } catch (e) { } }; }
+["ms_k", "ms_l"].forEach(id => $(id).onchange = ms); ["ms_to", "ms_me", "ms_x"].forEach(id => $(id).oninput = ms);
+/* Speaking pace */
+const FILL = ["um", "uh", "like", "actually", "basically", "so", "you know", "kind of", "literally"];
+function sp() { const t = $("sp_t").value, w = (t.match(/[A-Za-z']+/g) || []).length, low = " " + t.toLowerCase().replace(/[^a-z' ]+/g, " ") + " ";
+  const f = FILL.map(x => [x, (low.match(new RegExp(" " + x + " ", "g")) || []).length]).filter(x => x[1]); const tf = f.reduce((a, b) => a + b[1], 0), sec = Math.round(w / 130 * 60);
+  $("sp_out").innerHTML = `ពាក្យ <b>${w}</b> · ពេលនិយាយប្រហែល <b>${Math.floor(sec / 60)} នាទី ${sec % 60} វិនាទី</b> (130 wpm)<br>ពាក្យបំពេញចន្លោះ៖ <b>${tf}</b> ${f.map(x => `<code>${x[0]}×${x[1]}</code>`).join(" ")}<br>${tf / Math.max(w, 1) > .05 ? "⚠️ ច្រើនពេក — ជំនួសដោយ <b>ការផ្អាកស្ងាត់ ១ វិនាទី</b>" : "✅ ល្អ"} · 💡 «so» ពេលខ្លះត្រឹមត្រូវ — រាប់តែពេលប្រើជាទម្លាប់។`; }
+$("sp_t").oninput = sp;
+em(); poDraw(); st(); cv(); ms(); sp();
+})();
+</script>
+
+<h3>🏆 Quiz ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["How to Win Friends ដោយ?", ["Dale Carnegie", "Covey", "Goleman", "Dweck"], 0], ["Tuckman ដំណាក់កាលទី ២?", ["Storming", "Norming", "Forming", "Performing"], 0], ["Emotional Intelligence 1995?", ["Goleman", "Fisher", "Carnegie", "Taylor"], 0], ["Growth mindset?", ["Carol Dweck", "Eisenhower", "Tuckman", "Toyota"], 0], ["Excel ជា?", ["Hard skill", "Soft skill", "EQ", "Mindset"], 0], ["ស្តាប់សកម្ម?", ["សួរបញ្ជាក់ សង្ខេប", "ឆែកទូរស័ព្ទ", "កាត់សម្តី", "ស្ងៀមគ្មានប្រតិកម្ម"], 0], ["គោលបំណងសារ គួរនៅ?", ["ប្រយោគទី ១", "ចុងក្រោយ", "គ្មាន", "PS"], 0], ["10/20/30 Slides?", ["≤10", "30", "50", "100"], 0], ["ក្រុមឈ្លោះប្រធានបទ?", ["Storming", "Performing", "Adjourning", "Norming"], 0], ["Pomodoro?", ["25 + 5 នាទី", "60 + 0", "5 + 25", "90 + 30"], 0], ["សំខាន់ មិនបន្ទាន់?", ["កំណត់ពេលធ្វើ", "កាត់ចោល", "ប្រគល់", "ធ្វើភ្លាម"], 0], ["5 Whys មកពី?", ["Toyota", "Google", "Harvard", "NASA"], 0], ["Fact vs Opinion ការពារ?", ["ព័ត៌មានក្លែងក្លាយ", "ពេលវេលា", "លុយ", "Slides"], 0], ["Self-regulation?", ["ផ្អាកមុនឆ្លើយ", "ស្រែក", "ចាកចេញ", "Post"], 0], ["ឈ្នះ-ឈ្នះ?", ["Collaborating", "Competing", "Avoiding", "Accommodating"], 0], ["BATNA?", ["ជម្រើសល្អបំផុតបើមិនព្រមព្រៀង", "តម្លៃខ្ពស់បំផុត", "កិច្ចសន្យា", "បញ្ចុះតម្លៃ"], 0], ["SBI: B =", ["Behaviour", "Budget", "Boss", "Benefit"], 0], ["រិះគន់គួរ?", ["ឯកជន", "សាធារណៈ", "លើ Facebook", "តាមអ៊ីមែលក្រុម"], 0], ["STAR: A =", ["Action", "Answer", "Attitude", "Ability"], 0], ["ការងារសុំលុយមុន?", ["សញ្ញាបោក", "ធម្មតា", "ល្អ", "ចាំបាច់"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+<ol class='steps'><li><b>Soft Skills</b> (វគ្គនេះ) ✅</li><li>Business Management (ភាពជាអ្នកដឹកនាំ · HR)</li><li>ភាសាអង់គ្លេស (Business English · តេស្តកម្រិត)</li><li>Digital Marketing · PowerPoint (បទបង្ហាញ)</li></ol></section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="soft"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

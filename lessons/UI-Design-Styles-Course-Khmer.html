@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UI Design Styles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#5f3dc4; --accent2:#0ca678; --accent-soft:#f3f0ff;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#b197fc; --accent2:#63e6be; --accent-soft:#140f2b;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#b197fc; --accent2:#63e6be; --accent-soft:#140f2b;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#0d0221,#5f3dc4 40%,#0ca678 80%,#ffd43b);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/uxs.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/uxs.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>UI Design Styles — ១៦ Style សម្រាប់ App &amp; Web</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. UI Design Style ជាអ្វី?</a>
+<a href="#setup">២. ត្រៀមខ្លួន</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: UX vs UI និងច្បាប់ UX សំខាន់ៗ</a>
+<a href="#l2">មេរៀន ២: Design system: Token · Component · State</a>
+<a href="#l3">មេរៀន ៣: Skeuomorphism — ធ្វើត្រាប់វត្ថុពិត</a>
+<a href="#l4">មេរៀន ៤: Flat design — រាបស្មើ</a>
+<a href="#l5">មេរៀន ៥: Material Design — Google</a>
+<a href="#l6">មេរៀន ៦: Neumorphism — ប៉ោង/ផត</a>
+<a href="#l7">មេរៀន ៧: Glassmorphism — កញ្ចក់ព្រិល</a>
+<a href="#l8">មេរៀន ៨: Liquid Glass — Apple 2025</a>
+<a href="#l9">មេរៀន ៩: Claymorphism — ដីឥដ្ឋ 3D</a>
+<a href="#l10">មេរៀន ១០: Neubrutalism — ដិត ខ្មៅ ត្រង់</a>
+<a href="#l11">មេរៀន ១១: Minimal UI — តិចតួច</a>
+<a href="#l12">មេរៀន ១២: Dark mode — ផ្ទៃងងឹត</a>
+<a href="#l13">មេរៀន ១៣: Bento grid — ប្រអប់ក្រឡា</a>
+<a href="#l14">មេរៀន ១៤: Fluent Design — Microsoft</a>
+<a href="#l15">មេរៀន ១៥: Aqua / Y2K UI — ប៊ូតុងជែល</a>
+<a href="#l16">មេរៀន ១៦: Retro OS (Windows 95)</a>
+<a href="#l17">មេរៀន ១៧: Cyberpunk / Neon HUD</a>
+<a href="#l18">មេរៀន ១៨: Aurora UI — Gradient ព្រិល</a>
+<a href="#cheat">📋 សង្ខេប (Cheat sheet)</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងចុងវគ្គ</a>
+<a href="#pro-app">💻 UI Style Lab (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>📱 UI Design Styles — App ដដែល ១៦ រូបរាង</h2>
+  <p><b>Skeuomorphism</b>, Flat, <b>Material You</b>, <b>Neumorphism</b>, Glassmorphism, <b>Liquid Glass (2025)</b>, Claymorphism, <b>Neubrutalism</b>, Minimal, <b>Dark mode</b>, <b>Bento grid</b>, Fluent, Aqua Y2K, Win95, Neon HUD, Aurora — អេក្រង់ App ពិតគ្រប់ Style, ប្រវត្តិ, CSS, Figma, Accessibility + ច្បាប់ UX (Fitts, Hick, Nielsen)។</p>
+  <p><span class="badge">📘 ១៨ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">📱 អេក្រង់ App ១៦ Style + CSS</span><span class="badge">📱 UI Style Lab</span></p>
+</section>
+<section id="intro">
+<h2>១. UI Design Style ជាអ្វី?</h2>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@700&family=Roboto:wght@400;500&family=Space+Grotesk:wght@500;700;800&display=swap"><style>
+.uxstyle{margin:14px 0 6px;border-radius:14px;overflow:hidden;box-shadow:0 8px 26px rgba(0,0,0,.16);min-height:120px}
+.uxgal{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px;margin:12px 0}
+.uxgal a,.ul-grid .ulb{display:block;text-decoration:none;color:inherit;font-size:11.5px;text-align:center;line-height:1.25}
+.uxth{height:178px;overflow:hidden;border-radius:12px;position:relative;margin-bottom:4px;box-shadow:0 3px 10px rgba(0,0,0,.15);pointer-events:none}
+.uxth>div{width:320px;transform:scale(.35);transform-origin:0 0;position:absolute;left:0;top:0}.uxth .uxm{min-height:510px}
+#ul .ul-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin:10px 0}
+#ul .ul-grid .ulb{padding:3px;border:2px solid transparent;border-radius:14px;background:none;cursor:pointer}#ul .ul-grid .ulb.on{border-color:var(--accent)}
+#ul .ul-grid .uxth{height:152px}#ul .ul-grid .uxth>div{transform:scale(.30)}
+#ul pre{color:inherit;white-space:pre-wrap;word-break:break-all;font-size:11.5px;background:rgba(127,127,127,.12);padding:10px;border-radius:10px;max-height:260px;overflow:auto}
+#ul .ul-two{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:14px;align-items:start}@media(max-width:700px){#ul .ul-two{grid-template-columns:1fr}}
+.ul-ct{display:flex;gap:12px;flex-wrap:wrap;align-items:center}.ul-ct .sample{padding:14px 18px;border-radius:12px;font-weight:600;min-width:180px}
+.ul-pass{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;margin:2px;font-weight:600}.ul-pass.y{background:#d3f9d8;color:#2b8a3e}.ul-pass.n{background:#ffe3e3;color:#c92a2a}
+</style><script>/* UI Design Styles — live HTML/CSS phone mockups. window.UXS = { list, meta, css(id), render(id) } */
+(function () {
+const BASE = `.uxm{display:flex;justify-content:center;padding:22px 10px;border-radius:14px;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden;line-height:1.3;text-align:left}
+.uxm *{box-sizing:border-box;margin:0}
+.uxm .ux-scr{width:272px;max-width:100%;border-radius:30px;padding:16px;display:flex;flex-direction:column;gap:12px;min-height:500px;position:relative}
+.uxm .ux-top{display:flex;justify-content:space-between;align-items:center}
+.uxm .ux-t{font-weight:700;font-size:19px}.uxm .ux-hi{font-size:11px;opacity:.75;font-family:"Kantumruy Pro",Inter,sans-serif}
+.uxm .ux-av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:14px}
+.uxm .ux-card{padding:16px;display:flex;flex-direction:column;gap:4px}
+.uxm .ux-card small{font-size:12px;opacity:.8}.uxm .ux-card b{font-size:26px;letter-spacing:-.5px}
+.uxm .ux-bar{height:6px;border-radius:3px;margin-top:8px;overflow:hidden}.uxm .ux-bar i{display:block;height:100%;width:64%}
+.uxm .ux-row{display:flex;gap:10px}.uxm .ux-row button{flex:1;padding:11px 6px;font-weight:600;font-size:14px;font-family:inherit;cursor:pointer;border:0;line-height:1.2}
+.uxm .ux-list{display:flex;flex-direction:column;gap:8px}
+.uxm .ux-li{display:flex;align-items:center;gap:10px;padding:9px 10px;font-size:13px}.uxm .ux-li>span:nth-child(2){flex:1}.uxm .ux-li em{font-style:normal;font-weight:600}
+.uxm .ux-ic{width:30px;height:30px;display:grid;place-items:center;border-radius:10px;font-size:15px}
+.uxm .ux-tog{display:flex;justify-content:space-between;align-items:center;padding:10px;font-size:13px}
+.uxm .ux-sw{width:44px;height:24px;border-radius:12px;position:relative;display:inline-block;flex:none}.uxm .ux-sw i{position:absolute;top:3px;left:23px;width:18px;height:18px;border-radius:50%}
+.uxm .ux-nav{display:flex;justify-content:space-around;padding:10px;margin-top:auto;font-size:18px}.uxm .ux-nav span{padding:2px 14px;border-radius:14px}
+`;
+const R = {
+ skeuo: {
+  "": "background:repeating-linear-gradient(45deg,rgba(255,255,255,.08) 0 2px,transparent 2px 6px),#cfc8b8",
+  ".ux-scr": "background:linear-gradient(#f6f3ec,#e3ddcf);border:2px solid #7d725f;box-shadow:0 12px 30px rgba(0,0,0,.35),inset 0 1px 0 #fff;color:#3b3226",
+  ".ux-top": "margin:-16px -16px 0;padding:12px 16px;border-radius:28px 28px 0 0;background:linear-gradient(#b9c6d6,#6e86a4);border-bottom:1px solid #4a5f7a;color:#fff;text-shadow:0 -1px 0 rgba(0,0,0,.45)",
+  ".ux-av": "background:linear-gradient(#fff,#cfd6df);color:#3b4a5e;box-shadow:0 1px 2px rgba(0,0,0,.5);text-shadow:none",
+  ".ux-card": "background:linear-gradient(#6b4529,#3e2716);color:#f6e7c9;border-radius:10px;outline:2px dashed #c9a46a;outline-offset:-7px;box-shadow:0 4px 10px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.25)",
+  ".ux-bar": "background:#2a190d;box-shadow:inset 0 1px 2px #000", ".ux-bar i": "background:linear-gradient(#ffe08a,#d39b1f)",
+  ".ux-btn": "background:linear-gradient(#93bcf0,#3f78c8 50%,#2c60aa 51%,#4c88d8);color:#fff;border:1px solid #1d4580!important;border-radius:9px;text-shadow:0 -1px 0 rgba(0,0,0,.4);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(0,0,0,.4)",
+  ".ux-btn2": "background:linear-gradient(#fdfdfd,#d9d9d9 50%,#cacaca 51%,#e6e6e6);color:#333;border:1px solid #888!important;border-radius:9px;text-shadow:0 1px 0 #fff;box-shadow:inset 0 1px 0 #fff,0 1px 2px rgba(0,0,0,.3)",
+  ".ux-li": "background:#fff;border:1px solid #c8c0ad;border-radius:9px;box-shadow:0 1px 0 #fff,inset 0 1px 2px rgba(0,0,0,.08)",
+  ".ux-ic": "background:linear-gradient(#fff,#e0d9c8);box-shadow:0 1px 2px rgba(0,0,0,.35)", ".ux-li em": "color:#a33",
+  ".ux-tog": "background:#fff;border:1px solid #c8c0ad;border-radius:9px",
+  ".ux-sw": "background:linear-gradient(#2f6fd0,#69a4f0);box-shadow:inset 0 2px 3px rgba(0,0,0,.45)", ".ux-sw i": "background:linear-gradient(#fff,#ccc);box-shadow:0 1px 2px rgba(0,0,0,.5)",
+  ".ux-nav": "margin:auto -16px -16px;border-radius:0 0 28px 28px;background:linear-gradient(#4a4a4a,#111);color:#999", ".ux-nav .on": "color:#fff;background:linear-gradient(rgba(255,255,255,.25),rgba(255,255,255,.05));box-shadow:inset 0 0 0 1px rgba(255,255,255,.15)"
+ },
+ flat: {
+  "": "background:#ecf0f1", ".ux-scr": "background:#fff;color:#2c3e50;border-radius:24px",
+  ".ux-av": "background:#9b59b6;color:#fff;border-radius:4px", ".ux-card": "background:#3498db;color:#fff;border-radius:4px",
+  ".ux-bar": "background:#2980b9", ".ux-bar i": "background:#f1c40f",
+  ".ux-btn": "background:#2ecc71;color:#fff;border-radius:4px", ".ux-btn2": "background:#e74c3c;color:#fff;border-radius:4px",
+  ".ux-li": "background:#ecf0f1;border-radius:4px", ".ux-ic": "background:#e67e22;color:#fff;border-radius:4px", ".ux-li em": "color:#e74c3c",
+  ".ux-tog": "background:#ecf0f1;border-radius:4px", ".ux-sw": "background:#1abc9c;border-radius:4px", ".ux-sw i": "background:#fff;border-radius:3px",
+  ".ux-nav": "background:#2c3e50;color:#7f8c8d;border-radius:4px", ".ux-nav .on": "color:#fff"
+ },
+ material: {
+  "": "background:#f5effa", ".ux-scr": "background:#fffbfe;color:#1d1b20;font-family:Roboto,Inter,sans-serif;box-shadow:0 1px 3px rgba(0,0,0,.2)",
+  ".ux-av": "background:#6750a4;color:#fff", ".ux-card": "background:#eaddff;color:#21005d;border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.15)",
+  ".ux-bar": "background:#d0bcff", ".ux-bar i": "background:#6750a4",
+  ".ux-btn": "background:#6750a4;color:#fff;border-radius:20px", ".ux-btn2": "background:transparent;color:#6750a4;border:1px solid #79747e!important;border-radius:20px",
+  ".ux-li": "background:#f3edf7;border-radius:12px", ".ux-ic": "background:#e8def8;color:#1d192b;border-radius:50%", ".ux-li em": "color:#b3261e",
+  ".ux-tog": "background:#f3edf7;border-radius:12px", ".ux-sw": "background:#6750a4", ".ux-sw i": "background:#fff;width:20px;height:20px;top:2px",
+  ".ux-nav": "background:#f3edf7;border-radius:16px;color:#49454f", ".ux-nav .on": "background:#e8def8;color:#1d192b"
+ },
+ neumorph: {
+  "": "background:#e0e5ec", ".ux-scr": "background:#e0e5ec;color:#4a5568;box-shadow:9px 9px 18px #a3b1c6,-9px -9px 18px #fff",
+  ".ux-av": "background:#e0e5ec;color:#6c63ff;box-shadow:4px 4px 8px #a3b1c6,-4px -4px 8px #fff",
+  ".ux-card": "background:#e0e5ec;border-radius:20px;box-shadow:8px 8px 16px #a3b1c6,-8px -8px 16px #fff",
+  ".ux-bar": "background:#e0e5ec;box-shadow:inset 2px 2px 4px #a3b1c6,inset -2px -2px 4px #fff", ".ux-bar i": "background:#6c63ff",
+  ".ux-btn": "background:#e0e5ec;color:#6c63ff;border-radius:14px;box-shadow:5px 5px 10px #a3b1c6,-5px -5px 10px #fff",
+  ".ux-btn2": "background:#e0e5ec;color:#4a5568;border-radius:14px;box-shadow:inset 4px 4px 8px #a3b1c6,inset -4px -4px 8px #fff",
+  ".ux-li": "background:#e0e5ec;border-radius:14px;box-shadow:4px 4px 8px #a3b1c6,-4px -4px 8px #fff",
+  ".ux-ic": "box-shadow:inset 3px 3px 6px #a3b1c6,inset -3px -3px 6px #fff;border-radius:50%",
+  ".ux-tog": "border-radius:14px;box-shadow:inset 4px 4px 8px #a3b1c6,inset -4px -4px 8px #fff",
+  ".ux-sw": "background:#e0e5ec;box-shadow:inset 3px 3px 6px #a3b1c6,inset -3px -3px 6px #fff", ".ux-sw i": "background:#6c63ff;box-shadow:2px 2px 4px #a3b1c6",
+  ".ux-nav": "border-radius:16px;box-shadow:5px 5px 10px #a3b1c6,-5px -5px 10px #fff;color:#a0aec0", ".ux-nav .on": "color:#6c63ff;box-shadow:inset 3px 3px 6px #a3b1c6,inset -3px -3px 6px #fff"
+ },
+ glass: {
+  "": "background:radial-gradient(circle at 20% 25%,#ec4899 0,transparent 35%),radial-gradient(circle at 80% 75%,#06b6d4 0,transparent 38%),radial-gradient(circle at 75% 15%,#7c3aed 0,transparent 30%),#1e1b4b",
+  ".ux-scr": "background:rgba(255,255,255,.12);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.35);color:#fff",
+  ".ux-av": "background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.5)",
+  ".ux-card": "background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);border-radius:20px",
+  ".ux-bar": "background:rgba(255,255,255,.2)", ".ux-bar i": "background:#fff",
+  ".ux-btn": "background:rgba(255,255,255,.9);color:#4c1d95;border-radius:14px", ".ux-btn2": "background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.5)!important;border-radius:14px",
+  ".ux-li": "background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:14px", ".ux-ic": "background:rgba(255,255,255,.2)", ".ux-li em": "color:#fecdd3",
+  ".ux-tog": "background:rgba(255,255,255,.12);border-radius:14px", ".ux-sw": "background:rgba(255,255,255,.5)", ".ux-sw i": "background:#fff",
+  ".ux-nav": "background:rgba(255,255,255,.15);border-radius:18px;color:rgba(255,255,255,.6)", ".ux-nav .on": "color:#fff;background:rgba(255,255,255,.2)"
+ },
+ liquid: {
+  "": "background:linear-gradient(160deg,#ff9a3c,#ff3d77 35%,#5b2be0 70%,#00b4d8)",
+  ".ux-scr": "background:transparent;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.3);border-radius:38px",
+  ".ux-av,.ux-card,.ux-btn,.ux-btn2,.ux-li,.ux-tog,.ux-nav": "background:rgba(255,255,255,.1);backdrop-filter:blur(6px) saturate(180%);-webkit-backdrop-filter:blur(6px) saturate(180%);border:1px solid rgba(255,255,255,.45)!important;box-shadow:inset 0 1px 1px rgba(255,255,255,.9),inset 0 -1px 1px rgba(255,255,255,.25),0 8px 22px rgba(0,0,0,.18)",
+  ".ux-card": "border-radius:28px", ".ux-btn": "color:#fff;border-radius:999px;background:rgba(255,255,255,.28)", ".ux-btn2": "color:#fff;border-radius:999px",
+  ".ux-li": "border-radius:22px", ".ux-ic": "background:rgba(255,255,255,.2);border-radius:50%", ".ux-li em": "color:#fff",
+  ".ux-bar": "background:rgba(255,255,255,.25)", ".ux-bar i": "background:#fff",
+  ".ux-tog": "border-radius:22px", ".ux-sw": "background:#34c759", ".ux-sw i": "background:#fff;width:22px;height:18px;border-radius:9px;left:20px",
+  ".ux-nav": "border-radius:999px;margin:auto 10px 0", ".ux-nav .on": "background:rgba(255,255,255,.3)"
+ },
+ clay: {
+  "": "background:#ffe3ec", ".ux-scr": "background:#fff4f7;color:#7a2848;border-radius:36px;box-shadow:0 18px 30px rgba(176,71,106,.25),inset 0 -8px 16px rgba(0,0,0,.05),inset 0 8px 16px #fff",
+  ".ux-av": "background:#9ad7ff;color:#0b4f78;box-shadow:0 6px 10px rgba(30,120,180,.3),inset 0 -3px 6px rgba(0,0,0,.1),inset 0 3px 6px rgba(255,255,255,.8)",
+  ".ux-card,.ux-li,.ux-tog,.ux-btn,.ux-btn2,.ux-nav": "box-shadow:0 10px 18px rgba(176,71,106,.22),inset 0 -6px 12px rgba(0,0,0,.08),inset 0 6px 12px rgba(255,255,255,.7)",
+  ".ux-card": "background:#ffb4c8;border-radius:26px", ".ux-bar": "background:#ffd6e1", ".ux-bar i": "background:#ff6b9a;border-radius:3px",
+  ".ux-btn": "background:#c3f2c3;color:#1f5e2b;border-radius:20px", ".ux-btn2": "background:#ffe59a;color:#7a5a00;border-radius:20px",
+  ".ux-li": "background:#fff;border-radius:20px", ".ux-ic": "background:#e5dbff;border-radius:12px", ".ux-li em": "color:#d6336c",
+  ".ux-tog": "background:#fff;border-radius:20px", ".ux-sw": "background:#ff8fb1;box-shadow:inset 0 2px 4px rgba(0,0,0,.15)", ".ux-sw i": "background:#fff",
+  ".ux-nav": "background:#fff;border-radius:22px;color:#d4a5b5", ".ux-nav .on": "color:#7a2848;background:#ffe3ec"
+ },
+ brutal: {
+  "": "background:#fffbe6", ".ux-scr": "background:#fff;color:#000;border:3px solid #000;border-radius:18px;box-shadow:6px 6px 0 #000;font-family:'Space Grotesk',Inter,sans-serif",
+  ".ux-t": "font-weight:800", ".ux-av": "background:#a388ee;border:3px solid #000;border-radius:6px",
+  ".ux-card,.ux-btn,.ux-btn2,.ux-li,.ux-tog,.ux-nav": "border:3px solid #000!important;box-shadow:4px 4px 0 #000;border-radius:6px",
+  ".ux-card": "background:#ffde59", ".ux-bar": "background:#fff;border:2px solid #000;height:10px", ".ux-bar i": "background:#000",
+  ".ux-btn": "background:#ff6b6b;color:#000;font-weight:800", ".ux-btn2": "background:#4ecdc4;color:#000;font-weight:800",
+  ".ux-li": "background:#fff", ".ux-ic": "background:#a0e7e5;border:2px solid #000;border-radius:4px", ".ux-li em": "background:#ffde59;padding:0 4px",
+  ".ux-tog": "background:#fff", ".ux-sw": "background:#7bed9f;border:2px solid #000;border-radius:4px", ".ux-sw i": "background:#000;border-radius:2px;top:1px",
+  ".ux-nav": "background:#fff", ".ux-nav .on": "background:#ffde59;border:2px solid #000;border-radius:4px"
+ },
+ minimal: {
+  "": "background:#f4f4f2", ".ux-scr": "background:#fff;color:#111;border:1px solid #e8e8e8;padding:22px 20px;gap:16px",
+  ".ux-t": "font-weight:500", ".ux-av": "background:#f2f2f2;color:#111;font-weight:500",
+  ".ux-card": "padding:6px 0", ".ux-card b": "font-size:34px;font-weight:300", ".ux-bar": "background:#eee;height:2px", ".ux-bar i": "background:#111",
+  ".ux-btn": "background:#111;color:#fff;border-radius:10px;font-weight:500", ".ux-btn2": "background:transparent;color:#111;font-weight:500",
+  ".ux-list": "gap:0", ".ux-li": "border-bottom:1px solid #eee;padding:12px 0;border-radius:0", ".ux-ic": "background:transparent;width:20px", ".ux-li em": "font-weight:400;color:#888",
+  ".ux-tog": "padding:6px 0", ".ux-sw": "background:#111", ".ux-sw i": "background:#fff",
+  ".ux-nav": "border-top:1px solid #eee;color:#bbb", ".ux-nav .on": "color:#111"
+ },
+ dark: {
+  "": "background:#000", ".ux-scr": "background:#121212;color:#e6e6e6;border:1px solid #222",
+  ".ux-av": "background:#2c2c2c;color:#8ab4f8", ".ux-card": "background:#1e1e1e;border-radius:16px",
+  ".ux-bar": "background:#333", ".ux-bar i": "background:#8ab4f8",
+  ".ux-btn": "background:#8ab4f8;color:#0b1a33;border-radius:12px", ".ux-btn2": "background:#2c2c2c;color:#e6e6e6;border-radius:12px",
+  ".ux-li": "background:#1e1e1e;border-radius:12px", ".ux-ic": "background:#2c2c2c", ".ux-li em": "color:#f28b82",
+  ".ux-tog": "background:#1e1e1e;border-radius:12px", ".ux-sw": "background:#8ab4f8", ".ux-sw i": "background:#0b1a33",
+  ".ux-nav": "background:#1e1e1e;border-radius:16px;color:#777", ".ux-nav .on": "color:#8ab4f8;background:#2c2c2c"
+ },
+ bento: {
+  "": "background:#e9e9ee", ".ux-scr": "background:#f2f2f7;color:#1c1c1e;display:grid;grid-template-columns:1fr 1fr;gap:10px;align-content:start",
+  ".ux-top": "grid-column:1/-1", ".ux-av": "background:#1c1c1e;color:#fff",
+  ".ux-card": "grid-row:span 2;background:linear-gradient(160deg,#ff7a59,#ff3d77);color:#fff;border-radius:22px;justify-content:flex-end", ".ux-card b": "font-size:21px",
+  ".ux-bar": "background:rgba(255,255,255,.35)", ".ux-bar i": "background:#fff",
+  ".ux-row": "flex-direction:column;gap:10px", ".ux-btn": "background:#1c1c1e;color:#fff;border-radius:18px;padding:16px 6px!important", ".ux-btn2": "background:#fff;color:#1c1c1e;border-radius:18px;padding:16px 6px!important",
+  ".ux-list": "grid-column:1/-1;display:grid!important;grid-template-columns:1fr 1fr", ".ux-li": "background:#fff;border-radius:18px;flex-direction:column;align-items:flex-start;gap:4px",
+  ".ux-li:first-child": "grid-column:1/-1;flex-direction:row;align-items:center", ".ux-ic": "background:#f2f2f7", ".ux-li em": "color:#ff3d77",
+  ".ux-tog": "grid-column:1/-1;background:#fff;border-radius:18px", ".ux-sw": "background:#34c759", ".ux-sw i": "background:#fff",
+  ".ux-nav": "grid-column:1/-1;background:#fff;border-radius:18px;color:#aaa", ".ux-nav .on": "color:#1c1c1e"
+ },
+ fluent: {
+  "": "background:linear-gradient(135deg,#dfe9f5,#f3e7f0)", ".ux-scr": "background:rgba(243,243,243,.85);backdrop-filter:blur(30px);color:#1a1a1a;border-radius:8px;border:1px solid #d6d6d6;font-family:'Segoe UI',Inter,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.14)",
+  ".ux-t": "font-weight:600", ".ux-av": "background:#0f6cbd;color:#fff",
+  ".ux-card": "background:#fff;border:1px solid #e5e5e5;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,.06)", ".ux-bar": "background:#e0e0e0;height:4px", ".ux-bar i": "background:#0f6cbd",
+  ".ux-btn": "background:#0f6cbd;color:#fff;border-radius:4px;font-weight:600", ".ux-btn2": "background:#fff;color:#1a1a1a;border:1px solid #d1d1d1!important;border-radius:4px;font-weight:600",
+  ".ux-li": "background:#fff;border:1px solid #ececec;border-radius:6px", ".ux-ic": "background:#ebf3fc;border-radius:4px", ".ux-li em": "color:#c50f1f",
+  ".ux-tog": "background:#fff;border:1px solid #ececec;border-radius:6px", ".ux-sw": "background:#0f6cbd;height:20px;width:40px", ".ux-sw i": "background:#fff;width:12px;height:12px;top:4px;left:24px",
+  ".ux-nav": "background:#fff;border:1px solid #ececec;border-radius:6px;color:#707070", ".ux-nav .on": "color:#0f6cbd;box-shadow:inset 0 -3px 0 #0f6cbd;border-radius:0"
+ },
+ aqua: {
+  "": "background:linear-gradient(#7fb6ee,#2b6cc4),#4f8fd6", ".ux-scr": "background:repeating-linear-gradient(#f2f2f2 0 2px,#e6e6e6 2px 4px);color:#111;border-radius:14px;border:1px solid #6d6d6d;box-shadow:0 14px 30px rgba(0,0,0,.45);font-family:'Lucida Grande',Inter,sans-serif",
+  ".ux-top": "margin:-16px -16px 0;padding:10px 16px;border-radius:13px 13px 0 0;background:linear-gradient(#f4f4f4,#bdbdbd);border-bottom:1px solid #8a8a8a", ".ux-t": "font-size:15px",
+  ".ux-av": "background:radial-gradient(circle at 50% 30%,#fff 0,#ff9f9f 20%,#e0302a 70%);color:#fff;width:22px;height:22px;font-size:0",
+  ".ux-card": "background:linear-gradient(rgba(170,210,255,.9),rgba(90,150,230,.9));color:#fff;border-radius:14px;border:1px solid #2a64b0;box-shadow:inset 0 1px 0 rgba(255,255,255,.7);text-shadow:0 1px 1px rgba(0,0,0,.3)",
+  ".ux-bar": "background:#fff;border:1px solid #6b8fbf;height:10px;border-radius:5px", ".ux-bar i": "background:linear-gradient(#cfe6ff,#4a90e2 50%,#2f78d6 51%,#8cc4ff)",
+  ".ux-btn": "background:linear-gradient(#d4eaff,#6aaef5 50%,#2f86e8 51%,#8fd0ff);color:#001b3d;border:1px solid #1f5fae!important;border-radius:20px;box-shadow:0 2px 4px rgba(0,0,0,.35)",
+  ".ux-btn2": "background:linear-gradient(#ffffff,#e9e9e9 50%,#d6d6d6 51%,#f5f5f5);color:#111;border:1px solid #8a8a8a!important;border-radius:20px",
+  ".ux-li": "background:#fff;border:1px solid #b7b7b7;border-radius:4px", ".ux-li:nth-child(2)": "background:#e8f1fd", ".ux-ic": "background:transparent", ".ux-li em": "color:#a00",
+  ".ux-tog": "background:#fff;border:1px solid #b7b7b7;border-radius:4px", ".ux-sw": "background:linear-gradient(#cfe6ff,#3c8ae6);border:1px solid #1f5fae", ".ux-sw i": "background:linear-gradient(#fff,#ddd)",
+  ".ux-nav": "background:rgba(255,255,255,.55);border:1px solid #999;border-radius:12px", ".ux-nav .on": "background:radial-gradient(#fff,transparent)"
+ },
+ retro: {
+  "": "background:#008080", ".ux-scr": "background:#c0c0c0;color:#000;border-radius:0;border:2px solid;border-color:#fff #404040 #404040 #fff;box-shadow:inset -1px -1px #808080,inset 1px 1px #dfdfdf;font-family:Tahoma,'MS Sans Serif',Inter,sans-serif;padding:3px 10px 10px;gap:9px",
+  ".ux-top": "margin:0 -7px;padding:3px 6px;background:linear-gradient(90deg,#000080,#1084d0);color:#fff", ".ux-t": "font-size:13px", ".ux-hi": "display:none",
+  ".ux-av": "width:18px;height:16px;border-radius:0;background:#c0c0c0;color:#000;font-size:11px;border:1px solid;border-color:#fff #404040 #404040 #fff",
+  ".ux-card,.ux-li,.ux-tog": "background:#fff;border:2px solid;border-color:#808080 #fff #fff #808080;border-radius:0", ".ux-card b": "font-size:22px",
+  ".ux-bar": "border-radius:0;height:14px;border:1px solid #808080;background:#fff", ".ux-bar i": "background:repeating-linear-gradient(90deg,#000080 0 9px,transparent 9px 11px)",
+  ".ux-btn,.ux-btn2": "background:#c0c0c0;color:#000;border-radius:0;border:2px solid!important;border-color:#fff #404040 #404040 #fff!important;font-size:12px;font-weight:400",
+  ".ux-ic": "border-radius:0;font-size:13px", ".ux-sw": "width:16px;height:16px;border-radius:0;background:#fff;border:2px solid;border-color:#808080 #fff #fff #808080", ".ux-sw i": "background:none;left:1px;top:-4px;width:auto;height:auto;color:#000",
+  ".ux-nav": "margin:auto -10px -10px;background:#c0c0c0;border-top:2px solid #fff;justify-content:flex-start;gap:6px;padding:4px", ".ux-nav span": "border-radius:0;border:2px solid;border-color:#fff #404040 #404040 #fff;font-size:13px;padding:1px 10px", ".ux-nav .on": "border-color:#404040 #fff #fff #404040;background:#dcdcdc"
+ },
+ neon: {
+  "": "background:#05000f", ".ux-scr": "background:#0d0221;color:#e0f7ff;border:1px solid #ff2bd6;border-radius:18px;box-shadow:0 0 22px rgba(255,43,214,.45),inset 0 0 22px rgba(255,43,214,.12);font-family:Orbitron,'Space Grotesk',sans-serif",
+  ".ux-t": "text-shadow:0 0 8px #00f0ff;letter-spacing:2px;font-size:16px", ".ux-av": "border:1px solid #00f0ff;color:#00f0ff;box-shadow:0 0 10px #00f0ff;border-radius:4px",
+  ".ux-card": "border:1px solid #00f0ff;box-shadow:0 0 14px rgba(0,240,255,.4);clip-path:polygon(0 0,92% 0,100% 18%,100% 100%,8% 100%,0 82%);background:rgba(0,240,255,.06)",
+  ".ux-card b": "color:#f9f871;text-shadow:0 0 10px #f9f871", ".ux-bar": "background:#1b0b3a", ".ux-bar i": "background:linear-gradient(90deg,#ff2bd6,#00f0ff);box-shadow:0 0 8px #ff2bd6",
+  ".ux-btn": "background:#ff2bd6;color:#0d0221;clip-path:polygon(8% 0,100% 0,92% 100%,0 100%);box-shadow:0 0 14px #ff2bd6", ".ux-btn2": "background:transparent;color:#00f0ff;border:1px solid #00f0ff!important;text-shadow:0 0 6px #00f0ff",
+  ".ux-li": "border-left:3px solid #ff2bd6;background:rgba(255,43,214,.07);font-size:12px", ".ux-ic": "color:#00f0ff", ".ux-li em": "color:#ff2bd6;text-shadow:0 0 6px #ff2bd6",
+  ".ux-tog": "border:1px dashed #00f0ff;font-size:12px", ".ux-sw": "background:#1b0b3a;border:1px solid #00f0ff", ".ux-sw i": "background:#00f0ff;box-shadow:0 0 10px #00f0ff;top:2px",
+  ".ux-nav": "border-top:1px solid #ff2bd6;color:#6b5a8a", ".ux-nav .on": "color:#00f0ff;text-shadow:0 0 10px #00f0ff"
+ },
+ aurora: {
+  "": "background:radial-gradient(ellipse at 30% 10%,rgba(0,245,160,.55),transparent 45%),radial-gradient(ellipse at 80% 30%,rgba(168,85,247,.6),transparent 45%),radial-gradient(ellipse at 50% 100%,rgba(0,217,245,.4),transparent 50%),#050816",
+  ".ux-scr": "background:rgba(5,8,22,.55);backdrop-filter:blur(24px);color:#e2e8f0;border:1px solid rgba(255,255,255,.12)",
+  ".ux-t": "font-weight:300;letter-spacing:1px", ".ux-av": "background:linear-gradient(135deg,#00f5a0,#a855f7);color:#050816",
+  ".ux-card": "background:linear-gradient(135deg,rgba(0,245,160,.25),rgba(168,85,247,.3));border:1px solid rgba(255,255,255,.18);border-radius:20px", ".ux-card b": "font-weight:300",
+  ".ux-bar": "background:rgba(255,255,255,.12)", ".ux-bar i": "background:linear-gradient(90deg,#00f5a0,#00d9f5,#a855f7)",
+  ".ux-btn": "background:linear-gradient(90deg,#00f5a0,#a855f7);color:#050816;border-radius:14px", ".ux-btn2": "background:rgba(255,255,255,.06);color:#e2e8f0;border:1px solid rgba(255,255,255,.2)!important;border-radius:14px",
+  ".ux-li": "background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px", ".ux-ic": "background:rgba(255,255,255,.08)", ".ux-li em": "color:#f472b6",
+  ".ux-tog": "background:rgba(255,255,255,.05);border-radius:14px", ".ux-sw": "background:linear-gradient(90deg,#00f5a0,#a855f7)", ".ux-sw i": "background:#050816",
+  ".ux-nav": "background:rgba(255,255,255,.06);border-radius:18px;color:#64748b", ".ux-nav .on": "color:#00f5a0"
+ },
+};
+const META = {
+ skeuo: { n: "Skeuomorphism", km: "ធ្វើត្រាប់វត្ថុពិត", y: "2007–2013" }, flat: { n: "Flat design", km: "រាបស្មើ ពណ៌ផ្ទៃ", y: "2010–2013" },
+ material: { n: "Material Design", km: "Google · Material You", y: "2014 · 2021" }, neumorph: { n: "Neumorphism", km: "ប៉ោង/ផត ពណ៌តែមួយ", y: "2019–2020" },
+ glass: { n: "Glassmorphism", km: "កញ្ចក់ព្រិល", y: "2020" }, liquid: { n: "Liquid Glass", km: "កញ្ចក់រាវ Apple", y: "2025" },
+ clay: { n: "Claymorphism", km: "ដីឥដ្ឋ 3D ទន់", y: "2021–2022" }, brutal: { n: "Neubrutalism", km: "បន្ទាត់ខ្មៅក្រាស់ ស្រមោលរឹង", y: "2021+" },
+ minimal: { n: "Minimal UI", km: "តិចតួច White space", y: "គ្រប់សម័យ" }, dark: { n: "Dark mode", km: "ផ្ទៃងងឹត", y: "2018–2019" },
+ bento: { n: "Bento grid", km: "ប្រអប់ក្រឡាដូចបាយប្រអប់", y: "2022+" }, fluent: { n: "Fluent Design", km: "Microsoft Windows 11", y: "2017 · 2023" },
+ aqua: { n: "Aqua / Y2K UI", km: "ប៊ូតុងជែល Mac OS X", y: "2000" }, retro: { n: "Retro OS (Win95)", km: "ប៊ូតុង 3D ប្រផេះ", y: "1995" },
+ neon: { n: "Cyberpunk / Neon HUD", km: "ហ្គេម Sci-fi", y: "2020" }, aurora: { n: "Aurora UI", km: "Gradient ព្រិល", y: "2021+" },
+};
+const css = id => Object.entries(R[id]).map(([s, d]) => s.split(",").map(x => `.ux-${id}${x ? " " + x.trim() : ""}`).join(",") + "{" + d + "}").join("\n");
+if (!document.getElementById("uxcss")) { const st = document.createElement("style"); st.id = "uxcss"; st.textContent = BASE + Object.keys(R).map(css).join("\n"); document.head.appendChild(st); }
+const render = id => `<div class="uxm ux-${id}" role="img" aria-label="${META[id].n} UI example"><div class="ux-scr">
+<div class="ux-top"><div><div class="ux-hi">សួស្តី Dara 👋</div><div class="ux-t">My Wallet</div></div><span class="ux-av">D</span></div>
+<div class="ux-card"><small>Total balance</small><b>$2,450.80</b><div class="ux-bar"><i></i></div></div>
+<div class="ux-row"><button class="ux-btn" type="button" tabindex="-1">Send</button><button class="ux-btn2" type="button" tabindex="-1">Receive</button></div>
+<div class="ux-list"><div class="ux-li"><span class="ux-ic">☕</span><span>Coffee</span><em>-$2.50</em></div><div class="ux-li"><span class="ux-ic">🛵</span><span>Grab ride</span><em>-$1.80</em></div></div>
+<div class="ux-tog"><span>Notifications</span><span class="ux-sw"><i>${id === "retro" ? "✓" : ""}</i></span></div>
+<nav class="ux-nav"><span class="on">⌂</span><span>◎</span><span>♡</span><span>☰</span></nav></div></div>`;
+window.UXS = { list: Object.keys(R), meta: META, css, render };
+function fill() { document.querySelectorAll(".uxstyle[data-s]").forEach(el => { if (!el.dataset.done) { el.innerHTML = render(el.dataset.s); el.dataset.done = 1; } }); }
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fill); else fill();
+})();
+</script>
+<p><b>UI style</b> = «ភាសារូបរាង» របស់ App/Website — ពណ៌ Radius ស្រមោល Blur Border Font។ App ដដែល អាចមានអារម្មណ៍ខុសគ្នាស្រឡះ (ទុកចិត្ត · សប្បាយ · ប្រណីត · Tech)។ វគ្គនេះមាន <b>Style ១៦</b> — នីមួយៗមាន <b>អេក្រង់ App ពិត</b> (HTML/CSS) ប្រវត្តិ (អ្នកណាបង្កើត) លក្ខណៈ វិធីធ្វើក្នុង Figma Accessibility និងលំហាត់។ ជាវគ្គបន្ថែមលើវគ្គ <b>UX/UI Design</b> (Research → Wireframe → Prototype)។<p><b>📱 Style ទាំង ១៦ (ចុចដើម្បីទៅមេរៀន)</b></p><div class="uxgal"><a href="#l3"><div class="uxth"><div><div class="uxstyle" data-s="skeuo" style="margin:0;box-shadow:none"></div></div></div>1. Skeuomorphism</a><a href="#l4"><div class="uxth"><div><div class="uxstyle" data-s="flat" style="margin:0;box-shadow:none"></div></div></div>2. Flat design</a><a href="#l5"><div class="uxth"><div><div class="uxstyle" data-s="material" style="margin:0;box-shadow:none"></div></div></div>3. Material Design</a><a href="#l6"><div class="uxth"><div><div class="uxstyle" data-s="neumorph" style="margin:0;box-shadow:none"></div></div></div>4. Neumorphism</a><a href="#l7"><div class="uxth"><div><div class="uxstyle" data-s="glass" style="margin:0;box-shadow:none"></div></div></div>5. Glassmorphism</a><a href="#l8"><div class="uxth"><div><div class="uxstyle" data-s="liquid" style="margin:0;box-shadow:none"></div></div></div>6. Liquid Glass</a><a href="#l9"><div class="uxth"><div><div class="uxstyle" data-s="clay" style="margin:0;box-shadow:none"></div></div></div>7. Claymorphism</a><a href="#l10"><div class="uxth"><div><div class="uxstyle" data-s="brutal" style="margin:0;box-shadow:none"></div></div></div>8. Neubrutalism</a><a href="#l11"><div class="uxth"><div><div class="uxstyle" data-s="minimal" style="margin:0;box-shadow:none"></div></div></div>9. Minimal UI</a><a href="#l12"><div class="uxth"><div><div class="uxstyle" data-s="dark" style="margin:0;box-shadow:none"></div></div></div>10. Dark mode</a><a href="#l13"><div class="uxth"><div><div class="uxstyle" data-s="bento" style="margin:0;box-shadow:none"></div></div></div>11. Bento grid</a><a href="#l14"><div class="uxth"><div><div class="uxstyle" data-s="fluent" style="margin:0;box-shadow:none"></div></div></div>12. Fluent Design</a><a href="#l15"><div class="uxth"><div><div class="uxstyle" data-s="aqua" style="margin:0;box-shadow:none"></div></div></div>13. Aqua / Y2K UI</a><a href="#l16"><div class="uxth"><div><div class="uxstyle" data-s="retro" style="margin:0;box-shadow:none"></div></div></div>14. Retro OS (Win95)</a><a href="#l17"><div class="uxth"><div><div class="uxstyle" data-s="neon" style="margin:0;box-shadow:none"></div></div></div>15. Cyberpunk / Neon HUD</a><a href="#l18"><div class="uxth"><div><div class="uxstyle" data-s="aurora" style="margin:0;box-shadow:none"></div></div></div>16. Aurora UI</a></div></p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#868e96"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#868e96">1987</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Apple HIG</text><circle cx="164" cy="115" r="11" fill="#000080"/><text x="164" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#000080">1995</text><text x="164" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Windows 95</text><circle cx="248" cy="115" r="11" fill="#2f86e8"/><text x="248" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#2f86e8">2000</text><text x="248" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Aqua</text><circle cx="332" cy="115" r="11" fill="#6b4529"/><text x="332" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#6b4529">2007</text><text x="332" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Skeuomorphism</text><circle cx="416" cy="115" r="11" fill="#3498db"/><text x="416" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#3498db">2010</text><text x="416" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Metro / Flat</text><circle cx="500" cy="115" r="11" fill="#6750a4"/><text x="500" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#6750a4">2014</text><text x="500" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Material</text><circle cx="584" cy="115" r="11" fill="#0f6cbd"/><text x="584" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#0f6cbd">2017</text><text x="584" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Fluent</text><circle cx="668" cy="115" r="11" fill="#4a5568"/><text x="668" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#4a5568">2019</text><text x="668" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Neumorph · Dark</text><circle cx="752" cy="115" r="11" fill="#ec4899"/><text x="752" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#ec4899">2020</text><text x="752" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Glass</text><circle cx="836" cy="115" r="11" fill="#ff6b6b"/><text x="836" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#ff6b6b">2021</text><text x="836" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Clay · Neubrutal</text><circle cx="920" cy="115" r="11" fill="#00b4d8"/><text x="920" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#00b4d8">2025</text><text x="920" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Liquid Glass</text></svg><figcaption>🖼️ ប្រវត្តិ UI Style</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>1987</td><td><b>Apple Human Interface Guidelines</b></td><td>ច្បាប់ UI ផ្លូវការដំបូងៗ</td></tr><tr><td>1993</td><td><b>Don Norman</b> (Apple)</td><td>ពាក្យ «User Experience»</td></tr><tr><td>1995</td><td><b>Microsoft Windows 95</b></td><td>ប៊ូតុង 3D bevel</td></tr><tr><td>2000</td><td><b>Steve Jobs</b> — Aqua</td><td>ប៊ូតុងជែល Y2K</td></tr><tr><td>2007</td><td><b>Apple iPhone</b></td><td>Skeuomorphism</td></tr><tr><td>2010 · 2013</td><td><b>Microsoft Metro</b> · <b>iOS 7</b></td><td>Flat design</td></tr><tr><td>2014 · 2021</td><td><b>Google</b> (Matías Duarte)</td><td>Material · Material You</td></tr><tr><td>2017</td><td><b>Microsoft</b></td><td>Fluent Design</td></tr><tr><td>2018–19</td><td>macOS Mojave · iOS 13 · Android 10</td><td>Dark mode</td></tr><tr><td>2019–20</td><td><b>Alexander Plyuto</b> · <b>Michal Malewicz</b></td><td>Neumorphism · Glassmorphism</td></tr><tr><td>2021</td><td>Gumroad · Dribbble</td><td>Neubrutalism · Claymorphism · Aurora</td></tr><tr><td>2025</td><td><b>Apple</b> WWDC</td><td>Liquid Glass (iOS 26)</td></tr></table>
+
+<h3>ប្រើសម្រាប់អ្វី?</h3>
+<div class="grid"><div class="card"><b>📱 Mobile App</b><br>iOS · Android</div><div class="card"><b>🌐 Website</b><br>Landing page · SaaS</div><div class="card"><b>📊 Dashboard</b><br>Admin · Analytics</div><div class="card"><b>🎮 Game UI</b><br>HUD · Menu</div><div class="card"><b>🧩 Design system</b><br>Token · Component</div><div class="card"><b>💼 អាជីព</b><br>UI Designer · Product Designer</div></div>
+
+</section>
+<section id="setup">
+<h2>២. ត្រៀមខ្លួន</h2>
+<ol class='steps'><li><b>Figma</b> (ឥតគិតថ្លៃ) — Auto layout, Components, Variables, Effects (Background blur, Inner shadow)។</li><li>UI Kit ឥតគិតថ្លៃ៖ Material 3 Design Kit · Apple iOS 26 UI Kit · Fluent 2 Web — ក្នុង Figma Community។</li><li>Browser + DevTools — សាក CSS ផ្ទាល់។</li><li>WebAIM Contrast Checker (ឬ <b>Contrast Checker</b> ក្នុង App ចុងវគ្គ)។</li><li>រៀនវគ្គ <b>UX/UI Design</b> និង <b>Graphic Design Styles</b> ជាមួយ។</li></ol></section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>UX vs UI និងច្បាប់ UX សំខាន់ៗ</h2>
+<p><b>UX (User Experience)</b> = បទពិសោធន៍ — ងាយប្រើ? រកឃើញ? លឿន? · <b>UI (User Interface)</b> = រូបរាង — ពណ៌ Font ប៊ូតុង ស្រមោល។ <b>UI Style</b> ប្តូរ «សំលៀកបំពាក់» តែ UX ល្អត្រូវនៅដដែល — ឧទាហរណ៍ App «My Wallet» ក្នុងវគ្គនេះ មានរចនាសម្ព័ន្ធដដែលក្នុង Style ទាំង ១៦។ ពាក្យ «User Experience» ល្បីដោយ <b>Don Norman</b> នៅ Apple (1993)។</p><table><tr><th>ច្បាប់</th><th>អ្នករកឃើញ</th><th>ន័យក្នុង UI</th></tr><tr><td>Fitts's law (1954)</td><td>Paul Fitts</td><td>គោលដៅធំ និងជិត = ចុចលឿន → ប៊ូតុងសំខាន់ធំ នៅក្បែរមេដៃ</td></tr><tr><td>Hick's law (1952)</td><td>Hick &amp; Hyman</td><td>ជម្រើសច្រើន = សម្រេចចិត្តយឺត → កាត់ Menu</td></tr><tr><td>Miller (1956)</td><td>George Miller</td><td>ការចងចាំខ្លី មានកំណត់ (~7±2) → ចែកព័ត៌មានជាក្រុម (chunking)</td></tr><tr><td>Jakob's law (2000)</td><td>Jakob Nielsen</td><td>អ្នកប្រើចង់ឲ្យ App ដើរដូច App ផ្សេងដែលគេស្គាល់</td></tr><tr><td>10 Heuristics (1994)</td><td>Jakob Nielsen</td><td>Visibility of status · ភាសាអ្នកប្រើ · Undo · Consistency · ការពារកំហុស…</td></tr><tr><td>Aesthetic-usability</td><td>Kurosu &amp; Kashimura (1995)</td><td>រូបស្អាត → អ្នកប្រើគិតថាងាយប្រើជាង (តែកុំយកស្អាតជំនួសងាយ)</td></tr></table>
+<div class="grid"><div class="card"><b>👆 Touch target</b><br>≥ 44pt (Apple) · 48dp (Material)</div><div class="card"><b>🌓 Contrast</b><br>អក្សរ ≥ 4.5:1 (WCAG AA)</div><div class="card"><b>📏 8-pt grid</b><br>Spacing 4 · 8 · 16 · 24 · 32</div><div class="card"><b>🔁 Consistency</b><br>ប៊ូតុងដូចគ្នា ធ្វើការដូចគ្នា</div></div>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>ហេតុអ្វីប៊ូតុង «Pay» ក្នុង App ទូរស័ព្ទ គួរធំ និងនៅខាងក្រោមអេក្រង់?</p><details><summary>មើលចម្លើយ</summary><p>ច្បាប់ <b>Fitts</b> — គោលដៅធំ និងជិតមេដៃ (តំបន់ខាងក្រោម «thumb zone») ចុចបានលឿន និងមិនសូវខុស។</p></details></div>
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>Design system: Token · Component · State</h2>
+<p>Style ណាក៏ដោយ ត្រូវសង់ជា <b>Design system</b>៖ <b>Tokens</b> (តម្លៃតូចៗដែលប្រើឡើងវិញ) → <b>Components</b> (ប៊ូតុង Card Input Switch Nav) → <b>Patterns</b> (Login, Checkout)។ ប្តូរ Style = ប្តូរ Token ភាគច្រើន!</p><table><tr><th>Token</th><th>ឧទាហរណ៍</th><th>Style ផ្លាស់ប្តូរអ្វី</th></tr><tr><td>Color</td><td>--primary: #6750a4</td><td>Flat ឆ្អៅ · Dark ផ្ទៃ #121212</td></tr><tr><td>Radius</td><td>--radius: 16px</td><td>Retro 0 · Fluent 4–8 · Clay 24+ · Liquid 999</td></tr><tr><td>Shadow / Elevation</td><td>0 2px 6px rgba(0,0,0,.15)</td><td>Neumorph ស្រមោល ២ · Brutal ស្រមោលរឹង 4px 4px 0</td></tr><tr><td>Blur</td><td>backdrop-filter: blur(20px)</td><td>Glass · Liquid · Fluent (Acrylic)</td></tr><tr><td>Border</td><td>1px solid</td><td>Brutal 3px ខ្មៅ · Glass ស ថ្លា</td></tr><tr><td>Typography</td><td>Inter 16/24</td><td>Neon Orbitron · Minimal ស្តើង</td></tr></table>
+<div class="grid"><div class="card"><b>🖱️ States</b><br>Default · Hover · Pressed · Focus · Disabled · Loading</div><div class="card"><b>🌗 Theme</b><br>Light / Dark ដោយ Variables</div><div class="card"><b>📚 Library</b><br>Figma Components + Variants</div><div class="card"><b>🧭 Platform</b><br>Apple HIG · Material · Fluent</div></div>
+<div class="note">💡 Design system ល្បីៗ៖ <b>Material</b> (Google), <b>Human Interface Guidelines</b> (Apple — កំណែដំបូង 1987), <b>Fluent</b> (Microsoft), <b>Carbon</b> (IBM), <b>Polaris</b> (Shopify)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>ក្រុមចង់ប្តូរ App ពី Flat ទៅ Dark mode។ បើមាន Token ល្អ ត្រូវកែត្រង់ណាខ្លះ?</p><details><summary>មើលចម្លើយ</summary><p>ភាគច្រើនកែ <b>Color tokens</b> (surface, text, primary) ក្នុង Mode ថ្មី — Component មិនបាច់គូរឡើងវិញ។ នេះជាហេតុផលដែលត្រូវប្រើ Variables/Tokens។</p></details></div>
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Skeuomorphism — ធ្វើត្រាប់វត្ថុពិត</h2>
+<div class="uxstyle" data-s="skeuo"></div><p style="font-size:12px;opacity:.7;margin:0 0 10px">📱 អេក្រង់ App ឧទាហរណ៍ — សង់ពិតដោយ HTML/CSS (មិនមែនរូបថត) · មើល CSS ពេញក្នុង <b>UI Style Lab</b> ចុងវគ្គ</p><p><b>Skeuomorphism — ធ្វើត្រាប់វត្ថុពិត</b> — UI ធ្វើត្រាប់វត្ថុក្នុងជីវិតពិត — ស្បែក ឈើ ក្រដាស ដែក ប៊ូតុងភ្លឺចាំង (glossy) ស្រមោលពិត ដើម្បីឲ្យអ្នកប្រើថ្មីយល់ថា «ចុចបាន»។</p><table><tr><th></th><th>ព័ត៌មាន</th></tr><tr><td>📅 ឆ្នាំ</td><td>2007 (iPhone) → 2013</td></tr><tr><td>👤 អ្នកបង្កើត / ល្បីដោយ</td><td><b>Apple</b> iPhone OS 1 – iOS 6 (ក្រុម Scott Forstall) · ពាក្យមកពីក្រិក <i>skeuos</i> (ឧបករណ៍/ភាជន៍)</td></tr><tr><td>🌍 ប្រភព / ប្រើក្នុង</td><td>iOS ដំបូង (Notes ក្រដាសលឿង, iBooks ធ្នើឈើ, Game Center តុបៀ)</td></tr><tr><td>♿ Accessibility</td><td>Contrast ល្អ ព្រោះប៊ូតុងមើលទៅ «ចុចបាន» ច្បាស់ (affordance ខ្ពស់)</td></tr></table>
+<div class="grid"><div class="card"><b>🧵 Texture</b><br>ស្បែក ក្រណាត់ ឈើ</div><div class="card"><b>💎 Gloss</b><br>Gradient ពាក់កណ្តាលភ្លឺ</div><div class="card"><b>🌑 ស្រមោលពិត</b><br>Inset + Drop shadow</div><div class="card"><b>🧭 Metaphor</b><br>Icon ដូចវត្ថុពិត</div></div>
+<div class="note">💡 <b>🛠️ ធ្វើក្នុង Figma៖</b> Gradient ច្រើនជាន់ + Inner shadow + Texture image (Fill → Image, mode Multiply)។<br><b>✅ ប្រើពេល៖</b> Game UI · App ឧបករណ៍តន្ត្រី (knob, slider) · App កុមារ</div>
+<div class="warn">⚠️ <b>⚠️ កំហុសញឹកញាប់៖</b> Texture ធ្ងន់ ធ្វើឲ្យ App យឺត និងមើលទៅចាស់; Metaphor ខុស (ឧ. Floppy disk ក្មេងមិនស្គាល់)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>ហេតុអ្វី Apple ឈប់ប្រើ Skeuomorphism ក្នុង iOS 7 (2013)?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះអ្នកប្រើ <b>ស្គាល់ Touch screen ហើយ</b> មិនត្រូវការ metaphor ទៀត; Texture ធ្វើឲ្យរញ៉េរញ៉ៃ — iOS 7 (ក្រុម Jony Ive) ប្តូរទៅ Flat ស្រាល។</p></details></div>
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Flat design — រាបស្មើ</h2>
+<div class="uxstyle" data-s="flat"></div><p style="font-size:12px;opacity:.7;margin:0 0 10px">📱 អេក្រង់ App ឧទាហរណ៍ — សង់ពិតដោយ HTML/CSS (មិនមែនរូបថត) · មើល CSS ពេញក្នុង <b>UI Style Lab</b> ចុងវគ្គ</p><p><b>Flat design — រាបស្មើ</b> — ដកស្រមោល Texture Gradient ចេញ — ពណ៌ផ្ទៃ (flat color) រាងសាមញ្ញ Typography ច្បាស់ ផ្ទុកលឿន។</p><table><tr><th></th><th>ព័ត៌មាន</th></tr><tr><td>📅 ឆ្នាំ</td><td>2010 (Windows Phone 7) · 2012 · 2013 (iOS 7)</td></tr><tr><td>👤 អ្នកបង្កើត / ល្បីដោយ</td><td><b>Microsoft Metro</b> (Zune 2006, Windows Phone 7 2010, Windows 8 2012) · <b>Apple iOS 7</b> (2013) · ឥទ្ធិពល Swiss design</td></tr><tr><td>🌍 ប្រភព / ប្រើក្នុង</td><td>Microsoft → Apple → Web (Flat UI kit)</td></tr><tr><td>♿ Accessibility</td><td>ប្រយ័ត្នពណ៌ឆ្អៅ+អក្សរស (ឧ. បៃតង #2ecc71 + ស ≈ 2:1 មិនឆ្លង AA)</td></tr></table>
+<div class="grid"><div class="card"><b>🟦 ពណ៌ផ្ទៃ</b><br>គ្មាន gradient</div><div class="card"><b>⬛ រាងសាមញ្ញ</b><br>Radius តូច</div><div class="card"><b>🔤 Typography</b><br>ចំណងជើងធំ</div><div class="card"><b>⚡ លឿន</b><br>File តូច</div></div>
+<div class="note">💡 <b>🛠️ ធ្វើក្នុង Figma៖</b> Rectangle + Fill ពណ៌ ១ · Radius 4 · គ្មាន Effects · Icon line/solid។<br><b>✅ ប្រើពេល៖</b> Website · Dashboard · Infographic · App សាមញ្ញ</div>
+<div class="warn">⚠️ <b>⚠️ កំហុសញឹកញាប់៖</b> ប៊ូតុង និងអក្សរមើលទៅដូចគ្នា → អ្នកប្រើមិនដឹងអ្វីចុចបាន (affordance ទាប)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>បញ្ហាធំបំផុតរបស់ Flat design សុទ្ធគឺអ្វី? ដោះស្រាយដូចម្តេច?</p><details><summary>មើលចម្លើយ</summary><p><b>Affordance ទាប</b> — មិនដឹងអ្វីជាប៊ូតុង។ ដោះស្រាយដោយ «Flat 2.0»៖ ស្រមោលស្រាល ពណ៌ប៊ូតុងខុសពីអក្សរ និង State (hover/pressed) ច្បាស់ → នាំទៅ Material Design។</p></details></div>
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>Material Design — Google</h2>
+<div class="uxstyle" data-s="material"></div><p style="font-size:12px;opacity:.7;margin:0 0 10px">📱 អេក្រង់ App ឧទាហរណ៍ — សង់ពិតដោយ HTML/CSS (មិនមែនរូបថត) · មើល CSS ពេញក្នុង <b>UI Style Lab</b> ចុងវគ្គ</p><p><b>Material Design — Google</b> — ក្រដាសឌីជីថល — ស្រទាប់ (elevation) ស្រមោលមានន័យ ចលនាមានហេតុផល; <b>Material You (M3)</b> ទាញពណ៌ពីរូប Wallpaper (Dynamic color) រាងមូលជាង។</p><table><tr><th></th><th>ព័ត៌មាន</th></tr><tr><td>📅 ឆ្នាំ</td><td>2014 (I/O) · 2021 (Material You / M3)</td></tr><tr><td>👤 អ្នកបង្កើត / ល្បីដោយ</td><td><b>Google</b> — ដឹកនាំដោយ <b>Matías Duarte</b></td></tr><tr><td>🌍 ប្រភព / ប្រើក្នុង</td><td>Android · Google apps · Flutter (Material widgets)</td></tr><tr><td>♿ Accessibility</td><td>Theme Builder គណនា tone ដើម្បីឲ្យ contrast ត្រឹមត្រូវ</td></tr></table>
+<div class="grid"><div class="card"><b>📄 Elevation</b><br>ស្រទាប់ + ស្រមោល</div><div class="card"><b>🎨 Dynamic color</b><br>ពណ៌ពី Wallpaper (M3)</div><div class="card"><b>💊 Pill button</b><br>Filled · Tonal · Outlined</div><div class="card"><b>📏 8dp grid</b><br>Touch 48dp</div></div>
+<div class="note">💡 <b>🛠️ ធ្វើក្នុង Figma៖</b> Material 3 Design Kit (Figma Community) + Material Theme Builder ដើម្បីបង្កើតពណ៌។<br><b>✅ ប្រើពេល៖</b> Android App · Web App (Angular Material, MUI) · Flutter</div>
+<div class="warn">⚠️ <b>⚠️ កំហុសញឹកញាប់៖</b> ប្រើ Component Android លើ iOS ធ្វើឲ្យអ្នកប្រើ iPhone ចម្លែក (Jakob's law)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>Material You (2021) ផ្តល់អ្វីថ្មីសំខាន់?</p><details><summary>មើលចម្លើយ</summary><p><b>Dynamic color</b> — ពណ៌ App ទាញពី Wallpaper របស់អ្នកប្រើ + រាងមូលធំ + Component ថ្មី (M3)។</p></details></div>
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Neumorphism — ប៉ោង/ផត</h2>
+<div class="uxstyle" data-s="neumorph"></div><p style="font-size:12px;opacity:.7;margin:0 0 10px">📱 អេក្រង់ App ឧទាហរណ៍ — សង់ពិតដោយ HTML/CSS (មិនមែនរូបថត) · មើល CSS ពេញក្នុង <b>UI Style Lab</b> ចុងវគ្គ</p><p><b>Neumorphism — ប៉ោង/ផត</b> — «New + Skeuomorphism» — Element ពណ៌ដូចផ្ទៃ ហាក់ដូចជាប៉ោងចេញ ឬផតចូល ដោយស្រមោល ២ (ភ្លឺ ខាងលើឆ្វេង + ងងឹត ខាងក្រោមស្តាំ)។</p><table><tr><th></th><th>ព័ត៌មាន</th></tr><tr><td>📅 ឆ្នាំ</td><td>ចុង 2019 – 2020</td></tr><tr><td>👤 អ្នកបង្កើត / ល្បីដោយ</td><td>Dribbble shot «Skeuomorph Mobile Banking» ដោយ <b>Alexander Plyuto</b> (2019) · ពាក្យ Neumorphism ល្បីតាមអត្ថបទ <b>Michal Malewicz</b></td></tr><tr><td>🌍 ប្រភព / ប្រើក្នុង</td><td>Dribbble trend</td></tr><tr><td>♿ Accessibility</td><td><b>ខ្សោយ</b> — ព្រំ Element ≈ 1.1:1 · ត្រូវបន្ថែម Accent/Border/Icon ច្បាស់</td></tr></table>
+<div class="grid"><div class="card"><b>🎨 ពណ៌តែមួយ</b><br>ផ្ទៃ = Element</div><div class="card"><b>🌗 ស្រមោល ២</b><br>ស (-x,-y) + ងងឹត (x,y)</div><div class="card"><b>⬇️ Inset</b><br>ផត = Active/Pressed</div><div class="card"><b>🔘 Accent តិច</b><br>ពណ៌ ១ សម្រាប់ Active</div></div>
+<div class="note">💡 <b>🛠️ ធ្វើក្នុង Figma៖</b> Effects៖ Drop shadow 8,8 blur16 (#a3b1c6) + Drop shadow -8,-8 blur16 (#fff) · Inner shadow សម្រាប់ផត។<br><b>✅ ប្រើពេល៖</b> Smart home control · Music player · Calculator (ផ្នែកតូចៗ)</div>
+<div class="warn">⚠️ <b>⚠️ កំហុសញឹកញាប់៖</b> ប្រើគ្រប់កន្លែង → ប៊ូតុង/Input មើលមិនឃើញ; Disabled និង Enabled ដូចគ្នា។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>ហេតុអ្វី Neumorphism មិនពេញនិយមក្នុង App ធំ?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះ <b>Contrast ទាបខ្លាំង</b> (ពណ៌ element = ផ្ទៃ) — មនុស្សភ្នែកខ្សោយមើលមិនឃើញព្រំ ប៊ូតុងមិនច្បាស់ ខុស WCAG។</p></details></div>
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Glassmorphism — កញ្ចក់ព្រិល</h2>
+<div class="uxstyle" data-s="glass"></div><p style="font-size:12px;opacity:.7;margin:0 0 10px">📱 អេក្រង់ App ឧទាហរណ៍ — សង់ពិតដោយ HTML/CSS (មិនមែនរូបថត) · មើល CSS ពេញក្នុង <b>UI Style Lab</b> ចុងវគ្គ</p><p><b>Glassmorphism — កញ្ចក់ព្រិល</b> — ផ្ទាំងកញ្ចក់ព្រិល ថ្លាពាក់កណ្តាល នៅលើ Background ពណ៌ឆ្អៅ — បង្ហាញជម្រៅ (layer) ដោយមិនបាត់បរិបទ។</p><table><tr><th></th><th>ព័ត៌មាន</th></tr><tr><td>📅 ឆ្នាំ</td><td>2020 (macOS Big Sur) · មុននេះ Windows Vista Aero (2007)</td></tr><tr><td>👤 អ្នកបង្កើត / ល្បីដោយ</td><td><b>Apple</b> (Big Sur, iOS) · <b>Microsoft</b> Aero/Acrylic · ពាក្យ «Glassmorphism» ពី <b>Michal Malewicz</b> (2020)</td></tr><tr><td>🌍 ប្រភព / ប្រើក្នុង</td><td>macOS · iOS · Windows · Web</td></tr><tr><td>♿ Accessibility</td><td>អាស្រ័យលើ Background — ត្រូវពិនិត្យលើផ្នែកភ្លឺបំផុត; ផ្តល់ជម្រើស «Reduce transparency»</td></tr></table>
+<div class="grid"><div class="card"><b>🧊 backdrop-filter</b><br>blur(16–30px)</div><div class="card"><b>🔳 ស ថ្លា</b><br>10–25%</div><div class="card"><b>〰️ Border ស</b><br>1px rgba(255,255,255,.4)</div><div class="card"><b>🌈 Background</b><br>Blob ពណ៌ឆ្អៅ</div></div>
+<div class="note">💡 <b>🛠️ ធ្វើក្នុង Figma៖</b> Fill ស 15% + <b>Background blur</b> 20 + Stroke ស 40% inside។<br><b>✅ ប្រើពេល៖</b> Card លើរូប · Widget · Modal · Login screen</div>
+<div class="warn">⚠️ <b>⚠️ កំហុសញឹកញាប់៖</b> អក្សរសលើផ្ទៃភ្លឺ (contrast ទាប); Blur ច្រើនពេកធ្វើឲ្យទូរស័ព្ទចាស់យឺត។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>CSS property ណាដែលធ្វើឲ្យកញ្ចក់ព្រិល?</p><details><summary>មើលចម្លើយ</summary><p><code>backdrop-filter: blur(20px)</code> (+ <code>-webkit-backdrop-filter</code> សម្រាប់ Safari) — វាព្រិលអ្វីដែលនៅ <b>ក្រោយ</b> Element។</p></details></div>
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Liquid Glass — Apple 2025</h2>
+<div class="uxstyle" data-s="liquid"></div><p style="font-size:12px;opacity:.7;margin:0 0 10px">📱 អេក្រង់ App ឧទាហរណ៍ — សង់ពិតដោយ HTML/CSS (មិនមែនរូបថត) · មើល CSS ពេញក្នុង <b>UI Style Lab</b> ចុងវគ្គ</p><p><b>Liquid Glass — Apple 2025</b> — សម្ភារៈកញ្ចក់រាវ ថ្លាខ្លាំង ឆ្លុះ និងបត់ពន្លឺ (refraction) មានពន្លឺគែម (specular highlight) ប្តូរតាមចលនា — Tab bar / Control អណ្តែតលើមាតិកា រាង Capsule។</p><table><tr><th></th><th>ព័ត៌មាន</th></tr><tr><td>📅 ឆ្នាំ</td><td>2025 (WWDC — iOS 26, macOS Tahoe 26)</td></tr><tr><td>👤 អ្នកបង្កើត / ល្បីដោយ</td><td><b>Apple</b> — ប្រកាសនៅ WWDC ខែមិថុនា 2025 សម្រាប់ iOS/iPadOS/macOS/watchOS/tvOS/visionOS 26</td></tr><tr><td>🌍 ប្រភព / ប្រើក្នុង</td><td>Apple platforms (ឥទ្ធិពលពី visionOS)</td></tr><tr><td>♿ Accessibility</td><td>Apple មានការកំណត់ Reduce Transparency / Increase Contrast — Design ត្រូវតែអានបានក្នុងទាំងពីរ</td></tr></table>
+<div class="grid"><div class="card"><b>💧 ថ្លាខ្លាំង</b><br>មាតិកានៅក្រោយមើលឃើញ</div><div class="card"><b>✨ Specular</b><br>ពន្លឺគែម inset</div><div class="card"><b>💊 Capsule</b><br>Radius ពេញ</div><div class="card"><b>🫧 អណ្តែត</b><br>Tab bar/Toolbar លើមាតិកា</div></div>
+<div class="note">💡 <b>🛠️ ធ្វើក្នុង Figma៖</b> Fill ស 8–12% · Background blur 4–8 · Stroke ស 45% · Inner shadow ស ខាងលើ · Drop shadow ទន់។ (SwiftUI ពិត៖ <code>.glassEffect()</code>)<br><b>✅ ប្រើពេល៖</b> App Apple platforms · Control អណ្តែត · Media player</div>
+<div class="warn">⚠️ <b>⚠️ កំហុសញឹកញាប់៖</b> យកវាដាក់លើអត្ថបទវែង → អានមិនបាន; ធ្វើ Glass គ្រប់ស្រទាប់ (Apple ណែនាំសម្រាប់ Navigation layer ប៉ុណ្ណោះ)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>Liquid Glass ខុសពី Glassmorphism ត្រង់ណា?</p><details><summary>មើលចម្លើយ</summary><p>Glassmorphism = ព្រិលខ្លាំង ស្ងៀម · <b>Liquid Glass</b> = ថ្លាជាង មាន <b>refraction + specular highlight</b> ដែលប្រតិកម្មតាមចលនា និងប្រើសម្រាប់ Navigation/Control អណ្តែត។</p></details></div>
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Claymorphism — ដីឥដ្ឋ 3D</h2>
+<div class="uxstyle" data-s="clay"></div><p style="font-size:12px;opacity:.7;margin:0 0 10px">📱 អេក្រង់ App ឧទាហរណ៍ — សង់ពិតដោយ HTML/CSS (មិនមែនរូបថត) · មើល CSS ពេញក្នុង <b>UI Style Lab</b> ចុងវគ្គ</p><p><b>Claymorphism — ដីឥដ្ឋ 3D</b> — Element ធាត់ មូល ទន់ ដូចដីឥដ្ឋ — ពណ៌ pastel ស្រមោលខាងក្រៅធំ + Inner shadow ពីរ (ភ្លឺលើ ងងឹតក្រោម) ជាញឹកញាប់ប្រើជាមួយ Icon 3D។</p><table><tr><th></th><th>ព័ត៌មាន</th></tr><tr><td>📅 ឆ្នាំ</td><td>2021–2022</td></tr><tr><td>👤 អ្នកបង្កើត / ល្បីដោយ</td><td>និន្នាការ Dribbble/Medium · Icon 3D (Blender, Spline)</td></tr><tr><td>🌍 ប្រភព / ប្រើក្នុង</td><td>App កុមារ · Fintech រួសរាយ · Landing page</td></tr><tr><td>♿ Accessibility</td><td>ល្អជាង Neumorphism ព្រោះ element មានពណ៌ផ្ទាល់ · ប្រើអក្សរងងឹតលើ pastel</td></tr></table>
+<div class="grid"><div class="card"><b>🫧 មូល</b><br>Radius 20–40</div><div class="card"><b>🍬 Pastel</b><br>ផ្កាឈូក ខៀវ បៃតង</div><div class="card"><b>🌗 Inner ×2</b><br>ស + ងងឹត</div><div class="card"><b>🧸 3D icon</b><br>Spline/Blender</div></div>
+<div class="note">💡 <b>🛠️ ធ្វើក្នុង Figma៖</b> Drop shadow (ពណ៌ object ងងឹត 25%) + Inner shadow ស (x6,y6) + Inner shadow ខ្មៅ 8% (x-6,y-6)។<br><b>✅ ប្រើពេល៖</b> Education · Kids · Onboarding · Game casual</div>
+<div class="warn">⚠️ <b>⚠️ កំហុសញឹកញាប់៖</b> ស្រមោលខ្មៅសុទ្ធ (ធ្វើឲ្យកខ្វក់); Pastel+អក្សរស contrast ទាប។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>ធាតុ ២ ដែលធ្វើឲ្យ Clay ខុសពី Neumorphism?</p><details><summary>មើលចម្លើយ</summary><p>Clay មាន <b>ពណ៌ខុសពីផ្ទៃ (pastel)</b> និង <b>ស្រមោលអណ្តែតចេញពីផ្ទៃ</b> — Neumorphism ពណ៌ដូចផ្ទៃ ហាក់ដូចជាដុះចេញពីផ្ទៃ។</p></details></div>
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>Neubrutalism — ដិត ខ្មៅ ត្រង់</h2>
+<div class="uxstyle" data-s="brutal"></div><p style="font-size:12px;opacity:.7;margin:0 0 10px">📱 អេក្រង់ App ឧទាហរណ៍ — សង់ពិតដោយ HTML/CSS (មិនមែនរូបថត) · មើល CSS ពេញក្នុង <b>UI Style Lab</b> ចុងវគ្គ</p><p><b>Neubrutalism — ដិត ខ្មៅ ត្រង់</b> — Border ខ្មៅក្រាស់ ស្រមោលរឹង (គ្មាន blur) ពណ៌ឆ្អៅ Font ដិត — «ស្មោះត្រង់» មិនលាក់រចនាសម្ព័ន្ធ មានអារម្មណ៍ Indie/សប្បាយ។</p><table><tr><th></th><th>ព័ត៌មាន</th></tr><tr><td>📅 ឆ្នាំ</td><td>Brutalist web ~2014 · Neubrutalism ~2021</td></tr><tr><td>👤 អ្នកបង្កើត / ល្បីដោយ</td><td><b>Pascal Deville</b> (brutalistwebsites.com, 2014) · Gumroad redesign (2021) · Figma/Notion marketing · ឈ្មោះពីស្ថាបត្យកម្ម Brutalism (បេតុង 1950s)</td></tr><tr><td>🌍 ប្រភព / ប្រើក្នុង</td><td>Web · Startup · Creator tools</td></tr><tr><td>♿ Accessibility</td><td>Border ខ្មៅធ្វើឲ្យ Element ច្បាស់ខ្លាំង (ល្អ) · ប្រយ័ត្នអក្សរសលើពណ៌លឿង</td></tr></table>
+<div class="grid"><div class="card"><b>⬛ Border 3px</b><br>ខ្មៅ</div><div class="card"><b>🟨 Hard shadow</b><br>4px 4px 0 #000</div><div class="card"><b>🌈 ពណ៌ឆ្អៅ</b><br>លឿង ក្រហម បៃតងទឹកសមុទ្រ</div><div class="card"><b>🅰️ Bold</b><br>Space Grotesk ដិត</div></div>
+<div class="note">💡 <b>🛠️ ធ្វើក្នុង Figma៖</b> Stroke 3 ខ្មៅ · Drop shadow X4 Y4 Blur0 Spread0 ខ្មៅ 100% · Pressed = shadow 0 + រំកិល 4px។<br><b>✅ ប្រើពេល៖</b> Portfolio · Startup landing · Creator/Indie product · Gen Z</div>
+<div class="warn">⚠️ <b>⚠️ កំហុសញឹកញាប់៖</b> ប្រើជាមួយ Brand ធនាគារ/ពេទ្យ ដែលត្រូវការភាពស្ងប់; ពណ៌ច្រើនពេក។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>ធ្វើយ៉ាងណាឲ្យប៊ូតុង Neubrutalism មើលទៅ «ចុចចុះ» ពេល Pressed?</p><details><summary>មើលចម្លើយ</summary><p>កាត់ <b>shadow ទៅ 0</b> ហើយ <b>រំកិល element 4px ទៅស្តាំ/ក្រោម</b> (<code>transform: translate(4px,4px)</code>) — ហាក់ដូចជាចុចចូល។</p></details></div>
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>Minimal UI — តិចតួច</h2>
+<div class="uxstyle" data-s="minimal"></div><p style="font-size:12px;opacity:.7;margin:0 0 10px">📱 អេក្រង់ App ឧទាហរណ៍ — សង់ពិតដោយ HTML/CSS (មិនមែនរូបថត) · មើល CSS ពេញក្នុង <b>UI Style Lab</b> ចុងវគ្គ</p><p><b>Minimal UI — តិចតួច</b> — White space ច្រើន ពណ៌ ១–២ Typography ជាតួអង្គ គ្មានការតុបតែង — អ្វីៗមានហេតុផល។</p><table><tr><th></th><th>ព័ត៌មាន</th></tr><tr><td>📅 ឆ្នាំ</td><td>គ្រប់សម័យ (Bauhaus → Dieter Rams → Google 1998 → Apple)</td></tr><tr><td>👤 អ្នកបង្កើត / ល្បីដោយ</td><td><b>Dieter Rams</b> («Less, but better», 10 principles) · Google homepage · Apple · Linear, Notion</td></tr><tr><td>🌍 ប្រភព / ប្រើក្នុង</td><td>សកល</td></tr><tr><td>♿ Accessibility</td><td>ល្អ ប្រសិនបើអក្សរប្រផេះមិនស្រាលពេក (#888 លើស = 3.5:1 មិនគ្រប់សម្រាប់អក្សរតូច)</td></tr></table>
+<div class="grid"><div class="card"><b>⬜ White space</b><br>Padding ធំ</div><div class="card"><b>🔤 Type hierarchy</b><br>ទំហំ/ទម្ងន់ ជំនួសពណ៌</div><div class="card"><b>➖ Divider</b><br>បន្ទាត់ស្តើង ជំនួស Card</div><div class="card"><b>⚫ Accent ១</b><br>ខ្មៅ ឬ ពណ៌ Brand</div></div>
+<div class="note">💡 <b>🛠️ ធ្វើក្នុង Figma៖</b> Auto layout Padding 24–32 · Text styles ៤ (Display, Title, Body, Caption) · ពណ៌ ៣ តែប៉ុណ្ណោះ។<br><b>✅ ប្រើពេល៖</b> SaaS · Productivity · E-commerce ថ្លៃ · Portfolio</div>
+<div class="warn">⚠️ <b>⚠️ កំហុសញឹកញាប់៖</b> ដក Label/Icon សំខាន់ចេញ → អ្នកប្រើវង្វេង (Minimal ≠ ខ្វះព័ត៌មាន)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>Minimal UI ប្រើអ្វីជំនួស Card និងពណ៌ ដើម្បីបង្កើត Hierarchy?</p><details><summary>មើលចម្លើយ</summary><p><b>ទំហំ និងទម្ងន់ Font</b>, <b>White space</b> (Proximity) និង <b>បន្ទាត់ Divider ស្តើង</b>។</p></details></div>
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>Dark mode — ផ្ទៃងងឹត</h2>
+<div class="uxstyle" data-s="dark"></div><p style="font-size:12px;opacity:.7;margin:0 0 10px">📱 អេក្រង់ App ឧទាហរណ៍ — សង់ពិតដោយ HTML/CSS (មិនមែនរូបថត) · មើល CSS ពេញក្នុង <b>UI Style Lab</b> ចុងវគ្គ</p><p><b>Dark mode — ផ្ទៃងងឹត</b> — Theme ផ្ទៃងងឹត សម្រាប់ពេលយប់ សន្សំថ្ម (OLED) កាត់ពន្លឺភ្លឺ — មិនមែនគ្រាន់តែបញ្ច្រាសពណ៌ទេ។</p><table><tr><th></th><th>ព័ត៌មាន</th></tr><tr><td>📅 ឆ្នាំ</td><td>2018 (macOS Mojave) · 2019 (iOS 13, Android 10)</td></tr><tr><td>👤 អ្នកបង្កើត / ល្បីដោយ</td><td><b>Apple</b> · <b>Google</b> (Material dark theme ណែនាំ #121212) · មុននេះ Terminal អក្សរបៃតងលើខ្មៅ</td></tr><tr><td>🌍 ប្រភព / ប្រើក្នុង</td><td>OS ទាំងអស់ · Developer tools · Streaming apps</td></tr><tr><td>♿ Accessibility</td><td>#e6e6e6 លើ #121212 ≈ 15:1 · ត្រូវផ្តល់ជម្រើស Light/Dark/System</td></tr></table>
+<div class="grid"><div class="card"><b>⬛ #121212</b><br>មិនមែនខ្មៅសុទ្ធ</div><div class="card"><b>🔆 Elevation = ភ្លឺជាង</b><br>Surface ខ្ពស់ = ប្រផេះភ្លឺ</div><div class="card"><b>🎨 Desaturate</b><br>ពណ៌ Accent ស្រាលជាង</div><div class="card"><b>🔤 អក្សរ #e6e6e6</b><br>មិនមែនសសុទ្ធ</div></div>
+<div class="note">💡 <b>🛠️ ធ្វើក្នុង Figma៖</b> Variables → Mode «Dark» → ប្តូរ surface / on-surface / primary · មិនបាច់គូរ Component ថ្មី។<br><b>✅ ប្រើពេល៖</b> App គ្រប់ប្រភេទ (ជាជម្រើស) · Media · Code editor · Trading</div>
+<div class="warn">⚠️ <b>⚠️ កំហុសញឹកញាប់៖</b> ប្រើ #000 + #fff សុទ្ធ (ឈឺភ្នែក halation); ប្រើស្រមោលដើម្បីបង្ហាញ Elevation (មើលមិនឃើញលើផ្ទៃងងឹត)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>នៅ Dark mode តើយើងបង្ហាញ Elevation (ស្រទាប់ខ្ពស់) ដោយរបៀបណា?</p><details><summary>មើលចម្លើយ</summary><p>ដោយ <b>Surface ភ្លឺជាងបន្តិច</b> (ឧ. #121212 → #1e1e1e → #2c2c2c) ព្រោះស្រមោលមើលមិនឃើញលើផ្ទៃងងឹត។</p></details></div>
+</section>
+<section id="l13">
+<h2><span class="badge">មេរៀន ១៣</span>Bento grid — ប្រអប់ក្រឡា</h2>
+<div class="uxstyle" data-s="bento"></div><p style="font-size:12px;opacity:.7;margin:0 0 10px">📱 អេក្រង់ App ឧទាហរណ៍ — សង់ពិតដោយ HTML/CSS (មិនមែនរូបថត) · មើល CSS ពេញក្នុង <b>UI Style Lab</b> ចុងវគ្គ</p><p><b>Bento grid — ប្រអប់ក្រឡា</b> — Layout ជាប្រអប់ (tile) ទំហំខុសៗគ្នា ដូចប្រអប់បាយជប៉ុន <i>bento</i> — ព័ត៌មានច្រើន តែមានរបៀប មួយ Tile មួយគំនិត។</p><table><tr><th></th><th>ព័ត៌មាន</th></tr><tr><td>📅 ឆ្នាំ</td><td>Live Tiles 2010 · ពេញនិយមខ្លាំង ~2022+</td></tr><tr><td>👤 អ្នកបង្កើត / ល្បីដោយ</td><td><b>Windows Phone Live Tiles</b> (2010) · Apple keynote/product pages · Linear, Vercel landing pages</td></tr><tr><td>🌍 ប្រភព / ប្រើក្នុង</td><td>Web landing · Dashboard · Widget iOS/Android</td></tr><tr><td>♿ Accessibility</td><td>លំដាប់ Tab/Screen reader ត្រូវតាមលំដាប់ HTML មិនមែនតាមរូបរាង</td></tr></table>
+<div class="grid"><div class="card"><b>🍱 Tile ខុសទំហំ</b><br>1×1 · 2×1 · 2×2</div><div class="card"><b>🔲 Radius ធំ</b><br>16–28</div><div class="card"><b>📊 មួយ Tile មួយសារ</b><br>លេខ · រូប · Feature</div><div class="card"><b>📐 CSS Grid</b><br>grid-template-columns</div></div>
+<div class="note">💡 <b>🛠️ ធ្វើក្នុង Figma៖</b> Layout grid 4 columns · Auto layout wrap · Tile ធំសម្រាប់ចំណុចសំខាន់បំផុត។ CSS៖ <code>display:grid; grid-column: span 2</code>។<br><b>✅ ប្រើពេល៖</b> Feature showcase · Portfolio · Dashboard · Profile</div>
+<div class="warn">⚠️ <b>⚠️ កំហុសញឹកញាប់៖</b> Tile ទាំងអស់ទំហំស្មើ (បាត់ Hierarchy); ព័ត៌មានច្រើនពេកក្នុង Tile មួយ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣</h4><p>តើ Tile ណាគួរធំជាងគេក្នុង Bento?</p><details><summary>មើលចម្លើយ</summary><p>Tile ដែលមាន <b>សារសំខាន់បំផុត</b> (ឧ. សមតុល្យ ឬ Feature មេ) — ទំហំបង្កើត Hierarchy។</p></details></div>
+</section>
+<section id="l14">
+<h2><span class="badge">មេរៀន ១៤</span>Fluent Design — Microsoft</h2>
+<div class="uxstyle" data-s="fluent"></div><p style="font-size:12px;opacity:.7;margin:0 0 10px">📱 អេក្រង់ App ឧទាហរណ៍ — សង់ពិតដោយ HTML/CSS (មិនមែនរូបថត) · មើល CSS ពេញក្នុង <b>UI Style Lab</b> ចុងវគ្គ</p><p><b>Fluent Design — Microsoft</b> — Design system របស់ Microsoft — ពន្លឺ (light) ជម្រៅ (depth) ចលនា សម្ភារៈ (<b>Acrylic</b> ព្រិល · <b>Mica</b> ពណ៌ពី Wallpaper) និងជ្រុងមូលតូច (4–8px)។</p><table><tr><th></th><th>ព័ត៌មាន</th></tr><tr><td>📅 ឆ្នាំ</td><td>2017 (Fluent) · 2021 (Windows 11) · 2023 (Fluent 2)</td></tr><tr><td>👤 អ្នកបង្កើត / ល្បីដោយ</td><td><b>Microsoft</b> — Windows 10/11, Office, Teams</td></tr><tr><td>🌍 ប្រភព / ប្រើក្នុង</td><td>Windows · Microsoft 365 · Web (Fluent UI React)</td></tr><tr><td>♿ Accessibility</td><td>Fluent 2 មាន High contrast theme សម្រាប់ Windows</td></tr></table>
+<div class="grid"><div class="card"><b>🪟 Mica / Acrylic</b><br>សម្ភារៈព្រិល</div><div class="card"><b>🔵 #0f6cbd</b><br>Accent Microsoft</div><div class="card"><b>📐 Radius 4/8</b><br>មូលតិច</div><div class="card"><b>🔤 Segoe UI</b><br>Font ប្រព័ន្ធ</div></div>
+<div class="note">💡 <b>🛠️ ធ្វើក្នុង Figma៖</b> Fluent 2 Web UI Kit (Figma Community) · Border 1px ស្រាល + ស្រមោលទន់។<br><b>✅ ប្រើពេល៖</b> Windows app · Enterprise · Dashboard ការងារ · Add-in Office</div>
+<div class="warn">⚠️ <b>⚠️ កំហុសញឹកញាប់៖</b> ធ្វើ App iPhone ក្នុង Fluent ទាំងស្រុង (ខុស Platform convention)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១៤</h4><p>Mica និង Acrylic ខុសគ្នាដូចម្តេច?</p><details><summary>មើលចម្លើយ</summary><p><b>Acrylic</b> ព្រិលអ្វីនៅក្រោយ Window (ដូចកញ្ចក់) · <b>Mica</b> យកពណ៌ពី <b>Wallpaper</b> ម្តង ស្រាលជាង លឿនជាង — ប្រើសម្រាប់ផ្ទៃ Window វែង។</p></details></div>
+</section>
+<section id="l15">
+<h2><span class="badge">មេរៀន ១៥</span>Aqua / Y2K UI — ប៊ូតុងជែល</h2>
+<div class="uxstyle" data-s="aqua"></div><p style="font-size:12px;opacity:.7;margin:0 0 10px">📱 អេក្រង់ App ឧទាហរណ៍ — សង់ពិតដោយ HTML/CSS (មិនមែនរូបថត) · មើល CSS ពេញក្នុង <b>UI Style Lab</b> ចុងវគ្គ</p><p><b>Aqua / Y2K UI — ប៊ូតុងជែល</b> — UI សម័យឆ្នាំ 2000 — ប៊ូតុងដូចស្ករគ្រាប់ ជែលថ្លា ភ្លឺចាំង ផ្ទៃ Pinstripe លោហៈ ប៊ូតុងបិទ/បង្រួម ពណ៌ក្រហម លឿង បៃតង។</p><table><tr><th></th><th>ព័ត៌មាន</th></tr><tr><td>📅 ឆ្នាំ</td><td>2000 (Macworld, Steve Jobs) · ចេញ 2001 (Mac OS X)</td></tr><tr><td>👤 អ្នកបង្កើត / ល្បីដោយ</td><td><b>Apple</b> Mac OS X Aqua · iMac G3 (1998) translucent plastic · Windows XP «Luna» (2001)</td></tr><tr><td>🌍 ប្រភព / ប្រើក្នុង</td><td>Mac OS X · Web 2.0 (2005–2009 glossy buttons)</td></tr><tr><td>♿ Accessibility</td><td>Gradient ធ្វើឲ្យ contrast ខុសគ្នាតាមចំណុច — ពិនិត្យផ្នែកភ្លឺបំផុត</td></tr></table>
+<div class="grid"><div class="card"><b>🍬 Gel button</b><br>Gradient ពាក់កណ្តាល + highlight</div><div class="card"><b>📏 Pinstripe</b><br>ឆ្នូតតូចៗ</div><div class="card"><b>🔴 Traffic lights</b><br>ក្រហម លឿង បៃតង</div><div class="card"><b>🔵 Aqua blue</b><br>ខៀវទឹក</div></div>
+<div class="note">💡 <b>🛠️ ធ្វើក្នុង Figma៖</b> Gradient 4 stops (ភ្លឺ→កណ្តាល→ផ្ទុះងងឹត 51%→ភ្លឺ) · Radius ពេញ · Inner highlight។<br><b>✅ ប្រើពេល៖</b> Y2K revival · Retro tech brand · Game/Fan site · Portfolio សប្បាយ</div>
+<div class="warn">⚠️ <b>⚠️ កំហុសញឹកញាប់៖</b> ប្រើគ្រប់ Element → រញ៉េរញ៉ៃ; Gradient ធ្វើឲ្យអក្សរពិបាកអាន។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១៥</h4><p>Aqua ត្រូវបានបង្ហាញជាលើកដំបូងនៅពេលណា?</p><details><summary>មើលចម្លើយ</summary><p>នៅ <b>Macworld ខែមករា 2000</b> ដោយ <b>Steve Jobs</b> — Jobs និយាយលេងថាប៊ូតុងស្អាតរហូត «ចង់លិទ្ធ»។</p></details></div>
+</section>
+<section id="l16">
+<h2><span class="badge">មេរៀន ១៦</span>Retro OS (Windows 95)</h2>
+<div class="uxstyle" data-s="retro"></div><p style="font-size:12px;opacity:.7;margin:0 0 10px">📱 អេក្រង់ App ឧទាហរណ៍ — សង់ពិតដោយ HTML/CSS (មិនមែនរូបថត) · មើល CSS ពេញក្នុង <b>UI Style Lab</b> ចុងវគ្គ</p><p><b>Retro OS (Windows 95)</b> — UI ប្រព័ន្ធ 1990s — ផ្ទៃប្រផេះ #c0c0c0 ប៊ូតុង 3D ដោយ Border ភ្លឺ/ងងឹត (bevel) Title bar ខៀវ Font pixel — ពេលនេះប្រើជា Nostalgia។</p><table><tr><th></th><th>ព័ត៌មាន</th></tr><tr><td>📅 ឆ្នាំ</td><td>1995 (Windows 95)</td></tr><tr><td>👤 អ្នកបង្កើត / ល្បីដោយ</td><td><b>Microsoft</b> Windows 95 · <b>Susan Kare</b> (icon Macintosh 1984, Windows 3.0) · ឥឡូវ៖ 98.css, Poolsuite</td></tr><tr><td>🌍 ប្រភព / ប្រើក្នុង</td><td>Windows 95/98 · Retro web</td></tr><tr><td>♿ Accessibility</td><td>ខ្មៅលើប្រផេះ #c0c0c0 ≈ 12:1 (ល្អ) តែ Touch target តូចពេកលើទូរស័ព្ទ</td></tr></table>
+<div class="grid"><div class="card"><b>🔲 Bevel</b><br>Border ស/ប្រផេះ ៤ ជ្រុង</div><div class="card"><b>🟦 Title bar</b><br>ខៀវ #000080 gradient</div><div class="card"><b>⬜ #c0c0c0</b><br>ប្រផេះ classic</div><div class="card"><b>🟩 Teal desktop</b><br>#008080</div></div>
+<div class="note">💡 <b>🛠️ ធ្វើក្នុង Figma៖</b> Stroke ៤ ចំហៀងពណ៌ខុស (ស ខាងលើ/ឆ្វេង · ងងឹត ខាងក្រោម/ស្តាំ) · Radius 0 · Font Tahoma 11–12។<br><b>✅ ប្រើពេល៖</b> Game indie · Event nostalgia · Portfolio ច្នៃប្រឌិត · April Fools</div>
+<div class="warn">⚠️ <b>⚠️ កំហុសញឹកញាប់៖</b> យកមកធ្វើ App ធនាគារពិត (មិនទុកចិត្ត); អក្សរតូចពេកលើទូរស័ព្ទ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១៦</h4><p>ធ្វើយ៉ាងណាឲ្យប៊ូតុង Win95 មើលទៅ «ផត» (Pressed)?</p><details><summary>មើលចម្លើយ</summary><p><b>បញ្ច្រាស Border</b>៖ ងងឹត ខាងលើ/ឆ្វេង និង ភ្លឺ ខាងក្រោម/ស្តាំ។</p></details></div>
+</section>
+<section id="l17">
+<h2><span class="badge">មេរៀន ១៧</span>Cyberpunk / Neon HUD</h2>
+<div class="uxstyle" data-s="neon"></div><p style="font-size:12px;opacity:.7;margin:0 0 10px">📱 អេក្រង់ App ឧទាហរណ៍ — សង់ពិតដោយ HTML/CSS (មិនមែនរូបថត) · មើល CSS ពេញក្នុង <b>UI Style Lab</b> ចុងវគ្គ</p><p><b>Cyberpunk / Neon HUD</b> — UI ហ្គេម Sci-fi — ផ្ទៃងងឹត Neon Magenta/Cyan Glow ជ្រុងកាត់ (clip-path) Font Geometric ស្លាក HUD។</p><table><tr><th></th><th>ព័ត៌មាន</th></tr><tr><td>📅 ឆ្នាំ</td><td>Sci-fi HUD (ភាពយន្ត) · Cyberpunk 2077 (2020)</td></tr><tr><td>👤 អ្នកបង្កើត / ល្បីដោយ</td><td>ភាពយន្ត Blade Runner (1982), Tron · ហ្គេម <b>Cyberpunk 2077</b> (CD Projekt, 2020)</td></tr><tr><td>🌍 ប្រភព / ប្រើក្នុង</td><td>Game UI · Esports · Crypto/Web3</td></tr><tr><td>♿ Accessibility</td><td>Magenta #ff2bd6 លើ #0d0221 ≈ 5.5:1 ល្អ · ជៀសវាងចលនាភ្លឹបភ្លែត (prefers-reduced-motion)</td></tr></table>
+<div class="grid"><div class="card"><b>💗 Neon ២</b><br>Magenta + Cyan</div><div class="card"><b>✂️ ជ្រុងកាត់</b><br>clip-path polygon</div><div class="card"><b>✨ Glow</b><br>box/text-shadow</div><div class="card"><b>🔠 Orbitron</b><br>Uppercase spacing</div></div>
+<div class="note">💡 <b>🛠️ ធ្វើក្នុង Figma៖</b> Drop shadow ពណ៌ Neon blur 12–20 · Vector cut corners · Font Orbitron/Rajdhani។<br><b>✅ ប្រើពេល៖</b> Game · Esports team · Tech event · Streaming overlay</div>
+<div class="warn">⚠️ <b>⚠️ កំហុសញឹកញាប់៖</b> Glow ច្រើនពេក (អក្សរព្រិល); ប្រើក្នុង App ដែលត្រូវការការទុកចិត្ត។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១៧</h4><p>CSS អ្វីដែលធ្វើឲ្យកាត់ជ្រុង Card?</p><details><summary>មើលចម្លើយ</summary><p><code>clip-path: polygon(...)</code> — កំណត់ចំណុចរាង ឧ. <code>polygon(0 0, 92% 0, 100% 18%, 100% 100%, 0 100%)</code>។</p></details></div>
+</section>
+<section id="l18">
+<h2><span class="badge">មេរៀន ១៨</span>Aurora UI — Gradient ព្រិល</h2>
+<div class="uxstyle" data-s="aurora"></div><p style="font-size:12px;opacity:.7;margin:0 0 10px">📱 អេក្រង់ App ឧទាហរណ៍ — សង់ពិតដោយ HTML/CSS (មិនមែនរូបថត) · មើល CSS ពេញក្នុង <b>UI Style Lab</b> ចុងវគ្គ</p><p><b>Aurora UI — Gradient ព្រិល</b> — Background ពន្លឺ Aurora — Blob gradient ព្រិល (បៃតង Cyan ស្វាយ) លើផ្ទៃងងឹត ជាមួយ Card ថ្លា Font ស្តើង — ទំនើប ស្ងប់ «AI/Tech»។</p><table><tr><th></th><th>ព័ត៌មាន</th></tr><tr><td>📅 ឆ្នាំ</td><td>~2021+</td></tr><tr><td>👤 អ្នកបង្កើត / ល្បីដោយ</td><td>និន្នាការ Web/UI (Dribbble, Stripe-style gradients, AI startups) · Mesh gradient tools</td></tr><tr><td>🌍 ប្រភព / ប្រើក្នុង</td><td>SaaS · AI product landing · Music app</td></tr><tr><td>♿ Accessibility</td><td>Gradient ធ្វើឲ្យ contrast ប្រែប្រួល — ដាក់អក្សរលើ Card ងងឹតជាជាងលើ blob ផ្ទាល់</td></tr></table>
+<div class="grid"><div class="card"><b>🌌 ផ្ទៃងងឹត</b><br>#050816</div><div class="card"><b>🌈 Blob ព្រិល</b><br>radial-gradient ច្រើន</div><div class="card"><b>🔲 Card ថ្លា</b><br>ស 5–10%</div><div class="card"><b>✨ Gradient button</b><br>បៃតង → ស្វាយ</div></div>
+<div class="note">💡 <b>🛠️ ធ្វើក្នុង Figma៖</b> រង្វង់ពណ៌ ៣ → Layer blur 100+ → Card Fill ស 6% + Stroke ស 12% · Font Light។<br><b>✅ ប្រើពេល៖</b> AI app · SaaS landing · Wallet/Crypto · Music</div>
+<div class="warn">⚠️ <b>⚠️ កំហុសញឹកញាប់៖</b> Gradient ច្រើនពណ៌ពេក (ក្លាយជា «ភក់»); អក្សរប្រផេះលើ gradient។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១៨</h4><p>Aurora UI សង់ Background ដោយ CSS យ៉ាងដូចម្តេច?</p><details><summary>មើលចម្លើយ</summary><p>ប្រើ <b>radial-gradient ច្រើនស្រទាប់</b> ពណ៌ថ្លា ដាក់ទីតាំងខុសៗគ្នា + ពណ៌ផ្ទៃងងឹតជាស្រទាប់ចុងក្រោយ (ឬ blur លើ blob)។</p></details></div>
+</section>
+<section id="cheat">
+<h2>📋 សង្ខេប (Cheat sheet)</h2>
+<table><tr><th>Style</th><th>Token សំខាន់</th></tr><tr><td>Skeuomorphism</td><td>Texture · Gloss gradient · ស្រមោលពិត</td></tr><tr><td>Flat</td><td>ពណ៌ផ្ទៃ · Radius 4 · គ្មានស្រមោល</td></tr><tr><td>Material</td><td>Elevation · Pill 20 · 8dp · Dynamic color</td></tr><tr><td>Neumorphism</td><td>ស្រមោល ±8 ពណ៌ (#fff/#a3b1c6) · ពណ៌ដូចផ្ទៃ</td></tr><tr><td>Glassmorphism</td><td>backdrop-filter blur(20) · ស 15% · border ស 40%</td></tr><tr><td>Liquid Glass</td><td>ថ្លា 10% · specular inset · Capsule</td></tr><tr><td>Clay</td><td>Pastel · Radius 24+ · Inner shadow ×2</td></tr><tr><td>Neubrutalism</td><td>Border 3px · shadow 4px 4px 0</td></tr><tr><td>Minimal</td><td>White space · Type hierarchy · Divider</td></tr><tr><td>Dark</td><td>#121212 · អក្សរ #e6e6e6 · Elevation=ភ្លឺ</td></tr><tr><td>Bento</td><td>CSS Grid · span 2 · Radius 20</td></tr><tr><td>Fluent</td><td>Mica/Acrylic · Radius 4/8 · Segoe</td></tr><tr><td>Aqua</td><td>Gel gradient 51% · Pinstripe</td></tr><tr><td>Win95</td><td>Bevel ស/ប្រផេះ · #c0c0c0</td></tr><tr><td>Neon</td><td>Glow · clip-path · Orbitron</td></tr><tr><td>Aurora</td><td>radial-gradient ច្រើន · ផ្ទៃងងឹត</td></tr><tr><td>Contrast</td><td>≥ 4.5:1 អក្សរ · ≥ 3:1 UI</td></tr><tr><td>Touch</td><td>44pt Apple · 48dp Material · 24px WCAG 2.2</td></tr></table>
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងចុងវគ្គ</h2>
+<ol class='steps'><li><b>Brief</b>៖ App «Kafe Wallet» — អេក្រង់ Home (សមតុល្យ ប៊ូតុង Send/Receive បញ្ជីប្រតិបត្តិការ Switch Nav)។</li><li>សង់ <b>Wireframe ១</b> ក្នុង Figma ដោយ Auto layout + Components។</li><li>បង្កើត <b>Variables/Modes ៣</b>៖ Material · Neubrutalism · Dark — ប្តូរ Style ដោយមិនគូរថ្មី។</li><li>ពិនិត្យ Contrast (≥4.5:1) និង Touch target (≥44) ក្នុង App ចុងវគ្គ។</li><li>សាក <b>5-second test</b> ជាមួយមិត្ត ៥ នាក់៖ «App នេះសម្រាប់អ្វី? ទុកចិត្តទេ?» → ជ្រើស Style សមនឹង Brand → ដាក់ក្នុង Portfolio។</li></ol></section>
+<section id="pro-app">
+<h2>💻 UI Style Lab (App)</h2>
+
+<p><b>📱 Style Switcher</b>៖ App ដដែល ប្តូរ Style ១៦ ភ្លាមៗ + <b>CSS ពេញ</b> ចម្លងបាន · <b>🌓 Contrast Checker</b> (WCAG AA/AAA, គូពណ៌ពី Style នីមួយៗ) · <b>👆 Touch target</b> (Apple 44 · Material 48 · WCAG 24)។</p>
+
+<div class="itk" id="ul">
+<div class="itk-tabs"><button class="on" data-t="sw">📱 Style Switcher</button><button data-t="ct">🌓 Contrast Checker</button><button data-t="tt">👆 Touch target</button></div>
+<div class="itk-p on" data-p="sw">
+ <p class="vl-tip">ចុច Style ណាមួយ → App ដដែល ប្តូររូបរាងភ្លាមៗ — បង្ហាញថា <b>UX (រចនាសម្ព័ន្ធ) ដដែល</b> តែ <b>UI (រូបរាង) ខុស</b>។ ចម្លង CSS យកទៅប្រើបាន។</p>
+ <div class="itk-row"><button class="btn" id="ul_rnd">🎲 ចៃដន្យ</button><button class="btn ghost" id="ul_cp">📋 ចម្លង CSS</button><span id="ul_msg" style="font-size:12px"></span></div>
+ <div class="ul-grid" id="ul_grid"></div>
+ <div class="ul-two"><div id="ul_big"></div><div><div class="itk-out" id="ul_info"></div><pre id="ul_css"></pre></div></div>
+</div>
+<div class="itk-p" data-p="ct">
+ <p class="vl-tip">WCAG 2.x៖ អក្សរធម្មតា ≥ <b>4.5:1</b> (AA) · អក្សរធំ (≥24px ឬ 18.66px ដិត) ≥ <b>3:1</b> · AAA ≥ <b>7:1</b> · UI component (ប៊ូតុង, border) ≥ <b>3:1</b>។</p>
+ <div class="itk-row"><label>ពណ៌អក្សរ <input type="color" id="ct_f" value="#ffffff"></label><label>ពណ៌ផ្ទៃ <input type="color" id="ct_b" value="#6c63ff"></label>
+  <select id="ct_p"><option value="">— គូពណ៌ពី Style —</option><option value="#4a5568|#e0e5ec">Neumorphism អក្សរ</option><option value="#ffffff|#e0e5ec">Neumorphism highlight</option><option value="#ffffff|#a78bfa">Glass អក្សរសលើស្វាយស្រាល</option><option value="#e6e6e6|#121212">Dark mode</option><option value="#ffffff|#000000">ស/ខ្មៅ ពិត</option><option value="#6750a4|#fffbfe">Material primary</option><option value="#ff2bd6|#0d0221">Neon pink</option><option value="#999999|#ffffff">ប្រផេះលើស</option></select></div>
+ <div class="itk-out" id="ct_out"></div>
+</div>
+<div class="itk-p" data-p="tt">
+ <p class="vl-tip">ទំហំប៊ូតុងតូចពេក = ចុចខុស (ច្បាប់ <b>Fitts</b>)។ Apple ណែនាំ <b>44×44 pt</b> · Material <b>48×48 dp</b> · WCAG 2.2 (AA) អប្បបរមា <b>24×24 CSS px</b>។</p>
+ <div class="itk-row"><label>ទំហំប៊ូតុង (px) <input type="range" id="tt_s" min="16" max="72" value="32"></label><b id="tt_v"></b></div>
+ <div class="itk-out" id="tt_out"></div>
+</div>
+</div>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+document.querySelectorAll("#ul .itk-tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#ul .itk-tabs button").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll("#ul .itk-p").forEach(p=>p.classList.toggle("on",p.dataset.p===b.dataset.t));});
+let cur="neumorph";
+$("ul_grid").innerHTML=UXS.list.map(k=>`<div class="ulb" role="button" tabindex="0" data-k="${k}"><div class="uxth"><div>${UXS.render(k)}</div></div>${UXS.meta[k].n}</div>`).join("");
+function draw(){const m=UXS.meta[cur];$("ul_big").innerHTML=`<div class="uxstyle" style="margin:0">${UXS.render(cur)}</div>`;
+ document.querySelectorAll("#ul_grid .ulb").forEach(b=>b.classList.toggle("on",b.dataset.k===cur));
+ $("ul_info").innerHTML=`<b>${m.n}</b> — ${m.km} · <small>${m.y}</small>`;
+ $("ul_css").textContent=UXS.css(cur).replace(/\}/g,"}\n").replace(/;/g,";\n  ").replace(/\{/g," {\n  ");}
+$("ul_grid").onclick=e=>{const b=e.target.closest(".ulb");if(b){cur=b.dataset.k;draw();}};$("ul_grid").onkeydown=e=>{if(e.key==="Enter"||e.key===" "){const b=e.target.closest(".ulb");if(b){e.preventDefault();cur=b.dataset.k;draw();}}};
+$("ul_rnd").onclick=()=>{let k;do{k=UXS.list[Math.floor(Math.random()*UXS.list.length)]}while(k===cur);cur=k;draw();};
+$("ul_cp").onclick=()=>{const t=$("ul_css").textContent;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>$("ul_msg").textContent="✅ បានចម្លង",()=>{const r=document.createRange();r.selectNodeContents($("ul_css"));const s=getSelection();s.removeAllRanges();s.addRange(r);$("ul_msg").textContent="ចុច Ctrl+C";});};
+draw();
+const lum=h=>{const c=[1,3,5].map(i=>parseInt(h.substr(i,2),16)/255).map(v=>v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4));return .2126*c[0]+.7152*c[1]+.0722*c[2];};
+function ct(){const f=$("ct_f").value,b=$("ct_b").value,L1=lum(f),L2=lum(b),r=(Math.max(L1,L2)+.05)/(Math.min(L1,L2)+.05);
+ const P=(ok,t)=>`<span class="ul-pass ${ok?'y':'n'}">${ok?'✓':'✗'} ${t}</span>`;
+ $("ct_out").innerHTML=`<div class="ul-ct"><div class="sample" style="color:${f};background:${b}">Send money · ផ្ញើប្រាក់</div><div><div style="font-size:28px;font-weight:800">${r.toFixed(2)} : 1</div>${P(r>=4.5,"AA អក្សរធម្មតា")}${P(r>=3,"AA អក្សរធំ / UI")}${P(r>=7,"AAA")}</div></div>`+(r<4.5?`<p>💡 ងងឹតពណ៌អក្សរ ឬ ភ្លឺផ្ទៃ ដើម្បីបាន ≥ 4.5។</p>`:"");}
+["ct_f","ct_b"].forEach(i=>$(i).oninput=ct);$("ct_p").onchange=e=>{if(!e.target.value)return;const[a,b]=e.target.value.split("|");$("ct_f").value=a;$("ct_b").value=b;ct();};ct();
+function tt(){const s=+$("tt_s").value;$("tt_v").textContent=s+" px";const ok=(v,t)=>`<span class="ul-pass ${s>=v?'y':'n'}">${s>=v?'✓':'✗'} ${t}</span>`;
+ $("tt_out").innerHTML=`<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><div style="width:${s}px;height:${s}px;border-radius:${s/4}px;background:var(--accent);display:grid;place-items:center;color:#fff;font-size:${Math.max(10,s/2.4)}px">♡</div><div style="width:90px;height:90px;border-radius:50%;background:radial-gradient(#ffd8a8,#ffd8a800 70%);display:grid;place-items:center;font-size:12px">👆 ម្រាមដៃ ~9mm</div><div>${ok(24,"WCAG 2.2 AA 24px")}${ok(44,"Apple 44pt")}${ok(48,"Material 48dp")}</div></div>`;}
+$("tt_s").oninput=tt;tt();
+})();
+</script>
+
+<h3>🏆 Quiz ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["Skeuomorphism ល្បីក្នុង iOS រហូតដល់កំណែណា?", ["iOS 6", "iOS 13", "iOS 26", "iOS 2"], 0], ["iOS 7 (2013) ប្តូរទៅ style ណា?", ["Flat", "Neumorphism", "Aqua", "Win95"], 0], ["Material Design បង្ហាញដោយ Google ឆ្នាំ?", ["2014", "2007", "2020", "1995"], 0], ["Material You (M3) ពិសេសដោយ?", ["Dynamic color ពី Wallpaper", "ប៊ូតុង 3D bevel", "Texture ស្បែក", "Border ខ្មៅ 3px"], 0], ["Neumorphism បញ្ហាធំបំផុត?", ["Contrast ទាប", "File ធំ", "ពណ៌ច្រើនពេក", "គ្មានស្រមោល"], 0], ["CSS សម្រាប់កញ្ចក់ព្រិល?", ["backdrop-filter: blur()", "clip-path", "grid-template", "text-shadow"], 0], ["Liquid Glass បង្ហាញនៅ?", ["WWDC 2025", "Google I/O 2014", "Macworld 2000", "Windows 95"], 0], ["Shadow «4px 4px 0 #000» + border 3px = ?", ["Neubrutalism", "Glassmorphism", "Material", "Aurora"], 0], ["Dark mode Material ណែនាំផ្ទៃ?", ["#121212", "#000000", "#333333", "#ffffff"], 0], ["Elevation ក្នុង Dark mode បង្ហាញដោយ?", ["Surface ភ្លឺជាង", "ស្រមោលខ្មៅ", "Border ក្រហម", "Blur"], 0], ["Bento grid ឈ្មោះមកពី?", ["ប្រអប់បាយជប៉ុន", "ក្រុមហ៊ុន Bento", "Font Bento", "ទីក្រុង"], 0], ["Mica / Acrylic ជារបស់?", ["Microsoft Fluent", "Apple Aqua", "Google Material", "Gumroad"], 0], ["Aqua UI ប្រកាសដោយ Steve Jobs ឆ្នាំ?", ["2000", "1987", "2013", "2025"], 0], ["Win95 ប៊ូតុង 3D សង់ដោយ?", ["Border bevel ស/ងងឹត", "backdrop-filter", "Gradient aurora", "Glow"], 0], ["clip-path ប្រើច្រើនក្នុង style?", ["Cyberpunk / Neon HUD", "Minimal", "Flat", "Skeuomorphism"], 0], ["WCAG AA អក្សរធម្មតា contrast?", ["≥ 4.5:1", "≥ 2:1", "≥ 10:1", "≥ 1.5:1"], 0], ["Apple Touch target ណែនាំ?", ["44×44 pt", "20×20 pt", "100×100 pt", "10×10 pt"], 0], ["ច្បាប់ Fitts និយាយពី?", ["គោលដៅធំ/ជិត ចុចលឿន", "ជម្រើសច្រើន យឺត", "ការចងចាំ 7±2", "ពណ៌ 60-30-10"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+<ol class='steps'><li><b>UI Design Styles</b> (វគ្គនេះ) ✅</li><li>UX/UI Design (Research · Wireframe · Prototype)</li><li>Graphic Design Styles (Poster ២០ Style)</li><li>Mobile UI &amp; Animation (Motion)</li><li>Web Development / Flutter → សង់ UI ពិត</li></ol></section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="uxs"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

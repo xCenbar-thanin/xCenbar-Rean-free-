@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Information Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#ae3ec9; --accent2:#1c7ed6; --accent-soft:#f8f0fc;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#e599f7; --accent2:#74c0fc; --accent-soft:#2b0d33;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#e599f7; --accent2:#74c0fc; --accent-soft:#2b0d33;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#2b0d33,#ae3ec9 45%,#1c7ed6 85%);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/isys.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/isys.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Information Systems — ប្រព័ន្ធព័ត៌មាន</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Information Systems ជាអ្វី?</a>
+<a href="#setup">២. ត្រៀមខ្លួន</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Information System ជាអ្វី? ធាតុ ៥ · ប្រភេទ</a>
+<a href="#l2">មេរៀន ២: IS ក្នុងអង្គភាព · Value chain · Competitive advantage</a>
+<a href="#l3">មេរៀន ៣: Database &amp; ERD · Normalization</a>
+<a href="#l4">មេរៀន ៤: Systems Analysis៖ SDLC · Feasibility</a>
+<a href="#l5">មេរៀន ៥: ប្រមូលតម្រូវការ · DFD · Use case</a>
+<a href="#l6">មេរៀន ៦: Business process &amp; BPMN</a>
+<a href="#l7">មេរៀន ៧: Systems design៖ Input · Output · UI · Architecture</a>
+<a href="#l8">មេរៀន ៨: ERP · CRM · SCM</a>
+<a href="#l9">មេរៀន ៩: E-commerce · Digital payment</a>
+<a href="#l10">មេរៀន ១០: Business Intelligence · Data warehouse</a>
+<a href="#l11">មេរៀន ១១: គ្រប់គ្រងគម្រោង IT៖ WBS · Gantt · Critical path</a>
+<a href="#l12">មេរៀន ១២: សុវត្ថិភាព · ឯកជនភាព · ក្រមសីលធម៌ IS</a>
+<a href="#l13">មេរៀន ១៣: Cloud · SaaS · Digital transformation · អាជីព</a>
+<a href="#cheat">📋 សង្ខេប (Cheat sheet)</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងចុងវគ្គ</a>
+<a href="#pro-app">💻 IS Lab (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🗂️ Information Systems — ស្ពានរវាងអាជីវកម្ម និងបច្ចេកវិទ្យា</h2>
+  <p>ប្រភេទ IS (TPS · MIS · DSS), Value chain, <b>ERD &amp; Normalization</b> (SQL ពិត), Systems analysis (<b>TELOS · DFD · BPMN</b>), Systems design, <b>ERP · CRM · SCM (Odoo/SAP)</b>, E-commerce &amp; KHQR, BI &amp; Data warehouse, <b>Critical path</b>, សុវត្ថិភាព, Cloud + <b>IS Lab</b>។</p>
+  <p><span class="badge">📘 ១៣ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">🗃️ SQL + Diagram + គម្រោង</span><span class="badge">🗂️ IS Lab</span></p>
+</section>
+<section id="intro">
+<h2>១. Information Systems ជាអ្វី?</h2>
+
+
+<p><b>Information Systems (IS)</b> = ការរួមបញ្ចូល <b>មនុស្ស · ដំណើរការ · ទិន្នន័យ · Software · Hardware</b> ដើម្បីជួយអង្គភាពធ្វើការងារ និងសម្រេចចិត្ត។ ជាស្ពានរវាង <b>អាជីវកម្ម</b> និង <b>បច្ចេកវិទ្យា</b>។ វគ្គនេះមាន៖ ប្រភេទ IS · Value chain · <b>ERD &amp; Normalization</b> (SQL ពិត) · Systems analysis &amp; design (<b>DFD · BPMN · TELOS</b>) · <b>ERP/CRM</b> · E-commerce · BI · <b>Critical path</b> · សុវត្ថិភាព · Cloud — ជាមួយ <b>IS Lab</b>។</p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#495057"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#495057">1951</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">LEO</text><circle cx="185" cy="115" r="11" fill="#1c7ed6"/><text x="185" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#1c7ed6">1960s</text><text x="185" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">MIS</text><circle cx="290" cy="115" r="11" fill="#7048e8"/><text x="290" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#7048e8">1970</text><text x="290" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Codd relational</text><circle cx="395" cy="115" r="11" fill="#0b7285"/><text x="395" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#0b7285">1972</text><text x="395" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">SAP</text><circle cx="500" cy="115" r="11" fill="#e8590c"/><text x="500" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#e8590c">1976</text><text x="500" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Chen ERD</text><circle cx="605" cy="115" r="11" fill="#2f9e44"/><text x="605" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#2f9e44">1978</text><text x="605" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">DFD</text><circle cx="710" cy="115" r="11" fill="#d6336c"/><text x="710" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#d6336c">1985</text><text x="710" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Value chain</text><circle cx="815" cy="115" r="11" fill="#f59f00"/><text x="815" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#f59f00">1990</text><text x="815" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">ERP (Gartner)</text><circle cx="920" cy="115" r="11" fill="#ae3ec9"/><text x="920" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#ae3ec9">2005</text><text x="920" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Odoo (TinyERP)</text></svg><figcaption>🖼️ ប្រវត្តិ Information Systems</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>1951</td><td><b>LEO I</b> (J. Lyons &amp; Co., អង់គ្លេស)</td><td>កុំព្យូទ័រអាជីវកម្មដំបូង</td></tr><tr><td>1960s</td><td>ក្រុមហ៊ុនធំៗ</td><td>MIS — របាយការណ៍សម្រាប់អ្នកគ្រប់គ្រង</td></tr><tr><td>1970</td><td><b>Edgar F. Codd</b> (IBM)</td><td>Relational database model</td></tr><tr><td>1972</td><td><b>SAP</b> (អាល្លឺម៉ង់)</td><td>Software អាជីវកម្ម (R/3 ឆ្នាំ 1992)</td></tr><tr><td>1976</td><td><b>Peter Chen</b></td><td>ERD</td></tr><tr><td>1978–79</td><td><b>Tom DeMarco · Ed Yourdon</b></td><td>Structured analysis · DFD</td></tr><tr><td>1985</td><td><b>Michael Porter</b></td><td>Value chain</td></tr><tr><td>1990</td><td><b>Gartner</b></td><td>ពាក្យ ERP</td></tr><tr><td>2005</td><td><b>Fabien Pinckaers</b> — TinyERP → OpenERP → <b>Odoo</b></td><td>ERP Open source</td></tr></table>
+
+<h3>ប្រើសម្រាប់អ្វី?</h3>
+<div class="grid"><div class="card"><b>🏦 ធនាគារ</b><br>Core banking · CRM</div><div class="card"><b>🏥 មន្ទីរពេទ្យ</b><br>កំណត់ត្រាអ្នកជំងឺ</div><div class="card"><b>🏫 សាលា</b><br>ចុះឈ្មោះ · ពិន្ទុ · បង់ថ្លៃសិក្សា</div><div class="card"><b>🏭 រោងចក្រ</b><br>ERP ផលិតកម្ម</div><div class="card"><b>🛒 ហាង</b><br>POS · ស្តុក · E-commerce</div><div class="card"><b>🏛️ រដ្ឋាភិបាល</b><br>E-government</div></div>
+
+</section>
+<section id="setup">
+<h2>២. ត្រៀមខ្លួន</h2>
+<ol class='steps'><li>មូលដ្ឋាន <b>SQL</b> និង <b>Excel</b> (វគ្គ SQL · Excel Data Analytics)។</li><li>ឧបករណ៍គូរ៖ draw.io (DFD · ERD · BPMN) ឬ Lucidchart។</li><li>សាក <b>Odoo Community</b> ឬ Odoo Online Trial ដើម្បីស្គាល់ ERP ពិត។</li><li>ប្រើ <b>IS Lab</b> ចុងវគ្គ (Critical path · TELOS · ERD → SQL)។</li></ol></section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>Information System ជាអ្វី? ធាតុ ៥ · ប្រភេទ</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="156.0" height="96" rx="14" fill="#e8590c"/><text x="98.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">👥 People</text><text x="98.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">អ្នកប្រើ · IT</text><line x1="178.0" y1="82" x2="204.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="206.0" y="34" width="156.0" height="96" rx="14" fill="#7048e8"/><text x="284.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">📋 Process</text><text x="284.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">នីតិវិធី</text><line x1="364.0" y1="82" x2="390.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="392.0" y="34" width="156.0" height="96" rx="14" fill="#1c7ed6"/><text x="470.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🗃️ Data</text><text x="470.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ទិន្នន័យ</text><line x1="550.0" y1="82" x2="576.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="578.0" y="34" width="156.0" height="96" rx="14" fill="#2f9e44"/><text x="656.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">💻 Software</text><text x="656.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">កម្មវិធី</text><line x1="736.0" y1="82" x2="762.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="764.0" y="34" width="156.0" height="96" rx="14" fill="#495057"/><text x="842.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🖥️ Hardware</text><text x="842.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ម៉ាស៊ីន · Network</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">ធាតុ ៥ នៃ Information System</text></svg><figcaption>🖼️ Information System ជាអ្វី? ធាតុ ៥ · ប្រភេទ</figcaption></figure>
+<table><tr><th>ប្រភេទ</th><th>អ្នកប្រើ</th><th>ឧទាហរណ៍</th></tr><tr><td><b>TPS</b> — Transaction Processing</td><td>បុគ្គលិកប្រតិបត្តិការ</td><td>POS ហាង · ATM · ចុះឈ្មោះសិស្ស</td></tr><tr><td><b>MIS</b> — Management Information</td><td>អ្នកគ្រប់គ្រងកម្រិតកណ្តាល</td><td>របាយការណ៍លក់ប្រចាំខែ</td></tr><tr><td><b>DSS</b> — Decision Support</td><td>អ្នកវិភាគ/អ្នកគ្រប់គ្រង</td><td>What-if តម្លៃ · ជ្រើសទីតាំងសាខា</td></tr><tr><td><b>ESS/EIS</b> — Executive</td><td>នាយកប្រតិបត្តិ</td><td>Dashboard KPI</td></tr><tr><td><b>KMS</b> — Knowledge</td><td>បុគ្គលិកទាំងអស់</td><td>Wiki · FAQ</td></tr></table>
+<div class="note">💡 <b>Data</b> (ទិន្នន័យឆៅ) → <b>Information</b> (មានន័យ) → <b>Knowledge</b> → <b>Wisdom</b> (DIKW pyramid)។ IS មិនមែនតែកុំព្យូទ័រទេ — <b>មនុស្ស និងនីតិវិធី</b> សំខាន់ដូចគ្នា។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>ហាងកាហ្វេប្រើម៉ាស៊ីនគិតលុយ (POS) និង Dashboard ម្ចាស់មើលលក់ប្រចាំសប្តាហ៍។ ពួកវាជាប្រភេទ IS អ្វី?</p><details><summary>មើលចម្លើយ</summary><p>POS = <b>TPS</b> (កត់ត្រាប្រតិបត្តិការនីមួយៗ) · Dashboard ប្រចាំសប្តាហ៍ = <b>MIS</b> (ឬ ESS បើសម្រាប់នាយកកំពូល)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១.២</h4><p>ធាតុ ៥ នៃ IS ក្នុងហាងលក់ទូរស័ព្ទ — ឧទាហរណ៍នីមួយៗ។</p><details><summary>មើលចម្លើយ</summary><p><b>Hardware</b> POS/Printer · <b>Software</b> App លក់ · <b>Data</b> ផលិតផល/វិក្កយបត្រ · <b>Procedures</b> របៀបលក់/ត្រឡប់ · <b>People</b> អ្នកលក់ ម្ចាស់។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១.៣</h4><p>Data, Information, Knowledge ខុសគ្នា?</p><details><summary>មើលចម្លើយ</summary><p><b>Data</b> = 15, 22, 9 (លេខ) · <b>Information</b> = លក់បាន 46 គ្រឿងសប្តាហ៍នេះ · <b>Knowledge</b> = ចុងសប្តាហ៍លក់ច្រើន ត្រូវបន្ថែមស្តុក។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១.៤</h4><p>TPS, MIS, DSS — មួយណាសម្រាប់ «What-if»?</p><details><summary>មើលចម្លើយ</summary><p><b>DSS</b> (Decision Support System)។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> TPS ជា?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Email</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>AI</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Game</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>ប្រព័ន្ធកត់ត្រាប្រតិបត្តិការប្រចាំថ្ងៃ</button></div><div class="mcq-x" hidden>💡 ឧ. POS, ATM។</div></div><div class="mcq"><p><b>២.</b> EIS/ESS ប្រើដោយ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Tester</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>អ្នកដឹក</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>អតិថិជន</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>អ្នកដឹកនាំជាន់ខ្ពស់</button></div><div class="mcq-x" hidden>💡 Dashboard យុទ្ធសាស្ត្រ។</div></div><div class="mcq"><p><b>៣.</b> Information ល្អត្រូវ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>ត្រឹមត្រូវ ទាន់ពេល ពាក់ព័ន្ធ</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>ថ្លៃ</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>លាក់</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>វែងបំផុត</button></div><div class="mcq-x" hidden>💡 Accurate, Timely, Relevant។</div></div></div><style>.mcqs{margin:14px 0;padding:12px 14px;border:1px dashed rgba(127,127,127,.4);border-radius:14px}.mcqs h4{margin:0 0 6px}.mcq{margin:10px 0 14px}.mcq>p{margin:0 0 6px}
+.mcq-o{display:grid;gap:6px}.mcq-b{display:flex;gap:8px;align-items:flex-start;text-align:left;width:100%;padding:8px 10px;border-radius:10px;border:1px solid rgba(127,127,127,.35);background:transparent;color:inherit;font:inherit;cursor:pointer}
+.mcq-b span{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:rgba(127,127,127,.15)}
+.mcq-b.ok{border-color:#2f9e44;background:rgba(47,158,68,.14)}.mcq-b.ok span{background:#2f9e44;color:#fff}.mcq-b.no{border-color:#e03131;background:rgba(224,49,49,.1)}.mcq-b.no span{background:#e03131;color:#fff}
+.mcq.done .mcq-b{cursor:default}.mcq-x{margin-top:6px;padding:8px 10px;border-radius:10px;background:rgba(127,127,127,.08);font-size:.95em}</style>
+<script>document.addEventListener("click",function(e){var b=e.target.closest(".mcq-b");if(!b)return;var m=b.closest(".mcq");if(m.classList.contains("done"))return;m.classList.add("done");
+b.classList.add(b.dataset.ok==="1"?"ok":"no");if(b.dataset.ok!=="1")m.querySelector('.mcq-b[data-ok="1"]').classList.add("ok");var x=m.querySelector(".mcq-x");x.hidden=false;x.insertAdjacentHTML("afterbegin",b.dataset.ok==="1"?"<b>✅ ត្រឹមត្រូវ!</b> ":"<b>❌ មិនទាន់ត្រូវ</b> ");});</script></section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>IS ក្នុងអង្គភាព · Value chain · Competitive advantage</h2>
+<table><tr><th>Value chain (Porter 1985)</th><th>IS ជួយ</th></tr><tr><td>Inbound logistics</td><td>គ្រប់គ្រងស្តុក · SCM</td></tr><tr><td>Operations</td><td>ERP ផលិតកម្ម</td></tr><tr><td>Outbound logistics</td><td>ដឹកជញ្ជូន · Tracking</td></tr><tr><td>Marketing &amp; Sales</td><td>CRM · E-commerce · Social</td></tr><tr><td>Service</td><td>Helpdesk · Chatbot</td></tr><tr><td>Support (HR, Finance, IT)</td><td>HRM · Accounting · Payroll</td></tr></table>
+<div class="grid"><div class="card"><b>💰 Cost leadership</b><br>ស្វ័យប្រវត្តិកម្ម កាត់ចំណាយ</div><div class="card"><b>⭐ Differentiation</b><br>បទពិសោធន៍អតិថិជនពិសេស (App, Loyalty)</div><div class="card"><b>🎯 Focus</b><br>ទីផ្សារជាក់លាក់</div><div class="card"><b>🔒 Switching cost</b><br>អតិថិជនពិបាកប្តូរ (ទិន្នន័យ, ពិន្ទុ)</div></div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>ធនាគារមួយបង្កើត App ផ្ញើប្រាក់ KHQR លឿន និងងាយប្រើជាងគេ។ ជាយុទ្ធសាស្ត្រប្រកួតប្រជែងអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Differentiation</b> (បទពិសោធន៍ល្អជាង) — ព្រមទាំងបង្កើន <b>Switching cost</b> (អតិថិជនស៊ាំ App និងប្រវត្តិ)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ២.២</h4><p>Porter's 5 forces រាយ។</p><details><summary>មើលចម្លើយ</summary><p>Rivalry · New entrants · Substitutes · Buyer power · Supplier power។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ២.៣</h4><p>Value chain៖ សកម្មភាពចម្បង (Primary) ៥?</p><details><summary>មើលចម្លើយ</summary><p>Inbound logistics · Operations · Outbound logistics · Marketing &amp; sales · Service។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ២.៤</h4><p>ក្រុមហ៊ុនដឹកជញ្ជូនប្រើ IS ដើម្បី Cost leadership យ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>Route optimization កាត់ប្រេង · Tracking ស្វ័យប្រវត្តិ កាត់បុគ្គលិក Call center · ERP គ្រប់គ្រងស្តុកតិច។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Differentiation strategy?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>គ្មានយុទ្ធសាស្ត្រ</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>ចម្លងគូប្រកួត</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>ផ្តល់អ្វីខុសប្លែក/ល្អជាង</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>ថោកបំផុត</button></div><div class="mcq-x" hidden>💡 Porter generic strategies។</div></div><div class="mcq"><p><b>២.</b> Switching cost ខ្ពស់ ជួយ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>កាត់ចំណូល</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>បង្កើនគូប្រកួត</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>គ្មានឥទ្ធិពល</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>រក្សាអតិថិជន</button></div><div class="mcq-x" hidden>💡 ពិបាកប្តូរទៅគូប្រកួត។</div></div><div class="mcq"><p><b>៣.</b> Substitute សម្រាប់ Taxi?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Taxi ម៉ាកផ្សេង</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>សាំង</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>ផ្លូវ</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>App ហៅឡាន/Tuk-tuk</button></div><div class="mcq-x" hidden>💡 ផលិតផលផ្សេង ដែលបំពេញតម្រូវការដូចគ្នា។</div></div></div></section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Database &amp; ERD · Normalization</h2>
+<p><b>ERD (Entity-Relationship Diagram)</b> ដោយ <b>Peter Chen (1976)</b>៖ Entity (Table) · Attribute (Column) · Relationship (1:1, 1:N, M:N)។ <b>Normalization</b> (E. F. Codd) កាត់ទិន្នន័យស្ទួន៖ <b>1NF</b> តម្លៃតែមួយក្នុងក្រឡា · <b>2NF</b> អាស្រ័យលើ Key ទាំងមូល · <b>3NF</b> មិនអាស្រ័យលើ Column មិនមែន Key។</p><div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Dara   កុម្ម៉ង់ 2 ដង · សរុប 36,000៛
+Sokha  កុម្ម៉ង់ 1 ដង · សរុប 24,000៛</pre></div>
+<div class="warn">⚠️ ❌ Table តែមួយ «orders(customer_name, phone, product1, product2…)» = ស្ទួន · Update ខុសគ្នា (anomaly)។ ✅ បំបែកជា customers · products · orders · order_items (M:N)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>ហេតុអ្វីត្រូវមាន Table <code>order_items</code>?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះ Order ↔ Product ជា <b>Many-to-Many</b> (កុម្ម៉ង់មួយមានទំនិញច្រើន ទំនិញមួយនៅក្នុងកុម្ម៉ង់ច្រើន) — ត្រូវការ <b>Junction table</b> (order_id, product_id, qty)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣.២</h4><p>Entity Student និង Course (Many-to-Many) — Table អ្វីខ្លះ?</p><details><summary>មើលចម្លើយ</summary><p><code>students</code>, <code>courses</code>, និង <b><code>enrollments(student_id, course_id, grade)</code></b>។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣.៣</h4><p>Table <code>orders(order_id, customer_name, customer_phone, …)</code> បំពាន 3NF យ៉ាងម៉េច? កែ?</p><details><summary>មើលចម្លើយ</summary><p>ព័ត៌មានអតិថិជនពឹងលើ Customer មិនមែន Order → បំបែក <code>customers(id, name, phone)</code> ហើយ orders មាន <code>customer_id</code> (FK)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣.៤</h4><p>Primary key vs Foreign key?</p><details><summary>មើលចម្លើយ</summary><p><b>PK</b> = សម្គាល់ Row តែមួយ · <b>FK</b> = យោងទៅ PK នៃ Table ផ្សេង។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> 1NF តម្រូវ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>តម្លៃ Atomic (គ្មាន List ក្នុង Cell)</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>គ្មាន PK</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Table តែមួយ</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>JSON</button></div><div class="mcq-x" hidden>💡 Cell មួយ តម្លៃមួយ។</div></div><div class="mcq"><p><b>២.</b> Many-to-Many ត្រូវការ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>View</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>Junction table</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Index</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>PK តែមួយ</button></div><div class="mcq-x" hidden>💡 Associative entity។</div></div><div class="mcq"><p><b>៣.</b> SQL ភ្ជាប់ Table ពីរ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>DROP</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>JOIN</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>UNION តែប៉ុណ្ណោះ</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>ALTER</button></div><div class="mcq-x" hidden>💡 INNER/LEFT JOIN។</div></div></div></section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Systems Analysis៖ SDLC · Feasibility</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="156.0" height="96" rx="14" fill="#495057"/><text x="98.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🔍 Planning</text><text x="98.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">បញ្ហា · Feasibility</text><line x1="178.0" y1="82" x2="204.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="206.0" y="34" width="156.0" height="96" rx="14" fill="#1c7ed6"/><text x="284.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">📊 Analysis</text><text x="284.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">តម្រូវការ · As-is/To-be</text><line x1="364.0" y1="82" x2="390.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="392.0" y="34" width="156.0" height="96" rx="14" fill="#7048e8"/><text x="470.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">📐 Design</text><text x="470.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Data · UI · Architecture</text><line x1="550.0" y1="82" x2="576.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="578.0" y="34" width="156.0" height="96" rx="14" fill="#2f9e44"/><text x="656.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🔨 Implementation</text><text x="656.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Build · Test · Data migration</text><line x1="736.0" y1="82" x2="762.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="764.0" y="34" width="156.0" height="96" rx="14" fill="#e8590c"/><text x="842.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🚀 Deploy &amp; Support</text><text x="842.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Training · Go-live</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">SDLC សម្រាប់ Information System</text></svg><figcaption>🖼️ Systems Analysis៖ SDLC · Feasibility</figcaption></figure>
+<table><tr><th>TELOS</th><th>សំណួរ</th></tr><tr><td>Technical</td><td>មានបច្ចេកវិទ្យា និងជំនាញ?</td></tr><tr><td>Economic</td><td>Cost-benefit · ROI · Payback period</td></tr><tr><td>Legal</td><td>ច្បាប់ · ឯកជនភាព · អាជ្ញាប័ណ្ណ</td></tr><tr><td>Operational</td><td>អ្នកប្រើទទួលយក? ផ្លាស់ប្តូរការងារ?</td></tr><tr><td>Schedule</td><td>ទាន់ពេល?</td></tr></table>
+<div class="note">💡 ប្តូរប្រព័ន្ធ (Changeover)៖ <b>Direct</b> (ប្តូរភ្លាម — ហានិភ័យខ្ពស់) · <b>Parallel</b> (ប្រើទាំងពីរមួយរយៈ — សុវត្ថិភាព ថ្លៃ) · <b>Pilot</b> (សាខាមួយមុន) · <b>Phased</b> (ម្តងមួយផ្នែក)។ សាក <b>Feasibility (TELOS)</b> ក្នុង IS Lab។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>ធនាគារប្តូរប្រព័ន្ធ Core banking។ គួរប្រើ Changeover អ្វី? ហេតុអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Parallel</b> ឬ <b>Pilot</b> — ទិន្នន័យហិរញ្ញវត្ថុសំខាន់ខ្លាំង បើប្រព័ន្ធថ្មីមានបញ្ហា ត្រូវមានប្រព័ន្ធចាស់ជាការធានា។ Direct ហានិភ័យខ្ពស់ពេក។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤.២</h4><p>Feasibility ៤ ប្រភេទ?</p><details><summary>មើលចម្លើយ</summary><p><b>Technical</b> · <b>Economic</b> (Cost-benefit) · <b>Operational</b> (អ្នកប្រើទទួលយក?) · <b>Schedule</b> (+ Legal)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤.៣</h4><p>ប្រព័ន្ធថ្លៃ $20,000 សន្សំ $8,000/ឆ្នាំ — Payback?</p><details><summary>មើលចម្លើយ</summary><p>20,000 ÷ 8,000 = <b>2.5 ឆ្នាំ</b>។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤.៤</h4><p>Changeover ៤ ប្រភេទ និងហានិភ័យ?</p><details><summary>មើលចម្លើយ</summary><p><b>Direct</b> (ហានិភ័យខ្ពស់) · <b>Parallel</b> (សុវត្ថិភាព ថ្លៃ) · <b>Pilot</b> (សាកផ្នែកមួយ) · <b>Phased</b> (ម្តងបន្តិច)។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Changeover សុវត្ថិភាពបំផុត?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Big bang</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Direct</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>គ្មាន</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>Parallel</button></div><div class="mcq-x" hidden>💡 ប្រព័ន្ធចាស់ និងថ្មីរត់ជាមួយគ្នា។</div></div><div class="mcq"><p><b>២.</b> Systems analyst តួនាទី?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>ស្ពានរវាងអាជីវកម្ម និង IT</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>តែលក់</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Hardware តែប៉ុណ្ណោះ</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>តែ Code</button></div><div class="mcq-x" hidden>💡 យល់តម្រូវការ ហើយរចនាដំណោះស្រាយ។</div></div><div class="mcq"><p><b>៣.</b> Economic feasibility សួរ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>អត្ថប្រយោជន៍លើសថ្លៃ?</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>មានបច្ចេកវិទ្យា?</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>ច្បាប់?</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>ពេល?</button></div><div class="mcq-x" hidden>💡 Cost-benefit analysis។</div></div></div></section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>ប្រមូលតម្រូវការ · DFD · Use case</h2>
+<table><tr><th>វិធី</th><th>ល្អ</th><th>ប្រយ័ត្ន</th></tr><tr><td>Interview</td><td>ស៊ីជម្រៅ</td><td>យូរ · មតិម្នាក់</td></tr><tr><td>Questionnaire</td><td>មនុស្សច្រើន</td><td>ចម្លើយខ្លី</td></tr><tr><td>Observation</td><td>ឃើញការងារពិត</td><td>មនុស្សប្រែឥរិយាបថពេលគេមើល</td></tr><tr><td>Document analysis</td><td>ទម្រង់ របាយការណ៍ចាស់</td><td>អាចហួសសម័យ</td></tr><tr><td>JAD workshop</td><td>សម្រេចជាក្រុមលឿន</td><td>ត្រូវអ្នកសម្របសម្រួលល្អ</td></tr></table>
+<script type="text/x-code" data-lang="txt" data-label="DFD (Data Flow Diagram) — DeMarco/Yourdon">
+Level 0 (Context diagram) — ប្រព័ន្ធបណ្ណាល័យ
+
+ [សិស្ស] --(សំណើខ្ចីសៀវភៅ)--> ( 0. ប្រព័ន្ធបណ្ណាល័យ ) --(វិក្កយបត្រ/កាលបរិច្ឆេទសង)--> [សិស្ស]
+ [បណ្ណារក្ស] --(បញ្ចូលសៀវភៅថ្មី)--> ( 0 ) --(របាយការណ៍ប្រចាំខែ)--> [នាយក]
+
+Level 1
+ ( 1.0 ពិនិត្យសមាជិក ) --> ( 2.0 ខ្ចីសៀវភៅ ) --> = D1 Loans =
+ ( 3.0 សងសៀវភៅ ) --> = D1 Loans = · ( 3.0 ) --(ពិន័យ)--> [សិស្ស]
+ = D2 Books = <--> ( 2.0 ) , ( 3.0 )
+</script>
+<div class="note">💡 សញ្ញា DFD៖ <b>[ ]</b> External entity · <b>( )</b> Process · <b>= =</b> Data store · <b>→</b> Data flow។ ច្បាប់៖ ទិន្នន័យមិនហូរផ្ទាល់ពី Entity ទៅ Data store — ត្រូវឆ្លង Process។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>ក្នុង DFD ហេតុអ្វីមិនអាចគូរ «សិស្ស → D1 Loans» ផ្ទាល់?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះទិន្នន័យត្រូវ <b>ឆ្លងកាត់ Process</b> (ឧ. 2.0 ខ្ចីសៀវភៅ) ដែលពិនិត្យ និងកត់ត្រា — External entity មិនអាចសរសេរ Data store ដោយផ្ទាល់។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥.២</h4><p>និមិត្តសញ្ញា DFD ៤?</p><details><summary>មើលចម្លើយ</summary><p><b>External entity</b> (ការ៉េ) · <b>Process</b> (រង្វង់/មុំមូល) · <b>Data store</b> (បើកម្ខាង) · <b>Data flow</b> (ព្រួញ)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥.៣</h4><p>Context diagram (Level 0) មានលក្ខណៈអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>Process <b>តែមួយ</b> (ប្រព័ន្ធទាំងមូល) ជាមួយ External entities និង Data flows — គ្មាន Data store។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥.៤</h4><p>វិធីប្រមូលតម្រូវការ ៤?</p><details><summary>មើលចម្លើយ</summary><p>Interview · Questionnaire · Observation · Document analysis (+ Workshop/JAD, Prototype)។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> DFD បង្ហាញ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>លំហូរទិន្នន័យ</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>លំដាប់ពេលវេលា</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Class</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>UI</button></div><div class="mcq-x" hidden>💡 មិនបង្ហាញ Logic/Loop។</div></div><div class="mcq"><p><b>២.</b> Data flow ត្រូវឆ្លងកាត់?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>គ្មានច្បាប់</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>តែ Store</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>តែ Entity</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>Process</button></div><div class="mcq-x" hidden>💡 Entity ↔ Store ត្រូវតាម Process។</div></div><div class="mcq"><p><b>៣.</b> Prototype ជួយ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Encryption</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Deploy</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>អ្នកប្រើឃើញ និងផ្តល់ Feedback ឆាប់</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>លុប Requirements</button></div><div class="mcq-x" hidden>💡 កាត់បន្ថយការយល់ខុស។</div></div></div></section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Business process &amp; BPMN</h2>
+<table><tr><th>សញ្ញា BPMN</th><th>ន័យ</th></tr><tr><td>○ Event</td><td>ចាប់ផ្តើម / កណ្តាល / បញ្ចប់</td></tr><tr><td>▭ Activity/Task</td><td>ការងារ</td></tr><tr><td>◇ Gateway</td><td>ការសម្រេចចិត្ត (XOR/AND)</td></tr><tr><td>Pool / Lane</td><td>អង្គភាព / តួនាទី</td></tr></table>
+<script type="text/x-code" data-lang="txt" data-label="BPMN (សរសេរជាអក្សរ) — ដំណើរការកុម្ម៉ង់អនឡាញ">
+(●) ចាប់ផ្តើម: អតិថិជនកុម្ម៉ង់
+  → [ពិនិត្យស្តុក]
+  → <មានស្តុក?> —ទេ→ [ជូនដំណឹង «អស់ស្តុក»] → (◉) បញ្ចប់
+         | បាទ
+  → [បង់ប្រាក់ KHQR] → [វេចខ្ចប់] → [ដឹកជញ្ជូន] → (◉) បញ្ចប់: ទទួលទំនិញ
+
+Pool «ហាង» · Lanes៖ លក់ | ឃ្លាំង | ដឹកជញ្ជូន
+</script>
+<div class="note">💡 <b>As-is</b> (ដំណើរការបច្ចុប្បន្ន) → រកចំណុចយឺត (Bottleneck) ធ្វើដោយដៃស្ទួន → <b>To-be</b> (ដំណើរការថ្មី)។ BPMN 2.0 ដោយ OMG (2011)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>ដំណើរការអនុម័តប្រាក់ខែបន្ថែម ត្រូវចុះហត្ថលេខា ៥ នាក់ លើក្រដាស ចំណាយ ៣ សប្តាហ៍។ IS អាចកែយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>គូរ As-is ក្នុង BPMN → ស្វ័យប្រវត្តិ <b>Workflow អនុម័តអេឡិចត្រូនិក</b> (ជូនដំណឹង · អនុម័តស្របគ្នា · Deadline · Audit log) → To-be ពី ៣ សប្តាហ៍ មក ២–៣ ថ្ងៃ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦.២</h4><p>BPMN៖ Event, Activity, Gateway, Pool/Lane គូរម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>Event = <b>រង្វង់</b> · Activity = <b>ចតុកោណមុំមូល</b> · Gateway = <b>ពេជ្រ</b> · Pool/Lane = ជួរតួនាទី។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦.៣</h4><p>As-is និង To-be process?</p><details><summary>មើលចម្លើយ</summary><p><b>As-is</b> = ដំណើរការបច្ចុប្បន្ន · <b>To-be</b> = ដំណើរការកែលម្អ (ស្វ័យប្រវត្តិ តិចជំហាន)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦.៤</h4><p>គូរ To-be សម្រាប់ «សុំច្បាប់ឈប់» ក្នុងប្រព័ន្ធ HR។</p><details><summary>មើលចម្លើយ</summary><p>Start → បុគ្គលិកដាក់ Form Online → Gateway: ថ្ងៃ ≤ 3? → ប្រធានផ្នែកអនុម័ត / &gt;3 → HR អនុម័តបន្ថែម → Email ជូនដំណឹង → End។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Exclusive gateway (XOR)?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>ជ្រើសផ្លូវតែមួយ</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>ទាំងអស់ស្របគ្នា</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>ចាប់ផ្តើម</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>បញ្ចប់</button></div><div class="mcq-x" hidden>💡 ពេជ្រមាន X។</div></div><div class="mcq"><p><b>២.</b> BPR (Business Process Reengineering)?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>រចនាដំណើរការឡើងវិញទាំងស្រុង</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>កែតិចៗ</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>ទិញ Computer</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>ជួលបុគ្គលិក</button></div><div class="mcq-x" hidden>💡 ផ្លាស់ប្តូររ៉ាឌីកាល់។</div></div><div class="mcq"><p><b>៣.</b> Lane ក្នុង BPMN តំណាង?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>ទិន្នន័យ</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Error</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>តួនាទី/ផ្នែក</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>ពេលវេលា</button></div><div class="mcq-x" hidden>💡 អ្នកណាធ្វើ Activity។</div></div></div></section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Systems design៖ Input · Output · UI · Architecture</h2>
+<table><tr><th>Data dictionary</th><th>ប្រភេទ</th><th>ច្បាប់</th></tr><tr><td>student_id</td><td>VARCHAR(10)</td><td>ទម្រង់ S2026-0001 · Unique</td></tr><tr><td>phone</td><td>VARCHAR(15)</td><td>ចាប់ផ្តើម 0 · 9–10 ខ្ទង់</td></tr><tr><td>score</td><td>INT</td><td>0–100</td></tr><tr><td>created_at</td><td>TIMESTAMP</td><td>ស្វ័យប្រវត្តិ</td></tr></table>
+<div class="grid"><div class="card"><b>⌨️ Input design</b><br>Validation · Dropdown ជំនួសវាយ · Barcode/QR</div><div class="card"><b>🧾 Output design</b><br>Report · Dashboard · វិក្កយបត្រ · Export Excel/PDF</div><div class="card"><b>🖥️ UI design</b><br>ងាយប្រើ · ភាសាខ្មែរ · Accessibility (វគ្គ UX/UI)</div><div class="card"><b>🏗️ Architecture</b><br>Web · Mobile · Cloud · API</div><div class="card"><b>🔐 Controls</b><br>Role-based access · Audit log · Backup</div><div class="card"><b>📄 Data dictionary</b><br>ឈ្មោះ Field · ប្រភេទ · ច្បាប់</div></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>Form ចុះឈ្មោះ សិស្សវាយភេទ «ប្រុស/Boy/M/male» ខុសៗគ្នា។ កែការរចនា Input យ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>ប្រើ <b>Dropdown/Radio</b> មានជម្រើសថេរ (ប្រុស/ស្រី/ផ្សេងៗ) ហើយរក្សាទុកជាលេខកូដស្តង់ដារ — ទិន្នន័យស្អាត រាយការណ៍បានត្រឹមត្រូវ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧.២</h4><p>Input validation ៤ ប្រភេទ ឧទាហរណ៍?</p><details><summary>មើលចម្លើយ</summary><p><b>Type</b> (អាយុជាលេខ) · <b>Range</b> (0–120) · <b>Format</b> (Email, លេខទូរស័ព្ទ) · <b>Presence</b> (ឈ្មោះមិនទទេ)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧.៣</h4><p>Report ល្អសម្រាប់អ្នកគ្រប់គ្រង មានអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>ចំណងជើង · រយៈពេល · KPI សំខាន់ខាងលើ · ក្រាហ្វ · ការប្រៀបធៀប (ខែមុន/គោលដៅ) · ប្រភពទិន្នន័យ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧.៤</h4><p>Client-server vs Cloud SaaS សម្រាប់ SME?</p><details><summary>មើលចម្លើយ</summary><p>SaaS = គ្មាន Server ខ្លួនឯង បង់ប្រចាំខែ Update ស្វ័យប្រវត្តិ · Client-server = គ្រប់គ្រងខ្លួនឯង ថ្លៃដើមខ្ពស់។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Dropdown ជំនួស Text ជួយ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>បង្កើន Error</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>កាត់បន្ថយ Input ខុស</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>គ្មានឥទ្ធិពល</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>យឺត</button></div><div class="mcq-x" hidden>💡 តម្លៃស្តង់ដារ។</div></div><div class="mcq"><p><b>២.</b> Usability ល្អ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>ប៊ូតុងច្រើន</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>ងាយយល់ ជាប់លាប់ មាន Feedback</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>ពណ៌ច្រើន</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>អក្សរតូច</button></div><div class="mcq-x" hidden>💡 Nielsen heuristics។</div></div><div class="mcq"><p><b>៣.</b> Exception report?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Log</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Report ប្រចាំឆ្នាំ</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>បង្ហាញទាំងអស់</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>បង្ហាញតែករណីខុសធម្មតា</button></div><div class="mcq-x" hidden>💡 ឧ. ស្តុកក្រោម Reorder point។</div></div></div></section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>ERP · CRM · SCM</h2>
+<table><tr><th>ប្រព័ន្ធ</th><th>គ្រប់គ្រង</th><th>ឧទាហរណ៍</th></tr><tr><td><b>ERP</b></td><td>Finance · HR · Inventory · Purchasing · Sales ក្នុង Database តែមួយ</td><td>SAP · Oracle · Microsoft Dynamics · <b>Odoo</b> (Open source)</td></tr><tr><td><b>CRM</b></td><td>អតិថិជន · Sales pipeline · Marketing · Support</td><td>Salesforce · HubSpot · Odoo CRM</td></tr><tr><td><b>SCM</b></td><td>អ្នកផ្គត់ផ្គង់ · ស្តុក · ដឹកជញ្ជូន</td><td>SAP SCM · Odoo Inventory</td></tr><tr><td><b>HRM/Payroll</b></td><td>បុគ្គលិក · វត្តមាន · ប្រាក់ខែ</td><td>Odoo HR · ក្នុងស្រុក</td></tr></table>
+<div class="note">💡 ពាក្យ <b>ERP</b> ដោយ <b>Gartner (1990)</b>។ <b>SAP</b> បង្កើតនៅ <b>1972</b> (អាល្លឺម៉ង់) · R/3 (1992)។ <b>Odoo</b> (ចាប់ផ្តើមជា TinyERP 2005, បែលហ្ស៊ិក) ពេញនិយមនៅ SME កម្ពុជា ព្រោះមាន Community edition ឥតគិតថ្លៃ។</div>
+<div class="warn">⚠️ គម្រោង ERP ច្រើនបរាជ័យដោយសារ <b>មនុស្ស និងដំណើរការ</b> មិនមែនបច្ចេកវិទ្យា៖ Customize ច្រើនពេក · មិនបណ្តុះបណ្តាល · ទិន្នន័យចាស់កខ្វក់ · ថ្នាក់ដឹកនាំមិនគាំទ្រ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>អត្ថប្រយោជន៍សំខាន់បំផុតនៃ ERP ធៀបនឹង Excel ដាច់ៗតាមផ្នែក?</p><details><summary>មើលចម្លើយ</summary><p><b>Database រួមតែមួយ</b> — លក់ម្តង ស្តុក គណនេយ្យ និងរបាយការណ៍ Update ព្រមគ្នា (Single source of truth) · កាត់ការវាយស្ទួន និងកំហុស។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៨.២</h4><p>ERP Modules ទូទៅ?</p><details><summary>មើលចម្លើយ</summary><p>Finance/Accounting · Sales · Purchasing · Inventory · HR/Payroll · Manufacturing។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៨.៣</h4><p>CRM ជួយហាងគ្រឿងសំអាងយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>ប្រវត្តិទិញ · Loyalty points · ផ្ញើ Promotion តាមក្រុម · តាមដាន Lead/Complaint។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៨.៤</h4><p>Bullwhip effect ក្នុង SCM?</p><details><summary>មើលចម្លើយ</summary><p>ការប្រែប្រួលតម្រូវការតូចនៅអតិថិជន ក្លាយជាធំឡើងនៅ Supplier — ដោះស្រាយដោយចែករំលែកទិន្នន័យ Real-time។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Odoo ជា?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>OS</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>ERP Open source</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Browser</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Game</button></div><div class="mcq-x" hidden>💡 Community + Enterprise។</div></div><div class="mcq"><p><b>២.</b> ERP «Single source of truth»?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Excel ច្រើន</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>Database រួមតែមួយ</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>ក្រដាស</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Email</button></div><div class="mcq-x" hidden>💡 គ្មានទិន្នន័យស្ទួនខុសគ្នា។</div></div><div class="mcq"><p><b>៣.</b> SCM ផ្តោត?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Marketing</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>HR</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>លំហូរទំនិញពី Supplier ដល់អតិថិជន</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>UI</button></div><div class="mcq-x" hidden>💡 Supply chain។</div></div></div></section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>E-commerce · Digital payment</h2>
+<table><tr><th>ម៉ូដែល</th><th>ឧទាហរណ៍</th></tr><tr><td>B2C</td><td>ហាងអនឡាញ → អតិថិជន</td></tr><tr><td>B2B</td><td>អ្នកលក់ដុំ → ហាង</td></tr><tr><td>C2C</td><td>ផ្សារទំនិញជជុះ</td></tr><tr><td>G2C</td><td>សេវាសាធារណៈអនឡាញ</td></tr><tr><td>O2O</td><td>កុម្ម៉ង់អនឡាញ យកនៅហាង</td></tr></table>
+<div class="grid"><div class="card"><b>📱 KHQR / Bakong</b><br>ស្តង់ដារ QR ជាតិ (ធនាគារជាតិនៃកម្ពុជា) — មើលវគ្គ KHQR</div><div class="card"><b>🔐 PCI DSS</b><br>ស្តង់ដារសុវត្ថិភាពកាតទូទាត់</div><div class="card"><b>🚚 Fulfillment</b><br>ស្តុក · វេចខ្ចប់ · ដឹក · Return</div><div class="card"><b>📊 Analytics</b><br>Conversion rate · AOV · CAC</div></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>Conversion rate = 2% មានន័យអ្វី? បើ Website មានអ្នកចូល 5,000 នាក់/ខែ?</p><details><summary>មើលចម្លើយ</summary><p>2% នៃអ្នកចូលទិញ → <b>100 ការទិញ/ខែ</b>។ IS ជួយបង្កើនដោយ Checkout លឿន KHQR និងទំព័រផលិតផលច្បាស់។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩.២</h4><p>B2C, B2B, C2C ឧទាហរណ៍?</p><details><summary>មើលចម្លើយ</summary><p><b>B2C</b> ហាងលក់ Online ទៅអតិថិជន · <b>B2B</b> លក់ដុំឲ្យហាង · <b>C2C</b> Facebook Marketplace/Khmer24។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩.៣</h4><p>ចូល 8,000 នាក់ ទិញ 160 នាក់ មធ្យម $25 — Conversion និងចំណូល?</p><details><summary>មើលចម្លើយ</summary><p>160 ÷ 8,000 = <b>2%</b> · ចំណូល 160 × 25 = <b>$4,000</b>។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩.៤</h4><p>KHQR ផ្តល់អត្ថប្រយោជន៍អ្វីដល់ហាង?</p><details><summary>មើលចម្លើយ</summary><p>QR តែមួយ ទទួលបានពីធនាគារ/Wallet ច្រើន (Bakong) · ថ្លៃទាប · ទទួលភ្លាម · កំណត់ត្រាឌីជីថល។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Cart abandonment?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>ដាក់ក្នុងរទេះ តែមិនទិញ</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>ទិញច្រើន</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>ត្រឡប់ទំនិញ</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Login</button></div><div class="mcq-x" hidden>💡 ត្រូវ Reminder/Checkout ងាយ។</div></div><div class="mcq"><p><b>២.</b> PCI DSS ពាក់ព័ន្ធ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>SEO</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Wi-Fi</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Shipping</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>សុវត្ថិភាពទិន្នន័យកាត</button></div><div class="mcq-x" hidden>💡 Payment card industry។</div></div><div class="mcq"><p><b>៣.</b> AOV = ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>ចំណូល ÷ ចំនួន Order</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Visitor × 2</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Profit</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Order ÷ Visitor</button></div><div class="mcq-x" hidden>💡 Average order value។</div></div></div></section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>Business Intelligence · Data warehouse</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="156.0" height="96" rx="14" fill="#495057"/><text x="98.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🗄️ Sources</text><text x="98.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">POS · ERP · Excel</text><line x1="178.0" y1="82" x2="204.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="206.0" y="34" width="156.0" height="96" rx="14" fill="#1c7ed6"/><text x="284.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🔄 ETL</text><text x="284.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Extract · Transform · Load</text><line x1="364.0" y1="82" x2="390.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="392.0" y="34" width="156.0" height="96" rx="14" fill="#7048e8"/><text x="470.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🏬 Data warehouse</text><text x="470.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Star schema</text><line x1="550.0" y1="82" x2="576.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="578.0" y="34" width="156.0" height="96" rx="14" fill="#e8590c"/><text x="656.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">📊 BI / Dashboard</text><text x="656.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Power BI · OLAP</text><line x1="736.0" y1="82" x2="762.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="764.0" y="34" width="156.0" height="96" rx="14" fill="#2f9e44"/><text x="842.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🎯 Decision</text><text x="842.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">សម្រេចចិត្ត</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">BI pipeline</text></svg><figcaption>🖼️ Business Intelligence · Data warehouse</figcaption></figure>
+<table><tr><th></th><th>OLTP (ប្រតិបត្តិការ)</th><th>OLAP (វិភាគ)</th></tr><tr><td>គោលបំណង</td><td>កត់ត្រាលក់រាល់វិនាទី</td><td>វិភាគនិន្នាការ</td></tr><tr><td>ទិន្នន័យ</td><td>បច្ចុប្បន្ន · Normalized</td><td>ប្រវត្តិច្រើនឆ្នាំ · Star schema</td></tr><tr><td>Query</td><td>តូច លឿន ច្រើន</td><td>ធំ សរុប (SUM/GROUP BY)</td></tr></table>
+<div class="note">💡 <b>Star schema</b> (Ralph Kimball)៖ Fact table (Sales) នៅកណ្តាល + Dimension (Date, Product, Store, Customer)។ ពាក្យ Data warehouse ល្បីដោយ <b>Bill Inmon</b> (1990s)។ អនុវត្តក្នុងវគ្គ <b>Power BI</b>។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>ហេតុអ្វីមិនរត់ Report ធំៗលើ Database POS ផ្ទាល់?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះ Query វិភាគធំៗ <b>ធ្វើឲ្យ POS យឺត</b> ពេលកំពុងលក់ — ចម្លងទៅ <b>Data warehouse</b> (ETL ពេលយប់) ហើយវិភាគនៅទីនោះ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០.២</h4><p>ETL ជាអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Extract</b> (ទាញពី POS/ERP) → <b>Transform</b> (សម្អាត បម្លែង) → <b>Load</b> (ចូល Data warehouse)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០.៣</h4><p>Star schema មាន Table ប្រភេទអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Fact table</b> (លក់: qty, amount, keys) នៅកណ្តាល + <b>Dimension tables</b> (Date, Product, Store, Customer)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០.៤</h4><p>KPI ៣ សម្រាប់ហាងកាហ្វេ?</p><details><summary>មើលចម្លើយ</summary><p>ចំណូល/ថ្ងៃ · AOV (ចំណាយមធ្យម/Order) · Gross margin % (+ អតិថិជនត្រឡប់មក)។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> OLTP vs OLAP — OLAP សម្រាប់?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>វិភាគ/Report</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Login</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Backup</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>កត់ត្រាលក់ភ្លាម</button></div><div class="mcq-x" hidden>💡 Data warehouse។</div></div><div class="mcq"><p><b>២.</b> Drill-down?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>លុបទិន្នន័យ</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Backup</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>ពីសរុប ចុះទៅលម្អិត</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Merge</button></div><div class="mcq-x" hidden>💡 ឆ្នាំ → ខែ → ថ្ងៃ។</div></div><div class="mcq"><p><b>៣.</b> ឧបករណ៍ BI?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>CapCut</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Photoshop</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>Power BI / Tableau</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Word</button></div><div class="mcq-x" hidden>💡 មើលវគ្គ Power BI។</div></div></div></section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>គ្រប់គ្រងគម្រោង IT៖ WBS · Gantt · Critical path</h2>
+<div class="grid"><div class="card"><b>🧱 WBS</b><br>Work Breakdown Structure — បំបែកការងារជាដុំតូចៗ</div><div class="card"><b>📅 Gantt</b><br>Henry Gantt (1910s)</div><div class="card"><b>🔴 CPM</b><br>Critical Path Method (DuPont 1957)</div><div class="card"><b>📚 PMBOK / PRINCE2</b><br>ស្តង់ដារគ្រប់គ្រងគម្រោង</div></div>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>រយៈពេលគម្រោង: 26 ថ្ងៃ · Critical path: A → C → E → F → H
+  A: ES  0 EF  5 · Slack 0
+  B: ES  5 EF  9 · Slack 1
+  C: ES  5 EF 11 · Slack 0
+  D: ES  9 EF 18 · Slack 1
+  E: ES 11 EF 19 · Slack 0
+  F: ES 19 EF 24 · Slack 0
+  G: ES 19 EF 22 · Slack 2
+  H: ES 24 EF 26 · Slack 0</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>ការងារ G មាន Slack 2 ថ្ងៃ។ បើ G យឺត 1 ថ្ងៃ គម្រោងទាំងមូលយឺតប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p><b>មិនយឺតទេ</b> (0 ថ្ងៃ) — ព្រោះ G មិននៅលើ Critical path ហើយយឺតតិចជាង Slack (1 &lt; 2)។ សាក <b>Critical Path + Gantt</b> ក្នុង IS Lab។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១.២</h4><p>A(3) → B(4) → D(2) និង A → C(6) → D — Critical path និងរយៈពេល?</p><details><summary>មើលចម្លើយ</summary><p>A-B-D = 9 · A-C-D = <b>11</b> → Critical path <b>A-C-D</b> = 11 ថ្ងៃ · B Slack = 2។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១.៣</h4><p>WBS ជាអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>Work Breakdown Structure — បំបែកគម្រោងជាការងារតូចៗ (Deliverables → Work packages)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១.៤</h4><p>Gantt chart បង្ហាញអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>ការងារ (Row) តាមពេលវេលា (Bar) · Dependency · Milestone · វឌ្ឍនភាព។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Slack នៃ Critical path?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>1</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>អវិជ្ជមានជានិច្ច</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>ច្រើន</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>0</button></div><div class="mcq-x" hidden>💡 យឺតមួយថ្ងៃ = គម្រោងយឺត។</div></div><div class="mcq"><p><b>២.</b> Milestone?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>ថវិកា</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Bug</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>ចំណុចសំខាន់ (រយៈពេល 0)</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>ការងារវែង</button></div><div class="mcq-x" hidden>💡 ឧ. «Go-live»។</div></div><div class="mcq"><p><b>៣.</b> PERT ប៉ាន់ស្មាន (O + 4M + P) / 6 — O=2, M=4, P=12?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>3</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>5</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>4</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>6</button></div><div class="mcq-x" hidden>💡 (2 + 16 + 12) ÷ 6 = 5។</div></div></div></section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>សុវត្ថិភាព · ឯកជនភាព · ក្រមសីលធម៌ IS</h2>
+<table><tr><th>គោលការណ៍</th><th>ន័យ</th></tr><tr><td><b>CIA triad</b></td><td>Confidentiality · Integrity · Availability</td></tr><tr><td>Least privilege</td><td>សិទ្ធិតិចបំផុតដែលត្រូវការ</td></tr><tr><td>Segregation of duties</td><td>អ្នកបង្កើតវិក្កយបត្រ ≠ អ្នកអនុម័តបង់</td></tr><tr><td>Backup 3-2-1</td><td>៣ ច្បាប់ · ២ ប្រភេទ Media · ១ នៅក្រៅទីតាំង</td></tr><tr><td>Audit trail</td><td>កត់ត្រាអ្នកណាកែអ្វី ពេលណា</td></tr></table>
+<div class="grid"><div class="card"><b>🔐 Data protection</b><br>ប្រមូលតែទិន្នន័យដែលត្រូវការ · Consent · Encryption</div><div class="card"><b>🌍 GDPR (EU)</b><br>ស្តង់ដារឯកជនភាពល្បី — ក្រុមហ៊ុនមានអតិថិជន EU ត្រូវគោរព</div><div class="card"><b>⚖️ Ethics</b><br>កុំប្រើទិន្នន័យអតិថិជនខុសគោលបំណង</div><div class="card"><b>🧯 DR plan</b><br>Disaster recovery · RTO/RPO</div></div>
+<div class="note">💡 ច្បាប់ការពារទិន្នន័យប្រែប្រួលតាមប្រទេស — ពិនិត្យច្បាប់ និងបទប្បញ្ញត្តិចុងក្រោយនៅកម្ពុជា ឬប្រទេសដែលអ្នកធ្វើអាជីវកម្ម។ មើលវគ្គ <b>Cyber Security</b>។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>បុគ្គលិកម្នាក់អាចទាំងបង្កើតអ្នកផ្គត់ផ្គង់ថ្មី និងអនុម័តបង់ប្រាក់។ ខុសគោលការណ៍អ្វី? ហានិភ័យ?</p><details><summary>មើលចម្លើយ</summary><p>ខុស <b>Segregation of duties</b> — អាចបង្កើតអ្នកផ្គត់ផ្គង់ក្លែង ហើយបង់ប្រាក់ឲ្យខ្លួនឯង (Fraud)។ បំបែកតួនាទី + Audit trail។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២.២</h4><p>CIA triad?</p><details><summary>មើលចម្លើយ</summary><p><b>Confidentiality</b> · <b>Integrity</b> · <b>Availability</b>។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២.៣</h4><p>Backup 3-2-1?</p><details><summary>មើលចម្លើយ</summary><p><b>3</b> ច្បាប់ · <b>2</b> ប្រភេទផ្ទុក · <b>1</b> នៅក្រៅ (Offsite/Cloud)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២.៤</h4><p>Separation of duties ឧទាហរណ៍ក្នុងហិរញ្ញវត្ថុ?</p><details><summary>មើលចម្លើយ</summary><p>អ្នកបង្កើត Payment ≠ អ្នកអនុម័ត ≠ អ្នកផ្ទៀងផ្ទាត់ធនាគារ។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> MFA?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>Login ច្រើនកត្តា (Password + OTP)</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Firewall</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Password វែង</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Backup</button></div><div class="mcq-x" hidden>💡 Multi-factor authentication។</div></div><div class="mcq"><p><b>២.</b> Phishing?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>បោកឲ្យផ្តល់ព័ត៌មាន តាមសារ/Email ក្លែង</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Backup</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Cable</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Virus Hardware</button></div><div class="mcq-x" hidden>💡 ត្រូវបណ្តុះបណ្តាលបុគ្គលិក។</div></div><div class="mcq"><p><b>៣.</b> Availability ការពារដោយ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>Backup, Redundancy, UPS</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Logo</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Encryption តែប៉ុណ្ណោះ</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Password</button></div><div class="mcq-x" hidden>💡 ប្រព័ន្ធប្រើបានពេលត្រូវការ។</div></div></div></section>
+<section id="l13">
+<h2><span class="badge">មេរៀន ១៣</span>Cloud · SaaS · Digital transformation · អាជីព</h2>
+<table><tr><th>ម៉ូដែល</th><th>អ្នកគ្រប់គ្រង</th><th>ឧទាហរណ៍</th></tr><tr><td>IaaS</td><td>អ្នក៖ OS → App</td><td>AWS EC2 · DigitalOcean</td></tr><tr><td>PaaS</td><td>អ្នក៖ App + Data</td><td>Railway · Render · Heroku</td></tr><tr><td>SaaS</td><td>អ្នកប្រើតែ</td><td>Google Workspace · Microsoft 365 · Odoo Online · Canva</td></tr></table>
+<div class="grid"><div class="card"><b>📊 Business Analyst</b><br>ស្ពានរវាងអាជីវកម្ម និង IT</div><div class="card"><b>🧩 Systems Analyst</b><br>វិភាគ · រចនាប្រព័ន្ធ</div><div class="card"><b>🏢 ERP consultant</b><br>Odoo/SAP implementation</div><div class="card"><b>🗃️ Database admin</b><br>SQL · Backup · Performance</div><div class="card"><b>📈 BI analyst</b><br>Power BI · Data warehouse</div><div class="card"><b>🧭 IT project manager</b><br>Scope · Time · Cost</div></div>
+<div class="note">💡 <b>Digital transformation</b> = ប្តូរដំណើរការ និងវប្បធម៌ មិនមែនគ្រាន់តែទិញ Software។ ចាប់ផ្តើមពីបញ្ហាអាជីវកម្ម → ដំណើរការ → ទិន្នន័យ → បច្ចេកវិទ្យា។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣</h4><p>SME ១៥ នាក់ គ្មាន IT staff ចង់ប្រើប្រព័ន្ធគណនេយ្យ + ស្តុក។ IaaS, PaaS ឬ SaaS?</p><details><summary>មើលចម្លើយ</summary><p><b>SaaS</b> (ឧ. Odoo Online, QuickBooks) — មិនចាំបាច់ថែ Server · Update/Backup ដោយអ្នកផ្គត់ផ្គង់ · ចាប់ផ្តើមលឿន បង់ប្រចាំខែ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣.២</h4><p>IaaS, PaaS, SaaS ឧទាហរណ៍?</p><details><summary>មើលចម្លើយ</summary><p><b>IaaS</b> AWS EC2 · <b>PaaS</b> Vercel/Railway/Heroku · <b>SaaS</b> Google Workspace, Odoo Online។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣.៣</h4><p>Digital transformation ជំហានសម្រាប់ SME?</p><details><summary>មើលចម្លើយ</summary><p>ធ្វើឌីជីថលដំណើរការសំខាន់ (លក់/ស្តុក/គណនេយ្យ) → ទិន្នន័យរួម → KHQR/Online → Dashboard → ស្វ័យប្រវត្តិ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣.៤</h4><p>អាជីព IS ៣?</p><details><summary>មើលចម្លើយ</summary><p>Business/Systems analyst · ERP consultant · BI analyst (+ IT project manager)។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Public cloud?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>Infrastructure ចែករំលែក ពីអ្នកផ្តល់សេវា</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Email</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Server ក្នុងការិយាល័យ</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>USB</button></div><div class="mcq-x" hidden>💡 AWS, Azure, GCP។</div></div><div class="mcq"><p><b>២.</b> Pay-as-you-go?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>បង់ Hardware</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>ឥតគិតថ្លៃជានិច្ច</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>បង់ម្តងជារៀងរហូត</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>បង់តាមការប្រើ</button></div><div class="mcq-x" hidden>💡 OpEx ជំនួស CapEx។</div></div><div class="mcq"><p><b>៣.</b> Vendor lock-in?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>លឿន</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>ថោក</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>សុវត្ថិភាពល្អ</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>ពិបាកប្តូរអ្នកផ្តល់សេវា</button></div><div class="mcq-x" hidden>💡 គិតមុនជ្រើស។</div></div></div></section>
+<section id="cheat">
+<h2>📋 សង្ខេប (Cheat sheet)</h2>
+<table><tr><th>ពាក្យ</th><th>ន័យ</th></tr><tr><td>TPS · MIS · DSS · ESS</td><td>ប្រតិបត្តិការ · របាយការណ៍ · គាំទ្រការសម្រេច · នាយក</td></tr><tr><td>ERD</td><td>Entity · Attribute · Relationship (1:1, 1:N, M:N)</td></tr><tr><td>1NF/2NF/3NF</td><td>តម្លៃតែមួយ · Key ទាំងមូល · គ្មាន Transitive</td></tr><tr><td>TELOS</td><td>Technical · Economic · Legal · Operational · Schedule</td></tr><tr><td>DFD</td><td>Entity · Process · Data store · Flow</td></tr><tr><td>BPMN</td><td>Event · Activity · Gateway · Lane</td></tr><tr><td>Changeover</td><td>Direct · Parallel · Pilot · Phased</td></tr><tr><td>ERP / CRM / SCM</td><td>រួម · អតិថិជន · ផ្គត់ផ្គង់</td></tr><tr><td>OLTP vs OLAP</td><td>ប្រតិបត្តិការ vs វិភាគ</td></tr><tr><td>CPM</td><td>ES/EF/LS/LF · Slack 0 = Critical</td></tr><tr><td>CIA</td><td>Confidentiality · Integrity · Availability</td></tr><tr><td>IaaS/PaaS/SaaS</td><td>កម្រិតគ្រប់គ្រង Cloud</td></tr></table>
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងចុងវគ្គ</h2>
+<ol class='steps'><li>ជ្រើសអង្គភាពពិត (ហាង សាលា ក្លិនិក) → សម្ភាសន៍ ២ នាក់ → As-is BPMN។</li><li>បញ្ហា ៣ + Feasibility TELOS → To-be process។</li><li>DFD Level 0 &amp; 1 · ERD 3NF · SQL CREATE TABLE (IS Lab)។</li><li>Prototype (Excel/Odoo/Web) + Dashboard KPI ៣។</li><li>ផែនការគម្រោង (WBS + Critical path) និងផែនការ Changeover · បទបង្ហាញ ១០ នាទី។</li></ol></section>
+<section id="pro-app">
+<h2>💻 IS Lab (App)</h2>
+
+<p><b>📅 Critical Path + Gantt</b> (ES/EF/LS/LF · Slack · Critical path) · <b>⚖️ Feasibility TELOS</b> scorecard · <b>🗃️ ERD → SQL</b> (បង្កើត CREATE TABLE ជាមួយ PK/FK)។</p>
+
+<div class="itk" id="isl">
+<div class="itk-tabs"><button class="on" data-t="cpm">📅 Critical Path + Gantt</button><button data-t="fe">⚖️ Feasibility (TELOS)</button><button data-t="er">🗃️ ERD → SQL</button></div>
+<div class="itk-p on" data-p="cpm">
+ <p class="vl-tip">មួយបន្ទាត់៖ <code>ID | ការងារ | ថ្ងៃ | មុនត្រូវរួច (ID,ID)</code> → App គណនា <b>ES/EF/LS/LF</b>, <b>Slack</b>, <b>Critical path</b> និងគូរ Gantt។</p>
+ <textarea id="cp_t" rows="8" style="width:100%;font-family:inherit">A | សិក្សាតម្រូវការ | 5 |
+B | រចនា Database | 4 | A
+C | រចនា UI | 6 | A
+D | សរសេរ Backend | 9 | B
+E | សរសេរ Frontend | 8 | C
+F | សាក (Test) | 5 | D,E
+G | បណ្តុះបណ្តាលអ្នកប្រើ | 3 | E
+H | ដាក់ប្រើ (Go-live) | 2 | F,G</textarea>
+ <div class="itk-out" id="cp_out"></div>
+ <canvas id="cp_cv" width="720" height="260" style="width:100%;height:auto;border-radius:10px;background:rgba(127,127,127,.06)"></canvas>
+</div>
+<div class="itk-p" data-p="fe">
+ <p class="vl-tip">ដាក់ពិន្ទុ 1–5 សម្រាប់គម្រោង ERP/App ថ្មី។ ពិន្ទុ ≥ 3.5 = គួរបន្ត។</p>
+ <div id="fe_in"></div><div class="itk-out" id="fe_out"></div>
+</div>
+<div class="itk-p" data-p="er">
+ <p class="vl-tip">មួយបន្ទាត់ក្នុងមួយ Entity៖ <code>Entity: field, field, ref&gt;OtherEntity</code> → App បង្កើត <b>SQL CREATE TABLE</b> (PK/FK)។</p>
+ <textarea id="er_t" rows="5" style="width:100%;font-family:inherit">Customer: name, phone, email
+Product: name, price, stock
+Order: date, status, ref>Customer
+OrderItem: qty, unit_price, ref>Order, ref>Product</textarea>
+ <pre id="er_out" style="white-space:pre-wrap;background:rgba(127,127,127,.1);padding:10px;border-radius:10px;font-size:12.5px"></pre>
+</div>
+</div>
+<script>
+(function(){
+const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+document.querySelectorAll("#isl .itk-tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#isl .itk-tabs button").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll("#isl .itk-p").forEach(p=>p.classList.toggle("on",p.dataset.p===b.dataset.t));if(b.dataset.t==="cpm")cpm();});
+function cpm(){const T={},order=[];let err="";$("cp_t").value.split("\n").forEach(l=>{const p=l.split("|").map(x=>x.trim());if(!p[0])return;T[p[0]]={id:p[0],n:p[1]||p[0],d:Math.max(0,+p[2]||0),pre:(p[3]||"").split(",").map(x=>x.trim()).filter(Boolean)};order.push(p[0]);});
+ Object.values(T).forEach(t=>t.pre.forEach(p=>{if(!T[p])err="⚠️ មិនស្គាល់ ID «"+esc(p)+"» ក្នុង "+esc(t.id);}));if(err){$("cp_out").innerHTML=err;return;}
+ const done=new Set(),seq=[];let guard=0;while(seq.length<order.length&&guard++<500)order.forEach(id=>{if(!done.has(id)&&T[id].pre.every(p=>done.has(p))){done.add(id);seq.push(id);}});if(seq.length<order.length){$("cp_out").innerHTML="⚠️ មាន Loop (A ត្រូវការ B ហើយ B ត្រូវការ A)";return;}
+ seq.forEach(id=>{const t=T[id];t.es=Math.max(0,...t.pre.map(p=>T[p].ef));t.ef=t.es+t.d;});const end=Math.max(...seq.map(id=>T[id].ef));
+ [...seq].reverse().forEach(id=>{const t=T[id],succ=seq.filter(s=>T[s].pre.includes(id));t.lf=succ.length?Math.min(...succ.map(s=>T[s].ls)):end;t.ls=t.lf-t.d;t.sl=t.ls-t.es;});
+ const crit=seq.filter(id=>T[id].sl===0);
+ $("cp_out").innerHTML=`<b>⏱️ រយៈពេលគម្រោង៖ ${end} ថ្ងៃ · Critical path៖ ${crit.join(" → ")}</b><table><tr><th>ID</th><th>ការងារ</th><th>ថ្ងៃ</th><th>ES</th><th>EF</th><th>LS</th><th>LF</th><th>Slack</th></tr>${seq.map(id=>{const t=T[id];return `<tr${t.sl===0?' style="color:#e03131;font-weight:700"':""}><td>${esc(id)}</td><td>${esc(t.n)}</td><td>${t.d}</td><td>${t.es}</td><td>${t.ef}</td><td>${t.ls}</td><td>${t.lf}</td><td>${t.sl}</td></tr>`;}).join("")}</table><small>Slack 0 (ក្រហម) = ពន្យាមួយថ្ងៃ គម្រោងទាំងមូលយឺតមួយថ្ងៃ។</small>`;
+ const c=$("cp_cv"),g=c.getContext("2d"),W=c.width,rowH=Math.min(28,(c.height-30)/seq.length),X=d=>130+d/Math.max(1,end)*(W-150);g.clearRect(0,0,W,c.height);g.font="12px 'Kantumruy Pro',sans-serif";
+ seq.forEach((id,i)=>{const t=T[id],y=10+i*rowH;g.fillStyle="#495057";g.fillText((id+" "+t.n).slice(0,18),6,y+rowH*.65);g.fillStyle=t.sl===0?"#e03131":"#1c7ed6";g.fillRect(X(t.es),y+3,Math.max(2,X(t.ef)-X(t.es)),rowH-7);if(t.sl>0){g.fillStyle="rgba(28,126,214,.18)";g.fillRect(X(t.ef),y+3,X(t.lf)-X(t.ef),rowH-7);}});
+ g.fillStyle="#868e96";for(let d=0;d<=end;d+=Math.max(1,Math.ceil(end/12)))g.fillText(d,X(d)-3,c.height-6);}
+$("cp_t").oninput=cpm;cpm();
+const FE=[["T","Technical","មានបច្ចេកវិទ្យា/ជំនាញគ្រប់គ្រាន់?"],["E","Economic","អត្ថប្រយោជន៍ > ចំណាយ (ROI)?"],["L","Legal","ស្របច្បាប់ ឯកជនភាព កិច្ចសន្យា?"],["O","Operational","បុគ្គលិកប្រើ និងទទួលយក?"],["S","Schedule","ទាន់ពេលកំណត់?"]];
+$("fe_in").innerHTML=FE.map(([k,n,q])=>`<div class="itk-row"><label style="flex:1"><b>${k} — ${n}</b> <small>${q}</small></label><input type="range" min="1" max="5" value="${k==="E"?4:k==="S"?3:4}" data-k="${k}" style="flex:1"><b id="fe_${k}"></b></div>`).join("");
+function fe(){let s=0,low=[];FE.forEach(([k,n])=>{const v=+document.querySelector(`#fe_in [data-k="${k}"]`).value;$("fe_"+k).textContent=v;s+=v;if(v<=2)low.push(n);});const avg=s/FE.length;
+ $("fe_out").innerHTML=`<b style="font-size:20px">${avg.toFixed(1)} / 5</b> — ${avg>=3.5&&!low.length?"✅ គួរបន្តគម្រោង":"⚠️ ពិចារណាឡើងវិញ"}${low.length?`<br>ចំណុចខ្សោយ៖ <b>${low.join(", ")}</b> → ត្រូវមានផែនការកាត់បន្ថយហានិភ័យ`:""}`;}
+document.querySelectorAll("#fe_in input").forEach(i=>i.oninput=fe);fe();
+function er(){const out=[],rows=$("er_t").value.split("\n").filter(l=>l.includes(":"));rows.forEach(l=>{const[e,rest]=l.split(":");const name=e.trim().replace(/\s+/g,"_"),tb=name.toLowerCase()+"s";const cols=[`  id SERIAL PRIMARY KEY`],fks=[];
+ rest.split(",").map(x=>x.trim()).filter(Boolean).forEach(f=>{if(f.startsWith("ref>")){const r=f.slice(4).trim();const rt=r.toLowerCase()+"s";cols.push(`  ${r.toLowerCase()}_id INT NOT NULL`);fks.push(`  FOREIGN KEY (${r.toLowerCase()}_id) REFERENCES ${rt}(id)`);}
+  else{const t=/price|amount|total/.test(f)?"NUMERIC(12,2)":/qty|stock|count/.test(f)?"INT":/date/.test(f)?"DATE":/email/.test(f)?"VARCHAR(120) UNIQUE":"VARCHAR(120)";cols.push(`  ${f.replace(/\s+/g,"_")} ${t}`);}});
+ out.push(`CREATE TABLE ${tb} (\n${cols.concat(fks).join(",\n")}\n);`);});$("er_out").textContent=out.join("\n\n")+"\n\n-- 1-to-many៖ FK នៅខាង «many» · many-to-many៖ ប្រើ Table កណ្តាល (ឧ. order_items)";}
+$("er_t").oninput=er;er();
+})();
+</script>
+
+<h3>🏆 Quiz ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["ធាតុ IS មិនរួមបញ្ចូល?", ["អាកាសធាតុ", "មនុស្ស", "ទិន្នន័យ", "ដំណើរការ"], 0], ["POS ហាង ជា?", ["TPS", "ESS", "DSS", "KMS"], 0], ["ERD ដោយ?", ["Peter Chen", "Codd", "Porter", "Gantt"], 0], ["Relational model ដោយ?", ["Edgar F. Codd", "Peter Chen", "Bill Gates", "Linus"], 0], ["M:N relationship ត្រូវការ?", ["Junction table", "Primary key តែមួយ", "Index", "View"], 0], ["E ក្នុង TELOS?", ["Economic", "Email", "Ethics", "Error"], 0], ["Changeover សុវត្ថិភាពបំផុត?", ["Parallel", "Direct", "Random", "គ្មាន"], 0], ["DFD ទិន្នន័យពី Entity ទៅ Data store ត្រូវ?", ["ឆ្លង Process", "ផ្ទាល់", "តាម Email", "មិនចាំបាច់"], 0], ["ពាក្យ ERP ដោយ?", ["Gartner (1990)", "SAP (1972)", "Odoo", "IBM"], 0], ["Odoo ចាប់ផ្តើមជា?", ["TinyERP", "SAP R/3", "Oracle", "Excel"], 0], ["Slack 0 មានន័យ?", ["នៅលើ Critical path", "អាចយឺតបាន", "បានបញ្ចប់", "បោះបង់"], 0], ["SME គ្មាន IT staff គួរប្រើ?", ["SaaS", "IaaS", "Data center ផ្ទាល់", "Mainframe"], 0], ["អ្នកបង្កើតវិក្កយបត្រ ≠ អ្នកអនុម័ត?", ["Segregation of duties", "Least privilege", "Backup", "OLAP"], 0], ["Report ធំគួររត់លើ?", ["Data warehouse", "POS ផ្ទាល់", "ទូរស័ព្ទ", "Printer"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+<ol class='steps'><li>Excel · SQL · Power BI</li><li><b>Information Systems</b> (វគ្គនេះ) ✅</li><li>Software Engineering · UX/UI</li><li>Business Management · Accounting (ERP)</li><li>Cyber Security · Cloud</li></ol></section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="isys"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

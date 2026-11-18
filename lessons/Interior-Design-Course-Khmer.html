@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interior Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#a87b4f; --accent2:#2b8a3e; --accent-soft:#f8f1e9;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#e0b98a; --accent2:#8ce99a; --accent-soft:#2a1d10;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#e0b98a; --accent2:#8ce99a; --accent-soft:#2a1d10;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#2a1d10,#a87b4f 50%,#2b8a3e 90%);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/interior.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/interior.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Interior Design — រចនាផ្ទៃខាងក្នុង</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Interior Design ជាអ្វី?</a>
+<a href="#setup">២. ត្រៀមខ្លួន</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Interior design ជាអ្វី? · ដំណើរការរចនា</a>
+<a href="#l2">មេរៀន ២: Elements &amp; Principles</a>
+<a href="#l3">មេរៀន ៣: Floor plan · Scale · និមិត្តសញ្ញា</a>
+<a href="#l4">មេរៀន ៤: Ergonomics · ផ្លូវដើរ · ទំហំស្តង់ដារ</a>
+<a href="#l5">មេរៀន ៥: ពណ៌ក្នុង Interior · 60-30-10</a>
+<a href="#l6">មេរៀន ៦: ពន្លឺ · Layers · Lux · Kelvin</a>
+<a href="#l7">មេរៀន ៧: សម្ភារៈ · អាកាសធាតុកម្ពុជា</a>
+<a href="#l8">មេរៀន ៨: Interior styles · New Khmer Architecture</a>
+<a href="#l9">មេរៀន ៩: រៀបចំបន្ទប់ · Layout</a>
+<a href="#l10">មេរៀន ១០: ឧបករណ៍ · SketchUp · Render</a>
+<a href="#l11">មេរៀន ១១: BOQ · ថវិកា</a>
+<a href="#l12">មេរៀន ១២: និរន្តរភាព · អាជីព · Portfolio</a>
+<a href="#cheat">📋 សង្ខេប (Cheat sheet)</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងចុងវគ្គ</a>
+<a href="#pro-app">💻 Room Planner (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🛋️ Interior Design — រចនាលំហដែលស្អាត និងប្រើបាន</h2>
+  <p>ដំណើរការរចនា, Elements &amp; Principles, <b>Floor plan 1:50</b>, <b>Ergonomics</b>, ពណ៌ 60-30-10, <b>ពន្លឺ (Lux · Kelvin)</b>, សម្ភារៈសម្រាប់អាកាសធាតុកម្ពុជា, Style (New Khmer Architecture), SketchUp, <b>BOQ &amp; Budget</b> + <b>Room Planner</b>។</p>
+  <p><span class="badge">📘 ១២ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">🎨 Lab អន្តរកម្ម + គម្រោង (គ្មាន Code)</span><span class="badge">🛋️ Room Planner</span></p>
+</section>
+<section id="intro">
+<h2>១. Interior Design ជាអ្វី?</h2>
+
+
+<p><b>Interior Design</b> = ការរចនាលំហខាងក្នុង (ផ្ទះ ការិយាល័យ ហាង កាហ្វេ) ឲ្យស្អាត ប្រើបាន មានសុវត្ថិភាព និងសមនឹងអាកាសធាតុ។ វគ្គនេះមាន៖ ដំណើរការរចនា · Elements &amp; Principles · <b>Floor plan &amp; Scale</b> · <b>Ergonomics</b> · ពណ៌ 60-30-10 · <b>ពន្លឺ Lux/Kelvin</b> · សម្ភារៈសម្រាប់កម្ពុជា · Styles &amp; New Khmer Architecture · Layout · SketchUp · <b>BOQ</b> — ជាមួយ <b>Room Planner</b> (អូសសង្ហារឹម · គណនាអំពូល · Palette)។</p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#a87b4f"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#a87b4f">1913</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Elsie de Wolfe</text><circle cx="220" cy="115" r="11" fill="#e03131"/><text x="220" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#e03131">1919</text><text x="220" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Bauhaus</text><circle cx="360" cy="115" r="11" fill="#1c7ed6"/><text x="360" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#1c7ed6">1943</text><text x="360" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">IKEA</text><circle cx="500" cy="115" r="11" fill="#f59f00"/><text x="500" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#f59f00">1950s</text><text x="500" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Mid-century</text><circle cx="640" cy="115" r="11" fill="#2b8a3e"/><text x="640" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#2b8a3e">1953</text><text x="640" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Vann Molyvann</text><circle cx="780" cy="115" r="11" fill="#7048e8"/><text x="780" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#7048e8">2000</text><text x="780" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">SketchUp</text><circle cx="920" cy="115" r="11" fill="#0ca678"/><text x="920" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#0ca678">2020s</text><text x="920" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Biophilic</text></svg><figcaption>🖼️ ប្រវត្តិ Interior Design</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>1913</td><td><b>Elsie de Wolfe</b> — <i>The House in Good Taste</i></td><td>អ្នករចនា Interior វិជ្ជាជីវៈដំបូងៗ</td></tr><tr><td>1919</td><td><b>Walter Gropius</b> — Bauhaus</td><td>Form follows function · សង្ហារឹមទំនើប</td></tr><tr><td>1943</td><td><b>Ingvar Kamprad</b> — IKEA</td><td>Flat-pack — សង្ហារឹមល្អថោកសម្រាប់មនុស្សទូទៅ</td></tr><tr><td>1950s</td><td><b>Charles &amp; Ray Eames</b></td><td>Mid-century modern</td></tr><tr><td>1950s–60s</td><td><b>វណ្ណ ម៉ូលីវណ្ណ</b></td><td>New Khmer Architecture — រចនាសម្រាប់អាកាសធាតុត្រូពិច</td></tr><tr><td>2000</td><td><b>@Last Software</b> — SketchUp</td><td>3D ងាយសម្រាប់អ្នករចនា</td></tr><tr><td>2020s</td><td>Biophilic &amp; Sustainable design</td><td>ធម្មជាតិ សុខភាព ថាមពល</td></tr></table>
+
+<h3>ប្រើសម្រាប់អ្វី?</h3>
+<div class="grid"><div class="card"><b>🏠 ផ្ទះ/Condo</b><br>Residential</div><div class="card"><b>🏢 ការិយាល័យ</b><br>Workplace</div><div class="card"><b>☕ កាហ្វេ/ភោជនីយដ្ឋាន</b><br>F&amp;B</div><div class="card"><b>🏪 ហាង</b><br>Retail</div><div class="card"><b>🏨 សណ្ឋាគារ</b><br>Hospitality</div><div class="card"><b>🏫 សាលា/មន្ទីរពេទ្យ</b><br>Public</div></div>
+
+</section>
+<section id="setup">
+<h2>២. ត្រៀមខ្លួន</h2>
+<ol class='steps'><li>ម៉ែត្រវាស់ + សៀវភៅ Sketch + ក្រដាសក្រឡា។</li><li>SketchUp Free (Web) ឬ Planner 5D។</li><li>Pinterest/Behance សម្រាប់ Mood board។</li><li>ហាត <b>Room Planner</b> ចុងវគ្គ។</li></ol></section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>Interior design ជាអ្វី? · ដំណើរការរចនា</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="102.85714285714286" height="96" rx="14" fill="#a87b4f"/><text x="71.42857142857143" y="76.0" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">🗣️ Brief</text><text x="71.42857142857143" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">តម្រូវការ · ថវិកា</text><line x1="124.85714285714286" y1="82" x2="150.85714285714286" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="152.85714285714286" y="34" width="102.85714285714286" height="96" rx="14" fill="#495057"/><text x="204.28571428571428" y="76.0" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">📏 Survey</text><text x="204.28571428571428" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">វាស់ · ថតរូប</text><line x1="257.7142857142857" y1="82" x2="283.7142857142857" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="285.7142857142857" y="34" width="102.85714285714286" height="96" rx="14" fill="#7048e8"/><text x="337.14285714285717" y="76.0" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">💡 Concept</text><text x="337.14285714285717" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Mood board</text><line x1="390.57142857142856" y1="82" x2="416.57142857142856" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="418.57142857142856" y="34" width="102.85714285714286" height="96" rx="14" fill="#1c7ed6"/><text x="470.0" y="76.0" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">📐 Design</text><text x="470.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Plan · 3D</text><line x1="523.4285714285714" y1="82" x2="549.4285714285714" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="551.4285714285714" y="34" width="102.85714285714286" height="96" rx="14" fill="#f59f00"/><text x="602.8571428571429" y="76.0" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">💰 BOQ</text><text x="602.8571428571429" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">តម្លៃ</text><line x1="656.2857142857143" y1="82" x2="682.2857142857143" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="684.2857142857143" y="34" width="102.85714285714286" height="96" rx="14" fill="#2b8a3e"/><text x="735.7142857142858" y="76.0" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">🔨 Build</text><text x="735.7142857142858" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">តាមដាន</text><line x1="789.1428571428572" y1="82" x2="815.1428571428572" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="817.1428571428571" y="34" width="102.85714285714286" height="96" rx="14" fill="#0ca678"/><text x="868.5714285714286" y="88.0" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">🔑 Handover</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">ដំណើរការរចនា Interior</text></svg><figcaption>🖼️ Interior design ជាអ្វី? · ដំណើរការរចនា</figcaption></figure>
+<table><tr><th>Interior designer</th><th>Interior decorator</th></tr><tr><td>រចនាលំហ ផ្លូវដើរ ភ្លើង ពន្លឺ សម្ភារៈ</td><td>ជ្រើសពណ៌ សង្ហារឹម គ្រឿងតុបតែង</td></tr><tr><td>ធ្វើការជាមួយ Architect/Engineer</td><td>ភាគច្រើនធ្វើលើលំហមានស្រាប់</td></tr></table>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>ជំហានណាមកមុន៖ Mood board ឬ វាស់បន្ទប់?</p><details><summary>មើលចម្លើយ</summary><p><b>វាស់បន្ទប់ (Survey)</b> និង Brief មុន — Concept ត្រូវសមនឹងលំហពិត និងថវិកា។</p></details></div>
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>Elements &amp; Principles</h2>
+<table><tr><th>Principle</th><th>ន័យ</th></tr><tr><td>Balance</td><td>Symmetrical · Asymmetrical · Radial</td></tr><tr><td>Rhythm</td><td>ធាតុធ្វើម្តងទៀត</td></tr><tr><td>Emphasis / Focal point</td><td>ចំណុចទាក់ភ្នែក (ជញ្ជាំង TV, រូបភាព)</td></tr><tr><td>Proportion &amp; Scale</td><td>ទំហំសមនឹងលំហ និងមនុស្ស</td></tr><tr><td>Harmony / Unity</td><td>ទាំងអស់និយាយភាសាតែមួយ</td></tr></table>
+<div class="grid"><div class="card"><b>📏 Space</b><br>លំហ — វិជ្ជមាន (មានវត្ថុ) និងអវិជ្ជមាន (ទំនេរ)</div><div class="card"><b>➖ Line</b><br>បញ្ឈរ = ខ្ពស់ · ផ្តេក = ស្ងប់</div><div class="card"><b>🔷 Form</b><br>រាងសង្ហារឹម</div><div class="card"><b>💡 Light</b><br>ធម្មជាតិ + សិប្បនិម្មិត</div><div class="card"><b>🎨 Color</b><br>អារម្មណ៍</div><div class="card"><b>🧶 Texture</b><br>ផ្ទៃ — ឈើ ថ្ម ក្រណាត់</div><div class="card"><b>🌀 Pattern</b><br>លំនាំ</div></div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>បន្ទប់ពិដានទាប ចង់ឲ្យមើលទៅខ្ពស់ — ប្រើខ្សែបន្ទាត់អ្វី?</p><details><summary>មើលចម្លើយ</summary><p>ខ្សែ<b>បញ្ឈរ</b> (វាំងននពីពិដានដល់ដី ធ្នើខ្ពស់ ក្រដាសជញ្ជាំងឆ្នូតបញ្ឈរ)។</p></details></div>
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Floor plan · Scale · និមិត្តសញ្ញា</h2>
+<table><tr><th>Scale</th><th>1cm លើក្រដាស =</th><th>ប្រើ</th></tr><tr><td>1:100</td><td>1 m</td><td>ផែនការផ្ទះទាំងមូល</td></tr><tr><td>1:50</td><td>50 cm</td><td>បន្ទប់ + សង្ហារឹម</td></tr><tr><td>1:20</td><td>20 cm</td><td>ព័ត៌មានលម្អិត (ផ្ទះបាយ ទូ)</td></tr></table>
+<div class="grid"><div class="card"><b>🧱 ជញ្ជាំង</b><br>បន្ទាត់ក្រាស់ (100–200mm)</div><div class="card"><b>🚪 ទ្វារ</b><br>ធ្នូបង្ហាញទិសបើក (ទូទៅ 80–90cm)</div><div class="card"><b>🪟 បង្អួច</b><br>បន្ទាត់ ៣ ក្នុងជញ្ជាំង</div><div class="card"><b>📏 Dimension</b><br>គិតជា mm</div><div class="card"><b>🧭 North arrow</b><br>ទិសថ្ងៃ — សំខាន់ណាស់នៅកម្ពុជា</div></div>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Paper size (cm): 10.0 x 8.0
+Sofa on paper (cm): 4.0</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>លើគំនូរ 1:50 សាឡុង វាស់បាន 4cm។ ពិតវែងប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>4 × 50 = <b>200cm (2m)</b>។</p></details></div>
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Ergonomics · ផ្លូវដើរ · ទំហំស្តង់ដារ</h2>
+<table><tr><th>ធាតុ</th><th>ទំហំណែនាំ</th></tr><tr><td>ផ្លូវដើរសំខាន់</td><td>≥ 90cm (រទេះរុញ ≥ 120cm)</td></tr><tr><td>Sofa ↔ តុកាហ្វេ</td><td>40–45cm</td></tr><tr><td>ជុំវិញតុបាយ</td><td>≥ 75–90cm ពីគែមតុ</td></tr><tr><td>ផ្ទះបាយ Work triangle</td><td>សរុប 4–7.9m (ចង្ក្រាន · ឡាងចាន · ទូទឹកកក)</td></tr><tr><td>កម្ពស់តុការងារ</td><td>72–75cm</td></tr><tr><td>កម្ពស់កៅអី</td><td>43–47cm</td></tr><tr><td>កម្ពស់កន្លែងធ្វើម្ហូប</td><td>85–90cm</td></tr><tr><td>ជុំវិញគ្រែ</td><td>≥ 60cm</td></tr></table>
+<div class="note">💡 សាក <b>Room planner</b> ក្នុង Lab — វានឹងព្រមានពេលផ្លូវដើរ < 90cm ឬរារាំងទ្វារ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>គ្រែនៅជាប់ជញ្ជាំងម្ខាង ផ្លូវដើរម្ខាងទៀតមាន 45cm។ ល្អទេ?</p><details><summary>មើលចម្លើយ</summary><p><b>ចង្អៀត</b> — ណែនាំ ≥ 60cm ជុំវិញគ្រែ (≥ 90cm សម្រាប់ផ្លូវដើរសំខាន់)។</p></details></div>
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>ពណ៌ក្នុង Interior · 60-30-10</h2>
+<div class="grid"><div class="card"><b>🟫 60%</b><br>ពណ៌មេ — ជញ្ជាំង ឥដ្ឋការ៉ូ</div><div class="card"><b>🟩 30%</b><br>ពណ៌រង — Sofa វាំងនន</div><div class="card"><b>🟧 10%</b><br>Accent — ខ្នើយ រូបភាព រុក្ខជាតិ</div><div class="card"><b>☀️ Warm</b><br>ក្រហម ទឹកក្រូច — កក់ក្តៅ ស្និទ្ធស្នាល</div><div class="card"><b>❄️ Cool</b><br>ខៀវ បៃតង — ស្ងប់ ត្រជាក់ (ល្អសម្រាប់អាកាសធាតុក្តៅ)</div><div class="card"><b>⚪ Neutral</b><br>ស ប្រផេះ ក្រែម — Background</div></div>
+<div class="note">💡 ពណ៌ភ្លឺ ធ្វើឲ្យបន្ទប់តូចមើលទៅធំ · ពណ៌ងងឹតលើពិដាន ធ្វើឲ្យពិដានទាប។ សាកថ្នាំលើជញ្ជាំងពិតជាមុន (ពណ៌ប្តូរតាមពន្លឺ)។ សាក <b>60-30-10</b> ក្នុង Lab។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>Sofa បៃតងងងឹត ជាពណ៌ប៉ុន្មាន % ក្នុងច្បាប់ 60-30-10?</p><details><summary>មើលចម្លើយ</summary><p><b>30%</b> (ពណ៌រង — សង្ហារឹមធំ)។</p></details></div>
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>ពន្លឺ · Layers · Lux · Kelvin</h2>
+<table><tr><th>កន្លែង</th><th>Lux</th><th>Kelvin ណែនាំ</th></tr><tr><td>បន្ទប់គេង</td><td>100–150</td><td>2700–3000K</td></tr><tr><td>ទទួលភ្ញៀវ</td><td>150–200</td><td>2700–3500K</td></tr><tr><td>ផ្ទះបាយ</td><td>300</td><td>3500–4000K</td></tr><tr><td>ការិយាល័យ/សិក្សា</td><td>500</td><td>4000–5000K</td></tr><tr><td>ហាង</td><td>300–750</td><td>3000–4000K</td></tr></table>
+<div class="grid"><div class="card"><b>🌐 Ambient</b><br>ពន្លឺទូទៅ (ពិដាន)</div><div class="card"><b>🎯 Task</b><br>ពន្លឺការងារ (តុ ផ្ទះបាយ)</div><div class="card"><b>✨ Accent</b><br>បំភ្លឺរូបភាព ជញ្ជាំង</div><div class="card"><b>🌅 Natural</b><br>បង្អួច — តែការពារកម្តៅថ្ងៃ</div></div>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>16667 lm -&gt; 16 bulbs</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>បន្ទប់សិក្សា 5×4m ត្រូវការ 500 lux ហើយអំពូល 1100 lm — ត្រូវការប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>5×4×500÷0.6 ≈ 16,667 lm ÷ 1100 → <b>16 អំពូល</b> (ឬប្រើអំពូល/ចង្កៀងខ្លាំងជាង)។ សាកក្នុង Lab។</p></details></div>
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>សម្ភារៈ · អាកាសធាតុកម្ពុជា</h2>
+<table><tr><th>ផ្ទៃ</th><th>សម្ភារៈល្អ</th><th>ចំណាំ</th></tr><tr><td>ឥដ្ឋ</td><td>Porcelain tile · ថ្មម៉ាប/Granite · ឈើ Engineered</td><td>Tile ត្រជាក់ ស្រួលសម្អាត</td></tr><tr><td>ជញ្ជាំង</td><td>ថ្នាំ Anti-mold · ថ្នាំ Low-VOC</td><td>សំណើមខ្ពស់</td></tr><tr><td>ពិដាន</td><td>Gypsum board · Insulation</td><td>កាត់កម្តៅដំបូល</td></tr><tr><td>ផ្ទះបាយ</td><td>Quartz/Granite · Stainless</td><td>ធន់កម្តៅ ទឹក</td></tr><tr><td>បន្ទប់ទឹក</td><td>Tile ប្រឆាំងរអិល (R10+)</td><td>Waterproof</td></tr><tr><td>សង្ហារឹម</td><td>ឈើរឹង · ឬស្សី · ផ្តៅ (Rattan)</td><td>សម្ភារៈក្នុងស្រុក</td></tr></table>
+<div class="grid"><div class="card"><b>☀️ កម្តៅ</b><br>បង្អួចខាងលិចត្រូវការម្លប់/វាំងនន</div><div class="card"><b>🌧️ សំណើម</b><br>ខ្យល់ចេញចូល (Cross ventilation)</div><div class="card"><b>🐜 កណ្តៀរ</b><br>ឈើព្យាបាល ឬ Metal</div><div class="card"><b>🌿 ក្នុងស្រុក</b><br>ឥដ្ឋដីដុត ឬស្សី ផ្តៅ ក្រណាត់ខ្មែរ</div></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>ហេតុអ្វីបង្អួចធំទល់ទិសខាងលិច ជាបញ្ហានៅកម្ពុជា?</p><details><summary>មើលចម្លើយ</summary><p>ថ្ងៃរសៀលក្តៅខ្លាំង ចាំងចូលផ្ទាល់ → បន្ទប់ក្តៅ ថ្លៃម៉ាស៊ីនត្រជាក់។ ប្រើ <b>ម្លប់ (Overhang/Louver)</b> កញ្ចក់ Low-E ឬវាំងនន។</p></details></div>
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Interior styles · New Khmer Architecture</h2>
+<table><tr><th>Style</th><th>លក្ខណៈ</th></tr><tr><td>Minimalist</td><td>តិច ស្អាត លំហទំនេរ</td></tr><tr><td>Scandinavian</td><td>ពណ៌ស ឈើស្រាល កក់ក្តៅ</td></tr><tr><td>Industrial</td><td>ឥដ្ឋ បេតុង ដែក</td></tr><tr><td>Japandi</td><td>ជប៉ុន + Scandi — ធម្មជាតិ ស្ងប់</td></tr><tr><td>Modern Khmer</td><td>ក្បាច់ខ្មែរ ឈើ សូត្រ ក្នុងបែបទំនើប</td></tr><tr><td>Tropical</td><td>រុក្ខជាតិ ផ្តៅ ខ្យល់ចេញចូល</td></tr></table>
+<div class="note">💡 <b>New Khmer Architecture</b> (ទសវត្សរ៍ 1950s–60s) ដឹកនាំដោយ <b>វណ្ណ ម៉ូលីវណ្ណ (Vann Molyvann)</b> — ពិដានខ្ពស់ ខ្យល់ចេញចូលធម្មជាតិ ម្លប់ ស្រះទឹក រួមនឹងគំនិត Modernism (ឧ. ពហុកីឡដ្ឋានជាតិ វិមានឯករាជ្យ)។ ជាគំរូល្អនៃការរចនាសម្រាប់អាកាសធាតុត្រូពិច។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>ហេតុអ្វី New Khmer Architecture ល្អសម្រាប់អាកាសធាតុកម្ពុជា?</p><details><summary>មើលចម្លើយ</summary><p>ប្រើ <b>ខ្យល់ធម្មជាតិ ម្លប់ ពិដានខ្ពស់ និងទឹក</b> ដើម្បីបន្ថយកម្តៅ ដោយមិនពឹងម៉ាស៊ីនត្រជាក់។</p></details></div>
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>រៀបចំបន្ទប់ · Layout</h2>
+<div class="grid"><div class="card"><b>🛋️ ទទួលភ្ញៀវ</b><br>Focal point + ក្រុមកៅអីបែរមុខគ្នា · Rug ធំគ្រប់ជើងមុខ</div><div class="card"><b>🍳 ផ្ទះបាយ</b><br>Layout៖ I · L · U · Galley · Island</div><div class="card"><b>🛏️ បន្ទប់គេង</b><br>គ្រែទល់ជញ្ជាំង មើលឃើញទ្វារ · ពន្លឺទន់</div><div class="card"><b>💻 Home office</b><br>តុកាត់កែងបង្អួច (កុំឲ្យចាំងអេក្រង់)</div><div class="card"><b>🛁 បន្ទប់ទឹក</b><br>Wet/Dry zone</div><div class="card"><b>🏪 ហាង/កាហ្វេ</b><br>ផ្លូវអតិថិជន · Counter · Seating</div></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>ផ្ទះបាយតូចចង្អៀតវែង ២ ជញ្ជាំងទល់គ្នា — Layout ណា?</p><details><summary>មើលចម្លើយ</summary><p><b>Galley</b> (ពីរជួរ) — មានប្រសិទ្ធភាព ផ្លូវកណ្តាល ≥ 100–120cm។</p></details></div>
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>ឧបករណ៍ · SketchUp · Render</h2>
+<table><tr><th>ឧបករណ៍</th><th>ប្រើ</th><th>តម្លៃ</th></tr><tr><td>Floorplanner / Planner 5D</td><td>Plan + 3D ងាយ</td><td>Free tier</td></tr><tr><td>SketchUp Free</td><td>3D Model លើ Browser</td><td>ឥតគិតថ្លៃ (Web)</td></tr><tr><td>LibreCAD / FreeCAD</td><td>2D/3D CAD</td><td>ឥតគិតថ្លៃ</td></tr><tr><td>AutoCAD</td><td>Drawing វិជ្ជាជីវៈ</td><td>បង់ (សិស្ស Free)</td></tr><tr><td>Revit</td><td>BIM</td><td>បង់ (សិស្ស Free)</td></tr><tr><td>Enscape · D5 · Twinmotion · Blender</td><td>Render ស្អាត</td><td>ខ្លះ Free</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>វាស់បន្ទប់ពិត → គូរ Plan 2D</li><li>Push/Pull ជញ្ជាំង (កម្ពស់ 3m)</li><li>បន្ថែមទ្វារ បង្អួច</li><li>ដាក់សង្ហារឹមពី 3D Warehouse</li><li>Material + ពន្លឺ → Render</li><li>Export ជា PDF Presentation ឲ្យអតិថិជន</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>សិស្សគ្មានលុយ ចង់ធ្វើ 3D Interior — ចាប់ផ្តើមនៅឯណា?</p><details><summary>មើលចម្លើយ</summary><p><b>SketchUp Free (Web)</b> ឬ Planner 5D · Render ដោយ <b>Blender</b> (ឥតគិតថ្លៃ) — ឬស្នើ License សិស្ស Autodesk។</p></details></div>
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>BOQ · ថវិកា</h2>
+<p><b>BOQ (Bill of Quantities)</b> = តារាងបរិមាណ និងតម្លៃសម្ភារៈ/ការងារ ដើម្បីប្រៀបធៀបជាងម៉ៅការ និងគ្រប់គ្រងថវិកា។</p><div class="grid"><div class="card"><b>📊 Excel/Sheets</b><br>SUM · ក្រុម តាម Trade (ឥដ្ឋ ភ្លើង ជាង)</div><div class="card"><b>🧾 Quote ៣</b><br>យកតម្លៃពី ៣ អ្នកផ្គត់ផ្គង់</div><div class="card"><b>💸 Waste</b><br>Tile/ក្រដាស +5–10%</div><div class="card"><b>💼 Design fee</b><br>% នៃគម្រោង ឬ $/m²</div></div>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Floor tile 60x60      20 m2   $  360.00
+Paint (2 coats)       60 m2   $  210.00
+Gypsum ceiling        20 m2   $  240.00
+LED downlight 12W     16 pcs  $  128.00
+Sofa                   1 pcs  $  450.00
+Subtotal                      $1,388.00
++10% contingency              $1,526.80</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>ឥដ្ឋការ៉ូ 20m² ហេតុអ្វីគួរទិញ 21–22m²?</p><details><summary>មើលចម្លើយ</summary><p>បម្រុង <b>5–10% សម្រាប់ Waste</b> (កាត់ជ្រុង បែក) និងទុកសម្រាប់ជួសជុលថ្ងៃក្រោយ (Batch ពណ៌ដូចគ្នា)។</p></details></div>
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>និរន្តរភាព · អាជីព · Portfolio</h2>
+<table><tr><th>អាជីព</th><th>ធ្វើការ</th></tr><tr><td>Interior designer</td><td>Studio · Freelance</td></tr><tr><td>3D visualizer</td><td>Render ឲ្យ Developer</td></tr><tr><td>Space planner</td><td>ការិយាល័យ ហាង</td></tr><tr><td>Retail/F&amp;B designer</td><td>កាហ្វេ ភោជនីយដ្ឋាន</td></tr><tr><td>Furniture designer</td><td>ផលិតសង្ហារឹម</td></tr><tr><td>Site supervisor</td><td>តាមដានការសាងសង់</td></tr></table>
+<div class="grid"><div class="card"><b>♻️ Reuse</b><br>សង្ហារឹមចាស់ កែច្នៃ</div><div class="card"><b>🌿 ក្នុងស្រុក</b><br>ឬស្សី ផ្តៅ ឈើស្របច្បាប់</div><div class="card"><b>💨 Passive cooling</b><br>ខ្យល់ ម្លប់ — ថ្លៃភ្លើងតិច</div><div class="card"><b>💡 LED + Daylight</b><br>សន្សំថាមពល</div></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Portfolio ៥–៨ គម្រោង៖ Brief · Mood board · Plan · 3D · ព្រោង/រូបពិត</li><li>គម្រោងក្លែងក៏បាន (រចនាបន្ទប់ខ្លួនឯង កាហ្វេក្នុងស្រុក)</li><li>ដាក់ Behance/Instagram</li><li>កម្មសិក្សាជាមួយក្រុមហ៊ុន Interior/Construction</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>Portfolio Interior ល្អ ត្រូវបង្ហាញអ្វីក្រៅពីរូប Render ស្អាត?</p><details><summary>មើលចម្លើយ</summary><p><b>ដំណើរការ</b>៖ Brief · Floor plan · Mood board · ហេតុផលនៃការជ្រើសរើស · BOQ — បង្ហាញថាអ្នកដោះស្រាយបញ្ហា មិនមែនតែតុបតែង។</p></details></div>
+</section>
+<section id="cheat">
+<h2>📋 សង្ខេប (Cheat sheet)</h2>
+<table><tr><th>ពាក្យ</th><th>ន័យ</th></tr><tr><td>1:50</td><td>1cm = 50cm</td></tr><tr><td>ផ្លូវដើរ</td><td>≥ 90cm</td></tr><tr><td>Sofa↔តុ</td><td>40–45cm</td></tr><tr><td>Work triangle</td><td>4–7.9m</td></tr><tr><td>60-30-10</td><td>មេ · រង · Accent</td></tr><tr><td>Ambient · Task · Accent</td><td>ពន្លឺ ៣ ស្រទាប់</td></tr><tr><td>Lumens</td><td>ផ្ទៃ×Lux÷0.6</td></tr><tr><td>2700K / 4000K / 6500K</td><td>Warm / Neutral / Daylight</td></tr><tr><td>BOQ</td><td>តារាងបរិមាណ+តម្លៃ</td></tr><tr><td>Waste</td><td>+5–10%</td></tr><tr><td>Focal point</td><td>ចំណុចទាក់ភ្នែក</td></tr><tr><td>Vann Molyvann</td><td>New Khmer Architecture</td></tr></table>
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងចុងវគ្គ</h2>
+<ol class='steps'><li>រចនាបន្ទប់ពិតមួយ (បន្ទប់គេង ឬកាហ្វេតូច)៖ Brief + វាស់ + ថតរូប។</li><li>Mood board + Palette 60-30-10។</li><li>Floor plan 1:50 (ពិនិត្យផ្លូវដើរក្នុង Room Planner)។</li><li>3D ក្នុង SketchUp + ផែនការពន្លឺ (Lux)។</li><li>BOQ ក្នុង Excel + Presentation PDF។</li></ol></section>
+<section id="pro-app">
+<h2>💻 Room Planner (App)</h2>
+
+<p><b>📐 Room planner</b> — អូសសង្ហារឹម (Sofa គ្រែ តុ ទូ…) ក្នុងបន្ទប់ 1 ក្រឡា = 50cm ព្រមានផ្លូវដើរ < 90cm ទ្វារ និងការត្រួត · <b>💡 Lux</b> — គណនាចំនួនអំពូល + Kelvin · <b>🎨 60-30-10</b> — សាក Palette លើបន្ទប់។</p>
+
+<div class="itk" id="ir">
+<div class="itk-tabs"><button class="on" data-t="rp">📐 Room planner</button><button data-t="lx">💡 ពន្លឺ (Lux)</button><button data-t="pt">🎨 ពណ៌ 60-30-10</button></div>
+<div class="itk-p on" data-p="rp">
+ <p class="vl-tip">អូសគ្រឿងសង្ហារឹមក្នុងបន្ទប់ (1 ក្រឡា = 50cm)។ ចុចម្តងទៀតលើវត្ថុដើម្បីបង្វិល 90°។ ពិនិត្យ៖ ផ្លូវដើរ ≥ 90cm និងមិនជាន់ទ្វារ។</p>
+ <div class="itk-row"><label>បន្ទប់ <select id="rp_sz"><option value="400x300">4 × 3 m</option><option value="500x400" selected>5 × 4 m</option><option value="600x450">6 × 4.5 m</option></select></label><span id="rp_add"></span><button class="btn ghost" id="rp_clr">🧹</button></div>
+ <svg id="rp_sv" style="width:100%;background:#fdfaf5;border-radius:10px;touch-action:none;display:block"></svg>
+ <div class="itk-out" id="rp_out"></div>
+</div>
+<div class="itk-p" data-p="lx">
+ <p class="vl-tip">គណនាចំនួនអំពូល៖ Lumens ត្រូវការ = ផ្ទៃ (m²) × Lux គោលដៅ ÷ 0.6 (ការបាត់បង់)។</p>
+ <div class="itk-row"><label>បណ្តោយ m <input type="number" id="lx_l" value="5" step=".5" style="width:70px"></label><label>ទទឹង m <input type="number" id="lx_w" value="4" step=".5" style="width:70px"></label>
+  <label>ប្រើ <select id="lx_r"><option value="150">🛋️ បន្ទប់ទទួលភ្ញៀវ (150 lx)</option><option value="100">🛏️ បន្ទប់គេង (100 lx)</option><option value="300">🍳 ផ្ទះបាយ (300 lx)</option><option value="500" selected>💻 ការិយាល័យ/សិក្សា (500 lx)</option><option value="200">🛁 បន្ទប់ទឹក (200 lx)</option><option value="300">🏪 ហាង (300 lx)</option></select></label>
+  <label>អំពូល LED <select id="lx_b"><option value="800">9W ≈ 800 lm</option><option value="1100">12W ≈ 1100 lm</option><option value="1600">18W ≈ 1600 lm</option></select></label>
+  <label>Kelvin <input type="range" id="lx_k" min="2700" max="6500" step="100" value="4000"></label></div>
+ <svg id="lx_sv" viewBox="0 0 500 220" style="width:100%;max-width:560px;border-radius:10px;display:block"></svg>
+ <div class="itk-out" id="lx_out"></div>
+</div>
+<div class="itk-p" data-p="pt">
+ <p class="vl-tip">ច្បាប់ 60-30-10៖ ពណ៌មេ 60% (ជញ្ជាំង) · ពណ៌រង 30% (សង្ហារឹម/វាំងនន) · ពណ៌ Accent 10% (ខ្នើយ រូបភាព)។</p>
+ <div class="itk-row"><label>60% <input type="color" id="pt_a" value="#f1ebe1"></label><label>30% <input type="color" id="pt_b" value="#5f7a61"></label><label>10% <input type="color" id="pt_c" value="#c9822b"></label><button class="btn ghost" id="pt_r">🎲 Palette</button></div>
+ <svg id="pt_sv" viewBox="0 0 600 300" style="width:100%;max-width:640px;border-radius:10px;display:block"></svg>
+</div>
+</div>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+document.querySelectorAll("#ir .itk-tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#ir .itk-tabs button").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll("#ir .itk-p").forEach(p=>p.classList.toggle("on",p.dataset.p===b.dataset.t));});
+const LIB={sofa:["🛋️ Sofa",200,90,"#8d6e63"],bed:["🛏️ គ្រែ 1.6m",160,200,"#90a4ae"],table:["☕ តុ",100,60,"#a1887f"],desk:["💻 តុការងារ",120,60,"#6d4c41"],ward:["🚪 ទូ",120,60,"#5d4037"],tv:["📺 ទូ TV",160,40,"#455a64"],dine:["🍽️ តុបាយ 4",120,80,"#bcaaa4"],plant:["🪴",40,40,"#43a047"]};
+let W,H,items=[{k:"sofa",x:40,y:250,r:0},{k:"table",x:90,y:150,r:0},{k:"tv",x:60,y:0,r:0}],drag=null,moved=false;const S=.6;
+Object.keys(LIB).forEach(k=>{const b=document.createElement("button");b.className="btn ghost";b.textContent="+"+LIB[k][0];b.onclick=()=>{items.push({k,x:20,y:20,r:0});draw();};$("rp_add").appendChild(b);});
+function dims(it){const l=LIB[it.k];return it.r%2?[l[2],l[1]]:[l[1],l[2]];}
+function draw(){[W,H]=$("rp_sz").value.split("x").map(Number);const sv=$("rp_sv");sv.setAttribute("viewBox",`-20 -20 ${W+40} ${H+40}`);
+ let h=`<defs><pattern id="rpg" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M50 0H0V50" fill="none" stroke="#e3d9c9" stroke-width="1"/></pattern></defs><rect width="${W}" height="${H}" fill="url(#rpg)" stroke="#3e3a35" stroke-width="8"/>`;
+ h+=`<rect x="${W-110}" y="${H-4}" width="90" height="8" fill="#fdfaf5"/><path d="M${W-20} ${H} A90 90 0 0 0 ${W-110} ${H-90}" fill="none" stroke="#c9822b" stroke-dasharray="6 5" stroke-width="2"/><line x1="${W-20}" y1="${H}" x2="${W-20}" y2="${H-90}" stroke="#c9822b" stroke-width="3"/><text x="${W-100}" y="${H-12}" font-size="16" fill="#c9822b">ទ្វារ</text>`;
+ h+=`<rect x="${W/2-80}" y="-6" width="160" height="12" fill="#a5d8ff"/><text x="${W/2}" y="26" font-size="14" text-anchor="middle" fill="#1c7ed6">បង្អួច</text>`;
+ const warn=[];items.forEach((it,i)=>{const[w,d]=dims(it);it.x=Math.max(0,Math.min(W-w,it.x));it.y=Math.max(0,Math.min(H-d,it.y));const l=LIB[it.k];
+  const door=it.x+w>W-110&&it.y+d>H-90;const ov=items.some((o,j)=>{if(j===i)return false;const[w2,d2]=dims(o);return it.x<o.x+w2&&o.x<it.x+w&&it.y<o.y+d2&&o.y<it.y+d;});
+  if(door)warn.push(`${l[0]} ជាន់ផ្លូវបើកទ្វារ`);if(ov)warn.push(`${l[0]} ត្រួតលើគ្នា`);
+  h+=`<g data-i="${i}" style="cursor:grab"><rect x="${it.x}" y="${it.y}" width="${w}" height="${d}" rx="6" fill="${l[3]}" fill-opacity=".85" stroke="${door||ov?"#e03131":"#3e3a35"}" stroke-width="${door||ov?4:1.5}"/><text x="${it.x+w/2}" y="${it.y+d/2+6}" font-size="${Math.min(18,w/5)}" text-anchor="middle" fill="#fff">${l[0]}</text></g>`;});
+ /* clearance between pairs */
+ for(let i=0;i<items.length;i++)for(let j=i+1;j<items.length;j++){const a=items[i],b=items[j],[aw,ad]=dims(a),[bw,bd]=dims(b);const gx=Math.max(b.x-(a.x+aw),a.x-(b.x+bw)),gy=Math.max(b.y-(a.y+ad),a.y-(b.y+bd));const g=Math.max(gx,gy);
+  if(g>0&&g<90&&!(LIB[a.k][0].includes("តុ")&&LIB[b.k][0].includes("Sofa")||LIB[b.k][0].includes("តុ")&&LIB[a.k][0].includes("Sofa"))&&a.k!="plant"&&b.k!="plant")warn.push(`ផ្លូវដើររវាង ${LIB[a.k][0]} និង ${LIB[b.k][0]} = ${Math.round(g)}cm (< 90)`);}
+ sv.innerHTML=h;const area=items.reduce((s,it)=>{const[w,d]=dims(it);return s+w*d;},0);
+ $("rp_out").innerHTML=`ផ្ទៃបន្ទប់ ${(W*H/1e4).toFixed(1)} m² · គ្រឿងសង្ហារឹមគ្រប ${Math.round(area/(W*H)*100)}% ${area/(W*H)>.45?"⚠️ ចង្អៀតពេក (ណែនាំ ≤ 40%)":"✅"}<br>${warn.length?warn.map(w=>"⚠️ "+w).join("<br>"):"✅ ផ្លូវដើរ និងទ្វារ ល្អ"}`;}
+const sv=$("rp_sv");function pt(e){const p=sv.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(sv.getScreenCTM().inverse());}
+sv.onpointerdown=e=>{const g=e.target.closest("[data-i]");if(!g)return;const i=+g.dataset.i,p=pt(e);drag={i,dx:p.x-items[i].x,dy:p.y-items[i].y};moved=false;sv.setPointerCapture(e.pointerId);};
+sv.onpointermove=e=>{if(!drag)return;const p=pt(e),it=items[drag.i];const nx=Math.round((p.x-drag.dx)/10)*10,ny=Math.round((p.y-drag.dy)/10)*10;if(nx!=it.x||ny!=it.y){it.x=nx;it.y=ny;moved=true;draw();}};
+sv.onpointerup=()=>{if(drag&&!moved){items[drag.i].r++;draw();}drag=null;};
+$("rp_sz").onchange=draw;$("rp_clr").onclick=()=>{items=[];draw();};draw();
+/* lux */
+function kc(k){const t=(k-2700)/3800;const r=255,g=Math.round(180+t*70),b=Math.round(110+t*145);return`rgb(${r},${g},${b})`;}
+function lx(){const L=+$("lx_l").value||1,Wd=+$("lx_w").value||1,lux=+$("lx_r").value,bl=+$("lx_b").value,k=+$("lx_k").value;const A=L*Wd,lm=A*lux/.6,n=Math.ceil(lm/bl);
+ const cols=Math.ceil(Math.sqrt(n*L/Wd)),rows=Math.ceil(n/cols);let h=`<rect width="500" height="220" fill="#2b2b2b"/><rect x="40" y="20" width="420" height="180" fill="${kc(k)}" opacity=".9"/>`;let c=0;
+ for(let r=0;r<rows;r++)for(let q=0;q<cols&&c<n;q++,c++){const x=40+420*(q+.5)/cols,y=20+180*(r+.5)/rows;h+=`<circle cx="${x}" cy="${y}" r="40" fill="#fff" opacity=".18"/><circle cx="${x}" cy="${y}" r="8" fill="#fff"/>`;}
+ $("lx_sv").innerHTML=h;$("lx_out").innerHTML=`ផ្ទៃ <b>${A.toFixed(1)} m²</b> × ${lux} lx ÷ 0.6 = <b>${Math.round(lm).toLocaleString()} lumens</b> → <b>${n} អំពូល</b> (${bl} lm) · ${k<=3000?"🟠 Warm — ស្រួលសម្រាក (បន្ទប់គេង/ទទួលភ្ញៀវ)":k<=4500?"🟡 Neutral — ផ្ទះបាយ/សិក្សា":"🔵 Cool daylight — ការិយាល័យ/ហាង"} (${k}K)`;}
+["lx_l","lx_w","lx_r","lx_b","lx_k"].forEach(i=>$(i).oninput=lx);lx();
+/* palette */
+function pt3(){const a=$("pt_a").value,b=$("pt_b").value,c=$("pt_c").value;
+ $("pt_sv").innerHTML=`<rect width="600" height="300" fill="${a}"/><rect y="230" width="600" height="70" fill="#b08b62"/><rect x="40" y="40" width="130" height="150" fill="${b}" opacity=".9"/><rect x="430" y="30" width="110" height="80" fill="#fff" stroke="${c}" stroke-width="6"/><circle cx="485" cy="70" r="22" fill="${c}"/>
+ <rect x="170" y="150" width="270" height="70" rx="14" fill="${b}"/><rect x="160" y="120" width="290" height="50" rx="16" fill="${b}"/><rect x="200" y="128" width="50" height="40" rx="10" fill="${c}"/><rect x="360" y="128" width="50" height="40" rx="10" fill="${a}" stroke="${c}" stroke-width="3"/>
+ <rect x="490" y="160" width="40" height="70" fill="${c}"/><circle cx="510" cy="150" r="26" fill="#3a7d44"/><text x="16" y="292" font-size="13" fill="#fff">60% ${a} · 30% ${b} · 10% ${c}</text>`;}
+const PAL=[["#f1ebe1","#5f7a61","#c9822b"],["#f4f1ea","#2f3e46","#d4a373"],["#fefae0","#606c38","#bc6c25"],["#eae4e9","#3d405b","#e07a5f"],["#f8f9fa","#212529","#c92a2a"],["#efe6dd","#7b2d26","#d9a441"]];
+["pt_a","pt_b","pt_c"].forEach(i=>$(i).oninput=pt3);$("pt_r").onclick=()=>{const p=PAL[Math.floor(Math.random()*PAL.length)];$("pt_a").value=p[0];$("pt_b").value=p[1];$("pt_c").value=p[2];pt3();};pt3();
+})();
+</script>
+
+<h3>🏆 Quiz ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["ផ្លូវដើរសំខាន់ ≥?", ["90cm", "30cm", "300cm", "10cm"], 0], ["1:50 — 4cm = ?", ["2m", "4m", "50cm", "20m"], 0], ["60-30-10 — 10% គឺ?", ["Accent", "ជញ្ជាំង", "ឥដ្ឋ", "ពិដាន"], 0], ["បន្ទប់គេង Kelvin?", ["2700–3000K", "6500K", "10000K", "1000K"], 0], ["Lumens = ?", ["ផ្ទៃ×Lux÷0.6", "Watt×2", "Lux÷ផ្ទៃ", "Kelvin×10"], 0], ["Task lighting?", ["ពន្លឺការងារ", "ពន្លឺទូទៅ", "ពន្លឺរូបភាព", "ថ្ងៃ"], 0], ["New Khmer Architecture?", ["វណ្ណ ម៉ូលីវណ្ណ", "Elsie de Wolfe", "IKEA", "Eames"], 0], ["Bauhaus?", ["Form follows function", "តុបតែងច្រើន", "Gothic", "Baroque"], 0], ["BOQ?", ["តារាងបរិមាណ+តម្លៃ", "3D Model", "ពណ៌", "ពន្លឺ"], 0], ["Tile ទិញបម្រុង?", ["5–10%", "50%", "0%", "200%"], 0], ["ផ្ទះបាយពីរជួរ?", ["Galley", "Island", "U", "I"], 0], ["បន្ទប់ពិដានទាប ប្រើខ្សែ?", ["បញ្ឈរ", "ផ្តេក", "អង្កត់ទ្រូង", "រង្វង់"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+<ol class='steps'><li>Graphic Design · Photoshop (Mood board)</li><li><b>Interior Design</b> (វគ្គនេះ) ✅</li><li>SketchUp/AutoCAD · Civil Engineering (មូលដ្ឋាន)</li><li>Excel (BOQ) · PowerPoint (Presentation)</li><li>Business &amp; Digital Marketing (Studio)</li></ol></section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="interior"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Structures & Algorithms</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#1c7ed6; --accent2:#7048e8; --accent-soft:#e7f5ff;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#74c0fc; --accent2:#b197fc; --accent-soft:#0b1f33;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#74c0fc; --accent2:#b197fc; --accent-soft:#0b1f33;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#0b1f33,#1c7ed6 45%,#7048e8 80%,#20c997);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/dsa.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/dsa.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Data Structures &amp; Algorithms (Python)</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Data Structures &amp; Algorithms ជាអ្វី?</a>
+<a href="#setup">២. ត្រៀមខ្លួន</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Algorithm &amp; Big-O៖ វាស់ល្បឿនកូដ</a>
+<a href="#l2">មេរៀន ២: Array &amp; String · Two pointers</a>
+<a href="#l3">មេរៀន ៣: Hash table (dict · set)</a>
+<a href="#l4">មេរៀន ៤: Stack &amp; Queue</a>
+<a href="#l5">មេរៀន ៥: Linked list</a>
+<a href="#l6">មេរៀន ៦: Recursion &amp; Backtracking</a>
+<a href="#l7">មេរៀន ៧: Sorting៖ Bubble · Merge · Quick</a>
+<a href="#l8">មេរៀន ៨: Binary search</a>
+<a href="#l9">មេរៀន ៩: Tree &amp; Binary Search Tree (BST)</a>
+<a href="#l10">មេរៀន ១០: Heap &amp; Priority queue</a>
+<a href="#l11">មេរៀន ១១: Graph៖ BFS &amp; DFS</a>
+<a href="#l12">មេរៀន ១២: Dijkstra៖ ផ្លូវខ្លីបំផុតមានចម្ងាយ</a>
+<a href="#l13">មេរៀន ១៣: Dynamic Programming (DP)</a>
+<a href="#l14">មេរៀន ១៤: ដោះស្រាយបញ្ហា &amp; ត្រៀមសម្ភាសន៍ការងារ</a>
+<a href="#cheat">📋 សង្ខេប (Cheat sheet)</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងចុងវគ្គ</a>
+<a href="#pro-app">💻 Algorithm Lab (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🧩 Data Structures &amp; Algorithms — បេះដូង Computer Science</h2>
+  <p><b>Big-O</b>, Array &amp; Two pointers, <b>Hash table</b>, Stack/Queue, Linked list, <b>Recursion</b>, Sorting, <b>Binary search</b>, BST, Heap, <b>Graph BFS/DFS</b>, <b>Dijkstra</b>, <b>Dynamic programming</b> + ត្រៀមសម្ភាសន៍ — កូដ Python ដំណើរការពិត + <b>Algorithm Lab</b> មើលចលនា។</p>
+  <p><span class="badge">📘 ១៤ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">💻 Code មានពណ៌ + លទ្ធផល</span><span class="badge">🧩 Algorithm Lab</span></p>
+</section>
+<section id="intro">
+<h2>១. Data Structures &amp; Algorithms ជាអ្វី?</h2>
+
+
+<p><b>Data structure</b> = របៀបរៀបចំទិន្នន័យ (List, Hash table, Tree, Graph…) · <b>Algorithm</b> = ជំហានដោះស្រាយបញ្ហា (Sort, Search, Shortest path…)។ ជាបេះដូងនៃ <b>Computer Science</b> និងជាប្រធានបទសំខាន់បំផុតក្នុង <b>សម្ភាសន៍ការងារ Software Engineer</b>។ វគ្គនេះប្រើ <b>Python</b> — កូដទាំងអស់ដំណើរការពិត និងបង្ហាញលទ្ធផលពិត ជាមួយឧទាហរណ៍កម្ពុជា (ខេត្ត ក្រដាសប្រាក់រៀល ហាងកាហ្វេ)។</p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#868e96"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#868e96">~820</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Al-Khwarizmi</text><circle cx="185" cy="115" r="11" fill="#d6336c"/><text x="185" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#d6336c">1843</text><text x="185" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Ada Lovelace</text><circle cx="290" cy="115" r="11" fill="#495057"/><text x="290" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#495057">1936</text><text x="290" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Turing machine</text><circle cx="395" cy="115" r="11" fill="#1c7ed6"/><text x="395" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#1c7ed6">1945</text><text x="395" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Merge sort</text><circle cx="500" cy="115" r="11" fill="#2f9e44"/><text x="500" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#2f9e44">1956</text><text x="500" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Dijkstra</text><circle cx="605" cy="115" r="11" fill="#e8590c"/><text x="605" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#e8590c">1959</text><text x="605" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Quicksort</text><circle cx="710" cy="115" r="11" fill="#7048e8"/><text x="710" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#7048e8">1968</text><text x="710" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Knuth TAOCP</text><circle cx="815" cy="115" r="11" fill="#ae3ec9"/><text x="815" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#ae3ec9">1990</text><text x="815" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">CLRS</text><circle cx="920" cy="115" r="11" fill="#0ca678"/><text x="920" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#0ca678">2002</text><text x="920" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Timsort</text></svg><figcaption>🖼️ ប្រវត្តិ Algorithm</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>~820</td><td><b>Muhammad ibn Musa al-Khwarizmi</b> (បាកដាដ)</td><td>ពាក្យ «Algorithm» មកពីឈ្មោះគាត់</td></tr><tr><td>1843</td><td><b>Ada Lovelace</b></td><td>Algorithm ដំបូងសម្រាប់ម៉ាស៊ីន (Analytical Engine)</td></tr><tr><td>1936</td><td><b>Alan Turing</b></td><td>Turing machine — និយមន័យ «អ្វីគណនាបាន»</td></tr><tr><td>1945</td><td><b>John von Neumann</b></td><td>Merge sort</td></tr><tr><td>1956/1959</td><td><b>Edsger W. Dijkstra</b></td><td>Shortest path algorithm</td></tr><tr><td>1959/1961</td><td><b>Tony Hoare</b></td><td>Quicksort</td></tr><tr><td>1950s</td><td><b>Richard Bellman</b></td><td>Dynamic programming</td></tr><tr><td>1968</td><td><b>Donald Knuth</b> — <i>The Art of Computer Programming</i></td><td>វិភាគ Algorithm ជាវិទ្យាសាស្ត្រ</td></tr><tr><td>1990</td><td>Cormen, Leiserson, Rivest (+Stein 2001) — <b>CLRS</b></td><td>សៀវភៅសិក្សាស្តង់ដារ</td></tr><tr><td>2002</td><td><b>Tim Peters</b></td><td>Timsort (Python sort)</td></tr></table>
+
+<h3>ប្រើសម្រាប់អ្វី?</h3>
+<div class="grid"><div class="card"><b>💼 សម្ភាសន៍</b><br>Google, Meta, ក្រុមហ៊ុន Tech ទាំងអស់</div><div class="card"><b>🗺️ ផែនទី</b><br>Shortest path · GPS</div><div class="card"><b>🔎 Search engine</b><br>Index · Ranking</div><div class="card"><b>🗄️ Database</b><br>B-tree index · Hash join</div><div class="card"><b>🎮 Game</b><br>Pathfinding A*</div><div class="card"><b>🤖 AI</b><br>Graph search · Optimization</div></div>
+
+</section>
+<section id="setup">
+<h2>២. ត្រៀមខ្លួន</h2>
+<ol class='steps'><li>Python 3.12+ និង VS Code (មើលវគ្គ <b>Python</b>)។</li><li>ហាតបញ្ហារៀងរាល់ថ្ងៃ ១–២ (LeetCode Easy)។</li><li>ប្រើ <b>Algorithm Lab</b> ចុងវគ្គ មើលចលនា Sorting និង Pathfinding។</li><li>គូរលើក្រដាស មុនសរសេរកូដ!</li></ol></section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>Algorithm &amp; Big-O៖ វាស់ល្បឿនកូដ</h2>
+<p><b>Algorithm</b> = ជំហានច្បាស់លាស់ដើម្បីដោះស្រាយបញ្ហា។ <b>Big-O</b> ប្រាប់ថា ពេលទិន្នន័យ (n) កើនឡើង ការងារកើនលឿនប៉ុណ្ណា — មិនមែនវាស់វិនាទីទេ។</p><table><tr><th>Big-O</th><th>ឈ្មោះ</th><th>ឧទាហរណ៍</th><th>n=1,000,000</th></tr><tr><td>O(1)</td><td>Constant</td><td>យកធាតុ <code>a[5]</code> · dict lookup</td><td>1</td></tr><tr><td>O(log n)</td><td>Logarithmic</td><td>Binary search</td><td>≈ 20</td></tr><tr><td>O(n)</td><td>Linear</td><td>ស្វែងរកម្តងមួយៗ</td><td>1,000,000</td></tr><tr><td>O(n log n)</td><td>Linearithmic</td><td>Merge/Quick sort</td><td>≈ 20,000,000</td></tr><tr><td>O(n²)</td><td>Quadratic</td><td>Loop ក្នុង Loop (Bubble sort)</td><td>10¹²</td></tr><tr><td>O(2ⁿ)</td><td>Exponential</td><td>សាកគ្រប់ជម្រើស</td><td>មិនអាចគណនាបាន</td></tr></table>
+<script type="text/x-code" data-lang="py" data-label="big_o.py">
+def count_linear(n):
+    ops = 0
+    for i in range(n): ops += 1
+    return ops
+
+def count_quadratic(n):
+    ops = 0
+    for i in range(n):
+        for j in range(n): ops += 1
+    return ops
+
+def count_log(n):
+    ops = 0
+    while n > 1:
+        n //= 2; ops += 1
+    return ops
+
+for n in [10, 100, 1000]:
+    print(f"n={n:>5}  O(log n)={count_log(n):>3}  O(n)={count_linear(n):>6}  O(n²)={count_quadratic(n):>9}")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>n=   10  O(log n)=  3  O(n)=    10  O(n²)=      100
+n=  100  O(log n)=  6  O(n)=   100  O(n²)=    10000
+n= 1000  O(log n)=  9  O(n)=  1000  O(n²)=  1000000</pre></div>
+<div class="note">💡 ច្បាប់ Big-O៖ (1) <b>បោះចោលថេរ</b> — O(2n) = O(n) (2) <b>យកផ្នែកធំបំផុត</b> — O(n² + n) = O(n²) (3) Loop ជាប់គ្នា បូក · Loop ក្នុង Loop គុណ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>កូដមាន Loop <code>for i in range(n)</code> ហើយក្នុងនោះមាន Binary search លើ List ទំហំ n។ Big-O ជាអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>O(n log n)</b> — Loop n ដង × Binary search O(log n) មួយដងៗ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១.២</h4><p>កូដមាន Loop ពីរជាប់គ្នា (មិនមែនក្នុងគ្នា) នីមួយៗរត់ n ដង។ Big-O ប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>n + n = 2n → <b>O(n)</b> (ចោលថេរ 2)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១.៣</h4><p>រៀបលំដាប់ពីលឿនទៅយឺត៖ O(n²), O(1), O(n log n), O(log n), O(n)</p><details><summary>មើលចម្លើយ</summary><p><b>O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n²)</b></p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១.៤</h4><p>Algorithm O(n²) ចំណាយ 1 វិនាទីលើ n = 1,000។ បើ n = 10,000 ប្រហែលប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>n កើន ×10 → n² កើន ×100 → ប្រហែល <b>100 វិនាទី</b>។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> <code>x = arr[500]</code> មាន Big-O?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>O(1)</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>O(500)</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>O(n)</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>O(log n)</button></div><div class="mcq-x" hidden>💡 ចូលដល់ Index ផ្ទាល់ — ពេលថេរ ទោះ Array ធំប៉ុណ្ណា។</div></div><div class="mcq"><p><b>២.</b> Loop ក្នុង Loop (n × n)?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>O(log n)</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>O(n²)</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>O(n)</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>O(2n)</button></div><div class="mcq-x" hidden>💡 ជុំខាងក្នុង n ដង សម្រាប់ជុំខាងក្រៅនីមួយៗ → n·n។</div></div><div class="mcq"><p><b>៣.</b> Big-O ពិពណ៌នាអ្វីជាចម្បង?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>ល្បឿន CPU</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>ចំនួនបន្ទាត់កូដ</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>ពេលពិតជាវិនាទី</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>ការកើនឡើងនៃពេល/Memory ពេល n ធំ</button></div><div class="mcq-x" hidden>💡 Big-O មើលអត្រាកើនឡើង (Growth rate) មិនមែនវិនាទីពិតទេ។</div></div></div><style>.mcqs{margin:14px 0;padding:12px 14px;border:1px dashed rgba(127,127,127,.4);border-radius:14px}.mcqs h4{margin:0 0 6px}.mcq{margin:10px 0 14px}.mcq>p{margin:0 0 6px}
+.mcq-o{display:grid;gap:6px}.mcq-b{display:flex;gap:8px;align-items:flex-start;text-align:left;width:100%;padding:8px 10px;border-radius:10px;border:1px solid rgba(127,127,127,.35);background:transparent;color:inherit;font:inherit;cursor:pointer}
+.mcq-b span{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:rgba(127,127,127,.15)}
+.mcq-b.ok{border-color:#2f9e44;background:rgba(47,158,68,.14)}.mcq-b.ok span{background:#2f9e44;color:#fff}.mcq-b.no{border-color:#e03131;background:rgba(224,49,49,.1)}.mcq-b.no span{background:#e03131;color:#fff}
+.mcq.done .mcq-b{cursor:default}.mcq-x{margin-top:6px;padding:8px 10px;border-radius:10px;background:rgba(127,127,127,.08);font-size:.95em}</style>
+<script>document.addEventListener("click",function(e){var b=e.target.closest(".mcq-b");if(!b)return;var m=b.closest(".mcq");if(m.classList.contains("done"))return;m.classList.add("done");
+b.classList.add(b.dataset.ok==="1"?"ok":"no");if(b.dataset.ok!=="1")m.querySelector('.mcq-b[data-ok="1"]').classList.add("ok");var x=m.querySelector(".mcq-x");x.hidden=false;x.insertAdjacentHTML("afterbegin",b.dataset.ok==="1"?"<b>✅ ត្រឹមត្រូវ!</b> ":"<b>❌ មិនទាន់ត្រូវ</b> ");});</script></section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>Array &amp; String · Two pointers</h2>
+<p><b>Array (Python list)</b> រក្សាធាតុជាប់គ្នាក្នុង Memory → ចូលដោយ Index O(1) តែ <b>បញ្ចូល/លុបកណ្តាល O(n)</b> (ត្រូវរុញធាតុ)។ បច្ចេកទេស <b>Two pointers</b> ប្រើម្រាមដៃ ២ ពីចុងទាំងពីរ — កាត់ពី O(n²) មក O(n)។</p><table><tr><th>ប្រតិបត្តិការ</th><th>List</th><th>ចំណាំ</th></tr><tr><td>a[i]</td><td>O(1)</td><td>Index</td></tr><tr><td>a.append(x)</td><td>O(1)*</td><td>*ជាមធ្យម (amortized)</td></tr><tr><td>a.insert(0, x)</td><td>O(n)</td><td>រុញធាតុទាំងអស់</td></tr><tr><td>x in a</td><td>O(n)</td><td>ស្វែងរកម្តងមួយៗ</td></tr><tr><td>a.sort()</td><td>O(n log n)</td><td>Timsort</td></tr></table>
+<script type="text/x-code" data-lang="py" data-label="two_pointers.py">
+def is_palindrome(s):
+    s = [c.lower() for c in s if c.isalnum()]
+    i, j = 0, len(s) - 1
+    while i < j:
+        if s[i] != s[j]: return False
+        i += 1; j -= 1
+    return True
+
+def pair_with_sum(sorted_prices, budget):
+    i, j = 0, len(sorted_prices) - 1
+    while i < j:
+        total = sorted_prices[i] + sorted_prices[j]
+        if total == budget: return sorted_prices[i], sorted_prices[j]
+        if total < budget: i += 1
+        else: j -= 1
+    return None
+
+print(is_palindrome("Was it a car or a cat I saw?"))
+print(is_palindrome("xCenBar"))
+prices = [1500, 2000, 3500, 4000, 6500, 8000]   # រៀល
+print(pair_with_sum(prices, 10000))
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>True
+False
+(2000, 8000)</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>ហេតុអ្វី Two pointers រក «គូដែលបូកស្មើ budget» បាន O(n) ជំនួស O(n²)?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះ List <b>តម្រៀបរួច</b> — បើផលបូកតូចពេក រំកិល i ទៅស្តាំ (ធំឡើង) បើធំពេក រំកិល j ទៅឆ្វេង។ រាល់ជំហានដកជម្រើសមួយចោល → សរុបយ៉ាងច្រើន n ជំហាន។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ២.២</h4><p>រក Index នៃធាតុធំបំផុតក្នុង List គ្មានតម្រៀប — Big-O ល្អបំផុត?</p><details><summary>មើលចម្លើយ</summary><p>ត្រូវមើលគ្រប់ធាតុម្តង → <b>O(n)</b>។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ២.៣</h4><p>ហេតុអ្វីការបញ្ចូលធាតុនៅ <b>ដើម</b> Python list យឺត?</p><details><summary>មើលចម្លើយ</summary><p>ត្រូវរំកិលធាតុទាំងអស់មួយកន្លែង → <b>O(n)</b> (append នៅចុងជា O(1))។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ២.៤</h4><p>ពិនិត្យថា String «level» ជា Palindrome ដោយ Two pointers ពិពណ៌នាជំហាន។</p><details><summary>មើលចម្លើយ</summary><p>ចាប់ i = 0, j = ចុង → ប្រៀប s[i] និង s[j] → ខុស = មិនមែន → ត្រូវ: i+1, j−1 → ដល់ i ≥ j = <b>Palindrome</b> · O(n)។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Two pointers លើ Array តម្រៀបរួច រក a + b = target — Big-O?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>O(1)</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>O(n)</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>O(n²)</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>O(n log n)</button></div><div class="mcq-x" hidden>💡 Pointer នីមួយៗដើរតែម្តង។</div></div><div class="mcq"><p><b>២.</b> <code>s[::-1]</code> ក្នុង Python ធ្វើអ្វី?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>លុបដកឃ្លា</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>បញ្ច្រាស String</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>តម្រៀប String</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>ចម្លងតែធាតុទី១</button></div><div class="mcq-x" hidden>💡 Slice step −1 = បញ្ច្រាស។</div></div><div class="mcq"><p><b>៣.</b> Sliding window ល្អសម្រាប់?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Graph</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Hash</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>តម្រៀប</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>ផលបូកអតិបរមានៃ k ធាតុជាប់គ្នា</button></div><div class="mcq-x" hidden>💡 រំកិលបង្អួចដោយបន្ថែមធាតុថ្មី ដកធាតុចាស់ — O(n)។</div></div></div></section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Hash table (dict · set)</h2>
+<p><b>Hash table</b> បម្លែង Key ទៅជាលេខ (hash) → ទៅកន្លែងផ្ទុកផ្ទាល់ → ស្វែងរក/បញ្ចូល/លុប <b>O(1) ជាមធ្យម</b>។ Python <code>dict</code> និង <code>set</code> ជា Hash table។</p><script type="text/x-code" data-lang="py" data-label="hashing.py">
+def two_sum(nums, target):
+    seen = {}                          # value -> index
+    for i, x in enumerate(nums):
+        if target - x in seen:
+            return seen[target - x], i
+        seen[x] = i
+    return None
+
+print("two_sum:", two_sum([3, 9, 14, 20, 5], 25))
+
+words = "រៀន កូដ រៀន ភាសា រៀន កូដ ជារៀងរាល់ថ្ងៃ".split()
+freq = {}
+for w in words:
+    freq[w] = freq.get(w, 0) + 1
+print("ពាក្យញឹកញាប់៖", sorted(freq.items(), key=lambda kv: -kv[1])[:2])
+
+a = {"Python", "SQL", "Excel"}; b = {"SQL", "Power BI", "Excel"}
+print("ទាំងពីរ៖", sorted(a & b), "· តែ a៖", sorted(a - b))
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>two_sum: (3, 4)
+ពាក្យញឹកញាប់៖ [(&#x27;រៀន&#x27;, 3), (&#x27;កូដ&#x27;, 2)]
+ទាំងពីរ៖ [&#x27;Excel&#x27;, &#x27;SQL&#x27;] · តែ a៖ [&#x27;Python&#x27;]</pre></div>
+<div class="note">💡 Collision = Key ពីរមាន hash ដូចគ្នា — Python ដោះស្រាយខ្លួនឯង (open addressing)។ Key របស់ dict ត្រូវ <b>មិនប្រែប្រួល</b> (str, int, tuple) — List ធ្វើ Key មិនបាន។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>ពិនិត្យថា List មានធាតុស្ទួនឬអត់ ឲ្យលឿនបំផុត ធ្វើយ៉ាងម៉េច? Big-O?</p><details><summary>មើលចម្លើយ</summary><p>ប្រើ <code>set</code>៖ <code>len(set(a)) != len(a)</code> ឬ Loop បញ្ចូល set ហើយពិនិត្យ <code>x in seen</code> — <b>O(n)</b> (ធៀប O(n²) បើប្រៀបធៀបគ្រប់គូ)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣.២</h4><p>រាប់ចំនួនពាក្យនីមួយៗក្នុងប្រយោគ ប្រើអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>dict</b> (ឬ <code>collections.Counter</code>) — key = ពាក្យ, value = ចំនួន · O(n)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣.៣</h4><p>Two-sum (Array មិនតម្រៀប) ដោយ Hash ធ្វើយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>ដើរម្តង៖ សម្រាប់ x ពិនិត្យ <code>target − x</code> ក្នុង set/dict → មាន = រកឃើញ · មិនមាន = ដាក់ x → <b>O(n)</b>។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣.៤</h4><p>ហេតុអ្វី List មិនអាចធ្វើជា key ក្នុង dict?</p><details><summary>មើលចម្លើយ</summary><p>List អាចប្តូរ (Mutable) → Hash ប្តូរ។ ប្រើ <b>tuple</b> ជំនួស។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> <code>x in my_set</code> ជាមធ្យម?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>O(n)</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>O(n²)</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>O(log n)</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>O(1)</button></div><div class="mcq-x" hidden>💡 Hash table រកតាម Hash ផ្ទាល់។</div></div><div class="mcq"><p><b>២.</b> <code>x in my_list</code>?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>O(log n)</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>O(n log n)</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>O(n)</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>O(1)</button></div><div class="mcq-x" hidden>💡 List ត្រូវដើរមើលម្តងមួយៗ។</div></div><div class="mcq"><p><b>៣.</b> Collision ក្នុង Hash table គឺ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>Key ពីរ Hash ទៅកន្លែងដូចគ្នា</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Key ស្ទួន</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Memory ពេញ</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Error</button></div><div class="mcq-x" hidden>💡 ដោះស្រាយដោយ Chaining ឬ Open addressing។</div></div></div></section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Stack &amp; Queue</h2>
+<table><tr><th></th><th>Stack (LIFO)</th><th>Queue (FIFO)</th></tr><tr><td>គំនិត</td><td>ចាន៖ ដាក់ចុងក្រោយ យកមុន</td><td>ជួររង់ចាំ៖ មកមុន បានមុន</td></tr><tr><td>Python</td><td><code>list.append / pop()</code></td><td><code>collections.deque</code> append / popleft()</td></tr><tr><td>ប្រើ</td><td>Undo · Back browser · Function call stack · ពិនិត្យវង់ក្រចក</td><td>Printer · BFS · Request queue · Tuk-tuk booking</td></tr></table>
+<script type="text/x-code" data-lang="py" data-label="stack_queue.py">
+from collections import deque
+
+def balanced(code):
+    pairs = {")": "(", "]": "[", "}": "{" }
+    stack = []
+    for ch in code:
+        if ch in "([{": stack.append(ch)
+        elif ch in ")]}":
+            if not stack or stack.pop() != pairs[ch]: return False
+    return not stack
+
+print(balanced("print(len([1, 2, {3: 4} ]))"))
+print(balanced("if (a[0] > 1"))
+
+q = deque()
+for name in ["Dara", "Sokha", "Vanna"]: q.append(name)
+while q:
+    print("បម្រើ៖", q.popleft(), "· នៅសល់", len(q))
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>True
+False
+បម្រើ៖ Dara · នៅសល់ 2
+បម្រើ៖ Sokha · នៅសល់ 1
+បម្រើ៖ Vanna · នៅសល់ 0</pre></div>
+<div class="warn">⚠️ កុំប្រើ <code>list.pop(0)</code> សម្រាប់ Queue — វា O(n)។ ប្រើ <code>deque.popleft()</code> O(1)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>ប៊ូតុង Undo ក្នុង Word គួរប្រើ Stack ឬ Queue? ហេតុអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Stack</b> — Undo ត្រូវដកសកម្មភាព <b>ចុងក្រោយបំផុត</b> មុន (LIFO)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤.២</h4><p>ពិនិត្យថ្នាក់ «( [ ] { } )» ត្រឹមត្រូវ — ប្រើ Data structure អ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Stack</b>៖ ឃើញបើក → push · ឃើញបិទ → pop ហើយប្រៀបធៀប · ចុងក្រោយ Stack ទទេ = ត្រឹមត្រូវ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤.៣</h4><p>ជួរបោះពុម្ពឯកសារ (Printer queue) គួរប្រើ?</p><details><summary>មើលចម្លើយ</summary><p><b>Queue (FIFO)</b> — ឯកសារផ្ញើមុន បោះពុម្ពមុន។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤.៤</h4><p>ហេតុអ្វីប្រើ <code>collections.deque</code> ជំនួស list.pop(0)?</p><details><summary>មើលចម្លើយ</summary><p><code>pop(0)</code> = O(n) · <code>deque.popleft()</code> = <b>O(1)</b>។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Stack ធ្វើការតាមគោលការណ៍?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>LIFO</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Sorted</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>FIFO</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Random</button></div><div class="mcq-x" hidden>💡 Last In, First Out។</div></div><div class="mcq"><p><b>២.</b> ប៊ូតុង Back ក្នុង Browser ប្រើ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>Stack</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Heap</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Tree</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Queue</button></div><div class="mcq-x" hidden>💡 ទំព័រចុងក្រោយ ត្រឡប់មុន។</div></div><div class="mcq"><p><b>៣.</b> BFS ប្រើ Data structure អ្វី?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Stack</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Set តែម្យ៉ាង</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>Queue</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Heap</button></div><div class="mcq-x" hidden>💡 BFS ដើរតាមកម្រិត — ចូលមុន ចេញមុន។</div></div></div></section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>Linked list</h2>
+<p><b>Linked list</b> = Node ភ្ជាប់គ្នាដោយ Pointer (next)។ បញ្ចូល/លុបនៅដើម <b>O(1)</b> តែចូលធាតុទី k ត្រូវដើរ <b>O(k)</b>។ មូលដ្ឋានសម្រាប់ Stack/Queue/Graph adjacency។</p><script type="text/x-code" data-lang="py" data-label="linked_list.py">
+class Node:
+    def __init__(self, val, nxt=None):
+        self.val, self.next = val, nxt
+
+class LinkedList:
+    def __init__(self): self.head = None
+    def push_front(self, v): self.head = Node(v, self.head)
+    def __iter__(self):
+        cur = self.head
+        while cur: yield cur.val; cur = cur.next
+    def reverse(self):
+        prev, cur = None, self.head
+        while cur:
+            cur.next, prev, cur = prev, cur, cur.next
+        self.head = prev
+
+ll = LinkedList()
+for x in ["C", "B", "A"]: ll.push_front(x)
+print(" -> ".join(ll))
+ll.reverse()
+print(" -> ".join(ll))
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>A -&gt; B -&gt; C
+C -&gt; B -&gt; A</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>ហេតុអ្វី Linked list មិនអាចធ្វើ Binary search បានល្អ?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះ Binary search ត្រូវលោតទៅ <b>ធាតុកណ្តាល O(1)</b> — Linked list ត្រូវដើរពីដើម O(n) ទើបដល់កណ្តាល។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥.២</h4><p>បញ្ចូល Node នៅដើម Linked list — Big-O?</p><details><summary>មើលចម្លើយ</summary><p><b>O(1)</b> — node.next = head; head = node។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥.៣</h4><p>បញ្ច្រាស Linked list ពិពណ៌នា Algorithm។</p><details><summary>មើលចម្លើយ</summary><p>prev = None · ដើរ cur៖ nxt = cur.next; cur.next = prev; prev = cur; cur = nxt · ចុងក្រោយ head = prev · <b>O(n)</b>។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥.៤</h4><p>រកថា Linked list មាន Cycle — វិធីល្បី?</p><details><summary>មើលចម្លើយ</summary><p><b>Floyd (Tortoise &amp; Hare)</b>៖ slow ដើរ 1, fast ដើរ 2 — បើជួបគ្នា = មាន Cycle។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> ចូលដល់ធាតុទី k ក្នុង Linked list?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>O(log n)</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>O(k)</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>O(1)</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>O(k²)</button></div><div class="mcq-x" hidden>💡 ត្រូវដើរពី head។</div></div><div class="mcq"><p><b>២.</b> Doubly linked list មានអ្វីបន្ថែម?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>Pointer prev</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Index</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Hash</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Sorted</button></div><div class="mcq-x" hidden>💡 Node នីមួយៗចង្អុលទៅមុន និងក្រោយ។</div></div><div class="mcq"><p><b>៣.</b> Linked list ល្អជាង Array នៅពេល?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>ចូល Index ញឹកញាប់</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>បញ្ចូល/លុបញឹកញាប់នៅកណ្តាល (មាន Pointer រួច)</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Binary search</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>តម្រៀប</button></div><div class="mcq-x" hidden>💡 មិនបាច់រំកិលធាតុ។</div></div></div></section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Recursion &amp; Backtracking</h2>
+<p><b>Recursion</b> = Function ហៅខ្លួនឯងលើបញ្ហាតូចជាង។ ត្រូវមាន <b>Base case</b> (ឈប់) និង <b>Recursive case</b>។ <b>Backtracking</b> = សាក → បើខុស ត្រឡប់ក្រោយ → សាកផ្លូវផ្សេង។</p><script type="text/x-code" data-lang="py" data-label="recursion.py">
+def factorial(n):
+    return 1 if n <= 1 else n * factorial(n - 1)
+
+def permutations(items):
+    if len(items) <= 1: return [items]
+    out = []
+    for i, x in enumerate(items):
+        for p in permutations(items[:i] + items[i+1:]):
+            out.append([x] + p)
+    return out
+
+def subsets_with_sum(nums, target, start=0, chosen=None):
+    chosen = chosen or []
+    if target == 0: print("  ✓", chosen); return
+    for i in range(start, len(nums)):
+        if nums[i] <= target:
+            subsets_with_sum(nums, target - nums[i], i + 1, chosen + [nums[i]])
+
+print("5! =", factorial(5))
+print(["".join(p) for p in permutations(list("ABC"))])
+print("ក្រដាសប្រាក់ (រៀល) ដែលបូកស្មើ 15000៖")
+subsets_with_sum([10000, 5000, 2000, 1000, 2000], 15000)
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>5! = 120
+[&#x27;ABC&#x27;, &#x27;ACB&#x27;, &#x27;BAC&#x27;, &#x27;BCA&#x27;, &#x27;CAB&#x27;, &#x27;CBA&#x27;]
+ក្រដាសប្រាក់ (រៀល) ដែលបូកស្មើ 15000៖
+  ✓ [10000, 5000]
+  ✓ [10000, 2000, 1000, 2000]</pre></div>
+<div class="warn">⚠️ គ្មាន Base case = <b>RecursionError</b> (Python ដាក់ដែនកំណត់ ~1000 ជាន់)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>Base case របស់ factorial ជាអ្វី? បើគ្មានវា កើតអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><code>n &lt;= 1 → 1</code>។ គ្មានវា Function ហៅខ្លួនឯងគ្មានទីបញ្ចប់ → <b>RecursionError: maximum recursion depth exceeded</b>។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦.២</h4><p>សរសេរ Recursion សម្រាប់ផលបូក 1..n។</p><details><summary>មើលចម្លើយ</summary><p><code>def s(n): return 0 if n == 0 else n + s(n-1)</code></p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦.៣</h4><p>Fibonacci recursive ធម្មតា ហេតុអ្វីយឺត? កែយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>គណនាដដែលៗ → <b>O(2ⁿ)</b>។ ប្រើ Memoization (<code>@lru_cache</code>) → O(n)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦.៤</h4><p>Backtracking ជាអ្វី? ឧទាហរណ៍។</p><details><summary>មើលចម្លើយ</summary><p>សាកជម្រើស → ខុស ត្រឡប់ក្រោយ (Undo) ហើយសាកជម្រើសផ្សេង — N-Queens, Sudoku, Permutations។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Recursion គ្មាន Base case នាំឲ្យ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>លឿនជាង</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>លទ្ធផល 0</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>RecursionError / Stack overflow</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>គ្មានបញ្ហា</button></div><div class="mcq-x" hidden>💡 ហៅខ្លួនឯងរហូត។</div></div><div class="mcq"><p><b>២.</b> Permutations នៃ n ធាតុ មានប៉ុន្មាន?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>n</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>2ⁿ</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>n²</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>n!</button></div><div class="mcq-x" hidden>💡 n × (n−1) × … × 1។</div></div><div class="mcq"><p><b>៣.</b> Subsets ទាំងអស់នៃ n ធាតុ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>2ⁿ</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>n²</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>n</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>n!</button></div><div class="mcq-x" hidden>💡 ធាតុនីមួយៗ ជ្រើស ឬមិនជ្រើស។</div></div></div></section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Sorting៖ Bubble · Merge · Quick</h2>
+<table><tr><th>Algorithm</th><th>មធ្យម</th><th>អាក្រក់បំផុត</th><th>Memory</th><th>ចំណាំ</th></tr><tr><td>Bubble/Insertion</td><td>O(n²)</td><td>O(n²)</td><td>O(1)</td><td>Insertion ល្អសម្រាប់ទិន្នន័យស្ទើរតម្រៀប</td></tr><tr><td>Merge sort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n)</td><td>Stable · John von Neumann (1945)</td></tr><tr><td>Quick sort</td><td>O(n log n)</td><td>O(n²)</td><td>O(log n)</td><td>លឿនក្នុងការអនុវត្ត · Tony Hoare (1959)</td></tr><tr><td>Timsort (Python)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n)</td><td>Tim Peters (2002)</td></tr></table>
+<script type="text/x-code" data-lang="py" data-label="sorting.py">
+import random
+def bubble(a):
+    a = a[:]; c = 0
+    for i in range(len(a)):
+        for j in range(len(a) - i - 1):
+            c += 1
+            if a[j] > a[j+1]: a[j], a[j+1] = a[j+1], a[j]
+    return a, c
+
+def merge_sort(a, cnt):
+    if len(a) < 2: return a
+    m = len(a) // 2
+    L, R = merge_sort(a[:m], cnt), merge_sort(a[m:], cnt)
+    out, i, j = [], 0, 0
+    while i < len(L) and j < len(R):
+        cnt[0] += 1
+        if L[i] <= R[j]: out.append(L[i]); i += 1
+        else: out.append(R[j]); j += 1
+    return out + L[i:] + R[j:]
+
+random.seed(7)
+for n in [100, 1000]:
+    data = [random.randint(1, 9999) for _ in range(n)]
+    _, cb = bubble(data); cnt = [0]; s = merge_sort(data, cnt)
+    print(f"n={n}: Bubble {cb:,} ប្រៀបធៀប · Merge {cnt[0]:,} ប្រៀបធៀប · ត្រឹមត្រូវ? {s == sorted(data)}")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>n=100: Bubble 4,950 ប្រៀបធៀប · Merge 545 ប្រៀបធៀប · ត្រឹមត្រូវ? True
+n=1000: Bubble 499,500 ប្រៀបធៀប · Merge 8,705 ប្រៀបធៀប · ត្រឹមត្រូវ? True</pre></div>
+<div class="note">💡 សាកមើលចលនា Sorting ក្នុង <b>Algorithm Lab</b> ចុងវគ្គ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>ហេតុអ្វី Quick sort អាក្រក់បំផុត O(n²)?</p><details><summary>មើលចម្លើយ</summary><p>ពេល Pivot ជ្រើសបាន <b>តូចបំផុត ឬធំបំផុត</b> ជានិច្ច (ឧ. List តម្រៀបរួច ហើយយកចុងជា Pivot) — ចែកបានតែ 0 និង n-1 រាល់ដង។ ដំណោះស្រាយ៖ Pivot ចៃដន្យ ឬ median-of-three។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧.២</h4><p>Merge sort ចែក [5,2,4,1] ហើយ Merge — បង្ហាញជំហាន។</p><details><summary>មើលចម្លើយ</summary><p>[5,2] [4,1] → [5] [2] [4] [1] → [2,5] [1,4] → <b>[1,2,4,5]</b>។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧.៣</h4><p>Sorting ណាដែល Stable ហើយ O(n log n) ជានិច្ច?</p><details><summary>មើលចម្លើយ</summary><p><b>Merge sort</b> (ត្រូវការ Memory O(n))។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧.៤</h4><p>Python <code>sorted()</code> ប្រើ Algorithm អ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Timsort</b> (Merge + Insertion) — O(n log n), Stable។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Bubble sort ជាមធ្យម?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>O(n log n)</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>O(n²)</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>O(log n)</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>O(n)</button></div><div class="mcq-x" hidden>💡 ប្រៀបធៀបគូជិតគ្នាច្រើនជុំ។</div></div><div class="mcq"><p><b>២.</b> Quick sort ជាមធ្យម?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>O(n²)</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>O(n)</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>O(n log n)</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>O(1)</button></div><div class="mcq-x" hidden>💡 Pivot ល្អចែកពាក់កណ្តាល។</div></div><div class="mcq"><p><b>៣.</b> «Stable sort» មានន័យ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>ធាតុស្មើគ្នារក្សាលំដាប់ដើម</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>លឿនជានិច្ច</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>មិនប្រើ Memory</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>មិនគាំង</button></div><div class="mcq-x" hidden>💡 សំខាន់ពេលតម្រៀបតាម Key ច្រើន។</div></div></div></section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Binary search</h2>
+<script type="text/x-code" data-lang="py" data-label="binary_search.py">
+def binary_search(a, x):
+    lo, hi, steps = 0, len(a) - 1, 0
+    while lo <= hi:
+        steps += 1
+        mid = (lo + hi) // 2
+        if a[mid] == x: return mid, steps
+        if a[mid] < x: lo = mid + 1
+        else: hi = mid - 1
+    return -1, steps
+
+ids = list(range(0, 2_000_000, 2))          # 1 លានលេខសិស្ស (គូ)
+print(binary_search(ids, 1_234_566))
+print(binary_search(ids, 7))                 # គ្មាន
+
+import bisect
+scores = [50, 60, 70, 80, 90]; grades = "FDCBA"
+for s in [45, 72, 95]:
+    print(s, "→", grades[bisect.bisect_right(scores, s) - 1] if s >= 50 else "F")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>(617283, 20)
+(-1, 20)
+45 → F
+72 → C
+95 → A</pre></div>
+<div class="note">💡 Binary search ត្រូវការ <b>ទិន្នន័យតម្រៀបរួច</b>។ ១ លានធាតុ ត្រូវត្រឹម ~20 ជំហាន (log₂ 1,000,000 ≈ 20)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>List ១,០០០ ធាតុ ស្វែងរកដោយ Binary search ត្រូវប្រៀបធៀបច្រើនបំផុតប៉ុន្មានដង?</p><details><summary>មើលចម្លើយ</summary><p>⌈log₂ 1000⌉ = <b>10</b> ដង (2¹⁰ = 1024)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៨.២</h4><p>Binary search រក 23 ក្នុង [3,8,12,17,23,31,40] — បង្ហាញ mid។</p><details><summary>មើលចម្លើយ</summary><p>mid = 17 (index 3) → 23 &gt; 17 → ស្តាំ [23,31,40] → mid = 31 → ឆ្វេង → <b>23 រកឃើញ</b> (៣ ជំហាន)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៨.៣</h4><p>Binary search ត្រូវការលក្ខខណ្ឌអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>ទិន្នន័យ <b>តម្រៀបរួច</b> និងចូល Index បាន O(1)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៨.៤</h4><p>ប្រើ Binary search លើ «ចម្លើយ» — ឧទាហរណ៍?</p><details><summary>មើលចម្លើយ</summary><p>រកល្បឿនតូចបំផុតដើម្បីបញ្ចប់ការងារក្នុង H ម៉ោង — សាកល្បឿន mid ហើយពិនិត្យ (Binary search on answer)។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Binary search Big-O?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>O(n)</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>O(n log n)</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>O(log n)</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>O(1)</button></div><div class="mcq-x" hidden>💡 ចែកពាក់កណ្តាលរៀងរាល់ជំហាន។</div></div><div class="mcq"><p><b>២.</b> 1,000,000 ធាតុ ត្រូវប្រៀបធៀបច្រើនបំផុតប្រហែល?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>20</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>1,000</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>100</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>500,000</button></div><div class="mcq-x" hidden>💡 2²⁰ ≈ 1 លាន។</div></div><div class="mcq"><p><b>៣.</b> Python module សម្រាប់ Binary search?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>math</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>heapq</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>random</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>bisect</button></div><div class="mcq-x" hidden>💡 <code>bisect_left</code> · <code>bisect_right</code>។</div></div></div></section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Tree &amp; Binary Search Tree (BST)</h2>
+<p><b>Tree</b> = Node មាន Root និងកូន (ដូចមែកធាង Folder)។ <b>BST</b>៖ កូនឆ្វេង &lt; Node &lt; កូនស្តាំ → ស្វែងរក O(log n) (បើមានតុល្យភាព)។ <b>Inorder</b> traversal ចេញលំដាប់តម្រៀប។</p><script type="text/x-code" data-lang="py" data-label="bst.py">
+class BST:
+    def __init__(self): self.root = None
+    def insert(self, k):
+        def ins(n, k):
+            if n is None: return [k, None, None]
+            if k < n[0]: n[1] = ins(n[1], k)
+            else: n[2] = ins(n[2], k)
+            return n
+        self.root = ins(self.root, k)
+    def inorder(self, n="start"):
+        n = self.root if n == "start" else n
+        return [] if n is None else self.inorder(n[1]) + [n[0]] + self.inorder(n[2])
+    def height(self, n="start"):
+        n = self.root if n == "start" else n
+        return 0 if n is None else 1 + max(self.height(n[1]), self.height(n[2]))
+
+t = BST()
+for x in [50, 30, 70, 20, 40, 60, 80]: t.insert(x)
+print("Inorder:", t.inorder(), "· កម្ពស់:", t.height())
+u = BST()
+for x in [10, 20, 30, 40, 50, 60, 70]: u.insert(x)
+print("បញ្ចូលតាមលំដាប់ → កម្ពស់:", u.height(), "(ក្លាយជា Linked list!)")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>Inorder: [20, 30, 40, 50, 60, 70, 80] · កម្ពស់: 3
+បញ្ចូលតាមលំដាប់ → កម្ពស់: 7 (ក្លាយជា Linked list!)</pre></div>
+<div class="note">💡 BST មិនតុល្យភាព អាចក្លាយ O(n)។ <b>AVL</b> (1962) និង <b>Red-Black tree</b> រក្សាតុល្យភាពដោយស្វ័យប្រវត្តិ — Database index ប្រើ <b>B-tree</b>។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>បញ្ចូល 10, 20, 30, 40 តាមលំដាប់ចូល BST ធម្មតា — កើតបញ្ហាអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>Tree ក្លាយជា <b>ខ្សែតែមួយខាងស្តាំ</b> (កម្ពស់ = n) → ស្វែងរក O(n) មិនមែន O(log n)។ ត្រូវប្រើ Self-balancing tree (AVL/Red-Black)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩.២</h4><p>Inorder traversal នៃ BST ផ្តល់អ្វី?</p><details><summary>មើលចម្លើយ</summary><p>តម្លៃ <b>តាមលំដាប់កើន</b>។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩.៣</h4><p>Height នៃ Tree ដែលមាន Node តែមួយ ស្មើប៉ុន្មាន (រាប់ Edge)?</p><details><summary>មើលចម្លើយ</summary><p><b>0</b> (Tree ទទេ = −1 តាមនិយមន័យខ្លះ)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩.៤</h4><p>ដោះស្រាយ BST ខ្វិន (Skewed) យ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>ប្រើ <b>Self-balancing BST</b> (AVL, Red-Black) ឬលាយលំដាប់ទិន្នន័យ។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> ស្វែងរកក្នុង BST មានតុល្យភាព?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>O(1)</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>O(log n)</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>O(n)</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>O(n²)</button></div><div class="mcq-x" hidden>💡 កម្ពស់ ≈ log n។</div></div><div class="mcq"><p><b>២.</b> BST ខ្វិនទាំងស្រុង ស្វែងរក?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>O(n)</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>O(1)</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>O(n log n)</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>O(log n)</button></div><div class="mcq-x" hidden>💡 ក្លាយដូច Linked list។</div></div><div class="mcq"><p><b>៣.</b> Traversal ណា៖ Root → Left → Right?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Postorder</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Level-order</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Inorder</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>Preorder</button></div><div class="mcq-x" hidden>💡 Pre = Root មុន។</div></div></div></section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>Heap &amp; Priority queue</h2>
+<table><tr><th>ប្រតិបត្តិការ</th><th>Heap</th><th>List តម្រៀប</th></tr><tr><td>បញ្ចូល</td><td>O(log n)</td><td>O(n)</td></tr><tr><td>យកតូចបំផុត</td><td>O(log n)</td><td>O(1)/O(n)</td></tr><tr><td>Top-k ពី n</td><td>O(n log k)</td><td>O(n log n)</td></tr></table>
+<script type="text/x-code" data-lang="py" data-label="heap.py">
+import heapq
+tasks = []
+heapq.heappush(tasks, (2, "ធ្វើកិច្ចការផ្ទះ"))
+heapq.heappush(tasks, (1, "ប្រឡងស្អែក — រៀនជាមុន"))
+heapq.heappush(tasks, (3, "មើលវីដេអូ"))
+while tasks:
+    p, t = heapq.heappop(tasks)
+    print(p, t)
+
+sales = {"កាហ្វេ": 320, "តែ": 150, "នំបុ័ង": 410, "ទឹកក្រូច": 90, "ឡាតេ": 275}
+print("Top 3:", heapq.nlargest(3, sales.items(), key=lambda kv: kv[1]))
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>1 ប្រឡងស្អែក — រៀនជាមុន
+2 ធ្វើកិច្ចការផ្ទះ
+3 មើលវីដេអូ
+Top 3: [(&#x27;នំបុ័ង&#x27;, 410), (&#x27;កាហ្វេ&#x27;, 320), (&#x27;ឡាតេ&#x27;, 275)]</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>Hospital ER ត្រូវព្យាបាលអ្នកជំងឺធ្ងន់មុន មិនមែនមកមុន។ Data structure អ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Priority queue (Heap)</b> — Key = កម្រិតធ្ងន់ធ្ងរ ដកចេញអ្នកធ្ងន់បំផុតរាល់ពេល O(log n)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០.២</h4><p><code>heapq</code> ក្នុង Python ជា Min-heap ឬ Max-heap? ចង់បាន Max ធ្វើម៉េច?</p><details><summary>មើលចម្លើយ</summary><p><b>Min-heap</b> — ចង់ Max: push <code>-x</code> ហើយបញ្ច្រាសសញ្ញាពេល pop។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០.៣</h4><p>រក k ធាតុធំបំផុតក្នុង n ធាតុ ឲ្យលឿន?</p><details><summary>មើលចម្លើយ</summary><p>Min-heap ទំហំ k → <b>O(n log k)</b> (ឬ <code>heapq.nlargest</code>)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០.៤</h4><p>Heap ក្នុង Array៖ Node index i មានកូននៅ index អ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>2i+1</b> និង <b>2i+2</b> · ឪពុក = (i−1)//2។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> ទាញ Min ពី Min-heap?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>O(n)</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>O(1)</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>O(log n)</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>O(n log n)</button></div><div class="mcq-x" hidden>💡 យកឫស ហើយ Sift down។</div></div><div class="mcq"><p><b>២.</b> មើល Min (មិនទាញ)?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>O(log n)</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>O(1)</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>O(n²)</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>O(n)</button></div><div class="mcq-x" hidden>💡 នៅ heap[0]។</div></div><div class="mcq"><p><b>៣.</b> Heap sort?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>O(n²)</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>O(log n)</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>O(n)</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>O(n log n)</button></div><div class="mcq-x" hidden>💡 pop n ដង ដងនីមួយៗ log n។</div></div></div></section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>Graph៖ BFS &amp; DFS</h2>
+<p><b>Graph</b> = Vertex (ចំណុច) + Edge (ខ្សែ)៖ ផែនទី បណ្តាញមិត្តភក្តិ Internet។ ផ្ទុកជា <b>Adjacency list</b> (dict)។ <b>BFS</b> (Queue) រកផ្លូវ <b>ខ្លីបំផុត (ចំនួនជំហាន)</b> · <b>DFS</b> (Stack/Recursion) ដើរជ្រៅ ល្អសម្រាប់ Maze/Cycle។</p><script type="text/x-code" data-lang="py" data-label="graph.py">
+from collections import deque
+G = {
+  "ភ្នំពេញ": ["តាកែវ", "កំពង់ស្ពឺ", "កណ្តាល", "ព្រៃវែង"],
+  "កណ្តាល": ["ភ្នំពេញ", "កំពង់ចាម"], "កំពង់ចាម": ["កណ្តាល", "ក្រចេះ"],
+  "ក្រចេះ": ["កំពង់ចាម", "ស្ទឹងត្រែង"], "ស្ទឹងត្រែង": ["ក្រចេះ"],
+  "តាកែវ": ["ភ្នំពេញ", "កំពត"], "កំពត": ["តាកែវ", "កែប"], "កែប": ["កំពត"],
+  "កំពង់ស្ពឺ": ["ភ្នំពេញ"], "ព្រៃវែង": ["ភ្នំពេញ"],
+}
+def bfs_path(g, s, t):
+    prev, q = {s: None}, deque([s])
+    while q:
+        u = q.popleft()
+        if u == t: break
+        for v in g[u]:
+            if v not in prev: prev[v] = u; q.append(v)
+    path = []
+    while t is not None: path.append(t); t = prev.get(t)
+    return path[::-1]
+
+def dfs(g, u, seen=None):
+    seen = seen if seen is not None else []
+    seen.append(u)
+    for v in g[u]:
+        if v not in seen: dfs(g, v, seen)
+    return seen
+
+print("BFS:", " → ".join(bfs_path(G, "កែប", "ស្ទឹងត្រែង")))
+print("DFS:", dfs(G, "ភ្នំពេញ")[:6], "...")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>BFS: កែប → កំពត → តាកែវ → ភ្នំពេញ → កណ្តាល → កំពង់ចាម → ក្រចេះ → ស្ទឹងត្រែង
+DFS: [&#x27;ភ្នំពេញ&#x27;, &#x27;តាកែវ&#x27;, &#x27;កំពត&#x27;, &#x27;កែប&#x27;, &#x27;កំពង់ស្ពឺ&#x27;, &#x27;កណ្តាល&#x27;] ...</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>ហេតុអ្វី BFS ធានាផ្លូវដែលមាន <b>ចំនួនជំហានតិចបំផុត</b> តែ DFS មិនធានា?</p><details><summary>មើលចម្លើយ</summary><p>BFS ពិនិត្យ <b>ស្រទាប់ៗ</b> (ចម្ងាយ 1 ទាំងអស់ → 2 → 3…) ដូច្នេះលើកដំបូងដែលដល់គោលដៅ គឺតាមផ្លូវខ្លីបំផុត។ DFS ដើរជ្រៅលើផ្លូវមួយមុន — អាចដល់គោលដៅតាមផ្លូវវែង។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១.២</h4><p>Graph មាន V Node និង E Edge — BFS/DFS Big-O?</p><details><summary>មើលចម្លើយ</summary><p><b>O(V + E)</b>។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១.៣</h4><p>ហេតុអ្វីត្រូវមាន <code>visited</code>?</p><details><summary>មើលចម្លើយ</summary><p>ការពារដើរវិលជុំ (Cycle) គ្មានទីបញ្ចប់ និងដើរ Node ដដែលច្រើនដង។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១.៤</h4><p>រាប់ «កោះ» ក្នុង Grid 0/1 — វិធី?</p><details><summary>មើលចម្លើយ</summary><p>ដើរគ្រប់ក្រឡា · ឃើញ 1 មិនទាន់ visit → count += 1 ហើយ DFS/BFS សម្គាល់កោះទាំងមូល · O(rows × cols)។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> DFS ប្រើ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>Stack (ឬ Recursion)</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Heap</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Queue</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Hash</button></div><div class="mcq-x" hidden>💡 ចូលជ្រៅមុន។</div></div><div class="mcq"><p><b>២.</b> ផ្លូវតិចជំហានបំផុត (គ្មានទម្ងន់)?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Bubble sort</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>BFS</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Heap</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>DFS</button></div><div class="mcq-x" hidden>💡 BFS ដើរតាមកម្រិត។</div></div><div class="mcq"><p><b>៣.</b> Adjacency list ល្អសម្រាប់?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>Graph មាន Edge តិច (Sparse)</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Array</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Graph ពេញ</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Tree តែប៉ុណ្ណោះ</button></div><div class="mcq-x" hidden>💡 សន្សំ Memory O(V+E)។</div></div></div></section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>Dijkstra៖ ផ្លូវខ្លីបំផុតមានចម្ងាយ</h2>
+<script type="text/x-code" data-lang="py" data-label="dijkstra.py">
+import heapq
+# ចម្ងាយ (km) ប្រហាក់ប្រហែល — ឧទាហរណ៍សម្រាប់រៀន
+G = {
+  "ភ្នំពេញ": {"កំពង់ស្ពឺ": 48, "តាកែវ": 78, "កំពង់ចាម": 124},
+  "កំពង់ស្ពឺ": {"ភ្នំពេញ": 48, "កំពត": 100},
+  "តាកែវ": {"ភ្នំពេញ": 78, "កំពត": 95},
+  "កំពត": {"កំពង់ស្ពឺ": 100, "តាកែវ": 95, "កែប": 25},
+  "កែប": {"កំពត": 25},
+  "កំពង់ចាម": {"ភ្នំពេញ": 124},
+}
+def dijkstra(g, s):
+    dist, prev, pq = {s: 0}, {}, [(0, s)]
+    while pq:
+        d, u = heapq.heappop(pq)
+        if d > dist[u]: continue
+        for v, w in g[u].items():
+            if d + w < dist.get(v, float("inf")):
+                dist[v], prev[v] = d + w, u
+                heapq.heappush(pq, (d + w, v))
+    return dist, prev
+
+dist, prev = dijkstra(G, "ភ្នំពេញ")
+path, x = [], "កែប"
+while x: path.append(x); x = prev.get(x)
+print(" → ".join(path[::-1]), "=", dist["កែប"], "km")
+print(sorted(dist.items(), key=lambda kv: kv[1]))
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>ភ្នំពេញ → កំពង់ស្ពឺ → កំពត → កែប = 173 km
+[(&#x27;ភ្នំពេញ&#x27;, 0), (&#x27;កំពង់ស្ពឺ&#x27;, 48), (&#x27;តាកែវ&#x27;, 78), (&#x27;កំពង់ចាម&#x27;, 124), (&#x27;កំពត&#x27;, 148), (&#x27;កែប&#x27;, 173)]</pre></div>
+<div class="note">💡 <b>Edsger Dijkstra</b> រចនា Algorithm នេះឆ្នាំ <b>1956</b> (បោះពុម្ព 1959) — Google Maps/GPS ប្រើគំនិតដូចគ្នា (+ A* និង Heuristic)។ Dijkstra មិនដំណើរការជាមួយ Edge <b>អវិជ្ជមាន</b> — ប្រើ Bellman-Ford។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>Dijkstra ជាមួយ Heap មាន Big-O ប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p><b>O((V + E) log V)</b> — V = ចំណុច E = ខ្សែ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២.២</h4><p>ហេតុអ្វី Dijkstra មិនដំណើរការជាមួយទម្ងន់អវិជ្ជមាន?</p><details><summary>មើលចម្លើយ</summary><p>វាសន្មតថា Node ដែល Pop រួចមានចម្ងាយចុងក្រោយ — ទម្ងន់អវិជ្ជមានអាចធ្វើឲ្យខ្លីជាងក្រោយ។ ប្រើ <b>Bellman-Ford</b>។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២.៣</h4><p>A ពី B=4, A ពី C=1, C ពី B=2 — ផ្លូវខ្លីបំផុត A→B?</p><details><summary>មើលចម្លើយ</summary><p>A→C→B = 1+2 = <b>3</b> (ខ្លីជាង 4)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២.៤</h4><p>Google Maps ប្រើអ្វីលើស Dijkstra?</p><details><summary>មើលចម្លើយ</summary><p><b>A*</b> (Dijkstra + Heuristic ចម្ងាយត្រង់) និង Preprocessing (Contraction hierarchies)។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Dijkstra ប្រើ Data structure អ្វីដើម្បីលឿន?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Linked list</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Stack</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>Priority queue (Heap)</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Set តែម្យ៉ាង</button></div><div class="mcq-x" hidden>💡 យក Node ចម្ងាយតូចបំផុតមុន។</div></div><div class="mcq"><p><b>២.</b> Graph គ្មានទម្ងន់ ផ្លូវខ្លីបំផុត — គ្រាន់តែ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>DP</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Dijkstra ចាំបាច់</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Sort</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>BFS</button></div><div class="mcq-x" hidden>💡 ទម្ងន់ស្មើ 1 ទាំងអស់។</div></div><div class="mcq"><p><b>៣.</b> Dijkstra ជាប្រភេទ Algorithm?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Brute force</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>Greedy</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Backtracking</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Divide &amp; conquer</button></div><div class="mcq-x" hidden>💡 ជ្រើស Node ជិតបំផុតរៀងរាល់ជំហាន។</div></div></div></section>
+<section id="l13">
+<h2><span class="badge">មេរៀន ១៣</span>Dynamic Programming (DP)</h2>
+<p><b>DP</b> = បំបែកបញ្ហាជាបញ្ហារង <b>ដែលកើតឡើងដដែលៗ</b> ហើយ <b>ចងចាំចម្លើយ</b> (Memoization) — កាត់ពី Exponential មក Polynomial។ ពាក្យ «Dynamic programming» ដោយ <b>Richard Bellman</b> (1950s)។</p><script type="text/x-code" data-lang="py" data-label="dp.py">
+from functools import lru_cache
+import time
+
+def fib_slow(n): return n if n < 2 else fib_slow(n-1) + fib_slow(n-2)
+
+@lru_cache(maxsize=None)
+def fib_fast(n): return n if n < 2 else fib_fast(n-1) + fib_fast(n-2)
+
+t = time.perf_counter(); fib_slow(27); a = time.perf_counter() - t
+t = time.perf_counter(); fib_fast(27); b = time.perf_counter() - t
+print(f"fib(27) គ្មាន Memo ≈ {a*1000:.0f} ms · មាន Memo ≈ {b*1000:.3f} ms")
+print("fib(200) =", fib_fast(200))
+
+def min_notes(amount, notes=(100, 500, 1000, 2000, 5000, 10000)):
+    INF = float("inf"); dp = [0] + [INF] * amount
+    for x in range(1, amount + 1):
+        for c in notes:
+            if c <= x and dp[x - c] + 1 < dp[x]: dp[x] = dp[x - c] + 1
+    return dp[amount]
+print("ក្រដាសប្រាក់តិចបំផុតសម្រាប់ 18,600៛ =", min_notes(18600))
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>fib(27) គ្មាន Memo ≈ 17 ms · មាន Memo ≈ 0.008 ms
+fib(200) = 280571172992510140037611932413038677189525
+ក្រដាសប្រាក់តិចបំផុតសម្រាប់ 18,600៛ = 6</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣</h4><p>ពីរលក្ខណៈអ្វីដែលបញ្ជាក់ថាបញ្ហាអាចប្រើ DP?</p><details><summary>មើលចម្លើយ</summary><p>(1) <b>Overlapping subproblems</b> — បញ្ហារងដដែលគណនាច្រើនដង (2) <b>Optimal substructure</b> — ចម្លើយល្អបំផុតផ្សំពីចម្លើយល្អបំផុតនៃបញ្ហារង។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣.២</h4><p>ចំនួនវិធីឡើងជណ្តើរ n កាំ (ម្តង 1 ឬ 2 កាំ) — រូបមន្ត DP?</p><details><summary>មើលចម្លើយ</summary><p><code>dp[n] = dp[n-1] + dp[n-2]</code> · dp[1]=1, dp[2]=2 → n=5: <b>8 វិធី</b>។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣.៣</h4><p>Coin change (1, 3, 4) បង់ 6 កាក់តិចបំផុត — Greedy ឬ DP?</p><details><summary>មើលចម្លើយ</summary><p>Greedy: 4+1+1 = 3 កាក់ (ខុស) · <b>DP: 3+3 = 2 កាក់</b>។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣.៤</h4><p>Top-down vs Bottom-up?</p><details><summary>មើលចម្លើយ</summary><p><b>Top-down</b> = Recursion + Memo · <b>Bottom-up</b> = បំពេញតារាងពីតូចទៅធំ (គ្មាន Recursion depth)។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> DP ត្រូវការ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>Overlapping subproblems + Optimal substructure</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Array តម្រៀប</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Graph</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Random</button></div><div class="mcq-x" hidden>💡 លក្ខណៈពីរនេះ។</div></div><div class="mcq"><p><b>២.</b> Memoization គឺ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>តម្រៀប</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>លុប Cache</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>រក្សាលទ្ធផលដែលគណនារួច</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Loop</button></div><div class="mcq-x" hidden>💡 កុំគណនាម្តងទៀត។</div></div><div class="mcq"><p><b>៣.</b> Longest common subsequence តារាង DP ទំហំ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>m + n</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>2ⁿ</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>1</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>(m+1) × (n+1)</button></div><div class="mcq-x" hidden>💡 String ពីរ ប្រវែង m និង n។</div></div></div></section>
+<section id="l14">
+<h2><span class="badge">មេរៀន ១៤</span>ដោះស្រាយបញ្ហា &amp; ត្រៀមសម្ភាសន៍ការងារ</h2>
+<table><tr><th>ប្រធានបទឃើញ…</th><th>គិតពី…</th></tr><tr><td>«តម្រៀបរួច»</td><td>Binary search · Two pointers</td></tr><tr><td>«ស្ទួន / ញឹកញាប់ / គូ»</td><td>Hash map / Set</td></tr><tr><td>«ផ្លូវខ្លីបំផុត / ស្រទាប់»</td><td>BFS (គ្មានទម្ងន់) · Dijkstra (មានទម្ងន់)</td></tr><tr><td>«Top k / តូចបំផុតបន្តបន្ទាប់»</td><td>Heap</td></tr><tr><td>«ចំនួនវិធី / តម្លៃល្អបំផុត»</td><td>Dynamic programming</td></tr><tr><td>«គ្រប់បន្សំ / Permutation»</td><td>Backtracking</td></tr></table>
+<div class="grid"><div class="card"><b>🧩 LeetCode</b><br>ហាតបញ្ហា Easy → Medium</div><div class="card"><b>🏆 Codeforces / AtCoder</b><br>ការប្រកួត Competitive programming</div><div class="card"><b>📘 CLRS</b><br>Introduction to Algorithms (សៀវភៅស្តង់ដារ)</div><div class="card"><b>🎓 Visualgo</b><br>មើលចលនា Data structure</div></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li><b>យល់បញ្ហា</b>៖ អានម្តងទៀត · សួរ Input/Output · Edge cases (List ទទេ, លេខអវិជ្ជមាន)</li><li><b>ឧទាហរណ៍</b>៖ ដោះស្រាយដោយដៃ ២–៣ ករណី</li><li><b>Brute force</b> ជាមុន → គណនា Big-O</li><li><b>បង្កើនល្បឿន</b>៖ Hash? Sort + Two pointers? BFS? DP?</li><li><b>សរសេរកូដ</b> ស្អាត ដាក់ឈ្មោះច្បាស់</li><li><b>សាក</b> Edge cases · និយាយពី Time/Space complexity</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៤</h4><p>បញ្ហា៖ «រកពាក្យដែលបង្ហាញញឹកញាប់បំផុត k ពាក្យក្នុងអត្ថបទ»។ គួរប្រើ Data structure អ្វី? Big-O?</p><details><summary>មើលចម្លើយ</summary><p><b>Hash map</b> រាប់ (O(n)) + <b>Heap</b> ទំហំ k យក Top-k (O(m log k), m = ពាក្យខុសគ្នា) → សរុប <b>O(n + m log k)</b>។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៤.២</h4><p>ជំហាន ៥ ដោះស្រាយបញ្ហាក្នុងសម្ភាសន៍?</p><details><summary>មើលចម្លើយ</summary><p>យល់/សួរ → ឧទាហរណ៍ &amp; Edge case → Brute force + Big-O → បង្កើនល្បឿន → សរសេរ &amp; Test។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៤.៣</h4><p>Edge case សម្រាប់ «រកលេខធំបំផុតក្នុង List»?</p><details><summary>មើលចម្លើយ</summary><p>List ទទេ · ធាតុតែមួយ · លេខអវិជ្ជមានទាំងអស់ · ស្ទួន។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៤.៤</h4><p>ឃើញពាក្យ «sorted array» ក្នុងបញ្ហា គួរគិតដល់អ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Binary search</b> ឬ <b>Two pointers</b>។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> «Top k elements» គួរគិតដល់?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>Heap</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Linked list</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Bubble sort</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Stack</button></div><div class="mcq-x" hidden>💡 O(n log k)។</div></div><div class="mcq"><p><b>២.</b> «រកថាធ្លាប់ឃើញឬទេ» លឿន?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Queue</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>List</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Tree តែប៉ុណ្ណោះ</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>Hash set</button></div><div class="mcq-x" hidden>💡 O(1)។</div></div><div class="mcq"><p><b>៣.</b> ផ្លូវខ្លីបំផុតក្នុង Grid គ្មានទម្ងន់?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>DP តែប៉ុណ្ណោះ</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>BFS</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Merge sort</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>DFS</button></div><div class="mcq-x" hidden>💡 BFS ពីចំណុចចាប់ផ្តើម។</div></div></div></section>
+<section id="cheat">
+<h2>📋 សង្ខេប (Cheat sheet)</h2>
+<table><tr><th>Data structure / Algorithm</th><th>Big-O · ពេលប្រើ</th></tr><tr><td>List index / append</td><td>O(1) · ចូលដោយលេខ</td></tr><tr><td>Dict / Set</td><td>O(1) មធ្យម · រកលឿន, រាប់, ស្ទួន</td></tr><tr><td>Stack / Queue (deque)</td><td>O(1) · Undo / BFS</td></tr><tr><td>Heap</td><td>O(log n) push/pop · Priority, Top-k</td></tr><tr><td>BST (តុល្យភាព)</td><td>O(log n) · ទិន្នន័យតម្រៀបថាមវន្ត</td></tr><tr><td>Binary search</td><td>O(log n) · ត្រូវតម្រៀបរួច</td></tr><tr><td>Merge/Quick sort</td><td>O(n log n)</td></tr><tr><td>BFS</td><td>O(V+E) · ផ្លូវខ្លី (គ្មានទម្ងន់)</td></tr><tr><td>Dijkstra</td><td>O((V+E) log V) · ផ្លូវខ្លី (មានទម្ងន់ ≥ 0)</td></tr><tr><td>DP</td><td>Memo + បញ្ហារងស្ទួន</td></tr></table>
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងចុងវគ្គ</h2>
+<ol class='steps'><li><b>Phnom Penh Route Finder</b>៖ បង្កើត Graph ផ្លូវ ១០–១៥ ចំណុច (ទីផ្សារ សាលា ផ្សារ) ជាមួយចម្ងាយ។</li><li>BFS (ចំនួនផ្លូវកាត់តិចបំផុត) + Dijkstra (km តិចបំផុត)។</li><li>បន្ថែម Top-3 កន្លែងជិតបំផុត (Heap) និង Search ឈ្មោះកន្លែង (Dict/Trie)។</li><li>សរសេរ Big-O នៃមុខងារនីមួយៗក្នុង README · Push ទៅ GitHub។</li></ol></section>
+<section id="pro-app">
+<h2>💻 Algorithm Lab (App)</h2>
+
+<p><b>📊 Sorting</b> មើលចលនា Bubble/Insertion/Selection/Merge/Quick + រាប់ការប្រៀបធៀប · <b>🧭 Pathfinding</b> គូរជញ្ជាំង/ភក់ ហើយប្រៀបធៀប BFS · DFS · Dijkstra · <b>📈 Big-O</b> ក្រាហ្វ O(1) → O(2ⁿ)។</p>
+
+<div class="itk" id="al">
+<div class="itk-tabs"><button class="on" data-t="so">📊 Sorting</button><button data-t="pf">🧭 Pathfinding</button><button data-t="bo">📈 Big-O</button></div>
+<div class="itk-p on" data-p="so">
+ <div class="itk-row"><label>Algorithm <select id="so_a"><option value="bubble">Bubble sort O(n²)</option><option value="insertion">Insertion sort O(n²)</option><option value="selection">Selection sort O(n²)</option><option value="merge">Merge sort O(n log n)</option><option value="quick" selected>Quick sort O(n log n)</option></select></label>
+  <label>ចំនួន <input type="range" id="so_n" min="8" max="60" value="30"></label><label>ល្បឿន <input type="range" id="so_s" min="1" max="60" value="25"></label>
+  <button class="btn" id="so_go">▶ Sort</button><button class="btn ghost" id="so_new">🎲 ថ្មី</button></div>
+ <canvas id="so_cv" width="720" height="220" style="width:100%;height:auto;background:rgba(127,127,127,.08);border-radius:10px"></canvas>
+ <div class="itk-out" id="so_out"></div>
+</div>
+<div class="itk-p" data-p="pf">
+ <p class="vl-tip">ចុចលើក្រឡាដើម្បីគូរ <b>ជញ្ជាំង</b> · 🟢 ចាប់ផ្តើម · 🔴 គោលដៅ។ ប្រៀបធៀប BFS (ផ្លូវខ្លីបំផុត) · DFS (មិនប្រាកដខ្លី) · Dijkstra (មានទម្ងន់ — ក្រឡា 🟫 ភក់ ថ្លៃ 5)។</p>
+ <div class="itk-row"><select id="pf_a"><option value="bfs">BFS</option><option value="dfs">DFS</option><option value="dij">Dijkstra</option></select>
+  <label><input type="radio" name="pf_m" value="wall" checked> 🧱 ជញ្ជាំង</label><label><input type="radio" name="pf_m" value="mud"> 🟫 ភក់</label>
+  <button class="btn" id="pf_go">▶ រក</button><button class="btn ghost" id="pf_rand">🎲 Maze</button><button class="btn ghost" id="pf_clr">🧹 សម្អាត</button></div>
+ <canvas id="pf_cv" width="720" height="360" style="width:100%;height:auto;border-radius:10px;touch-action:none;background:#fff"></canvas>
+ <div class="itk-out" id="pf_out"></div>
+</div>
+<div class="itk-p" data-p="bo">
+ <div class="itk-row"><label>n = <input type="range" id="bo_n" min="1" max="64" value="16"></label><b id="bo_v"></b></div>
+ <canvas id="bo_cv" width="720" height="260" style="width:100%;height:auto;background:rgba(127,127,127,.08);border-radius:10px"></canvas>
+ <div class="itk-out" id="bo_out"></div>
+</div>
+</div>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+document.querySelectorAll("#al .itk-tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#al .itk-tabs button").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll("#al .itk-p").forEach(p=>p.classList.toggle("on",p.dataset.p===b.dataset.t));if(b.dataset.t==="pf")pdraw();if(b.dataset.t==="bo")bo();});
+/* ---- sorting ---- */
+const cv=$("so_cv"),g=cv.getContext("2d");let arr=[],run=null,cmp=0,swp=0;
+function fresh(){arr=Array.from({length:+$("so_n").value},()=>5+Math.floor(Math.random()*95));cmp=swp=0;draw([]);$("so_out").textContent="";}
+function draw(hi,done){const n=arr.length,w=cv.width/n;g.clearRect(0,0,cv.width,cv.height);arr.forEach((v,i)=>{g.fillStyle=done?"#2f9e44":hi.includes(i)?"#e8590c":"#7048e8";g.fillRect(i*w+1,cv.height-v*2.1,w-2,v*2.1);});}
+function* bubble(a){for(let i=0;i<a.length;i++)for(let j=0;j<a.length-i-1;j++){cmp++;yield[j,j+1];if(a[j]>a[j+1]){[a[j],a[j+1]]=[a[j+1],a[j]];swp++;}}}
+function* insertion(a){for(let i=1;i<a.length;i++){let j=i;while(j>0){cmp++;yield[j-1,j];if(a[j-1]>a[j]){[a[j-1],a[j]]=[a[j],a[j-1]];swp++;j--;}else break;}}}
+function* selection(a){for(let i=0;i<a.length;i++){let m=i;for(let j=i+1;j<a.length;j++){cmp++;yield[m,j];if(a[j]<a[m])m=j;}if(m!==i){[a[i],a[m]]=[a[m],a[i]];swp++;}}}
+function* merge(a,l=0,r=a.length){if(r-l<2)return;const m=(l+r)>>1;yield*merge(a,l,m);yield*merge(a,m,r);const t=[];let i=l,j=m;while(i<m&&j<r){cmp++;yield[i,j];t.push(a[i]<=a[j]?a[i++]:a[j++]);}while(i<m)t.push(a[i++]);while(j<r)t.push(a[j++]);for(let k=0;k<t.length;k++){a[l+k]=t[k];swp++;yield[l+k];}}
+function* quick(a,l=0,r=a.length-1){if(l>=r)return;const p=a[r];let i=l;for(let j=l;j<r;j++){cmp++;yield[j,r];if(a[j]<p){[a[i],a[j]]=[a[j],a[i]];swp++;i++;}}[a[i],a[r]]=[a[r],a[i]];swp++;yield*quick(a,l,i-1);yield*quick(a,i+1,r);}
+$("so_go").onclick=()=>{if(run){clearInterval(run);run=null;$("so_go").textContent="▶ Sort";return;}cmp=swp=0;const gen={bubble,insertion,selection,merge,quick}[$("so_a").value](arr);$("so_go").textContent="⏸";
+ run=setInterval(()=>{for(let k=0;k<Math.ceil(+$("so_s").value/10);k++){const s=gen.next();if(s.done){clearInterval(run);run=null;draw([],true);$("so_go").textContent="▶ Sort";const n=arr.length;$("so_out").innerHTML=`✅ រួច! n=${n} · ប្រៀបធៀប <b>${cmp}</b> ដង · ផ្លាស់ទី <b>${swp}</b> · n²=${n*n} · n·log₂n≈${Math.round(n*Math.log2(n))}`;return;}draw(s.value);}$("so_out").innerHTML=`ប្រៀបធៀប ${cmp} · ផ្លាស់ទី ${swp}`;},1000/Math.max(1,+$("so_s").value));};
+$("so_new").onclick=()=>{if(run){clearInterval(run);run=null;$("so_go").textContent="▶ Sort";}fresh();};$("so_n").oninput=$("so_new").onclick;fresh();
+/* ---- pathfinding ---- */
+const pc=$("pf_cv"),q=pc.getContext("2d"),C=36,R=18,S=pc.width/C;let G=[],st=[2,9],en=[33,9],pr=null,drag=false;
+function clr(){G=Array.from({length:R},()=>Array(C).fill(0));pdraw();$("pf_out").textContent="";}
+function pdraw(vis,path){q.clearRect(0,0,pc.width,pc.height);for(let y=0;y<R;y++)for(let x=0;x<C;x++){let c=G[y][x]===1?"#343a40":G[y][x]===5?"#a47148":"#f8f9fa";if(vis&&vis.has(y*C+x))c=G[y][x]===5?"#d0a37a":"#a5d8ff";q.fillStyle=c;q.fillRect(x*S,y*S,S,S);q.strokeStyle="#dee2e6";q.strokeRect(x*S,y*S,S,S);}
+ if(path)path.forEach(([x,y])=>{q.fillStyle="#ffd43b";q.fillRect(x*S+3,y*S+3,S-6,S-6);});q.fillStyle="#2f9e44";q.fillRect(st[0]*S,st[1]*S,S,S);q.fillStyle="#e03131";q.fillRect(en[0]*S,en[1]*S,S,S);}
+function cell(e){const r=pc.getBoundingClientRect(),x=Math.floor((e.clientX-r.left)/r.width*C),y=Math.floor((e.clientY-r.top)/r.height*R);return[x,y];}
+function paint(e){const[x,y]=cell(e);if(x<0||y<0||x>=C||y>=R)return;if((x===st[0]&&y===st[1])||(x===en[0]&&y===en[1]))return;const m=document.querySelector('input[name=pf_m]:checked').value==="mud"?5:1;G[y][x]=drag==="erase"?0:m;pdraw();}
+pc.onpointerdown=e=>{const[x,y]=cell(e);const m=document.querySelector('input[name=pf_m]:checked').value==="mud"?5:1;drag=G[y]&&G[y][x]===m?"erase":"draw";paint(e);};pc.onpointermove=e=>{if(drag)paint(e);};window.addEventListener("pointerup",()=>drag=false);
+$("pf_clr").onclick=clr;$("pf_rand").onclick=()=>{clr();for(let y=0;y<R;y++)for(let x=0;x<C;x++){const r=Math.random();if(r<.24)G[y][x]=1;else if(r<.32)G[y][x]=5;}G[st[1]][st[0]]=G[en[1]][en[0]]=0;pdraw();};
+$("pf_go").onclick=()=>{if(pr)clearInterval(pr);const a=$("pf_a").value,key=(x,y)=>y*C+x,prev=new Map(),dist=new Map(),vis=new Set(),order=[];
+ const nb=(x,y)=>[[1,0],[-1,0],[0,1],[0,-1]].map(([dx,dy])=>[x+dx,y+dy]).filter(([u,v])=>u>=0&&v>=0&&u<C&&v<R&&G[v][u]!==1);
+ const sk=key(...st),ek=key(...en);dist.set(sk,0);
+ if(a==="dij"){const pq=[[0,...st]];while(pq.length){pq.sort((p,r)=>p[0]-r[0]);const[d,x,y]=pq.shift();const k=key(x,y);if(vis.has(k))continue;vis.add(k);order.push(k);if(k===ek)break;for(const[u,v]of nb(x,y)){const nd=d+(G[v][u]||1),kk=key(u,v);if(nd<(dist.has(kk)?dist.get(kk):1e9)){dist.set(kk,nd);prev.set(kk,k);pq.push([nd,u,v]);}}}}
+ else{const fr=[st];vis.add(sk);while(fr.length){const[x,y]=a==="bfs"?fr.shift():fr.pop();const k=key(x,y);order.push(k);if(k===ek)break;for(const[u,v]of nb(x,y)){const kk=key(u,v);if(!vis.has(kk)){vis.add(kk);prev.set(kk,k);fr.push([u,v]);}}}}
+ let path=[],c=ek;if(prev.has(ek)||ek===sk){while(c!==undefined&&c!==sk){path.push([c%C,Math.floor(c/C)]);c=prev.get(c);}}path.reverse();
+ const shown=new Set();let i=0;pr=setInterval(()=>{for(let k=0;k<6&&i<order.length;k++)shown.add(order[i++]);pdraw(shown);if(i>=order.length){clearInterval(pr);pdraw(shown,path);const cost=path.reduce((s,[x,y])=>s+(G[y][x]||1),0);
+  $("pf_out").innerHTML=path.length?`✅ ${a.toUpperCase()}៖ ពិនិត្យ <b>${order.length}</b> ក្រឡា · ផ្លូវ <b>${path.length}</b> ជំហាន · តម្លៃ (ភក់=5) <b>${cost}</b>`:"❌ រកផ្លូវមិនឃើញ";}},16);};
+clr();
+/* ---- Big-O ---- */
+function bo(){const n=+$("bo_n").value,b=$("bo_cv"),h=b.getContext("2d"),F=[["O(1)",x=>1,"#2f9e44"],["O(log n)",x=>Math.log2(x+1),"#1c7ed6"],["O(n)",x=>x,"#7048e8"],["O(n log n)",x=>x*Math.log2(x+1),"#f59f00"],["O(n²)",x=>x*x,"#e03131"],["O(2ⁿ)",x=>Math.pow(2,x),"#868e96"]];
+ $("bo_v").textContent=n;h.clearRect(0,0,b.width,b.height);const max=n*n*1.05+1,W=b.width-60,H=b.height-30;h.strokeStyle="#adb5bd";h.beginPath();h.moveTo(50,10);h.lineTo(50,H+10);h.lineTo(W+50,H+10);h.stroke();
+ F.forEach(([nm,f,c])=>{h.strokeStyle=c;h.lineWidth=2.5;h.beginPath();for(let x=0;x<=n;x+=n/100){const y=Math.min(f(x),max);const px=50+x/n*W,py=H+10-y/max*H;x?h.lineTo(px,py):h.moveTo(px,py);}h.stroke();});
+ $("bo_out").innerHTML=F.map(([nm,f,c])=>`<span style="color:${c};font-weight:700">${nm}</span> = ${Math.round(f(n)).toLocaleString()}`).join(" · ")+"<br>💡 n=1,000,000៖ O(log n)≈20 ជំហាន · O(n²)=1,000,000,000,000 ជំហាន!";}
+$("bo_n").oninput=bo;bo();
+})();
+</script>
+
+<h3>🏆 Quiz ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["Binary search មាន Big-O?", ["O(log n)", "O(n)", "O(n²)", "O(1)"], 0], ["ពាក្យ Algorithm មកពីឈ្មោះ?", ["Al-Khwarizmi", "Alan Turing", "Ada Lovelace", "Knuth"], 0], ["Stack ធ្វើការតាម?", ["LIFO", "FIFO", "Random", "Sorted"], 0], ["Queue ក្នុង Python គួរប្រើ?", ["collections.deque", "list.pop(0)", "dict", "set"], 0], ["dict lookup ជាមធ្យម?", ["O(1)", "O(n)", "O(log n)", "O(n²)"], 0], ["Merge sort Big-O?", ["O(n log n)", "O(n²)", "O(n)", "O(2ⁿ)"], 0], ["Quicksort បង្កើតដោយ?", ["Tony Hoare", "Dijkstra", "von Neumann", "Bellman"], 0], ["ផ្លូវខ្លីបំផុត (ចំនួនជំហាន) គ្មានទម្ងន់ ប្រើ?", ["BFS", "DFS", "Bubble sort", "Heap sort"], 0], ["Dijkstra មិនដំណើរការជាមួយ?", ["Edge អវិជ្ជមាន", "Graph ធំ", "Edge វិជ្ជមាន", "Graph មានទិស"], 0], ["Top-k ធាតុធំបំផុត ប្រើ?", ["Heap", "Stack", "Linked list", "Queue"], 0], ["BST Inorder traversal ចេញ?", ["លំដាប់តម្រៀប", "ចៃដន្យ", "បញ្ច្រាសជានិច្ច", "តែ Root"], 0], ["Memoization ជាផ្នែកនៃ?", ["Dynamic programming", "Sorting", "Hashing", "BFS"], 0], ["O(2n + 5) សម្រួលជា?", ["O(n)", "O(2n)", "O(n²)", "O(5)"], 0], ["Python list.sort() ប្រើ?", ["Timsort", "Bubble", "Quick", "Heap"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+<ol class='steps'><li><b>Data Structures &amp; Algorithms</b> (វគ្គនេះ) ✅</li><li>Python · C/C++ · Java (អនុវត្តជាភាសាផ្សេង)</li><li>Math for IT (Discrete math · Logic)</li><li>Software Engineering</li><li>AI Level 1 (ML ប្រើ Algorithm ច្រើន)</li></ol></section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="dsa"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fashion Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#d6336c; --accent2:#1c1c1c; --accent-soft:#fff0f6;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#faa2c1; --accent2:#dee2e6; --accent-soft:#2e0a19;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#faa2c1; --accent2:#dee2e6; --accent-soft:#2e0a19;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#1c1c1c,#d6336c 55%,#f59f00 95%);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/fashion.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/fashion.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Fashion Design — រចនាម៉ូដសំលៀកបំពាក់</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Fashion Design ជាអ្វី?</a>
+<a href="#setup">២. ត្រៀមខ្លួន</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: ឧស្សាហកម្មម៉ូដ · ផ្នែកនានា</a>
+<a href="#l2">មេរៀន ២: Elements &amp; Principles នៃម៉ូដ</a>
+<a href="#l3">មេរៀន ៣: Croquis · Fashion illustration · Flat sketch</a>
+<a href="#l4">មេរៀន ៤: ក្រណាត់ · Fiber · ត្បាញខ្មែរ</a>
+<a href="#l5">មេរៀន ៥: Trend research · Mood board · Concept</a>
+<a href="#l6">មេរៀន ៦: Pattern making · វាស់ខ្លួន</a>
+<a href="#l7">មេរៀន ៧: ដេរ · ថ្នេរ · ឧបករណ៍</a>
+<a href="#l8">មេរៀន ៨: Draping</a>
+<a href="#l9">មេរៀន ៩: Collection · Line sheet · Tech pack</a>
+<a href="#l10">មេរៀន ១០: សំលៀកបំពាក់ខ្មែរ · Modern Khmer</a>
+<a href="#l11">មេរៀន ១១: Costing · តម្លៃ · Brand</a>
+<a href="#l12">មេរៀន ១២: និរន្តរភាព · អាជីព · Portfolio</a>
+<a href="#cheat">📋 សង្ខេប (Cheat sheet)</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងចុងវគ្គ</a>
+<a href="#pro-app">💻 Fashion Lab (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>👗 Fashion Design — ពីគំនិត ដល់សំលៀកបំពាក់ពិត</h2>
+  <p>ឧស្សាហកម្មម៉ូដ, Elements &amp; Principles, <b>Croquis &amp; Flat sketch</b>, <b>ក្រណាត់ (សូត្រខ្មែរ · ក្រមា · ហូល)</b>, Trend &amp; Mood board, <b>Pattern making</b>, ដេរ, Draping, Collection &amp; Tech pack, <b>សំលៀកបំពាក់ខ្មែរ</b>, Costing &amp; Brand + <b>Fashion Lab</b>។</p>
+  <p><span class="badge">📘 ១២ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">🎨 Lab អន្តរកម្ម + គម្រោង (គ្មាន Code)</span><span class="badge">👗 Fashion Lab</span></p>
+</section>
+<section id="intro">
+<h2>១. Fashion Design ជាអ្វី?</h2>
+
+
+<p><b>Fashion Design</b> = ការរចនាសំលៀកបំពាក់ និងគ្រឿងតុបតែង ពីគំនិត ដល់ Pattern ការដេរ និងការលក់។ វគ្គនេះមាន៖ ឧស្សាហកម្មម៉ូដ · Elements &amp; Principles · <b>Croquis 9 ក្បាល &amp; Flat sketch</b> · <b>ក្រណាត់ (សូត្រខ្មែរ ក្រមា ហូល)</b> · Trend &amp; Mood board · <b>Pattern making</b> · ដេរ · Draping · Collection &amp; <b>Tech pack</b> · <b>សំលៀកបំពាក់ខ្មែរ</b> · Costing &amp; Brand · និរន្តរភាព — ជាមួយ <b>Fashion Lab</b> (Outfit designer · Costing)។</p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#868e96"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#868e96">1804</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Jacquard loom</text><circle cx="200" cy="115" r="11" fill="#495057"/><text x="200" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#495057">1851</text><text x="200" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Singer</text><circle cx="320" cy="115" r="11" fill="#7048e8"/><text x="320" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#7048e8">1858</text><text x="320" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Worth — Couture</text><circle cx="440" cy="115" r="11" fill="#111111"/><text x="440" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#111111">1926</text><text x="440" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Little black dress</text><circle cx="560" cy="115" r="11" fill="#d6336c"/><text x="560" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#d6336c">1947</text><text x="560" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">New Look</text><circle cx="680" cy="115" r="11" fill="#1c7ed6"/><text x="680" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#1c7ed6">1966</text><text x="680" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">YSL ready-to-wear</text><circle cx="800" cy="115" r="11" fill="#f59f00"/><text x="800" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#f59f00">1975</text><text x="800" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Zara</text><circle cx="920" cy="115" r="11" fill="#2f9e44"/><text x="920" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#2f9e44">2020s</text><text x="920" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Sustainable</text></svg><figcaption>🖼️ ប្រវត្តិម៉ូដ</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>1804</td><td><b>Joseph Marie Jacquard</b></td><td>ម៉ាស៊ីនត្បាញ Punch card (ក៏ជាប្រភពគំនិតកុំព្យូទ័រ)</td></tr><tr><td>1851</td><td><b>Isaac Singer</b></td><td>ម៉ាស៊ីនដេរពេញនិយម</td></tr><tr><td>1858</td><td><b>Charles Frederick Worth</b></td><td>Haute couture ផ្ទះម៉ូដដំបូង (Paris)</td></tr><tr><td>1926</td><td><b>Coco Chanel</b></td><td>Little black dress — សាមញ្ញ ស្រួល</td></tr><tr><td>1947</td><td><b>Christian Dior</b> — New Look</td><td>ចង្កេះតូច សំពត់ធំ</td></tr><tr><td>1966</td><td><b>Yves Saint Laurent</b></td><td>Le Smoking · Rive Gauche ready-to-wear</td></tr><tr><td>1975</td><td><b>Amancio Ortega</b> — Zara</td><td>Fast fashion</td></tr><tr><td>2020s</td><td>Sustainable &amp; Circular fashion</td><td>Upcycle · Resale · Zero-waste</td></tr></table>
+
+<h3>ប្រើសម្រាប់អ្វី?</h3>
+<div class="grid"><div class="card"><b>👗 Womenswear</b><br></div><div class="card"><b>👔 Menswear</b><br></div><div class="card"><b>🧒 Kidswear</b><br></div><div class="card"><b>👟 Streetwear</b><br></div><div class="card"><b>🎭 Costume</b><br>ភាពយន្ត ល្ខោន</div><div class="card"><b>💍 Accessories</b><br>កាបូប ស្បែកជើង</div></div>
+
+</section>
+<section id="setup">
+<h2>២. ត្រៀមខ្លួន</h2>
+<ol class='steps'><li>សៀវភៅ Sketch · ខ្មៅដៃ · Marker (ឬ Procreate/Krita)។</li><li>ម៉ែត្រវាស់ខ្លួន · កន្ត្រៃក្រណាត់ · ម្ជុល · ម៉ាស៊ីនដេរ (ជម្រើស)។</li><li>Illustrator/Inkscape សម្រាប់ Flat sketch។</li><li>ហាត <b>Fashion Lab</b> ចុងវគ្គ។</li></ol></section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>ឧស្សាហកម្មម៉ូដ · ផ្នែកនានា</h2>
+<table><tr><th>ផ្នែក</th><th>លក្ខណៈ</th></tr><tr><td>Haute couture</td><td>ដេរដៃតាមខ្នាត · ថ្លៃខ្លាំង (Paris)</td></tr><tr><td>Ready-to-wear (Prêt-à-porter)</td><td>ទំហំស្តង់ដារ · Collection តាមរដូវ</td></tr><tr><td>Mass market / Fast fashion</td><td>ផលិតច្រើន លឿន ថោក</td></tr><tr><td>Streetwear</td><td>Drop · Community · Brand</td></tr><tr><td>Sustainable / Slow fashion</td><td>ផលិតតិច គុណភាព យូរ</td></tr><tr><td>Costume design</td><td>ភាពយន្ត ល្ខោន</td></tr></table>
+<div class="note">💡 ឧស្សាហកម្មកាត់ដេរ (Garment, footwear &amp; travel goods) ជាវិស័យនាំចេញធំបំផុតមួយរបស់កម្ពុជា ជាមួយកម្មករជាច្រើនសែននាក់ — ឱកាសសម្រាប់អ្នករចនា អ្នកធ្វើ Pattern និង Merchandiser។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>Collection ដែលលក់តាមទំហំ S/M/L ក្នុងហាង ជាផ្នែកណា?</p><details><summary>មើលចម្លើយ</summary><p><b>Ready-to-wear (Prêt-à-porter)</b>។</p></details></div>
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>Elements &amp; Principles នៃម៉ូដ</h2>
+<table><tr><th>Silhouette</th><th>ពិពណ៌នា</th></tr><tr><td>A-line</td><td>តូចលើ រីកក្រោម</td></tr><tr><td>H (Straight)</td><td>ត្រង់ គ្មានចង្កេះ</td></tr><tr><td>X (Hourglass)</td><td>ចង្កេះតូច ស្មា/ត្រគាករីក</td></tr><tr><td>Y / V</td><td>ស្មាធំ តូចចុះក្រោម</td></tr><tr><td>O (Cocoon)</td><td>មូលកណ្តាល</td></tr></table>
+<div class="grid"><div class="card"><b>✂️ Silhouette</b><br>រាងទូទៅ — A · H · X · Y · O</div><div class="card"><b>➖ Line</b><br>ថ្នេរ Dart ឆ្នូត — ដឹកភ្នែក</div><div class="card"><b>🎨 Color</b><br>ពណ៌ — អារម្មណ៍ និងរដូវ</div><div class="card"><b>🧶 Texture</b><br>ក្រណាត់ — រលោង រដុប ភ្លឺ</div><div class="card"><b>🌀 Pattern/Print</b><br>លំនាំ</div><div class="card"><b>📏 Proportion</b><br>សមាមាត្រ ខាងលើ:ខាងក្រោម (1:2 ច្រើនស្អាត)</div></div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>ខ្សែក្រវាត់រឹតចង្កេះលើរ៉ូបធំ បង្កើត Silhouette អ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>X (Hourglass)</b>។</p></details></div>
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Croquis · Fashion illustration · Flat sketch</h2>
+<table><tr><th>Illustration</th><th>Flat sketch</th></tr><tr><td>សិល្បៈ បង្ហាញអារម្មណ៍</td><td>បច្ចេកទេស ត្រឹមត្រូវ</td></tr><tr><td>សម្រាប់ Portfolio/Lookbook</td><td>សម្រាប់ Tech pack/រោងចក្រ</td></tr><tr><td>Procreate · Photoshop</td><td>Illustrator (Vector)</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>គូរ Croquis <b>9 ក្បាល</b> (មនុស្សពិត ≈ 7.5) — ជើងវែង ដើម្បីបង្ហាញសំលៀកបំពាក់</li><li>Balance line ពីក (Pit of neck) ចុះដល់ដី</li><li>Pose — ស្មា និងត្រគាកផ្អៀងផ្ទុយគ្នា</li><li>គូរសំលៀកបំពាក់លើ Croquis — គិតពីការធ្លាក់របស់ក្រណាត់</li><li>ពណ៌ (Marker, Watercolor, Procreate)</li><li><b>Flat sketch</b> — គូរដាក់ស្មើ (មុខ+ក្រោយ) ត្រឹមត្រូវតាមសមាមាត្រ សម្រាប់រោងចក្រ</li></ol></div>
+<div class="note">💡 សាក <b>Outfit designer</b> ក្នុង Fashion Lab (Croquis 9 ក្បាល)។ Flat sketch ធ្វើក្នុង <b>Illustrator</b> (មើលវគ្គ Illustrator)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>ហេតុអ្វីរោងចក្រចង់បាន Flat sketch ជាជាង Fashion illustration?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះ Flat sketch បង្ហាញ <b>ថ្នេរ ឡេវ ហោប៉ៅ សមាមាត្រពិត ខាងមុខ/ក្រោយ</b> ច្បាស់ — Illustration បំផ្លើសសមាមាត្រ។</p></details></div>
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>ក្រណាត់ · Fiber · ត្បាញខ្មែរ</h2>
+<table><tr><th>Fiber</th><th>ប្រភេទ</th><th>លក្ខណៈ</th></tr><tr><td>Cotton (កប្បាស)</td><td>ធម្មជាតិ</td><td>ស្រូបញើស ត្រជាក់ — ល្អអាកាសធាតុក្តៅ</td></tr><tr><td>Linen (អំបោះក្រហម)</td><td>ធម្មជាតិ</td><td>ត្រជាក់ខ្លាំង ជ្រួញងាយ</td></tr><tr><td>Silk (សូត្រ)</td><td>ធម្មជាតិ</td><td>រលោង ភ្លឺ ថ្លៃ</td></tr><tr><td>Polyester</td><td>សំយោគ</td><td>ធន់ ថោក មិនស្រូបញើស</td></tr><tr><td>Rayon/Viscose</td><td>ពាក់កណ្តាល</td><td>ទន់ ធ្លាក់ស្អាត</td></tr></table>
+<div class="grid"><div class="card"><b>🧵 Woven</b><br>ត្បាញ — Plain · Twill (Denim) · Satin</div><div class="card"><b>🧶 Knit</b><br>ចាក់ — យឺត (T-shirt)</div><div class="card"><b>🇰🇭 សូត្រខ្មែរ</b><br>សូត្រលឿងខ្មែរ (Golden silk) · តាកែវ · ព្រែកឫស្សី</div><div class="card"><b>🧣 ក្រមា</b><br>ក្រឡាកប្បាស — និមិត្តសញ្ញាខ្មែរ</div><div class="card"><b>🎨 ហូល (Ikat)</b><br>ចងពណ៌អំបោះមុនត្បាញ</div><div class="card"><b>💠 ផាមួង</b><br>សូត្រពណ៌ដុល ភ្លឺ</div></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>ផលិត T-shirt យឺតៗ — ក្រណាត់ Woven ឬ Knit?</p><details><summary>មើលចម្លើយ</summary><p><b>Knit</b> (ចាក់) — យឺតដោយធម្មជាតិ។ Woven មិនយឺត (លុះត្រាតែបន្ថែម Spandex)។</p></details></div>
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>Trend research · Mood board · Concept</h2>
+<div class="grid"><div class="card"><b>🔭 Macro trend</b><br>សង្គម បរិស្ថាន (Sustainability)</div><div class="card"><b>🌊 Micro trend</b><br>ពណ៌/Item ពេញនិយមខ្លី</div><div class="card"><b>📚 ប្រភព</b><br>WGSN · Vogue Runway · Pinterest</div><div class="card"><b>🇰🇭 Heritage</b><br>ក្បាច់ សំលៀកបំពាក់ រាំ — ប្រើដោយគោរព</div></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ជ្រើស <b>Theme</b> — ឧ. «អង្គរពេលព្រឹក» «ផ្សារចាស់»</li><li>ស្រាវជ្រាវ៖ Runway · Street style · វប្បធម៌ · ធម្មជាតិ · ប្រវត្តិសាស្ត្រ</li><li>ប្រមូលរូបភាព ក្រណាត់ពិត ពណ៌ (Pinterest + ក្រដាសពិត)</li><li>Mood board៖ Palette ៤–៦ ពណ៌ + Texture + Silhouette</li><li>Customer profile — អ្នកណាពាក់? អាយុ ការងារ ថវិកា</li><li>Sketch ២០–៥០ គំនិត → ជ្រើស ៦–១០</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>Mood board ខុសពី Pinterest board ធម្មតាដូចម្តេច?</p><details><summary>មើលចម្លើយ</summary><p>Mood board <b>ចម្រាញ់រួច</b> — មាន Theme តែមួយ Palette ច្បាស់ Texture Silhouette និងអតិថិជនគោលដៅ ដើម្បីដឹកនាំ Collection។</p></details></div>
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Pattern making · វាស់ខ្លួន</h2>
+<table><tr><th>វាស់</th><th>របៀប</th></tr><tr><td>ទ្រូង (Bust/Chest)</td><td>ជុំវិញកន្លែងធំបំផុត</td></tr><tr><td>ចង្កេះ (Waist)</td><td>កន្លែងតូចបំផុត</td></tr><tr><td>ត្រគាក (Hip)</td><td>កន្លែងធំបំផុតខាងក្រោម</td></tr><tr><td>ប្រវែងខ្នង</td><td>ពី C7 ដល់ចង្កេះ</td></tr><tr><td>ប្រវែងសំពត់</td><td>ពីចង្កេះដល់ចុង</td></tr></table>
+<div class="grid"><div class="card"><b>📐 Block/Sloper</b><br>Pattern មូលដ្ឋានគ្មាន Style</div><div class="card"><b>➕ Seam allowance</b><br>1–1.5cm (ចុង 2–4cm)</div><div class="card"><b>🔻 Dart</b><br>បត់ក្រណាត់ឲ្យតាមរាងកាយ</div><div class="card"><b>↕️ Grainline</b><br>ស្របអំបោះបណ្តោយ</div><div class="card"><b>🌬️ Ease</b><br>បន្ថែមលំហដើម្បីដកដង្ហើម/ផ្លាស់ទី</div><div class="card"><b>📏 Grading</b><br>ពង្រីក/បង្រួម Pattern ជា S/M/L</div></div>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Each panel width at hip: 53.0 cm</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>ហេតុអ្វីត្រូវបន្ថែម Ease លើការវាស់?</p><details><summary>មើលចម្លើយ</summary><p>ដើម្បីឲ្យអាចដកដង្ហើម អង្គុយ ដើរ — Pattern ស្មើនឹងការវាស់ពិត = តឹងពេក (លើកលែងក្រណាត់យឺត)។</p></details></div>
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>ដេរ · ថ្នេរ · ឧបករណ៍</h2>
+<div class="grid"><div class="card"><b>🧵 Straight stitch</b><br>ថ្នេរមូលដ្ឋាន</div><div class="card"><b>〰️ Zigzag</b><br>ការពារគែមរបេះ · ក្រណាត់យឺត</div><div class="card"><b>🔒 Overlock (Serger)</b><br>ចងគែមដូចរោងចក្រ</div><div class="card"><b>🔘 ឡេវ · រ៉ូត</b><br>Zipper · Button hole</div><div class="card"><b>♨️ ឆ្កៀង (Press)</b><br>ឆ្កៀងគ្រប់ថ្នេរ — ស្អាតដូចអាជីព</div><div class="card"><b>📏 Tools</b><br>កន្ត្រៃក្រណាត់ ដីស ម្ជុល ម៉ែត្រ</div></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>លាងក្រណាត់មុន (ការពាររួញ)</li><li>ដាក់ Pattern តាម Grainline → ចាក់ម្ជុល → កាត់</li><li>Transfer ចំណាំ (Dart notch)</li><li>ដេរ Dart → ថ្នេរចំហៀង → ឆ្កៀង</li><li>ដាក់ Zipper/ឡេវ → Hem</li><li>Fitting លើមនុស្ស/Mannequin → កែ</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>ហេតុអ្វីត្រូវលាងក្រណាត់កប្បាសមុនកាត់?</p><details><summary>មើលចម្លើយ</summary><p>កប្បាស <b>រួញ</b> ពេលលាងលើកដំបូង — បើមិនលាងមុន សំលៀកបំពាក់រួមតូចក្រោយលក់។</p></details></div>
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Draping</h2>
+<p><b>Draping</b> = ការរចនាដោយដាក់ក្រណាត់ (Muslin) ផ្ទាល់លើ Mannequin ហើយចាក់ម្ជុល កាត់ បត់ — បន្ទាប់មកផ្ទេរទៅជា Pattern ក្រដាស។ ល្អសម្រាប់រ៉ូបរលុង ជ្រួញ និងរាងស្មុគស្មាញ។</p><table><tr><th>Flat pattern</th><th>Draping</th></tr><tr><td>គណនា វាស់ គូរលើក្រដាស</td><td>បង្កើតលើ Mannequin (3D)</td></tr><tr><td>ត្រឹមត្រូវ ធ្វើម្តងទៀតបាន</td><td>ច្នៃប្រឌិត ឃើញការធ្លាក់ពិត</td></tr><tr><td>អាវកអាវ ខោ</td><td>Evening gown ផ្ទាត់ ជ្រួញ</td></tr></table>
+<div class="note">💡 <b>Madeleine Vionnet</b> (1920s–30s) ល្បីដោយ Draping និងការកាត់ <b>Bias cut</b> (កាត់ទ្រេត 45° ឲ្យក្រណាត់ធ្លាក់តាមខ្លួន)។ សំពត់ខ្មែរប្រពៃណីភាគច្រើនក៏ជាការរុំ/Draping ផងដែរ (សំពត់ចងក្បិន)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>Bias cut ជាអ្វី? ហេតុអ្វីប្រើ?</p><details><summary>មើលចម្លើយ</summary><p>កាត់ក្រណាត់ <b>ទ្រេត 45°</b> ពី Grainline — ក្រណាត់យឺតបន្តិច ហើយធ្លាក់តាមរាងកាយស្អាត (Slip dress)។</p></details></div>
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Collection · Line sheet · Tech pack</h2>
+<table><tr><th>Tech pack មាន</th><th>ព័ត៌មាន</th></tr><tr><td>Flat sketch</td><td>មុខ + ក្រោយ + លម្អិត</td></tr><tr><td>Spec sheet</td><td>ទំហំគ្រប់ចំណុច + Tolerance (±0.5–1cm)</td></tr><tr><td>BOM (Bill of materials)</td><td>ក្រណាត់ ឡេវ ខ្សែ ស្លាក</td></tr><tr><td>Colorway</td><td>ពណ៌ (Pantone)</td></tr><tr><td>Construction</td><td>ប្រភេទថ្នេរ SPI</td></tr><tr><td>Label &amp; Packaging</td><td>ស្លាក Care · ទំហំ</td></tr></table>
+<div class="grid"><div class="card"><b>👗 Collection</b><br>៦–១២ Look មាន Story តែមួយ</div><div class="card"><b>📋 Line sheet</b><br>Item · រូប · ពណ៌ · តម្លៃ (ឲ្យ Buyer)</div><div class="card"><b>📸 Lookbook</b><br>រូបថតម៉ូដ</div><div class="card"><b>🗓️ Calendar</b><br>SS (Spring/Summer) · AW (Autumn/Winter) — កម្ពុជា៖ ក្តៅ/ភ្លៀង</div></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>ហេតុអ្វីរោងចក្រត្រូវការ Tech pack?</p><details><summary>មើលចម្លើយ</summary><p>ដើម្បីផលិត <b>ដូចគ្នាគ្រប់ឈុត</b> ដោយមិនចាំបាច់សួរ — ទំហំ សម្ភារៈ ថ្នេរ ពណ៌ ច្បាស់លាស់ (កាត់បន្ថយកំហុស និង Sample ឡើងវិញ)។</p></details></div>
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>សំលៀកបំពាក់ខ្មែរ · Modern Khmer</h2>
+<table><tr><th>សំលៀកបំពាក់</th><th>ពិពណ៌នា</th></tr><tr><td>សំពត់ចងក្បិន</td><td>រុំ ហើយចងបញ្ចូលចន្លោះជើងទៅក្រោយ — ប្រុស និងស្រី ពិធីផ្លូវការ</td></tr><tr><td>សំពត់ហូល</td><td>សូត្រត្បាញ Ikat លំនាំស្មុគស្មាញ</td></tr><tr><td>សំពត់ផាមួង</td><td>សូត្រពណ៌ដុលភ្លឺ</td></tr><tr><td>ស្បៃ (Sbai)</td><td>ក្រណាត់ពាក់ឆៀងស្មា</td></tr><tr><td>អាវផ្លូវការ/អាវស្រី</td><td>ឧ. អាវប៉ាក់ ជាមួយក្បាច់</td></tr><tr><td>ក្រមា</td><td>ក្រឡាកប្បាស — ប្រើគ្រប់យ៉ាង</td></tr></table>
+<div class="grid"><div class="card"><b>🔄 Modern Khmer</b><br>យកក្រមា ហូល ក្បាច់ មកក្នុង Silhouette ទំនើប</div><div class="card"><b>🤝 គោរពវប្បធម៌</b><br>យល់ន័យ មុនប្រើ — ពណ៌តាមថ្ងៃ ពិធី</div><div class="card"><b>🧑‍🌾 សហគមន៍</b><br>ធ្វើការជាមួយអ្នកត្បាញក្នុងស្រុក · Fair price</div><div class="card"><b>🏷️ Story</b><br>ប្រាប់ប្រភពក្រណាត់ — តម្លៃបន្ថែម</div></div>
+<div class="note">💡 សាកក្នុង Lab៖ ជ្រើស <b>ស្បៃ + សំពត់ហូល</b> ឬលំនាំ <b>ក្រឡាក្រមា</b> លើ Silhouette ទំនើប។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>ធ្វើ Collection «Modern Khmer» ដោយមានការគោរព និងចីរភាព — ធ្វើយ៉ាងដូចម្តេច?</p><details><summary>មើលចម្លើយ</summary><p>ស្រាវជ្រាវន័យប្រពៃណី · ទិញក្រណាត់ពី <b>អ្នកត្បាញក្នុងស្រុក តម្លៃត្រឹមត្រូវ</b> · ប្រាប់ Story ពិត · ប្រើក្បាច់ក្នុងបរិបទសមរម្យ។</p></details></div>
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>Costing · តម្លៃ · Brand</h2>
+<div class="grid"><div class="card"><b>🏷️ Brand</b><br>ឈ្មោះ Logo Story អតិថិជនគោលដៅ</div><div class="card"><b>📱 លក់</b><br>Facebook · TikTok Shop · Instagram · Pop-up market</div><div class="card"><b>📦 MOQ</b><br>Minimum order quantity របស់រោងចក្រ</div><div class="card"><b>📸 Content</b><br>រូបថតម៉ូដ + វីដេអូ (មើលវគ្គ Digital Marketing)</div></div>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Cost $17.70 | Wholesale $35.40 | Retail $70.80
+Retail margin: 75%</pre></div>
+<div class="note">💡 សាក <b>Costing</b> ក្នុង Fashion Lab។ ប្រាក់ចំណេញពិតត្រូវដកការផ្សាយ ការដឹក ពន្ធ និងទំនិញដែលមិនបានលក់។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>Cost $17.70 លក់ដុំ ×2 រាយ ×2 → តម្លៃរាយ?</p><details><summary>មើលចម្លើយ</summary><p>17.70 × 2 × 2 = <b>$70.80</b>។</p></details></div>
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>និរន្តរភាព · អាជីព · Portfolio</h2>
+<table><tr><th>អាជីព</th><th>ការងារ</th></tr><tr><td>Fashion designer</td><td>Brand · Studio</td></tr><tr><td>Pattern maker</td><td>រោងចក្រ</td></tr><tr><td>Technical designer</td><td>Tech pack · Fit</td></tr><tr><td>Merchandiser</td><td>ភ្ជាប់ Buyer និងរោងចក្រ</td></tr><tr><td>Textile designer</td><td>Print · ត្បាញ</td></tr><tr><td>Stylist</td><td>Photo shoot · MV · Celebrity</td></tr><tr><td>Costume designer</td><td>ភាពយន្ត</td></tr></table>
+<div class="grid"><div class="card"><b>♻️ Upcycle</b><br>ក្រណាត់សល់ពីរោងចក្រ (Deadstock)</div><div class="card"><b>✂️ Zero-waste pattern</b><br>Pattern ដែលប្រើក្រណាត់អស់</div><div class="card"><b>🌿 Natural dye</b><br>ពណ៌ធម្មជាតិ (ល្អ ប្រហុក ស្លឹកឈើ)</div><div class="card"><b>🔧 Repair</b><br>ជួសជុល ជួល លក់បន្ត</div></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Portfolio ៣–៤ Collection៖ Mood board → Sketch → Flat → រូបថតសំលៀកបំពាក់ពិត</li><li>បង្ហាញជំនាញ Pattern និងដេរ (រូបដំណើរការ)</li><li>Lookbook ស្អាត (មើលវគ្គ Photoshop)</li><li>Instagram/Behance + ប្រកួតម៉ូដ</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>ហេតុអ្វី Zero-waste pattern សំខាន់?</p><details><summary>មើលចម្លើយ</summary><p>ការកាត់ធម្មតាបោះក្រណាត់ចោល ~15% — Zero-waste រចនា Pattern ឲ្យដាក់ចូលគ្នាប្រើក្រណាត់ស្ទើរ <b>100%</b> បន្ថយសំណល់ និងថ្លៃដើម។</p></details></div>
+</section>
+<section id="cheat">
+<h2>📋 សង្ខេប (Cheat sheet)</h2>
+<table><tr><th>ពាក្យ</th><th>ន័យ</th></tr><tr><td>Croquis</td><td>តួរាង 9 ក្បាល</td></tr><tr><td>Flat sketch</td><td>គូរបច្ចេកទេស មុខ/ក្រោយ</td></tr><tr><td>Silhouette A·H·X·Y·O</td><td>រាងទូទៅ</td></tr><tr><td>Woven / Knit</td><td>ត្បាញ / ចាក់</td></tr><tr><td>Ikat (ហូល)</td><td>ចងពណ៌មុនត្បាញ</td></tr><tr><td>Seam allowance</td><td>1–1.5cm</td></tr><tr><td>Ease</td><td>លំហបន្ថែម</td></tr><tr><td>Dart</td><td>បត់ឲ្យតាមរាង</td></tr><tr><td>Bias cut</td><td>កាត់ទ្រេត 45°</td></tr><tr><td>Tech pack</td><td>ឯកសាររោងចក្រ</td></tr><tr><td>Cost × 2 × 2</td><td>Wholesale → Retail</td></tr><tr><td>Zero-waste</td><td>Pattern គ្មានសំណល់</td></tr></table>
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងចុងវគ្គ</h2>
+<ol class='steps'><li>Mini collection ៣ Look «Modern Khmer»។</li><li>Mood board + Palette + ក្រណាត់ពិត (ក្រមា/ហូល/កប្បាស)។</li><li>Croquis + Flat sketch (Illustrator) + Outfit ក្នុង Fashion Lab។</li><li>ដេរយ៉ាងហោចណាស់ ១ Look (ឬ Mock-up ក្រដាស/Muslin)។</li><li>Tech pack ១ ទំព័រ + Costing + Lookbook ថតរូប។</li></ol></section>
+<section id="pro-app">
+<h2>💻 Fashion Lab (App)</h2>
+
+<p><b>👗 Outfit designer</b> — Croquis 9 ក្បាល ជ្រើសខាងលើ (អាវ ស្បៃ…) ខាងក្រោម (A-line សំពត់ហូល ខោ Dress) ពណ៌ និងលំនាំ (ក្រឡាក្រមា ហូល ឆ្នូត…) · <b>💰 Costing</b> — ក្រណាត់ + ពលកម្ម → Cost → Wholesale → Retail + Margin។</p>
+
+<div class="itk" id="fs">
+<div class="itk-tabs"><button class="on" data-t="od">👗 Outfit designer</button><button data-t="cs">💰 Costing</button></div>
+<div class="itk-p on" data-p="od">
+ <p class="vl-tip">រចនាសំលៀកបំពាក់លើ Croquis — ជ្រើស Silhouette · ផ្នែកខាងលើ · ខាងក្រោម · ពណ៌ · លំនាំ (Pattern) រួចមើល Flat sketch និង Palette។</p>
+ <div class="itk-row"><label>ខាងលើ <select id="od_t"><option value="tee">អាវយឺត</option><option value="shirt" selected>អាវកអាវ</option><option value="sbai">ស្បៃ (Sbai)</option><option value="crop">Crop top</option><option value="none">— (Dress)</option></select></label>
+ <label>ខាងក្រោម <select id="od_b"><option value="pencil">សំពត់ Pencil</option><option value="aline" selected>សំពត់ A-line</option><option value="sampot">សំពត់ហូល</option><option value="pants">ខោជើងវែង</option><option value="dress">Dress (ពេញ)</option></select></label>
+ <label>ពណ៌ 1 <input type="color" id="od_c1" value="#f8f0e3"></label><label>ពណ៌ 2 <input type="color" id="od_c2" value="#7b2d26"></label>
+ <label>លំនាំ <select id="od_p"><option value="solid">ពណ៌ដុល</option><option value="stripe">ឆ្នូត</option><option value="krama" selected>ក្រឡាក្រមា</option><option value="dot">ចំណុច</option><option value="hol">ហូល (Ikat)</option></select></label><button class="btn ghost" id="od_r">🎲</button></div>
+ <div style="display:flex;gap:10px;flex-wrap:wrap"><svg id="od_sv" viewBox="0 0 220 460" style="flex:1 1 200px;max-width:280px;background:#faf7f2;border-radius:10px"></svg><div style="flex:1 1 220px"><div class="itk-out" id="od_out"></div></div></div>
+</div>
+<div class="itk-p" data-p="cs">
+ <p class="vl-tip">គណនាថ្លៃដើមក្នុងមួយឈុត (Cost) → តម្លៃលក់ដុំ (Wholesale) → តម្លៃលក់រាយ (Retail) តាម Markup។</p>
+ <div class="itk-row"><label>ក្រណាត់ (m) <input type="number" id="cs_m" value="2.2" step=".1" style="width:64px"></label><label>$/m <input type="number" id="cs_p" value="4.5" step=".5" style="width:64px"></label><label>គ្រឿងបន្ថែម $ <input type="number" id="cs_t" value="1.2" step=".1" style="width:64px"></label>
+ <label>ពេលដេរ (ម៉ោង) <input type="number" id="cs_h" value="3" step=".5" style="width:64px"></label><label>$/ម៉ោង <input type="number" id="cs_w" value="2" step=".5" style="width:64px"></label><label>Packaging $ <input type="number" id="cs_k" value=".6" step=".1" style="width:64px"></label>
+ <label>Markup លក់ដុំ × <input type="number" id="cs_x" value="2" step=".1" style="width:60px"></label><label>Markup រាយ × <input type="number" id="cs_y" value="2" step=".1" style="width:60px"></label><label>ចំនួន <input type="number" id="cs_q" value="50" style="width:64px"></label></div>
+ <div class="itk-out" id="cs_out"></div>
+</div>
+</div>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+document.querySelectorAll("#fs .itk-tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#fs .itk-tabs button").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll("#fs .itk-p").forEach(p=>p.classList.toggle("on",p.dataset.p===b.dataset.t));});
+function pat(id,p,c1,c2){if(p=="solid")return`<pattern id="${id}" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill="${c2}"/></pattern>`;
+ if(p=="stripe")return`<pattern id="${id}" width="12" height="12" patternUnits="userSpaceOnUse"><rect width="12" height="12" fill="${c1}"/><rect width="6" height="12" fill="${c2}"/></pattern>`;
+ if(p=="krama")return`<pattern id="${id}" width="24" height="24" patternUnits="userSpaceOnUse"><rect width="24" height="24" fill="${c1}"/><rect width="10" height="24" fill="${c2}" opacity=".8"/><rect width="24" height="10" fill="${c2}" opacity=".8"/><rect x="16" width="2" height="24" fill="${c2}"/><rect y="16" width="24" height="2" fill="${c2}"/></pattern>`;
+ if(p=="dot")return`<pattern id="${id}" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="${c2}"/><circle cx="7" cy="7" r="2.6" fill="${c1}"/></pattern>`;
+ return`<pattern id="${id}" width="28" height="28" patternUnits="userSpaceOnUse"><rect width="28" height="28" fill="${c2}"/><path d="M14 2L26 14 14 26 2 14Z" fill="${c1}" opacity=".85"/><path d="M14 8L20 14 14 20 8 14Z" fill="${c2}"/><path d="M0 0l4 4M28 0l-4 4M0 28l4-4M28 28l-4-4" stroke="${c1}" stroke-width="2"/></pattern>`;}
+const SL={pencil:"Pencil — រាងតូចតាមខ្លួន ផ្លូវការ",aline:"A-line — តូចនៅចង្កេះ រីកចុះក្រោម ស័ក្តិសមរាងកាយភាគច្រើន",sampot:"សំពត់ហូល — រុំខ្មែរប្រពៃណី ត្បាញ Ikat",pants:"ខោជើងវែង — Straight leg",dress:"Dress — ខាងលើ និងក្រោមតែមួយ"};
+function od(){const t=$("od_t").value,b=$("od_b").value,c1=$("od_c1").value,c2=$("od_c2").value,p=$("od_p").value;
+ let h=`<defs>${pat("odp",p,c1,c2)}</defs>`;
+ /* croquis 9 heads: head 0-46 */
+ h+=`<g fill="#e9c8a8" stroke="#b8906c" stroke-width="1"><ellipse cx="110" cy="30" rx="15" ry="20"/><rect x="104" y="48" width="12" height="12"/><path d="M80 64 Q110 56 140 64 L136 150 Q110 160 84 150Z"/><path d="M80 66 L66 160 L72 230 L80 230 L78 160 L90 90Z"/><path d="M140 66 L154 160 L148 230 L140 230 L142 160 L130 90Z"/><path d="M86 150 L96 300 L94 430 L106 430 L108 300 L110 190 L112 300 L114 430 L126 430 L124 300 L134 150Z"/></g>`;
+ h+=`<path d="M95 14 Q110 0 125 14 Q128 30 124 34 Q110 20 96 34 Q92 28 95 14Z" fill="#2b1d16"/>`;
+ const fl=`fill="url(#odp)" stroke="#333" stroke-width="1.2"`;
+ if(b=="pencil")h+=`<path d="M84 150 L136 150 L132 300 L88 300Z" ${fl}/>`;
+ if(b=="aline")h+=`<path d="M86 148 L134 148 L160 320 L60 320Z" ${fl}/>`;
+ if(b=="sampot")h+=`<path d="M84 148 L136 148 L134 420 L86 420Z" ${fl}/><path d="M110 150 L120 420" stroke="#333" stroke-width="1" fill="none"/><rect x="82" y="144" width="56" height="10" fill="${c1}" stroke="#333"/>`;
+ if(b=="pants")h+=`<path d="M84 148 L136 148 L134 425 L114 425 L110 200 L106 425 L86 425Z" ${fl}/>`;
+ if(b=="dress")h+=`<path d="M84 64 Q110 74 136 64 L138 150 L166 360 L54 360 L82 150Z" ${fl}/>`;
+ const tf=b=="dress"?"none":t;const tc=`fill="${p=="solid"?c1:c1}" stroke="#333" stroke-width="1.2"`;
+ if(tf=="tee")h+=`<path d="M80 62 L62 92 L74 100 L84 84 L86 152 L134 152 L136 84 L146 100 L158 92 L140 62 Q110 74 80 62Z" ${tc}/>`;
+ if(tf=="shirt")h+=`<path d="M80 62 L64 150 L76 152 L86 92 L86 154 L134 154 L134 92 L144 152 L156 150 L140 62 Q110 70 80 62Z" ${tc}/><path d="M100 60 L110 76 L120 60" fill="none" stroke="#333"/><line x1="110" y1="76" x2="110" y2="152" stroke="#333"/>${[90,105,120,135].map(y=>`<circle cx="113" cy="${y}" r="1.6" fill="#333"/>`).join("")}`;
+ if(tf=="crop")h+=`<path d="M82 64 Q110 70 138 64 L136 118 L84 118Z" ${tc}/>`;
+ if(tf=="sbai")h+=`<path d="M78 62 Q110 70 140 62 L138 152 L84 152Z" fill="${c1}" stroke="#333"/><path d="M140 60 L76 120 L64 210 L84 214 L92 130 L146 70Z" fill="url(#odp)" stroke="#333" stroke-width="1.2" opacity=".95"/>`;
+ h+=`<g stroke="#bbb" stroke-dasharray="2 3">${[0,1,2,3,4,5,6,7,8,9].map(i=>`<line x1="4" x2="20" y1="${10+i*46}" y2="${10+i*46}"/>`).join("")}</g><text x="4" y="456" font-size="9" fill="#999">9 heads</text>`;
+ $("od_sv").innerHTML=h;
+ $("od_out").innerHTML=`<b>Silhouette:</b> ${SL[b]}<br><b>Palette:</b> <span style="display:inline-block;width:18px;height:18px;background:${c1};border:1px solid #888;vertical-align:middle"></span> ${c1} · <span style="display:inline-block;width:18px;height:18px;background:${c2};border:1px solid #888;vertical-align:middle"></span> ${c2}<br><b>លំនាំ:</b> ${{solid:"ពណ៌ដុល",stripe:"ឆ្នូត",krama:"ក្រឡាក្រមា (ត្បាញកប្បាស)",dot:"ចំណុច (Polka dot)",hol:"ហូល/Ikat — ចងពណ៌មុនត្បាញ"}[p]}<br><small>${t=="sbai"||b=="sampot"?"🇰🇭 ធាតុខ្មែរប្រពៃណី — ល្អសម្រាប់ Collection «Modern Khmer»":"💡 សាកប្តូរលំនាំទៅ ក្រឡាក្រមា ឬ ហូល សម្រាប់ Modern Khmer"}</small>`;}
+["od_t","od_b","od_c1","od_c2","od_p"].forEach(i=>$(i).oninput=od);
+const PL=[["#f8f0e3","#7b2d26"],["#fefae0","#283618"],["#ffffff","#1d3557"],["#f1faee","#e63946"],["#fff3bf","#5f3dc4"],["#f8f9fa","#212529"]];
+$("od_r").onclick=()=>{const p=PL[Math.floor(Math.random()*PL.length)];$("od_c1").value=p[0];$("od_c2").value=p[1];$("od_p").value=["solid","stripe","krama","dot","hol"][Math.floor(Math.random()*5)];od();};od();
+function cs(){const v=i=>+$(i).value||0;const fab=v("cs_m")*v("cs_p"),trim=v("cs_t"),lab=v("cs_h")*v("cs_w"),pk=v("cs_k");const cost=fab+trim+lab+pk,ws=cost*v("cs_x"),rt=ws*v("cs_y"),q=v("cs_q");
+ const r=(a,b)=>`<tr><td>${a}</td><td style="text-align:right">$${b.toFixed(2)}</td></tr>`;
+ $("cs_out").innerHTML=`<table class="tbl">${r("ក្រណាត់",fab)}${r("គ្រឿងបន្ថែម (ឡេវ រ៉ូត ស្លាក)",trim)}${r("ពលកម្មដេរ",lab)}${r("Packaging",pk)}<tr><th>ថ្លៃដើម (Cost)</th><th style="text-align:right">$${cost.toFixed(2)}</th></tr>${r("តម្លៃលក់ដុំ (×"+v("cs_x")+")",ws)}<tr><th>តម្លៃលក់រាយ (×"+v("cs_y")+")</th><th style="text-align:right">$${rt.toFixed(2)}</th></tr></table>
+ ${q} ឈុត → ទុនសរុប <b>$${(cost*q).toFixed(0)}</b> · លក់រាយផ្ទាល់ (DTC) ចំណេញ ≈ <b>$${((rt-cost)*q).toFixed(0)}</b> · Margin ${(100*(rt-cost)/rt).toFixed(0)}%<br><small>⚠️ មិនទាន់គិត៖ ការផ្សាយពាណិជ្ជកម្ម ដឹកជញ្ជូន ពន្ធ ការត្រឡប់ទំនិញ ទំនិញមិនបានលក់</small>`;}
+document.querySelectorAll("#fs [id^=cs_]").forEach(e=>e.oninput=cs);cs();
+})();
+</script>
+
+<h3>🏆 Quiz ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["Croquis ម៉ូដ ប៉ុន្មានក្បាល?", ["9", "3", "20", "1"], 0], ["T-shirt យឺត?", ["Knit", "Woven", "Denim", "Satin"], 0], ["ហូល (Ikat)?", ["ចងពណ៌មុនត្បាញ", "បោះពុម្ព Digital", "ប៉ាក់", "Knit"], 0], ["Seam allowance ទូទៅ?", ["1–1.5cm", "10cm", "0mm", "1m"], 0], ["Bias cut?", ["ទ្រេត 45°", "ត្រង់", "បញ្ឈរ", "រង្វង់"], 0], ["Tech pack សម្រាប់?", ["រោងចក្រ", "Instagram", "អតិថិជន", "Runway"], 0], ["New Look 1947?", ["Dior", "Chanel", "Zara", "Singer"], 0], ["Haute couture ផ្ទះដំបូង?", ["Worth", "IKEA", "Nike", "Zara"], 0], ["Cost $10 ×2 ×2 =?", ["$40", "$20", "$12", "$100"], 0], ["កប្បាស — ហេតុអ្វីលាងមុន?", ["រួញ", "ពណ៌ភ្លឺ", "យឺត", "រឹង"], 0], ["Silhouette ចង្កេះតូច?", ["X", "H", "O", "I"], 0], ["Zero-waste?", ["Pattern គ្មានសំណល់", "ក្រណាត់ថោក", "ដេរលឿន", "ពណ៌ស"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+<ol class='steps'><li>Graphic Design Styles · Illustrator (Flat sketch)</li><li><b>Fashion Design</b> (វគ្គនេះ) ✅</li><li>Photoshop (Lookbook) · CapCut (Fashion video)</li><li>Digital Marketing · Business (Brand)</li><li>Excel (Costing) · Logistics</li></ol></section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="fashion"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

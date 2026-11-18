@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Hosting & Deploy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#111111; --accent2:#7048e8; --accent-soft:#f3f0ff;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#b197fc; --accent2:#63e6be; --accent-soft:#140f2b;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#b197fc; --accent2:#63e6be; --accent-soft:#140f2b;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#000,#1a1033 40%,#7048e8 75%,#00e599);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/fh.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/fh.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Free Hosting &amp; Deploy — Vercel + Railway + Neon</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Free Hosting ជាអ្វី? ហេតុអ្វីសំខាន់?</a>
+<a href="#setup">២. ត្រៀមខ្លួន</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Hosting ជាអ្វី? Static · Backend · Database · Serverless</a>
+<a href="#l2">មេរៀន ២: ប្រៀបធៀបកន្លែង Hosting ឥតគិតថ្លៃ</a>
+<a href="#l3">មេរៀន ៣: ត្រៀមគម្រោង៖ Folder · Git · .env</a>
+<a href="#l4">មេរៀន ៤: Neon៖ បង្កើត PostgreSQL ឥតគិតថ្លៃ</a>
+<a href="#l5">មេរៀន ៥: Backend៖ Express API + PostgreSQL</a>
+<a href="#l6">មេរៀន ៦: Deploy Backend លើ Railway (ជំហានៗ)</a>
+<a href="#l7">មេរៀន ៧: ជម្រើស Backend ផ្សេង៖ Render · Vercel Functions · Cloudflare Workers</a>
+<a href="#l8">មេរៀន ៨: Frontend៖ React (Vite) ហៅ API</a>
+<a href="#l9">មេរៀន ៩: Deploy Frontend លើ Vercel (ជំហានៗ)</a>
+<a href="#l10">មេរៀន ១០: ភ្ជាប់ ៣ ផ្នែក៖ CORS · Env · Flow ទាំងមូល</a>
+<a href="#l11">មេរៀន ១១: Website ស្តាទិក៖ GitHub Pages · Cloudflare Pages · Netlify</a>
+<a href="#l12">មេរៀន ១២: Custom domain · DNS · HTTPS</a>
+<a href="#l13">មេរៀន ១៣: សុវត្ថិភាព · ការគ្រប់គ្រងចំណាយ · Backup</a>
+<a href="#l14">មេរៀន ១៤: ដោះស្រាយបញ្ហាញឹកញាប់ (Troubleshooting)</a>
+<a href="#cheat">📋 សង្ខេប (Cheat sheet)</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងចុងវគ្គ</a>
+<a href="#pro-app">💻 Deploy Lab (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🚀 Free Hosting — Deploy App ពេញ (Frontend + Backend + Database) ដោយ $0</h2>
+  <p><b>Vercel</b> (React Frontend) · <b>Railway</b> (Node.js API) · <b>Neon</b> (PostgreSQL) ជំហានៗ ជាមួយ App «Kafe Menu» + <b>តារាងប្រៀបធៀប Free tier</b> (GitHub Pages, Cloudflare Pages, Netlify, Render, Supabase — ពិនិត្យ វិច្ឆិកា 2026), CORS, Env, Custom domain, សុវត្ថិភាព និង Troubleshooting + <b>Deploy Lab</b>។</p>
+  <p><span class="badge">📘 ១៤ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">💻 Code មានពណ៌ + លទ្ធផល</span><span class="badge">🚀 Deploy Lab</span></p>
+</section>
+<section id="intro">
+<h2>១. Free Hosting ជាអ្វី? ហេតុអ្វីសំខាន់?</h2>
+
+
+<p><b>Hosting</b> = ដាក់ Website/App លើកុំព្យូទ័រដែលបើក 24 ម៉ោង ភ្ជាប់អ៊ីនធឺណិត ដើម្បីឲ្យមនុស្សគ្រប់គ្នាចូលបាន។ សព្វថ្ងៃមាន <b>Free tier</b> ច្រើន ដែលអនុញ្ញាតឲ្យសិស្ស/Developer ចាប់ផ្តើមដោយ <b>$0</b>។ វគ្គនេះបង្រៀន <b>Stack ពេញនិយម៖ Vercel (Frontend) + Railway (Backend) + Neon (PostgreSQL)</b> ជាមួយ App ពិត «Kafe Menu» ជំហានៗ — និងប្រៀបធៀប GitHub Pages, Cloudflare Pages, Netlify, Render, Supabase។ 📅 <i>ពិនិត្យនៅខែ វិច្ឆិកា 2026 ពីទំព័រផ្លូវការ — Free tier ប្តូរញឹកញាប់ សូមពិនិត្យ Pricing page មុនប្រើពិត</i></p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#ff9900"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#ff9900">2006</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">AWS</text><circle cx="185" cy="115" r="11" fill="#79589f"/><text x="185" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#79589f">2007</text><text x="185" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Heroku</text><circle cx="290" cy="115" r="11" fill="#24292f"/><text x="290" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#24292f">2008</text><text x="290" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">GitHub</text><circle cx="395" cy="115" r="11" fill="#f38020"/><text x="395" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#f38020">2010</text><text x="395" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Cloudflare</text><circle cx="500" cy="115" r="11" fill="#00ad9f"/><text x="500" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#00ad9f">2014</text><text x="500" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Netlify</text><circle cx="605" cy="115" r="11" fill="#111111"/><text x="605" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#111111">2015</text><text x="605" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">ZEIT → Vercel</text><circle cx="710" cy="115" r="11" fill="#46e3b7"/><text x="710" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#46e3b7">2019</text><text x="710" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Render</text><circle cx="815" cy="115" r="11" fill="#7048e8"/><text x="815" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#7048e8">2020</text><text x="815" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Railway · Supabase</text><circle cx="920" cy="115" r="11" fill="#00e599"/><text x="920" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#00e599">2021</text><text x="920" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Neon</text></svg><figcaption>🖼️ ប្រវត្តិ Cloud Hosting</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>2006</td><td><b>Amazon Web Services</b> (S3, EC2)</td><td>ចាប់ផ្តើម Cloud សម័យថ្មី</td></tr><tr><td>2007</td><td><b>Heroku</b></td><td>PaaS — <code>git push</code> ដើម្បី Deploy (Free tier បានបញ្ចប់ឆ្នាំ 2022)</td></tr><tr><td>2008</td><td><b>GitHub</b> → GitHub Pages</td><td>Hosting ស្តាទិកឥតគិតថ្លៃ</td></tr><tr><td>2014</td><td><b>Netlify</b></td><td>ពាក្យ «Jamstack» · Deploy ពី Git</td></tr><tr><td>2015</td><td><b>ZEIT</b> (Guillermo Rauch) → ប្តូរឈ្មោះ <b>Vercel</b> ឆ្នាំ 2020</td><td>បង្កើត <b>Next.js</b> (2016)</td></tr><tr><td>2019</td><td><b>Render</b></td><td>Heroku alternative</td></tr><tr><td>2020</td><td><b>Railway</b> (Jake Cooper) · <b>Supabase</b></td><td>Deploy Backend/DB ងាយ · Open-source Firebase alternative</td></tr><tr><td>2021</td><td><b>Neon</b> (Nikita Shamgunov, Heikki Linnakangas)</td><td>Serverless Postgres + Branching</td></tr></table>
+
+<h3>ប្រើសម្រាប់អ្វី?</h3>
+<div class="grid"><div class="card"><b>🎓 Portfolio</b><br>បង្ហាញគម្រោងពិតដល់អ្នកជ្រើសរើសការងារ</div><div class="card"><b>🚀 MVP</b><br>សាក Idea ជាមួយអ្នកប្រើពិត</div><div class="card"><b>🏫 គម្រោងសាលា</b><br>Deploy ឲ្យគ្រូមើល</div><div class="card"><b>🤖 Bot</b><br>Telegram/Discord bot</div><div class="card"><b>🛒 ហាងតូច</b><br>Website ផ្សព្វផ្សាយ (ពិនិត្យលក្ខខណ្ឌពាណិជ្ជកម្ម)</div></div>
+
+</section>
+<section id="setup">
+<h2>២. ត្រៀមខ្លួន</h2>
+<ol class='steps'><li>គណនី <b>GitHub</b> (ចាំបាច់ — Platform ទាំងអស់ Login ដោយវា)។</li><li><b>Node.js 20+</b> និង <b>VS Code</b>។</li><li>គណនី <b>Neon</b>, <b>Railway</b>, <b>Vercel</b> (ឥតគិតថ្លៃ — Login ដោយ GitHub)។</li><li>ស្គាល់ Git មូលដ្ឋាន (វគ្គ <b>Git &amp; GitHub</b>) និង React/Express បន្តិច (វគ្គ React · Node.js)។</li></ol></section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>Hosting ជាអ្វី? Static · Backend · Database · Serverless</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="202.5" height="96" rx="14" fill="#868e96"/><text x="121.25" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">👤 អ្នកប្រើ</text><text x="121.25" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Browser/ទូរស័ព្ទ</text><line x1="224.5" y1="82" x2="250.5" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="252.5" y="34" width="202.5" height="96" rx="14" fill="#111111"/><text x="353.75" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🖥️ Frontend</text><text x="353.75" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Vercel</text><line x1="457.0" y1="82" x2="483.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="485.0" y="34" width="202.5" height="96" rx="14" fill="#7048e8"/><text x="586.25" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">⚙️ Backend API</text><text x="586.25" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Railway</text><line x1="689.5" y1="82" x2="715.5" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="717.5" y="34" width="202.5" height="96" rx="14" fill="#0ca678"/><text x="818.75" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🗄️ Database</text><text x="818.75" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Neon Postgres</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Stack ក្នុងវគ្គនេះ៖ Vercel → Railway → Neon</text></svg><figcaption>🖼️ Hosting ជាអ្វី? Static · Backend · Database · Serverless</figcaption></figure>
+<table><tr><th>ប្រភេទ</th><th>ដំណើរការអ្វី</th><th>ឧទាហរណ៍សេវា</th></tr><tr><td>Static hosting</td><td>ផ្ញើឯកសារ HTML/CSS/JS ដូចដើម</td><td>GitHub Pages · Cloudflare Pages · Netlify · Vercel</td></tr><tr><td>Backend (Server)</td><td>Node/Python ដំណើរការជាប់ · API · Bot</td><td>Railway · Render</td></tr><tr><td>Serverless functions</td><td>Code ដំណើរការពេលមាន Request ប៉ុណ្ណោះ</td><td>Vercel Functions · Netlify Functions · Cloudflare Workers</td></tr><tr><td>Database</td><td>រក្សាទុកទិន្នន័យ</td><td>Neon · Supabase · Railway Postgres</td></tr></table>
+<div class="note">💡 ហេតុអ្វីបំបែក ៣? ម្នាក់ៗពូកែការងាររបស់ខ្លួន — Vercel លឿនសម្រាប់ Frontend (CDN), Railway ដំណើរការ Server ជាប់, Neon គ្រប់គ្រង Postgres (Backup, Branching) — ហើយ Free tier នីមួយៗបូកគ្នា។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>Website xCenBar Rean Free របស់យើង (HTML ស្តាទិក គ្មាន Database) គួរដាក់ Hosting ប្រភេទណា?</p><details><summary>មើលចម្លើយ</summary><p><b>Static hosting</b> — ដូច <b>GitHub Pages</b> ដែលយើងកំពុងប្រើ (ឬ Cloudflare Pages/Netlify)។ មិនចាំបាច់ Backend/Database ទេ។</p></details></div>
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>ប្រៀបធៀបកន្លែង Hosting ឥតគិតថ្លៃ</h2>
+<p>📅 <i>ពិនិត្យនៅខែ វិច្ឆិកា 2026 ពីទំព័រផ្លូវការ — Free tier ប្តូរញឹកញាប់ សូមពិនិត្យ Pricing page មុនប្រើពិត</i></p><table><tr><th>សេវា</th><th>សម្រាប់</th><th>ឥតគិតថ្លៃបានអ្វី (សង្ខេប)</th><th>ត្រូវប្រយ័ត្ន</th></tr><tr><td><b>GitHub Pages</b></td><td>Static (HTML/CSS/JS)</td><td>ឥតគិតថ្លៃសម្រាប់ Repo សាធារណៈ · Site ≈ 1 GB · Bandwidth ≈ 100 GB/ខែ (soft)</td><td>គ្មាន Backend/Database · មិនសម្រាប់ហាងអនឡាញ/SaaS</td></tr><tr><td><b>Cloudflare Pages</b></td><td>Static + Functions</td><td>500 builds/ខែ · 20,000 files · File ≤ 25 MiB · 100 custom domains/project</td><td>Functions ប្រើ Workers quota</td></tr><tr><td><b>Netlify</b> (Free)</td><td>Static + Functions</td><td>300 credits/ខែ</td><td>អស់ Credit → Project ផ្អាករហូតដល់ខែក្រោយ</td></tr><tr><td><b>Vercel</b> (Hobby)</td><td>Frontend · Next.js · Functions</td><td>100 GB Fast Data Transfer · 1,000,000 Function invocations · 4 ម៉ោង Active CPU · 100 deploys/ថ្ងៃ</td><td><b>សម្រាប់ផ្ទាល់ខ្លួន មិនមែនពាណិជ្ជកម្ម</b></td></tr><tr><td><b>Railway</b></td><td>Backend · Worker · DB</td><td>Free៖ ឥណទាន $1/ខែ (0.5 GB RAM, 1 vCPU) · Trial៖ $5 ម្តង · Hobby $5/ខែ (រួម $5 usage)</td><td>លុយឥណទានតិច — App តូចប៉ុណ្ណោះ</td></tr><tr><td><b>Render</b> (Free)</td><td>Backend · Static · Postgres</td><td>750 instance hours/ខែ · Postgres 1 GB</td><td>Web service <b>ដេកក្រោយ 15 នាទី</b> គ្មានអ្នកប្រើ · Postgres ផុតកំណត់ក្រោយ <b>30 ថ្ងៃ</b></td></tr><tr><td><b>Neon</b> (Free)</td><td>PostgreSQL</td><td>100 projects · 1 GB/project · 100 CU-hours/project/ខែ · Branching</td><td>Compute ដេកក្រោយ 5 នាទី (Scale to zero) · Egress 5 GB/ខែ</td></tr><tr><td><b>Supabase</b> (Free)</td><td>Postgres + Auth + Storage</td><td>DB 500 MB · 2 projects · 50,000 MAU · File 1 GB</td><td>Project <b>ផ្អាកក្រោយ 1 សប្តាហ៍</b> គ្មានសកម្មភាព</td></tr></table>
+<div class="grid"><div class="card"><b>🌐 Website ស្តាទិក</b><br>GitHub Pages / Cloudflare Pages</div><div class="card"><b>⚛️ React + API + DB</b><br>Vercel + Railway + Neon</div><div class="card"><b>▲ Next.js</b><br>Vercel + Neon</div><div class="card"><b>🤖 Bot 24/7</b><br>Railway (Hobby ល្អជាង)</div><div class="card"><b>🔐 ត្រូវការ Login/Upload</b><br>Supabase</div></div>
+<div class="warn">⚠️ <b>Free ≠ សម្រាប់ផលិតកម្មធំ។</b> Free tier ល្អសម្រាប់រៀន Portfolio និង MVP។ ពេលមានអតិថិជនពិត ត្រូវគ្រោងថវិកា (ឧ. Railway Hobby $5/ខែ)។ កុំបង្កើតគណនីច្រើនដើម្បីគេចដែនកំណត់ — រំលោភលក្ខខណ្ឌសេវា ហើយអាចត្រូវបិទ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>ហេតុអ្វី Render Free Postgres មិនសមសម្រាប់គម្រោង Portfolio ដែលចង់ទុកយូរ?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះ Free Postgres របស់ Render <b>ផុតកំណត់ក្រោយ 30 ថ្ងៃ</b> (មាន 14 ថ្ងៃ Grace period រួចលុប) — ប្រើ <b>Neon</b> សម្រាប់ Database ជំនួស (Free មិនផុតកំណត់ តែ Compute ដេកពេលទំនេរ)។</p></details></div>
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>ត្រៀមគម្រោង៖ Folder · Git · .env</h2>
+<p>យើងនឹងសង់ App «Kafe Menu»៖ <b>client/</b> (React + Vite) និង <b>server/</b> (Node + Express) ក្នុង Repo តែមួយ (Monorepo)។</p><script type="text/x-code" data-lang="txt" data-label="Folder structure">
+kafe/
+├── client/          ← React (Vite) → Vercel
+│   ├── src/App.jsx
+│   ├── vercel.json
+│   └── package.json
+├── server/          ← Express API → Railway
+│   ├── index.js
+│   ├── schema.sql
+│   └── package.json
+└── .gitignore
+</script>
+<script type="text/x-code" data-lang="txt" data-label=".gitignore">
+node_modules/
+.env
+.env.local
+dist/
+</script>
+<script type="text/x-code" data-lang="bash" data-label="Push ទៅ GitHub">
+git init
+git add .
+git commit -m "Kafe menu: client + server"
+git branch -M main
+git remote add origin https://github.com/USERNAME/kafe.git
+git push -u origin main
+</script>
+<div class="warn">⚠️ <b>កុំ Commit .env</b> (ពាក្យសម្ងាត់ Database)! បើច្រឡំ Push ហើយ → Reset password ក្នុង Neon ភ្លាម (Git history នៅចាំ)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>ហេតុអ្វី <code>.env</code> ត្រូវនៅក្នុង .gitignore?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះវាមាន <b>ពាក្យសម្ងាត់</b> (DATABASE_URL, API keys)។ បើ Push ទៅ GitHub សាធារណៈ អ្នកណាក៏អាចចូល Database អ្នកបាន — ដាក់តម្លៃក្នុង Dashboard (Railway/Vercel Variables) ជំនួស។</p></details></div>
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Neon៖ បង្កើត PostgreSQL ឥតគិតថ្លៃ</h2>
+<script type="text/x-code" data-lang="sql" data-label="server/schema.sql">
+CREATE TABLE menu (
+  id     SERIAL PRIMARY KEY,
+  name   TEXT NOT NULL,
+  price  NUMERIC(6,2) NOT NULL,
+  hot    BOOLEAN DEFAULT true
+);
+
+CREATE TABLE orders (
+  id         SERIAL PRIMARY KEY,
+  item_id    INT REFERENCES menu(id),
+  qty        INT NOT NULL CHECK (qty > 0),
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+INSERT INTO menu (name, price, hot) VALUES
+  ('កាហ្វេទឹកដោះគោ', 1.50, false),
+  ('ឡាតេក្តៅ', 2.00, true),
+  ('នំបុ័ងសាច់ក្រក', 2.50, true);
+</script>
+<script type="text/x-code" data-lang="txt" data-label="Connection string (ឧទាហរណ៍)">
+postgresql://neondb_owner:PASSWORD@ep-cool-name-123456-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
+</script>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ចូល <b>neon.com</b> → Sign up (GitHub/Google)</li><li>Create project → ឈ្មោះ <code>kafe</code> → Region ជិតអ្នកប្រើ (ឧ. Singapore <code>ap-southeast-1</code>)</li><li>Dashboard → <b>Connect</b> → ចម្លង <b>Connection string</b> (ជ្រើស Pooled connection)</li><li><b>SQL Editor</b> → បិទភ្ជាប់ schema.sql → Run</li><li>Tables → មើលទិន្នន័យ</li></ol></div>
+<div class="note">💡 <b>Pooled</b> (មាន <code>-pooler</code>) ល្អសម្រាប់ App ដែលបើក Connection ច្រើន។ <b>Branching</b>៖ បង្កើតច្បាប់ចម្លង Database សម្រាប់សាក (ដូច Git branch)។ Free compute <b>ដេកក្រោយ 5 នាទី</b> — Query ដំបូងយឺតបន្តិច។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>ផ្នែក <code>?sslmode=require</code> ក្នុង Connection string មានន័យអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>បង្ខំឲ្យ Connection ប្រើ <b>SSL/TLS (Encryption)</b> — ទិន្នន័យ និងពាក្យសម្ងាត់មិនធ្វើដំណើរជាអក្សរធម្មតាតាមអ៊ីនធឺណិត។ Neon តម្រូវឲ្យមាន។</p></details></div>
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>Backend៖ Express API + PostgreSQL</h2>
+<script type="text/x-code" data-lang="json" data-label="server/package.json">
+{
+  "name": "kafe-server",
+  "type": "module",
+  "scripts": { "start": "node index.js", "dev": "node --watch --env-file=.env index.js" },
+  "engines": { "node": ">=20" },
+  "dependencies": { "cors": "^2.8.5", "express": "^4.21.2", "pg": "^8.13.1" }
+}
+</script>
+<script type="text/x-code" data-lang="js" data-label="server/index.js">
+import express from "express";
+import cors from "cors";
+import pg from "pg";
+
+const app = express();
+const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+
+const origins = (process.env.CORS_ORIGIN || "http://localhost:5173").split(",");
+app.use(cors({ origin: origins }));
+app.use(express.json());
+
+app.get("/api/health", async (req, res) => {
+  await pool.query("SELECT 1");
+  res.json({ ok: true, time: new Date().toISOString() });
+});
+
+app.get("/api/menu", async (req, res) => {
+  const { rows } = await pool.query("SELECT id, name, price, hot FROM menu ORDER BY id");
+  res.json(rows);
+});
+
+app.post("/api/orders", async (req, res) => {
+  const { itemId, qty } = req.body;
+  if (!Number.isInteger(itemId) || !Number.isInteger(qty) || qty < 1) {
+    return res.status(400).json({ error: "itemId និង qty ត្រូវជាលេខគត់" });
+  }
+  // ✅ Parameterized query ($1, $2) — ការពារ SQL injection
+  const { rows } = await pool.query(
+    "INSERT INTO orders (item_id, qty) VALUES ($1, $2) RETURNING id",
+    [itemId, qty]
+  );
+  res.status(201).json({ orderId: rows[0].id });
+});
+
+const port = process.env.PORT || 3000;   // Railway/Render ផ្តល់ PORT ឲ្យ
+app.listen(port, () => console.log(`API on :${port}`));
+</script>
+<script type="text/x-code" data-lang="bash" data-label="សាកនៅលើកុំព្យូទ័រ">
+cd server
+npm install
+# បង្កើត server/.env (កុំ Commit)
+echo 'DATABASE_URL=postgresql://...neon.tech/neondb?sslmode=require' > .env
+npm run dev
+curl http://localhost:3000/api/menu
+</script>
+<div class="note">💡 <b>3 ច្បាប់ដែល Hosting ទាមទារ៖</b> (1) Listen លើ <code>process.env.PORT</code> (2) មាន Script <code>start</code> (3) តម្លៃសម្ងាត់មកពី Environment variables។</div>
+<div class="warn">⚠️ កុំសរសេរ SQL ដោយភ្ជាប់អក្សរ (<code>"...WHERE id=" + req.query.id</code>) — ងាយត្រូវ <b>SQL injection</b>។ ប្រើ <code>$1, $2</code> ជានិច្ច។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>ហេតុអ្វី Backend ត្រូវប្រើ <code>process.env.PORT</code> មិនមែនលេខ 3000 ថេរ?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះ Railway/Render <b>កំណត់ Port ដោយខ្លួនឯង</b> ហើយផ្ញើតាម Env variable <code>PORT</code>។ បើ App Listen លើ Port ផ្សេង Platform រក App មិនឃើញ → Error 502/Application failed to respond។</p></details></div>
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Deploy Backend លើ Railway (ជំហានៗ)</h2>
+<script type="text/x-code" data-lang="bash" data-label="Railway CLI (ជម្រើស)">
+npm i -g @railway/cli
+railway login
+railway link          # ភ្ជាប់ Folder ទៅ Project
+railway variables     # មើល Env
+railway logs          # មើល Log
+railway up            # Deploy ពី Folder បច្ចុប្បន្ន (មិនចាំបាច់ Git)
+</script>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ចូល <b>railway.com</b> → Login ដោយ GitHub</li><li><b>New Project</b> → <b>Deploy from GitHub repo</b> → ជ្រើស <code>kafe</code></li><li>ចុច Service → <b>Settings → Root Directory</b> = <code>/server</code> (Railway រកឃើញ Node ដោយស្វ័យប្រវត្តិ ហើយប្រើ <code>npm start</code>)</li><li><b>Variables</b> → បន្ថែម <code>DATABASE_URL</code> (ពី Neon) និង <code>CORS_ORIGIN</code> (URL Vercel — ដាក់ក្រោយក៏បាន)</li><li><b>Settings → Networking → Generate Domain</b> → បាន <code>https://….up.railway.app</code></li><li>បើក <code>/api/health</code> → <code>{"ok":true}</code> ✅ · មើល <b>Deploy Logs</b> បើមានបញ្ហា</li><li>រាល់ពេល <code>git push</code> → Railway Deploy ថ្មីដោយស្វ័យប្រវត្តិ</li></ol></div>
+<div class="note">💡 <b>តម្លៃ (វិច្ឆិកា 2026)៖</b> Free = ឥណទាន <b>$1/ខែ</b> (0.5 GB RAM, 1 vCPU ក្នុងមួយ Service) · Trial = <b>$5</b> ម្តង · Hobby = <b>$5/ខែ</b> (រួម $5 usage)។ API តូចសម្រាប់ Portfolio ប្រើតិច។ ពិនិត្យ Usage ក្នុង Dashboard។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>Deploy ចប់ តែបើក URL ឃើញ «Application failed to respond»។ ពិនិត្យ ៣ ចំណុចអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>(1) App Listen លើ <code>process.env.PORT</code>? (2) <b>Root Directory</b> = <code>/server</code> និងមាន <code>"start"</code> script? (3) <b>Deploy Logs</b> — ឧ. <code>DATABASE_URL</code> មិនបានកំណត់ ឬ Module រកមិនឃើញ (ភ្លេចដាក់ក្នុង dependencies)។</p></details></div>
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>ជម្រើស Backend ផ្សេង៖ Render · Vercel Functions · Cloudflare Workers</h2>
+<table><tr><th>ជម្រើស</th><th>របៀប</th><th>ល្អ / មិនល្អ</th></tr><tr><td><b>Render</b> Web Service (Free)</td><td>New → Web Service → Root <code>server</code> · Build <code>npm install</code> · Start <code>npm start</code> · Instance Free</td><td>✅ ងាយ · ❌ ដេកក្រោយ 15 នាទី (Request ដំបូងយឺត) · 750 ម៉ោង/ខែ</td></tr><tr><td><b>Vercel Functions</b></td><td>ដាក់ File ក្នុង <code>api/</code> ឬ Express zero-config</td><td>✅ Repo តែមួយជាមួយ Frontend · ❌ មិនសម្រាប់ WebSocket/Job វែង</td></tr><tr><td><b>Cloudflare Workers</b></td><td><code>npx wrangler deploy</code></td><td>✅ លឿនខ្លាំង (Edge) · ❌ មិនមែន Node ពេញលេញ (ត្រូវប្តូរ Code ខ្លះ)</td></tr><tr><td><b>Supabase</b></td><td>ប្រើ Database + Auth + REST ដោយមិនសរសេរ Backend</td><td>✅ លឿនសម្រាប់ MVP · ❌ ផ្អាកក្រោយ 1 សប្តាហ៍គ្មានសកម្មភាព (Free)</td></tr></table>
+<script type="text/x-code" data-lang="js" data-label="Vercel Function + Neon (ជម្រើស)">
+// client/api/menu.js  → https://your-app.vercel.app/api/menu
+import { neon } from "@neondatabase/serverless";
+
+export default async function handler(req, res) {
+  const sql = neon(process.env.DATABASE_URL);
+  const rows = await sql`SELECT id, name, price FROM menu ORDER BY id`;
+  res.status(200).json(rows);
+}
+</script>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>Telegram bot ដែលត្រូវឆ្លើយគ្រប់ពេល (Polling 24/7) — Render Free ឬ Railway ល្អជាង? ហេតុអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Railway</b> — Render Free <b>ដេកក្រោយ 15 នាទី</b>គ្មាន Traffic ចូល ដូច្នេះ Bot Polling ឈប់។ (ឬប្រើ Webhook + Serverless function ជំនួស Polling)។</p></details></div>
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Frontend៖ React (Vite) ហៅ API</h2>
+<script type="text/x-code" data-lang="jsx" data-label="client/src/App.jsx">
+import { useEffect, useState } from "react";
+
+const API = import.meta.env.VITE_API_URL;   // ឧ. https://kafe-api.up.railway.app
+
+export default function App() {
+  const [menu, setMenu] = useState([]);
+  const [err, setErr] = useState("");
+
+  useEffect(() => {
+    fetch(`${API}/api/menu`)
+      .then(r => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then(setMenu)
+      .catch(e => setErr("ភ្ជាប់ API មិនបាន (" + e + ")"));
+  }, []);
+
+  if (err) return <p>⚠️ {err}</p>;
+  if (!menu.length) return <p>កំពុងផ្ទុក…</p>;
+  return (
+    <ul>
+      {menu.map(m => <li key={m.id}>{m.name} — ${m.price}</li>)}
+    </ul>
+  );
+}
+</script>
+<script type="text/x-code" data-lang="txt" data-label="client/.env.local (សម្រាប់ Dev)">
+VITE_API_URL=http://localhost:3000
+</script>
+<script type="text/x-code" data-lang="json" data-label="client/vercel.json (SPA routing)">
+{
+  "rewrites": [ { "source": "/(.*)", "destination": "/index.html" } ]
+}
+</script>
+<div class="note">💡 <b>Vite env</b>៖ តែ Variable ដែលចាប់ផ្តើមដោយ <code>VITE_</code> ប៉ុណ្ណោះទៅដល់ Browser ហើយវា <b>ត្រូវបានដាក់ចូលពេល Build</b> — ប្តូរតម្លៃ ត្រូវ <b>Redeploy</b>។</div>
+<div class="warn">⚠️ អ្វីៗក្នុង <code>VITE_*</code> <b>អ្នកណាក៏មើលឃើញ</b> (ក្នុង Browser DevTools)។ កុំដាក់ DATABASE_URL ឬ Secret key នៅ Frontend!</div>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>ហេតុអ្វីមិនអាចដាក់ <code>DATABASE_URL</code> ជា <code>VITE_DATABASE_URL</code> ហើយ Query ពី React ផ្ទាល់?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះ <code>VITE_*</code> ត្រូវបានបញ្ចូលក្នុង JavaScript ដែលទាញទៅ Browser — អ្នកណាក៏អាចយក Password Database ហើយលុប/លួចទិន្នន័យបាន។ Database ត្រូវនៅក្រោយ <b>Backend</b> ដែលពិនិត្យ Input។</p></details></div>
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Deploy Frontend លើ Vercel (ជំហានៗ)</h2>
+<script type="text/x-code" data-lang="bash" data-label="Vercel CLI (ជម្រើស)">
+npm i -g vercel
+cd client
+vercel            # Preview deploy
+vercel --prod     # Production
+vercel env add VITE_API_URL
+</script>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ចូល <b>vercel.com</b> → Login ដោយ GitHub</li><li><b>Add New → Project</b> → Import <code>kafe</code></li><li><b>Root Directory</b> = <code>client</code> · Framework Preset = <b>Vite</b> (រកឃើញស្វ័យប្រវត្តិ)</li><li><b>Environment Variables</b> → <code>VITE_API_URL</code> = URL Railway (គ្មាន <code>/</code> ចុងក្រោយ)</li><li><b>Deploy</b> → បាន <code>https://kafe-….vercel.app</code></li><li>ត្រឡប់ទៅ Railway → Variables → <code>CORS_ORIGIN</code> = URL Vercel → Railway Redeploy</li><li>បើក Website → ឃើញម៉ឺនុយពី Neon ✅</li></ol></div>
+<div class="note">💡 <b>Preview deployments</b>៖ រាល់ Branch/Pull request បាន URL ផ្ទាល់ខ្លួន សម្រាប់សាកមុន Merge។ Neon មាន Integration ជាមួយ Vercel ដើម្បីបង្កើត <b>Database branch</b> សម្រាប់ Preview នីមួយៗ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>ប្តូរ <code>VITE_API_URL</code> ក្នុង Vercel ហើយ តែ Website នៅហៅ URL ចាស់។ ហេតុអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះ Vite env ត្រូវបានដាក់ចូលពេល <b>Build</b>។ ត្រូវ <b>Redeploy</b> (Deployments → … → Redeploy) ដើម្បី Build ថ្មីជាមួយតម្លៃថ្មី។</p></details></div>
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>ភ្ជាប់ ៣ ផ្នែក៖ CORS · Env · Flow ទាំងមូល</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="156.0" height="96" rx="14" fill="#111111"/><text x="98.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Browser</text><text x="98.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">kafe.vercel.app</text><line x1="178.0" y1="82" x2="204.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="206.0" y="34" width="156.0" height="96" rx="14" fill="#1c7ed6"/><text x="284.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">fetch()</text><text x="284.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">VITE_API_URL</text><line x1="364.0" y1="82" x2="390.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="392.0" y="34" width="156.0" height="96" rx="14" fill="#7048e8"/><text x="470.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Railway API</text><text x="470.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">CORS_ORIGIN ✓</text><line x1="550.0" y1="82" x2="576.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="578.0" y="34" width="156.0" height="96" rx="14" fill="#e8590c"/><text x="656.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">pg Pool</text><text x="656.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">DATABASE_URL</text><line x1="736.0" y1="82" x2="762.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="764.0" y="34" width="156.0" height="96" rx="14" fill="#0ca678"/><text x="842.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Neon</text><text x="842.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">SSL</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Request ធ្វើដំណើរពី Browser ទៅ Database</text></svg><figcaption>🖼️ ភ្ជាប់ ៣ ផ្នែក៖ CORS · Env · Flow ទាំងមូល</figcaption></figure>
+<table><tr><th>Variable</th><th>ដាក់នៅ</th><th>តម្លៃ</th></tr><tr><td><code>DATABASE_URL</code></td><td>Railway (Backend)</td><td>Neon connection string</td></tr><tr><td><code>CORS_ORIGIN</code></td><td>Railway (Backend)</td><td>https://kafe-….vercel.app (បំបែកច្រើនដោយ ,)</td></tr><tr><td><code>VITE_API_URL</code></td><td>Vercel (Frontend)</td><td>https://….up.railway.app</td></tr><tr><td><code>PORT</code></td><td>Railway ផ្តល់ឲ្យ</td><td>កុំកំណត់ខ្លួនឯង</td></tr></table>
+<div class="note">💡 <b>CORS</b> = Browser ការពារ Website មួយមិនឲ្យហៅ API Domain ផ្សេង លុះត្រា API អនុញ្ញាត (Header <code>Access-Control-Allow-Origin</code>)។ ប្រើ <b>Env &amp; CORS Generator</b> ក្នុង App ចុងវគ្គ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>Console បង្ហាញ «blocked by CORS policy: No 'Access-Control-Allow-Origin'»។ កែនៅណា?</p><details><summary>មើលចម្លើយ</summary><p>កែនៅ <b>Backend (Railway)</b>៖ <code>CORS_ORIGIN</code> ត្រូវស្មើ URL Frontend <b>ពិតប្រាកដ</b> (https, គ្មាន / ចុង, Domain ត្រឹមត្រូវ) ហើយ Redeploy — មិនមែនកែនៅ React ទេ។</p></details></div>
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>Website ស្តាទិក៖ GitHub Pages · Cloudflare Pages · Netlify</h2>
+<table><tr><th>សេវា</th><th>ជំហាន</th><th>ចំណាំ</th></tr><tr><td><b>GitHub Pages</b></td><td>Repo → Settings → Pages → Branch <code>main</code> / root → Save</td><td>ងាយបំផុត · ដូច Website xCenBar របស់យើង</td></tr><tr><td><b>Cloudflare Pages</b></td><td>Dashboard → Workers &amp; Pages → Create → Pages → Connect Git (ឬ Upload folder)</td><td>CDN លឿន · 500 builds/ខែ</td></tr><tr><td><b>Netlify</b></td><td>Add new site → Import from Git ឬ <b>Drag &amp; drop</b> Folder</td><td>300 credits/ខែ (Free)</td></tr><tr><td><b>Vercel</b></td><td>Import repo → Framework «Other»</td><td>Hobby៖ ផ្ទាល់ខ្លួន/មិនពាណិជ្ជកម្ម</td></tr></table>
+<script type="text/x-code" data-lang="bash" data-label="Update Website">
+# Website ស្តាទិក ក្នុង Folder ណាមួយ
+git add . && git commit -m "update" && git push
+# GitHub Pages / Cloudflare Pages / Netlify Deploy ថ្មីដោយស្វ័យប្រវត្តិ
+</script>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>Website React (Vite) ដាក់លើ GitHub Pages ហើយ Refresh ទំព័រ <code>/about</code> ចេញ 404។ ហេតុអ្វី? ដោះស្រាយយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះ Server រក File <code>/about</code> មិនឃើញ (SPA មានតែ index.html)។ ដោះស្រាយ៖ ប្រើ <b>HashRouter</b> (<code>/#/about</code>) ឬ Copy <code>index.html</code> ជា <code>404.html</code> · នៅ Vercel ប្រើ <code>rewrites</code> · Cloudflare/Netlify ប្រើ <code>_redirects</code> (<code>/* /index.html 200</code>)។</p></details></div>
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>Custom domain · DNS · HTTPS</h2>
+<table><tr><th>Record</th><th>ប្រើពេល</th><th>ឧទាហរណ៍</th></tr><tr><td><b>CNAME</b></td><td>Subdomain → Platform</td><td><code>www</code> → <code>cname.vercel-dns.com</code> · <code>api</code> → <code>xxx.up.railway.app</code></td></tr><tr><td><b>A</b></td><td>Root domain → IP</td><td><code>@</code> → IP ដែល Platform ផ្តល់</td></tr><tr><td><b>TXT</b></td><td>បញ្ជាក់ម្ចាស់ Domain</td><td><code>_vercel</code> → verify code</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ទិញ Domain (ឧ. <code>.com</code> ពី Registrar, ឬ <code>.com.kh</code> តាមក្រុមហ៊ុនក្នុងស្រុក)</li><li>Vercel → Project → Settings → <b>Domains</b> → បញ្ចូល <code>kafe.com</code></li><li>ចម្លង DNS records ទៅ Registrar</li><li>Railway → Settings → Networking → <b>Custom Domain</b> → <code>api.kafe.com</code> (CNAME)</li><li>រង់ចាំ DNS (នាទី → ម៉ោង) · HTTPS (Let's Encrypt) ធ្វើដោយស្វ័យប្រវត្តិ</li><li>ប្តូរ <code>VITE_API_URL</code> និង <code>CORS_ORIGIN</code> ទៅ Domain ថ្មី → Redeploy ទាំងពីរ</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>ក្រោយភ្ជាប់ <code>kafe.com</code> ហើយ API ចាប់ផ្តើមចេញ CORS error។ ហេតុអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះ Origin ប្តូរពី <code>…vercel.app</code> ទៅ <code>https://kafe.com</code> — ត្រូវបន្ថែមវាក្នុង <code>CORS_ORIGIN</code> (ឧ. <code style='word-break:break-all'>https://kafe.com,https://www.kafe.com</code>) ហើយ Redeploy Railway។</p></details></div>
+</section>
+<section id="l13">
+<h2><span class="badge">មេរៀន ១៣</span>សុវត្ថិភាព · ការគ្រប់គ្រងចំណាយ · Backup</h2>
+<div class="grid"><div class="card"><b>🔐 Secrets</b><br>នៅក្នុង Dashboard Variables ប៉ុណ្ណោះ · Rotate ពេលលេចធ្លាយ</div><div class="card"><b>💳 Spending limit</b><br>Railway៖ Usage limit · Vercel៖ Spend management</div><div class="card"><b>📊 Usage alert</b><br>ពិនិត្យ Dashboard ប្រចាំសប្តាហ៍</div><div class="card"><b>🗄️ Backup</b><br>pg_dump ទៅ File ម្តងម្កាល</div><div class="card"><b>🧯 Rate limit</b><br>ការពារ API ពីការ Spam</div><div class="card"><b>🧾 Logs</b><br>កុំ Log ពាក្យសម្ងាត់/ទិន្នន័យផ្ទាល់ខ្លួន</div></div>
+<script type="text/x-code" data-lang="bash" data-label="Backup Neon">
+# Backup (ត្រូវមាន PostgreSQL client)
+pg_dump "$DATABASE_URL" > backup-$(date +%F).sql
+# Restore ទៅ Database ថ្មី
+psql "$NEW_DATABASE_URL" < backup-2026-11-17.sql
+</script>
+<div class="warn">⚠️ កុំប្រើ «Ping bot» រៀងរាល់ ១០ នាទីដើម្បីកុំឲ្យ Free service ដេក — វាប្រើ Quota អស់លឿន ហើយផ្ទុយស្មារតី Free tier។ បើត្រូវការ 24/7 ពិត → Plan បង់ប្រាក់តូចមួយ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣</h4><p>គណនី GitHub របស់អ្នកមាន Commit ដែលមាន Neon password។ ធ្វើអ្វីមុនគេ?</p><details><summary>មើលចម្លើយ</summary><p><b>Reset password/Role ក្នុង Neon ភ្លាម</b> (ធ្វើឲ្យ Password ចាស់ប្រើលែងបាន) → Update <code>DATABASE_URL</code> ក្នុង Railway → Redeploy។ ការលុប File ពី Git មិនគ្រប់គ្រាន់ទេ ព្រោះ History នៅចាំ។</p></details></div>
+</section>
+<section id="l14">
+<h2><span class="badge">មេរៀន ១៤</span>ដោះស្រាយបញ្ហាញឹកញាប់ (Troubleshooting)</h2>
+<table><tr><th>បញ្ហា</th><th>មូលហេតុ</th><th>ដំណោះស្រាយ</th></tr><tr><td>CORS error</td><td>CORS_ORIGIN ខុស/ខ្វះ</td><td>ដាក់ URL Frontend ពិត (https, គ្មាន /) → Redeploy Backend</td></tr><tr><td>Application failed to respond / 502</td><td>មិន Listen លើ PORT · App crash</td><td>ប្រើ process.env.PORT · មើល Deploy Logs</td></tr><tr><td>404 ពេល Refresh ទំព័រ (SPA)</td><td>គ្មាន Rewrite</td><td>vercel.json rewrites / _redirects</td></tr><tr><td>fetch ទៅ <code>undefined/api/menu</code></td><td>VITE_API_URL មិនបានកំណត់ពេល Build</td><td>បន្ថែម Env → Redeploy</td></tr><tr><td>Mixed content blocked</td><td>Frontend https ហៅ API http</td><td>ប្រើ URL https របស់ Railway</td></tr><tr><td>Connection terminated / SSL</td><td>ខ្វះ sslmode=require</td><td>ប្រើ Connection string ពេញពី Neon</td></tr><tr><td>Request ដំបូងយឺត ៣–៦០ វិនាទី</td><td>Cold start (Render/Neon ដេក)</td><td>ធម្មតាសម្រាប់ Free · បង្ហាញ Loading ក្នុង UI</td></tr><tr><td>Cannot find module 'express'</td><td>ដាក់ក្នុង devDependencies ឬមិន Commit package.json</td><td>npm i express --save · Commit package.json</td></tr></table>
+<div class="ex"><h4>✍️ លំហាត់ ១៤</h4><p>Website បង្ហាញ «កំពុងផ្ទុក…» ជារៀងរហូត ហើយ Console មាន <code style='word-break:break-all'>GET https://kafe.vercel.app/undefined/api/menu 404</code>។ ហេតុអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><code>VITE_API_URL</code> = <b>undefined</b> ពេល Build — ភ្លេចបន្ថែម Env ក្នុង Vercel ឬបន្ថែមក្រោយ Build។ បន្ថែម <code>VITE_API_URL</code> → <b>Redeploy</b>។</p></details></div>
+</section>
+<section id="cheat">
+<h2>📋 សង្ខេប (Cheat sheet)</h2>
+<table><tr><th>ពាក្យ / ពាក្យបញ្ជា</th><th>ន័យ</th></tr><tr><td>Static hosting</td><td>HTML/CSS/JS — GitHub Pages, Cloudflare Pages</td></tr><tr><td>PaaS</td><td>Platform ដំណើរការ Server ឲ្យ (Railway, Render)</td></tr><tr><td>Serverless</td><td>Code រត់ពេលមាន Request (Vercel/Netlify Functions, Workers)</td></tr><tr><td>Cold start</td><td>Service ដេក → Request ដំបូងយឺត</td></tr><tr><td>process.env.PORT</td><td>Port ដែល Platform ផ្តល់</td></tr><tr><td>VITE_*</td><td>Env ទៅ Browser ពេល Build — មិនសម្ងាត់</td></tr><tr><td>CORS_ORIGIN</td><td>URL Frontend ដែល API អនុញ្ញាត</td></tr><tr><td>?sslmode=require</td><td>Connection Postgres ប្រើ TLS</td></tr><tr><td>Root Directory</td><td>Folder ដែល Platform Build (client / server)</td></tr><tr><td>Rewrites</td><td>SPA៖ គ្រប់ Path → index.html</td></tr><tr><td>CNAME / A</td><td>DNS៖ Subdomain → Host · Root → IP</td></tr><tr><td>pg_dump</td><td>Backup Postgres</td></tr></table>
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងចុងវគ្គ</h2>
+<ol class='steps'><li>Deploy <b>Kafe Menu</b> ពេញ៖ Neon (menu + orders) → Railway API → Vercel React។</li><li>បន្ថែមប៊ូតុង «កុម្ម៉ង់» ដែល POST <code>/api/orders</code>។</li><li>បន្ថែម Loading/Error state (Cold start)។</li><li>Custom domain (បើមាន) · README មាន Link Live + Architecture diagram។</li><li>ដាក់ក្នុង Portfolio/CV៖ «Deployed full-stack app: Vercel + Railway + Neon»។</li></ol></section>
+<section id="pro-app">
+<h2>💻 Deploy Lab (App)</h2>
+
+<p><b>🧭 Deploy Planner</b>៖ ជ្រើសប្រភេទគម្រោង → ទទួល Stack ឥតគិតថ្លៃ + ការព្រមាន · <b>🔐 Env &amp; CORS Generator</b>៖ បញ្ចូល URL → បាន Variables សម្រាប់ Railway/Vercel + CORS code + curl test · <b>✅ Checklist</b> Deploy ១២ ជំហាន (រក្សាទុកក្នុង Browser)។</p>
+
+<div class="itk" id="fh">
+<div class="itk-tabs"><button class="on" data-t="pl">🧭 Deploy Planner</button><button data-t="env">🔐 Env &amp; CORS Generator</button><button data-t="ck">✅ Checklist</button></div>
+<div class="itk-p on" data-p="pl">
+ <p class="vl-tip">ឆ្លើយ ៤ សំណួរ → ទទួលបាន Stack ឥតគិតថ្លៃដែលសម + ការព្រមាន។</p>
+ <div class="itk-row">
+  <label>ប្រភេទគម្រោង <select id="pl_t"><option value="static">Website ស្តាទិក (HTML/CSS/JS)</option><option value="spa" selected>React/Vue + API + Database</option><option value="next">Next.js Full-stack</option><option value="bot">Telegram bot / Worker 24/7</option><option value="py">Python API (FastAPI/Flask)</option></select></label>
+  <label><input type="checkbox" id="pl_db" checked> ត្រូវការ Database</label>
+  <label><input type="checkbox" id="pl_on"> ត្រូវដំណើរការ 24/7 (មិនដេក)</label>
+  <label><input type="checkbox" id="pl_com"> ប្រើពាណិជ្ជកម្ម (លក់/រកលុយ)</label></div>
+ <div class="itk-out" id="pl_out"></div>
+</div>
+<div class="itk-p" data-p="env">
+ <p class="vl-tip">បញ្ចូល URL ពិត → App បង្កើត <code>.env</code> និង CORS code ឲ្យចម្លង។</p>
+ <div class="itk-row"><label style="flex:1">Frontend URL (Vercel)<input id="ev_f" value="https://kafe-web.vercel.app" style="width:100%"></label><label style="flex:1">Backend URL (Railway)<input id="ev_b" value="https://kafe-api-production.up.railway.app" style="width:100%"></label></div>
+ <div class="itk-row"><label style="flex:1">Neon connection string<input id="ev_d" value="postgresql://neondb_owner:********@ep-xxx-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require" style="width:100%"></label></div>
+ <div class="itk-out" id="ev_out"></div>
+</div>
+<div class="itk-p" data-p="ck"><div class="itk-out" id="ck_out"></div></div>
+</div>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+document.querySelectorAll("#fh .itk-tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#fh .itk-tabs button").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll("#fh .itk-p").forEach(p=>p.classList.toggle("on",p.dataset.p===b.dataset.t));});
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function plan(){
+ const t=$("pl_t").value,db=$("pl_db").checked,on=$("pl_on").checked,com=$("pl_com").checked;let fe="",be="",d="",w=[];
+ if(t==="static"){fe="<b>GitHub Pages</b> ឬ <b>Cloudflare Pages</b> (ឬ Netlify)";be="—";}
+ else if(t==="spa"){fe=com?"<b>Cloudflare Pages</b> ឬ <b>Netlify</b>":"<b>Vercel</b> (Hobby)";be=on?"<b>Railway</b> (Free $1/ខែ សម្រាប់ App តូចណាស់ · Hobby $5/ខែ សម្រាប់ពិត)":"<b>Railway</b> ឬ <b>Render</b> Free (ដេកក្រោយ 15 នាទី)";}
+ else if(t==="next"){fe=com?"<b>Vercel Pro</b> ឬ <b>Netlify</b> / <b>Cloudflare</b>":"<b>Vercel</b> (Hobby) — Frontend + API Routes ក្នុងមួយ";be="Next.js API routes / Server Actions (នៅលើ Vercel)";}
+ else if(t==="bot"){fe="—";be="<b>Railway</b> (Worker មិនដេក) — Render Free មិនសម ព្រោះដេក";}
+ else {fe="(បើមាន) Vercel / Cloudflare Pages";be="<b>Railway</b> ឬ <b>Render</b> (Python) · ឬ Vercel Functions (Python)";}
+ if(db) d=t==="next"?"<b>Neon</b> (Vercel integration) ឬ Supabase":"<b>Neon</b> (Postgres serverless) — ឬ <b>Supabase</b> បើត្រូវការ Auth+Storage";
+ if(com&&(fe.includes("Vercel</b> (Hobby)")))w.push("Vercel Hobby សម្រាប់ផ្ទាល់ខ្លួន/មិនពាណិជ្ជកម្ម។");
+ if(com) w.push("ពាណិជ្ជកម្ម → គ្រោងថវិកា $5–20/ខែ (Railway Hobby, Vercel Pro…) ដើម្បីស្ថិរភាព និងស្របច្បាប់សេវា។");
+ if(on) w.push("24/7 ពិត ជាធម្មតាត្រូវការ Plan បង់ប្រាក់តិចតួច — Free tier ភាគច្រើនដេក ឬមានឥណទានកំណត់។");
+ if(db) w.push("Neon/Supabase ឥតគិតថ្លៃ ដេកពេលគ្មានអ្នកប្រើ → Request ដំបូងយឺតបន្តិច (cold start)។ Supabase Free ផ្អាកក្រោយ ១ សប្តាហ៍គ្មានសកម្មភាព។");
+ if(be.includes("Render")) w.push("Render Free Postgres ផុតកំណត់ក្រោយ 30 ថ្ងៃ — ប្រើ Neon សម្រាប់ Database ជំនួស។");
+ const arch=[fe!=="—"?"🖥️ Frontend":null,be!=="—"?"⚙️ Backend":null,db?"🗄️ Database":null].filter(Boolean).join(" → ");
+ $("pl_out").innerHTML=`<b>🧱 Architecture៖</b> ${arch||"🖥️ Frontend"}<br><b>🖥️ Frontend៖</b> ${fe}<br><b>⚙️ Backend៖</b> ${be}<br><b>🗄️ Database៖</b> ${db?d:"—"}`+(w.length?`<br><br><b>⚠️ ចំណាំ៖</b><ul>${w.map(x=>`<li>${x}</li>`).join("")}</ul>`:"")+`<small>ទិន្នន័យ Free tier៖ វិច្ឆិកា 2026 — ពិនិត្យ Pricing page មុនប្រើ។</small>`;}
+["pl_t","pl_db","pl_on","pl_com"].forEach(i=>$(i).onchange=plan);plan();
+function env(){const f=$("ev_f").value.trim().replace(/\/+$/,""),b=$("ev_b").value.trim().replace(/\/+$/,""),d=$("ev_d").value.trim();
+ const ok=u=>/^https:\/\/[^\s/]+/.test(u);const warn=[];if(!ok(f))warn.push("Frontend URL ត្រូវចាប់ផ្តើមដោយ https://");if(!ok(b))warn.push("Backend URL ត្រូវចាប់ផ្តើមដោយ https://");if(d&&!/sslmode=require/.test(d))warn.push("Neon ត្រូវការ ?sslmode=require");if(d&&!/^postgres(ql)?:\/\//.test(d))warn.push("Connection string ត្រូវចាប់ផ្តើមដោយ postgresql://");
+ $("ev_out").innerHTML=(warn.length?`<p style="color:#c92a2a">⚠️ ${warn.join(" · ")}</p>`:"")+
+ `<b>⚙️ Railway → Variables (Backend)</b><pre>DATABASE_URL=${esc(d)}\nCORS_ORIGIN=${esc(f)}\nNODE_ENV=production</pre>`+
+ `<b>🖥️ Vercel → Environment Variables (Frontend)</b><pre>VITE_API_URL=${esc(b)}</pre>`+
+ `<b>🔒 CORS ក្នុង server/index.js</b><pre>app.use(cors({ origin: process.env.CORS_ORIGIN.split(",") }));</pre>`+
+ `<b>🧪 សាក (Terminal)</b><pre>curl ${esc(b)}/api/health\ncurl -i -H "Origin: ${esc(f)}" ${esc(b)}/api/menu</pre><small>⚠️ កុំដាក់ពាក្យសម្ងាត់ពិតក្នុង GitHub ឬ Frontend — DATABASE_URL នៅតែលើ Backend ប៉ុណ្ណោះ។ VITE_* ទាំងអស់ អ្នកណាក៏មើលឃើញក្នុង Browser។</small>`;}
+["ev_f","ev_b","ev_d"].forEach(i=>$(i).oninput=env);env();
+const CK=["Code នៅលើ GitHub · .env មិនបាន Commit (.gitignore)","Neon៖ បង្កើត Table + ទិន្នន័យសាកល្បង","Railway៖ Root directory = server · Start = npm start","Railway Variables៖ DATABASE_URL · CORS_ORIGIN","Railway៖ Generate Domain · /api/health ចេញ ok","Vercel៖ Root directory = client · Framework = Vite","Vercel Env៖ VITE_API_URL → Redeploy","Browser៖ គ្មាន CORS error ក្នុង Console","Refresh ទំព័ររង (SPA) មិនចេញ 404 (vercel.json rewrites)","Custom domain + HTTPS (បើមាន)","កំណត់ Usage alert / Spending limit","Backup Database (pg_dump) ម្តងម្កាល"];
+let st={};try{st=JSON.parse(localStorage.getItem("fh_ck")||"{}")}catch(e){}
+function ck(){const n=CK.filter((_,i)=>st[i]).length;$("ck_out").innerHTML=`<b>✅ ${n}/${CK.length}</b><div style="height:8px;background:rgba(127,127,127,.2);border-radius:4px;margin:6px 0"><div style="height:100%;width:${n/CK.length*100}%;background:var(--accent);border-radius:4px"></div></div>`+CK.map((c,i)=>`<label style="display:block;margin:4px 0"><input type="checkbox" data-i="${i}" ${st[i]?"checked":""}> ${c}</label>`).join("");
+ $("ck_out").querySelectorAll("input").forEach(x=>x.onchange=()=>{st[x.dataset.i]=x.checked;try{localStorage.setItem("fh_ck",JSON.stringify(st))}catch(e){}ck();});}
+ck();
+})();
+</script>
+
+<h3>🏆 Quiz ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["Stack Vercel + Railway + Neon — Neon សម្រាប់?", ["Database PostgreSQL", "Frontend", "Email", "DNS"], 0], ["Website HTML ស្តាទិក គ្មាន DB គួរប្រើ?", ["GitHub Pages / Cloudflare Pages", "Railway Hobby", "Neon", "Supabase Pro"], 0], ["Render Free web service ដេកក្រោយ?", ["15 នាទី គ្មាន Traffic", "1 ថ្ងៃ", "មិនដេក", "1 ម៉ោង"], 0], ["Render Free Postgres ផុតកំណត់ក្រោយ?", ["30 ថ្ងៃ", "1 ឆ្នាំ", "7 ថ្ងៃ", "មិនផុត"], 0], ["Vercel Hobby សម្រាប់?", ["ផ្ទាល់ខ្លួន មិនពាណិជ្ជកម្ម", "ក្រុមហ៊ុនធំ", "តែ Database", "តែ Email"], 0], ["Backend ត្រូវ Listen លើ?", ["process.env.PORT", "Port 80 ជានិច្ច", "Port 5173", "Port 22"], 0], ["ប្តូរ VITE_API_URL ហើយត្រូវ?", ["Redeploy Frontend", "លុប Database", "ប្តូរ Domain", "មិនធ្វើអ្វី"], 0], ["CORS error កែនៅ?", ["Backend (CORS_ORIGIN)", "Database", "DNS", "GitHub"], 0], ["DATABASE_URL គួរនៅ?", ["Backend env variables", "VITE_ env", "README", "Code React"], 0], ["SQL injection ការពារដោយ?", ["Parameterized query ($1,$2)", "ប្រើ HTTPS", "ប្តូរ Port", "CORS"], 0], ["SPA Refresh ចេញ 404 នៅ Vercel ដោះស្រាយដោយ?", ["vercel.json rewrites", "ប្តូរ Database", "បិទ HTTPS", "លុប Cache"], 0], ["Supabase Free ផ្អាកក្រោយ?", ["1 សប្តាហ៍គ្មានសកម្មភាព", "15 នាទី", "30 ថ្ងៃជានិច្ច", "មិនផ្អាក"], 0], ["Railway Free ផ្តល់ឥណទាន?", ["$1/ខែ", "$100/ខែ", "គ្មាន", "$50 ម្តង"], 0], ["Password Database លេចធ្លាយលើ GitHub — ធ្វើអ្វីមុន?", ["Reset password ក្នុង Neon", "លុប Repo តែប៉ុណ្ណោះ", "មិនអីទេ", "ប្តូរ Domain"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+<ol class='steps'><li><b>Free Hosting &amp; Deploy</b> (វគ្គនេះ) ✅</li><li>Vercel (លម្អិត) · Git &amp; GitHub</li><li>PostgreSQL + Prisma · Node.js API</li><li>Docker + CI/CD (GitHub Actions)</li><li>Website Security · Firebase &amp; Supabase</li></ol></section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="fh"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

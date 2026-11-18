@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoCAD &amp; SketchUp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#c92a2a; --accent2:#1c7ed6; --accent-soft:#fff5f5;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#ff8787; --accent2:#74c0fc; --accent-soft:#1e1013;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#ff8787; --accent2:#74c0fc; --accent-soft:#1e1013;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#1e2329,#c92a2a 50%,#1c7ed6 90%);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/cad.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/cad.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>AutoCAD &amp; SketchUp — គូរប្លង់ 2D និង 3D</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. AutoCAD &amp; SketchUp ជាអ្វី?</a>
+<a href="#setup">២. ត្រៀមខ្លួន</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: CAD ជាអ្វី? · Technical drawing</a>
+<a href="#l2">មេរៀន ២: AutoCAD Interface · Command line</a>
+<a href="#l3">មេរៀន ៣: កូអរដោនេ · Absolute · Relative · Polar</a>
+<a href="#l4">មេរៀន ៤: Draw commands</a>
+<a href="#l5">មេរៀន ៥: Modify commands</a>
+<a href="#l6">មេរៀន ៦: Layers · Linetype · Lineweight</a>
+<a href="#l7">មេរៀន ៧: Dimension · Text · Annotation</a>
+<a href="#l8">មេរៀន ៨: Blocks · Xref · Template</a>
+<a href="#l9">មេរៀន ៩: Layout · Viewport · Plot</a>
+<a href="#l10">មេរៀន ១០: SketchUp 3D មូលដ្ឋាន</a>
+<a href="#l11">មេរៀន ១១: BIM · Revit · ស្តង់ដារ · Workflow</a>
+<a href="#l12">មេរៀន ១២: គម្រោង · Portfolio · អាជីព</a>
+<a href="#cheat">📋 សង្ខេប (Cheat sheet)</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងចុងវគ្គ</a>
+<a href="#pro-app">💻 CAD Lab (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>📐 AutoCAD &amp; SketchUp — ពីប្លង់ 2D ដល់ Model 3D</h2>
+  <p>Technical drawing, Command line, <b>កូអរដោនេ Absolute · Relative · Polar</b>, Draw &amp; Modify, <b>Layers</b>, Dimension, Blocks, <b>Layout · Viewport · Scale</b>, <b>SketchUp Push/Pull</b>, BIM/Revit + <b>CAD Lab</b>។</p>
+  <p><span class="badge">📘 ១២ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">🎨 Lab អន្តរកម្ម + គម្រោង (គ្មាន Code)</span><span class="badge">📐 CAD Lab</span></p>
+</section>
+<section id="intro">
+<h2>១. AutoCAD &amp; SketchUp ជាអ្វី?</h2>
+
+
+<p><b>AutoCAD &amp; SketchUp</b> = ឧបករណ៍គូរប្លង់ 2D និង Model 3D សម្រាប់ Architecture, Civil, Interior, Electrical និង Mechanical។ វគ្គនេះមាន៖ Technical drawing · Interface &amp; Command line · <b>កូអរដោនេ Absolute/Relative/Polar</b> · Draw &amp; Modify · <b>Layers</b> · Dimension · Blocks · <b>Layout &amp; Plot (Scale)</b> · <b>SketchUp 3D</b> · BIM/Revit — ជាមួយ <b>CAD Lab</b> (Command line គូរដូច AutoCAD ពិត · Scale calculator)។</p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#868e96"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#868e96">1963</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Sketchpad</text><circle cx="220" cy="115" r="11" fill="#c92a2a"/><text x="220" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#c92a2a">1982</text><text x="220" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">AutoCAD</text><circle cx="360" cy="115" r="11" fill="#1c7ed6"/><text x="360" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#1c7ed6">1987</text><text x="360" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">ArchiCAD</text><circle cx="500" cy="115" r="11" fill="#2f9e44"/><text x="500" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#2f9e44">2000</text><text x="500" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">SketchUp · Revit</text><circle cx="640" cy="115" r="11" fill="#f59f00"/><text x="640" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#f59f00">2006</text><text x="640" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Google SketchUp</text><circle cx="780" cy="115" r="11" fill="#7048e8"/><text x="780" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#7048e8">2012</text><text x="780" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Trimble</text><circle cx="920" cy="115" r="11" fill="#0ca678"/><text x="920" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#0ca678">2020s</text><text x="920" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Cloud BIM</text></svg><figcaption>🖼️ ប្រវត្តិ CAD</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>1963</td><td><b>Ivan Sutherland</b> — Sketchpad (MIT)</td><td>គូរលើកុំព្យូទ័រអន្តរកម្មដំបូង — ឪពុក Computer graphics</td></tr><tr><td>1982</td><td><b>Autodesk</b> (John Walker និងក្រុម) — AutoCAD</td><td>CAD លើ PC — ស្តង់ដារឧស្សាហកម្ម (.dwg)</td></tr><tr><td>1987</td><td><b>Graphisoft</b> — ArchiCAD</td><td>BIM ដំបូងៗ (Virtual building)</td></tr><tr><td>2000</td><td><b>@Last Software</b> — SketchUp</td><td>3D ងាយសម្រាប់អ្នករចនា</td></tr><tr><td>2000</td><td><b>Revit Technology</b> — Revit (Autodesk ទិញ 2002)</td><td>BIM ពេញនិយម</td></tr><tr><td>2006</td><td><b>Google</b> ទិញ SketchUp</td><td>Free version · 3D Warehouse</td></tr><tr><td>2012</td><td><b>Trimble</b> ទិញ SketchUp</td><td>SketchUp Pro / Free (Web)</td></tr></table>
+
+<h3>ប្រើសម្រាប់អ្វី?</h3>
+<div class="grid"><div class="card"><b>🏠 Architecture</b><br>ប្លង់ផ្ទះ អគារ</div><div class="card"><b>🏢 Civil/Structure</b><br>ធ្នឹម សសរ</div><div class="card"><b>⚡ MEP</b><br>ភ្លើង ទឹក ម៉ាស៊ីនត្រជាក់</div><div class="card"><b>🛋️ Interior</b><br>Shop drawing</div><div class="card"><b>⚙️ Mechanical</b><br>គ្រឿងម៉ាស៊ីន</div><div class="card"><b>🗺️ Survey/GIS</b><br>ផែនទីដី</div></div>
+
+</section>
+<section id="setup">
+<h2>២. ត្រៀមខ្លួន</h2>
+<ol class='steps'><li>AutoCAD — <b>Autodesk Education (ឥតគិតថ្លៃសិស្ស)</b> ឬ Trial · ជម្រើស Free៖ <b>LibreCAD</b> (2D) · <b>FreeCAD</b>។</li><li><b>SketchUp Free</b> (app.sketchup.com) លើ Browser។</li><li>Mouse មាន Scroll wheel (សំខាន់!)។</li><li>ហាត <b>CAD Lab</b> ចុងវគ្គ។</li></ol></section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>CAD ជាអ្វី? · Technical drawing</h2>
+<p><b>CAD (Computer-Aided Design)</b> = ការគូរ/រចនាដោយកុំព្យូទ័រ ជំនួសការគូរដៃលើក្រដាស — ត្រឹមត្រូវដល់ mm កែលឿន ចែករំលែកបាន និងបង្កើត 3D។</p><table><tr><th>ប្រភេទគំនូរ</th><th>បង្ហាញ</th></tr><tr><td>Plan (ប្លង់)</td><td>មើលពីលើ (កាត់ផ្តេកកម្ពស់ ~1.2m)</td></tr><tr><td>Elevation (ផ្នែកមុខ)</td><td>មើលពីមុខ/ចំហៀង</td></tr><tr><td>Section (មុខកាត់)</td><td>កាត់បញ្ឈរ ឃើញខាងក្នុង</td></tr><tr><td>Detail</td><td>Scale ធំ (1:5–1:20)</td></tr><tr><td>Isometric / 3D</td><td>មើលបីវិមាត្រ</td></tr></table>
+<div class="grid"><div class="card"><b>📐 AutoCAD</b><br>2D Drafting ស្តង់ដារឧស្សាហកម្ម</div><div class="card"><b>🧊 SketchUp</b><br>3D លឿន ងាយ — Architecture/Interior</div><div class="card"><b>🏢 Revit</b><br>BIM — Model ដែលមានទិន្នន័យ</div><div class="card"><b>🆓 Free</b><br>LibreCAD · FreeCAD · SketchUp Free (Web)</div></div>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>Plan, Elevation និង Section ខុសគ្នាដូចម្តេច?</p><details><summary>មើលចម្លើយ</summary><p><b>Plan</b> = មើលពីលើ · <b>Elevation</b> = មើលពីមុខខាងក្រៅ · <b>Section</b> = កាត់បញ្ឈរមើលខាងក្នុង (កម្រាស់ជញ្ជាំង កម្ពស់ពិដាន គ្រឹះ)។</p></details></div>
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>AutoCAD Interface · Command line</h2>
+<table><tr><th>ផ្នែក</th><th>តួនាទី</th></tr><tr><td>Ribbon</td><td>Tools ជាក្រុម (Home · Insert · Annotate)</td></tr><tr><td>Command line</td><td>វាយ Command — លឿនបំផុត</td></tr><tr><td>Model space</td><td>គូរ 1:1 ទំហំពិត</td></tr><tr><td>Layout (Paper space)</td><td>រៀបក្រដាស Print</td></tr><tr><td>Status bar</td><td>OSNAP · ORTHO · GRID · POLAR</td></tr><tr><td>Properties (Ctrl+1)</td><td>កែ Layer ពណ៌ ទំហំ</td></tr></table>
+<div class="grid"><div class="card"><b>⌨️ Enter/Space</b><br>បញ្ចប់ ឬធ្វើ Command មុនម្តងទៀត</div><div class="card"><b>⎋ Esc</b><br>បោះបង់</div><div class="card"><b>🖱️ Scroll</b><br>Zoom · ចុចកណ្តាល = Pan</div><div class="card"><b>🔍 Z → E</b><br>Zoom extents (មើលទាំងអស់)</div></div>
+<div class="note">💡 អ្នកជំនាញ AutoCAD វាយ <b>Alias</b> (L, C, TR, CO…) ជំនួសការចុច Icon — លឿនជាង ២–៣ ដង។</div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>គូរបាត់មិនឃើញអ្វីលើអេក្រង់ — ត្រូវវាយអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Z</b> Enter <b>E</b> Enter (Zoom Extents) — បង្ហាញវត្ថុទាំងអស់។</p></details></div>
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>កូអរដោនេ · Absolute · Relative · Polar</h2>
+<table><tr><th>ទម្រង់</th><th>ឧទាហរណ៍</th><th>ន័យ</th></tr><tr><td>Absolute</td><td><code>3000,2000</code></td><td>ពីចំណុច (0,0)</td></tr><tr><td>Relative</td><td><code>@4000,0</code></td><td>ពីចំណុចចុងក្រោយ ទៅស្តាំ 4000</td></tr><tr><td>Polar</td><td><code>@3000&lt;90</code></td><td>ចម្ងាយ 3000 មុំ 90° (ឡើងលើ)</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>វាយ <code>L</code> Enter</li><li>ចំណុចដំបូង <code>0,0</code></li><li><code>@4000,0</code> (ជញ្ជាំង 4m ទៅស្តាំ)</li><li><code>@3000&lt;90</code> (ឡើងលើ 3m)</li><li><code>@-4000,0</code> (ត្រឡប់ឆ្វេង)</li><li><code>C</code> (Close) → បន្ទប់ 4×3m</li></ol></div>
+<div class="note">💡 មុំក្នុង AutoCAD៖ <b>0° = ស្តាំ (East)</b> · 90° = លើ · 180° = ឆ្វេង · 270° = ក្រោម (ច្រាសទ្រនិចនាឡិកា)។ សាកក្នុង <b>CAD Lab</b>!</div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>ពីចំណុច (1000,1000) វាយ <code>@2000&lt;180</code> ទៅដល់ណា?</p><details><summary>មើលចម្លើយ</summary><p>មុំ 180° = ទៅឆ្វេង 2000 → <b>(−1000, 1000)</b>។</p></details></div>
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Draw commands</h2>
+<table><tr><th>Command</th><th>Alias</th><th>ប្រើ</th></tr><tr><td>LINE</td><td>L</td><td>បន្ទាត់</td></tr><tr><td>POLYLINE</td><td>PL</td><td>បន្ទាត់ជាប់គ្នាជា Object មួយ</td></tr><tr><td>RECTANG</td><td>REC</td><td>ចតុកោណ</td></tr><tr><td>CIRCLE</td><td>C</td><td>រង្វង់ (Center + Radius)</td></tr><tr><td>ARC</td><td>A</td><td>ធ្នូ</td></tr><tr><td>HATCH</td><td>H</td><td>លំនាំបំពេញ (ឥដ្ឋ បេតុង)</td></tr><tr><td>TEXT / MTEXT</td><td>DT / T</td><td>អក្សរ</td></tr></table>
+<div class="grid"><div class="card"><b>🧲 OSNAP (F3)</b><br>Snap ទៅ Endpoint · Midpoint · Center · Intersection</div><div class="card"><b>📏 ORTHO (F8)</b><br>បន្ទាត់ត្រង់ 0°/90°</div><div class="card"><b>🧭 POLAR (F10)</b><br>Snap មុំ 45° · 30°</div><div class="card"><b>🔢 Direct distance</b><br>ORTHO បើក → ទាញទិស → វាយ 3000</div></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>គូរជញ្ជាំងជុំវិញ ចង់ឲ្យជា Object តែមួយ (ងាយ Offset) — ប្រើ Command អ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>PLINE (PL)</b> — បន្ទាត់ជាប់គ្នាជា Object មួយ ហើយ Offset ជញ្ជាំង 200mm បានម្តង។</p></details></div>
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>Modify commands</h2>
+<table><tr><th>Command</th><th>Alias</th><th>ប្រើ</th></tr><tr><td>MOVE</td><td>M</td><td>ផ្លាស់ទី</td></tr><tr><td>COPY</td><td>CO</td><td>ចម្លង</td></tr><tr><td>OFFSET</td><td>O</td><td>ចម្លងស្របចម្ងាយ (កម្រាស់ជញ្ជាំង)</td></tr><tr><td>TRIM</td><td>TR</td><td>កាត់ផ្នែកលើស</td></tr><tr><td>EXTEND</td><td>EX</td><td>ពន្លូតដល់ព្រំ</td></tr><tr><td>FILLET</td><td>F</td><td>ភ្ជាប់ជ្រុង (R=0 = ជ្រុងកែង)</td></tr><tr><td>MIRROR</td><td>MI</td><td>ឆ្លុះ</td></tr><tr><td>ROTATE</td><td>RO</td><td>បង្វិល</td></tr><tr><td>ARRAY</td><td>AR</td><td>ចម្លងជាជួរ (សសរ កៅអី)</td></tr><tr><td>SCALE</td><td>SC</td><td>ពង្រីក/បង្រួម</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>គូរ Polyline ជញ្ជាំងខាងក្នុង 4000×3000</li><li><code>O</code> → 200 → ជ្រើស → ចុចខាងក្រៅ (ជញ្ជាំង 20cm)</li><li>គូរបន្ទាត់កាត់ទ្វារ 900mm</li><li><code>TR</code> កាត់ជញ្ជាំងនៅកន្លែងទ្វារ</li><li>Insert Block ទ្វារ</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>ចង់បានសសរ ៥ × ៤ គម្លាត 4m — Command អ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>ARRAY (AR)</b> → Rectangular · Columns 5 · Rows 4 · Spacing 4000។</p></details></div>
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Layers · Linetype · Lineweight</h2>
+<table><tr><th>Layer</th><th>ពណ៌</th><th>Lineweight</th></tr><tr><td>A-WALL</td><td>ស/ខ្មៅ</td><td>0.50mm</td></tr><tr><td>A-DOOR / A-WIND</td><td>Cyan</td><td>0.25</td></tr><tr><td>A-FURN</td><td>ប្រផេះ</td><td>0.18</td></tr><tr><td>A-DIM</td><td>បៃតង</td><td>0.18</td></tr><tr><td>A-TEXT</td><td>លឿង</td><td>0.25</td></tr><tr><td>A-HATCH</td><td>ប្រផេះស្រាល</td><td>0.13</td></tr><tr><td>S-COLM (សសរ)</td><td>ក្រហម</td><td>0.50</td></tr></table>
+<div class="grid"><div class="card"><b>📚 LA</b><br>Layer manager</div><div class="card"><b>💡 Freeze/Off</b><br>លាក់ Layer</div><div class="card"><b>🔒 Lock</b><br>ការពារកុំកែខុស</div><div class="card"><b>✏️ ByLayer</b><br>ពណ៌/បន្ទាត់តាម Layer ជានិច្ច</div></div>
+<div class="note">💡 ច្បាប់មាស៖ គ្រប់ Object ត្រូវនៅលើ <b>Layer ត្រឹមត្រូវ</b> និង Properties <b>ByLayer</b> — ងាយកែ Print និងធ្វើការជាក្រុម។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>ហេតុអ្វីមិនគួរគូរអ្វីៗទាំងអស់លើ Layer «0»?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះមិនអាចលាក់/Print ដោយឡែក ឬប្តូរពណ៌ជាក្រុមបាន — គំនូរច្របូកច្របល់ ពិបាកកែ ហើយក្រុមការងារមិនយល់។</p></details></div>
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Dimension · Text · Annotation</h2>
+<table><tr><th>Command</th><th>ប្រើ</th></tr><tr><td>DLI (Linear)</td><td>វាស់ផ្តេក/បញ្ឈរ</td></tr><tr><td>DAL (Aligned)</td><td>វាស់ទ្រេត</td></tr><tr><td>DCO (Continue)</td><td>វាស់បន្តជាប់គ្នា</td></tr><tr><td>DAN (Angular)</td><td>មុំ</td></tr><tr><td>DRA (Radius)</td><td>កាំ</td></tr><tr><td>MLD (Multileader)</td><td>ព្រួញ + កំណត់ចំណាំ</td></tr><tr><td>D (Dimstyle)</td><td>ទំហំអក្សរ ព្រួញ ឯកតា</td></tr></table>
+<div class="grid"><div class="card"><b>🔤 Annotative</b><br>អក្សរ/Dim ប្តូរទំហំតាម Scale Viewport</div><div class="card"><b>📏 ឯកតា</b><br>ប្លង់អគារ៖ mm</div><div class="card"><b>🏷️ Title block</b><br>ឈ្មោះគម្រោង · Scale · កាលបរិច្ឆេទ · អ្នកគូរ</div><div class="card"><b>🇰🇭 អក្សរខ្មែរ</b><br>ប្រើ Font Unicode (Khmer OS / Noto Sans Khmer)</div></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>Dimension ក្នុង Layout ធំពេក ពេល Print 1:100 — ដោះស្រាយដោយ?</p><details><summary>មើលចម្លើយ</summary><p>ប្រើ <b>Annotative</b> Dimstyle (ឬកំណត់ Overall scale = 100) ឲ្យទំហំអក្សរលើក្រដាស ≈ 2.5mm។</p></details></div>
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Blocks · Xref · Template</h2>
+<div class="grid"><div class="card"><b>🧱 Block (B)</b><br>ក្រុម Object ប្រើម្តងទៀត — ទ្វារ បង្អួច កៅអី បង្គន់</div><div class="card"><b>📥 Insert (I)</b><br>ដាក់ Block</div><div class="card"><b>🔄 Redefine</b><br>កែ Block មួយ → ប្តូរគ្រប់កន្លែង</div><div class="card"><b>🔗 Xref</b><br>ភ្ជាប់ File ផ្សេង (Structure ↔ Architecture)</div><div class="card"><b>📄 Template .dwt</b><br>Layer · Dimstyle · Title block ត្រៀមរួច</div><div class="card"><b>🧹 PURGE</b><br>លុប Block/Layer មិនប្រើ — File តូច</div></div>
+<div class="note">💡 ធ្វើ <b>Template ក្រុមហ៊ុន</b> ម្តង (Layers + Dimstyles + Title block A3/A1) → រាល់គម្រោងចាប់ផ្តើមលឿន និងស្តង់ដារ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>អគារមានបង្អួច ១២០ ហើយត្រូវប្តូរទំហំ — ដោយ Block ធ្វើយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>កែ <b>Block definition</b> តែមួយ (BEDIT) → បង្អួចទាំង ១២០ ប្តូរស្វ័យប្រវត្តិ។</p></details></div>
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Layout · Viewport · Plot</h2>
+<table><tr><th>Scale</th><th>1mm លើក្រដាស =</th></tr><tr><td>1:50</td><td>50mm ពិត</td></tr><tr><td>1:100</td><td>100mm (10cm)</td></tr><tr><td>1:200</td><td>200mm</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>គូរ 1:1 (mm) ក្នុង <b>Model space</b></li><li>ចូល <b>Layout</b> → Page setup (A3, Plotter = DWG To PDF)</li><li>បញ្ចូល Title block</li><li>បង្កើត Viewport (MV) → ជ្រើស Scale <b>1:100</b></li><li>Lock viewport (ការពារ Zoom ខុស)</li><li>Plot (Ctrl+P) → Plot style <b>monochrome.ctb</b> → PDF</li></ol></div>
+<div class="note">💡 សាក <b>Scale</b> ក្នុង CAD Lab ដើម្បីដឹងថាផ្ទះ 12×8m ចូលក្រដាសអ្វីនៅ 1:100។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>ផ្ទះ 12×8m នៅ 1:100 លើក្រដាសធំប៉ុនណា? ចូល A4 ទេ?</p><details><summary>មើលចម្លើយ</summary><p>120×80mm — <b>ចូល A4</b> (297×210)។ តែជាធម្មតាប្រើ A3 ដើម្បីដាក់ Dimension និង Title block។</p></details></div>
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>SketchUp 3D មូលដ្ឋាន</h2>
+<table><tr><th>Tool</th><th>Key</th><th>ប្រើ</th></tr><tr><td>Line</td><td>L</td><td>គូរ Edge — បិទជាផ្ទៃ (Face)</td></tr><tr><td>Rectangle</td><td>R</td><td>ចតុកោណ</td></tr><tr><td>Push/Pull</td><td>P</td><td>ទាញ 2D → 3D</td></tr><tr><td>Move/Copy</td><td>M (+Ctrl)</td><td>ផ្លាស់ទី/ចម្លង</td></tr><tr><td>Offset</td><td>F</td><td>ចម្លងគែមចូល</td></tr><tr><td>Orbit · Pan</td><td>O · H</td><td>មើលជុំវិញ</td></tr><tr><td>Tape measure</td><td>T</td><td>វាស់ · Guide</td></tr><tr><td>Paint bucket</td><td>B</td><td>Material</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Import ប្លង់ DWG ពី AutoCAD (ឬគូរ R)</li><li>Push/Pull ជញ្ជាំង 3000mm</li><li>Offset + Push/Pull កាត់ទ្វារ បង្អួច</li><li><b>Group/Component</b> រាល់វត្ថុ (កុំឲ្យ Geometry ស្អិតគ្នា)</li><li>Material + 3D Warehouse (សង្ហារឹម)</li><li>Scenes + Shadows → Export រូប ឬ Animation</li></ol></div>
+<div class="note">💡 <b>Component</b> ដូច Block ក្នុង AutoCAD — កែមួយ ប្តូរទាំងអស់។ វាយលេខពេលកំពុងប្រើ Tool (Push/Pull → 3000 Enter) ដើម្បីត្រឹមត្រូវ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>គូរប្រអប់ពីរជាប់គ្នា ទាញមួយ ហើយមួយទៀតខូចទ្រង់ទ្រាយ — ដោយសារអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>មិនបាន <b>Group</b> — Geometry ក្នុង SketchUp ស្អិតគ្នា។ ជ្រើសវត្ថុនីមួយៗ → Make Group (G) ជានិច្ច។</p></details></div>
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>BIM · Revit · ស្តង់ដារ · Workflow</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="156.0" height="96" rx="14" fill="#868e96"/><text x="98.0" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">✏️ Sketch</text><line x1="178.0" y1="82" x2="204.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="206.0" y="34" width="156.0" height="96" rx="14" fill="#c92a2a"/><text x="284.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">📐 AutoCAD 2D</text><text x="284.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Plan · Section</text><line x1="364.0" y1="82" x2="390.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="392.0" y="34" width="156.0" height="96" rx="14" fill="#1c7ed6"/><text x="470.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🧊 SketchUp/Revit</text><text x="470.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">3D</text><line x1="550.0" y1="82" x2="576.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="578.0" y="34" width="156.0" height="96" rx="14" fill="#7048e8"/><text x="656.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🖼️ Render</text><text x="656.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Enscape · D5 · Blender</text><line x1="736.0" y1="82" x2="762.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="764.0" y="34" width="156.0" height="96" rx="14" fill="#2f9e44"/><text x="842.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">📄 PDF set</text><text x="842.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Print · Permit</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Workflow គំនូរអគារ</text></svg><figcaption>🖼️ BIM · Revit · ស្តង់ដារ · Workflow</figcaption></figure>
+<table><tr><th>CAD (AutoCAD)</th><th>BIM (Revit/ArchiCAD)</th></tr><tr><td>បន្ទាត់ និងរាង</td><td>Object ពិត (ជញ្ជាំង ទ្វារ) មានទិន្នន័យ</td></tr><tr><td>Plan/Section គូរដាច់ៗ</td><td>Model មួយ → Plan/Section/3D ស្វ័យប្រវត្តិ</td></tr><tr><td>BOQ គណនាដៃ</td><td>Schedule/BOQ ចេញពី Model</td></tr></table>
+<div class="grid"><div class="card"><b>📁 Naming</b><br>PRJ-A-101_Plan-GF_v03.dwg</div><div class="card"><b>💾 Backup</b><br>Autosave + Cloud</div><div class="card"><b>🎓 Student license</b><br>Autodesk ឥតគិតថ្លៃសម្រាប់សិស្ស</div><div class="card"><b>🏛️ ច្បាប់សំណង់</b><br>Permit ត្រូវការប្លង់ពី Architect/Engineer មានអាជ្ញាប័ណ្ណ</div></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>ហេតុអ្វីក្រុមហ៊ុនធំកំពុងប្តូរពី CAD ទៅ BIM?</p><details><summary>មើលចម្លើយ</summary><p>Model តែមួយ <b>Update ទាំង Plan, Section, 3D និង BOQ</b> ស្វ័យប្រវត្តិ — កាត់បន្ថយកំហុស និងសម្របសម្រួល Architect/Structure/MEP ងាយ (Clash detection)។</p></details></div>
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>គម្រោង · Portfolio · អាជីព</h2>
+<div class="grid"><div class="card"><b>📐 CAD drafter</b><br>គូរប្លង់ឲ្យ Architect/Engineer</div><div class="card"><b>🧊 3D visualizer</b><br>Render សម្រាប់ Developer</div><div class="card"><b>🏗️ BIM modeler</b><br>Revit · ក្រុមហ៊ុនធំ</div><div class="card"><b>🛋️ Interior / Furniture</b><br>Shop drawing</div><div class="card"><b>⚙️ Mechanical CAD</b><br>Fusion 360 · SolidWorks</div><div class="card"><b>💼 Freelance</b><br>ប្លង់ផ្ទះ · Render</div></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>គូរប្លង់ផ្ទះ ២ ជាន់៖ Plan GF/1F · Elevation ២ · Section ១</li><li>Layers + Dimensions + Title block ស្តង់ដារ</li><li>Model 3D ក្នុង SketchUp + Render</li><li>Export PDF set A3</li><li>ដាក់ក្នុង Portfolio/Behance</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>Portfolio CAD ល្អ ត្រូវបង្ហាញអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Drawing set ពេញ</b> (Plan · Elevation · Section · Detail) ស្អាត ស្តង់ដារ Layer/Lineweight ត្រឹមត្រូវ + 3D/Render — បង្ហាញទាំងបច្ចេកទេស និងការបង្ហាញ។</p></details></div>
+</section>
+<section id="cheat">
+<h2>📋 សង្ខេប (Cheat sheet)</h2>
+<table><tr><th>Command</th><th>ន័យ</th></tr><tr><td>L · PL · REC · C · A</td><td>Line · Polyline · Rectangle · Circle · Arc</td></tr><tr><td>M · CO · O · TR · EX</td><td>Move · Copy · Offset · Trim · Extend</td></tr><tr><td>F · MI · RO · AR · SC</td><td>Fillet · Mirror · Rotate · Array · Scale</td></tr><tr><td>x,y · @dx,dy · @d&lt;a</td><td>Absolute · Relative · Polar</td></tr><tr><td>F3 · F8 · F10</td><td>OSNAP · ORTHO · POLAR</td></tr><tr><td>LA</td><td>Layer manager</td></tr><tr><td>DLI · DCO</td><td>Dimension</td></tr><tr><td>B · I</td><td>Block · Insert</td></tr><tr><td>Z E</td><td>Zoom extents</td></tr><tr><td>Ctrl+P</td><td>Plot</td></tr><tr><td>SketchUp P · F · G</td><td>Push/Pull · Offset · Group</td></tr><tr><td>1:100</td><td>1mm = 100mm</td></tr></table>
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងចុងវគ្គ</h2>
+<ol class='steps'><li>ប្លង់ផ្ទះល្វែង 4×16m (ឬផ្ទះអ្នកផ្ទាល់)៖ Plan + Elevation + Section។</li><li>Layers ស្តង់ដារ + Dimension + Blocks (ទ្វារ បង្អួច)។</li><li>Layout A3 · 1:100 · Title block → PDF។</li><li>Import ទៅ SketchUp → Push/Pull → Material → Render។</li><li>BOQ សាមញ្ញក្នុង Excel (ផ្ទៃឥដ្ឋ ជញ្ជាំង)។</li></ol></section>
+<section id="pro-app">
+<h2>💻 CAD Lab (App)</h2>
+
+<p><b>⌨️ Command line</b> — វាយ L · REC · C · DI · U ជាមួយកូអរដោនេ <code>x,y</code> · <code>@dx,dy</code> · <code>@ចម្ងាយ&lt;មុំ</code> ហើយមើលប្រវែង មុំ ផ្ទៃ (+ Demo ផ្ទះ) · <b>📏 Scale</b> — ទំហំពិត ⇄ ក្រដាស និងជ្រើស A4–A1។</p>
+
+<div class="itk" id="cd">
+<div class="itk-tabs"><button class="on" data-t="cl">⌨️ Command line</button><button data-t="sc">📏 Scale</button></div>
+<div class="itk-p on" data-p="cl">
+ <p class="vl-tip">គូរដូច AutoCAD ពិត (ឯកតា mm · 1 ក្រឡា = 500mm)។ សាក៖ <code>L</code> → <code>0,0</code> → <code>@4000,0</code> → <code>@3000&lt;90</code> → <code>@-4000,0</code> → <code>C</code>។ ឬ <code>REC 500,500 1500,1200</code> · <code>C 2000,1500 400</code> (Circle) · <code>U</code> Undo · <code>E</code> លុបទាំងអស់។</p>
+ <div class="itk-row"><input id="cl_in" placeholder="Command: L / REC / C / DI / U / E" style="flex:1;min-width:200px;font-family:monospace;padding:8px"><button class="btn" id="cl_go">↵ Enter</button><button class="btn ghost" id="cl_demo">🏠 Demo ផ្ទះ</button></div>
+ <svg id="cl_sv" viewBox="-500 -6000 9000 6500" style="width:100%;background:#1e2329;border-radius:10px;display:block"></svg>
+ <pre class="itk-out" id="cl_log" style="max-height:150px;overflow:auto;font-size:12px;white-space:pre-wrap"></pre>
+</div>
+<div class="itk-p" data-p="sc">
+ <p class="vl-tip">បម្លែងទំហំពិត ⇄ ទំហំលើក្រដាស តាម Scale និងពិនិត្យថាចូលក្រដាស A4/A3/A1 ឬទេ។</p>
+ <div class="itk-row"><label>បណ្តោយពិត (m) <input type="number" id="sc_l" value="12" step=".5" style="width:70px"></label><label>ទទឹងពិត (m) <input type="number" id="sc_w" value="8" step=".5" style="width:70px"></label><label>Scale 1: <select id="sc_s"><option>20</option><option>50</option><option selected>100</option><option>200</option><option>500</option></select></label></div>
+ <div class="itk-out" id="sc_out"></div>
+</div>
+</div>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+document.querySelectorAll("#cd .itk-tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#cd .itk-tabs button").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll("#cd .itk-p").forEach(p=>p.classList.toggle("on",p.dataset.p===b.dataset.t));});
+let ents=[],mode=null,pts=[],last=null,log=[];
+function L(t){log.push(t);$("cl_log").textContent=log.slice(-40).join("\n");$("cl_log").scrollTop=1e6;}
+function pt(s){s=s.trim();let m;
+ if(m=s.match(/^@(-?[\d.]+)<(-?[\d.]+)$/)){if(!last)return null;const d=+m[1],a=+m[2]*Math.PI/180;return[last[0]+d*Math.cos(a),last[1]+d*Math.sin(a)];}
+ if(m=s.match(/^@(-?[\d.]+),(-?[\d.]+)$/)){if(!last)return null;return[last[0]+ +m[1],last[1]+ +m[2]];}
+ if(m=s.match(/^(-?[\d.]+),(-?[\d.]+)$/))return[+m[1],+m[2]];return null;}
+const r=v=>Math.round(v*10)/10;
+function draw(){let h="";for(let x=0;x<=8500;x+=500)h+=`<line x1="${x}" y1="0" x2="${x}" y2="-5500" stroke="#2c333b" stroke-width="10"/>`;for(let y=0;y<=5500;y+=500)h+=`<line x1="0" y1="${-y}" x2="8500" y2="${-y}" stroke="#2c333b" stroke-width="10"/>`;
+ h+=`<line x1="0" y1="0" x2="900" y2="0" stroke="#e03131" stroke-width="30"/><line x1="0" y1="0" x2="0" y2="-900" stroke="#2f9e44" stroke-width="30"/><text x="950" y="60" fill="#e03131" font-size="220">X</text><text x="-60" y="-950" fill="#2f9e44" font-size="220">Y</text>`;
+ ents.forEach(e=>{if(e.t=="L")h+=`<line x1="${e.a[0]}" y1="${-e.a[1]}" x2="${e.b[0]}" y2="${-e.b[1]}" stroke="#fff" stroke-width="28"/>`;
+  if(e.t=="R")h+=`<rect x="${Math.min(e.a[0],e.b[0])}" y="${-Math.max(e.a[1],e.b[1])}" width="${Math.abs(e.b[0]-e.a[0])}" height="${Math.abs(e.b[1]-e.a[1])}" fill="none" stroke="#74c0fc" stroke-width="28"/>`;
+  if(e.t=="C")h+=`<circle cx="${e.a[0]}" cy="${-e.a[1]}" r="${e.r}" fill="none" stroke="#ffd43b" stroke-width="28"/>`;
+  if(e.t=="D"){const mx=(e.a[0]+e.b[0])/2,my=(e.a[1]+e.b[1])/2;h+=`<line x1="${e.a[0]}" y1="${-e.a[1]}" x2="${e.b[0]}" y2="${-e.b[1]}" stroke="#63e6be" stroke-width="14" stroke-dasharray="80 50"/><text x="${mx}" y="${-my-80}" fill="#63e6be" font-size="200" text-anchor="middle">${r(Math.hypot(e.b[0]-e.a[0],e.b[1]-e.a[1]))}</text>`;}});
+ if(last)h+=`<circle cx="${last[0]}" cy="${-last[1]}" r="60" fill="#ff6b6b"/>`;$("cl_sv").innerHTML=h;}
+function run(raw){const s=raw.trim();if(!s)return;L("Command: "+s);const u=s.toUpperCase();let m;
+ if(u=="U"){ents.pop();L("  ↶ Undo");draw();return;}
+ if(u=="E"||u=="ERASE"){ents=[];mode=null;last=null;L("  🧹 លុបទាំងអស់");draw();return;}
+ if(m=u.match(/^(REC|RECTANG)\s+(\S+)\s+(\S+)$/)){const a=pt(m[2]),b=pt(m[3]);if(a&&b){ents.push({t:"R",a,b});last=b;L(`  ▭ ${r(Math.abs(b[0]-a[0]))} × ${r(Math.abs(b[1]-a[1]))} mm · ផ្ទៃ ${r(Math.abs((b[0]-a[0])*(b[1]-a[1]))/1e6)} m²`);}else L("  ⚠️ REC x1,y1 x2,y2");draw();return;}
+ if(m=u.match(/^(C|CIRCLE)\s+(\S+)\s+([\d.]+)$/)){const a=pt(m[2]);if(a){ents.push({t:"C",a,r:+m[3]});L(`  ◯ r=${m[3]} · បរិមាត្រ ${r(2*Math.PI*m[3])} mm`);}draw();return;}
+ if(u=="L"||u=="LINE"){mode="L";pts=[];L("  LINE — Specify first point:");return;}
+ if(u=="DI"||u=="DIST"){mode="D";pts=[];L("  DIST — first point:");return;}
+ if(mode=="L"&&u=="C"){if(pts.length>2){const a=pts[pts.length-1],b=pts[0];ents.push({t:"L",a,b});last=b;L(`  ✓ Close — ${r(Math.hypot(b[0]-a[0],b[1]-a[1]))} mm`);}mode=null;draw();return;}
+ if(mode){const p=pt(s);if(!p){L("  ⚠️ ទម្រង់៖ x,y · @dx,dy · @ចម្ងាយ<មុំ");return;}
+  if(mode=="L"){if(pts.length){const a=pts[pts.length-1];ents.push({t:"L",a,b:p});L(`  ➖ ${r(Math.hypot(p[0]-a[0],p[1]-a[1]))} mm · មុំ ${r(Math.atan2(p[1]-a[1],p[0]-a[0])*180/Math.PI)}° → (${r(p[0])}, ${r(p[1])})`);}else L(`  ● (${r(p[0])}, ${r(p[1])}) — next point (C = Close · Enter ទទេ = បញ្ចប់)`);pts.push(p);last=p;}
+  if(mode=="D"){pts.push(p);last=p;if(pts.length==2){ents.push({t:"D",a:pts[0],b:pts[1]});L(`  📏 Distance = ${r(Math.hypot(pts[1][0]-pts[0][0],pts[1][1]-pts[0][1]))} mm`);mode=null;}}
+  draw();return;}
+ L("  ⚠️ មិនស្គាល់ Command (L · REC · C · DI · U · E)");}
+$("cl_in").onkeydown=e=>{if(e.key==="Enter"){const v=$("cl_in").value;if(!v.trim()&&mode){mode=null;L("  ⏎ បញ្ចប់");}else run(v);$("cl_in").value="";}};
+$("cl_go").onclick=()=>{run($("cl_in").value);$("cl_in").value="";$("cl_in").focus();};
+$("cl_demo").onclick=()=>{ents=[];log=[];["L","0,0","@8000,0","@0,5000","@-8000,0","C","L","4000,0","@0,3000","@-4000,0","","L","4000,3000","@0,2000","","REC 5500,0 6400,100","REC 1500,4950 3000,5050","C 6500,3500 400","DI","0,0","8000,5000"].forEach(c=>{if(c==="")mode=null;else run(c);});};
+draw();L("xCenBar CAD — វាយ L ហើយ Enter");
+function sc(){const l=+$("sc_l").value,w=+$("sc_w").value,s=+$("sc_s").value;const pl=l*1000/s,pw=w*1000/s;
+ const P=[["A4",297,210],["A3",420,297],["A2",594,420],["A1",841,594]];const fit=P.find(p=>pl+40<=p[1]&&pw+40<=p[2]);
+ $("sc_out").innerHTML=`ពិត ${l} × ${w} m → លើក្រដាស <b>${r(pl)} × ${r(pw)} mm</b> (1:${s})<br>ក្រដាសតូចបំផុតដែលចូល (មានរឹម 20mm)៖ <b>${fit?fit[0]+" ("+fit[1]+"×"+fit[2]+")":"ធំជាង A1 — ប្រើ Scale ធំជាង"}</b><br>ក្នុង AutoCAD៖ គូរ <b>1:1 (mm)</b> ក្នុង Model space → កំណត់ Scale នៅ <b>Layout/Viewport</b> ពេល Print។`;}
+["sc_l","sc_w","sc_s"].forEach(i=>$(i).oninput=sc);sc();
+})();
+</script>
+
+<h3>🏆 Quiz ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["Model space គូរ Scale?", ["1:1", "1:100", "1:50", "1:1000"], 0], ["@3000&lt;90 →?", ["ឡើងលើ 3000", "ស្តាំ 3000", "ឆ្វេង", "ចុះក្រោម"], 0], ["Alias OFFSET?", ["O", "F", "T", "X"], 0], ["កាត់ផ្នែកលើស?", ["TRIM", "MOVE", "COPY", "HATCH"], 0], ["F8?", ["ORTHO", "OSNAP", "GRID", "HELP"], 0], ["Object ប្រើម្តងទៀត?", ["Block", "Layer", "Hatch", "Text"], 0], ["1:100 — 120mm ក្រដាស = ពិត?", ["12m", "1.2m", "120m", "12cm"], 0], ["SketchUp Push/Pull?", ["P", "L", "M", "Z"], 0], ["Geometry ស្អិតគ្នា → ?", ["Group", "Delete", "Paint", "Orbit"], 0], ["AutoCAD ឆ្នាំ?", ["1982", "1963", "2000", "1995"], 0], ["Sketchpad?", ["Ivan Sutherland", "Steve Jobs", "Autodesk", "Google"], 0], ["BIM ល្អជាងព្រោះ?", ["Model មួយ Update ទាំងអស់", "ថោកជាង", "គ្មាន 3D", "គូរដៃ"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+<ol class='steps'><li>Engineering Foundations · Math</li><li><b>AutoCAD &amp; SketchUp</b> (វគ្គនេះ) ✅</li><li>Civil Engineering · Interior Design</li><li>Excel (BOQ) · PowerPoint</li><li>Revit/BIM · Render (Blender)</li></ol></section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="cad"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

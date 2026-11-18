@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Animation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#e8590c; --accent2:#7048e8; --accent-soft:#fff4e6;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#ffa94d; --accent2:#b197fc; --accent-soft:#2e1500;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#ffa94d; --accent2:#b197fc; --accent-soft:#2e1500;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#2e1500,#e8590c 45%,#7048e8 85%);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/anim.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/anim.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Animation — គំនូរជីវចល 2D &amp; 3D</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Animation (គំនូរជីវចល) ជាអ្វី?</a>
+<a href="#setup">២. ត្រៀមខ្លួន</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Animation ជាអ្វី? Frame · fps · ប្រភេទ</a>
+<a href="#l2">មេរៀន ២: ច្បាប់ ១២ នៃ Animation</a>
+<a href="#l3">មេរៀន ៣: Timing &amp; Spacing</a>
+<a href="#l4">មេរៀន ៤: Storyboard &amp; Animatic</a>
+<a href="#l5">មេរៀន ៥: Character design · Model sheet</a>
+<a href="#l6">មេរៀន ៦: 2D frame-by-frame · Key · Breakdown · Inbetween</a>
+<a href="#l7">មេរៀន ៧: Walk cycle</a>
+<a href="#l8">មេរៀន ៨: Lip sync · Acting</a>
+<a href="#l9">មេរៀន ៩: Cut-out · Rigging 2D · Motion</a>
+<a href="#l10">មេរៀន ១០: 3D pipeline</a>
+<a href="#l11">មេរៀន ១១: Blender មូលដ្ឋាន</a>
+<a href="#l12">មេរៀន ១២: Render · Export · Workflow</a>
+<a href="#l13">មេរៀន ១៣: អាជីព · Demo reel · Animation នៅកម្ពុជា</a>
+<a href="#cheat">📋 សង្ខេប (Cheat sheet)</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងចុងវគ្គ</a>
+<a href="#pro-app">💻 Animation Lab (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🎞️ Animation — ធ្វើឲ្យរូបភាពមានជីវិត</h2>
+  <p><b>ច្បាប់ ១២ នៃ Animation</b>, Timing &amp; Spacing, Storyboard &amp; Animatic, Character design, 2D frame-by-frame, <b>Walk cycle</b>, Lip sync, Rigging, <b>3D pipeline &amp; Blender</b>, Render, Demo reel + <b>Animation Lab</b>។</p>
+  <p><span class="badge">📘 ១៣ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">🎨 Lab អន្តរកម្ម + គម្រោង (គ្មាន Code)</span><span class="badge">🎞️ Animation Lab</span></p>
+</section>
+<section id="intro">
+<h2>១. Animation (គំនូរជីវចល) ជាអ្វី?</h2>
+
+
+<p><b>Animation</b> = សិល្បៈធ្វើឲ្យរូបភាពមានជីវិត — ពី Cartoon 2D ដល់ភាពយន្ត 3D, Game, Ads, Motion graphics និង UI។ វគ្គនេះមាន៖ <b>ច្បាប់ ១២ នៃ Animation</b> · Timing &amp; Spacing · Storyboard &amp; Animatic · Character design · 2D frame-by-frame · <b>Walk cycle</b> · Lip sync · Rigging · <b>3D pipeline</b> · <b>Blender</b> · Demo reel — ជាមួយ <b>Animation Lab</b> (Bouncing ball + Flipbook គូរផ្ទាល់)។</p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#868e96"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#868e96">1834</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Zoetrope</text><circle cx="185" cy="115" r="11" fill="#495057"/><text x="185" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#495057">1908</text><text x="185" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Fantasmagorie</text><circle cx="290" cy="115" r="11" fill="#1c7ed6"/><text x="290" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#1c7ed6">1914</text><text x="290" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Gertie</text><circle cx="395" cy="115" r="11" fill="#111111"/><text x="395" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#111111">1928</text><text x="395" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Steamboat Willie</text><circle cx="500" cy="115" r="11" fill="#e03131"/><text x="500" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#e03131">1937</text><text x="500" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Snow White</text><circle cx="605" cy="115" r="11" fill="#7048e8"/><text x="605" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#7048e8">1963</text><text x="605" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Astro Boy</text><circle cx="710" cy="115" r="11" fill="#f59f00"/><text x="710" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#f59f00">1981</text><text x="710" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">12 principles book</text><circle cx="815" cy="115" r="11" fill="#2f9e44"/><text x="815" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#2f9e44">1995</text><text x="815" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Toy Story</text><circle cx="920" cy="115" r="11" fill="#0ca678"/><text x="920" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#0ca678">2025</text><text x="920" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Flow — Oscar</text></svg><figcaption>🖼️ ប្រវត្តិ Animation</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>1834</td><td><b>William Horner</b></td><td>Zoetrope — ឧបករណ៍មើលចលនា</td></tr><tr><td>1908</td><td><b>Émile Cohl</b> — <i>Fantasmagorie</i></td><td>ភាពយន្តគំនូរជីវចលពេញដំបូងៗ</td></tr><tr><td>1914</td><td><b>Winsor McCay</b> — <i>Gertie the Dinosaur</i></td><td>តួអង្គមានបុគ្គលិកលក្ខណៈ</td></tr><tr><td>1928</td><td><b>Walt Disney / Ub Iwerks</b> — <i>Steamboat Willie</i></td><td>Cartoon មានសំឡេង Sync</td></tr><tr><td>1937</td><td><b>Disney</b> — <i>Snow White and the Seven Dwarfs</i></td><td>Cel-animated feature ល្បីដំបូង</td></tr><tr><td>1963</td><td><b>Osamu Tezuka</b> — <i>Astro Boy</i></td><td>Anime TV · Limited animation</td></tr><tr><td>1981</td><td><b>Frank Thomas &amp; Ollie Johnston</b></td><td><i>The Illusion of Life</i> — ច្បាប់ ១២</td></tr><tr><td>1995</td><td><b>Pixar</b> — <i>Toy Story</i></td><td>ភាពយន្តវែង CGI ទាំងស្រុងដំបូង</td></tr><tr><td>2002</td><td><b>Ton Roosendaal</b> — Blender Foundation</td><td>Blender Open source</td></tr><tr><td>2025</td><td><i>Flow</i> (Gints Zilbalodis)</td><td>Oscar Best Animated Feature — បង្កើតដោយ Blender</td></tr></table>
+
+<h3>ប្រើសម្រាប់អ្វី?</h3>
+<div class="grid"><div class="card"><b>🎬 ភាពយន្ត/Series</b><br>2D · 3D</div><div class="card"><b>📺 Ads</b><br>Brand · Explainer</div><div class="card"><b>🎮 Game</b><br>Character · UI</div><div class="card"><b>📱 Social</b><br>Sticker · Reels</div><div class="card"><b>🏫 Education</b><br>វីដេអូបង្រៀន</div><div class="card"><b>🏗️ Architecture</b><br>3D walkthrough</div></div>
+
+</section>
+<section id="setup">
+<h2>២. ត្រៀមខ្លួន</h2>
+<ol class='steps'><li>ឥតគិតថ្លៃ៖ <b>Krita</b> / <b>OpenToonz</b> (2D) · <b>Blender</b> (3D) · <b>FlipaClip</b> (ទូរស័ព្ទ)។</li><li>Tablet គូរ (ជម្រើស — Mouse ក៏ចាប់ផ្តើមបាន)។</li><li>សៀវភៅ Sketch សម្រាប់ Thumbnail/Storyboard។</li><li>ហាត <b>Animation Lab</b> ចុងវគ្គ៖ Bouncing ball + Flipbook។</li></ol></section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>Animation ជាអ្វី? Frame · fps · ប្រភេទ</h2>
+<p><b>Animation</b> = បង្ហាញរូបភាពនៅស្ងៀមជាបន្តបន្ទាប់លឿនៗ ហើយខួរក្បាលយើងយល់ថាមានចលនា។ ភាពយន្តប្រើ <b>24 fps</b> (រូប ២៤ ក្នុងមួយវិនាទី)។ Animation 2D ជាច្រើនគូរ <b>«on twos»</b> = រូប ១២ ផ្សេងគ្នា/វិនាទី (រូបនីមួយៗបង្ហាញ ២ frame)។</p><table><tr><th>ប្រភេទ</th><th>របៀប</th><th>ឧទាហរណ៍ឧបករណ៍</th></tr><tr><td>2D frame-by-frame</td><td>គូររូបម្តងមួយៗ</td><td>Krita, OpenToonz, Toon Boom Harmony, Procreate Dreams</td></tr><tr><td>2D cut-out / rig</td><td>បំបែកតួអង្គជាផ្នែក ហើយបង្វិល</td><td>Moho, After Effects, Spine</td></tr><tr><td>3D</td><td>Model → Rig → Keyframe</td><td>Blender, Maya</td></tr><tr><td>Stop motion</td><td>ថតវត្ថុពិតម្តងមួយៗ</td><td>Dragonframe, Stop Motion Studio</td></tr><tr><td>Motion graphics</td><td>Shape · អក្សរ · Infographic</td><td>After Effects (វគ្គ After Effects)</td></tr></table>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>Animation 10 វិនាទី នៅ 24 fps គូរ «on twos» ត្រូវគូររូបប៉ុន្មាន?</p><details><summary>មើលចម្លើយ</summary><p>10 × 24 = 240 frame · on twos = 240 ÷ 2 = <b>120 រូប</b>។</p></details></div>
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>ច្បាប់ ១២ នៃ Animation</h2>
+<table><tr><th>ច្បាប់</th><th>ន័យ</th></tr><tr><td>1. Squash &amp; stretch</td><td>ស្រូប/ពន្លូតរូបរាង ដើម្បីបង្ហាញទម្ងន់ និងភាពបត់បែន (Volume ដដែល)</td></tr><tr><td>2. Anticipation</td><td>ត្រៀមខ្លួនមុនសកម្មភាព (អង្គុយចុះមុនលោត)</td></tr><tr><td>3. Staging</td><td>បង្ហាញគំនិតឲ្យច្បាស់ — អ្នកមើលដឹងត្រូវមើលអ្វី</td></tr><tr><td>4. Straight ahead / Pose to pose</td><td>គូរតាមលំដាប់ vs គូរ Key pose មុន</td></tr><tr><td>5. Follow through &amp; overlapping</td><td>ផ្នែកខ្លះនៅបន្តផ្លាស់ទី (សក់ សំលៀកបំពាក់)</td></tr><tr><td>6. Slow in &amp; slow out</td><td>ចាប់ផ្តើម/បញ្ចប់យឺត (Easing)</td></tr><tr><td>7. Arcs</td><td>ចលនាធម្មជាតិដើរតាមផ្លូវកោង</td></tr><tr><td>8. Secondary action</td><td>សកម្មភាពរង (ដើរ + ផឹកកាហ្វេ)</td></tr><tr><td>9. Timing</td><td>ចំនួន Frame = ល្បឿន និងទម្ងន់</td></tr><tr><td>10. Exaggeration</td><td>បំផ្លើសបន្តិច ដើម្បីច្បាស់</td></tr><tr><td>11. Solid drawing</td><td>គូរមានបរិមាណ 3D ទម្ងន់ និងតុល្យភាព</td></tr><tr><td>12. Appeal</td><td>តួអង្គទាក់ទាញ គួរឲ្យចាប់អារម្មណ៍</td></tr></table>
+<div class="note">💡 ច្បាប់ទាំង ១២ ពីសៀវភៅ <i>The Illusion of Life: Disney Animation</i> (1981) ដោយ <b>Frank Thomas &amp; Ollie Johnston</b> — ពីរក្នុងចំណោម «Nine Old Men» របស់ Disney។ សាក <b>Bouncing ball</b> ក្នុង Animation Lab។</div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>តួអង្គមុនលោត អង្គុយចុះបន្តិច បត់ជង្គង់ — ជាច្បាប់អ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Anticipation</b> — ប្រាប់អ្នកមើលថាសកម្មភាពធំកំពុងមក ហើយធ្វើឲ្យលោតមានកម្លាំង។</p></details></div>
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Timing &amp; Spacing</h2>
+<p><b>Timing</b> = ចំនួន Frame សម្រាប់សកម្មភាព (ច្រើន = យឺត/ធ្ងន់) · <b>Spacing</b> = ចម្ងាយរវាង Frame (ជិតៗ = យឺត · ឆ្ងាយ = លឿន)។ វត្ថុធ្ងន់ (ថ្ម) ចាប់ផ្តើមយឺត ឈប់ភ្លាម · វត្ថុស្រាល (ស្លាប) អណ្តែតយូរ។</p><table><tr><th>សកម្មភាព</th><th>Frame ប្រហាក់ប្រហែល (24 fps)</th></tr><tr><td>ព្រិចភ្នែក</td><td>6–8</td></tr><tr><td>ងាកក្បាលរហ័ស</td><td>6–10</td></tr><tr><td>ជំហានដើរធម្មតា</td><td>12 (មួយជំហាន) · 24 (មួយវដ្ត)</td></tr><tr><td>បាល់ធ្លាក់ពី 1m</td><td>~11</td></tr><tr><td>ស្លាបធ្លាក់</td><td>48+</td></tr></table>
+<div class="note">💡 Timing chart = បន្ទាត់តូចៗរវាង Key pose ប្រាប់ពីការចែក Inbetween (ជិតនៅចុង = Slow in/out)។ Graph editor ក្នុង After Effects/Blender គឺ Spacing ជាខ្សែកោង។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>ចង់ឲ្យកណ្តាប់ដៃមើលទៅខ្លាំង លឿន — គួរដាក់ Frame តិច ឬច្រើនពេលវាយ?</p><details><summary>មើលចម្លើយ</summary><p><b>តិច</b> (2–4 frame) ពេលវាយ ជាមួយ Anticipation វែង និង Follow-through/Settle ក្រោយ — Contrast នៃ Timing ធ្វើឲ្យមានកម្លាំង។</p></details></div>
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Storyboard &amp; Animatic</h2>
+<div class="grid"><div class="card"><b>📐 Shot size</b><br>Wide · Medium · Close-up (មើលវគ្គ Film Production)</div><div class="card"><b>➡️ Screen direction</b><br>តួអង្គដើរទិសដដែល ដើម្បីកុំច្រឡំ</div><div class="card"><b>🎵 Sound first</b><br>Lip sync/តន្ត្រី ថតមុន Animate</div><div class="card"><b>⏱️ Length</b><br>រឿងខ្លី ៣០–៦០ វិនាទី ល្អសម្រាប់ចាប់ផ្តើម</div></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>សរសេរ <b>Logline</b> មួយប្រយោគ (តួអង្គ + គោលដៅ + ឧបសគ្គ)</li><li>Script ខ្លី ឬ Beat sheet</li><li>Thumbnail storyboard — ប្រអប់តូចៗ គូរលឿន</li><li>Storyboard ស្អាត៖ Shot size · ទិសកាមេរ៉ា · ព្រួញចលនា · កំណត់ចំណាំ</li><li><b>Animatic</b> = Storyboard + ពេលវេលា + សំឡេង/តន្ត្រីបណ្តោះអាសន្ន (Premiere/CapCut)</li><li>កែ Timing ក្នុង Animatic មុនចាប់ផ្តើម Animate (ថោកជាងកែក្រោយ)</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>ហេតុអ្វីធ្វើ Animatic មុន Animate ពិត?</p><details><summary>មើលចម្លើយ</summary><p>ដើម្បីសាក <b>រឿង Timing និងសំឡេង</b> ថាដំណើរការ — កែក្នុង Animatic ចំណាយ នាទី · កែក្រោយ Animate ចំណាយ សប្តាហ៍។</p></details></div>
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>Character design · Model sheet</h2>
+<table><tr><th>Model sheet មាន</th><th>ប្រើ</th></tr><tr><td>Turnaround (មុខ · ¾ · ចំហៀង · ក្រោយ)</td><td>គូរដូចគ្នាគ្រប់មុំ</td></tr><tr><td>Expression sheet</td><td>អារម្មណ៍ ៦–១០</td></tr><tr><td>Pose sheet</td><td>អត្តចរិតតាមកាយវិការ</td></tr><tr><td>Color callout</td><td>លេខ Hex ពណ៌នីមួយៗ</td></tr></table>
+<div class="grid"><div class="card"><b>🔷 Shape language</b><br>រង្វង់ = រួសរាយ · ការ៉េ = រឹងមាំ · ត្រីកោណ = គ្រោះថ្នាក់/ស្វាហាប់</div><div class="card"><b>👤 Silhouette</b><br>តួអង្គស្គាល់បានទោះតែស្រមោលខ្មៅ</div><div class="card"><b>🎨 Color</b><br>Palette ៣–៥ ពណ៌ ស្របអត្តចរិត</div><div class="card"><b>📏 Proportion</b><br>ក្បាលធំ = ក្មេង/គួរឲ្យស្រឡាញ់</div></div>
+<div class="note">💡 បំផុសគំនិតពីវប្បធម៌ខ្មែរ៖ ក្បាច់ខ្មែរ · សំលៀកបំពាក់ប្រពៃណី · សត្វក្នុងរឿងព្រេង (ទន្សាយឆ្លាត) — តែត្រូវ <b>បង្កើតតួអង្គថ្មី</b> កុំចម្លងតួអង្គមានកម្មសិទ្ធិ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>ហេតុអ្វីតួអង្គត្រូវមាន Silhouette ច្បាស់?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះអ្នកមើលស្គាល់តួអង្គ និងសកម្មភាពភ្លាមៗ សូម្បីតែតូច ឬលឿន — Pose ដែលអានបានពី Silhouette = Staging ល្អ។</p></details></div>
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>2D frame-by-frame · Key · Breakdown · Inbetween</h2>
+<table><tr><th>ឧបករណ៍ (ឥតគិតថ្លៃ)</th><th>ល្អសម្រាប់</th></tr><tr><td><b>Krita</b></td><td>គូរ + Animation timeline · Onion skin</td></tr><tr><td><b>OpenToonz</b></td><td>Studio-grade (Studio Ghibli បានប្រើកំណែមុន)</td></tr><tr><td><b>Pencil2D</b></td><td>ងាយសម្រាប់អ្នកចាប់ផ្តើម</td></tr><tr><td><b>FlipaClip</b> (ទូរស័ព្ទ)</td><td>ហាតលើទូរស័ព្ទ</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>គូរ <b>Key pose</b> (ចំណុចសំខាន់ — ចាប់ផ្តើម/បញ្ចប់)</li><li><b>Breakdown</b> — Pose កណ្តាលដែលកំណត់ផ្លូវ (Arc) និងបុគ្គលិកលក្ខណៈ</li><li><b>Inbetween</b> — បំពេញចន្លោះ (Tween) តាម Timing chart</li><li>Clean-up (បន្ទាត់ស្អាត)</li><li>ពណ៌ (Coloring) និង Shadow</li><li>Composite + Background + សំឡេង</li></ol></div>
+<div class="note">💡 <b>Onion skin</b> = បង្ហាញ Frame មុន/ក្រោយដោយស្រាលៗ ដើម្បីគូរ Frame បន្ទាប់ឲ្យជាប់គ្នា — សាក <b>Flipbook</b> ក្នុង Lab។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>«Breakdown» ខុសពី «Inbetween» ដូចម្តេច?</p><details><summary>មើលចម្លើយ</summary><p><b>Breakdown</b> ជា Pose កណ្តាលដែល Animator សម្រេច (កំណត់ Arc/អារម្មណ៍) · <b>Inbetween</b> គ្រាន់តែបំពេញចន្លោះឲ្យរលូនតាម Timing។</p></details></div>
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Walk cycle</h2>
+<table><tr><th>Pose</th><th>Frame (12 frame ក្នុងមួយជំហាន)</th><th>ពិពណ៌នា</th></tr><tr><td>Contact</td><td>1</td><td>កែងជើងមុខប៉ះដី · ជើងទាំងពីរលាតឆ្ងាយ</td></tr><tr><td>Down</td><td>4</td><td>រាងកាយទាបបំផុត · ទម្ងន់ធ្លាក់លើជើងមុខ</td></tr><tr><td>Passing</td><td>7</td><td>ជើងក្រោយឆ្លងកាត់ · ជង្គង់បត់</td></tr><tr><td>Up</td><td>10</td><td>រាងកាយខ្ពស់បំផុត · រុញខ្លួនទៅមុខ</td></tr><tr><td>Contact (ជើងម្ខាង)</td><td>13</td><td>ចាប់ផ្តើមជំហានបន្ទាប់</td></tr></table>
+<div class="note">💡 ដៃគ្រវីផ្ទុយជើង (ជើងឆ្វេងមុខ = ដៃស្តាំមុខ)។ ត្រគាក និងស្មាបង្វិលផ្ទុយគ្នា។ ក្បាលឡើងចុះតាម Down/Up។ អត្តចរិតផ្លាស់ប្តូរ Walk៖ ក្មេងលោតៗ · មនុស្សចាស់យឺត · មនុស្សសោកសៅក្បាលឱន។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>វដ្តដើរពេញ (២ ជំហាន) នៅ 24 fps ជាធម្មតាប៉ុន្មាន Frame? ប៉ុន្មានវិនាទី?</p><details><summary>មើលចម្លើយ</summary><p>ប្រហែល <b>24 frame = 1 វិនាទី</b> (12 frame ក្នុងមួយជំហាន) — ដើរលឿនជាងនេះ កាត់មក 16–20 frame។</p></details></div>
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Lip sync · Acting</h2>
+<table><tr><th>រាងមាត់ (ទូទៅ)</th><th>សំឡេង (English)</th><th>ឧទាហរណ៍ខ្មែរ</th></tr><tr><td>បិទ</td><td>M, B, P</td><td>ម៉ែ · ប៉ា</td></tr><tr><td>បើកធំ</td><td>A, I</td><td>អា</td></tr><tr><td>មូល</td><td>O, U, W</td><td>អូ · វ</td></tr><tr><td>ធ្មេញបង្ហាញ</td><td>E, S, T</td><td>អេ · ស</td></tr><tr><td>អណ្តាតលើធ្មេញ</td><td>L, TH</td><td>ល</td></tr><tr><td>ធ្មេញលើ-បបូរមាត់ក្រោម</td><td>F, V</td><td>ហ្វ</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ថតសំឡេងនិយាយមុន (Dialogue)</li><li>ស្តាប់ ហើយកត់ Frame នៃពាក្យសំខាន់ (Exposure sheet)</li><li>Acting៖ Pose ដងខ្លួន និងភ្នែកមុន — មាត់ចុងក្រោយ</li><li>កាត់រាងមាត់តិចជាងសំឡេងពិត (កុំបង្ហាញគ្រប់សំឡេង)</li><li>ចលនាមាត់ចាប់ផ្តើមមុនសំឡេង ១–២ frame ទើបមើលទៅត្រូវ</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>ហេតុអ្វី Animate រាងកាយ និងភ្នែកមុនមាត់ពេលធ្វើ Lip sync?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះអ្នកមើលអានអារម្មណ៍ពី <b>Pose និងភ្នែក</b> មុន — មាត់ត្រូវគ្រាន់តែ Sync។ រាងកាយស្ងៀមដែលមាត់និយាយ = ដូចតុក្កតា។</p></details></div>
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Cut-out · Rigging 2D · Motion</h2>
+<div class="grid"><div class="card"><b>✂️ Cut-out</b><br>បំបែក ក្បាល/ដៃ/ជើង ជា Layer · Pivot point នៅសន្លាក់</div><div class="card"><b>🦴 Bones/IK</b><br>Inverse kinematics — ទាញដៃ ធ្វើឲ្យកែងដៃបត់ឯង</div><div class="card"><b>🔁 Reuse</b><br>Rig ម្តង ប្រើច្រើនរឿង — លឿនសម្រាប់ YouTube/Explainer</div><div class="card"><b>🎛️ Tools</b><br>After Effects (Duik Ángela ឥតគិតថ្លៃ) · Moho · Spine (Game)</div></div>
+<div class="note">💡 Cut-out ល្អសម្រាប់ Series វែង និង Explainer ថវិកាតូច។ Frame-by-frame ល្អសម្រាប់ចលនាស្មុគស្មាញ និងស្ទីលសិល្បៈ។ មើលវគ្គ <b>After Effects</b> សម្រាប់ Keyframe និង Graph editor។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>App Game ត្រូវការតួអង្គ 2D ដែលមានចលនាច្រើន File តូច — គួរប្រើ Frame-by-frame ឬ Skeletal (Spine)?</p><details><summary>មើលចម្លើយ</summary><p><b>Skeletal/Cut-out (Spine)</b> — ផ្ទុកតែផ្នែករូប + ទិន្នន័យឆ្អឹង ជំនួសរូបរាប់រយ → File តូច ប្រើក្នុង Unity បាន។</p></details></div>
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>3D pipeline</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="102.85714285714286" height="96" rx="14" fill="#495057"/><text x="71.42857142857143" y="88.0" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">🧱 Modeling</text><line x1="124.85714285714286" y1="82" x2="150.85714285714286" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="152.85714285714286" y="34" width="102.85714285714286" height="96" rx="14" fill="#1c7ed6"/><text x="204.28571428571428" y="88.0" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">🗺️ UV + Texture</text><line x1="257.7142857142857" y1="82" x2="283.7142857142857" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="285.7142857142857" y="34" width="102.85714285714286" height="96" rx="14" fill="#7048e8"/><text x="337.14285714285717" y="88.0" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">🦴 Rigging</text><line x1="390.57142857142856" y1="82" x2="416.57142857142856" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="418.57142857142856" y="34" width="102.85714285714286" height="96" rx="14" fill="#e8590c"/><text x="470.0" y="88.0" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">🎬 Animation</text><line x1="523.4285714285714" y1="82" x2="549.4285714285714" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="551.4285714285714" y="34" width="102.85714285714286" height="96" rx="14" fill="#f59f00"/><text x="602.8571428571429" y="88.0" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">💡 Lighting</text><line x1="656.2857142857143" y1="82" x2="682.2857142857143" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="684.2857142857143" y="34" width="102.85714285714286" height="96" rx="14" fill="#2f9e44"/><text x="735.7142857142858" y="88.0" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">🖼️ Rendering</text><line x1="789.1428571428572" y1="82" x2="815.1428571428572" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="817.1428571428571" y="34" width="102.85714285714286" height="96" rx="14" fill="#d6336c"/><text x="868.5714285714286" y="88.0" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">✨ Compositing</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">3D production pipeline</text></svg><figcaption>🖼️ 3D pipeline</figcaption></figure>
+<table><tr><th>ដំណាក់កាល</th><th>ការងារ</th></tr><tr><td>Modeling</td><td>Polygon (Vertex · Edge · Face) · Low/High poly</td></tr><tr><td>UV &amp; Texturing</td><td>លាត Model ជាផ្ទៃ 2D ហើយលាបពណ៌/សម្ភារៈ (PBR)</td></tr><tr><td>Rigging</td><td>ឆ្អឹង + Weight paint + Controls</td></tr><tr><td>Animation</td><td>Keyframe · Graph editor · Motion capture</td></tr><tr><td>Lighting &amp; Render</td><td>Eevee (លឿន) · Cycles (Ray tracing ពិត)</td></tr><tr><td>Compositing</td><td>បញ្ចូល Layer · Color · Effects</td></tr></table>
+<div class="note">💡 <b>Toy Story (1995, Pixar)</b> = ភាពយន្តវែងដំបូងដែលបង្កើតដោយ CGI ទាំងស្រុង។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>Eevee និង Cycles ក្នុង Blender ខុសគ្នាដូចម្តេច?</p><details><summary>មើលចម្លើយ</summary><p><b>Eevee</b> = Real-time (លឿន ល្អសម្រាប់ Preview/Stylized) · <b>Cycles</b> = Path tracing (ពន្លឺពិត ស្រមោលត្រឹមត្រូវ តែយឺត)។</p></details></div>
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>Blender មូលដ្ឋាន</h2>
+<table><tr><th>Shortcut</th><th>សកម្មភាព</th></tr><tr><td>G · R · S</td><td>ផ្លាស់ទី · បង្វិល · ពង្រីក (+X/Y/Z ចាក់សោអ័ក្ស)</td></tr><tr><td>Tab</td><td>Object mode ⇄ Edit mode</td></tr><tr><td>I</td><td>បញ្ចូល Keyframe</td></tr><tr><td>Shift+A</td><td>បន្ថែម Object</td></tr><tr><td>Numpad 0</td><td>មើលតាមកាមេរ៉ា</td></tr><tr><td>Ctrl+F12</td><td>Render animation</td></tr><tr><td>F12</td><td>Render រូបមួយ</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>បន្ថែម Sphere (Shift+A) → Shade smooth</li><li>Frame 1៖ ដាក់ខ្ពស់ → I → Location</li><li>Frame 12៖ ប៉ះដី → I · Frame 24៖ ខ្ពស់វិញ → I</li><li>Graph editor → ធ្វើឲ្យប៉ះដីស្រួច (Vector handle) និងកំពូលរលូន</li><li>បន្ថែម Scale Z តិចពេលប៉ះដី (Squash)</li><li>Output 1920×1080 · 24 fps → Render</li></ol></div>
+<div class="note">💡 <b>Blender</b> ឥតគិតថ្លៃ Open source (<b>Ton Roosendaal</b> · Blender Foundation 2002)។ ភាពយន្ត <i>Flow</i> (2024) ដែលបង្កើតដោយ Blender បានឈ្នះ <b>Oscar Best Animated Feature</b> ឆ្នាំ 2025។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>បាល់លោតក្នុង Blender ចលនាមើលទៅ «អណ្តែត» ពេលប៉ះដី។ កែនៅណា?</p><details><summary>មើលចម្លើយ</summary><p>ក្នុង <b>Graph editor</b> — ប្តូរ Keyframe ពេលប៉ះដីទៅ <b>Vector/Sharp</b> (ល្បឿនប្តូរទិសភ្លាម) ជំនួស Bezier រលូន។</p></details></div>
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>Render · Export · Workflow</h2>
+<table><tr><th>Output</th><th>ការកំណត់ណែនាំ</th></tr><tr><td>YouTube/Film</td><td>1920×1080 ឬ 3840×2160 · 24/25 fps · H.264/H.265</td></tr><tr><td>TikTok/Reels</td><td>1080×1920 · 30 fps</td></tr><tr><td>GIF/Sticker</td><td>≤ 512 px · 12–15 fps · ពណ៌តិច</td></tr><tr><td>Image sequence</td><td>PNG/EXR frame by frame (សុវត្ថិភាពពេល Render គាំង)</td></tr></table>
+<div class="grid"><div class="card"><b>💾 Version</b><br>scene_v01, v02… · Backup Cloud</div><div class="card"><b>📁 Folder</b><br>assets / scenes / renders / audio</div><div class="card"><b>⏱️ Render farm</b><br>Render យូរ? SheepIt (ឥតគិតថ្លៃ) / Cloud</div><div class="card"><b>🎵 License</b><br>តន្ត្រី/សំឡេងត្រូវមានសិទ្ធិ</div></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>ហេតុអ្វី Render ជា Image sequence (PNG) ល្អជាង Render ជា MP4 ផ្ទាល់?</p><details><summary>មើលចម្លើយ</summary><p>បើ Render គាំងនៅ Frame 800 អាច <b>បន្តពី Frame 801</b> (MP4 ខូចទាំងមូល) · គុណភាពមិនបាត់ (Lossless) · កែ Frame ខ្លះបាន។</p></details></div>
+</section>
+<section id="l13">
+<h2><span class="badge">មេរៀន ១៣</span>អាជីព · Demo reel · Animation នៅកម្ពុជា</h2>
+<div class="grid"><div class="card"><b>🎞️ 2D/3D Animator</b><br>Studio · Advertising · YouTube</div><div class="card"><b>🧍 Character designer</b><br>Concept art</div><div class="card"><b>🧱 3D modeler</b><br>Game · Architecture visualization</div><div class="card"><b>✨ Motion designer</b><br>Brand · Social media</div><div class="card"><b>🎮 Game animator</b><br>Unity · Unreal</div><div class="card"><b>💼 Freelance</b><br>Fiverr · Upwork · Sticker</div></div>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>Demo reel <b>១–២ នាទី</b> — ការងារល្អបំផុតដាក់មុន</li><li>បង្ហាញជំនាញជាក់លាក់ (Walk cycle, Lip sync, Acting, 3D)</li><li>ដាក់ឈ្មោះ + តួនាទី + Contact នៅដើម/ចុង</li><li>Portfolio លើ ArtStation, Behance, Vimeo/YouTube</li><li>ចូលរួម Challenge (11 Second Club, Animation Jam)</li></ol></div>
+<div class="note">💡 ឧស្សាហកម្ម Animation នៅកម្ពុជាកំពុងរីក (Advertising, YouTube kids, Game, Education)។ ជំនាញ Animation ក៏ប្រើក្នុង UI motion, Marketing និង Education video ផងដែរ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣</h4><p>Demo reel ល្អ គួរយូរប៉ុន្មាន? ដាក់អ្វីមុន?</p><details><summary>មើលចម្លើយ</summary><p><b>១–២ នាទី</b> — ដាក់ការងារ <b>ល្អបំផុតក្នុង ១០ វិនាទីដំបូង</b> (អ្នកជ្រើសរើសមើលខ្លី) ហើយដកការងារខ្សោយចេញ។</p></details></div>
+</section>
+<section id="cheat">
+<h2>📋 សង្ខេប (Cheat sheet)</h2>
+<table><tr><th>ពាក្យ</th><th>ន័យ</th></tr><tr><td>24 fps · on twos</td><td>12 រូបផ្សេងគ្នា/វិនាទី</td></tr><tr><td>Key · Breakdown · Inbetween</td><td>Pose សំខាន់ · Pose កណ្តាល · បំពេញ</td></tr><tr><td>Squash &amp; stretch</td><td>ទម្ងន់ + បត់បែន (Volume ដដែល)</td></tr><tr><td>Anticipation</td><td>ត្រៀមមុនសកម្មភាព</td></tr><tr><td>Slow in/out</td><td>Easing</td></tr><tr><td>Arc</td><td>ផ្លូវកោង</td></tr><tr><td>Timing / Spacing</td><td>ចំនួន Frame / ចម្ងាយ</td></tr><tr><td>Walk cycle</td><td>Contact · Down · Passing · Up</td></tr><tr><td>Onion skin</td><td>មើល Frame មុន/ក្រោយ</td></tr><tr><td>Animatic</td><td>Storyboard + ពេល + សំឡេង</td></tr><tr><td>Blender G/R/S · I</td><td>Move/Rotate/Scale · Keyframe</td></tr><tr><td>Eevee / Cycles</td><td>លឿន / ពន្លឺពិត</td></tr></table>
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងចុងវគ្គ</h2>
+<ol class='steps'><li>រឿងខ្លី ១០–២០ វិនាទី «ទន្សាយឆ្លាត» (តួអង្គថ្មីរបស់អ្នក)។</li><li>Logline → Storyboard ៦–១០ ប្រអប់ → Animatic ជាមួយសំឡេង។</li><li>Animate ក្នុង Krita (2D) ឬ Blender (3D)៖ ត្រូវមាន Anticipation, Squash &amp; stretch និង Walk/Run។</li><li>ពណ៌ + Background + សំឡេង → Export 1080p។</li><li>ដាក់ក្នុង Demo reel និង Portfolio។</li></ol></section>
+<section id="pro-app">
+<h2>💻 Animation Lab (App)</h2>
+
+<p><b>🏀 Bouncing ball</b> — បិទ/បើក Easing · Squash &amp; Stretch · Arc · Onion skin · fps ហើយមើលភាពខុសគ្នា · <b>✏️ Flipbook</b> — គូរ Frame ផ្ទាល់ (ម្រាមដៃ/Mouse) ជាមួយ Onion skin ហើយ Play ជាគំនូរជីវចល។</p>
+
+<div class="itk" id="an">
+<div class="itk-tabs"><button class="on" data-t="bb">🏀 Bouncing ball</button><button data-t="fb">✏️ Flipbook</button></div>
+<div class="itk-p on" data-p="bb">
+ <p class="vl-tip">លំហាត់ដំបូងរបស់អ្នកធ្វើ Animation គ្រប់រូប៖ បាល់លោត។ បិទ/បើកច្បាប់នីមួយៗ ហើយមើលភាពខុសគ្នា។</p>
+ <div class="itk-row"><label><input type="checkbox" id="bb_e" checked> Slow in/out (Easing)</label><label><input type="checkbox" id="bb_s" checked> Squash &amp; Stretch</label><label><input type="checkbox" id="bb_a" checked> Arc (ផ្លូវកោង)</label><label><input type="checkbox" id="bb_o"> 👻 Onion skin</label>
+  <label>fps <select id="bb_f"><option>12</option><option selected>24</option><option>60</option></select></label></div>
+ <canvas id="bb_cv" width="720" height="300" style="width:100%;height:auto;background:#f8f9fa;border-radius:10px"></canvas>
+ <div class="itk-out" id="bb_out"></div>
+</div>
+<div class="itk-p" data-p="fb">
+ <p class="vl-tip">គូរ Frame នីមួយៗ (ម្រាមដៃ/Mouse) → ➕ Frame ថ្មី (ឃើញ Onion skin របស់ Frame មុន) → ▶ Play។ ព្យាយាមគូររូបមនុស្សលេខ ឬផ្កាឈូករីក!</p>
+ <div class="itk-row"><button class="btn" id="fb_add">➕ Frame ថ្មី</button><button class="btn" id="fb_play">▶ Play</button><button class="btn ghost" id="fb_clr">🧹 សម្អាត Frame</button><button class="btn ghost" id="fb_reset">↺ ចាប់ផ្តើមថ្មី</button>
+  <label>fps <input type="range" id="fb_fps" min="2" max="24" value="8"></label><b id="fb_info"></b></div>
+ <canvas id="fb_cv" width="640" height="360" style="width:100%;height:auto;background:#fff;border:1px solid rgba(127,127,127,.3);border-radius:10px;touch-action:none;cursor:crosshair"></canvas>
+</div>
+</div>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+document.querySelectorAll("#an .itk-tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#an .itk-tabs button").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll("#an .itk-p").forEach(p=>p.classList.toggle("on",p.dataset.p===b.dataset.t));});
+const c=$("bb_cv"),g=c.getContext("2d");let t0=performance.now(),last=-1,trail=[];
+function ball(u){/* u 0..1 over one bounce */const E=$("bb_e").checked,S=$("bb_s").checked,A=$("bb_a").checked;
+ const k=E?(1-Math.pow(1-2*Math.abs(u-.5)*1,2)):1-2*Math.abs(u-.5);const h=E?(1-Math.pow(2*u-1,2)):(1-Math.abs(2*u-1));const y=260-h*210;
+ const x=A?60+u*600:60+u*600;const yy=A?y:(u<.5?260-(u*2)*210:50+(u-.5)*2*210);let sx=1,sy=1;if(S){const v=Math.abs(2*u-1);if(h<.06){sx=1.45;sy=.62;}else{sy=1+v*.35;sx=1/sy;}}return{x,y:A?y:Math.min(260,yy),sx,sy};}
+function frame(now){const fps=+$("bb_f").value,dur=1.2,f=Math.floor((now-t0)/1000*fps),u=((f/fps)%dur)/dur;if(f!==last){last=f;const b=ball(u);trail.push(b);if(trail.length>8)trail.shift();
+ g.clearRect(0,0,c.width,c.height);g.fillStyle="#dee2e6";g.fillRect(0,272,c.width,28);
+ if($("bb_o").checked)trail.slice(0,-1).forEach((p,i)=>{g.globalAlpha=.08+i*.04;dr(p,"#7048e8");});g.globalAlpha=1;dr(b,"#e8590c");
+ $("bb_out").innerHTML=`Frame ${f%Math.round(fps*dur)+1}/${Math.round(fps*dur)} · ${fps} fps — ${!$("bb_e").checked?"⚠️ គ្មាន Easing → ចលនាដូចម៉ាស៊ីន ":""}${!$("bb_s").checked?"⚠️ គ្មាន Squash → បាល់រឹងដូចថ្ម ":""}${$("bb_e").checked&&$("bb_s").checked?"✅ បាល់មានទម្ងន់ និងបត់បែន":""}`;}
+ requestAnimationFrame(frame);}
+function dr(b,col){g.save();g.translate(b.x,b.y+22*(1-b.sy));g.scale(b.sx,b.sy);g.beginPath();g.arc(0,0,22,0,7);g.fillStyle=col;g.fill();g.restore();}
+requestAnimationFrame(frame);
+/* flipbook */
+const f=$("fb_cv"),q=f.getContext("2d");let frames=[null],cur=0,draw=false,play=null;
+function snap(){return q.getImageData(0,0,f.width,f.height);}
+function show(i,onion){q.fillStyle="#fff";q.fillRect(0,0,f.width,f.height);if(onion&&i>0&&frames[i-1]){const tmp=document.createElement("canvas");tmp.width=f.width;tmp.height=f.height;tmp.getContext("2d").putImageData(frames[i-1],0,0);q.globalAlpha=.18;q.drawImage(tmp,0,0);q.globalAlpha=1;}
+ if(frames[i])q.putImageData(frames[i],0,0);$("fb_info").textContent=`Frame ${i+1}/${frames.length}`;}
+function pos(e){const r=f.getBoundingClientRect();return[(e.clientX-r.left)/r.width*f.width,(e.clientY-r.top)/r.height*f.height];}
+let base=null;f.onpointerdown=e=>{if(play)return;draw=true;f.setPointerCapture(e.pointerId);const[x,y]=pos(e);q.lineWidth=4;q.lineCap="round";q.strokeStyle="#212529";q.beginPath();q.moveTo(x,y);};
+f.onpointermove=e=>{if(!draw)return;const[x,y]=pos(e);q.lineTo(x,y);q.stroke();};
+f.onpointerup=()=>{if(!draw)return;draw=false;/* save without onion: redraw from stroke layer */frames[cur]=strip();};
+function strip(){/* remove onion tint: keep only dark pixels */const d=snap();for(let i=0;i<d.data.length;i+=4){if(d.data[i]>150){d.data[i]=d.data[i+1]=d.data[i+2]=255;}}return d;}
+$("fb_add").onclick=()=>{if(play)return;frames.splice(cur+1,0,null);cur++;show(cur,true);};
+$("fb_clr").onclick=()=>{frames[cur]=null;show(cur,true);};$("fb_reset").onclick=()=>{frames=[null];cur=0;show(0);};
+$("fb_play").onclick=()=>{if(play){clearInterval(play);play=null;$("fb_play").textContent="▶ Play";show(cur,true);return;}$("fb_play").textContent="⏸ Stop";let i=0;play=setInterval(()=>{show(i%frames.length,false);i++;},1000/+$("fb_fps").value);};
+show(0);
+})();
+</script>
+
+<h3>🏆 Quiz ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["ភាពយន្តប្រើ fps ប៉ុន្មាន?", ["24", "5", "100", "1"], 0], ["ច្បាប់ ១២ ពីសៀវភៅ?", ["The Illusion of Life", "Clean Code", "Design Patterns", "Big O"], 0], ["អង្គុយចុះមុនលោត?", ["Anticipation", "Arc", "Appeal", "Staging"], 0], ["ចលនាធម្មជាតិដើរតាម?", ["Arc", "បន្ទាត់ត្រង់ជានិច្ច", "ចៃដន្យ", "ការ៉េ"], 0], ["Toy Story (1995) ពិសេស?", ["CGI ទាំងស្រុងដំបូង", "ខ្មៅ-ស", "គ្មានសំឡេង", "Stop motion"], 0], ["Walk cycle pose ទាបបំផុត?", ["Down", "Up", "Passing", "Contact"], 0], ["Onion skin ជួយ?", ["មើល Frame មុន/ក្រោយ", "Render លឿន", "ថតសំឡេង", "ពណ៌"], 0], ["Blender Keyframe shortcut?", ["I", "K", "P", "Q"], 0], ["Lip sync — Animate អ្វីមុន?", ["រាងកាយ និងភ្នែក", "មាត់", "សក់", "Background"], 0], ["Steamboat Willie (1928) ពិសេស?", ["Cartoon មានសំឡេង Sync", "3D ដំបូង", "Anime ដំបូង", "ពណ៌ដំបូង"], 0], ["Flow (2025 Oscar) បង្កើតដោយ?", ["Blender", "Maya", "Flash", "Paint"], 0], ["Demo reel គួរយូរ?", ["១–២ នាទី", "៣០ នាទី", "៥ វិនាទី", "១ ម៉ោង"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+<ol class='steps'><li>Graphic Design Styles · Photoshop · Illustrator</li><li><b>Animation</b> (វគ្គនេះ) ✅</li><li>After Effects (Motion) · Film Production (Storyboard, Camera)</li><li>Premiere / DaVinci (Edit &amp; Color)</li><li>Unity (Game animation)</li></ol></section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="anim"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

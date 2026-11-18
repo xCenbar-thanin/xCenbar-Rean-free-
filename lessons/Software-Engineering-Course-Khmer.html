@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Software Engineering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#0ca678; --accent2:#1c7ed6; --accent-soft:#e6fcf5;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#63e6be; --accent2:#74c0fc; --accent-soft:#082b22;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#63e6be; --accent2:#74c0fc; --accent-soft:#082b22;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#082b22,#0ca678 45%,#1c7ed6 85%);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/se.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/se.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Software Engineering — វិស្វកម្មកម្មវិធី</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Software Engineering ជាអ្វី?</a>
+<a href="#setup">២. ត្រៀមខ្លួន</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: Software Engineering &amp; SDLC</a>
+<a href="#l2">មេរៀន ២: Requirements៖ User story · Use case · MoSCoW</a>
+<a href="#l3">មេរៀន ៣: Agile &amp; Scrum</a>
+<a href="#l4">មេរៀន ៤: Kanban · ការប៉ាន់ស្មាន · Velocity</a>
+<a href="#l5">មេរៀន ៥: UML៖ Use case · Class · Sequence</a>
+<a href="#l6">មេរៀន ៦: Software Architecture</a>
+<a href="#l7">មេរៀន ៧: Clean code &amp; SOLID</a>
+<a href="#l8">មេរៀន ៨: Design Patterns</a>
+<a href="#l9">មេរៀន ៩: Git workflow · Pull request · Code review</a>
+<a href="#l10">មេរៀន ១០: Software Testing &amp; TDD</a>
+<a href="#l11">មេរៀន ១១: CI/CD &amp; DevOps</a>
+<a href="#l12">មេរៀន ១២: គ្រប់គ្រងគម្រោង · ហានិភ័យ · ឯកសារ</a>
+<a href="#l13">មេរៀន ១៣: គុណភាព · សុវត្ថិភាព · ក្រមសីលធម៌ · អាជីព</a>
+<a href="#cheat">📋 សង្ខេប (Cheat sheet)</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងចុងវគ្គ</a>
+<a href="#pro-app">💻 SE Lab (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>⚙️ Software Engineering — បង្កើត Software ជាក្រុម ឲ្យត្រឹមត្រូវ ទាន់ពេល</h2>
+  <p><b>SDLC</b>, Requirements (User story · MoSCoW), <b>Agile &amp; Scrum</b>, Kanban &amp; Velocity, <b>UML</b>, Architecture (Monolith vs Microservices), <b>Clean code &amp; SOLID</b>, <b>Design patterns</b>, Git workflow, <b>Testing &amp; TDD</b>, CI/CD, គ្រប់គ្រងគម្រោង + <b>SE Lab</b>។</p>
+  <p><span class="badge">📘 ១៣ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">💻 Code មានពណ៌ + លទ្ធផល</span><span class="badge">⚙️ SE Lab</span></p>
+</section>
+<section id="intro">
+<h2>១. Software Engineering ជាអ្វី?</h2>
+
+
+<p><b>Software Engineering</b> = អនុវត្តវិធីសាស្ត្រវិស្វកម្ម (ផែនការ · រចនា · សាក · ថែទាំ) ដើម្បីបង្កើត Software <b>ធំ ត្រឹមត្រូវ ទាន់ពេល និងងាយថែទាំ</b> ជាក្រុម — មិនមែនត្រឹមតែ «សរសេរកូដ» ទេ។ វគ្គនេះមាន SDLC · Requirements · <b>Agile/Scrum</b> · UML · Architecture · <b>Clean code &amp; SOLID</b> · <b>Design patterns</b> · Git workflow · <b>Testing &amp; TDD</b> · CI/CD · គ្រប់គ្រងគម្រោង — ជាមួយកូដ Python ដំណើរការពិត។</p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#495057"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#495057">1968</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">NATO conference</text><circle cx="185" cy="115" r="11" fill="#1c7ed6"/><text x="185" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#1c7ed6">1970</text><text x="185" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Royce (Waterfall)</text><circle cx="290" cy="115" r="11" fill="#e8590c"/><text x="290" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#e8590c">1975</text><text x="290" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Mythical Man-Month</text><circle cx="395" cy="115" r="11" fill="#7048e8"/><text x="395" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#7048e8">1994</text><text x="395" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Design Patterns</text><circle cx="500" cy="115" r="11" fill="#2f9e44"/><text x="500" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#2f9e44">1995</text><text x="500" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Scrum</text><circle cx="605" cy="115" r="11" fill="#ae3ec9"/><text x="605" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#ae3ec9">1997</text><text x="605" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">UML 1.1</text><circle cx="710" cy="115" r="11" fill="#d6336c"/><text x="710" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#d6336c">1999</text><text x="710" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">XP / TDD</text><circle cx="815" cy="115" r="11" fill="#0ca678"/><text x="815" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#0ca678">2001</text><text x="815" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Agile Manifesto</text><circle cx="920" cy="115" r="11" fill="#f59f00"/><text x="920" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#f59f00">2009</text><text x="920" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">DevOps</text></svg><figcaption>🖼️ ប្រវត្តិ Software Engineering</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>1968</td><td><b>NATO Software Engineering Conference</b> · Margaret Hamilton (Apollo)</td><td>ពាក្យ «Software Engineering» · Software crisis</td></tr><tr><td>1970</td><td><b>Winston Royce</b></td><td>អត្ថបទដែលក្រោយមកហៅថា Waterfall</td></tr><tr><td>1975</td><td><b>Fred Brooks</b> — <i>The Mythical Man-Month</i></td><td>Brooks's law</td></tr><tr><td>1994</td><td><b>Gang of Four</b></td><td><i>Design Patterns</i> — 23 patterns</td></tr><tr><td>1995</td><td><b>Ken Schwaber &amp; Jeff Sutherland</b></td><td>Scrum</td></tr><tr><td>1997</td><td><b>Booch · Rumbaugh · Jacobson</b> (OMG)</td><td>UML ស្តង់ដារ</td></tr><tr><td>1999</td><td><b>Kent Beck</b></td><td>Extreme Programming · TDD</td></tr><tr><td>2001</td><td>17 នាក់នៅ Snowbird, Utah</td><td><b>Agile Manifesto</b></td></tr><tr><td>2008</td><td><b>Robert C. Martin</b></td><td><i>Clean Code</i> · SOLID</td></tr><tr><td>2009</td><td><b>Patrick Debois</b></td><td>DevOpsDays · DevOps</td></tr></table>
+
+<h3>ប្រើសម្រាប់អ្វី?</h3>
+<div class="grid"><div class="card"><b>🏢 ក្រុមហ៊ុន Software</b><br>ធ្វើការជាក្រុម ១០–១០០០ នាក់</div><div class="card"><b>🏦 ធនាគារ/ទូរគមនាគមន៍</b><br>ប្រព័ន្ធធំ សុវត្ថិភាពខ្ពស់</div><div class="card"><b>🚀 Startup</b><br>MVP លឿន + Agile</div><div class="card"><b>🏛️ រដ្ឋាភិបាល</b><br>E-government</div><div class="card"><b>💼 Freelance</b><br>គ្រប់គ្រង Project ជាមួយអតិថិជន</div></div>
+
+</section>
+<section id="setup">
+<h2>២. ត្រៀមខ្លួន</h2>
+<ol class='steps'><li>ចេះភាសាមួយ (Python/JavaScript/Java) — រៀនវគ្គភាសាមុន។</li><li>Git + GitHub (វគ្គ <b>Git &amp; GitHub</b>)។</li><li>ឧបករណ៍៖ GitHub Projects/Trello (Kanban), draw.io/Mermaid (UML), VS Code។</li><li>សាក <b>SE Lab</b> ចុងវគ្គ (User story · Sprint planner · MoSCoW)។</li></ol></section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>Software Engineering &amp; SDLC</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="125.0" height="96" rx="14" fill="#1c7ed6"/><text x="82.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">📋 Requirements</text><text x="82.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">តម្រូវការ</text><line x1="147.0" y1="82" x2="173.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="175.0" y="34" width="125.0" height="96" rx="14" fill="#7048e8"/><text x="237.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">📐 Design</text><text x="237.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Architecture</text><line x1="302.0" y1="82" x2="328.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="330.0" y="34" width="125.0" height="96" rx="14" fill="#2f9e44"/><text x="392.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">💻 Implement</text><text x="392.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">សរសេរកូដ</text><line x1="457.0" y1="82" x2="483.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="485.0" y="34" width="125.0" height="96" rx="14" fill="#e8590c"/><text x="547.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🧪 Test</text><text x="547.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">សាក</text><line x1="612.0" y1="82" x2="638.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="640.0" y="34" width="125.0" height="96" rx="14" fill="#d6336c"/><text x="702.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🚀 Deploy</text><text x="702.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ដាក់ប្រើ</text><line x1="767.0" y1="82" x2="793.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="795.0" y="34" width="125.0" height="96" rx="14" fill="#495057"/><text x="857.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🔧 Maintain</text><text x="857.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ថែទាំ</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">SDLC — Software Development Life Cycle</text></svg><figcaption>🖼️ Software Engineering &amp; SDLC</figcaption></figure>
+<table><tr><th>Model</th><th>របៀប</th><th>ល្អពេល</th><th>ហានិភ័យ</th></tr><tr><td><b>Waterfall</b></td><td>ដំណាក់កាលម្តងមួយ មិនត្រឡប់ក្រោយ</td><td>តម្រូវការច្បាស់ ប្តូរតិច (ឧ. ប្រព័ន្ធធនាគារ, ច្បាប់)</td><td>ឃើញកំហុសយឺត</td></tr><tr><td><b>Iterative / Incremental</b></td><td>ធ្វើជាដុំៗ ហើយបន្ថែម</td><td>គម្រោងមធ្យម</td><td>Scope រីក</td></tr><tr><td><b>Agile (Scrum/Kanban)</b></td><td>Sprint ១–៤ សប្តាហ៍ · Feedback ញឹក</td><td>Startup · App · តម្រូវការប្តូរ</td><td>ត្រូវការវិន័យក្រុម</td></tr><tr><td><b>V-Model</b></td><td>ដំណាក់កាលនីមួយៗមាន Test ផ្គូផ្គង</td><td>សុវត្ថិភាពខ្ពស់ (ពេទ្យ, រថយន្ត)</td><td>ថ្លៃ</td></tr></table>
+<div class="note">💡 ពាក្យ <b>Software Engineering</b> ពេញនិយមក្រោយ <b>NATO Software Engineering Conference (1968)</b> ក្នុង «Software crisis» — Project ធំៗយឺត ហួសថវិកា និងមាន Bug ច្រើន។ <b>Margaret Hamilton</b> (Apollo) ក៏បានប្រើពាក្យនេះ ដើម្បីឲ្យ Software ត្រូវបានគោរពដូចវិស្វកម្មផ្សេង។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>ក្រសួងមួយត្រូវការប្រព័ន្ធបង់ពន្ធ ដែលច្បាប់កំណត់ច្បាស់ ប្តូរតិច។ Startup មួយធ្វើ App ថ្មី មិនដឹងអតិថិជនចូលចិត្តអ្វី។ ជ្រើស Model សម្រាប់ទាំងពីរ។</p><details><summary>មើលចម្លើយ</summary><p>ក្រសួង៖ <b>Waterfall/V-Model</b> (តម្រូវការច្បាស់ ត្រូវការឯកសារ និង Test ពេញ)។ Startup៖ <b>Agile/Scrum</b> (ចេញ MVP លឿន ស្តាប់ Feedback ហើយកែ)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១.២</h4><p>រាយដំណាក់កាល SDLC តាមលំដាប់។</p><details><summary>មើលចម្លើយ</summary><p>Planning → Requirements → Design → Implementation → Testing → Deployment → Maintenance។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១.៣</h4><p>Bug រកឃើញក្នុង Production ថ្លៃជាងក្នុង Requirements ប្រហែលប៉ុន្មានដង? ហេតុអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>ច្រើនដង (រាប់សិប ដល់រាប់រយដង) — ព្រោះត្រូវកែ Design, Code, Test, Deploy ឡើងវិញ និងប៉ះពាល់អតិថិជន។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១.៤</h4><p>App ធនាគារ ត្រូវការ Maintenance ប្រភេទណាខ្លះ?</p><details><summary>មើលចម្លើយ</summary><p>Corrective (កែ Bug) · Adaptive (iOS ថ្មី ច្បាប់ថ្មី) · Perfective (មុខងារថ្មី) · Preventive (Refactor, Security patch)។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Waterfall ល្អនៅពេល?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Prototype</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>គ្មាន Requirements</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Startup ផ្លាស់ប្តូរញឹកញាប់</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>Requirements ច្បាស់ ប្តូរតិច</button></div><div class="mcq-x" hidden>💡 ដំណាក់កាលតាមលំដាប់។</div></div><div class="mcq"><p><b>២.</b> Agile ផ្តោតលើ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>Iteration ខ្លី និង Feedback</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>ឯកសារច្រើន</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>ផែនការ ២ ឆ្នាំ</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>គ្មាន Testing</button></div><div class="mcq-x" hidden>💡 ផ្តល់តម្លៃញឹកញាប់។</div></div><div class="mcq"><p><b>៣.</b> ចំណាយ Software ភាគច្រើនក្នុងជីវិតវា ស្ថិតនៅ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>Maintenance</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Deployment</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Requirements</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Design</button></div><div class="mcq-x" hidden>💡 Software រស់នៅយូរ។</div></div></div><style>.mcqs{margin:14px 0;padding:12px 14px;border:1px dashed rgba(127,127,127,.4);border-radius:14px}.mcqs h4{margin:0 0 6px}.mcq{margin:10px 0 14px}.mcq>p{margin:0 0 6px}
+.mcq-o{display:grid;gap:6px}.mcq-b{display:flex;gap:8px;align-items:flex-start;text-align:left;width:100%;padding:8px 10px;border-radius:10px;border:1px solid rgba(127,127,127,.35);background:transparent;color:inherit;font:inherit;cursor:pointer}
+.mcq-b span{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:rgba(127,127,127,.15)}
+.mcq-b.ok{border-color:#2f9e44;background:rgba(47,158,68,.14)}.mcq-b.ok span{background:#2f9e44;color:#fff}.mcq-b.no{border-color:#e03131;background:rgba(224,49,49,.1)}.mcq-b.no span{background:#e03131;color:#fff}
+.mcq.done .mcq-b{cursor:default}.mcq-x{margin-top:6px;padding:8px 10px;border-radius:10px;background:rgba(127,127,127,.08);font-size:.95em}</style>
+<script>document.addEventListener("click",function(e){var b=e.target.closest(".mcq-b");if(!b)return;var m=b.closest(".mcq");if(m.classList.contains("done"))return;m.classList.add("done");
+b.classList.add(b.dataset.ok==="1"?"ok":"no");if(b.dataset.ok!=="1")m.querySelector('.mcq-b[data-ok="1"]').classList.add("ok");var x=m.querySelector(".mcq-x");x.hidden=false;x.insertAdjacentHTML("afterbegin",b.dataset.ok==="1"?"<b>✅ ត្រឹមត្រូវ!</b> ":"<b>❌ មិនទាន់ត្រូវ</b> ");});</script></section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>Requirements៖ User story · Use case · MoSCoW</h2>
+<table><tr><th>ប្រភេទ</th><th>ឧទាហរណ៍ (App រៀន)</th></tr><tr><td><b>Functional</b> (ធ្វើអ្វី)</td><td>សិស្សអាចចុះឈ្មោះដោយលេខទូរស័ព្ទ · មើលពិន្ទុ Quiz</td></tr><tr><td><b>Non-functional</b> (គុណភាព)</td><td>បើកក្រោម ២ វិនាទីលើ 4G · គាំទ្រ ១០,០០០ អ្នកប្រើព្រមគ្នា · ភាសាខ្មែរ · Accessibility</td></tr><tr><td><b>Constraint</b></td><td>ថវិកា $500 · ចេញក្នុង ៣ ខែ · ត្រូវដំណើរការលើ Android 8+</td></tr></table>
+<div class="grid"><div class="card"><b>📝 User story</b><br>As a … I want … so that …</div><div class="card"><b>✅ Acceptance criteria</b><br>Given … When … Then …</div><div class="card"><b>🎯 MoSCoW</b><br>Must · Should · Could · Won't</div><div class="card"><b>🧾 INVEST</b><br>Independent · Negotiable · Valuable · Estimable · Small · Testable</div></div>
+<div class="warn">⚠️ កំហុសធំបំផុតក្នុង Project = <b>យល់តម្រូវការខុស</b> — កែក្នុងដំណាក់កាល Requirement ថោកជាងកែក្រោយ Release ច្រើនដង។ សួរ «ហេតុអ្វី?» និងបង្ហាញ Prototype ឲ្យអតិថិជនមើលឆាប់។</div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>សរសេរ User story មួយ សម្រាប់ «អ្នកលក់ក្នុងផ្សារ ចង់ទទួលប្រាក់តាម KHQR»។</p><details><summary>មើលចម្លើយ</summary><p><i>As a <b>អ្នកលក់ក្នុងផ្សារ</b>, I want <b>បង្ហាញ KHQR ដែលមានចំនួនប្រាក់រួច</b>, so that <b>អតិថិជនបង់លឿន មិនច្រឡំចំនួន</b>.</i> AC៖ Given ខ្ញុំវាយ 12,500៛ When ចុច «បង្កើត QR» Then QR បង្ហាញចំនួន 12,500៛ ហើយជូនដំណឹងពេលទទួលប្រាក់។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ២.២</h4><p>បំបែក Functional vs Non-functional៖ «Login ដោយ OTP» · «Page load &lt; 2s» · «Export PDF» · «Uptime 99.9%»</p><details><summary>មើលចម្លើយ</summary><p><b>Functional</b>៖ Login OTP, Export PDF · <b>Non-functional</b>៖ Load &lt; 2s, Uptime 99.9%។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ២.៣</h4><p>សរសេរ Acceptance criteria (Given/When/Then) សម្រាប់ Login ខុស ៣ ដង។</p><details><summary>មើលចម្លើយ</summary><p><b>Given</b> អ្នកប្រើវាយពាក្យសម្ងាត់ខុស ២ ដងរួច · <b>When</b> ខុសលើកទី ៣ · <b>Then</b> គណនីត្រូវចាក់សោ ១៥ នាទី ហើយបង្ហាញសារ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ២.៤</h4><p>MoSCoW៖ ចាត់ «Dark mode» សម្រាប់ App បង់ពន្ធ MVP។</p><details><summary>មើលចម្លើយ</summary><p><b>Could have</b> — ល្អបើមាន តែមិនចាំបាច់សម្រាប់ MVP។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> User story ទម្រង់?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>As a … I want … so that …</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>If … then …</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Given … When …</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>SELECT … FROM</button></div><div class="mcq-x" hidden>💡 តួនាទី · គោលដៅ · ហេតុផល។</div></div><div class="mcq"><p><b>២.</b> «System ត្រូវគាំទ្រ 1,000 អ្នកប្រើក្នុងពេលតែមួយ» ជា?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>User story</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>Non-functional</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Bug</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Functional</button></div><div class="mcq-x" hidden>💡 ជា Performance requirement។</div></div><div class="mcq"><p><b>៣.</b> INVEST ក្នុង User story — «S» មានន័យ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Simple</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>Small</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Secure</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Sorted</button></div><div class="mcq-x" hidden>💡 Independent, Negotiable, Valuable, Estimable, Small, Testable។</div></div></div></section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Agile &amp; Scrum</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="156.0" height="96" rx="14" fill="#1c7ed6"/><text x="98.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">📚 Product backlog</text><text x="98.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">PO រៀបអាទិភាព</text><line x1="178.0" y1="82" x2="204.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="206.0" y="34" width="156.0" height="96" rx="14" fill="#7048e8"/><text x="284.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🗓️ Sprint planning</text><text x="284.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">ជ្រើសការងារ</text><line x1="364.0" y1="82" x2="390.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="392.0" y="34" width="156.0" height="96" rx="14" fill="#2f9e44"/><text x="470.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🏃 Sprint 1–4 សប្តាហ៍</text><text x="470.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Daily scrum ១៥ នាទី</text><line x1="550.0" y1="82" x2="576.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="578.0" y="34" width="156.0" height="96" rx="14" fill="#e8590c"/><text x="656.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🎬 Sprint review</text><text x="656.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">បង្ហាញអតិថិជន</text><line x1="736.0" y1="82" x2="762.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="764.0" y="34" width="156.0" height="96" rx="14" fill="#d6336c"/><text x="842.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🔁 Retrospective</text><text x="842.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">កែលម្អក្រុម</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Scrum cycle</text></svg><figcaption>🖼️ Agile &amp; Scrum</figcaption></figure>
+<table><tr><th>តួនាទី</th><th>ការងារ</th></tr><tr><td><b>Product Owner</b></td><td>កំណត់ «អ្វី» និងអាទិភាព Backlog · តំណាងអតិថិជន</td></tr><tr><td><b>Scrum Master</b></td><td>ជួយក្រុមអនុវត្ត Scrum · ដកឧបសគ្គ (មិនមែនជាថៅកែ)</td></tr><tr><td><b>Developers</b></td><td>ក្រុម ៣–៩ នាក់ សម្រេច «របៀប» បង្កើត Increment</td></tr></table>
+<div class="note">💡 <b>Agile Manifesto (2001)</b>៖ មនុស្ស &amp; ការប្រាស្រ័យ &gt; Process/Tool · Software ដំណើរការ &gt; ឯកសារច្រើន · សហការជាមួយអតិថិជន &gt; ចរចាកិច្ចសន្យា · ឆ្លើយតបការប្តូរ &gt; ធ្វើតាមផែនការ។ <b>Scrum</b> ដោយ <b>Ken Schwaber &amp; Jeff Sutherland</b> (បង្ហាញ 1995)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>Daily scrum ១៥ នាទី សមាជិកម្នាក់ៗឆ្លើយសំណួរអ្វីខ្លះ?</p><details><summary>មើលចម្លើយ</summary><p>(1) ម្សិលមិញខ្ញុំធ្វើអ្វីជួយគោលដៅ Sprint? (2) ថ្ងៃនេះខ្ញុំនឹងធ្វើអ្វី? (3) មានឧបសគ្គអ្វីទេ? — ផ្តោតលើ <b>Sprint goal</b> មិនមែនរាយការណ៍ថៅកែ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣.២</h4><p>តួនាទី ៣ ក្នុង Scrum និងការងារ?</p><details><summary>មើលចម្លើយ</summary><p><b>Product Owner</b> (Backlog/អាទិភាព) · <b>Scrum Master</b> (ដំណើរការ ដកឧបសគ្គ) · <b>Developers</b> (បង្កើត Increment)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣.៣</h4><p>Sprint review និង Retrospective ខុសគ្នាដូចម្តេច?</p><details><summary>មើលចម្លើយ</summary><p><b>Review</b> = បង្ហាញផលិតផលឲ្យ Stakeholder · <b>Retro</b> = ក្រុមកែលម្អរបៀបធ្វើការ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣.៤</h4><p>Definition of Done ឧទាហរណ៍?</p><details><summary>មើលចម្លើយ</summary><p>Code review រួច · Test pass · Coverage ≥ 80% · Deploy លើ Staging · Docs update។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Sprint ធម្មតាយូរ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>៦ ខែ</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>១ ថ្ងៃ</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>១ ឆ្នាំ</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>១–៤ សប្តាហ៍</button></div><div class="mcq-x" hidden>💡 ភាគច្រើន ២ សប្តាហ៍។</div></div><div class="mcq"><p><b>២.</b> អ្នកណាកំណត់អាទិភាព Product backlog?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>CEO តែម្នាក់</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Tester</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>Product Owner</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Scrum Master</button></div><div class="mcq-x" hidden>💡 PO ទទួលខុសត្រូវ Value។</div></div><div class="mcq"><p><b>៣.</b> Daily scrum ចំណាយពេល?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>១ ថ្ងៃ</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>២ ម៉ោង</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>≤ ១៥ នាទី</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>គ្មានកំណត់</button></div><div class="mcq-x" hidden>💡 ខ្លី ផ្តោតលើផែនការថ្ងៃនេះ។</div></div></div></section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>Kanban · ការប៉ាន់ស្មាន · Velocity</h2>
+<table><tr><th>Kanban column</th><th>ច្បាប់</th></tr><tr><td>📥 To do</td><td>Backlog តម្រៀបអាទិភាព</td></tr><tr><td>🔨 In progress</td><td><b>WIP limit</b> (ឧ. ≤ 3) — បញ្ចប់មុនចាប់ផ្តើមថ្មី</td></tr><tr><td>👀 Review / Test</td><td>Code review · QA</td></tr><tr><td>✅ Done</td><td>តាម <b>Definition of Done</b></td></tr></table>
+<div class="grid"><div class="card"><b>🃏 Story points</b><br>ប៉ាន់ស្មានទំហំ (Fibonacci 1,2,3,5,8,13) មិនមែនម៉ោង</div><div class="card"><b>🎴 Planning poker</b><br>ក្រុមបោះសន្លឹកព្រមគ្នា → ពិភាក្សាភាពខុសគ្នា</div><div class="card"><b>📈 Velocity</b><br>Points ដែលបញ្ចប់ក្នុងមួយ Sprint (មធ្យម ៣ Sprint)</div><div class="card"><b>📉 Burndown</b><br>Points នៅសល់ តាមថ្ងៃ</div></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>ក្រុមបញ្ចប់ 18, 22, 20 points ក្នុង ៣ Sprint ចុងក្រោយ។ Backlog នៅសល់ 120 points។ ត្រូវប្រហែលប៉ុន្មាន Sprint?</p><details><summary>មើលចម្លើយ</summary><p>Velocity ≈ (18+22+20)/3 = <b>20</b> → 120/20 = <b>6 Sprint</b> (ប្រហែល ១២ សប្តាហ៍ បើ Sprint = ២ សប្តាហ៍)។ សាកក្នុង <b>Sprint Planner</b>។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤.២</h4><p>WIP limit = 3 នៅជួរ «Doing» មានន័យអ្វី? ហេតុអ្វីល្អ?</p><details><summary>មើលចម្លើយ</summary><p>កុំធ្វើការងារលើស ៣ ក្នុងពេលតែមួយ — បង្ខំឲ្យបញ្ចប់មុនចាប់ផ្តើមថ្មី កាត់បន្ថយ Context switching។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤.៣</h4><p>Velocity 20 points/Sprint (២ សប្តាហ៍) Backlog 90 points — ត្រូវការប៉ុន្មានសប្តាហ៍?</p><details><summary>មើលចម្លើយ</summary><p>90 ÷ 20 = 4.5 → <b>5 Sprint = 10 សប្តាហ៍</b>។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤.៤</h4><p>ហេតុអ្វី Story points ប្រើ Fibonacci (1,2,3,5,8,13)?</p><details><summary>មើលចម្លើយ</summary><p>ការងារធំ មិនប្រាកដច្រើន — គម្លាតធំបង្ហាញភាពមិនប្រាកដ ហើយបង្ខំឲ្យបំបែក Story ធំ។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Kanban board ជួរទូទៅ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Q1 · Q2</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Dev · Ops</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>To do · Doing · Done</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>A · B · C</button></div><div class="mcq-x" hidden>💡 មើលលំហូរការងារ។</div></div><div class="mcq"><p><b>២.</b> Planning poker ប្រើសម្រាប់?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>ប៉ាន់ស្មាន Story points</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Code review</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>លេងល្បែង</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Deploy</button></div><div class="mcq-x" hidden>💡 ក្រុមប៉ាន់ស្មានរួមគ្នា។</div></div><div class="mcq"><p><b>៣.</b> Lead time គឺ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>ពេល Test</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>ពេល Deploy</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>ពីស្នើ ដល់ Done</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>ពេលសរសេរ Code</button></div><div class="mcq-x" hidden>💡 អតិថិជនរង់ចាំប៉ុន្មាន។</div></div></div></section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>UML៖ Use case · Class · Sequence</h2>
+<p><b>UML (Unified Modeling Language)</b> ដោយ Grady Booch, James Rumbaugh, Ivar Jacobson (1990s) — ស្តង់ដារ OMG 1997។ គូរ Diagram ដើម្បីក្រុមយល់ដូចគ្នា (ឧបករណ៍៖ draw.io, PlantUML, Mermaid, FigJam)។</p><table><tr><th>Diagram</th><th>បង្ហាញ</th></tr><tr><td>Use case</td><td>អ្នកណាធ្វើអ្វីជាមួយប្រព័ន្ធ</td></tr><tr><td>Class</td><td>រចនាសម្ព័ន្ធ Object · Inheritance · Relationship</td></tr><tr><td>Sequence</td><td>លំដាប់សារតាមពេលវេលា</td></tr><tr><td>Activity / State</td><td>Flow · ស្ថានភាពនៃ Object (ឧ. Order៖ new → paid → delivered)</td></tr></table>
+<script type="text/x-code" data-lang="txt" data-label="Use case diagram (PlantUML)">
+@startuml
+actor សិស្ស
+actor គ្រូ
+rectangle "App រៀន" {
+  សិស្ស --> (ចូលប្រព័ន្ធ)
+  សិស្ស --> (ធ្វើ Quiz)
+  (ធ្វើ Quiz) .> (មើលពិន្ទុ) : <<include>>
+  គ្រូ --> (បង្កើត Quiz)
+}
+@enduml
+</script>
+<script type="text/x-code" data-lang="txt" data-label="Class diagram (Mermaid)">
+classDiagram
+  class User { +id: int
+ +name: str
+ +login() }
+  class Student { +grade: int
+ +takeQuiz(q) }
+  class Teacher { +createQuiz() }
+  class Quiz { +title: str
+ +score(answers) int }
+  User <|-- Student
+  User <|-- Teacher
+  Teacher "1" --> "*" Quiz : creates
+  Student "*" --> "*" Quiz : takes
+</script>
+<script type="text/x-code" data-lang="txt" data-label="Sequence diagram (Mermaid)">
+sequenceDiagram
+  Student->>App: ចុច «ដាក់ចម្លើយ»
+  App->>API: POST /quiz/7/answers
+  API->>DB: INSERT answers
+  DB-->>API: OK
+  API-->>App: score = 8/10
+  App-->>Student: បង្ហាញពិន្ទុ 🎉
+</script>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>ចង់បង្ហាញលំដាប់ «App → API → Database → API → App» ពេលបង់ប្រាក់។ គូរ Diagram អ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Sequence diagram</b> — បង្ហាញសារ (Request/Response) តាមលំដាប់ពេលវេលា រវាង Object នីមួយៗ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥.២</h4><p>Class diagram៖ Order មាន OrderItem ច្រើន ហើយ OrderItem មិនអាចនៅដាច់ពី Order — ទំនាក់ទំនងអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Composition</b> (ពេជ្រខ្មៅ ◆) 1 — *។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥.៣</h4><p>Use case diagram សម្រាប់ App កុម្ម៉ង់អាហារ — Actor និង Use case ៣។</p><details><summary>មើលចម្លើយ</summary><p>Actor៖ អតិថិជន, ហាង, អ្នកដឹក · Use case៖ កុម្ម៉ង់អាហារ, បង់ប្រាក់ KHQR, តាមដានការដឹក។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥.៤</h4><p>Inheritance ក្នុង Class diagram គូរម៉េច? ឧទាហរណ៍។</p><details><summary>មើលចម្លើយ</summary><p>ព្រួញត្រីកោណទទេ ▷ ពី Subclass ទៅ Superclass — <code>Teacher ▷ Person</code>។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Diagram បង្ហាញលំដាប់សារតាមពេលវេលា?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Class</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>Sequence</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Deployment</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Use case</button></div><div class="mcq-x" hidden>💡 Lifeline + Message។</div></div><div class="mcq"><p><b>២.</b> Diagram បង្ហាញ Attributes និង Methods?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Sequence</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Activity</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>Class</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Use case</button></div><div class="mcq-x" hidden>💡 ប្រអប់ ៣ ផ្នែក។</div></div><div class="mcq"><p><b>៣.</b> ក្នុង Class diagram <code>-</code> មុខ Attribute មានន័យ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>private</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>protected</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>static</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>public</button></div><div class="mcq-x" hidden>💡 + public · − private · # protected។</div></div></div></section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>Software Architecture</h2>
+<table><tr><th>Architecture</th><th>ពន្យល់</th><th>ល្អ</th><th>មិនល្អ</th></tr><tr><td><b>Layered</b> (UI → Business → Data)</td><td>ស្រទាប់ៗ</td><td>ងាយយល់ · ស្តង់ដារ</td><td>អាចយឺត · ស្រទាប់ជាប់គ្នា</td></tr><tr><td><b>MVC / MVVM</b></td><td>Model · View · Controller/ViewModel</td><td>បំបែក UI ពី Logic</td><td>ស្មុគស្មាញសម្រាប់ App តូច</td></tr><tr><td><b>Client–Server / REST API</b></td><td>Frontend ហៅ API</td><td>Web + Mobile ប្រើ API ដដែល</td><td>ត្រូវការ Network</td></tr><tr><td><b>Monolith</b></td><td>App តែមួយ Deploy ម្តង</td><td>ចាប់ផ្តើមលឿន ងាយ Debug</td><td>ពិបាក Scale ក្រុមធំ</td></tr><tr><td><b>Microservices</b></td><td>Service តូចៗ ដាច់ដោយឡែក</td><td>Scale ផ្នែកនីមួយៗ · ក្រុមឯករាជ្យ</td><td>ស្មុគស្មាញ (Network, DevOps)</td></tr><tr><td><b>Event-driven</b></td><td>Service ផ្ញើ Event តាម Queue</td><td>Loose coupling</td><td>Debug ពិបាក</td></tr></table>
+<div class="note">💡 ច្បាប់ល្អ៖ <b>ចាប់ផ្តើមជា Monolith ដែលបែងចែក Module ល្អ</b> — ប្តូរទៅ Microservices ពេលមានហេតុផលពិត (ក្រុមធំ, Scale ខុសគ្នា)។ ច្រើនក្រុមហ៊ុនបរាជ័យព្រោះ Microservices មុនពេល។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>Startup ៣ នាក់ ចាប់ផ្តើម App កុម្ម៉ង់កាហ្វេ — Monolith ឬ Microservices?</p><details><summary>មើលចម្លើយ</summary><p><b>Monolith</b> (Module ច្បាស់ ឧ. orders, menu, payments) — Deploy ងាយ ថោក Debug លឿន។ Microservices សមនៅពេលក្រុម និង Traffic ធំ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦.២</h4><p>ពន្យល់ 3-tier architecture ជាមួយឧទាហរណ៍។</p><details><summary>មើលចម្លើយ</summary><p><b>Presentation</b> (React/App) → <b>Logic</b> (API Node/Laravel) → <b>Data</b> (PostgreSQL)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦.៣</h4><p>អត្ថប្រយោជន៍ និងគុណវិបត្តិ Microservices?</p><details><summary>មើលចម្លើយ</summary><p>+ Scale/Deploy ដាច់ៗ ក្រុមឯករាជ្យ · − ស្មុគស្មាញ Network, Monitoring, Data consistency។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦.៤</h4><p>Cache (Redis) ជួយអ្វី? ហានិភ័យ?</p><details><summary>មើលចម្លើយ</summary><p>Response លឿន បន្ថយ Load DB · ហានិភ័យ៖ ទិន្នន័យចាស់ (Stale) — ត្រូវ TTL/Invalidation។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> MVC — «C» ជា?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Client</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Cache</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Cloud</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>Controller</button></div><div class="mcq-x" hidden>💡 Model · View · Controller។</div></div><div class="mcq"><p><b>២.</b> Load balancer ធ្វើអ្វី?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>ចែក Request ទៅ Server ច្រើន</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>បង្ហាញ UI</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Compile Code</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>រក្សាទុក Data</button></div><div class="mcq-x" hidden>💡 Horizontal scaling។</div></div><div class="mcq"><p><b>៣.</b> Startup តូច គួរចាប់ផ្តើមជាមួយ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>Modular monolith</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>100 Microservices</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Mainframe</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>គ្មាន Architecture</button></div><div class="mcq-x" hidden>💡 សាមញ្ញ លឿន បំបែកក្រោយ។</div></div></div></section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Clean code &amp; SOLID</h2>
+<table><tr><th>SOLID</th><th>ន័យ</th></tr><tr><td><b>S</b> — Single Responsibility</td><td>Class/Function មួយ មានហេតុផលតែមួយដើម្បីប្តូរ</td></tr><tr><td><b>O</b> — Open/Closed</td><td>បើកសម្រាប់ពង្រីក បិទសម្រាប់កែ (បន្ថែមដោយមិនកែកូដចាស់)</td></tr><tr><td><b>L</b> — Liskov Substitution</td><td>Subclass ជំនួស Parent បានដោយមិនខូច</td></tr><tr><td><b>I</b> — Interface Segregation</td><td>Interface តូចៗ ជាជាងធំមួយ</td></tr><tr><td><b>D</b> — Dependency Inversion</td><td>អាស្រ័យលើ Abstraction មិនមែន Class ជាក់ស្តែង</td></tr></table>
+<script type="text/x-code" data-lang="py" data-label="clean_code.py">
+# ❌ មុន៖ Function មួយធ្វើច្រើន ឈ្មោះមិនច្បាស់
+def p(d):
+    t = 0
+    for i in d:
+        t += i["q"] * i["pr"]
+    if t > 50000: t = t * 0.9
+    print("Total:", t)
+
+# ✅ ក្រោយ៖ ឈ្មោះច្បាស់ · Function តូច · ធ្វើការងារមួយ (SRP)
+DISCOUNT_THRESHOLD = 50_000   # រៀល
+DISCOUNT_RATE = 0.10
+
+def subtotal(items):
+    return sum(item["qty"] * item["price"] for item in items)
+
+def apply_discount(amount):
+    return amount * (1 - DISCOUNT_RATE) if amount > DISCOUNT_THRESHOLD else amount
+
+def format_riel(amount):
+    return f"{amount:,.0f}៛"
+
+cart = [{"qty": 2, "price": 15_000}, {"qty": 3, "price": 8_000}]
+print(format_riel(apply_discount(subtotal(cart))))
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>48,600៛</pre></div>
+<div class="note">💡 SOLID ប្រមូលដោយ <b>Robert C. Martin (Uncle Bob)</b> (~2000) · <i>Clean Code</i> (2008)។ Kent Beck៖ «Make it work, make it right, make it fast»។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>ហេតុអ្វី <code>DISCOUNT_THRESHOLD = 50_000</code> ល្អជាងសរសេរ <code>50000</code> ក្នុងកូដផ្ទាល់?</p><details><summary>មើលចម្លើយ</summary><p>ជៀស <b>Magic number</b>៖ ឈ្មោះពន្យល់ន័យ · កែកន្លែងតែមួយពេលគោលនយោបាយប្តូរ · មិនច្រឡំលេខ 50000 ផ្សេងទៀតក្នុងកូដ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧.២</h4><p>កែឈ្មោះ៖ <code>def f(a, b): return a * b * 0.1</code></p><details><summary>មើលចម្លើយ</summary><p><code>def calc_tax(price, qty): return price * qty * TAX_RATE</code> (TAX_RATE = 0.1)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧.៣</h4><p>SOLID «S» មានន័យអ្វី? ឧទាហរណ៍បំពាន។</p><details><summary>មើលចម្លើយ</summary><p><b>Single responsibility</b> — Class <code>Report</code> ដែលទាំងគណនា ទាំង Save PDF ទាំងផ្ញើ Email = បំពាន។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧.៤</h4><p>DRY មានន័យអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Don't Repeat Yourself</b> — Logic ដដែលដាក់កន្លែងតែមួយ (Function/Module)។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Function ល្អគួរ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>គ្មានឈ្មោះ</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>ប្រើ Global ច្រើន</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>វែង ៥០០ បន្ទាត់</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>តូច ធ្វើរឿងតែមួយ</button></div><div class="mcq-x" hidden>💡 ងាយអាន ងាយ Test។</div></div><div class="mcq"><p><b>២.</b> SOLID «O»?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Order</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Object</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Optional</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>Open/Closed</button></div><div class="mcq-x" hidden>💡 បើកសម្រាប់ពង្រីក បិទសម្រាប់កែ។</div></div><div class="mcq"><p><b>៣.</b> Comment ល្អបំផុតពន្យល់?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>ឈ្មោះអ្នកសរសេរ</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>ហេតុអ្វី (Why)</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>កាលបរិច្ឆេទ</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>កូដធ្វើអ្វីតាមបន្ទាត់</button></div><div class="mcq-x" hidden>💡 Code ពន្យល់ What, Comment ពន្យល់ Why។</div></div></div></section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Design Patterns</h2>
+<table><tr><th>ក្រុម</th><th>Pattern</th><th>ប្រើពេល</th></tr><tr><td>Creational</td><td>Singleton · Factory · Builder</td><td>បង្កើត Object</td></tr><tr><td>Structural</td><td>Adapter · Decorator · Facade</td><td>ភ្ជាប់/រុំ Object</td></tr><tr><td>Behavioral</td><td>Strategy · Observer · Command · State</td><td>ការប្រាស្រ័យរវាង Object</td></tr></table>
+<script type="text/x-code" data-lang="py" data-label="patterns.py">
+from abc import ABC, abstractmethod
+
+# Strategy — ប្តូរវិធីបង់ប្រាក់ ដោយមិនកែ Checkout
+class Payment(ABC):
+    @abstractmethod
+    def pay(self, amount): ...
+class KHQR(Payment):
+    def pay(self, amount): return f"បង់ {amount:,}៛ តាម KHQR ✅"
+class Cash(Payment):
+    def pay(self, amount): return f"បង់សាច់ប្រាក់ {amount:,}៛ ពេលទទួល"
+def checkout(amount, method: Payment): return method.pay(amount)
+
+# Factory — បង្កើត Object តាមឈ្មោះ
+def payment_factory(name):
+    return {"khqr": KHQR, "cash": Cash}[name]()
+
+# Observer — ជូនដំណឹងអ្នកជាវ ពេលស្ថានភាពប្តូរ
+class Order:
+    def __init__(self): self.listeners, self.status = [], "new"
+    def subscribe(self, fn): self.listeners.append(fn)
+    def set_status(self, s):
+        self.status = s
+        for fn in self.listeners: fn(s)
+
+print(checkout(25_000, payment_factory("khqr")))
+print(checkout(9_000, payment_factory("cash")))
+o = Order()
+o.subscribe(lambda s: print("📱 Push:", s))
+o.subscribe(lambda s: print("📧 Email:", s))
+o.set_status("កំពុងរៀបចំ")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>បង់ 25,000៛ តាម KHQR ✅
+បង់សាច់ប្រាក់ 9,000៛ ពេលទទួល
+📱 Push: កំពុងរៀបចំ
+📧 Email: កំពុងរៀបចំ</pre></div>
+<div class="note">💡 <i>Design Patterns</i> (1994) ដោយ <b>Gang of Four</b> — Erich Gamma, Richard Helm, Ralph Johnson, John Vlissides — Pattern ២៣។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>App ត្រូវគាំទ្រ KHQR, Visa និង Wing ហើយអាចបន្ថែមថ្មីក្រោយ។ Pattern អ្វីសម?</p><details><summary>មើលចម្លើយ</summary><p><b>Strategy</b> (Payment interface + Class សម្រាប់វិធីនីមួយៗ) + <b>Factory</b> បង្កើតតាមឈ្មោះ — បន្ថែមវិធីថ្មីដោយមិនកែ Checkout (<b>Open/Closed</b>)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៨.២</h4><p>ប្រព័ន្ធ Notification ផ្ញើ SMS/Email/Telegram ពេលមាន Order — Pattern?</p><details><summary>មើលចម្លើយ</summary><p><b>Observer</b> (Subscribe/Notify) ឬ Strategy សម្រាប់ Channel។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៨.៣</h4><p>ហេតុអ្វី Singleton ខ្លះត្រូវគេហៅថា Anti-pattern?</p><details><summary>មើលចម្លើយ</summary><p>Global state ពិបាក Test និងបង្កើត Coupling លាក់កំបាំង។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៨.៤</h4><p>Adapter pattern ឧទាហរណ៍ពិត?</p><details><summary>មើលចម្លើយ</summary><p>ភ្ជាប់ API ធនាគារចាស់ (XML) ទៅ Interface ថ្មីរបស់ App (JSON) — Adapter បកប្រែ។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Factory pattern?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>តម្រៀប</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>បង្កើត Object ដោយមិនកំណត់ Class ផ្ទាល់</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>លុប Object</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Cache</button></div><div class="mcq-x" hidden>💡 Creational pattern។</div></div><div class="mcq"><p><b>២.</b> Strategy pattern?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Subscribe</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>ប្តូរ Algorithm ពេល Runtime</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Object តែមួយ</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Wrap API</button></div><div class="mcq-x" hidden>💡 ឧ. វិធីបង់ប្រាក់។</div></div><div class="mcq"><p><b>៣.</b> Gang of Four book ឆ្នាំ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>1970</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>2020</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>2010</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>1994</button></div><div class="mcq-x" hidden>💡 Design Patterns (Gamma, Helm, Johnson, Vlissides)។</div></div></div></section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Git workflow · Pull request · Code review</h2>
+<table><tr><th>Commit type (Conventional Commits)</th><th>ឧទាហរណ៍</th></tr><tr><td>feat</td><td>feat: add KHQR payment</td></tr><tr><td>fix</td><td>fix: crash when list is empty</td></tr><tr><td>docs</td><td>docs: update README setup</td></tr><tr><td>refactor</td><td>refactor: split checkout service</td></tr><tr><td>test</td><td>test: add tests for discount</td></tr></table>
+<div class="grid"><div class="card"><b>👀 Code review</b><br>រក Bug · ចែករំលែកចំណេះ · ស្តង់ដារដូចគ្នា</div><div class="card"><b>🤝 សុភាព</b><br>Review កូដ មិនមែនមនុស្ស — «យើងអាច…?»</div><div class="card"><b>📏 PR តូច</b><br>< 400 បន្ទាត់ — Review បានល្អ</div><div class="card"><b>✅ Checklist</b><br>Test · Naming · Security · Docs</div></div>
+<script type="text/x-code" data-lang="bash" data-label="Feature branch workflow">
+git switch -c feature/exam-reminder      # Branch ថ្មីសម្រាប់មុខងារ
+# ... សរសេរកូដ + Test ...
+git add .
+git commit -m "feat: exam reminder 3 days before"
+git push -u origin feature/exam-reminder
+# → បើក Pull Request លើ GitHub → Review → CI ✅ → Merge ទៅ main
+</script>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>ហេតុអ្វីមិនគួរ Push ផ្ទាល់ទៅ <code>main</code>?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះគ្មាន <b>Review</b> និង <b>CI test</b> មុនចូល Code ផ្លូវការ — Bug ចូល Production ងាយ។ ប្រើ Branch + Pull request + Branch protection rule។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩.២</h4><p>Workflow៖ ចាប់ផ្តើម Feature ថ្មី ដល់ Merge — Command សំខាន់។</p><details><summary>មើលចម្លើយ</summary><p><code>git switch -c feature/khqr</code> → Commit → <code>git push -u origin feature/khqr</code> → Pull request → Review → Merge។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩.៣</h4><p>Commit message ល្អ ឧទាហរណ៍?</p><details><summary>មើលចម្លើយ</summary><p><code>fix(payment): handle KHQR timeout after 60s</code> — ខ្លី ច្បាស់ បញ្ជាក់ហេតុ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩.៤</h4><p>Merge conflict ដោះស្រាយយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>បើក File ចំណាំ &lt;&lt;&lt;&lt;&lt;&lt;&lt; ===== &gt;&gt;&gt;&gt;&gt;&gt;&gt; → ជ្រើស/លាយ → <code>git add</code> → <code>git commit</code> → Test។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Pull request សំខាន់សម្រាប់?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Backup</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>លុប Repo</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>Code review មុន Merge</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Compile</button></div><div class="mcq-x" hidden>💡 គុណភាព + ចែករំលែកចំណេះ។</div></div><div class="mcq"><p><b>២.</b> <code>git log --oneline</code>?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>លុប Commit</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>មើលប្រវត្តិ Commit ខ្លី</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>បង្កើត Branch</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Push</button></div><div class="mcq-x" hidden>💡 Commit មួយបន្ទាត់។</div></div><div class="mcq"><p><b>៣.</b> Code review ល្អ ផ្តោតលើ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>តែ Spacing</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>ពណ៌ Editor</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>ឈ្មោះអ្នកសរសេរ</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>Logic, Readability, Security, Test</button></div><div class="mcq-x" hidden>💡 Bug, Design និង Maintainability។</div></div></div></section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>Software Testing &amp; TDD</h2>
+<table><tr><th>កម្រិត</th><th>សាកអ្វី</th><th>ចំនួន</th></tr><tr><td>Unit test</td><td>Function/Class តែមួយ</td><td>ច្រើនបំផុត (Test pyramid បាត)</td></tr><tr><td>Integration test</td><td>Module ជាមួយ Database/API</td><td>មធ្យម</td></tr><tr><td>End-to-end (E2E)</td><td>អ្នកប្រើពិតចុចពីដើមដល់ចប់ (Playwright)</td><td>តិច</td></tr><tr><td>Acceptance / UAT</td><td>អតិថិជនបញ្ជាក់តាម Acceptance criteria</td><td>មុន Release</td></tr></table>
+<script type="text/x-code" data-lang="py" data-label="test_grade.py">
+import unittest, sys
+
+def grade(score):
+    if not 0 <= score <= 100: raise ValueError("score 0..100")
+    return "A" if score >= 90 else "B" if score >= 80 else "C" if score >= 70 else "D" if score >= 60 else "F"
+
+class TestGrade(unittest.TestCase):
+    def test_boundaries(self):
+        self.assertEqual(grade(90), "A"); self.assertEqual(grade(89), "B")
+        self.assertEqual(grade(60), "D"); self.assertEqual(grade(59), "F")
+    def test_extremes(self):
+        self.assertEqual(grade(100), "A"); self.assertEqual(grade(0), "F")
+    def test_invalid(self):
+        with self.assertRaises(ValueError): grade(101)
+        with self.assertRaises(ValueError): grade(-5)
+
+r = unittest.TextTestRunner(stream=sys.stdout, verbosity=2).run(unittest.defaultTestLoader.loadTestsFromTestCase(TestGrade))
+print("ជោគជ័យ!" if r.wasSuccessful() else "មាន Test បរាជ័យ")
+</script>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>លទ្ធផលពិត · Python 3</span></div><pre>test_boundaries (__main__.TestGrade.test_boundaries) ... ok
+test_extremes (__main__.TestGrade.test_extremes) ... ok
+test_invalid (__main__.TestGrade.test_invalid) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.000s
+
+OK
+ជោគជ័យ!</pre></div>
+<div class="note">💡 <b>TDD</b> (Kent Beck)៖ 🔴 សរសេរ Test បរាជ័យ → 🟢 សរសេរកូដតិចបំផុតឲ្យ Test ឆ្លង → 🔵 Refactor។ <b>Boundary value</b>៖ សាកចំណុចព្រំ (59/60, 89/90)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>ហេតុអ្វី Test ក្នុងឧទាហរណ៍ សាកលេខ 89 និង 90 ជាពិសេស?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះ Bug ច្រើនកើតនៅ <b>ព្រំដែន</b> (&gt; vs &gt;=) — Boundary value analysis សាកមុន/ក្រោយព្រំដែននីមួយៗ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០.២</h4><p>Testing pyramid មានអ្វីខ្លះ? មួយណាច្រើនជាងគេ?</p><details><summary>មើលចម្លើយ</summary><p>Unit (ច្រើនបំផុត) → Integration → E2E/UI (តិចបំផុត)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០.៣</h4><p>TDD ៣ ជំហាន?</p><details><summary>មើលចម្លើយ</summary><p><b>Red</b> (សរសេរ Test បរាជ័យ) → <b>Green</b> (កូដតិចបំផុតឲ្យ Pass) → <b>Refactor</b>។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០.៤</h4><p>សរសេរ Test case សម្រាប់ <code>grade(score)</code> (≥ 50 ជាប់)។</p><details><summary>មើលចម្លើយ</summary><p>Boundary: 49 → ធ្លាក់ · 50 → ជាប់ · 0, 100 · តម្លៃខុស (−1, 101, None) → Error។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Unit test សាក?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Network</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>ប្រព័ន្ធទាំងមូល</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>UI តែប៉ុណ្ណោះ</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>Function/Class តូចដាច់ដោយឡែក</button></div><div class="mcq-x" hidden>💡 លឿន ច្រើន។</div></div><div class="mcq"><p><b>២.</b> Mock ប្រើដើម្បី?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Deploy</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>ជំនួស Dependency ពិត (API, DB)</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>លុប Test</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Debug</button></div><div class="mcq-x" hidden>💡 Test ដាច់ដោយឡែក។</div></div><div class="mcq"><p><b>៣.</b> Regression test?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Performance</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Security តែប៉ុណ្ណោះ</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>ធានាថាមុខងារចាស់នៅដំណើរការក្រោយកែ</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Test ដំបូង</button></div><div class="mcq-x" hidden>💡 ការពារ Bug ត្រឡប់មកវិញ។</div></div></div></section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>CI/CD &amp; DevOps</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="125.0" height="96" rx="14" fill="#495057"/><text x="82.5" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">💻 Commit</text><line x1="147.0" y1="82" x2="173.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="175.0" y="34" width="125.0" height="96" rx="14" fill="#1c7ed6"/><text x="237.5" y="88.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🔨 Build</text><line x1="302.0" y1="82" x2="328.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="330.0" y="34" width="125.0" height="96" rx="14" fill="#7048e8"/><text x="392.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🧪 Test</text><text x="392.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Unit + Lint</text><line x1="457.0" y1="82" x2="483.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="485.0" y="34" width="125.0" height="96" rx="14" fill="#0ca678"/><text x="547.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">📦 Package</text><text x="547.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Docker</text><line x1="612.0" y1="82" x2="638.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="640.0" y="34" width="125.0" height="96" rx="14" fill="#e8590c"/><text x="702.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🚀 Deploy</text><text x="702.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Staging → Prod</text><line x1="767.0" y1="82" x2="793.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="795.0" y="34" width="125.0" height="96" rx="14" fill="#d6336c"/><text x="857.5" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">📊 Monitor</text><text x="857.5" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Logs · Alerts</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">CI/CD pipeline</text></svg><figcaption>🖼️ CI/CD &amp; DevOps</figcaption></figure>
+<script type="text/x-code" data-lang="yaml" data-label=".github/workflows/ci.yml (GitHub Actions)">
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python -m pytest -q
+      - run: python -m ruff check .
+</script>
+<div class="note">💡 <b>CI</b> (Continuous Integration) = Merge ញឹក + Test ស្វ័យប្រវត្តិ · <b>CD</b> (Delivery/Deployment) = ត្រៀម/ដាក់ Production ស្វ័យប្រវត្តិ។ ពាក្យ <b>DevOps</b> ពេញនិយមពីឆ្នាំ 2009 (Patrick Debois)។ មើលវគ្គ <b>Docker + CI/CD</b>។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>ហេតុអ្វី CI ត្រូវដំណើរការលើ <b>Pull request</b> មុន Merge?</p><details><summary>មើលចម្លើយ</summary><p>ដើម្បីរកឃើញ Test បរាជ័យ/Lint error <b>មុន</b> កូដចូល main — Branch protection អាចហាម Merge បើ CI ក្រហម។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១.២</h4><p>Pipeline CI/CD សាមញ្ញ មានជំហានអ្វីខ្លះ?</p><details><summary>មើលចម្លើយ</summary><p>Checkout → Install → Lint → Test → Build → Deploy Staging → (Approve) → Production។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១.៣</h4><p>Continuous Delivery និង Continuous Deployment ខុសគ្នា?</p><details><summary>មើលចម្លើយ</summary><p><b>Delivery</b> = ត្រៀម Deploy ជានិច្ច តែចុចដោយមនុស្ស · <b>Deployment</b> = ចេញ Production ស្វ័យប្រវត្តិ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១.៤</h4><p>Secret (API key) ក្នុង CI ដាក់នៅណា?</p><details><summary>មើលចម្លើយ</summary><p><b>Secrets/Environment variables</b> របស់ GitHub Actions — មិនដែលដាក់ក្នុង Code។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> GitHub Actions File ដាក់?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>package.json តែប៉ុណ្ណោះ</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>src/main.py</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>.github/workflows/*.yml</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>README.md</button></div><div class="mcq-x" hidden>💡 YAML workflow។</div></div><div class="mcq"><p><b>២.</b> Blue-green deployment?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Deploy ពណ៌</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Test ដោយដៃ</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>Environment ពីរ ប្តូរ Traffic</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Rollback មិនបាន</button></div><div class="mcq-x" hidden>💡 Rollback លឿន។</div></div><div class="mcq"><p><b>៣.</b> Docker ជួយ CI/CD ដោយ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>សរសេរ Test ជំនួស</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>Environment ដូចគ្នាគ្រប់កន្លែង</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Design UI</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>លុប Bug</button></div><div class="mcq-x" hidden>💡 «Works on my machine» ថយ។</div></div></div></section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>គ្រប់គ្រងគម្រោង · ហានិភ័យ · ឯកសារ</h2>
+<table><tr><th>ឧបករណ៍</th><th>ប្រើ</th></tr><tr><td>Gantt chart</td><td>កាលវិភាគ + Dependency</td></tr><tr><td>Risk register</td><td>ហានិភ័យ · ប្រូបាប៊ីលីតេ · ផលប៉ះពាល់ · ផែនការការពារ</td></tr><tr><td>RACI</td><td>Responsible · Accountable · Consulted · Informed</td></tr><tr><td>README / ADR</td><td>ការណែនាំ Setup · Architecture Decision Record</td></tr></table>
+<div class="grid"><div class="card"><b>📏 Brooks's law</b><br>«បន្ថែមមនុស្សក្នុង Project យឺត ធ្វើឲ្យយឺតជាង» — <i>The Mythical Man-Month</i> (1975)</div><div class="card"><b>🧯 Technical debt</b><br>ផ្លូវកាត់ថ្ងៃនេះ = ការប្រាក់ថ្ងៃស្អែក (Ward Cunningham 1992)</div><div class="card"><b>🎯 Scope creep</b><br>តម្រូវការរីក ដោយមិនកែពេល/ថវិកា</div><div class="card"><b>🔺 Iron triangle</b><br>Scope · Time · Cost → Quality</div></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>Project យឺត ២ សប្តាហ៍ ថៅកែចង់បន្ថែម Developer ៣ នាក់ភ្លាម។ គួរពន្យល់អ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Brooks's law</b> — អ្នកថ្មីត្រូវការពេលរៀន ហើយការប្រាស្រ័យកើនឡើង → អាចយឺតជាង។ ជម្រើសល្អ៖ កាត់ Scope (MoSCoW) ឬ ពន្យាពេល ឬបន្ថែមមនុស្សលើផ្នែកដាច់ដោយឡែក។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២.២</h4><p>Risk register មាន Column អ្វីខ្លះ?</p><details><summary>មើលចម្លើយ</summary><p>ហានិភ័យ · ប្រូបាប៊ីលីតេ · ផលប៉ះពាល់ · ពិន្ទុ · វិធានការ · អ្នកទទួលខុសត្រូវ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២.៣</h4><p>Triple constraint ជាអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Scope · Time · Cost</b> (+ Quality) — ប្តូរមួយ ប៉ះពាល់ផ្សេងទៀត។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២.៤</h4><p>Technical debt ជាអ្វី? គ្រប់គ្រងយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>ផ្លូវកាត់ក្នុង Code ដែលត្រូវ «សង» ក្រោយ — កត់ក្នុង Backlog ហើយទុក ~10–20% Sprint សម្រាប់ Refactor។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Brooks's law?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Test មិនចាំបាច់</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Code ច្រើន ល្អជាង</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Agile ស្លាប់</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>បន្ថែមមនុស្សលើគម្រោងយឺត ធ្វើឲ្យយឺតថែម</button></div><div class="mcq-x" hidden>💡 Onboarding + Communication។</div></div><div class="mcq"><p><b>២.</b> README ល្អមាន?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>Install · Run · Config · Contribute</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>តែឈ្មោះ</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Password</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>គ្មានអ្វី</button></div><div class="mcq-x" hidden>💡 ឲ្យអ្នកថ្មីចាប់ផ្តើមបាន។</div></div><div class="mcq"><p><b>៣.</b> Scope creep?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>Requirements កើនឥតគ្រប់គ្រង</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Server គាំង</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Velocity</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Bug</button></div><div class="mcq-x" hidden>💡 ត្រូវ Change control។</div></div></div></section>
+<section id="l13">
+<h2><span class="badge">មេរៀន ១៣</span>គុណភាព · សុវត្ថិភាព · ក្រមសីលធម៌ · អាជីព</h2>
+<div class="grid"><div class="card"><b>🔐 Secure by design</b><br>OWASP Top 10 · Input validation · Least privilege</div><div class="card"><b>♿ Accessibility</b><br>WCAG · ភាសាខ្មែរ</div><div class="card"><b>📊 Observability</b><br>Logs · Metrics · Traces</div><div class="card"><b>⚖️ Ethics</b><br>ឯកជនភាព · ទិន្នន័យត្រឹមត្រូវ · កុំបង្កើត Dark patterns</div><div class="card"><b>📚 រៀនជាប់</b><br>Code review · Open source · Blog</div><div class="card"><b>💼 អាជីព</b><br>Junior → Mid → Senior → Tech lead/Architect · QA · DevOps · PM</div></div>
+<div class="note">💡 <b>ACM/IEEE Software Engineering Code of Ethics</b> (1999)៖ ធ្វើការដើម្បីផលប្រយោជន៍សាធារណៈ · គុណភាពខ្ពស់ · ស្មោះត្រង់ក្នុងការប៉ាន់ស្មាន · រក្សាភាពឯករាជ្យក្នុងការវិនិច្ឆ័យ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣</h4><p>ថៅកែសុំឲ្យលាក់ Bug សុវត្ថិភាពពីអតិថិជន ដើម្បីចេញ Release ទាន់ពេល។ Software engineer គួរធ្វើអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>ពន្យល់ហានិភ័យជាលាយលក្ខណ៍អក្សរ ស្នើកែ ឬពន្យា/កាត់មុខងារ — <b>សុវត្ថិភាពអ្នកប្រើ</b> និងភាពស្មោះត្រង់ សំខាន់ជាងកាលវិភាគ (Code of Ethics)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣.២</h4><p>OWASP Top 10 ពីរ ឧទាហរណ៍ និងការពារ។</p><details><summary>មើលចម្លើយ</summary><p><b>Injection</b> → Parameterized query · <b>Broken access control</b> → ពិនិត្យសិទ្ធិលើ Server គ្រប់ Request។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣.៣</h4><p>Password ត្រូវរក្សាទុកយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p><b>Hash + Salt</b> ដោយ bcrypt/Argon2 — មិនដែលរក្សាអក្សរដើម ឬ MD5។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣.៤</h4><p>ក្រមសីលធម៌៖ ទិន្នន័យអ្នកប្រើ ត្រូវប្រមូលប៉ុណ្ណា?</p><details><summary>មើលចម្លើយ</summary><p>តែ <b>ចាំបាច់</b> (Data minimization) មានការយល់ព្រម ការពារ និងលុបពេលលែងត្រូវការ។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> HTTPS ការពារ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>ទិន្នន័យពេលផ្ញើ (Encryption)</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Database ពេញ</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Bug ក្នុង Code</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>UI</button></div><div class="mcq-x" hidden>💡 TLS។</div></div><div class="mcq"><p><b>២.</b> Code coverage 100% មានន័យថា?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Secure</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>លឿន</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>គ្មាន Bug</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>គ្រប់បន្ទាត់បានរត់ក្នុង Test (មិនធានាគ្មាន Bug)</button></div><div class="mcq-x" hidden>💡 Coverage ≠ គុណភាព។</div></div><div class="mcq"><p><b>៣.</b> Principle of least privilege?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Public ទាំងអស់</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>គ្មាន Password</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Admin គ្រប់គ្នា</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>ផ្តល់សិទ្ធិតិចបំផុតដែលចាំបាច់</button></div><div class="mcq-x" hidden>💡 កាត់បន្ថយហានិភ័យ។</div></div></div></section>
+<section id="cheat">
+<h2>📋 សង្ខេប (Cheat sheet)</h2>
+<table><tr><th>ពាក្យ</th><th>ន័យ</th></tr><tr><td>SDLC</td><td>Requirements → Design → Implement → Test → Deploy → Maintain</td></tr><tr><td>User story</td><td>As a … I want … so that …</td></tr><tr><td>Acceptance criteria</td><td>Given · When · Then</td></tr><tr><td>MoSCoW</td><td>Must · Should · Could · Won't</td></tr><tr><td>Scrum events</td><td>Planning · Daily · Review · Retro</td></tr><tr><td>Velocity</td><td>Points/Sprint</td></tr><tr><td>SOLID</td><td>SRP · OCP · LSP · ISP · DIP</td></tr><tr><td>Strategy / Observer / Factory</td><td>ប្តូរ Algorithm / ជូនដំណឹង / បង្កើត Object</td></tr><tr><td>Test pyramid</td><td>Unit ច្រើន → Integration → E2E តិច</td></tr><tr><td>TDD</td><td>Red → Green → Refactor</td></tr><tr><td>CI/CD</td><td>Test + Deploy ស្វ័យប្រវត្តិ</td></tr><tr><td>Brooks's law</td><td>បន្ថែមមនុស្ស Project យឺត → យឺតជាង</td></tr></table>
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងចុងវគ្គ</h2>
+<ol class='steps'><li>ក្រុម ៣–៥ នាក់៖ App «កាលវិភាគប្រឡង» — សរសេរ User stories ១០ + MoSCoW។</li><li>Sprint ២ សប្តាហ៍ × ២ នៅលើ GitHub Projects (Kanban)។</li><li>Class + Sequence diagram (Mermaid ក្នុង README)។</li><li>Feature branch + Pull request + Code review + GitHub Actions (Test)។</li><li>Sprint review (Demo) + Retrospective ជាលាយលក្ខណ៍អក្សរ។</li></ol></section>
+<section id="pro-app">
+<h2>💻 SE Lab (App)</h2>
+
+<p><b>📝 User Story</b> builder + Acceptance criteria + INVEST check · <b>🏃 Sprint Planner</b> (Backlog + Velocity → Sprints + Burndown chart) · <b>🎯 MoSCoW</b> board (ចុចប្តូរអាទិភាព)។</p>
+
+<div class="itk" id="sw">
+<div class="itk-tabs"><button class="on" data-t="us">📝 User Story</button><button data-t="sp">🏃 Sprint Planner</button><button data-t="mo">🎯 MoSCoW</button></div>
+<div class="itk-p on" data-p="us">
+ <p class="vl-tip">សរសេរ User story ស្តង់ដារ៖ <b>As a</b> … <b>I want</b> … <b>so that</b> … + Acceptance criteria (Given / When / Then)។</p>
+ <div class="itk-row"><label style="flex:1">As a (អ្នកប្រើ)<input id="us_r" value="សិស្សថ្នាក់ទី១២" style="width:100%"></label><label style="flex:2">I want (ចង់បាន)<input id="us_w" value="កំណត់រំលឹកប្រឡងតាមកាលវិភាគ" style="width:100%"></label></div>
+ <div class="itk-row"><label style="flex:1">so that (ដើម្បី)<input id="us_s" value="មិនភ្លេចរៀនមុនប្រឡង" style="width:100%"></label><label>Story points <select id="us_p"><option>1</option><option>2</option><option selected>3</option><option>5</option><option>8</option><option>13</option></select></label></div>
+ <div class="itk-out" id="us_out"></div>
+</div>
+<div class="itk-p" data-p="sp">
+ <p class="vl-tip">បញ្ចូល Backlog (មួយបន្ទាត់៖ <code>ឈ្មោះ | points</code>) និង <b>Velocity</b> (points/sprint) → App ចែកជា Sprint និងគូរ <b>Burndown chart</b>។</p>
+ <div class="itk-row"><textarea id="sp_b" rows="7" style="flex:1;min-width:220px;font-family:inherit">Login ដោយលេខទូរស័ព្ទ | 5
+បញ្ជីមុខវិជ្ជា | 3
+កំណត់រំលឹកប្រឡង | 5
+Dark mode | 2
+ពិន្ទុ &amp; Badge | 8
+ចែករំលែកលទ្ធផល | 3
+Offline mode | 13
+Profile | 2</textarea>
+ <div><label>Velocity <input id="sp_v" type="number" value="10" min="1" style="width:70px"></label><br><label>ថ្ងៃ/Sprint <input id="sp_d" type="number" value="10" min="1" style="width:70px"></label></div></div>
+ <div class="itk-out" id="sp_out"></div>
+ <canvas id="sp_cv" width="720" height="240" style="width:100%;height:auto;background:rgba(127,127,127,.06);border-radius:10px;margin-top:6px"></canvas>
+</div>
+<div class="itk-p" data-p="mo">
+ <p class="vl-tip">ចុចមុខងារ ដើម្បីប្តូរ៖ <b>Must</b> → <b>Should</b> → <b>Could</b> → <b>Won't</b> (ពេលនេះ)។ Must មិនគួរលើស ~60% នៃការងារ។</p>
+ <div id="mo_out"></div>
+</div>
+</div>
+<script>
+(function(){
+const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+document.querySelectorAll("#sw .itk-tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#sw .itk-tabs button").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll("#sw .itk-p").forEach(p=>p.classList.toggle("on",p.dataset.p===b.dataset.t));if(b.dataset.t==="sp")sp();});
+function us(){const r=$("us_r").value,w=$("us_w").value,s=$("us_s").value,p=$("us_p").value;const inv=[["Independent",1],["Negotiable",1],["Valuable",!!s],["Estimable",1],["Small",+p<=8],["Testable",1]];
+ $("us_out").innerHTML=`<div style="border-left:4px solid var(--accent);padding:8px 12px;background:rgba(127,127,127,.08);border-radius:8px"><b>📝 User story (${p} pts)</b><br>As a <b>${esc(r)}</b>, I want <b>${esc(w)}</b>, so that <b>${esc(s)}</b>.<br><br><b>✅ Acceptance criteria</b><br>• <b>Given</b> ${esc(r)} បានកំណត់ថ្ងៃប្រឡង<br>&nbsp;&nbsp;<b>When</b> នៅសល់ ៣ ថ្ងៃ មុនប្រឡង<br>&nbsp;&nbsp;<b>Then</b> ប្រព័ន្ធផ្ញើការជូនដំណឹង «${esc(w)}»<br>• <b>Given</b> គ្មាន Internet <b>When</b> ដល់ម៉ោង <b>Then</b> ការជូនដំណឹងនៅតែចេញ (local)</div>
+ <p><b>INVEST check៖</b> ${inv.map(([n,ok])=>`<span class="pill" style="padding:2px 8px;border-radius:999px;margin:2px;display:inline-block;background:${ok?"#d3f9d8":"#ffe3e3"};color:${ok?"#2b8a3e":"#c92a2a"}">${ok?"✓":"✗"} ${n}</span>`).join("")}${+p>8?"<br>⚠️ Story ធំពេក (&gt;8) → បំបែកជា Story តូចៗ (Epic → Stories)":""}</p>`;}
+["us_r","us_w","us_s","us_p"].forEach(i=>{$(i).oninput=us;$(i).onchange=us;});us();
+function parse(){return $("sp_b").value.split("\n").map(l=>l.split("|")).filter(x=>x[0]&&x[0].trim()).map(([n,p])=>({n:n.trim(),p:Math.max(0,parseInt(p)||0)}));}
+function sp(){const items=parse(),v=Math.max(1,+$("sp_v").value||1),days=Math.max(1,+$("sp_d").value||1),sprints=[];let cur=[],load=0;
+ items.forEach(it=>{if(it.p>v){sprints.push([{...it,big:1}]);return;}if(load+it.p>v&&cur.length){sprints.push(cur);cur=[];load=0;}cur.push(it);load+=it.p;});if(cur.length)sprints.push(cur);
+ const total=items.reduce((s,x)=>s+x.p,0);
+ $("sp_out").innerHTML=`<b>សរុប ${total} points → ${sprints.length} Sprint (~${sprints.length*days} ថ្ងៃធ្វើការ)</b>`+sprints.map((s,i)=>`<div style="margin:6px 0;padding:6px 10px;border-radius:8px;background:rgba(127,127,127,.08)"><b>Sprint ${i+1}</b> (${s.reduce((a,x)=>a+x.p,0)}/${v} pts) — ${s.map(x=>esc(x.n)+" <small>("+x.p+")</small>"+(x.big?" ⚠️ ធំជាង Velocity → បំបែក!":"")).join(" · ")}</div>`).join("");
+ const c=$("sp_cv"),g=c.getContext("2d"),W=c.width,H=c.height,s1=sprints[0]||[],pts=s1.reduce((a,x)=>a+x.p,0);g.clearRect(0,0,W,H);g.strokeStyle="#adb5bd";g.beginPath();g.moveTo(40,10);g.lineTo(40,H-25);g.lineTo(W-10,H-25);g.stroke();
+ g.fillStyle="#868e96";g.font="12px sans-serif";g.fillText("Sprint 1 Burndown · ideal (ដាច់ៗ) vs actual (ចៃដន្យ)",50,20);
+ const X=d=>40+d/days*(W-60),Y=p=>H-25-p/Math.max(1,pts)*(H-45);g.setLineDash([6,5]);g.strokeStyle="#1c7ed6";g.beginPath();g.moveTo(X(0),Y(pts));g.lineTo(X(days),Y(0));g.stroke();g.setLineDash([]);
+ let rem=pts;g.strokeStyle="#e8590c";g.lineWidth=2.5;g.beginPath();g.moveTo(X(0),Y(rem));let seed=pts*7+days;const rnd=()=>{seed=(seed*9301+49297)%233280;return seed/233280;};for(let d=1;d<=days;d++){rem=Math.max(0,rem-pts/days*(.3+rnd()*1.4));if(d===days)rem=Math.max(0,Math.round(rem*.3));g.lineTo(X(d),Y(rem));}g.stroke();g.lineWidth=1;
+ g.fillStyle="#495057";for(let d=0;d<=days;d+=Math.ceil(days/10))g.fillText(d,X(d)-4,H-8);}
+["sp_b","sp_v","sp_d"].forEach(i=>$(i).oninput=sp);
+const F=["Login","បញ្ជីវគ្គ","Quiz","ការជូនដំណឹង","Dark mode","Chat ជាមួយគ្រូ","Leaderboard","AI tutor","Video call","Offline"];let M={};try{M=JSON.parse(localStorage.getItem("se_mo")||"{}")}catch(e){}
+const L=["Must","Should","Could","Won't"],CL=["#e03131","#f59f00","#1c7ed6","#868e96"];
+function mo(){const g=L.map(()=>[]);F.forEach(f=>g[M[f]||0].push(f));$("mo_out").innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px">`+L.map((l,i)=>`<div style="border:2px solid ${CL[i]};border-radius:10px;padding:8px;min-height:90px"><b style="color:${CL[i]}">${l} (${g[i].length})</b>${g[i].map(f=>`<div data-f="${esc(f)}" style="cursor:pointer;margin:4px 0;padding:4px 8px;border-radius:6px;background:rgba(127,127,127,.1)">${esc(f)}</div>`).join("")}</div>`).join("")+`</div><p>${g[0].length/F.length>.6?"⚠️ Must ច្រើនពេក — MVP នឹងយឺត":"✅ តុល្យភាពល្អ — Must = MVP ដំបូង"}</p>`;
+ $("mo_out").querySelectorAll("[data-f]").forEach(e=>e.onclick=()=>{const f=e.dataset.f;M[f]=((M[f]||0)+1)%4;try{localStorage.setItem("se_mo",JSON.stringify(M))}catch(x){}mo();});}
+mo();
+})();
+</script>
+
+<h3>🏆 Quiz ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["ពាក្យ Software Engineering ល្បីពី?", ["NATO conference 1968", "Agile 2001", "UML 1997", "Git 2005"], 0], ["Agile Manifesto ឆ្នាំ?", ["2001", "1968", "1995", "2010"], 0], ["Daily scrum រយៈពេល?", ["១៥ នាទី", "២ ម៉ោង", "១ ថ្ងៃ", "៥ វិនាទី"], 0], ["អ្នកកំណត់អាទិភាព Backlog?", ["Product Owner", "Scrum Master", "Tester", "CEO ជានិច្ច"], 0], ["Given/When/Then ជា?", ["Acceptance criteria", "SQL", "UML class", "Git command"], 0], ["S ក្នុង SOLID?", ["Single Responsibility", "Simple Code", "Secure Software", "Sprint"], 0], ["Design Patterns (1994) ដោយ?", ["Gang of Four", "Kent Beck", "Fred Brooks", "Linus Torvalds"], 0], ["ប្តូរវិធីបង់ប្រាក់ដោយមិនកែ Checkout?", ["Strategy", "Singleton", "Adapter", "Facade"], 0], ["TDD ចាប់ផ្តើមដោយ?", ["Test បរាជ័យ (Red)", "Deploy", "Refactor", "UML"], 0], ["Test ច្រើនបំផុតក្នុង Pyramid?", ["Unit test", "E2E", "Manual", "UAT"], 0], ["Brooks's law?", ["បន្ថែមមនុស្ស Project យឺត → យឺតជាង", "កូដតិចល្អជាង", "Test ១០០%", "Agile តែមួយ"], 0], ["Diagram បង្ហាញលំដាប់សារ?", ["Sequence", "Class", "Use case", "ERD"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+<ol class='steps'><li><b>Software Engineering</b> (វគ្គនេះ) ✅</li><li>Git &amp; GitHub · Testing</li><li>Docker + CI/CD</li><li>Data Structures &amp; Algorithms</li><li>UX/UI Design · Information Systems</li></ol></section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="se"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

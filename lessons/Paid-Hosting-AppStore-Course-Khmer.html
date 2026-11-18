@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hosting បង់លុយ & App Store / Play Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#1c7ed6; --accent2:#2f9e44; --accent-soft:#e7f5ff;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#74c0fc; --accent2:#8ce99a; --accent-soft:#0b1f33;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#74c0fc; --accent2:#8ce99a; --accent-soft:#0b1f33;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#0b1f33,#1c7ed6 40%,#2f9e44 75%,#fab005);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/ph.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/ph.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Hosting បង់លុយ &amp; ដាក់ App លើ App Store / Play Store</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Hosting បង់លុយ និង App Store / Play Store ជាអ្វី?</a>
+<a href="#setup">២. ត្រៀមខ្លួន</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: ពេលណាត្រូវបង់លុយ? Free vs Paid hosting</a>
+<a href="#l2">មេរៀន ២: ប្រភេទ Hosting បង់ប្រាក់ និងតម្លៃចាប់ផ្តើម</a>
+<a href="#l3">មេរៀន ៣: VPS ពីសូន្យ៖ Ubuntu · Nginx · Node · HTTPS</a>
+<a href="#l4">មេរៀន ៤: បង់ប្រាក់ពីកម្ពុជា · Billing · កុំឲ្យលុយហួស</a>
+<a href="#l5">មេរៀន ៥: ដាក់ App លើ Store៖ ទិដ្ឋភាពទូទៅ</a>
+<a href="#l6">មេរៀន ៦: ត្រៀម App៖ Icon · Screenshot · Privacy · លុបគណនី</a>
+<a href="#l7">មេរៀន ៧: Google Play ជំហានៗ</a>
+<a href="#l8">មេរៀន ៨: Apple App Store ជំហានៗ</a>
+<a href="#l9">មេរៀន ៩: Cross-platform៖ Flutter · React Native (Expo) · Unity</a>
+<a href="#l10">មេរៀន ១០: រកលុយ៖ IAP · Subscription · Ads · កម្រៃ Store · KHQR</a>
+<a href="#l11">មេរៀន ១១: ហេតុផល Reject ញឹកញាប់ និងរបៀបជៀស</a>
+<a href="#l12">មេរៀន ១២: ក្រោយ Launch៖ Update · Crash · ASO · Rating</a>
+<a href="#l13">មេរៀន ១៣: ជម្រើសក្រៅ Store៖ PWA · APK ផ្ទាល់ · Developer verification</a>
+<a href="#cheat">📋 សង្ខេប (Cheat sheet)</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងចុងវគ្គ</a>
+<a href="#pro-app">💻 Launch Lab (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>📲 Hosting បង់លុយ + ដាក់ App លើ Google Play &amp; App Store</h2>
+  <p><b>តម្លៃពិត</b> (VPS $4 · Railway $5 · Render $7 · Vercel Pro $20 · Managed DB · Domain), <b>VPS ពីសូន្យ</b> (Nginx + HTTPS), <b>Google Play</b> ($25 · .aab · Closed test 12×14 · API 36) និង <b>App Store</b> ($99/ឆ្នាំ · Xcode 26 · TestFlight · Review), IAP vs KHQR, ហេតុផល Reject, PWA — ពិនិត្យ វិច្ឆិកា 2026 + <b>Launch Lab</b>។</p>
+  <p><span class="badge">📘 ១៣ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">💻 Code មានពណ៌ + លទ្ធផល</span><span class="badge">📲 Launch Lab</span></p>
+</section>
+<section id="intro">
+<h2>១. Hosting បង់លុយ និង App Store / Play Store ជាអ្វី?</h2>
+
+
+<p>ពេល App/Website មាន <b>អ្នកប្រើពិត</b> ឬ <b>រកលុយ</b> Free tier លែងគ្រប់គ្រាន់ — ត្រូវ <b>Hosting បង់ប្រាក់</b> (VPS, PaaS, Managed Database, Domain)។ ហើយ Mobile App ត្រូវដាក់លើ <b>Google Play</b> និង <b>Apple App Store</b>។ វគ្គនេះពន្យល់ <b>តម្លៃពិត</b>, ជំហាន <b>VPS</b>, និង <b>ដាក់ App លើ Store ទាំងពីរ</b> ជំហានៗ (គណនី · Build · Test · Review · Release · រកលុយ) — ជាមួយ <b>Launch Lab</b> គណនាចំណាយ និង Checklist។ 📅 <i>ពិនិត្យនៅខែ វិច្ឆិកា 2026 ពីទំព័រផ្លូវការ — តម្លៃ និងច្បាប់ប្តូរញឹកញាប់ សូមពិនិត្យម្តងទៀតមុនបង់ប្រាក់</i></p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#ff9900"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#ff9900">2006</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">AWS</text><circle cx="185" cy="115" r="11" fill="#1c7ed6"/><text x="185" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#1c7ed6">2008</text><text x="185" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">App Store</text><circle cx="290" cy="115" r="11" fill="#2f9e44"/><text x="290" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#2f9e44">2008</text><text x="290" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Android Market</text><circle cx="395" cy="115" r="11" fill="#0080ff"/><text x="395" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#0080ff">2011</text><text x="395" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">DigitalOcean</text><circle cx="500" cy="115" r="11" fill="#34a853"/><text x="500" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#34a853">2012</text><text x="500" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Google Play</text><circle cx="605" cy="115" r="11" fill="#495057"/><text x="605" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#495057">2014</text><text x="605" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">TestFlight → Apple</text><circle cx="710" cy="115" r="11" fill="#7048e8"/><text x="710" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#7048e8">2021</text><text x="710" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">AAB required</text><circle cx="815" cy="115" r="11" fill="#e8590c"/><text x="815" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#e8590c">2023</text><text x="815" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">12 testers rule</text><circle cx="920" cy="115" r="11" fill="#c92a2a"/><text x="920" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#c92a2a">2026</text><text x="920" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Dev verification</text></svg><figcaption>🖼️ ប្រវត្តិ App Store &amp; Hosting</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>2006</td><td><b>Amazon Web Services</b></td><td>Cloud server ជួលតាមម៉ោង</td></tr><tr><td>10 កក្កដា 2008</td><td><b>Apple App Store</b> (iPhone OS 2)</td><td>Store App ដំបូងដែលពេញនិយម</td></tr><tr><td>តុលា 2008</td><td><b>Android Market</b></td><td>ប្តូរឈ្មោះជា <b>Google Play</b> ឆ្នាំ 2012</td></tr><tr><td>2011</td><td><b>DigitalOcean</b></td><td>VPS តម្លៃទាប សម្រាប់ Developer</td></tr><tr><td>2014</td><td>Apple ទិញ <b>TestFlight</b></td><td>Beta testing ផ្លូវការ</td></tr><tr><td>សីហា 2021</td><td>Google Play តម្រូវ <b>.aab</b> សម្រាប់ App ថ្មី</td><td>App តូចជាង</td></tr><tr><td>វិច្ឆិកា 2023</td><td>Google Play — គណនីផ្ទាល់ខ្លួនថ្មី</td><td>Closed test (ឥឡូវ ≥ 12 testers × 14 ថ្ងៃ)</td></tr><tr><td>2026</td><td>Android developer verification · Xcode 26 · Target API 36</td><td>ច្បាប់ថ្មីសំខាន់ៗ</td></tr></table>
+
+<h3>ប្រើសម្រាប់អ្វី?</h3>
+<div class="grid"><div class="card"><b>🛒 ហាង/សេវា</b><br>Website + App កុម្ម៉ង់</div><div class="card"><b>🚀 Startup</b><br>MVP → អ្នកប្រើពិត</div><div class="card"><b>🎓 Portfolio</b><br>App ពិតលើ Store = CV ខ្លាំង</div><div class="card"><b>💼 Freelance</b><br>ដាក់ App ឲ្យអតិថិជន</div><div class="card"><b>🏫 សាលា/NGO</b><br>PWA ឬ App ផ្ទៃក្នុង</div></div>
+
+</section>
+<section id="setup">
+<h2>២. ត្រៀមខ្លួន</h2>
+<ol class='steps'><li>កាត <b>Visa/Mastercard</b> ដែលអាចទិញអនឡាញអន្តរជាតិបាន។</li><li>App ដែលដំណើរការល្អ (រៀនវគ្គ <b>Flutter</b>, <b>Kotlin Android</b>, <b>Swift iOS</b> ឬ <b>React Native</b>)។</li><li>Website សម្រាប់ Privacy policy (GitHub Pages ឥតគិតថ្លៃ)។</li><li>iOS៖ <b>Mac + Xcode</b> ឬ Cloud build (Expo EAS/Codemagic)។</li><li>មិត្ត/ក្រុម <b>≥ 12 នាក់</b> ជួយសាក (Google Play គណនីផ្ទាល់ខ្លួនថ្មី)។</li></ol></section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>ពេលណាត្រូវបង់លុយ? Free vs Paid hosting</h2>
+<table><tr><th></th><th>Free tier</th><th>Paid (បង់ប្រាក់)</th></tr><tr><td>ការប្រើពាណិជ្ជកម្ម</td><td>ខ្លះមិនអនុញ្ញាត (ឧ. Vercel Hobby)</td><td>អនុញ្ញាត</td></tr><tr><td>ដេក / Cold start</td><td>ច្រើនតែដេកពេលទំនេរ</td><td>ដំណើរការជាប់ 24/7</td></tr><tr><td>ដែនកំណត់</td><td>តឹង — អស់ Quota ផ្អាក</td><td>ធំជាង + បង់តាម Usage</td></tr><tr><td>Backup / Support</td><td>តិច ឬគ្មាន</td><td>Backup ស្វ័យប្រវត្តិ · Support</td></tr><tr><td>ការធានា (SLA)</td><td>គ្មាន</td><td>Plan ខ្ពស់មាន Uptime SLA</td></tr></table>
+<div class="grid"><div class="card"><b>✅ នៅ Free បាន</b><br>រៀន · Portfolio · Demo · គម្រោងសាលា</div><div class="card"><b>💳 ត្រូវបង់</b><br>មានអតិថិជនពិត · លក់ទំនិញ · Bot 24/7 · ទិន្នន័យសំខាន់</div><div class="card"><b>📈 ចាប់ផ្តើមតូច</b><br>$5–10/ខែ គ្រប់គ្រាន់សម្រាប់ MVP ភាគច្រើន</div></div>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>ហាងកាហ្វេមួយចង់ឲ្យអតិថិជនកុម្ម៉ង់តាម Website រៀងរាល់ថ្ងៃ។ ហេតុអ្វីគួរប្រើ Plan បង់ប្រាក់?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះជា <b>ការប្រើពាណិជ្ជកម្ម</b> (Free tier ខ្លះហាមឃាត់), ត្រូវការ <b>ដំណើរការជាប់</b> (មិនដេក/មិនផ្អាកពេលអស់ Quota) និង <b>Backup</b> ទិន្នន័យកុម្ម៉ង់ — ចំណាយ $5–10/ខែ តូចជាងការខាតបង់ពេល App ឈប់។</p></details></div>
+</section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>ប្រភេទ Hosting បង់ប្រាក់ និងតម្លៃចាប់ផ្តើម</h2>
+<p>📅 <i>ពិនិត្យនៅខែ វិច្ឆិកា 2026 ពីទំព័រផ្លូវការ — តម្លៃ និងច្បាប់ប្តូរញឹកញាប់ សូមពិនិត្យម្តងទៀតមុនបង់ប្រាក់</i></p><table><tr><th>ប្រភេទ</th><th>ឧទាហរណ៍ (តម្លៃចាប់ផ្តើម)</th><th>សមសម្រាប់</th><th>អ្នកត្រូវគ្រប់គ្រង</th></tr><tr><td><b>Shared hosting</b> (cPanel)</td><td>Hostinger, Namecheap… (~$2–4/ខែ ពេលបង់ច្រើនឆ្នាំ)</td><td>WordPress · PHP · Website តូច</td><td>តិច</td></tr><tr><td><b>VPS</b></td><td>DigitalOcean Droplet <b>$4/ខែ</b> (512 MiB) · Hetzner · Vultr</td><td>Node/Python/Bot · ចង់គ្រប់គ្រងទាំងស្រុង</td><td><b>ច្រើន</b> — Linux, Security, Update</td></tr><tr><td><b>PaaS</b></td><td>Railway Hobby <b>$5/ខែ</b> (រួម $5 usage) · Render <b>$7/ខែ</b> · Heroku Basic <b>$7/ខែ</b></td><td>API · Backend · Worker</td><td>តិច — Git push</td></tr><tr><td><b>Frontend platform</b></td><td>Vercel Pro <b>$20/ខែ</b> (១ seat + $20 usage) · Netlify · Cloudflare</td><td>Next.js · ពាណិជ្ជកម្ម</td><td>តិច</td></tr><tr><td><b>Managed Database</b></td><td>DigitalOcean PG <b>$15/ខែ</b> · Supabase Pro <b>$25/ខែ</b> · Neon (បង់តាម Usage)</td><td>ទិន្នន័យសំខាន់ + Backup</td><td>តិច</td></tr><tr><td><b>Domain</b></td><td>.com ~<b>$10–15/ឆ្នាំ</b> · .com.kh តាម Registrar ក្នុងស្រុក</td><td>ឈ្មោះ Brand</td><td>បន្តរៀងរាល់ឆ្នាំ</td></tr></table>
+<div class="note">💡 <b>SSL/HTTPS ឥតគិតថ្លៃ</b>៖ Let's Encrypt (Platform ភាគច្រើនធ្វើស្វ័យប្រវត្តិ)។ កុំទិញ SSL ថ្លៃៗ បើមិនត្រូវការ OV/EV។ ប្រយ័ត្ន Shared hosting៖ តម្លៃ «$2/ខែ» ជាតម្លៃឆ្នាំដំបូង — ឆ្នាំបន្តច្រើនតែថ្លៃជាង។</div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>Telegram bot (Python) ដែលត្រូវដំណើរការ 24/7 — ជ្រើស Shared hosting, VPS ឬ PaaS? ហេតុអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>PaaS (Railway Hobby $5)</b> ងាយបំផុត (Git push, Logs) ឬ <b>VPS ($4)</b> បើចង់រៀន Linux និងគ្រប់គ្រងខ្លួនឯង។ Shared hosting (cPanel) ភាគច្រើនមិនអនុញ្ញាត Process ដំណើរការជាប់។</p></details></div>
+</section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>VPS ពីសូន្យ៖ Ubuntu · Nginx · Node · HTTPS</h2>
+<script type="text/x-code" data-lang="bash" data-label="Setup VPS (Ubuntu)">
+# 1) អាប់ដេត + User ថ្មី
+apt update && apt upgrade -y
+adduser kafe && usermod -aG sudo kafe
+
+# 2) Firewall
+ufw allow OpenSSH
+ufw allow 'Nginx Full'
+ufw enable
+
+# 3) Node.js + PM2 (ចូលជា kafe)
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs nginx
+sudo npm i -g pm2
+git clone https://github.com/USERNAME/kafe.git && cd kafe/server
+npm ci --omit=dev
+pm2 start index.js --name kafe-api
+pm2 save && pm2 startup   # ចាប់ផ្តើមឡើងវិញពេល Reboot
+
+# 4) HTTPS
+sudo apt install -y certbot python3-certbot-nginx
+sudo certbot --nginx -d api.kafe.com
+</script>
+<script type="text/x-code" data-lang="txt" data-label="/etc/nginx/sites-available/kafe">
+server {
+    server_name api.kafe.com;
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+</script>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>បង្កើត Droplet/VPS → Ubuntu LTS → ជ្រើស <b>SSH key</b> (មិនមែន Password)</li><li>ចូល <code>ssh root@IP</code> → បង្កើត User ថ្មី + បិទ root login</li><li>Firewall (ufw)៖ អនុញ្ញាតតែ SSH, 80, 443</li><li>ដំឡើង Node + PM2 → ដំណើរការ App</li><li>Nginx ជា Reverse proxy → Domain</li><li>Certbot → HTTPS ឥតគិតថ្លៃ (បន្តស្វ័យប្រវត្តិ)</li></ol></div>
+<div class="warn">⚠️ VPS = <b>អ្នកទទួលខុសត្រូវសុវត្ថិភាពទាំងស្រុង</b>៖ Update ប្រព័ន្ធជាប្រចាំ · SSH key · Firewall · Backup។ បើមិនទាន់ចេះ Linux សូមរៀនវគ្គ <b>Linux &amp; Command Line</b> មុន ឬប្រើ PaaS។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>ហេតុអ្វីប្រើ SSH key ជំនួស Password ហើយបិទ root login?</p><details><summary>មើលចម្លើយ</summary><p>Server សាធារណៈត្រូវ Bot សាកទាយ Password (Brute-force) រាប់ពាន់ដងក្នុងមួយថ្ងៃ។ <b>SSH key</b> ទាយមិនបាន ហើយបិទ <b>root</b> កាត់បន្ថយការខូចខាត បើគណនីណាមួយត្រូវគេចូល។</p></details></div>
+</section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>បង់ប្រាក់ពីកម្ពុជា · Billing · កុំឲ្យលុយហួស</h2>
+<div class="grid"><div class="card"><b>💳 កាត</b><br>Visa/Mastercard (Debit/Virtual card) ដែលធនាគារក្នុងស្រុកចេញ — ពិនិត្យថាបើកការទិញអនឡាញ/អន្តរជាតិ</div><div class="card"><b>🔔 Alert</b><br>កំណត់ Budget alert ($5, $10…)</div><div class="card"><b>🛑 Spending limit</b><br>Railway Usage limit · Vercel Spend management · Cloud budget</div><div class="card"><b>🧾 វិក្កយបត្រ</b><br>ទាញ Invoice ប្រចាំខែ (សម្រាប់គណនេយ្យ/ពន្ធ)</div><div class="card"><b>🔁 Auto-renew</b><br>Domain + Apple Developer បន្តរៀងរាល់ឆ្នាំ — កុំឲ្យផុតកំណត់</div><div class="card"><b>🧹 សម្អាត</b><br>លុប Service/Database ដែលលែងប្រើ</div></div>
+<div class="warn">⚠️ Cloud ធំៗ (AWS, Google Cloud, Azure) គិតលុយតាម Usage <b>គ្មានដែនកំណត់</b> បើមិនកំណត់ Budget — កំហុស Code មួយ (Loop ហៅ API) អាចបង្កើតវិក្កយបត្ររាប់រយដុល្លារ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>ហេតុអ្វីត្រូវកំណត់ Spending limit ពេលប្រើ Plan បង់តាម Usage?</p><details><summary>មើលចម្លើយ</summary><p>ដើម្បីការពារ <b>វិក្កយបត្រហួស</b> ពី Bug (Loop), ការវាយប្រហារ/Bot ឬ Traffic ភ្លាមៗ — Service នឹងឈប់ ឬជូនដំណឹងមុនលុយហួសថវិកា។</p></details></div>
+</section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>ដាក់ App លើ Store៖ ទិដ្ឋភាពទូទៅ</h2>
+<figure class="fig"><svg viewBox="0 0 940 170" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="940" height="170" fill="#fff"/><rect x="20.0" y="34" width="156.0" height="96" rx="14" fill="#495057"/><text x="98.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">💻 Build</text><text x="98.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Release</text><line x1="178.0" y1="82" x2="204.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="206.0" y="34" width="156.0" height="96" rx="14" fill="#1c7ed6"/><text x="284.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🧪 Test</text><text x="284.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">TestFlight / Closed test</text><line x1="364.0" y1="82" x2="390.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="392.0" y="34" width="156.0" height="96" rx="14" fill="#7048e8"/><text x="470.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">📝 Store listing</text><text x="470.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Icon · Screenshot · Privacy</text><line x1="550.0" y1="82" x2="576.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="578.0" y="34" width="156.0" height="96" rx="14" fill="#e8590c"/><text x="656.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🔍 Review</text><text x="656.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Apple / Google</text><line x1="736.0" y1="82" x2="762.0" y2="82" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/><rect x="764.0" y="34" width="156.0" height="96" rx="14" fill="#2f9e44"/><text x="842.0" y="76.0" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">🚀 Release</text><text x="842.0" y="98.0" text-anchor="middle" font-size="13" fill="#fff" opacity=".92">Production</text><text x="470.0" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">ដំណើរការដាក់ App លើ Store</text></svg><figcaption>🖼️ ដាក់ App លើ Store៖ ទិដ្ឋភាពទូទៅ</figcaption></figure>
+<table><tr><th></th><th>🤖 Google Play</th><th>🍎 Apple App Store</th></tr><tr><td>ថ្លៃគណនី</td><td><b>$25</b> (បង់ម្តង)</td><td><b>$99/ឆ្នាំ</b></td></tr><tr><td>ឧបករណ៍ Build</td><td>Windows/Mac/Linux (Android Studio)</td><td><b>Mac + Xcode</b> (ឬ Cloud build៖ Expo EAS, Codemagic)</td></tr><tr><td>File</td><td><b>.aab</b> (Android App Bundle)</td><td><b>.ipa</b> តាម Xcode/Transporter</td></tr><tr><td>សាកមុន</td><td>Internal / Closed / Open testing</td><td><b>TestFlight</b></td></tr><tr><td>លក្ខខណ្ឌពិសេស</td><td>គណនីផ្ទាល់ខ្លួនថ្មី៖ Closed test ≥ <b>12 testers × 14 ថ្ងៃ</b></td><td>Build ជាមួយ <b>Xcode 26 / iOS 26 SDK</b>+ (តាំងពី មេសា 2026)</td></tr><tr><td>Target / SDK</td><td>Target <b>API 36 (Android 16)</b> សម្រាប់ App ថ្មី/Update (តាំងពី 31 សីហា 2026)</td><td>Apple ប្រកាសរួចថា ពី <b>មេសា 2027</b> ត្រូវប្រើ iOS 27 SDK</td></tr><tr><td>គណនីក្រុមហ៊ុន</td><td>ត្រូវ <b>D-U-N-S number</b> (ឥតគិតថ្លៃ)</td><td>ត្រូវ <b>D-U-N-S number</b></td></tr></table>
+<div class="note">💡 📅 <i>ពិនិត្យនៅខែ វិច្ឆិកា 2026 ពីទំព័រផ្លូវការ — តម្លៃ និងច្បាប់ប្តូរញឹកញាប់ សូមពិនិត្យម្តងទៀតមុនបង់ប្រាក់</i>។ ច្បាប់ Store ប្តូរជារៀងរាល់ឆ្នាំ — តាមដាន Policy updates ក្នុង Play Console និង Apple Developer News។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>អ្នកមានតែកុំព្យូទ័រ Windows។ អាចដាក់ App លើ App Store បានទេ?</p><details><summary>មើលចម្លើយ</summary><p>Native iOS ត្រូវការ <b>Xcode (Mac)</b>។ ជម្រើស៖ ប្រើ <b>Cloud build</b> (Expo EAS សម្រាប់ React Native, Codemagic សម្រាប់ Flutter) ឬជួល Mac cloud — តែនៅតែត្រូវមាន <b>Apple Developer ($99/ឆ្នាំ)</b>។</p></details></div>
+</section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>ត្រៀម App៖ Icon · Screenshot · Privacy · លុបគណនី</h2>
+<table><tr><th>ធាតុ</th><th>Google Play</th><th>App Store</th></tr><tr><td>Icon</td><td>512×512 PNG</td><td>1024×1024 PNG (គ្មាន Transparency)</td></tr><tr><td>Screenshots</td><td>ទូរស័ព្ទ ≥ 2 (អតិបរមា 8)</td><td>iPhone 6.9" (+ iPad បើគាំទ្រ)</td></tr><tr><td>Graphic ផ្សេង</td><td>Feature graphic 1024×500</td><td>App Preview video (ជម្រើស)</td></tr><tr><td>Privacy</td><td><b>Data safety</b> form + Privacy policy URL</td><td><b>App Privacy</b> details + Privacy policy URL</td></tr><tr><td>Rating</td><td>Content rating (IARC)</td><td>Age rating questionnaire</td></tr><tr><td>គណនី</td><td>ត្រូវមានវិធីស្នើលុបគណនី (ក្នុង App + Link Web)</td><td>ត្រូវអាចលុបគណនីក្នុង App បាន</td></tr></table>
+<script type="text/x-code" data-lang="txt" data-label="privacy.md (ឧទាហរណ៍ — ដាក់លើ GitHub Pages ឥតគិតថ្លៃ)">
+# គោលការណ៍ឯកជនភាព — Kafe App
+ធ្វើបច្ចុប្បន្នភាព៖ 17 វិច្ឆិកា 2026
+
+1. ទិន្នន័យដែលយើងប្រមូល៖ ឈ្មោះ លេខទូរស័ព្ទ ប្រវត្តិកុម្ម៉ង់
+2. ហេតុអ្វី៖ ដើម្បីដំណើរការកុម្ម៉ង់ និងសន្សំពិន្ទុ
+3. ចែករំលែកជាមួយ៖ អ្នកផ្តល់សេវាបង់ប្រាក់ (មិនលក់ទិន្នន័យ)
+4. រក្សាទុករយៈពេល៖ រហូតដល់អ្នកលុបគណនី
+5. លុបគណនី៖ ការកំណត់ › លុបគណនី ឬ https://kafe.com/delete
+6. ទំនាក់ទំនង៖ privacy@kafe.com
+</script>
+<div class="warn">⚠️ Privacy policy ត្រូវ <b>ស្របនឹងអ្វីដែល App ធ្វើពិត</b> (រួមទាំង SDK ដូច Firebase Analytics, Ads)។ សរសេរខុសពីការពិត = Reject ឬដកចេញ។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>App មាន Login ដោយលេខទូរស័ព្ទ។ ត្រូវមានមុខងារអ្វីដើម្បីស្របច្បាប់ Store ទាំងពីរ?</p><details><summary>មើលចម្លើយ</summary><p><b>លុបគណនី</b> (Account deletion) — Apple តម្រូវឲ្យលុបបាន <b>ក្នុង App</b>; Google តម្រូវឲ្យមាន <b>ក្នុង App</b> និង <b>Link Web</b> ដែលស្នើលុបបាន + ពន្យល់ក្នុង Data safety។ ព្រមទាំង Privacy policy URL និង Demo account សម្រាប់ Reviewer។</p></details></div>
+</section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Google Play ជំហានៗ</h2>
+<script type="text/x-code" data-lang="bash" data-label="Build .aab">
+# Android (Kotlin/Java)
+./gradlew bundleRelease          # → app/build/outputs/bundle/release/app-release.aab
+
+# Flutter
+flutter build appbundle --release
+
+# React Native (Expo)
+npx eas-cli build -p android --profile production
+</script>
+<script type="text/x-code" data-lang="bash" data-label="បង្កើត Upload key">
+keytool -genkeypair -v -keystore upload-key.jks -alias upload \
+  -keyalg RSA -keysize 2048 -validity 10000
+# ⚠️ Backup upload-key.jks + password នៅកន្លែងសុវត្ថិភាព (កុំ Commit ទៅ Git)
+</script>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ចូល <b>play.google.com/console</b> → បង្កើតគណនី (Personal ឬ Organization) → បង់ <b>$25</b> → ផ្ទៀងផ្ទាត់អត្តសញ្ញាណ (អត្តសញ្ញាណប័ណ្ណ/លិខិតឆ្លងដែន)</li><li><b>Create app</b> → ឈ្មោះ · ភាសា · App/Game · Free/Paid (Paid → Free ប្តូរបាន, Free → Paid ប្តូរមិនបាន)</li><li>បំពេញ <b>App content</b>៖ Privacy policy · Data safety · Content rating · Target audience · Ads</li><li>Build <b>.aab</b> ចុះហត្ថលេខា (Upload key) → ប្រើ <b>Play App Signing</b></li><li><b>Testing → Closed testing</b> → បញ្ចូល Email testers ≥ 12 → ផ្ញើ Link → រក្សា 14 ថ្ងៃជាប់គ្នា</li><li><b>Apply for production access</b> → ឆ្លើយសំណួរពីការសាក</li><li>Production → Create release → Upload .aab → Release notes → <b>Staged rollout</b> → Review</li></ol></div>
+<div class="note">💡 <b>Closed test 12 × 14</b> អនុវត្តចំពោះ <b>គណនីផ្ទាល់ខ្លួនដែលបង្កើតក្រោយ 13 វិច្ឆិកា 2023</b>។ Testers ដែលចេញហើយចូលវិញ ចាប់ផ្តើមរាប់ពីដើម។ អញ្ជើញមិត្តរៀន គ្រូ ក្រុមគ្រួសារ — <b>កុំទិញ Tester ក្លែងក្លាយ</b> (រំលោភ Policy)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>ហេតុអ្វីត្រូវ Backup <code>upload-key.jks</code> ឲ្យបានល្អ?</p><details><summary>មើលចម្លើយ</summary><p>ព្រោះ Update នីមួយៗត្រូវ <b>ចុះហត្ថលេខាដោយ Key ដដែល</b>។ ជាមួយ Play App Signing អាចស្នើ Reset upload key បាន តែយឺត — បាត់ Key ហើយគ្មាន Play App Signing = <b>Update App លែងបាន</b>។</p></details></div>
+</section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Apple App Store ជំហានៗ</h2>
+<script type="text/x-code" data-lang="bash" data-label="Build iOS">
+# Flutter
+flutter build ipa --release        # បន្ទាប់មក Upload តាម Transporter ឬ Xcode Organizer
+
+# React Native (Expo) — Build លើ Cloud (មិនចាំបាច់ Mac)
+npx eas-cli build -p ios --profile production
+npx eas-cli submit -p ios
+</script>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>ចូល <b>developer.apple.com/programs</b> → Enroll (Individual ឬ Organization + D-U-N-S) → បង់ <b>$99/ឆ្នាំ</b> · ត្រូវ Apple Account មាន 2FA</li><li>Xcode → Target → <b>Signing &amp; Capabilities</b> → Automatically manage signing → ជ្រើស Team</li><li><b>App Store Connect</b> → Apps → <b>+ New App</b> → Platform · ឈ្មោះ · Bundle ID · SKU</li><li>Xcode → Any iOS Device → <b>Product › Archive</b> → Distribute App → App Store Connect → Upload</li><li><b>TestFlight</b>៖ Internal testers (ក្រុម) ភ្លាមៗ · External testers (ដល់ 10,000 នាក់ ត្រូវ Beta review)</li><li>បំពេញ Product page · Screenshots · App Privacy · Age rating · <b>Review notes + Demo account</b></li><li><b>Add for Review → Submit</b> → រង់ចាំ (ច្រើនតែ ១–២ ថ្ងៃ) → Release (Manual / Automatic / Phased)</li></ol></div>
+<div class="note">💡 ចាប់ពី <b>28 មេសា 2026</b> App ដែល Upload ត្រូវ Build ជាមួយ <b>Xcode 26 + iOS 26 SDK</b> ឡើងទៅ ហើយ Apple ប្រកាសរួចថា ពី <b>មេសា 2027</b> ត្រូវប្រើ <b>Xcode 27 / iOS 27 SDK</b>។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>App ត្រូវ Reject ដោយ «Guideline 2.1 — App Completeness: we were unable to sign in»។ ដោះស្រាយយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>ផ្តល់ <b>Demo account</b> (Username/Password ឬលេខ OTP សាកល្បង) ក្នុង <b>App Review Information</b> + ពន្យល់ជំហានក្នុង Review notes ហើយប្រាកដថា Server ដំណើរការ (មិនដេក!) ពេល Reviewer សាក → Resubmit។</p></details></div>
+</section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>Cross-platform៖ Flutter · React Native (Expo) · Unity</h2>
+<table><tr><th>Framework</th><th>Android</th><th>iOS</th><th>ចំណាំ</th></tr><tr><td><b>Flutter</b></td><td><code>flutter build appbundle</code></td><td><code>flutter build ipa</code> (Mac)</td><td>Codemagic/GitHub Actions សម្រាប់ CI</td></tr><tr><td><b>React Native + Expo</b></td><td><code>eas build -p android</code></td><td><code>eas build -p ios</code> (Cloud)</td><td><code>eas submit</code> ផ្ញើទៅ Store ផ្ទាល់</td></tr><tr><td><b>Unity</b></td><td>Build Settings → Android → .aab</td><td>Export Xcode project → Archive</td><td>Target API តាម Unity version</td></tr><tr><td><b>Kotlin Multiplatform</b></td><td>Gradle bundleRelease</td><td>Xcode (Compose/SwiftUI)</td><td>Share logic</td></tr></table>
+<script type="text/x-code" data-lang="json" data-label="eas.json (Expo — autoIncrement version)">
+{
+  "build": {
+    "production": { "autoIncrement": true }
+  },
+  "submit": {
+    "production": {}
+  }
+}
+</script>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>Developer មានតែ Windows ចង់ធ្វើ App ទាំង Android និង iOS ឲ្យលឿនបំផុត — ណែនាំអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>React Native + Expo (EAS Build/Submit)</b> — Build iOS លើ Cloud មិនចាំបាច់ Mac (ត្រូវ Apple Developer $99/ឆ្នាំ) ឬ Flutter + Codemagic។</p></details></div>
+</section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>រកលុយ៖ IAP · Subscription · Ads · កម្រៃ Store · KHQR</h2>
+<table><tr><th>ម៉ូដែល</th><th>ពេលប្រើ</th><th>កម្រៃ Store (ទូទៅ)</th></tr><tr><td>Paid app</td><td>ទិញម្តង</td><td>15–30%</td></tr><tr><td>In-App Purchase / Subscription</td><td>មាតិកាឌីជីថល (Premium, Coins, វគ្គ)</td><td>15% (អាជីវកម្មតូច/Subscription ឆ្នាំទី២+) ឬ 30%</td></tr><tr><td>Ads</td><td>App ឥតគិតថ្លៃ ប្រើច្រើន</td><td>Store មិនយក (Ad network ចែក)</td></tr><tr><td>ទំនិញ/សេវាពិត</td><td>កាហ្វេ ដឹកជញ្ជូន កក់សំបុត្រ</td><td><b>មិនត្រូវប្រើ IAP</b> — អាចប្រើ KHQR/កាតផ្ទាល់</td></tr></table>
+<div class="note">💡 ច្បាប់ទូទៅ៖ <b>មាតិកាឌីជីថល</b> ដែលប្រើក្នុង App ត្រូវប្រើ IAP របស់ Store · <b>ទំនិញ/សេវាពិត</b> (ឧ. កុម្ម៉ង់កាហ្វេ) បង់តាម KHQR/Bakong ឬកាតបាន។ ច្បាប់មានករណីលើកលែងតាមប្រទេស (ឧ. EU, US) — អានគោលការណ៍ Payments របស់ Store ចុងក្រោយ។ កម្រៃពិត ពិនិត្យ App Store Small Business Program និង Play service fees។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>App «Kafe» លក់កាហ្វេ (យកនៅហាង) និងលក់ «Premium មុខងារ AI ណែនាំភេសជ្ជៈ»។ ផ្នែកណាត្រូវប្រើ IAP?</p><details><summary>មើលចម្លើយ</summary><p><b>Premium AI</b> = មាតិកាឌីជីថល → ត្រូវប្រើ <b>IAP/Subscription</b> របស់ Store។ <b>កាហ្វេ</b> = ទំនិញពិត → បង់ដោយ <b>KHQR</b>/កាតបាន (មិនប្រើ IAP)។</p></details></div>
+</section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>ហេតុផល Reject ញឹកញាប់ និងរបៀបជៀស</h2>
+<table><tr><th>ហេតុផល</th><th>ឧទាហរណ៍</th><th>ដំណោះស្រាយ</th></tr><tr><td>Crash / Bug</td><td>App បិទពេលបើក</td><td>សាកលើទូរស័ព្ទពិត + TestFlight/Closed test</td></tr><tr><td>ព័ត៌មានមិនពេញ</td><td>គ្មាន Demo account · Link ខូច</td><td>Review notes ច្បាស់ · Server ដំណើរការ</td></tr><tr><td>Minimum functionality</td><td>Website រុំក្នុង WebView គ្មានមុខងារ App</td><td>បន្ថែមមុខងារ Native (Notification, Offline…)</td></tr><tr><td>Privacy</td><td>ប្រមូលទិន្នន័យមិនបានប្រកាស</td><td>Data safety/App Privacy ត្រឹមត្រូវ</td></tr><tr><td>Metadata</td><td>Screenshot មិនមែន App ពិត · ពាក្យ «Android» ក្នុង iOS listing</td><td>Screenshot ពិត · ពិពណ៌នាត្រឹមត្រូវ</td></tr><tr><td>Copycat / IP</td><td>ប្រើ Logo/ឈ្មោះ Brand គេ</td><td>Design ផ្ទាល់ខ្លួន · មានសិទ្ធិ</td></tr><tr><td>Target API / SDK ចាស់</td><td>Target API 34 ពេល Store ទាមទារ 36</td><td>Update Gradle/Xcode</td></tr></table>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>App ជា WebView បើក Website ហាងតែប៉ុណ្ណោះ ត្រូវ Apple Reject (4.2)។ កែយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>បន្ថែម <b>តម្លៃពិតជា App</b>៖ Push notification ស្ថានភាពកុម្ម៉ង់ · QR ពិន្ទុ · Offline menu · Native UI សម្រាប់ផ្នែកសំខាន់ — ឬដាក់ជា <b>PWA</b> លើ Web ជំនួស។</p></details></div>
+</section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>ក្រោយ Launch៖ Update · Crash · ASO · Rating</h2>
+<div class="grid"><div class="card"><b>🔢 Version</b><br>versionCode/Build ឡើងរាល់ Update</div><div class="card"><b>📶 Staged rollout</b><br>20% → 50% → 100% · បញ្ឈប់បានបើមានបញ្ហា</div><div class="card"><b>💥 Crash report</b><br>Firebase Crashlytics · Play Console vitals · Xcode Organizer</div><div class="card"><b>🔎 ASO</b><br>ឈ្មោះ + Keyword + Screenshot ល្អ</div><div class="card"><b>⭐ Rating</b><br>សុំ Review ក្នុង App (In-App Review API) ពេលអ្នកប្រើសប្បាយ</div><div class="card"><b>🗣️ ឆ្លើយ Review</b><br>ឆ្លើយគ្រប់ Review អវិជ្ជមាន</div></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>ហេតុអ្វីប្រើ Staged rollout (ឧ. 20%) ជំនួសការ Release 100% ភ្លាម?</p><details><summary>មើលចម្លើយ</summary><p>បើ Version ថ្មីមាន <b>Crash/Bug</b> វាប៉ះពាល់តែ 20% នៃអ្នកប្រើ — អាច <b>Halt rollout</b> កែ ហើយ Release ថ្មី មុនពេលប៉ះពាល់អ្នកប្រើទាំងអស់។</p></details></div>
+</section>
+<section id="l13">
+<h2><span class="badge">មេរៀន ១៣</span>ជម្រើសក្រៅ Store៖ PWA · APK ផ្ទាល់ · Developer verification</h2>
+<table><tr><th>ជម្រើស</th><th>ល្អ</th><th>ប្រយ័ត្ន</th></tr><tr><td><b>PWA</b> (Web App ដំឡើងបាន)</td><td>គ្មានថ្លៃ Store · Update ភ្លាម · Hosting Free</td><td>មុខងារ iOS មានកំណត់ · រកក្នុង Store មិនឃើញ</td></tr><tr><td><b>APK ផ្ទាល់</b> (Sideload)</td><td>ចែកក្នុងក្រុមហ៊ុន/សាលា</td><td>អ្នកប្រើត្រូវអនុញ្ញាត «Unknown sources» · សុវត្ថិភាព</td></tr><tr><td><b>Store ផ្សេង</b></td><td>Samsung Galaxy Store, Huawei AppGallery…</td><td>Update ច្រើនកន្លែង</td></tr></table>
+<div class="warn">⚠️ <b>Android developer verification</b>៖ Google ចាប់ផ្តើមតម្រូវឲ្យ Developer ផ្ទៀងផ្ទាត់អត្តសញ្ញាណ និងចុះឈ្មោះ App (រួមទាំង App ចែកក្រៅ Play) — ចាប់ពី <b>30 កញ្ញា 2026</b> នៅ <b>ឥណ្ឌូនេស៊ី សិង្ហបុរី ថៃ</b> ហើយ <b>ពង្រីកសកលនៅឆ្នាំ 2027</b>។ សិស្ស/Hobbyist អាចប្រើ <b>Limited distribution account</b> (ឥតគិតថ្លៃ ដល់ 20 ឧបករណ៍)។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣</h4><p>សាលាចង់ឲ្យសិស្ស ៥០០ នាក់ប្រើ App កាលវិភាគ ដោយមិនចង់បង់ថ្លៃ Store។ ណែនាំអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>PWA</b> — Host លើ GitHub Pages/Cloudflare Pages ឥតគិតថ្លៃ សិស្ស «Add to Home Screen» បានទាំង Android និង iPhone។ (APK ផ្ទាល់ មិនដំណើរការលើ iPhone ហើយនឹងប៉ះ Developer verification នៅឆ្នាំ 2027)។</p></details></div>
+</section>
+<section id="cheat">
+<h2>📋 សង្ខេប (Cheat sheet)</h2>
+<table><tr><th>ពាក្យ</th><th>ចំណាំ</th></tr><tr><td>Google Play</td><td>$25 ម្តង · .aab · Target API 36 · Closed test 12×14 (គណនីផ្ទាល់ខ្លួនថ្មី)</td></tr><tr><td>App Store</td><td>$99/ឆ្នាំ · Xcode 26/iOS 26 SDK · TestFlight · Demo account</td></tr><tr><td>D-U-N-S</td><td>លេខក្រុមហ៊ុន — ចាំបាច់សម្រាប់គណនី Organization (ឥតគិតថ្លៃ)</td></tr><tr><td>versionCode / Build</td><td>លេខគត់ ឡើងរាល់ Update</td></tr><tr><td>Play App Signing</td><td>Google រក្សា App signing key</td></tr><tr><td>Staged rollout</td><td>Release ជាភាគរយ</td></tr><tr><td>IAP</td><td>មាតិកាឌីជីថល · ទំនិញពិតប្រើ KHQR/កាតបាន</td></tr><tr><td>VPS</td><td>$4+/ខែ · ត្រូវគ្រប់គ្រង Security ខ្លួនឯង</td></tr><tr><td>PaaS</td><td>Railway $5 · Render $7 · Heroku Basic $7</td></tr><tr><td>Vercel Pro</td><td>$20/ខែ (១ seat + $20 usage)</td></tr><tr><td>Managed DB</td><td>DO $15 · Supabase Pro $25</td></tr><tr><td>Let's Encrypt</td><td>HTTPS ឥតគិតថ្លៃ</td></tr></table>
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងចុងវគ្គ</h2>
+<ol class='steps'><li>យក App ពីវគ្គ Mobile របស់អ្នក (ឬ Kafe) → បង្កើត Privacy policy លើ GitHub Pages។</li><li>Backend → Railway Hobby (ឬ VPS) + Neon · Domain + HTTPS។</li><li>Android៖ .aab → Closed test 12 នាក់ × 14 ថ្ងៃ → Production (Staged 20%)។</li><li>iOS៖ TestFlight → Submit → Release។</li><li>គណនាចំណាយឆ្នាំដំបូងក្នុង Launch Lab · ដាក់ Link Store ក្នុង Portfolio/CV។</li></ol></section>
+<section id="pro-app">
+<h2>💻 Launch Lab (App)</h2>
+
+<p><b>💰 គណនាចំណាយ</b> (Hosting + Database + Domain + Apple/Google — ខែ និងឆ្នាំដំបូង) · <b>🤖 Play Store Checklist</b> ១២ ជំហាន · <b>🍎 App Store Checklist</b> ១២ ជំហាន (រក្សាទុកក្នុង Browser) · <b>🔢 Version helper</b> (versionCode/Build + SemVer សម្រាប់ Android/Flutter/iOS)។</p>
+
+<div class="itk" id="ph">
+<div class="itk-tabs"><button class="on" data-t="cost">💰 គណនាចំណាយ</button><button data-t="gp">🤖 Play Store Checklist</button><button data-t="as">🍎 App Store Checklist</button><button data-t="ver">🔢 Version helper</button></div>
+<div class="itk-p on" data-p="cost">
+ <p class="vl-tip">ជ្រើសអ្វីដែលគម្រោងត្រូវការ → App គណនាចំណាយ <b>ខែ</b> និង <b>ឆ្នាំដំបូង</b>។ តម្លៃជាតម្លៃចាប់ផ្តើមប្រហាក់ប្រហែល (វិច្ឆិកា 2026)។</p>
+ <div class="itk-row">
+  <label>🖥️ Frontend <select id="c_fe"><option value="0">Free (GitHub/Cloudflare Pages)</option><option value="20">Vercel Pro $20/ខែ</option></select></label>
+  <label>⚙️ Backend <select id="c_be"><option value="0">គ្មាន / Free</option><option value="5" selected>Railway Hobby $5/ខែ</option><option value="7">Render $7/ខែ</option><option value="4">VPS DigitalOcean $4/ខែ</option><option value="3">Shared hosting ~$3/ខែ</option></select></label>
+  <label>🗄️ Database <select id="c_db"><option value="0" selected>Neon Free</option><option value="15">DigitalOcean Managed PG $15/ខែ</option><option value="25">Supabase Pro $25/ខែ</option></select></label></div>
+ <div class="itk-row">
+  <label>🌐 Domain/ឆ្នាំ <select id="c_dm"><option value="0">គ្មាន</option><option value="12" selected>.com ~$12</option><option value="35">.com.kh (ប្រហាក់ប្រហែល)</option></select></label>
+  <label><input type="checkbox" id="c_gp" checked> 🤖 Google Play ($25 ម្តង)</label>
+  <label><input type="checkbox" id="c_as" checked> 🍎 Apple ($99/ឆ្នាំ)</label>
+  <label>📈 Usage បន្ថែម/ខែ $<input type="number" id="c_ex" value="0" min="0" style="width:70px"></label></div>
+ <div class="itk-out" id="c_out"></div>
+</div>
+<div class="itk-p" data-p="gp"><div class="itk-out" id="gp_out"></div></div>
+<div class="itk-p" data-p="as"><div class="itk-out" id="as_out"></div></div>
+<div class="itk-p" data-p="ver">
+ <p class="vl-tip">រាល់ Update ត្រូវ <b>ឡើងលេខ</b>៖ Android <code>versionCode</code> (លេខគត់ ត្រូវធំជាងមុន) · iOS <code>CFBundleVersion</code> (Build) · <code>versionName</code>/<code>CFBundleShortVersionString</code> = លេខដែលអ្នកប្រើឃើញ (SemVer)។</p>
+ <div class="itk-row"><label>Version បច្ចុប្បន្ន <input id="v_n" value="1.4.2" style="width:90px"></label><label>versionCode/Build <input id="v_c" type="number" value="17" style="width:80px"></label>
+  <label>ប្រភេទ Update <select id="v_t"><option value="patch">🐞 កែកំហុស (patch)</option><option value="minor">✨ មុខងារថ្មី (minor)</option><option value="major">🚀 ប្តូរធំ (major)</option></select></label></div>
+ <div class="itk-out" id="v_out"></div>
+</div>
+</div>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+document.querySelectorAll("#ph .itk-tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#ph .itk-tabs button").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll("#ph .itk-p").forEach(p=>p.classList.toggle("on",p.dataset.p===b.dataset.t));});
+const f=n=>"$"+(Math.round(n*100)/100).toLocaleString("en-US");
+function cost(){const m=+$("c_fe").value + +$("c_be").value + +$("c_db").value + Math.max(0,+$("c_ex").value||0),dm=+$("c_dm").value,gp=$("c_gp").checked?25:0,as=$("c_as").checked?99:0;
+ const y1=m*12+dm+gp+as, y2=m*12+dm+as;
+ $("c_out").innerHTML=`<div style="display:flex;gap:18px;flex-wrap:wrap"><div><small>ក្នុងមួយខែ (Hosting)</small><div style="font-size:28px;font-weight:800">${f(m)}</div></div><div><small>ឆ្នាំទី ១ (សរុប)</small><div style="font-size:28px;font-weight:800">${f(y1)}</div></div><div><small>ឆ្នាំបន្ទាប់</small><div style="font-size:28px;font-weight:800">${f(y2)}</div></div></div>
+ <ul><li>Hosting ${f(m)} × 12 = ${f(m*12)}</li>${dm?`<li>Domain ${f(dm)}/ឆ្នាំ</li>`:""}${gp?`<li>Google Play ${f(25)} (បង់ម្តង)</li>`:""}${as?`<li>Apple Developer ${f(99)}/ឆ្នាំ (ត្រូវបន្តរៀងរាល់ឆ្នាំ — បើមិនបន្ត App ត្រូវដកចេញពី Store)</li>`:""}</ul>
+ <small>💡 ប្រៀប៖ ${f(y1/365)}/ថ្ងៃ។ ពិនិត្យ Usage ពិតក្នុង Dashboard + កំណត់ Spending limit។ ពន្ធ/កម្រៃធនាគារ មិនទាន់គិត។</small>`;}
+["c_fe","c_be","c_db","c_dm","c_gp","c_as","c_ex"].forEach(i=>{$(i).onchange=cost;$(i).oninput=cost;});cost();
+function list(id,key,items){let st={};try{st=JSON.parse(localStorage.getItem(key)||"{}")}catch(e){}
+ const draw=()=>{const n=items.filter((_,i)=>st[i]).length;$(id).innerHTML=`<b>${n}/${items.length}</b><div style="height:8px;background:rgba(127,127,127,.2);border-radius:4px;margin:6px 0"><div style="height:100%;width:${n/items.length*100}%;background:var(--accent);border-radius:4px"></div></div>`+items.map((c,i)=>`<label style="display:block;margin:5px 0"><input type="checkbox" data-i="${i}" ${st[i]?"checked":""}> ${c}</label>`).join("");
+  $(id).querySelectorAll("input").forEach(x=>x.onchange=()=>{st[x.dataset.i]=x.checked;try{localStorage.setItem(key,JSON.stringify(st))}catch(e){}draw();});};draw();}
+list("gp_out","ph_gp",["គណនី Play Console ($25) + ផ្ទៀងផ្ទាត់អត្តសញ្ញាណ","Package name ថេរ (ឧ. com.xcen.kafe) — ប្តូរលែងបាន","Target API 36 (Android 16) ឡើងទៅ","Build <b>.aab</b> (Android App Bundle) + Play App Signing","Icon 512×512 · Feature graphic 1024×500 · Screenshot ≥ 2","ការពិពណ៌នាខ្លី (≤ 80 តួ) និងវែង","Privacy policy URL (អាចដាក់លើ GitHub Pages)","Data safety form · Content rating · Target audience","វិធីលុបគណនី (បើ App មាន Login)","Closed test៖ ≥ 12 testers × 14 ថ្ងៃជាប់គ្នា (គណនីផ្ទាល់ខ្លួនថ្មី)","Apply for production → Review","Staged rollout (ឧ. 20% → 100%)"]);
+list("as_out","ph_as",["Apple Developer Program ($99/ឆ្នាំ) — Mac + Xcode","Bundle ID ថេរ (ឧ. com.xcen.kafe)","Build ជាមួយ Xcode 26 / iOS 26 SDK ឡើងទៅ (តម្រូវតាំងពី មេសា 2026)","App Store Connect → New App","Icon 1024×1024 · Screenshots iPhone (6.9\") (+ iPad បើគាំទ្រ)","Privacy details (App Privacy) + Privacy policy URL","Age rating questionnaire","Demo account សម្រាប់ App Review (បើមាន Login)","លុបគណនីក្នុង App បាន (បើមានបង្កើតគណនី)","Archive → Upload → <b>TestFlight</b> សាក","Submit for Review → ឆ្លើយ Rejection បើមាន","Release (Manual/Automatic/Phased)"]);
+function ver(){const p=($("v_n").value||"1.0.0").split(".").map(x=>parseInt(x)||0);while(p.length<3)p.push(0);const t=$("v_t").value,c=(+$("v_c").value||0)+1;
+ if(t==="major"){p[0]++;p[1]=0;p[2]=0}else if(t==="minor"){p[1]++;p[2]=0}else p[2]++;const v=p.join(".");
+ $("v_out").innerHTML=`<b>Version ថ្មី៖ ${v}</b> · Build/versionCode៖ <b>${c}</b><pre>// Android — app/build.gradle.kts\nversionCode = ${c}\nversionName = "${v}"\n\n# Flutter — pubspec.yaml\nversion: ${v}+${c}\n\n// iOS — Xcode › Target › General\nVersion = ${v}   Build = ${c}</pre>`;}
+["v_n","v_c","v_t"].forEach(i=>{$(i).oninput=ver;$(i).onchange=ver;});ver();
+})();
+</script>
+
+<h3>🏆 Quiz ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["ថ្លៃគណនី Google Play?", ["$25 ម្តង", "$99/ឆ្នាំ", "ឥតគិតថ្លៃ", "$300/ឆ្នាំ"], 0], ["ថ្លៃ Apple Developer Program?", ["$99/ឆ្នាំ", "$25 ម្តង", "$10/ខែ", "ឥតគិតថ្លៃ"], 0], ["Google Play App ថ្មីត្រូវ Upload ជា?", [".aab", ".exe", ".ipa", ".zip"], 0], ["គណនីផ្ទាល់ខ្លួនថ្មី Play ត្រូវ Closed test?", ["≥ 12 testers × 14 ថ្ងៃ", "2 testers × 1 ថ្ងៃ", "100 testers × 30 ថ្ងៃ", "មិនត្រូវ"], 0], ["Beta testing iOS ផ្លូវការ?", ["TestFlight", "Play Console", "Firebase Hosting", "Netlify"], 0], ["Target API ដែល Play ទាមទារសម្រាប់ App ថ្មីក្រោយ 31 សីហា 2026?", ["API 36 (Android 16)", "API 30", "API 21", "API 26"], 0], ["Upload App Store ពី មេសា 2026 ត្រូវ Build ជាមួយ?", ["Xcode 26 / iOS 26 SDK+", "Xcode 12", "Android Studio", "Visual Studio"], 0], ["គណនីក្រុមហ៊ុន ត្រូវការ?", ["D-U-N-S number", "លេខ VAT តែប៉ុណ្ណោះ", "SSL", "Domain .kh"], 0], ["លក់កាហ្វេពិតក្នុង App បង់ដោយ?", ["KHQR/កាត (មិនចាំបាច់ IAP)", "ត្រូវតែ IAP", "មិនអាចលក់", "Ads"], 0], ["Premium មុខងារឌីជីថល បង់ដោយ?", ["IAP/Subscription របស់ Store", "សាច់ប្រាក់", "Email", "SMS"], 0], ["VPS តម្លៃចាប់ផ្តើម DigitalOcean?", ["$4/ខែ", "$100/ខែ", "$1/ឆ្នាំ", "ឥតគិតថ្លៃជានិច្ច"], 0], ["HTTPS ឥតគិតថ្លៃ?", ["Let's Encrypt", "Play Console", "TestFlight", "D-U-N-S"], 0], ["Release ជាភាគរយ ហៅថា?", ["Staged/Phased rollout", "Hotfix", "Rollback", "Sideload"], 0], ["បាត់ upload key គ្មាន Play App Signing?", ["Update App លែងបាន", "គ្មានបញ្ហា", "App លឿនជាង", "ប្តូរ Package បាន"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+<ol class='steps'><li><b>Hosting បង់លុយ &amp; App Store / Play Store</b> (វគ្គនេះ) ✅</li><li>Free Hosting &amp; Deploy (Vercel + Railway + Neon)</li><li>Flutter · Kotlin Android · Swift iOS · React Native</li><li>Mobile Testing &amp; CI/CD (Fastlane, EAS)</li><li>KHQR / Bakong Payment · Linux &amp; Command Line</li></ol></section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="ph"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>

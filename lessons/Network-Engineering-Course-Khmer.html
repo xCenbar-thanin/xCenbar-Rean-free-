@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Network Engineering (CCNA)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#f6f8fc; --panel:#ffffff; --text:#1f1611; --muted:#5b6b61; --line:#e1e6f0;
+  --accent:#1864ab; --accent2:#0ca678; --accent-soft:#e7f5ff;
+  --code-bg:#0f1720; --code-text:#e6edf3;
+  --c-kw:#ff7b72; --c-str:#a5d6ff; --c-com:#8b949e; --c-num:#79c0ff; --c-fn:#d2a8ff; --c-bi:#ffa657; --c-cmd:#7ee787;
+  --warn:#fff6e0; --warn-line:#e5b000; --tip:#e8f4ff; --tip-line:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+    --accent:#74c0fc; --accent2:#63e6be; --accent-soft:#0b1f33;
+    --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117; --panel:#161b22; --text:#e6edf3; --muted:#9aa7b2; --line:#2a323c;
+  --accent:#74c0fc; --accent2:#63e6be; --accent-soft:#0b1f33;
+  --code-bg:#0a0e13; --warn:#2b2410; --tip:#0f2236;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Kantumruy Pro",system-ui,sans-serif;line-height:1.85;font-size:16px}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:34px;height:34px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-family:"JetBrains Mono",monospace}
+header.top h1{font-size:17px;margin:0;flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+.layout{display:grid;grid-template-columns:270px 1fr;max-width:1250px;margin:0 auto}
+nav.side{position:sticky;top:55px;height:calc(100vh - 55px);overflow:auto;padding:16px;border-right:1px solid var(--line)}
+nav.side h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+nav.side a{display:block;padding:4px 8px;border-radius:6px;text-decoration:none;color:var(--text);font-size:14.5px}
+nav.side a:hover{background:var(--accent-soft);color:var(--accent)}
+main{padding:24px 32px 80px;min-width:0}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;margin-bottom:24px}
+section h2{margin-top:0;color:var(--accent);font-size:24px;border-bottom:2px solid var(--accent-soft);padding-bottom:8px}
+section h3{font-size:19px;margin-top:26px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.hero{background:linear-gradient(135deg,#061a2e,#1864ab 45%,#0ca678 85%);color:#fff;border:none}
+.hero h2{color:#fff;border-color:rgba(255,255,255,.3);font-size:28px}
+.hero p{font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg)}
+.card b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+code.i{font-family:"JetBrains Mono",monospace;background:var(--accent-soft);padding:1px 6px;border-radius:5px;font-size:.9em}
+.codebox{position:relative;margin:14px 0}
+.codebox .label{position:absolute;top:0;left:14px;transform:translateY(-50%);background:var(--accent);color:#fff;font-size:12px;padding:1px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace}
+.codebox .copy{position:absolute;top:8px;right:8px;font-size:12px;padding:3px 8px;background:#21262d;color:#c9d1d9;border:1px solid #30363d}
+pre{background:var(--code-bg);color:var(--code-text);padding:20px 16px 16px;border-radius:10px;overflow-x:auto;margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.tok-kw{color:var(--c-kw)} .tok-str{color:var(--c-str)} .tok-com{color:var(--c-com);font-style:italic}
+.tok-num{color:var(--c-num)} .tok-fn{color:var(--c-fn)} .tok-bi{color:var(--c-bi)} .tok-cmd{color:var(--c-cmd)}
+.note{border-left:4px solid var(--tip-line);background:var(--tip);padding:10px 14px;border-radius:8px;margin:14px 0}
+.warn{border-left:4px solid var(--warn-line);background:var(--warn);padding:10px 14px;border-radius:8px;margin:14px 0}
+.ex{border:2px dashed var(--accent2);border-radius:12px;padding:12px 16px;margin:18px 0;background:var(--accent-soft)}
+.ex h4{margin:0 0 6px;color:var(--accent)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 10px 44px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:4px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.tree{font-family:"JetBrains Mono",monospace;font-size:14px}
+#menuBtn{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  nav.side{display:none;position:fixed;top:55px;left:0;right:0;bottom:0;height:auto;background:var(--panel);z-index:15}
+  nav.side.open{display:block}
+  #menuBtn{display:inline-block}
+  main{padding:16px}
+  section{padding:16px}
+}
+
+.k-kw{color:#ff7b72}.k-s{color:#a5d6ff}.k-c{color:#8b949e;font-style:italic}.k-n{color:#79c0ff}.k-f{color:#d2a8ff;font-weight:600}
+.k-cell{color:#ffa657}.k-sh{color:#7ee787}.k-st{color:#ffd580}.k-op{color:#ff9bce}.k-key{color:#7ee787;font-weight:600}.k-tag{color:#7ee787}.k-attr{color:#79c0ff}.k-hook{color:#ffa657;font-weight:600}
+#pro-app .codebox pre{max-height:480px;overflow:auto}
+code.i{overflow-wrap:anywhere}
+.term-out{margin:-6px 0 16px;border-radius:0 0 10px 10px;overflow:hidden;border:1px solid #2a2f3a;border-top:0}
+.term-bar{display:flex;align-items:center;gap:6px;background:#2a2f3a;color:#aab3c0;font-size:12px;padding:5px 10px}
+.term-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:inline-block}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:6px}
+.term-out pre{margin:0;background:#0b0e14;color:#d6deeb;padding:12px 14px;font:13px/1.55 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-x:auto;max-height:420px;border-radius:0}
+.term-out .tp{color:#7fd962;font-weight:600}.term-out .tc{color:#fff}
+.codebox .result{background:#fff;border-radius:0 0 10px 10px;margin-top:-6px;border:1px solid var(--line);border-top:3px solid var(--accent)}
+.codebox .result .lbl{background:var(--accent-soft);color:var(--accent);font-size:13px;padding:3px 12px}
+.codebox .result iframe{width:100%;border:0;display:block;min-height:90px;background:#fff}
+.codebox.visual .result{margin-top:0;border-radius:10px;border-top:1px solid var(--line)}
+.codebox.visual{padding-top:4px}
+kbd{font-family:"JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:.85em;background:var(--panel);white-space:nowrap}
+/* Excel-like sheet */
+table.sheet{font-family:"JetBrains Mono","Kantumruy Pro",monospace;font-size:13.5px;width:auto;max-width:100%}
+table.sheet th{background:#e9ecef;color:#495057;text-align:center;font-weight:600;min-width:34px}
+table.sheet td{background:#fff;color:#1f2937;white-space:nowrap}
+table.sheet td.r{text-align:right}
+table.sheet td.hd{font-weight:700;background:#f1f5f2}
+table.sheet td.hl{background:#fff4c2;font-weight:700}
+table.sheet td.sel{outline:2px solid #107c41;outline-offset:-2px}
+:root[data-theme="dark"] table.sheet td{filter:none}
+.mock{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--bg);margin:12px 0}
+.ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.ribbon span{background:var(--accent);color:#fff;border-radius:6px;padding:2px 10px;font-size:13.5px}
+.ribbon span.sub{background:var(--accent-soft);color:var(--accent)}
+
+
+.fig{margin:16px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;overflow:hidden}
+.fig>svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:13.5px;color:#475569;text-align:center;margin-top:6px}
+.how{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 14px 2px;margin:14px 0}
+.how>b{color:var(--accent)}
+.how .steps li{padding-bottom:6px}
+.btn.say{font-size:13px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.k-kw{color:#ff7b72}
+/* IT Toolkit */
+.itk{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.itk-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.itk-tabs button{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:14px;cursor:pointer}
+.itk-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.itk-p{display:none;padding:16px}.itk-p.on{display:block}
+.itk-p label{display:inline-flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;margin:0 10px 10px 0}
+.itk-p input,.itk-p select{font:inherit;font-size:15px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);min-width:140px}
+.itk-p input[type=checkbox],.itk-p input[type=radio]{width:auto;min-width:0;padding:0;margin:0 6px 0 0;vertical-align:middle;accent-color:var(--accent)}
+#nIn,#pwIn{width:100%;max-width:420px;font-family:"JetBrains Mono",monospace;font-size:18px}
+.itk-row{display:flex;flex-wrap:wrap;align-items:flex-end}
+.itk-out{margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;line-height:1.9;font-size:15px}
+.itk-out b{color:var(--accent)}
+.itk-bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.itk-bits span{width:44px;text-align:center;border-radius:8px;background:var(--line);padding:4px 0;display:flex;flex-direction:column}
+.itk-bits span.on{background:var(--accent);color:#fff}.itk-bits b{font:700 18px "JetBrains Mono",monospace}.itk-bits small{font-size:10.5px;opacity:.8}
+.itk-meter{height:10px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px;max-width:420px}.itk-meter i{display:block;height:100%;transition:.3s}
+.itk-score{display:inline-block;min-width:110px;padding:0 10px;border-radius:99px;color:#fff;font-weight:700;background:linear-gradient(90deg,#12b886 var(--v),#e9ecef var(--v));color:#0b3d2e}
+.itk-qh{font-size:13.5px;color:var(--muted)}
+.itk-prog{height:6px;background:var(--line);border-radius:9px;margin:6px 0 10px}.itk-prog i{display:block;height:100%;background:var(--accent2);border-radius:9px}
+.itk-opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;cursor:pointer}
+.itk-opt:hover{border-color:var(--accent)}.itk-opt.good{background:#d3f9d8;border-color:#2f9e44;color:#0b3d17}.itk-opt.bad{background:#ffe3e3;border-color:#e03131;color:#5c0b0b}.itk-opt.dim{opacity:.5}
+.itk-done{text-align:center}
+.pe{display:grid;grid-template-columns:1fr 320px;gap:14px;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--bg)}
+.pe-stage{position:relative;background:repeating-conic-gradient(#e5e7eb 0 25%,#fff 0 50%) 0 0/18px 18px;border-radius:10px;display:grid;place-items:center;min-height:240px;overflow:hidden}
+.pe-stage canvas{max-width:100%;max-height:70vh;height:auto;display:block}
+.pe-cmp{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.65);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;user-select:none;touch-action:none}
+.pe-side label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}.pe-side label input[type=range]{flex:1}.pe-side output{width:34px;text-align:right;font:12px "JetBrains Mono",monospace;color:var(--muted)}
+.pe-side input:not([type=range]):not([type=checkbox]),.pe-side select{flex:1;font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.pe-row,.vl-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.pe-up{cursor:pointer}
+.pe-tabs{display:flex;gap:4px;margin:8px 0}.pe-tabs button{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:5px;font:inherit;font-size:13px;cursor:pointer}.pe-tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pe-p{display:none}.pe-p.on{display:block}.pe-pre{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.pe-info{font-size:13px;color:var(--muted);margin:6px 0}
+@media (max-width:900px){.pe{grid-template-columns:1fr}}
+.vl{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.vl-p{display:none;padding:14px}.vl-p.on{display:block}
+.vl-tip{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.vl-svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;display:block}
+.vl-svg .vl-a{fill:#fff;stroke:#0f172a;stroke-width:2.5;cursor:move}.vl-svg .vl-h{fill:#2563eb;cursor:pointer}.vl-svg .vl-hl{stroke:#94a3b8;stroke-width:1.5}
+.vl-row label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.vl-code{background:var(--code-bg);color:#a5d6ff;font:12.5px/1.6 "JetBrains Mono",monospace;padding:12px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:220px;overflow:auto;margin-top:10px}
+.vl-grid{display:grid;grid-template-columns:260px 1fr;gap:14px}.vl-ctl label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600;margin-bottom:8px}
+.vl-ctl input:not([type=checkbox]),.vl-ctl select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}
+.vl-ctl label:has(input[type=checkbox]){flex-direction:row;align-items:center}
+.vl-logo{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;place-items:center}.vl-logo svg{width:100%;max-width:340px;height:auto}
+.vl-sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 14px;margin-top:10px}.vl-sizes div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px}.vl-sizes div.dark{background:#0f172a}.vl-sizes svg{width:100%;height:auto;display:block}.vl-sizes small{font-size:11px;color:var(--muted);margin-left:-10px}
+.vl-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}.vl-pal div{height:110px;border-radius:10px;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font:12px "JetBrains Mono",monospace}.vl-pal small{font-size:10.5px;opacity:.85}
+.vl-wheel{display:flex;flex-wrap:wrap;gap:14px;align-items:center}.vl-wheel .itk-out{flex:1;min-width:220px}
+.phf{margin:16px auto;text-align:center}.phf figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.ph{position:relative;width:270px;height:500px;margin:0 auto;border:10px solid #111;border-radius:38px;background:#fafafa;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.25);text-align:left;font-family:"Kantumruy Pro",Roboto,sans-serif;color:#1c1b1f}
+.ph.big{width:300px;height:580px}
+.ph-notch{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:80px;height:18px;border-radius:12px;background:#111;z-index:3}
+.ph-bar{padding:34px 16px 12px;color:#fff;font-weight:700;font-size:17px}
+.ph-bar.ios{background:#f8f8fa;color:#111;text-align:center;font-size:16px;border-bottom:1px solid #e5e5ea}
+.ph-body{position:absolute;top:70px;bottom:0;left:0;right:0;padding:12px;overflow:auto}
+.ph-center{display:grid;place-items:center;height:70%}
+.ph-fab{position:absolute;right:16px;bottom:18px;width:52px;height:52px;border-radius:16px;background:#d7ccc8;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:2}
+.ph-card{background:#fff;border-radius:18px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:10px}.ph-card.dark{background:#2b2b2e;color:#eee}
+.ph-img{height:120px;border-radius:14px;display:grid;place-items:center;font-size:44px;margin-bottom:10px}
+.ph-btn{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#795548;color:#fff;font-weight:700;font-size:14px}
+.ph-row,.ph-tile{display:flex;align-items:center;gap:10px}.ph-tile{background:#fff;border-radius:14px;padding:9px 12px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ph-av{width:38px;height:38px;border-radius:50%;background:#d7ccc8;display:grid;place-items:center;font-weight:700;flex:none}
+.ph-badge{position:absolute;top:-4px;right:-8px;background:#e11d48;color:#fff;border-radius:99px;font:700 10px sans-serif;padding:1px 5px;font-style:normal}
+.ph-field{border:1.5px solid #79747e;border-radius:6px;padding:10px 12px;margin-bottom:10px;background:#fff;min-height:22px}
+.ph-nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:8px 0 12px;background:#f3edf7;font-size:12px;text-align:center;z-index:1}
+.ph-nav span{padding:2px 14px;border-radius:14px}.ph-nav span.on{background:var(--pc,#e8def8);font-weight:700}
+.ph-sw{width:38px;height:22px;border-radius:99px;position:relative}.ph-sw::after{content:"";position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.ph-chip{border:1px solid;border-radius:8px;padding:4px 12px;font-size:13px}
+.ph-pair{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.ph-live .codebox{max-width:420px;margin:14px auto}
+.fb{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}.fb-p{display:none;padding:14px}.fb-p.on{display:block}
+.fb-grid{display:grid;grid-template-columns:1fr 330px;gap:14px}.fb-ctl label{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:6px 0}
+.fb-ctl input:not([type=checkbox]):not([type=color]),.fb-row select{font:inherit;font-size:14px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);flex:1}
+.fb-add{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:10px 0}.fb-add .btn{font-size:13px;padding:4px 10px}
+.fb-list{display:grid;gap:5px}.fb-item{display:grid;grid-template-columns:70px 1fr 30px 30px;gap:5px;align-items:center;font-size:13px}.fb-item input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text)}
+.fb-item button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;cursor:pointer;height:28px}
+.fb-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13.5px}.fb-row label{display:inline-flex;align-items:center;gap:6px}
+.fb-lay{margin-top:12px;height:300px;border:2px dashed var(--accent);border-radius:14px;padding:8px;background:var(--panel)}
+#l_box{display:flex;height:100%;gap:6px}#l_box div{border-radius:8px;color:#fff;font:700 12px sans-serif;display:grid;place-items:center;min-width:30px;min-height:30px}
+@media (max-width:860px){.fb-grid{grid-template-columns:1fr}}
+#pfOps .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width:760px){.vl-grid{grid-template-columns:1fr}.vl-pal{grid-template-columns:repeat(2,1fr)}}
+.itk-out .itk-bits{margin:4px 0 10px}
+table.tt{width:auto;display:table;font-family:"JetBrains Mono",monospace;text-align:center}table.tt td,table.tt th{text-align:center;min-width:44px}td.t1{background:#d3f9d8;color:#0b3d17;font-weight:700}td.t0{background:#ffe3e3;color:#5c0b0b}
+.itk-hist{display:flex;align-items:flex-end;gap:8px;margin-top:12px;height:170px}.itk-hist div{display:flex;flex-direction:column;align-items:center;flex:1;max-width:70px}.itk-hist i{display:block;width:100%;background:var(--accent);border-radius:6px 6px 0 0}.itk-hist b{font-size:13px}.itk-hist small{font-size:11px;color:var(--muted)}
+.itk-bo{display:grid;gap:10px;margin-top:10px}.bo-row{display:grid;grid-template-columns:100px 1fr;gap:4px 10px;align-items:center}.bo-row span{grid-column:2;font-size:13px;color:var(--muted)}.bo-bar{height:16px;background:var(--line);border-radius:9px;overflow:hidden}.bo-bar i{display:block;height:100%;border-radius:9px;transition:width .2s}.itk-done .big{font-size:56px}
+</style>
+<link rel="icon" href="../assets/icons/net.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="top">
+  <button class="btn" id="menuBtn" aria-label="Menu">☰</button>
+  <div class="logo" style="background:none;padding:0;overflow:hidden"><img src="../assets/icons/net.svg" alt="" style="width:100%;height:100%;display:block;border-radius:inherit"></div>
+  <h1>Network Engineering — វិស្វកម្មបណ្តាញ (ត្រៀម CCNA)</h1>
+  <button class="btn" id="themeBtn" aria-label="ប្តូរ Dark mode">🌓</button>
+</header>
+<div class="layout">
+<nav class="side" id="side">
+<h4>ផ្នែកទី ១ – មូលដ្ឋាន</h4>
+<a href="#intro">១. Network Engineering ជាអ្វី?</a>
+<a href="#setup">២. ត្រៀមខ្លួន</a>
+<h4>ផ្នែកទី ២ – មេរៀន</h4>
+<a href="#l1">មេរៀន ១: បណ្តាញជាអ្វី? LAN · WAN · Topology · ឧបករណ៍</a>
+<a href="#l2">មេរៀន ២: OSI 7 Layers &amp; TCP/IP</a>
+<a href="#l3">មេរៀន ៣: Ethernet · MAC · Switching</a>
+<a href="#l4">មេរៀន ៤: IPv4 Addressing &amp; Subnetting</a>
+<a href="#l5">មេរៀន ៥: VLSM · IPv6</a>
+<a href="#l6">មេរៀន ៦: VLAN &amp; Trunk (802.1Q)</a>
+<a href="#l7">មេរៀន ៧: Routing៖ Routing table · Static route</a>
+<a href="#l8">មេរៀន ៨: Dynamic routing៖ OSPF</a>
+<a href="#l9">មេរៀន ៩: DHCP · DNS · NAT/PAT</a>
+<a href="#l10">មេរៀន ១០: Wi-Fi (802.11)</a>
+<a href="#l11">មេរៀន ១១: សុវត្ថិភាពបណ្តាញ៖ ACL · Port security · SSH</a>
+<a href="#l12">មេរៀន ១២: Troubleshooting៖ ping · traceroute · nslookup</a>
+<a href="#l13">មេរៀន ១៣: Cisco IOS មូលដ្ឋាន &amp; Packet Tracer</a>
+<a href="#l14">មេរៀន ១៤: អាជីព &amp; ប្រឡង CCNA</a>
+<a href="#cheat">📋 សង្ខេប (Cheat sheet)</a>
+<h4>ផ្នែកទី ៣ – កម្រិតអាជីព</h4>
+<a href="#pro">🏆 គម្រោងចុងវគ្គ</a>
+<a href="#pro-app">💻 Network Lab (App)</a>
+<a href="#roadmap">🗺️ ផែនទីបន្តការសិក្សា</a>
+</nav>
+<main>
+<section class="hero">
+  <h2>🌐 Network Engineering — ពី Cable ដល់ Router (ត្រៀម CCNA)</h2>
+  <p><b>OSI &amp; TCP/IP</b>, Switching &amp; MAC, <b>Subnetting / VLSM</b>, IPv6, <b>VLAN &amp; Trunk</b>, Routing (Static · <b>OSPF</b>), DHCP · DNS · NAT, Wi-Fi, ACL, Troubleshooting, <b>Cisco IOS + Packet Tracer</b>, CCNA 200-301 (v2.0 ឆ្នាំ 2027) + <b>Network Lab</b>។</p>
+  <p><span class="badge">📘 ១៤ មេរៀន</span><span class="badge">🖼️ រូបភាពពន្យល់</span><span class="badge">✍️ លំហាត់ + ចម្លើយ</span><span class="badge">🧮 គណនា Subnet + Cisco IOS</span><span class="badge">🌐 Network Lab</span></p>
+</section>
+<section id="intro">
+<h2>១. Network Engineering ជាអ្វី?</h2>
+
+
+<p><b>Network Engineering</b> = រចនា ដំឡើង គ្រប់គ្រង និងការពារបណ្តាញកុំព្យូទ័រ — ពី Wi-Fi ផ្ទះ ដល់ Network ធនាគារ និង ISP។ វគ្គនេះធ្វើតាមប្រធានបទ <b>CCNA</b>៖ OSI/TCP-IP · Switching · <b>Subnetting</b> · VLAN · Routing (Static/OSPF) · DHCP/DNS/NAT · Wi-Fi · ACL · Troubleshooting · <b>Cisco IOS</b> — ជាមួយ <b>Network Lab</b> (Subnet calculator · VLSM · Binary quiz)។</p>
+<figure class="fig"><svg viewBox="0 0 1000 230" role="img" font-family="Kantumruy Pro,Inter,sans-serif" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs><rect width="1000" height="230" fill="#fff"/><line x1="30" y1="115" x2="970" y2="115" stroke="#94a3b8" stroke-width="4"/><circle cx="80" cy="115" r="11" fill="#495057"/><text x="80" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#495057">1969</text><text x="80" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">ARPANET</text><circle cx="185" cy="115" r="11" fill="#1c7ed6"/><text x="185" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#1c7ed6">1973</text><text x="185" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Ethernet</text><circle cx="290" cy="115" r="11" fill="#2f9e44"/><text x="290" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#2f9e44">1974</text><text x="290" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">TCP/IP</text><circle cx="395" cy="115" r="11" fill="#7048e8"/><text x="395" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#7048e8">1981</text><text x="395" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">IPv4 RFC 791</text><circle cx="500" cy="115" r="11" fill="#e8590c"/><text x="500" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#e8590c">1984</text><text x="500" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">OSI · Cisco</text><circle cx="605" cy="115" r="11" fill="#0ca678"/><text x="605" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#0ca678">1989</text><text x="605" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">OSPF</text><circle cx="710" cy="115" r="11" fill="#d6336c"/><text x="710" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#d6336c">1997</text><text x="710" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">Wi-Fi 802.11</text><circle cx="815" cy="115" r="11" fill="#ae3ec9"/><text x="815" y="165" text-anchor="middle" font-size="17" font-weight="700" fill="#ae3ec9">1998</text><text x="815" y="187" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">IPv6 · CCNA</text><circle cx="920" cy="115" r="11" fill="#f59f00"/><text x="920" y="70" text-anchor="middle" font-size="17" font-weight="700" fill="#f59f00">2027</text><text x="920" y="92" text-anchor="middle" font-size="12.5" font-weight="400" fill="#334155">CCNA v2.0</text></svg><figcaption>🖼️ ប្រវត្តិ Internet &amp; Network</figcaption></figure>
+
+<table><tr><th>ឆ្នាំ</th><th>អ្នកបង្កើត / ព្រឹត្តិការណ៍</th><th>សារៈសំខាន់</th></tr><tr><td>1969</td><td><b>ARPANET</b> (DARPA)</td><td>បណ្តាញ Packet-switching ដំបូង</td></tr><tr><td>1973</td><td><b>Robert Metcalfe</b> (Xerox PARC)</td><td>Ethernet</td></tr><tr><td>1974</td><td><b>Vint Cerf &amp; Bob Kahn</b></td><td>TCP/IP</td></tr><tr><td>1981</td><td>RFC 791</td><td>IPv4</td></tr><tr><td>1983</td><td>ARPANET ប្តូរទៅ TCP/IP (1 មករា)</td><td>ថ្ងៃកំណើត Internet</td></tr><tr><td>1984</td><td><b>ISO</b> OSI model · <b>Cisco</b> បង្កើត (Leonard Bosack &amp; Sandy Lerner)</td><td>ស្តង់ដារ · Router</td></tr><tr><td>1985</td><td><b>Radia Perlman</b></td><td>Spanning Tree Protocol</td></tr><tr><td>1989/1991</td><td>IETF</td><td>OSPF (v1 1989, v2 1991)</td></tr><tr><td>1997</td><td>IEEE 802.11</td><td>Wi-Fi</td></tr><tr><td>1998</td><td>IPv6 (RFC 2460 → 8200 ឆ្នាំ 2017) · Cisco CCNA</td><td>IP 128-bit · វិញ្ញាបនបត្រ</td></tr></table>
+
+<h3>ប្រើសម្រាប់អ្វី?</h3>
+<div class="grid"><div class="card"><b>🏢 ក្រុមហ៊ុន/ធនាគារ</b><br>LAN · WAN · Data center</div><div class="card"><b>📡 ISP / Telecom</b><br>Fiber · 4G/5G</div><div class="card"><b>🏫 សាលា/សាកលវិទ្យាល័យ</b><br>Wi-Fi រាប់ពាន់នាក់</div><div class="card"><b>☁️ Cloud</b><br>VPC · Load balancer</div><div class="card"><b>🛡️ Security</b><br>Firewall · SOC</div></div>
+
+</section>
+<section id="setup">
+<h2>២. ត្រៀមខ្លួន</h2>
+<ol class='steps'><li>ចុះឈ្មោះ <b>Cisco Networking Academy</b> → ទាញ <b>Packet Tracer</b> (ឥតគិតថ្លៃ)។</li><li>រៀន <b>IT Fundamentals</b> និង <b>Math for IT</b> (Binary) ជាមុន។</li><li>ហាត Subnetting រៀងរាល់ថ្ងៃ ១០ នាទី (Binary Quiz ក្នុង Lab)។</li><li>Router/Switch ពិតជជុះ (ជម្រើស) សម្រាប់ Lab កម្រិតខ្ពស់។</li></ol></section>
+<section id="l1">
+<h2><span class="badge">មេរៀន ១</span>បណ្តាញជាអ្វី? LAN · WAN · Topology · ឧបករណ៍</h2>
+<table><tr><th>ឧបករណ៍</th><th>Layer</th><th>ការងារ</th></tr><tr><td><b>Switch</b></td><td>2 (Data link)</td><td>ភ្ជាប់ឧបករណ៍ក្នុង LAN · ផ្ញើតាម <b>MAC</b></td></tr><tr><td><b>Router</b></td><td>3 (Network)</td><td>ភ្ជាប់ Network ផ្សេងគ្នា · ផ្ញើតាម <b>IP</b></td></tr><tr><td><b>Access Point</b></td><td>2</td><td>Wi-Fi ភ្ជាប់ឥតខ្សែ</td></tr><tr><td><b>Firewall</b></td><td>3–7</td><td>ត្រង Traffic តាមច្បាប់</td></tr><tr><td><b>Modem/ONT</b></td><td>1</td><td>ភ្ជាប់ ISP (Fiber/DSL/4G-5G)</td></tr></table>
+<div class="grid"><div class="card"><b>🏠 LAN</b><br>ក្នុងផ្ទះ/សាលា/ការិយាល័យ</div><div class="card"><b>🌍 WAN</b><br>ភ្ជាប់ទីតាំងឆ្ងាយ (Internet, MPLS)</div><div class="card"><b>⭐ Star topology</b><br>ពេញនិយមបំផុត — គ្រប់ឧបករណ៍ភ្ជាប់ Switch កណ្តាល</div><div class="card"><b>🕸️ Mesh</b><br>ច្រើនផ្លូវ — Redundancy (Router ISP, Wi-Fi mesh)</div></div>
+<div class="ex"><h4>✍️ លំហាត់ ១</h4><p>Switch និង Router ខុសគ្នាដូចម្តេច?</p><details><summary>មើលចម្លើយ</summary><p><b>Switch</b> (Layer 2) ផ្ញើ Frame ក្នុង <b>LAN តែមួយ</b> តាម MAC address · <b>Router</b> (Layer 3) ផ្ញើ Packet <b>រវាង Network</b> ផ្សេងគ្នា តាម IP address (ឧ. ពី LAN ផ្ទះ ទៅ Internet)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១.២</h4><p>ការិយាល័យ ២០ PC ១ Printer ចង់ចូល Internet — ឧបករណ៍ចាំបាច់?</p><details><summary>មើលចម្លើយ</summary><p><b>Switch</b> (ភ្ជាប់ក្នុង LAN) + <b>Router</b> (ចេញ Internet/NAT) + (Access point សម្រាប់ Wi-Fi) + ខ្សែ Cat6។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១.៣</h4><p>Star topology មានគុណសម្បត្តិ និងគុណវិបត្តិអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>+ ខ្សែមួយខូច ប៉ះតែឧបករណ៍មួយ ងាយរកបញ្ហា · − Switch កណ្តាលខូច = ទាំងអស់ដាច់។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១.៤</h4><p>LAN, WAN, MAN ខុសគ្នា?</p><details><summary>មើលចម្លើយ</summary><p><b>LAN</b> = ក្នុងអគារ · <b>MAN</b> = ទីក្រុង · <b>WAN</b> = ប្រទេស/ពិភពលោក (Internet)។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> ឧបករណ៍ភ្ជាប់បណ្តាញខុសគ្នា (LAN ↔ Internet)?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>Router</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Switch</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Repeater</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Hub</button></div><div class="mcq-x" hidden>💡 Router ធ្វើការ Layer 3។</div></div><div class="mcq"><p><b>២.</b> Topology ពេញនិយមបំផុតក្នុង LAN សព្វថ្ងៃ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Ring</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>Star</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Bus</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Mesh ពេញ</button></div><div class="mcq-x" hidden>💡 គ្រប់ PC ភ្ជាប់ Switch។</div></div><div class="mcq"><p><b>៣.</b> Bandwidth វាស់ជា?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Watt</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>GHz</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Byte តែប៉ុណ្ណោះ</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>bps (Mbps/Gbps)</button></div><div class="mcq-x" hidden>💡 Bits per second។</div></div></div><style>.mcqs{margin:14px 0;padding:12px 14px;border:1px dashed rgba(127,127,127,.4);border-radius:14px}.mcqs h4{margin:0 0 6px}.mcq{margin:10px 0 14px}.mcq>p{margin:0 0 6px}
+.mcq-o{display:grid;gap:6px}.mcq-b{display:flex;gap:8px;align-items:flex-start;text-align:left;width:100%;padding:8px 10px;border-radius:10px;border:1px solid rgba(127,127,127,.35);background:transparent;color:inherit;font:inherit;cursor:pointer}
+.mcq-b span{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:rgba(127,127,127,.15)}
+.mcq-b.ok{border-color:#2f9e44;background:rgba(47,158,68,.14)}.mcq-b.ok span{background:#2f9e44;color:#fff}.mcq-b.no{border-color:#e03131;background:rgba(224,49,49,.1)}.mcq-b.no span{background:#e03131;color:#fff}
+.mcq.done .mcq-b{cursor:default}.mcq-x{margin-top:6px;padding:8px 10px;border-radius:10px;background:rgba(127,127,127,.08);font-size:.95em}</style>
+<script>document.addEventListener("click",function(e){var b=e.target.closest(".mcq-b");if(!b)return;var m=b.closest(".mcq");if(m.classList.contains("done"))return;m.classList.add("done");
+b.classList.add(b.dataset.ok==="1"?"ok":"no");if(b.dataset.ok!=="1")m.querySelector('.mcq-b[data-ok="1"]').classList.add("ok");var x=m.querySelector(".mcq-x");x.hidden=false;x.insertAdjacentHTML("afterbegin",b.dataset.ok==="1"?"<b>✅ ត្រឹមត្រូវ!</b> ":"<b>❌ មិនទាន់ត្រូវ</b> ");});</script></section>
+<section id="l2">
+<h2><span class="badge">មេរៀន ២</span>OSI 7 Layers &amp; TCP/IP</h2>
+<table><tr><th>OSI</th><th>TCP/IP</th><th>PDU</th><th>Protocol/ឧទាហរណ៍</th></tr><tr><td>7 Application</td><td>Application</td><td>Data</td><td>HTTP(S), DNS, DHCP, SMTP, SSH</td></tr><tr><td>6 Presentation</td><td>Application</td><td>Data</td><td>TLS, UTF-8, JPEG</td></tr><tr><td>5 Session</td><td>Application</td><td>Data</td><td>Session</td></tr><tr><td>4 Transport</td><td>Transport</td><td><b>Segment</b></td><td><b>TCP</b> (ធានា) · <b>UDP</b> (លឿន)</td></tr><tr><td>3 Network</td><td>Internet</td><td><b>Packet</b></td><td>IP, ICMP, OSPF</td></tr><tr><td>2 Data link</td><td>Network access</td><td><b>Frame</b></td><td>Ethernet, Wi-Fi (802.11), ARP</td></tr><tr><td>1 Physical</td><td>Network access</td><td><b>Bits</b></td><td>Cable, Fiber, Radio</td></tr></table>
+<div class="note">💡 ចាំ OSI ពីក្រោម៖ <b>P</b>lease <b>D</b>o <b>N</b>ot <b>T</b>hrow <b>S</b>ausage <b>P</b>izza <b>A</b>way។ TCP៖ 3-way handshake <b>SYN → SYN-ACK → ACK</b>។ សាក <b>OSI Encapsulation</b> ក្នុង Network Lab។</div>
+<div class="ex"><h4>✍️ លំហាត់ ២</h4><p>Video call (Zoom/Messenger) ច្រើនតែប្រើ TCP ឬ UDP? ហេតុអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>UDP</b> — លឿន គ្មានការរង់ចាំផ្ញើឡើងវិញ។ Packet បាត់ខ្លះ = រូបភាពព្រិលបន្តិច ប្រសើរជាងរង់ចាំ (Delay)។ TCP សម្រាប់ Web/File ដែលត្រូវការត្រឹមត្រូវ ១០០%។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ២.២</h4><p>តម្រៀប OSI ពីក្រោម៖ Transport, Physical, Application, Network, Data link, Session, Presentation</p><details><summary>មើលចម្លើយ</summary><p>Physical → Data link → Network → Transport → Session → Presentation → Application (<b>Please Do Not Throw Sausage Pizza Away</b>)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ២.៣</h4><p>PDU នៅ Layer 2, 3, 4 ឈ្មោះអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>L2 = <b>Frame</b> · L3 = <b>Packet</b> · L4 = <b>Segment</b> (TCP) / Datagram (UDP)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ២.៤</h4><p>TCP 3-way handshake?</p><details><summary>មើលចម្លើយ</summary><p><b>SYN → SYN-ACK → ACK</b>។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> IP address ធ្វើការ Layer?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>7</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>4</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>3 Network</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>2</button></div><div class="mcq-x" hidden>💡 Logical addressing។</div></div><div class="mcq"><p><b>២.</b> HTTPS Port?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>22</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>80</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>53</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>443</button></div><div class="mcq-x" hidden>💡 HTTP = 80។</div></div><div class="mcq"><p><b>៣.</b> DNS ប្រើ Port?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>25</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>110</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>3389</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>53</button></div><div class="mcq-x" hidden>💡 UDP/TCP 53។</div></div></div></section>
+<section id="l3">
+<h2><span class="badge">មេរៀន ៣</span>Ethernet · MAC · Switching</h2>
+<p><b>MAC address</b> = 48 bit (ឧ. <code>3C:22:FB:9A:10:7E</code>) — ៣ byte ដំបូង = ក្រុមហ៊ុនផលិត (OUI)។ Switch រៀន <b>MAC address table</b>៖ ពេល Frame ចូល Port ណា វាចាំ MAC ប្រភព ↔ Port នោះ។</p><table><tr><th>ពាក្យ</th><th>ន័យ</th></tr><tr><td>Collision domain</td><td>Switch ៖ មួយ Port = មួយ Domain (Full-duplex)</td></tr><tr><td>Broadcast domain</td><td>VLAN មួយ = មួយ Broadcast domain · Router បំបែក</td></tr><tr><td>ARP</td><td>ស្វែងរក MAC ពី IP (Who has 192.168.1.1?)</td></tr><tr><td>STP (802.1D)</td><td>ការពារ Loop ពេលមាន Switch ភ្ជាប់ច្រើនផ្លូវ — Radia Perlman (1985)</td></tr></table>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li>PC-A (MAC A, Port 1) ផ្ញើទៅ PC-B</li><li>Switch រៀន៖ <b>A → Port 1</b></li><li>Switch មិនទាន់ស្គាល់ B → <b>Flood</b> ទៅ Port ទាំងអស់ (លើកលែង Port 1)</li><li>PC-B ឆ្លើយ → Switch រៀន <b>B → Port 3</b></li><li>លើកក្រោយ A → B ផ្ញើទៅ Port 3 តែមួយ (Forward)</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣</h4><p>ពេល Switch ទទួល Frame ទៅ MAC ដែលវាមិនទាន់ស្គាល់ វាធ្វើអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Flood</b> — ផ្ញើចេញគ្រប់ Port ក្នុង VLAN ដដែល (លើកលែង Port ដែលចូល)។ ពេលម៉ាស៊ីនគោលដៅឆ្លើយ Switch រៀន MAC នោះ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣.២</h4><p>MAC address មានប៉ុន្មាន bit? ផ្នែកដើម ២៤ bit ជាអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>48 bit</b> (12 Hex) · ២៤ bit ដើម = <b>OUI</b> (អ្នកផលិត)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣.៣</h4><p>Switch រៀន MAC ដោយមើល Source ឬ Destination?</p><details><summary>មើលចម្លើយ</summary><p><b>Source MAC</b> → កត់ថា MAC នេះនៅ Port ណា។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៣.៤</h4><p>ARP ធ្វើអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>រក <b>MAC</b> ពី <b>IP</b> ក្នុង LAN (Broadcast «អ្នកណាមាន IP …?»)។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Switch ផ្ញើ Frame ទៅ MAC មិនស្គាល់ដោយ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Drop</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>ផ្ញើទៅ Router</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>រង់ចាំ</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>Flood (គ្រប់ Port លើកលែង Port ចូល)</button></div><div class="mcq-x" hidden>💡 Unknown unicast flooding។</div></div><div class="mcq"><p><b>២.</b> Broadcast MAC?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>AA:AA</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>FF:FF:FF:FF:FF:FF</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>127.0.0.1</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>00:00:00:00:00:00</button></div><div class="mcq-x" hidden>💡 គ្រប់ឧបករណ៍ក្នុង LAN។</div></div><div class="mcq"><p><b>៣.</b> STP ការពារ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>Switching loop</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Virus</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>IP ស្ទួន</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Wi-Fi</button></div><div class="mcq-x" hidden>💡 Spanning Tree Protocol។</div></div></div></section>
+<section id="l4">
+<h2><span class="badge">មេរៀន ៤</span>IPv4 Addressing &amp; Subnetting</h2>
+<p>IPv4 = <b>32 bit</b> (4 octet)។ <b>Prefix /n</b> = n bit ដំបូងជា Network។ ចំនួន Host = <b>2<sup>(32−n)</sup> − 2</b> (ដក Network + Broadcast)។ Private៖ <code>10.0.0.0/8 · 172.16.0.0/12 · 192.168.0.0/16</code> (RFC 1918)។</p><table><tr><th>Prefix</th><th>Mask</th><th>Hosts</th><th>ប្រើ</th></tr><tr><td>/30</td><td>255.255.255.252</td><td>2</td><td>Link រវាង Router ២</td></tr><tr><td>/27</td><td>255.255.255.224</td><td>30</td><td>ការិយាល័យតូច</td></tr><tr><td>/26</td><td>255.255.255.192</td><td>62</td><td>ថ្នាក់រៀន/Lab</td></tr><tr><td>/24</td><td>255.255.255.0</td><td>254</td><td>LAN ផ្ទះ/ការិយាល័យ</td></tr><tr><td>/22</td><td>255.255.252.0</td><td>1,022</td><td>Wi-Fi សាលាធំ</td></tr></table>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>192.168.10.0/24 → mask 255.255.255.0 · hosts 254
+  192.168.10.0/26  hosts 192.168.10.1 – 192.168.10.62  broadcast 192.168.10.63
+  192.168.10.64/26  hosts 192.168.10.65 – 192.168.10.126  broadcast 192.168.10.127
+  192.168.10.128/26  hosts 192.168.10.129 – 192.168.10.190  broadcast 192.168.10.191
+  192.168.10.192/26  hosts 192.168.10.193 – 192.168.10.254  broadcast 192.168.10.255
+192.168.10.77/26 ស្ថិតក្នុង 192.168.10.64/26 · private? True</pre></div>
+<div class="note">💡 វិធីលឿន៖ <b>Block size = 256 − octet mask</b>។ /26 → mask .192 → block 64 → Subnet ៖ .0, .64, .128, .192។ សាក <b>Subnet Calculator</b> ក្នុង Lab។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៤</h4><p>IP 192.168.10.77/26 — Network, Broadcast, Host range?</p><details><summary>មើលចម្លើយ</summary><p>Block 64 → 77 ស្ថិតក្នុង <b>.64</b>៖ Network <b>192.168.10.64</b> · Broadcast <b>.127</b> · Host <b>.65 – .126</b> (62 Host)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤.២</h4><p>172.16.5.130/25 — Network, Broadcast, Host range?</p><details><summary>មើលចម្លើយ</summary><p>Block 128 → Network <b>172.16.5.128</b> · Broadcast <b>172.16.5.255</b> · Host .129–.254 (126 hosts)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤.៣</h4><p>/27 មាន Host ប៉ុន្មាន? Subnet mask?</p><details><summary>មើលចម្លើយ</summary><p>2⁵ − 2 = <b>30 hosts</b> · <b>255.255.255.224</b>។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៤.៤</h4><p>ត្រូវការ Subnet ៦ ពី 192.168.1.0/24 — ប្រើ Prefix អ្វី? Host/Subnet?</p><details><summary>មើលចម្លើយ</summary><p>ខ្ចី 3 bit (2³ = 8 ≥ 6) → <b>/27</b> · 30 hosts ក្នុងមួយ Subnet។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> /30 មាន Host ប្រើបាន?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>4</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>6</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>2</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>30</button></div><div class="mcq-x" hidden>💡 សម្រាប់ Point-to-point link។</div></div><div class="mcq"><p><b>២.</b> 255.255.255.192 = ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>/26</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>/27</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>/24</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>/28</button></div><div class="mcq-x" hidden>💡 192 = 11000000។</div></div><div class="mcq"><p><b>៣.</b> 10.0.0.0/8 ជា?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Multicast</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Loopback</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>Private IP</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Public</button></div><div class="mcq-x" hidden>💡 RFC 1918៖ 10/8, 172.16/12, 192.168/16។</div></div></div></section>
+<section id="l5">
+<h2><span class="badge">មេរៀន ៥</span>VLSM · IPv6</h2>
+<p><b>VLSM</b> = Subnet ទំហំខុសៗគ្នាតាមតម្រូវការ (ធំមុន) — ខ្ជះខ្ជាយ IP តិច។ <b>IPv6</b> = <b>128 bit</b> សរសេរ Hex ៨ ក្រុម (ឧ. <code>2001:db8:acad:1::10</code>) — <code>::</code> ជំនួសក្រុមសូន្យជាប់គ្នា (ម្តងតែមួយ)។</p><table><tr><th>IPv6</th><th>ឧទាហរណ៍</th><th>ប្រហាក់ប្រហែល IPv4</th></tr><tr><td>Global unicast</td><td>2000::/3</td><td>Public IP</td></tr><tr><td>Link-local</td><td>fe80::/10</td><td>169.254.x.x</td></tr><tr><td>Unique local</td><td>fc00::/7</td><td>Private (10.x)</td></tr><tr><td>Loopback</td><td>::1</td><td>127.0.0.1</td></tr><tr><td>Subnet LAN</td><td>/64</td><td>/24</td></tr></table>
+<div class="term-out"><div class="term-bar"><i></i><i></i><i></i><span>📊 ឧទាហរណ៍គណនា (លទ្ធផល)</span></div><pre>Students  300 hosts → 172.16.0.0/23  (ប្រើបាន 510)
+Teachers   60 hosts → 172.16.2.0/26  (ប្រើបាន 62)
+Admin      25 hosts → 172.16.2.64/27  (ប្រើបាន 30)
+WAN         2 hosts → 172.16.2.96/30  (ប្រើបាន 2)
+IPv6 compressed: 2001:db8::ff00:42:8329 · exploded: 2001:0db8:0000:0000:0000:ff00:0042:8329</pre></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥</h4><p>ហេតុអ្វី VLSM ចាប់ផ្តើមពីផ្នែកដែលត្រូវការ Host <b>ច្រើនបំផុត</b>?</p><details><summary>មើលចម្លើយ</summary><p>ដើម្បីឲ្យ Subnet ធំ <b>តម្រឹមព្រំដែន (alignment)</b> បានត្រឹមត្រូវ ហើយ Subnet តូចៗបំពេញចន្លោះនៅសល់ — ជៀសការត្រួតគ្នា និងខ្ជះខ្ជាយ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥.២</h4><p>VLSM ពី 192.168.10.0/24៖ LAN A 50 hosts, LAN B 20 hosts, Link 2 hosts។</p><details><summary>មើលចម្លើយ</summary><p>A = <b>.0/26</b> (.1–.62) · B = <b>.64/27</b> (.65–.94) · Link = <b>.96/30</b> (.97–.98)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥.៣</h4><p>សរសេរខ្លី IPv6៖ 2001:0db8:0000:0000:0000:0000:0000:0001</p><details><summary>មើលចម្លើយ</summary><p><b>2001:db8::1</b> (លុបលេខ 0 នាំមុខ ហើយប្រើ :: ម្តង)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៥.៤</h4><p>IPv6 address មានប៉ុន្មាន bit? ហេតុអ្វីត្រូវការ?</p><details><summary>មើលចម្លើយ</summary><p><b>128 bit</b> — IPv4 (32 bit ≈ 4.3 ពាន់លាន) អស់ហើយ។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> IPv6 Link-local ចាប់ផ្តើម?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>::1</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>FE80::/10</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>2001::</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>FF00::</button></div><div class="mcq-x" hidden>💡 ស្វ័យប្រវត្តិលើ Interface។</div></div><div class="mcq"><p><b>២.</b> IPv6 Loopback?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>FE80::1</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>::1</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>127.0.0.1</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>0.0.0.0</button></div><div class="mcq-x" hidden>💡 ដូច 127.0.0.1។</div></div><div class="mcq"><p><b>៣.</b> VLSM ជួយ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Encryption</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Wi-Fi</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>បង្កើនល្បឿន</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>សន្សំ IP តាមទំហំពិត</button></div><div class="mcq-x" hidden>💡 Subnet ទំហំខុសគ្នា។</div></div></div></section>
+<section id="l6">
+<h2><span class="badge">មេរៀន ៦</span>VLAN &amp; Trunk (802.1Q)</h2>
+<p><b>VLAN</b> បំបែក Switch មួយជា Network ឡូហ្សិកច្រើន (ឧ. សិស្ស · គ្រូ · កាមេរ៉ា) — សុវត្ថិភាព និងកាត់ Broadcast។ <b>Trunk</b> ដឹក VLAN ច្រើនលើខ្សែមួយ ដោយ <b>Tag 802.1Q</b>។ VLAN ផ្សេងគ្នាត្រូវការ <b>Router/Layer-3 switch</b> (Inter-VLAN routing) ដើម្បីនិយាយគ្នា។</p><script type="text/x-code" data-lang="txt" data-label="Cisco IOS — VLAN + Trunk">
+Switch(config)# vlan 10
+Switch(config-vlan)# name STUDENTS
+Switch(config)# vlan 20
+Switch(config-vlan)# name TEACHERS
+
+Switch(config)# interface range fa0/1 - 12
+Switch(config-if-range)# switchport mode access
+Switch(config-if-range)# switchport access vlan 10
+
+Switch(config)# interface gi0/1
+Switch(config-if)# switchport mode trunk
+Switch(config-if)# switchport trunk allowed vlan 10,20
+
+Switch# show vlan brief
+Switch# show interfaces trunk
+</script>
+<div class="ex"><h4>✍️ លំហាត់ ៦</h4><p>Port ដែលភ្ជាប់ PC សិស្ស គួរ Mode អ្វី? Port ដែលភ្ជាប់ Switch មួយទៀត?</p><details><summary>មើលចម្លើយ</summary><p>PC៖ <b>Access</b> (VLAN តែមួយ ឧ. 10) · Switch↔Switch/Router៖ <b>Trunk</b> (ដឹក VLAN ច្រើនជាមួយ Tag 802.1Q)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦.២</h4><p>Command បង្កើត VLAN 20 ឈ្មោះ STAFF ហើយដាក់ Port Fa0/5។</p><details><summary>មើលចម្លើយ</summary><p><code>vlan 20</code> → <code>name STAFF</code> → <code>interface fa0/5</code> → <code>switchport mode access</code> → <code>switchport access vlan 20</code>។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦.៣</h4><p>PC ក្នុង VLAN 10 និង VLAN 20 ទាក់ទងគ្នាត្រូវការអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Inter-VLAN routing</b>៖ Router-on-a-stick (Sub-interface + 802.1Q) ឬ Layer 3 switch (SVI)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៦.៤</h4><p>ហេតុអ្វីបំបែក VLAN សិស្ស និងបុគ្គលិក?</p><details><summary>មើលចម្លើយ</summary><p>សុវត្ថិភាព (សិស្សមិនចូល Server បុគ្គលិក) · កាត់ Broadcast · គ្រប់គ្រង Policy ងាយ។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> 802.1Q ជា?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>DNS</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>VLAN tagging លើ Trunk</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Routing</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Wi-Fi</button></div><div class="mcq-x" hidden>💡 បន្ថែម Tag 4 byte។</div></div><div class="mcq"><p><b>២.</b> Native VLAN default លើ Cisco?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>គ្មាន</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>VLAN 10</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>VLAN 1</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>VLAN 99</button></div><div class="mcq-x" hidden>💡 Frame មិនមាន Tag។</div></div><div class="mcq"><p><b>៣.</b> ពិនិត្យ VLAN ទាំងអស់?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>ping</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>show ip route</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>show vlan brief</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>show clock</button></div><div class="mcq-x" hidden>💡 បង្ហាញ VLAN និង Port។</div></div></div></section>
+<section id="l7">
+<h2><span class="badge">មេរៀន ៧</span>Routing៖ Routing table · Static route</h2>
+<table><tr><th>Code ក្នុង show ip route</th><th>ន័យ</th><th>AD</th></tr><tr><td>C</td><td>Connected</td><td>0</td></tr><tr><td>S</td><td>Static</td><td>1</td></tr><tr><td>O</td><td>OSPF</td><td>110</td></tr><tr><td>S*</td><td>Default route (Gateway of last resort)</td><td>1</td></tr></table>
+<script type="text/x-code" data-lang="txt" data-label="Cisco IOS — Static routing">
+R1(config)# interface gi0/0
+R1(config-if)# ip address 192.168.1.1 255.255.255.0
+R1(config-if)# no shutdown
+
+! Static route ទៅ LAN នៅ R2 (តាម Next-hop 10.0.0.2)
+R1(config)# ip route 192.168.2.0 255.255.255.0 10.0.0.2
+! Default route ទៅ Internet
+R1(config)# ip route 0.0.0.0 0.0.0.0 203.0.113.1
+
+R1# show ip route
+</script>
+<div class="note">💡 Router ជ្រើស Route៖ (1) <b>Longest prefix match</b> (/26 ឈ្នះ /24) (2) <b>Administrative Distance</b> តូចជាង (ទុកចិត្តជាង) (3) <b>Metric</b> តូចជាង។</div>
+<div class="ex"><h4>✍️ លំហាត់ ៧</h4><p>Routing table មាន 10.1.0.0/16 និង 10.1.5.0/24។ Packet ទៅ 10.1.5.9 ទៅតាមណា?</p><details><summary>មើលចម្លើយ</summary><p><b>10.1.5.0/24</b> — Longest prefix match (ច្បាស់ជាង) ឈ្នះ ទោះ AD ដូចគ្នា។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧.២</h4><p>សរសេរ Static route ទៅ 192.168.50.0/24 តាម Next-hop 10.0.0.2។</p><details><summary>មើលចម្លើយ</summary><p><code>ip route 192.168.50.0 255.255.255.0 10.0.0.2</code></p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧.៣</h4><p>Default route សរសេរម៉េច? ប្រើពេលណា?</p><details><summary>មើលចម្លើយ</summary><p><code>ip route 0.0.0.0 0.0.0.0 &lt;next-hop&gt;</code> — ទៅ Internet/ISP សម្រាប់គោលដៅមិនស្គាល់។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៧.៤</h4><p>នៅក្នុង <code>show ip route</code> អក្សរ C, S, O មានន័យ?</p><details><summary>មើលចម្លើយ</summary><p><b>C</b> = Connected · <b>S</b> = Static · <b>O</b> = OSPF។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Router ជ្រើស Route ដោយ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Random</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>Longest prefix match</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Route ដំបូង</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Metric ធំ</button></div><div class="mcq-x" hidden>💡 /24 ឈ្នះ /16។</div></div><div class="mcq"><p><b>២.</b> Administrative distance Static route?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>120</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>1</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>110</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>0</button></div><div class="mcq-x" hidden>💡 Connected = 0, OSPF = 110។</div></div><div class="mcq"><p><b>៣.</b> Default route?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>127.0.0.0/8</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>10.0.0.0/8</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>255.255.255.255/32</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>0.0.0.0/0</button></div><div class="mcq-x" hidden>💡 ត្រូវគ្រប់ IP។</div></div></div></section>
+<section id="l8">
+<h2><span class="badge">មេរៀន ៨</span>Dynamic routing៖ OSPF</h2>
+<p><b>OSPF</b> (Open Shortest Path First) = Link-state protocol — Router ម្នាក់ៗស្គាល់ផែនទីទាំងមូល ហើយគណនាផ្លូវដោយ <b>Dijkstra (SPF)</b>។ Cost = Reference bandwidth / Interface bandwidth (លំនាំដើម 100 Mbps)។</p><table><tr><th>Protocol</th><th>ប្រភេទ</th><th>Metric</th><th>ប្រើ</th></tr><tr><td>RIP</td><td>Distance vector</td><td>Hop count (≤15)</td><td>ចាស់ · តូច</td></tr><tr><td><b>OSPF</b></td><td>Link state</td><td>Cost (bandwidth)</td><td>ក្រុមហ៊ុន/ISP · CCNA</td></tr><tr><td>EIGRP</td><td>Advanced DV (Cisco)</td><td>Bandwidth + delay</td><td>Cisco network</td></tr><tr><td>BGP</td><td>Path vector</td><td>Path attributes</td><td>Internet រវាង ISP</td></tr></table>
+<script type="text/x-code" data-lang="txt" data-label="Cisco IOS — OSPF single area">
+R1(config)# router ospf 1
+R1(config-router)# router-id 1.1.1.1
+R1(config-router)# network 192.168.1.0 0.0.0.255 area 0
+R1(config-router)# network 10.0.0.0 0.0.0.3 area 0
+R1(config-router)# passive-interface gi0/0
+
+R1# show ip ospf neighbor
+R1# show ip route ospf
+</script>
+<div class="ex"><h4>✍️ លំហាត់ ៨</h4><p>ហេតុអ្វីដាក់ <code>passive-interface</code> លើ Port ដែលភ្ជាប់ LAN អ្នកប្រើ?</p><details><summary>មើលចម្លើយ</summary><p>ដើម្បី <b>មិនផ្ញើ OSPF Hello</b> ទៅ PC (គ្មាន Router នៅទីនោះ) — សុវត្ថិភាព (ការពារអ្នកក្លែង Router) និងកាត់ Traffic មិនចាំបាច់ តែ Network នោះនៅតែត្រូវផ្សព្វផ្សាយ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៨.២</h4><p>OSPF ជ្រើសផ្លូវដោយអ្វី? រូបមន្ត Cost?</p><details><summary>មើលចម្លើយ</summary><p><b>Cost</b> = Reference bandwidth (100 Mbps default) ÷ Interface bandwidth — Cost សរុបតូចបំផុតឈ្នះ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៨.៣</h4><p>Command បើក OSPF Area 0 សម្រាប់ 192.168.1.0/24។</p><details><summary>មើលចម្លើយ</summary><p><code>router ospf 1</code> → <code>network 192.168.1.0 0.0.0.255 area 0</code></p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៨.៤</h4><p>Router ID OSPF ជ្រើសតាមលំដាប់អ្វី?</p><details><summary>មើលចម្លើយ</summary><p>1) <code>router-id</code> កំណត់ដោយដៃ → 2) Loopback IP ខ្ពស់បំផុត → 3) Interface IP ខ្ពស់បំផុត។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> OSPF ជា Protocol ប្រភេទ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>Link-state</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Distance vector</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Path vector</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Static</button></div><div class="mcq-x" hidden>💡 ប្រើ Dijkstra (SPF)។</div></div><div class="mcq"><p><b>២.</b> Wildcard របស់ /24?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>0.0.0.0</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>255.255.255.0</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>255.0.0.0</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>0.0.0.255</button></div><div class="mcq-x" hidden>💡 បញ្ច្រាស Subnet mask។</div></div><div class="mcq"><p><b>៣.</b> Backbone area?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>Area 0</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Area 10</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Area 255</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Area 1</button></div><div class="mcq-x" hidden>💡 Area ទាំងអស់ត្រូវភ្ជាប់ Area 0។</div></div></div></section>
+<section id="l9">
+<h2><span class="badge">មេរៀន ៩</span>DHCP · DNS · NAT/PAT</h2>
+<table><tr><th>Service</th><th>Port</th><th>ការងារ</th></tr><tr><td><b>DHCP</b></td><td>UDP 67/68</td><td>ចែក IP ស្វ័យប្រវត្តិ — <b>DORA</b>៖ Discover → Offer → Request → Ack</td></tr><tr><td><b>DNS</b></td><td>UDP/TCP 53</td><td>ឈ្មោះ → IP (xcenbar-thanin.github.io → 185.199.x.x)</td></tr><tr><td><b>NAT/PAT</b></td><td>—</td><td>Private IP ច្រើន ចេញ Internet ដោយ Public IP តែមួយ (តាម Port)</td></tr><tr><td>NTP</td><td>UDP 123</td><td>ធ្វើសមកាលកម្មម៉ោង</td></tr></table>
+<script type="text/x-code" data-lang="txt" data-label="Cisco IOS — DHCP + PAT">
+R1(config)# ip dhcp excluded-address 192.168.1.1 192.168.1.10
+R1(config)# ip dhcp pool LAN
+R1(dhcp-config)# network 192.168.1.0 255.255.255.0
+R1(dhcp-config)# default-router 192.168.1.1
+R1(dhcp-config)# dns-server 1.1.1.1 8.8.8.8
+
+! PAT (NAT overload)
+R1(config)# access-list 1 permit 192.168.1.0 0.0.0.255
+R1(config)# ip nat inside source list 1 interface gi0/1 overload
+R1(config)# interface gi0/0
+R1(config-if)# ip nat inside
+R1(config)# interface gi0/1
+R1(config-if)# ip nat outside
+</script>
+<div class="ex"><h4>✍️ លំហាត់ ៩</h4><p>PC ទទួល IP 169.254.12.5។ មានបញ្ហាអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>នេះជា <b>APIPA (link-local)</b> — PC <b>មិនទទួលបាន IP ពី DHCP</b>។ ពិនិត្យ៖ DHCP server ដំណើរការ? VLAN ត្រឹមត្រូវ? ខ្សែ/Wi-Fi? (Router ផ្សេង VLAN ត្រូវការ <code>ip helper-address</code>)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩.២</h4><p>DHCP DORA ជាអ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>Discover → Offer → Request → Acknowledge</b>។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩.៣</h4><p>PAT ធ្វើឲ្យ PC ១០០ ចេញ Internet ដោយ Public IP តែមួយបានយ៉ាងម៉េច?</p><details><summary>មើលចម្លើយ</summary><p>បកប្រែ Private IP:Port → Public IP:<b>Port ខុសៗគ្នា</b> ហើយកត់ក្នុង NAT table។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ៩.៤</h4><p>DNS Record A, AAAA, CNAME, MX?</p><details><summary>មើលចម្លើយ</summary><p><b>A</b> = IPv4 · <b>AAAA</b> = IPv6 · <b>CNAME</b> = ឈ្មោះក្លែង · <b>MX</b> = Mail server។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> DHCP ផ្តល់អ្វីខ្លះ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Domain name ទិញ</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>IP, Mask, Gateway, DNS</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Password Wi-Fi</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>តែ MAC</button></div><div class="mcq-x" hidden>💡 ការកំណត់ស្វ័យប្រវត្តិ។</div></div><div class="mcq"><p><b>២.</b> DHCP server នៅ Subnet ផ្សេង ត្រូវការ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>ip helper-address (Relay)</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>VLAN 1</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>STP</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>NAT</button></div><div class="mcq-x" hidden>💡 បញ្ជូន Broadcast ជា Unicast។</div></div><div class="mcq"><p><b>៣.</b> NAT «Inside local» គឺ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>DNS</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Public IP</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>MAC</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>Private IP របស់ Host ខាងក្នុង</button></div><div class="mcq-x" hidden>💡 មុនបកប្រែ។</div></div></div></section>
+<section id="l10">
+<h2><span class="badge">មេរៀន ១០</span>Wi-Fi (802.11)</h2>
+<table><tr><th>ជំនាន់</th><th>ស្តង់ដារ</th><th>ឆ្នាំ</th><th>Band</th></tr><tr><td>Wi-Fi 4</td><td>802.11n</td><td>2009</td><td>2.4 / 5 GHz</td></tr><tr><td>Wi-Fi 5</td><td>802.11ac</td><td>2013</td><td>5 GHz</td></tr><tr><td>Wi-Fi 6 / 6E</td><td>802.11ax</td><td>2019 / 2020</td><td>2.4 / 5 / 6 GHz</td></tr><tr><td>Wi-Fi 7</td><td>802.11be</td><td>2024</td><td>2.4 / 5 / 6 GHz · MLO</td></tr></table>
+<div class="grid"><div class="card"><b>📶 2.4 GHz</b><br>ទៅឆ្ងាយ ឆ្លងជញ្ជាំងល្អ តែមមាញឹក — Channel មិនត្រួត៖ 1, 6, 11</div><div class="card"><b>⚡ 5/6 GHz</b><br>លឿន Channel ច្រើន តែទៅមិនសូវឆ្ងាយ</div><div class="card"><b>🔐 WPA3</b><br>សុវត្ថិភាពល្អបំផុត (2018) · ជៀស WEP/WPA</div><div class="card"><b>🏫 Enterprise</b><br>WPA2/3-Enterprise + RADIUS (គណនីម្នាក់មួយ)</div></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០</h4><p>សាលាមាន Access point ៣ នៅជិតគ្នា ប្រើ 2.4 GHz។ គួរកំណត់ Channel អ្វី?</p><details><summary>មើលចម្លើយ</summary><p><b>1, 6, 11</b> — Channel ដែលមិនត្រួតគ្នា ដើម្បីកុំរំខានគ្នា (Co-channel interference)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០.២</h4><p>Wi-Fi 2.4 GHz vs 5 GHz?</p><details><summary>មើលចម្លើយ</summary><p><b>2.4</b> = ទៅឆ្ងាយ ឆ្លងជញ្ជាំងល្អ តែយឺត រំខានច្រើន · <b>5</b> = លឿន រំខានតិច តែចម្ងាយខ្លី។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០.៣</h4><p>សុវត្ថិភាព Wi-Fi ល្អបំផុតសព្វថ្ងៃ?</p><details><summary>មើលចម្លើយ</summary><p><b>WPA3</b> (ឬ WPA2-AES ពេលឧបករណ៍ចាស់) · ពាក្យសម្ងាត់វែង · បិទ WPS។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១០.៤</h4><p>Wi-Fi សាលាមួយ AP ចង្អៀត — ដំណោះស្រាយ?</p><details><summary>មើលចម្លើយ</summary><p>បន្ថែម AP ច្រើន (Channel ខុសគ្នា 1/6/11) · 5 GHz · Controller/Mesh · Guest VLAN ដាច់។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> Channel មិនត្រួតគ្នាលើ 2.4 GHz?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>1, 6, 11</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>គ្រប់ Channel</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>1, 2, 3</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>5, 10, 15</button></div><div class="mcq-x" hidden>💡 គម្លាត 5 Channel។</div></div><div class="mcq"><p><b>២.</b> SSID ជា?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>MAC</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>IP</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>ឈ្មោះ Wi-Fi</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Password</button></div><div class="mcq-x" hidden>💡 Service Set Identifier។</div></div><div class="mcq"><p><b>៣.</b> Wi-Fi 6 = ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>802.3</button><button type="button" class="mcq-b" data-ok="1"><span>B</span>802.11ax</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>802.11b</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>802.11n</button></div><div class="mcq-x" hidden>💡 Wi-Fi 5 = 802.11ac។</div></div></div></section>
+<section id="l11">
+<h2><span class="badge">មេរៀន ១១</span>សុវត្ថិភាពបណ្តាញ៖ ACL · Port security · SSH</h2>
+<div class="grid"><div class="card"><b>🔑 SSH មិនមែន Telnet</b><br>Telnet ផ្ញើ Password ជាអក្សរធម្មតា</div><div class="card"><b>🧱 Implicit deny</b><br>ACL មាន deny any នៅចុងក្រោយមើលមិនឃើញ</div><div class="card"><b>📍 ACL placement</b><br>Standard → ជិតគោលដៅ · Extended → ជិតប្រភព</div><div class="card"><b>🛡️ DHCP snooping / DAI</b><br>ការពារ DHCP ក្លែង និង ARP spoofing</div></div>
+<script type="text/x-code" data-lang="txt" data-label="Cisco IOS — Security basics">
+! Standard ACL — អនុញ្ញាតតែ Admin VLAN ចូល SSH Router
+R1(config)# access-list 10 permit 192.168.99.0 0.0.0.255
+R1(config)# line vty 0 4
+R1(config-line)# access-class 10 in
+R1(config-line)# transport input ssh
+
+! Extended ACL — ហាម Lab ចូល Server 10.0.5.10 លើ Port 3306
+R1(config)# ip access-list extended LAB-IN
+R1(config-ext-nacl)# deny tcp 192.168.30.0 0.0.0.255 host 10.0.5.10 eq 3306
+R1(config-ext-nacl)# permit ip any any
+
+! Port security លើ Switch
+SW(config-if)# switchport port-security
+SW(config-if)# switchport port-security maximum 2
+SW(config-if)# switchport port-security violation restrict
+</script>
+<div class="ex"><h4>✍️ លំហាត់ ១១</h4><p>ACL មានតែ <code>deny tcp … eq 3306</code> ហើយភ្លេច <code>permit ip any any</code>។ កើតអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>Traffic <b>ទាំងអស់</b>ត្រូវបានហាម — ព្រោះ ACL មាន <b>implicit deny any</b> នៅចុងក្រោយ។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១.២</h4><p>ACL Standard និង Extended ខុសគ្នា? ដាក់ជិតណា?</p><details><summary>មើលចម្លើយ</summary><p><b>Standard</b> (1–99) មើលតែ Source → ដាក់ជិត Destination · <b>Extended</b> (100–199) Source/Dest/Port → ដាក់ជិត Source។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១.៣</h4><p>Port security៖ អនុញ្ញាត MAC 1 ហើយ Shutdown ពេលបំពាន — Command?</p><details><summary>មើលចម្លើយ</summary><p><code>switchport port-security</code> · <code>switchport port-security maximum 1</code> · <code>switchport port-security violation shutdown</code></p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១១.៤</h4><p>ហេតុអ្វីប្រើ SSH ជំនួស Telnet?</p><details><summary>មើលចម្លើយ</summary><p>Telnet ផ្ញើ Password ជាអក្សរធម្មតា — <b>SSH Encrypt</b>។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> ACL ចុងក្រោយមាន?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>Implicit deny any</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Permit any</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Log</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>គ្មានអ្វី</button></div><div class="mcq-x" hidden>💡 ត្រូវ permit ដែលចង់បាន។</div></div><div class="mcq"><p><b>២.</b> Firewall ការពារ?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>Wi-Fi ខ្សោយ</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Bug ក្នុង App</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>Traffic មិនអនុញ្ញាត</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>ខ្សែដាច់</button></div><div class="mcq-x" hidden>💡 ត្រងតាម Rule។</div></div><div class="mcq"><p><b>៣.</b> VPN ផ្តល់?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>IP ស្ទួន</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>DHCP</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Wi-Fi ឥតគិតថ្លៃ</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>Tunnel Encrypt លើ Internet</button></div><div class="mcq-x" hidden>💡 Site-to-site ឬ Remote access។</div></div></div></section>
+<section id="l12">
+<h2><span class="badge">មេរៀន ១២</span>Troubleshooting៖ ping · traceroute · nslookup</h2>
+<script type="text/x-code" data-lang="bash" data-label="ពាក្យបញ្ជាដោះស្រាយបញ្ហា">
+ipconfig /all            # Windows (Linux/macOS: ip a)
+ping 192.168.1.1          # Gateway ដំណើរការ?
+ping 1.1.1.1              # Internet (IP)?
+ping google.com           # DNS?
+tracert google.com        # Windows (Linux: traceroute)
+nslookup xcenbar-thanin.github.io
+arp -a                    # IP ↔ MAC
+</script>
+<div class="how"><b>🧩 ពន្យល់ជំហានៗ</b><ol class="steps"><li><b>Layer 1</b>៖ ខ្សែ ភ្លើង Port · Wi-Fi ភ្ជាប់?</li><li><b>Layer 2</b>៖ VLAN ត្រឹម? MAC table?</li><li><b>Layer 3</b>៖ IP/Mask/Gateway ត្រឹម? <code>ping gateway</code></li><li><b>Routing</b>៖ <code>tracert</code> ឈប់នៅណា?</li><li><b>DNS</b>៖ ping IP បាន តែ ping ឈ្មោះមិនបាន → DNS</li><li><b>Application</b>៖ Firewall/ACL ហាម Port?</li></ol></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២</h4><p>Ping 1.1.1.1 បាន តែបើក Website ដោយឈ្មោះមិនបាន។ បញ្ហានៅណា?</p><details><summary>មើលចម្លើយ</summary><p><b>DNS</b> — Internet (Layer 3) ដំណើរការ តែបម្លែងឈ្មោះមិនបាន។ ពិនិត្យ DNS server (ឧ. ដាក់ 1.1.1.1/8.8.8.8) ហើយ <code>nslookup</code>។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២.២</h4><p>Troubleshooting តាម OSI Bottom-up — ជំហាន?</p><details><summary>មើលចម្លើយ</summary><p>ខ្សែ/ភ្លើង Link (L1) → MAC/VLAN (L2) → IP/Gateway (L3) → Port/Firewall (L4) → App/DNS (L7)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២.៣</h4><p>PC Ping Gateway មិនបាន — ពិនិត្យអ្វីខ្លះ?</p><details><summary>មើលចម្លើយ</summary><p>ខ្សែ/Link light · <code>ipconfig</code> (IP/Mask ត្រូវ Subnet?) · VLAN របស់ Port · Gateway interface up?</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១២.៤</h4><p><code>traceroute</code> បង្ហាញអ្វី?</p><details><summary>មើលចម្លើយ</summary><p>Router (Hop) នីមួយៗតាមផ្លូវ និង Latency — រកថាដាច់នៅ Hop ណា។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> ពិនិត្យ IP លើ Windows?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>ipconfig</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>show vlan</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>ifconfig តែប៉ុណ្ណោះ</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>dir</button></div><div class="mcq-x" hidden>💡 Linux/macOS: ip a / ifconfig។</div></div><div class="mcq"><p><b>២.</b> Ping 127.0.0.1 សាក?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>DNS</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Gateway</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Internet</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>TCP/IP stack លើម៉ាស៊ីនខ្លួនឯង</button></div><div class="mcq-x" hidden>💡 Loopback។</div></div><div class="mcq"><p><b>៣.</b> nslookup ប្រើសាក?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>DHCP</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Cable</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>VLAN</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>DNS</button></div><div class="mcq-x" hidden>💡 បកឈ្មោះ → IP។</div></div></div></section>
+<section id="l13">
+<h2><span class="badge">មេរៀន ១៣</span>Cisco IOS មូលដ្ឋាន &amp; Packet Tracer</h2>
+<table><tr><th>Mode</th><th>Prompt</th><th>ចូលដោយ</th></tr><tr><td>User EXEC</td><td>R1&gt;</td><td>ចូលដំបូង</td></tr><tr><td>Privileged EXEC</td><td>R1#</td><td><code>enable</code></td></tr><tr><td>Global config</td><td>R1(config)#</td><td><code>configure terminal</code></td></tr><tr><td>Interface config</td><td>R1(config-if)#</td><td><code>interface gi0/0</code></td></tr></table>
+<script type="text/x-code" data-lang="txt" data-label="Cisco IOS — ការកំណត់ដំបូង + SSH">
+Router> enable
+Router# configure terminal
+Router(config)# hostname R1
+R1(config)# enable secret Xc3n!2026
+R1(config)# service password-encryption
+R1(config)# banner motd # Authorized access only #
+R1(config)# ip domain-name xcenbar.local
+R1(config)# crypto key generate rsa modulus 2048
+R1(config)# username admin secret Adm1n!Pass
+R1(config)# line vty 0 4
+R1(config-line)# login local
+R1(config-line)# transport input ssh
+R1(config-line)# end
+R1# copy running-config startup-config
+R1# show running-config
+</script>
+<div class="note">💡 <b>Cisco Packet Tracer</b> ជាកម្មវិធីក្លែង Network ឥតគិតថ្លៃ (ចុះឈ្មោះតាម <b>Cisco Networking Academy</b>) — ហាតគ្រប់ Lab ក្នុងវគ្គនេះដោយមិនចាំបាច់ទិញ Router ពិត។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣</h4><p>ហេតុអ្វីត្រូវវាយ <code>copy running-config startup-config</code>?</p><details><summary>មើលចម្លើយ</summary><p>Running-config នៅក្នុង <b>RAM</b> — បាត់ពេល Reload/ដាច់ភ្លើង។ Copy ទៅ <b>NVRAM (startup-config)</b> ដើម្បីរក្សាទុក។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣.២</h4><p>Mode IOS ៣ និង Prompt?</p><details><summary>មើលចម្លើយ</summary><p>User EXEC <code>R1&gt;</code> → Privileged <code>R1#</code> (enable) → Global config <code>R1(config)#</code> (conf t)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣.៣</h4><p>កំណត់ IP លើ G0/0 = 192.168.1.1/24 ហើយបើក។</p><details><summary>មើលចម្លើយ</summary><p><code>interface g0/0</code> → <code>ip address 192.168.1.1 255.255.255.0</code> → <code>no shutdown</code></p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៣.៤</h4><p>ការពារ Router មូលដ្ឋាន ៣ Command?</p><details><summary>មើលចម្លើយ</summary><p><code>enable secret …</code> · <code>service password-encryption</code> · <code>banner motd …</code> (+ SSH)។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> ចូល Privileged mode?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>exit</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>end</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>enable</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>configure terminal</button></div><div class="mcq-x" hidden>💡 R1&gt; → R1#។</div></div><div class="mcq"><p><b>២.</b> Save config?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>copy running-config startup-config</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>reload</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>erase</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>show run</button></div><div class="mcq-x" hidden>💡 ឬ write memory។</div></div><div class="mcq"><p><b>៣.</b> ពិនិត្យ IP interface សង្ខេប?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>show vlan</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>ping</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>show mac</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>show ip interface brief</button></div><div class="mcq-x" hidden>💡 Status/Protocol។</div></div></div></section>
+<section id="l14">
+<h2><span class="badge">មេរៀន ១៤</span>អាជីព &amp; ប្រឡង CCNA</h2>
+<table><tr><th>ផ្នែក</th><th>ព័ត៌មាន (ពិនិត្យ វិច្ឆិកា 2026)</th></tr><tr><td>ប្រឡង</td><td><b>CCNA 200-301</b> (v1.1) · ១២០ នាទី</td></tr><tr><td>ការផ្លាស់ប្តូរ</td><td>Cisco ប្រកាស <b>v2.0</b> — ចាប់ផ្តើម <b>3 កុម្ភៈ 2027</b> (v1.1 រហូតដល់ 2 កុម្ភៈ 2027) · មានផ្នែកថ្មី AI &amp; Network operations · ផ្តោត Troubleshooting ច្រើនជាង</td></tr><tr><td>តម្លៃ</td><td>ប្រហែល <b>$300</b> (+ពន្ធ) — ពិនិត្យ Pearson VUE</td></tr><tr><td>សុពលភាព</td><td>៣ ឆ្នាំ (បន្តដោយប្រឡង ឬ Continuing Education)</td></tr></table>
+<div class="grid"><div class="card"><b>🧑‍💻 Network technician</b><br>ដំឡើង · Cable · Wi-Fi</div><div class="card"><b>🛠️ Network engineer</b><br>Routing/Switching · Design</div><div class="card"><b>☁️ Cloud network</b><br>AWS/Azure VPC</div><div class="card"><b>🛡️ Network security</b><br>Firewall · SOC (វគ្គ Cyber Security)</div><div class="card"><b>📡 ISP/Telecom</b><br>ក្រុមហ៊ុនទូរគមនាគមន៍ក្នុងស្រុក</div></div>
+<div class="note">💡 ផ្លូវរៀន៖ <b>IT Fundamentals</b> → វគ្គនេះ + Packet Tracer → CCNA → CCNP / Security / Cloud។ តាមដាន Exam topics ផ្លូវការលើ cisco.com មុនប្រឡង។</div>
+<div class="ex"><h4>✍️ លំហាត់ ១៤</h4><p>បើគ្រោងប្រឡង CCNA នៅខែ មីនា 2027 ត្រូវត្រៀមតាម Blueprint ណា?</p><details><summary>មើលចម្លើយ</summary><p><b>v2.0</b> (ចាប់ផ្តើម 3 កុម្ភៈ 2027) — ត្រូវរៀនផ្នែកថ្មី AI &amp; Network operations និងហាត Troubleshooting ច្រើន។ ពិនិត្យ Exam topics ចុងក្រោយលើ cisco.com។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៤.២</h4><p>ផែនការរៀន CCNA ៣ ខែ សាមញ្ញ?</p><details><summary>មើលចម្លើយ</summary><p>ខែ ១៖ Fundamentals + Subnetting រាល់ថ្ងៃ · ខែ ២៖ Switching/Routing + Lab Packet Tracer · ខែ ៣៖ Services/Security/Automation + Practice exam។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៤.៣</h4><p>Certificate បន្ទាប់ពី CCNA?</p><details><summary>មើលចម្លើយ</summary><p>CCNP Enterprise · Security (CCNP Security/CompTIA Security+) · Cloud (AWS/Azure networking)។</p></details></div>
+<div class="ex"><h4>✍️ លំហាត់ ១៤.៤</h4><p>Portfolio Network ដាក់អ្វី?</p><details><summary>មើលចម្លើយ</summary><p>Lab topology Packet Tracer/GNS3 ជាមួយ Config · Diagram · ឯកសារ Troubleshooting · GitHub។</p></details></div>
+<div class="mcqs"><h4>🎯 សំណួរជ្រើសរើស (ចុចចម្លើយ)</h4><div class="mcq"><p><b>១.</b> CCNA 200-301 Blueprint v2.0 ចាប់ផ្តើម?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>2015</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>2020</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>មិនដែល</button><button type="button" class="mcq-b" data-ok="1"><span>D</span>3 កុម្ភៈ 2027</button></div><div class="mcq-x" hidden>💡 ពិនិត្យជានិច្ចលើ Cisco។</div></div><div class="mcq"><p><b>២.</b> Packet Tracer ជា?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="1"><span>A</span>Simulator បណ្តាញរបស់ Cisco</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Browser</button><button type="button" class="mcq-b" data-ok="0"><span>C</span>Antivirus</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>Database</button></div><div class="mcq-x" hidden>💡 ឥតគិតថ្លៃតាម NetAcad។</div></div><div class="mcq"><p><b>៣.</b> ការងារ Entry-level?</p><div class="mcq-o"><button type="button" class="mcq-b" data-ok="0"><span>A</span>CTO</button><button type="button" class="mcq-b" data-ok="0"><span>B</span>Designer</button><button type="button" class="mcq-b" data-ok="1"><span>C</span>Network technician / NOC</button><button type="button" class="mcq-b" data-ok="0"><span>D</span>CEO</button></div><div class="mcq-x" hidden>💡 ចាប់ផ្តើមពី Support/NOC។</div></div></div></section>
+<section id="cheat">
+<h2>📋 សង្ខេប (Cheat sheet)</h2>
+<table><tr><th>ពាក្យ / ពាក្យបញ្ជា</th><th>ន័យ</th></tr><tr><td>Hosts</td><td>2^(32−n) − 2</td></tr><tr><td>Block size</td><td>256 − octet mask</td></tr><tr><td>/30 · /24</td><td>2 hosts · 254 hosts</td></tr><tr><td>Private</td><td>10/8 · 172.16/12 · 192.168/16</td></tr><tr><td>PDU</td><td>Data → Segment → Packet → Frame → Bits</td></tr><tr><td>TCP handshake</td><td>SYN → SYN-ACK → ACK</td></tr><tr><td>DHCP</td><td>DORA</td></tr><tr><td>AD</td><td>Connected 0 · Static 1 · OSPF 110</td></tr><tr><td>show ip route / show vlan brief</td><td>ពិនិត្យ Route / VLAN</td></tr><tr><td>switchport mode access/trunk</td><td>PC / Switch↔Switch</td></tr><tr><td>ip route 0.0.0.0 0.0.0.0 X</td><td>Default route</td></tr><tr><td>copy run start</td><td>រក្សាទុក Config</td></tr></table>
+</section>
+<section id="pro">
+<h2>🏆 គម្រោងចុងវគ្គ</h2>
+<ol class='steps'><li>រចនា Network សាលា៖ VLAN សិស្ស · គ្រូ · Admin · Lab · Server (VLSM ពី 172.16.0.0/22)។</li><li>Packet Tracer៖ Switch ២ + Router ១ · Trunk · Inter-VLAN routing · DHCP · PAT ចេញ Internet។</li><li>ACL៖ Lab មិនអាចចូល Admin · SSH តែពី Admin VLAN។</li><li>សាក ping/tracert · សរសេរ IP plan + Diagram ក្នុង Report។</li></ol></section>
+<section id="pro-app">
+<h2>💻 Network Lab (App)</h2>
+
+<p><b>🧮 Subnet Calculator</b> (Network · Broadcast · Range · Wildcard · Binary) · <b>🏢 VLSM Planner</b> (ចែក Subnet តាមផ្នែក) · <b>🔢 Binary Quiz</b> · <b>📦 OSI Encapsulation</b> មើលទិន្នន័យចុះតាម Layer។</p>
+
+<div class="itk" id="nw">
+<div class="itk-tabs"><button class="on" data-t="sc">🧮 Subnet Calculator</button><button data-t="vl">🏢 VLSM Planner</button><button data-t="bi">🔢 Binary Quiz</button><button data-t="os">📦 OSI Encapsulation</button></div>
+<div class="itk-p on" data-p="sc">
+ <div class="itk-row"><label>IP / CIDR <input id="sc_i" value="192.168.10.77/26" style="width:200px"></label></div>
+ <div class="itk-out" id="sc_out"></div>
+</div>
+<div class="itk-p" data-p="vl">
+ <p class="vl-tip">បញ្ចូល Network ធំ និងចំនួន Host ដែលផ្នែកនីមួយៗត្រូវការ (មួយបន្ទាត់៖ <code>ឈ្មោះ | hosts</code>) → App ចែក Subnet តាម <b>VLSM</b> (ធំមុន)។</p>
+ <div class="itk-row"><label>Network <input id="vl_n" value="172.16.0.0/22" style="width:170px"></label></div>
+ <div class="itk-row"><textarea id="vl_d" rows="6" style="flex:1;font-family:inherit">Students Wi-Fi | 300
+Teachers | 60
+Admin | 25
+Lab | 40
+Servers | 10
+WAN link | 2</textarea></div>
+ <div class="itk-out" id="vl_out"></div>
+</div>
+<div class="itk-p" data-p="bi">
+ <div class="itk-out" id="bi_out"></div>
+</div>
+<div class="itk-p" data-p="os">
+ <p class="vl-tip">ចុច ▶ ដើម្បីមើលទិន្នន័យ «សួស្តី» ធ្វើដំណើរចុះតាមស្រទាប់ (Encapsulation) ហើយឡើងវិញនៅម៉ាស៊ីនទទួល។</p>
+ <button class="btn" id="os_go">▶ ផ្ញើ</button>
+ <div class="itk-out" id="os_out"></div>
+</div>
+</div>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+document.querySelectorAll("#nw .itk-tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#nw .itk-tabs button").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll("#nw .itk-p").forEach(p=>p.classList.toggle("on",p.dataset.p===b.dataset.t));});
+const ip2n=s=>{const p=s.split(".").map(Number);if(p.length!==4||p.some(x=>!(x>=0&&x<=255)||isNaN(x)))return null;return((p[0]<<24)>>>0)+(p[1]<<16)+(p[2]<<8)+p[3];};
+const n2ip=n=>[n>>>24,(n>>>16)&255,(n>>>8)&255,n&255].join(".");
+const bin=n=>[n>>>24,(n>>>16)&255,(n>>>8)&255,n&255].map(x=>x.toString(2).padStart(8,"0")).join(".");
+const mask=p=>p===0?0:((0xFFFFFFFF<<(32-p))>>>0);
+function cls(n){const a=n>>>24;return a<128?"A":a<192?"B":a<224?"C":a<240?"D (Multicast)":"E";}
+function priv(n){const a=n>>>24,b=(n>>>16)&255;return a===10||(a===172&&b>=16&&b<=31)||(a===192&&b===168)?"Private (RFC 1918)":a===127?"Loopback":a===169&&b===254?"Link-local (APIPA)":"Public";}
+function sc(){const m=$("sc_i").value.trim().match(/^(\d+\.\d+\.\d+\.\d+)\s*\/\s*(\d{1,2})$/);if(!m||ip2n(m[1])===null||+m[2]>32){$("sc_out").innerHTML="⚠️ ទម្រង់៖ 192.168.1.10/24";return;}
+ const ip=ip2n(m[1]),p=+m[2],mk=mask(p),net=(ip&mk)>>>0,bc=(net|(~mk>>>0))>>>0,hosts=p>=31?(p===31?2:1):Math.pow(2,32-p)-2;
+ const row=(k,v,b)=>`<tr><td><b>${k}</b></td><td><code>${v}</code></td><td><code style="font-size:11px">${b||""}</code></td></tr>`;
+ $("sc_out").innerHTML=`<table>${row("IP",n2ip(ip),bin(ip))}${row("Subnet mask",n2ip(mk)+" (/"+p+")",bin(mk))}${row("Wildcard",n2ip(~mk>>>0))}${row("Network",n2ip(net),bin(net))}${row("Broadcast",n2ip(bc))}${row("Host ដំបូង",p>=31?n2ip(net):n2ip(net+1))}${row("Host ចុងក្រោយ",p>=31?n2ip(bc):n2ip(bc-1))}${row("ចំនួន Host",hosts.toLocaleString()+(p<31?" (2^"+(32-p)+" − 2)":""))}${row("Class / ប្រភេទ",cls(ip)+" · "+priv(ip))}</table>`;}
+$("sc_i").oninput=sc;sc();
+function vl(){const m=$("vl_n").value.trim().match(/^(\d+\.\d+\.\d+\.\d+)\s*\/\s*(\d{1,2})$/);if(!m||ip2n(m[1])===null){$("vl_out").textContent="⚠️ ទម្រង់ Network ខុស";return;}
+ const base=(ip2n(m[1])&mask(+m[2]))>>>0,size=Math.pow(2,32-m[2]);let cur=base;const reqs=$("vl_d").value.split("\n").map(l=>l.split("|")).filter(x=>x[0].trim()).map(([n,h])=>({n:n.trim(),h:Math.max(1,parseInt(h)||1)})).sort((a,b)=>b.h-a.h);
+ let rows="",ok=true;reqs.forEach(r=>{let p=32;while(p>0&&Math.pow(2,32-p)-2<r.h)p--;const sz=Math.pow(2,32-p);cur=Math.ceil((cur-base)/sz)*sz+base;const end=cur+sz-1;const fit=end<base+size;if(!fit)ok=false;
+  rows+=`<tr${fit?"":' style="color:#e03131"'}><td>${r.n}</td><td>${r.h}</td><td><code>${n2ip(cur)}/${p}</code></td><td><code>${n2ip(cur+1)} – ${n2ip(end-1)}</code></td><td><code>${n2ip(end)}</code></td><td>${sz-2-r.h}</td></tr>`;cur=end+1;});
+ const used=cur-base;$("vl_out").innerHTML=`<table><tr><th>ផ្នែក</th><th>ត្រូវការ</th><th>Subnet</th><th>Host range</th><th>Broadcast</th><th>ទំនេរ</th></tr>${rows}</table><p>${ok?`✅ ប្រើ ${used.toLocaleString()} / ${size.toLocaleString()} អាសយដ្ឋាន (${Math.round(used/size*100)}%)`:"❌ Network តូចពេក — ប្រើ Prefix ធំជាង (ឧ. /21)"}</p>`;}
+$("vl_n").oninput=vl;$("vl_d").oninput=vl;vl();
+let sc2=0,tot=0,qz;function nq(){const t=Math.floor(Math.random()*3);if(t===0){const n=Math.floor(Math.random()*256);qz={q:`បម្លែង <b>${n}</b> ទៅ Binary (8 bit)`,a:n.toString(2).padStart(8,"0")};}
+ else if(t===1){const n=Math.floor(Math.random()*256),b=n.toString(2).padStart(8,"0");qz={q:`បម្លែង <b>${b}</b> ទៅ Decimal`,a:String(n)};}
+ else{const p=16+Math.floor(Math.random()*15);qz={q:`/${p} មាន Host ប្រើបានប៉ុន្មាន?`,a:String(Math.pow(2,32-p)-2)};}
+ $("bi_out").innerHTML=`<p style="font-size:18px">${qz.q}</p><div class="itk-row"><input id="bi_a" style="width:200px" autocomplete="off"><button class="btn" id="bi_ok">ពិនិត្យ</button><button class="btn ghost" id="bi_sk">រំលង</button></div><p id="bi_r"></p><p>ពិន្ទុ៖ <b>${sc2}/${tot}</b></p>`;
+ const chk=()=>{tot++;const ok=$("bi_a").value.replace(/\s/g,"")===qz.a;if(ok)sc2++;$("bi_r").innerHTML=ok?"✅ ត្រឹមត្រូវ!":"❌ ចម្លើយ៖ <code>"+qz.a+"</code>";setTimeout(nq,ok?700:1800);};$("bi_ok").onclick=chk;$("bi_a").onkeydown=e=>{if(e.key==="Enter")chk();};$("bi_sk").onclick=nq;}
+nq();
+const L=[["7 Application","HTTP: GET /","#e03131","Data"],["6 Presentation","UTF-8 · TLS encrypt","#f76707","Data"],["5 Session","Session ID","#f59f00","Data"],["4 Transport","TCP src 51544 → dst 443 · seq","#2f9e44","Segment"],["3 Network","IP 192.168.1.20 → 104.21.5.9 · TTL 64","#1c7ed6","Packet"],["2 Data Link","MAC aa:bb… → gateway MAC · FCS","#7048e8","Frame"],["1 Physical","0101100… (ភ្លើង/រលកវិទ្យុ)","#495057","Bits"]];
+$("os_go").onclick=()=>{let i=0;$("os_out").innerHTML="";const iv=setInterval(()=>{if(i<L.length){const[l,h,c,pdu]=L[i];$("os_out").innerHTML+=`<div style="margin:3px 0;padding:6px 10px;border-radius:8px;border-left:6px solid ${c};background:rgba(127,127,127,.08);margin-left:${i*10}px"><b>${l}</b> · PDU = <b>${pdu}</b> · បន្ថែម Header៖ <code>${h}</code></div>`;i++;}else{clearInterval(iv);$("os_out").innerHTML+=`<p>➡️ ធ្វើដំណើរតាម Switch → Router → Internet → ម៉ាស៊ីនទទួល <b>ដក Header ឡើងវិញ</b> (De-encapsulation) ពី Layer 1 → 7 → បង្ហាញ «សួស្តី» ✅</p>`;}},450);};
+})();
+</script>
+
+<h3>🏆 Quiz ២០ សំណួរ</h3>
+<div class="itk"><div class="itk-p on" style="display:block"><div id="qz"></div></div></div>
+<script>(()=>{const $=id=>document.getElementById(id),kh=n=>String(n).replace(/\d/g,d=>"០១២៣៤៥៦៧៨៩"[d]);const Q=[["Switch ធ្វើការនៅ Layer?", ["2", "3", "7", "1"], 0], ["Router ផ្ញើតាម?", ["IP address", "MAC address", "Port number", "ឈ្មោះ"], 0], ["/26 មាន Host ប៉ុន្មាន?", ["62", "64", "30", "126"], 0], ["Private range មួយណា?", ["172.16.0.0/12", "8.8.8.0/24", "1.1.1.0/24", "203.0.113.0/24"], 0], ["TCP handshake?", ["SYN → SYN-ACK → ACK", "ACK → SYN", "GET → POST", "DORA"], 0], ["DHCP ដំណើរការ?", ["DORA", "SYN-ACK", "ARP only", "NAT"], 0], ["169.254.x.x មានន័យ?", ["មិនទទួល IP ពី DHCP", "Public IP", "Gateway", "DNS"], 0], ["AD របស់ OSPF?", ["110", "1", "0", "120"], 0], ["Channel 2.4GHz មិនត្រួត?", ["1, 6, 11", "1, 2, 3", "36, 40", "5, 10, 15"], 0], ["ACL ចុងក្រោយមាន?", ["Implicit deny any", "Permit any", "គ្មានអ្វី", "NAT"], 0], ["Port ភ្ជាប់ Switch↔Switch ដឹក VLAN ច្រើន?", ["Trunk", "Access", "Console", "Loopback"], 0], ["CCNA v2.0 ចាប់ផ្តើម?", ["3 កុម្ភៈ 2027", "1 មករា 2026", "2020", "2030"], 0], ["Ping IP បាន ping ឈ្មោះមិនបាន?", ["DNS", "ខ្សែ", "Switch", "MAC"], 0], ["IPv6 មាន?", ["128 bit", "32 bit", "64 bit", "48 bit"], 0]];let qi=0,ok=0,picked=false;const order=Q.map((_,i)=>i).sort(()=>Math.random()-.5);
+function quiz(){if(qi>=Q.length){const pct=Math.round(ok/Q.length*100);$("qz").innerHTML=`<div class="itk-done"><div class="big">${pct>=80?"🏆":pct>=50?"👍":"📚"}</div><h3>ពិន្ទុ ${kh(ok)}/${kh(Q.length)} (${pct}%)</h3><button class="btn" id="qAgain">🔁 សាកម្តងទៀត</button></div>`;$("qAgain").onclick=()=>{qi=0;ok=0;quiz()};return}
+const [q,opts,a]=Q[order[qi]];picked=false;$("qz").innerHTML=`<div class="itk-qh">សំណួរ ${kh(qi+1)}/${kh(Q.length)} · ត្រូវ ${kh(ok)}</div><div class="itk-prog"><i style="width:${qi/Q.length*100}%"></i></div><h3>${q}</h3>`+opts.map((o,i)=>`<button class="itk-opt" data-i="${i}">${"ABCD"[i]}. ${o}</button>`).join("")+`<div id="qNext"></div>`;
+$("qz").querySelectorAll(".itk-opt").forEach(b=>b.onclick=()=>{if(picked)return;picked=true;const i=+b.dataset.i;if(i===a)ok++;$("qz").querySelectorAll(".itk-opt").forEach(x=>x.classList.add(+x.dataset.i===a?"good":+x.dataset.i===i?"bad":"dim"));$("qNext").innerHTML=`<button class="btn" id="qN">${qi+1<Q.length?"បន្ទាប់ →":"មើលលទ្ធផល 🏁"}</button>`;$("qN").onclick=()=>{qi++;quiz()}})}quiz()})();</script>
+</section>
+<section id="roadmap">
+<h2>🗺️ ផែនទីបន្តការសិក្សា</h2>
+<ol class='steps'><li>IT Fundamentals · Math for IT</li><li><b>Network Engineering</b> (វគ្គនេះ) ✅</li><li>Cyber Security (Network &amp; Web security)</li><li>Linux · Docker</li><li>Cloud (AWS/Azure) · CCNP</li></ol></section>
+
+</main>
+</div>
+<script>
+
+/* ---------- Syntax highlighter (Excel, VBA, JS, Python, M, DAX) ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(code, rules, flags) {
+  const re = new RegExp(rules.map(r => '(' + r[0] + ')').join('|'), 'g' + (flags || ''));
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === '') { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    const k = m.slice(1).findIndex(g => g !== undefined);
+    out += rules[k][1] ? '<span class="k-' + rules[k][1] + '">' + esc(m[0]) + '</span>' : esc(m[0]);
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+const STR = ['"(?:[^"]|"")*"', 's'];
+const NUM = ['\\b\\d+(?:\\.\\d+)?%?', 'n'];
+const LANGS = {
+  xl: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'!|\\b[A-Za-z_][\\w.]*!", 'sh'],
+       ['\\b[A-Za-z_]\\w*\\[(?:[^\\]\\[]|\\[[^\\]]*\\])*\\]|\\[@?[^\\]\\n]*\\]', 'st'],
+       ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'],
+       ['\\$?\\b[A-Z]{1,3}\\$?\\d+\\b(?::\\$?[A-Z]{1,3}\\$?\\d+\\b)?#?|\\b[A-Z]{1,3}:[A-Z]{1,3}\\b', 'cell'],
+       ['\\b(?:TRUE|FALSE)\\b', 'kw'], NUM, ['[=+\\-*/^&<>]', 'op']],
+  vba: [["'[^\\n]*", 'c'], STR,
+        ['\\b(?:Sub|End|Function|Dim|As|Set|If|Then|Else|ElseIf|For|Each|Next|To|Step|In|With|Do|Loop|While|Wend|Until|Exit|Option|Explicit|Private|Public|Const|Long|Integer|String|Double|Boolean|Range|Worksheet|Workbook|Variant|Object|Nothing|And|Or|Not|True|False|Call|On|Error|GoTo|Resume|ByVal|ByRef|New|Is|Select|Case|Me)\\b', 'kw'],
+        ['\\b(?:MsgBox|InputBox|Cells|Rows|Columns|Worksheets|Sheets|ActiveSheet|ThisWorkbook|Application|WorksheetFunction|Format|Now|Date|CDbl|CLng|Len|Trim|UCase)\\b', 'f'],
+        NUM],
+  js: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|switch|case|break|typeof|instanceof|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:Office|Excel|Word|PowerPoint|context|console|React|JSON|Math|Promise|process|req|res|next|app|router)\\b', 'sh'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?', 'op']],
+  ts: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|while|await|async|new|try|catch|finally|throw|import|from|export|default|class|extends|implements|switch|case|break|typeof|instanceof|keyof|infer|is|as|satisfies|readonly|private|protected|public|static|abstract|declare|namespace|type|interface|enum|null|undefined|true|false|this)\\b', 'kw'],
+       ['\\b(?:string|number|boolean|bigint|symbol|unknown|any|never|void|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-zA-Z_$][\\w$]*(?=\\s*[(<])', 'f'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.|[|&]', 'op']],
+  jsx: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/|\\{/\\*[\\s\\S]*?\\*/\\}', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)*\'|`(?:[^`\\\\]|\\\\.)*`', 's'],
+       ['</?[A-Za-z][\\w.]*|/?>', 'tag'],
+       ['\\b(?:const|let|var|function|return|if|else|for|of|in|await|async|new|try|catch|finally|throw|import|from|export|default|null|undefined|true|false|typeof)\\b', 'kw'],
+       ['\\buse[A-Z]\\w*(?=\\()', 'hook'], ['\\b[a-zA-Z_$][\\w$]*(?=\\()', 'f'], ['\\b[a-zA-Z-]+(?==[{"])', 'attr'], NUM, ['=>|===|!==|&&|\\|\\||\\?\\?|\\?\\.', 'op']],
+  html: [['<!--[\\s\\S]*?-->', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[A-Za-z][\\w-]*|/?>', 'tag'], ['\\b[a-zA-Z-]+(?==)', 'attr']],
+  json: [['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'attr'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  http: [['#[^\\n]*|//[^\\n]*', 'c'], ['^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b', 'kw'], ['^HTTP/[\\d.]+ \\d{3}.*$', 'hook'], ['^[A-Za-z-]+(?=:)', 'attr'],
+         ['https?://[^\\s]+|/api/[^\\s]*', 'cell'], ['"(?:[^"\\\\\\n]|\\\\.)*"(?=\\s*:)', 'f'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['\\b(?:true|false|null)\\b', 'kw'], ['-?\\b\\d+(?:\\.\\d+)?\\b', 'n']],
+  py: [['#[^\\n]*', 'c'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'],
+       ['\\b(?:import|from|as|def|return|for|in|if|else|elif|and|or|not|True|False|None|with|lambda|print)\\b', 'kw'],
+       ['\\bxl(?=\\()', 'sh'], ['\\b[a-zA-Z_]\\w*(?=\\()', 'f'], NUM],
+  m: [['//[^\\n]*', 'c'], STR, ['\\b(?:let|in|each|if|then|else|type|true|false|null)\\b', 'kw'],
+      ['\\b[A-Z][A-Za-z]*\\.[A-Za-z.]+(?=\\()', 'f'], ['#"[^"]*"', 'st'], ['\\[[^\\]\\n]*\\]', 'st'], NUM],
+  dax: [['//[^\\n]*', 'c'], STR, ["'[^'\\n]+'(?:\\[[^\\]]*\\])?|\\b\\w+\\[[^\\]]*\\]", 'st'], ['\\[[^\\]\\n]*\\]', 'cell'],
+        ['\\b(?:VAR|RETURN)\\b', 'kw'], ['\\b[A-Z][A-Z0-9.]*(?=\\()', 'f'], NUM, ['[=+\\-*/&<>]', 'op']],
+  fld: [['\\{|\\}', 'op'], STR, ['\\b(?:PAGE|NUMPAGES|SECTIONPAGES|MERGEFIELD|IF|TOC|SEQ|REF|DATE|STYLEREF|NEXT|FILLIN|ASK|PAGEREF|HYPERLINK)\\b', 'kw'], ['\\\\[a-z*@#!]', 'n'], ['\\b[A-Z][a-zA-Z_]+\\b', 'cell'], ['//[^\\n]*', 'c']],
+  keys: [['#[^\\n]*', 'c'], ['\\b(?:Ctrl|Shift|Alt|Win|Cmd|Option|Tab|Enter|Esc|Home|End|Space|F\\d{1,2}|PgUp|PgDn|Delete|Backspace)\\b', 'key'], ['\\+', 'op']],
+  bash: [['#[^\\n]*', 'c'], STR, ['^\\s*\\S+', 'f']],
+  sql: [['--[^\\n]*', 'c'], ["'(?:[^'\\n]|'')*'", 's'], ['\\b(?:SELECT|FROM|WHERE|JOIN|ON|GROUP|BY|ORDER|DESC|ASC|AS|INSERT|INTO|VALUES|CREATE|TABLE|PRIMARY|KEY|REFERENCES|INTEGER|TEXT|UPDATE|SET|DELETE|AND|OR|NOT|NULL|LIMIT|HAVING|INNER|LEFT)\\b', 'kw'], ['\\b[A-Z_]+(?=\\()', 'f'], NUM, ['[=<>*]', 'op']],
+  dart: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\\\n]|\\\\.)*'|\"(?:[^\"\\\\\\n]|\\\\.)*\"", 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|export|library|part|class|extends|implements|with|mixin|abstract|final|const|var|late|required|void|return|if|else|for|in|while|do|switch|case|default|break|continue|new|this|super|async|await|yield|try|catch|finally|throw|true|false|null|static|get|set|enum|typedef|is|as|override|factory|sealed|base)\\b', 'kw'],
+       ['\\b(?:int|double|num|String|bool|List|Map|Set|Future|Stream|dynamic|Object|Widget|BuildContext|State)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[(<])', 'f'], NUM, ['=>|\\?\\?|\\?\\.|!\\.|[!?](?=[.;,)])', 'op']],
+  kotlin: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|object|interface|fun|val|var|return|if|else|when|for|in|while|do|is|as|null|true|false|this|super|data|sealed|enum|private|public|internal|override|open|abstract|suspend|companion|init|by|lazy|try|catch|finally|throw|typealias|const|lateinit)\\b', 'kw'],
+       ['\\b(?:Int|Long|Double|Float|Boolean|String|Unit|Any|List|MutableList|Map|Set|Flow|StateFlow)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], NUM, ['->|\\?:|\\?\\.|!!|\\.\\.', 'op']],
+  swift: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['"(?:[^"\\\\\\n]|\\\\.)*"', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:import|struct|class|enum|protocol|extension|func|let|var|return|if|else|guard|switch|case|default|for|in|while|repeat|some|any|async|await|throws|try|catch|do|nil|true|false|self|Self|init|private|public|static|mutating|weak|in|where|defer|actor)\\b', 'kw'],
+       ['\\b(?:Int|Double|Float|Bool|String|Array|Dictionary|Set|View|Void|Error)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_][\\w]*(?=\\s*[({])', 'f'], ['\\.[a-z]\\w*', 'sh'], NUM, ['->|\\?\\?|\\?\\.|\\.\\.\\.|\\.\\.<', 'op']],
+  yaml: [['#[^\\n]*', 'c'], ['^\\s*[\\w-]+(?=:)', 'attr'], ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['\\^?\\d+(?:\\.\\d+)*', 'n']],
+  java: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\"\"\"[\\s\\S]*?\"\"\"|"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['@\\w+', 'hook'],
+       ['\\b(?:package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|sealed|permits|non-sealed|void|return|if|else|switch|case|default|for|while|do|break|continue|new|this|super|try|catch|finally|throw|throws|var|yield|instanceof|null|true|false|synchronized|volatile|when)\\b', 'kw'],
+       ['\\b(?:int|long|double|float|boolean|char|byte|short|String|Integer|Double|Long|Boolean|Object|List|Map|Set|Optional|Stream)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['->|::|&&|\\|\\||[=!<>]=', 'op']],
+  cs: [['//[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ['\\$?"(?:[^"\\\\\\n]|\\\\.)*"|\'(?:[^\'\\\\\\n]|\\\\.)\'', 's'], ['\\[[A-Z]\\w*(?:\\([^)]*\\))?\\]', 'hook'],
+       ['\\b(?:using|namespace|class|struct|interface|enum|record|public|private|protected|internal|static|readonly|const|void|return|if|else|switch|case|default|for|foreach|in|while|do|break|continue|new|this|base|try|catch|finally|throw|var|null|true|false|override|virtual|abstract|sealed|async|await|yield|out|ref|is|as|get|set|event|delegate)\\b', 'kw'],
+       ['\\b(?:int|float|double|bool|string|char|long|object|Vector2|Vector3|Quaternion|GameObject|Transform|Rigidbody2D|Collider2D|MonoBehaviour|IEnumerator|List|Dictionary)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'attr'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], ['\\b\\d+(?:\\.\\d+)?f?\\b', 'n'], ['=>|&&|\\|\\||[=!<>]=|\\+=|-=', 'op']],
+  php: [['//[^\\n]*|#(?![\\[<])[^\\n]*|/\\*[\\s\\S]*?\\*/', 'c'], ["'(?:[^'\\\\]|\\\\.)*'|\"(?:[^\"\\\\]|\\\\.)*\"", 's'], ['<\\?php|\\?>', 'kw'], ['#\\[\\w+', 'hook'], ['\\$\\w+', 'attr'],
+       ['\\b(?:function|fn|return|if|else|elseif|foreach|for|while|as|echo|print|class|interface|trait|enum|extends|implements|new|public|private|protected|static|readonly|const|use|namespace|match|default|case|switch|break|continue|try|catch|finally|throw|null|true|false|array|abstract|final|instanceof|require|require_once|include|yield)\\b', 'kw'],
+       ['\\b(?:int|float|string|bool|void|mixed|self|parent|iterable|callable|object)\\b', 'hook'],
+       ['\\b[A-Z][A-Za-z0-9_]*\\b', 'f'], ['\\b[a-z_]\\w*(?=\\s*\\()', 'f'], NUM, ['=>|->|\\?->|::|\\?\\?=?|\\.=|\\.\\.\\.', 'op']],
+  blade: [['\\{\\{--[\\s\\S]*?--\\}\\}|<!--[\\s\\S]*?-->', 'c'], ['@\\w+', 'hook'], ['\\{\\{|\\}\\}|\\{!!|!!\\}', 'op'], ['\\$\\w+', 'attr'],
+       ['"[^"\\n]*"|\'[^\'\\n]*\'', 's'], ['</?[\\w.:-]+|/?>', 'kw'], ['\\b[\\w:.-]+(?==)', 'f']],
+  ps: [['#[^\\n]*', 'c'], STR, ['\\$\\w+', 'attr'], ['\\b[A-Z][a-z]+-[A-Z][A-Za-z]+\\b', 'f'], ['(?:^|\\s)-[A-Za-z]+', 'hook'], ['^\\s*\\w+', 'f'], NUM, ['\\|', 'op']],
+
+};
+const highlight = (code, lang) => LANGS[lang] ? hl(code, LANGS[lang], (lang === 'bash' || lang === 'http' || lang === 'ps' || lang === 'yaml') ? 'm' : '') : esc(code);
+
+const TSRUNS = [], RUNS = [], RUNTIME = "", MOCK = "";
+const FRAME_HEAD = '<meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet"><style>body{font-family:"Kantumruy Pro",system-ui,sans-serif;margin:12px;line-height:1.7;color:#1f2937}</style>';
+const NAMES = { xl: 'Excel Formula', vba: 'VBA', js: 'JavaScript', py: 'Python', m: 'Power Query M', dax: 'DAX', keys: 'Shortcuts', ts: 'TypeScript', jsx: 'JSX', json: 'JSON', http: 'HTTP', fld: 'Field Code', bash: 'Terminal', txt: 'Text', html: 'HTML', sql: 'SQL', ps: 'PowerShell', dart: 'Dart', yaml: 'YAML', kotlin: 'Kotlin', swift: 'Swift', php: 'PHP', blade: 'Blade', java: 'Java', cs: 'C# (Unity)' };
+
+document.querySelectorAll('script[type="text/x-code"]').forEach(sc => {
+  const raw = sc.textContent.replace(/<\\\/script>/g, '<\/script>').replace(/^\n/, '').replace(/\s+$/, '');
+  const lang = sc.dataset.lang || 'txt';
+  const box = document.createElement('div');
+  box.className = 'codebox';
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = sc.dataset.label || NAMES[lang] || lang;
+  if (sc.hasAttribute('data-demo')) {
+    box.classList.add('visual');
+    label.textContent = '▶ ' + label.textContent;
+    const res = document.createElement('div');
+    res.className = 'result';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('loading', 'lazy');
+    fr.title = sc.dataset.label || 'ឧទាហរណ៍';
+    if (sc.dataset.tsrun !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>', R = TSRUNS[+sc.dataset.tsrun];
+      const diag = R.diags.length
+        ? '<div class="tsc bad"><b>✘ tsc: ' + R.diags.length + ' error' + (R.diags.length > 1 ? 's' : '') + '</b>' + R.diags.map(d => '<div><span class="ln">Line ' + d.line + ':' + d.col + '</span> <span class="cd">TS' + d.code + '</span> ' + esc(d.msg) + '</div>').join('') + '</div>'
+        : '<div class="tsc ok"><b>✔ tsc: 0 errors</b> — Type ត្រឹមត្រូវ</div>';
+      const shell = '<style>.tsc{font:12.5px/1.6 "JetBrains Mono",monospace;padding:8px 10px;border-radius:8px;margin-bottom:8px;white-space:pre-wrap}.tsc.ok{background:#ecfdf3;color:#05603a}.tsc.bad{background:#fef3f2;color:#912018}.ln{font-weight:700}.cd{opacity:.7}.out{font:12.5px/1.6 "JetBrains Mono",monospace;background:#0c111d;color:#e4e7ec;border-radius:8px;padding:8px 10px;white-space:pre-wrap;min-height:28px}.out .e{color:#fda29b}.lbl2{font-size:12px;color:#475467;margin:2px 0}</style>'
+        + diag + '<div class="lbl2">▶ Console (JavaScript ដែល Type ត្រូវបានលុបចេញ)</div><div class="out" id="out"></div>'
+        + S + 'const __o=document.getElementById("out");const __f=v=>v===undefined?"undefined":typeof v==="string"?v:JSON.stringify(v,(k,x)=>x instanceof Map?Object.fromEntries(x):x instanceof Set?[...x]:x,2);const __p=(c)=>(...a)=>{const d=document.createElement("div");if(c)d.className=c;d.textContent=a.map(__f).join(" ");__o.appendChild(d)};console.log=__p("");console.info=__p("");console.warn=__p("e");console.error=__p("e");addEventListener("error",e=>{console.error(/^Uncaught/.test(e.message)?e.message:"Uncaught "+e.message)});addEventListener("unhandledrejection",e=>console.error("Unhandled: "+(e.reason&&e.reason.message||e.reason)));' + E
+        + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + R.js + E;
+      fr.srcdoc = FRAME_HEAD + shell;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'demo.ts') + ' · ▶ tsc + លទ្ធផល';
+      box.append(pre);
+    } else if (sc.dataset.run !== undefined) {
+      const S = '<scr' + 'ipt>', E = '</scr' + 'ipt>';
+      fr.srcdoc = FRAME_HEAD + '<style>button,input,select{font:inherit;min-height:34px;padding:0 10px;border-radius:6px;border:1px solid #cbd5e1;background:#fff}button{background:#087ea4;color:#fff;border-color:#087ea4;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}</style><div id="root"></div>' + S + RUNTIME + E + (sc.hasAttribute('data-mock') ? S + MOCK + E : '') + S + RUNS[+sc.dataset.run] + E;
+      const pre = document.createElement('pre'), code = document.createElement('code');
+      code.innerHTML = highlight(raw, lang); pre.appendChild(code);
+      box.classList.remove('visual'); label.textContent = (sc.dataset.label || 'App.jsx') + ' · ▶ លទ្ធផលពិត (React 19)';
+      box.append(pre);
+    } else fr.srcdoc = FRAME_HEAD + raw;
+    const fit = () => {
+      try { const d = fr.contentDocument, cs = getComputedStyle(d.body); fr.style.height = Math.max(90, Math.ceil(d.body.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 4) + 'px'; }
+      catch (e) { fr.style.height = '320px'; }
+    };
+    fr.onload = () => { fit(); setTimeout(fit, 900); try { new ResizeObserver(fit).observe(fr.contentDocument.body); } catch (e) {} };
+    res.appendChild(fr);
+    box.prepend(label); box.append(res);
+  } else {
+    const pre = document.createElement('pre');
+    const code = document.createElement('code');
+    code.innerHTML = highlight(raw, lang);
+    pre.appendChild(code);
+    const btn = document.createElement('button');
+    btn.className = 'btn copy';
+    btn.textContent = 'ចម្លង';
+    btn.onclick = async () => {
+      try { await navigator.clipboard.writeText(raw); btn.textContent = '✔ បានចម្លង'; }
+      catch (e) { btn.textContent = 'បរាជ័យ'; }
+      setTimeout(() => btn.textContent = 'ចម្លង', 1500);
+    };
+    box.append(label, pre, btn);
+  }
+  sc.replaceWith(box);
+});
+
+// ===== Theme toggle =====
+const root = document.documentElement;
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch {}
+};
+
+// ===== Mobile menu =====
+const side = document.getElementById("side");
+document.getElementById("menuBtn").onclick = () => side.classList.toggle("open");
+side.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => side.classList.remove("open")));
+
+
+// ===== 🔊 TTS =====
+document.querySelectorAll('.btn.say').forEach(b => b.onclick = () => {
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {}
+});
+</script>
+<script src="../config.js"></script><script src="../assets/lesson.js" data-id="net"></script><script src="../assets/xc-skin.js"></script>
+</body>
+</html>
