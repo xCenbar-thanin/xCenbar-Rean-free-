@@ -218,13 +218,13 @@ $$(".eye").forEach(b => b.onclick = () => { const i = b.previousElementSibling; 
 function openAuth(tab = "login") { authTab(tab); $("#loginErr").textContent = $("#signupErr").textContent = ""; openM("authModal"); setTimeout(() => { const f = $(tab === "login" ? "#loginForm input" : "#signupForm input"); f && f.focus(); }, 50); }
 $("#loginForm").onsubmit = async e => {
   e.preventDefault(); const f = new FormData(e.target);
-  try { await AUTH.login({ id: f.get("id"), pw: f.get("pw") }); closeM("authModal"); e.target.reset(); afterAuth("👋 សូមស្វាគមន៍ " + AUTH.user.name + "!"); }
+  try { await AUTH.login({ id: f.get("id"), pw: f.get("pw") }); closeM("authModal"); e.target.reset(); afterAuth("👋 សូមស្វាគមន៍ " + AUTH.user.name + "!"); window.XCWelcome && XCWelcome.greet("back", AUTH.user.name); }
   catch (err) { $("#loginErr").textContent = err.message; }
 };
 $("#signupForm").onsubmit = async e => {
   e.preventDefault(); const f = new FormData(e.target);
   if (f.get("pw") !== f.get("pw2")) { $("#signupErr").textContent = "ពាក្យសម្ងាត់ទាំងពីរមិនដូចគ្នា"; return; }
-  try { await AUTH.signup({ name: f.get("name"), email: f.get("email"), pw: f.get("pw"), invite: f.get("invite") || "" }); closeM("authModal"); e.target.reset(); afterAuth("🎉 បានបង្កើតគណនី — សូមស្វាគមន៍ " + AUTH.user.name + "!"); }
+  try { await AUTH.signup({ name: f.get("name"), email: f.get("email"), pw: f.get("pw"), invite: f.get("invite") || "" }); closeM("authModal"); e.target.reset(); afterAuth("🎉 បានបង្កើតគណនី — សូមស្វាគមន៍ " + AUTH.user.name + "!"); window.XCWelcome && XCWelcome.greet("new", AUTH.user.name); }
   catch (err) { $("#signupErr").textContent = err.message; }
 };
 function afterAuth(msg) {
@@ -265,6 +265,18 @@ function courseCard(c, opts = {}) {
     <p>${esc(c.desc)}</p>
     <div class="meta"><span><span class="xi-skip">${esc(CAT.cats.find(x => x.id === c.cat).icon)}</span> ${kh((c.size / 1e6).toFixed(1))} MB</span>${locked ? '<span class="lockbadge">🔒 ចូលដើម្បីរៀន</span>' : v ? `<span class="seen">✓ បានបើក ${kh(v.n)} ដង</span>` : "<span>📖 រៀន</span>"}</div></a>`;
 }
+/*MAJ_LIST*/const MAJ_LIST = [["cs", "🖥️", "វិទ្យាសាស្ត្រកុំព្យូទ័រ", "#1c7ed6"], ["it", "💻", "បច្ចេកវិទ្យាព័ត៌មាន", "#2f9e44"], ["se", "⚙️", "វិស្វកម្មកម្មវិធី", "#0ca678"], ["ds", "📊", "វិទ្យាសាស្ត្រទិន្នន័យ", "#f59f00"], ["ai", "🤖", "បញ្ញាសិប្បនិម្មិត", "#7048e8"], ["cyber", "🛡️", "សន្តិសុខប្រព័ន្ធព័ត៌មាន", "#e03131"], ["is", "🗂️", "ប្រព័ន្ធព័ត៌មាន", "#ae3ec9"], ["net", "🌐", "វិស្វកម្មបណ្តាញ", "#1864ab"], ["web", "🌍", "អភិវឌ្ឍន៍គេហទំព័រ", "#e8590c"], ["mobile", "📱", "បង្កើតកម្មវិធីទូរស័ព្ទ", "#d6336c"], ["gd", "🎨", "រចនាក្រាហ្វិក", "#7048e8"], ["ux", "📱", "រចនា UX/UI", "#d6336c"], ["mm", "🎬", "ពហុព័ត៌មាន", "#e8590c"], ["an", "🎞️", "គំនូរជីវចល", "#f76707"], ["fm", "🎥", "ផលិតកម្មភាពយន្ត និងមេឌៀ", "#c92a2a"], ["id", "🛋️", "រចនាផ្ទៃខាងក្នុង", "#a87b4f"], ["fd", "👗", "រចនាម៉ូដ", "#c2255c"], ["bmj", "💼", "គ្រប់គ្រងអាជីវកម្ម", "#1971c2"], ["acm", "🧮", "គណនេយ្យ", "#2b8a3e"], ["fin", "📈", "ហិរញ្ញវត្ថុ និងធនាគារ", "#f08c00"], ["mkt", "📣", "ទីផ្សារ", "#e64980"], ["lsc", "🚚", "ភស្តុភារ និងខ្សែសង្វាក់ផ្គត់ផ្គង់", "#5f3dc4"], ["cve", "🏢", "វិស្វកម្មសំណង់ស៊ីវិល", "#495057"], ["eee", "⚡", "វិស្វកម្មអគ្គិសនី", "#f59f00"], ["mce", "⚙️", "វិស្វកម្មមេកានិច", "#c92a2a"]];/*/MAJ_LIST*/
+function majorMarquee() {
+  if (!MAJ_LIST.length || !byId("majors")) return "";
+  const m = byId("majors"), half = Math.ceil(MAJ_LIST.length / 2);
+  const item = x => `<a class="mj-pill" href="lessons/${m.file}#m-${x[0]}" data-open="majors" data-major="${x[0]}" style="--c:${x[3]}"><span class="mj-e">${x[1]}</span>${esc(x[2])}</a>`;
+  const row = (list, rev) => `<div class="mq-row${rev ? " rev" : ""}"><div class="mq-track mj-track">${list.map(item).join("")}${list.map(item).join("")}</div></div>`;
+  return `<h2 class="sec-title">🎓 ផ្លូវសិក្សាតាមជំនាញ <small class="muted" style="font:600 13px Inter">${kh(MAJ_LIST.length)} ជំនាញ · ចុចដើម្បីមើល Roadmap ឆ្នាំ ១–៤</small></h2><section class="mq mjq" aria-label="ជំនាញ">${row(MAJ_LIST.slice(0, half))}${row(MAJ_LIST.slice(half), true)}</section>`;
+}
+document.addEventListener("click", e => {
+  const a = e.target.closest("[data-major]"); if (!a || !window.XC_OPEN_LESSON) return;
+  e.preventDefault(); e.stopPropagation(); window.XC_OPEN_LESSON("majors", { a: "#m-" + a.dataset.major });
+}, true);
 function logoMarquee() {
   const cs = CAT.courses, half = Math.ceil(cs.length / 2);
   const item = c => `<a class="mq-item" href="lessons/${c.file}" data-open="${c.id}" title="${esc(c.title)}"><span class="mq-ico"><img src="${icon(c)}" alt="" loading="lazy"></span><b>${esc(c.short || c.en)}</b></a>`;
@@ -290,9 +302,10 @@ function pageHome() {
     <div class="panel stat"><b>${kh(CAT.cats.length)}</b>ផ្នែក</div>
     <div class="panel stat stat-lv">${u ? `<b>Lv ${kh(levelInfo().lv)}</b>${levelInfo().name}<div class="lv-bar"><i style="width:${levelInfo().pct}%"></i></div>` : `<b>Lv ១</b>ចូលគណនី ដើម្បីឡើង Level 🎮`}</div>
   </div>
+  ${majorMarquee()}
   ${logoMarquee()}
   ${u && last ? `<h2 class="sec-title">▶️ បន្តពីលើកមុន</h2><a class="panel cont" href="lessons/${last.file}" data-open="${last.id}" style="text-decoration:none;color:inherit"><img src="${icon(last)}" alt=""><div><b>${esc(last.title)}</b><br><span class="muted">${esc(last.desc)}</span></div><span class="btn small" style="margin-left:auto">បន្ត →</span></a>` : ""}
-  ${CAT.cats.map(cat => `<h2 class="sec-title"><span class="cat-ico xi-skip">${cat.icon}</span> ${esc(cat.km)} <small class="muted" style="font:600 13px Inter">${esc(cat.en)}</small></h2><div class="grid">${CAT.courses.filter(c => c.cat === cat.id).map(c => courseCard(c)).join("")}</div>`).join("")}`;
+  ${CAT.cats.filter(cat => cat.id !== "lib").map(cat => `<h2 class="sec-title"><span class="cat-ico xi-skip">${cat.icon}</span> ${esc(cat.km)} <small class="muted" style="font:600 13px Inter">${esc(cat.en)}</small></h2><div class="grid">${CAT.courses.filter(c => c.cat === cat.id).map(c => courseCard(c)).join("")}</div>`).join("")}`;
   const a = $("#ctaSignup"), b = $("#ctaLogin"); if (a) a.onclick = () => openAuth("signup"); if (b) b.onclick = () => openAuth("login");
 }
 let filt = { q: "", cat: "", fav: false };
@@ -396,7 +409,7 @@ addEventListener("popstate", () => { window.XC_H = location.hash; route(); });
   if (!ok) setTimeout(() => toast("⚠️ Browser/Viewer នេះមិនរក្សាគណនីទុកទេ — បិទហើយបើកវិញ ត្រូវបង្កើតគណនីម្តងទៀត។ សូមប្រើ file HTML ឬ Website ដើម្បីរក្សាទុក។"), 1500); })();
 function route() {
   const p = (H().slice(1) || "home").split("/")[0];
-  $$("[data-nav]").forEach(a => a.classList.toggle("on", a.dataset.nav === p));
+  const lid = p === "lesson" ? H().split("/")[1] : ""; $$("[data-nav]").forEach(a => a.classList.toggle("on", a.dataset.nav === p || (a.dataset.nav === "library" && lid === "library")));
   if (p === "login" || p === "signup") { pageHome(); openAuth(p); }
   else if (p === "courses") pageCourses();
   else if (p === "profile") pageProfile();

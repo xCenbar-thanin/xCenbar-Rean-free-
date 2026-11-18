@@ -398,3 +398,634 @@ function svgFor(ch, uid) {
   window.XCB = { chars: C, cfg: cfg, setCfg: setCfg, mountProfile: mountProfile, charHtml: charHtml };
   if (!SITE) { if (document.body) lesson(); else document.addEventListener("DOMContentLoaded", lesson); }
 })();
+
+/* ===== xCenBar Chill Music: original generative lo-fi / ambient music (Web Audio, no audio files, no copyrighted songs) ===== */
+(function () {
+  if (window.XCMusic || !window.XC_SKIN_SITE) return;
+  function lget(k, d) { try { var v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } }
+  function lset(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  var mtof = function (m) { return 440 * Math.pow(2, (m - 69) / 12); };
+  var R = Math.random, pick = function (a) { return a[Math.floor(R() * a.length)]; };
+
+  /* ---------- moods (all original progressions / random melodies) ---------- */
+  var MOODS = {
+    lofi:   { e: "📚", n: "Lo-fi Study", km: "ភ្លេង Lo-fi សម្រាប់រៀន", bpm: 72, swing: .14, layers: { vinyl: 1 },
+              chords: [[50, 53, 57, 60, 64], [43, 53, 59, 64], [48, 52, 59, 62], [45, 55, 60, 64]], scale: [72, 74, 76, 79, 81, 84], drums: "lofi", inst: "ep", mel: .22 },
+    rain:   { e: "🌧️", n: "Rain & Piano", km: "ភ្លៀង + ព្យ៉ាណូស្ងប់", bpm: 60, swing: 0, layers: { rain: 1 },
+              chords: [[41, 48, 52, 57, 60], [40, 47, 50, 55, 59], [38, 45, 48, 53, 57], [36, 43, 47, 52, 55]], scale: [69, 72, 74, 76, 79, 81], drums: "", inst: "arp", mel: .1 },
+    ocean:  { e: "🌊", n: "Ocean Ambient", km: "រលកសមុទ្រ · Pad ស្ងប់", bpm: 48, swing: 0, layers: { waves: 1 }, bars: 2,
+              chords: [[48, 55, 62, 64], [45, 52, 59, 60], [41, 48, 55, 57, 64], [43, 50, 55, 62]], scale: [79, 81, 84, 86, 88], drums: "", inst: "pad", mel: .07 },
+    mekong: { e: "🛶", n: "Mekong Breeze", km: "Pentatonic ស្រាល ដូចខ្យល់ទន្លេ", bpm: 84, swing: .08, layers: {},
+              chords: [[43, 50, 55], [43, 50, 57], [40, 47, 55], [43, 50, 55]], scale: [67, 69, 71, 74, 76, 79, 81, 83], drums: "hand", inst: "pluck", mel: .42 },
+    night:  { e: "🌃", n: "Night Drive", km: "Synthwave យឺតៗពេលយប់", bpm: 88, swing: 0, layers: {},
+              chords: [[45, 52, 57, 60, 64], [41, 48, 53, 57, 60], [48, 55, 60, 64, 67], [43, 50, 55, 59, 62]], scale: [69, 72, 74, 76, 79], drums: "synth", inst: "synth", mel: .16 }
+  };
+  var ORDER = ["lofi", "rain", "ocean", "mekong", "night"];
+  /* Khmer-inspired moods (original generative music; instrument timbres are synthesized approximations) */
+  MOODS.pinpeat = { e: "🛕", n: "Pinpeat Chill", km: "ពីដើម · រនាត + ឈិង + ស្គរ", bpm: 74, swing: 0, layers: {}, khmer: 1,
+    chords: [[43, 50], [43, 50], [45, 52], [43, 50]], scale: [67, 69, 71, 74, 76, 79, 81, 83], fn: function (t, i, ch, f, cd, sx) {
+      if (f) pad([ch[0] - 12, ch[1] - 12], t, cd, .7, "sine");
+      if (i % 2 === 0 && R() < .85) { var n = walk(); roneat(n, t, .9); roneat(n - 12, t + .004, .35); if (R() < .3) roneat(n, t + sx, .55); }
+      if (i % 4 === 0) chhing(t, i % 8 !== 0);
+      if (i === 0 || i === 10) skor(t, 1, 0); if (i === 6 || i === 14) skor(t, .6, 1);
+    } };
+  MOODS.mahori = { e: "🪕", n: "Mahori: Khim + Tro", km: "ពីដើម · ឃឹម + ទ្រ ស្ងប់ៗ", bpm: 62, swing: 0, layers: {}, khmer: 1,
+    chords: [[45, 52], [45, 52], [43, 50], [45, 52]], scale: [69, 72, 74, 76, 79, 81, 84], fn: function (t, i, ch, f, cd, sx) {
+      if (f) pad([ch[0] - 12, ch[1] - 12, ch[0]], t, cd, .55, "triangle");
+      if (i % 4 === 0 && R() < .72) tro(walk(), t, sx * (R() < .4 ? 8 : 4), .9);
+      if (i % 2 === 1 && R() < .3) khim(M2(), t, .7, 3, sx);
+      if (i % 8 === 0) chhing(t, false, .6); if (i % 8 === 4) chhing(t, true, .5);
+      if (i === 0) skor(t, .5, 0);
+    } };
+  MOODS.romvong = { e: "💃", n: "Romvong Lo-fi", km: "ចង្វាក់រាំវង់ យឺតៗ + ព្យ៉ាណូ", bpm: 90, swing: .08, layers: { vinyl: 1 }, khmer: 1,
+    chords: [[48, 55, 60, 64], [45, 52, 57, 60, 64], [41, 48, 53, 57, 60], [43, 50, 55, 59, 62]], scale: [72, 74, 76, 79, 81, 84], fn: function (t, i, ch, f, cd, sx) {
+      if (f) ch.forEach(function (m, k) { ep(m, t + k * .012, sx * 7, .85); }); if (i === 8) ch.slice(1).forEach(function (m) { ep(m, t, sx * 5, .6); });
+      if (R() < .28 && i % 2 === 0) khim(walk(), t, .7, R() < .3 ? 2 : 1, sx);
+      if (i === 0 || i === 6 || i === 8) skor(t, .85, 0); if (i === 4 || i === 12 || i === 14) skor(t, .55, 1);
+      if (i % 4 === 0) chhing(t, i % 8 === 0 ? false : true, .7);
+    } };
+  MOODS.golden60 = { e: "🎸", n: "Golden 60s Chill", km: "សម័យមាស ៦០ · Guitar + Organ", bpm: 104, swing: 0, layers: { vinyl: 1 }, khmer: 1,
+    chords: [[48, 52, 55], [45, 48, 52], [41, 45, 48], [43, 47, 50]], scale: [72, 74, 76, 79, 81, 84, 86], fn: function (t, i, ch, f, cd, sx) {
+      if (i % 4 === 2) organ(ch.map(function (m) { return m + 12; }), t, sx * 1.6, .8);
+      if (i % 4 === 0) bass(ch[0] - (i % 8 === 0 ? 12 : 5), t, .9);
+      if (i % 2 === 0 && R() < .38) { var n = walk(); if (R() < .2) { for (var r = 0; r < 4; r++) twang(n, t + r * sx / 2, .5); } else twang(n, t, .85); }
+      if (i === 0 || i === 8 || (i === 10 && R() < .4)) kick(t, .7); if (i === 4 || i === 12) snare(t, .55);
+      if (i % 2 === 0) noiseHit(t, "bandpass", 8500, 3, .05, .09);
+    } };
+  MOODS.pplofi = { e: "🏙️", n: "Phnom Penh Lo-fi", km: "សម័យ · Lo-fi + ឃឹម Pentatonic", bpm: 74, swing: .14, layers: { vinyl: 1 }, khmer: 1,
+    chords: [[45, 55, 60, 64, 71], [41, 52, 57, 60, 64], [48, 55, 59, 64], [43, 52, 55, 59, 64]], scale: [69, 72, 74, 76, 79, 81, 84], fn: function (t, i, ch, f, cd, sx) {
+      if (f) ch.forEach(function (m, k) { ep(m, t + k * .014, sx * 8, .85); }); if (i === 10 && R() < .5) ch.slice(1).forEach(function (m) { ep(m, t, sx * 2, .5); });
+      if (i % 2 === 0 && R() < .26) khim(walk(), t, .75, R() < .25 ? 3 : 1, sx);
+      if (i === 0 || i === 7 || (i === 10 && R() < .6)) kick(t, .85); if (i === 4 || i === 12) snare(t, .75); if (i % 2 === 0) hat(t, i % 4 === 0 ? .9 : .55);
+      if (i === 0 && R() < .5) chhing(t, false, .45);
+    } };
+  var ORDER_KH = ["pinpeat", "mahori", "romvong", "golden60", "pplofi"];
+  /* Hip-hop / rap beats (original generative instrumentals) */
+  MOODS.boombap = { e: "🎤", n: "Boom Bap 90s", km: "Hip-hop ចាស់ · ស្គរខ្លាំង + Sample chop", bpm: 88, swing: .18, layers: { vinyl: 1 }, rap: 1,
+    chords: [[45, 55, 60, 64, 71], [50, 53, 57, 60, 64], [41, 48, 52, 57, 64], [40, 50, 56, 59, 67]], scale: [69, 72, 74, 76, 79], fn: function (t, i, ch, f, cd, sx) {
+      if (f || i === 6 || i === 11) ch.forEach(function (m, k) { ep(m, t + k * .006, sx * (f ? 5 : 2), f ? .9 : .6); });
+      if (i === 0 || i === 8) bass(ch[0] - 12, t, 1); if (i === 3 && R() < .6) bass(ch[0] - 5, t, .7); if (i === 10) bass(ch[0] - 12, t, .8);
+      if (i === 0 || i === 10 || (i === 3 && R() < .5) || (i === 7 && R() < .3)) kick(t, 1); if (i === 4 || i === 12) { snare(t, 1.1); noiseHit(t, "highpass", 2500, .5, .08, .2); }
+      if (i % 2 === 0) hat(t, i % 4 === 2 ? 1 : .6); if (i === 14 && bar % 4 === 3) scratch(t, sx);
+    } };
+  MOODS.trap = { e: "🔥", n: "Trap Beat", km: "808 Bass + Hi-hat roll", bpm: 70, swing: 0, layers: {}, rap: 1,
+    chords: [[57, 60, 64], [53, 57, 60], [50, 53, 57], [52, 56, 59]], scale: [69, 72, 74, 76, 79, 81], fn: function (t, i, ch, f, cd, sx) {
+      if (f) pad(ch, t, cd, .5, "sawtooth");
+      if (i === 0) b808(ch[0] - 24, t, sx * 6); if (i === 7 && R() < .6) b808(ch[0] - 24, t, sx * 2); if (i === 10) b808(ch[0] - 24 + pick([0, 0, 3, 7]), t, sx * 3, R() < .4);
+      if (i === 0 || i === 10) kick(t, .6); if (i === 8) clap(t, 1);
+      hatRoll(t, i, sx);
+      if (i % 2 === 0 && R() < .2) bell(walk(), t, .7);
+    } };
+  MOODS.khtrap = { e: "🇰🇭", n: "Khmer Trap", km: "Trap + ឃឹម + ទ្រ + ឈិង", bpm: 70, swing: 0, layers: {}, rap: 1, khmer: 1,
+    chords: [[45, 52], [45, 52], [43, 50], [40, 47]], scale: [69, 72, 74, 76, 79, 81, 84], fn: function (t, i, ch, f, cd, sx) {
+      if (i === 0) b808(ch[0] - 12, t, sx * 6); if (i === 10) b808(ch[0] - 12 + pick([0, 0, 7]), t, sx * 3, R() < .4); if (i === 0 || i === 10) kick(t, .6); if (i === 8) clap(t, 1);
+      hatRoll(t, i, sx); if (i === 4 || i === 12) chhing(t, i === 12, .6);
+      if (i % 2 === 0 && R() < .3) khim(walk(), t, .75, R() < .3 ? 3 : 1, sx);
+      if (f && R() < .6) tro(walk(), t + sx * 2, sx * 6, .8);
+    } };
+  MOODS.chillhop = { e: "🧢", n: "Chillhop", km: "Jazz hip-hop ស្រាល · Bass groove", bpm: 84, swing: .12, layers: { vinyl: 1 }, rap: 1,
+    chords: [[48, 55, 59, 64], [45, 52, 55, 60, 64], [50, 57, 60, 65], [43, 50, 53, 59, 64]], scale: [72, 74, 76, 79, 81, 84], fn: function (t, i, ch, f, cd, sx) {
+      if (f) ch.forEach(function (m, k) { ep(m, t + k * .012, sx * 7, .8); }); if (i === 9) ch.slice(1).forEach(function (m) { ep(m, t, sx * 3, .5); });
+      if (i === 0) bass(ch[0] - 12, t, 1); if (i === 6) bass(ch[0] - 5, t, .7); if (i === 8) bass(ch[0] - 12, t, .8); if (i === 14) bass(ch[0] - 10, t, .6);
+      if (i === 0 || i === 9) kick(t, .8); if (i === 4 || i === 12) snare(t, .7); if (i % 2 === 0) hat(t, .7); else if (R() < .25) hat(t, .3);
+      if (i % 2 === 0 && R() < .22) twang(walk(), t, .5);
+    } };
+  var ORDER_HH = ["boombap", "trap", "khtrap", "chillhop"];
+  /* 🔥 Remix / EDM (original songs; 32-bar form: intro 4 · build 4 · DROP 8 · break 4 · build 4 · DROP 8) */
+  function sec() { var b = bar % 32; return b < 4 ? "intro" : b < 8 ? "build" : b < 16 ? "drop" : b < 20 ? "break" : b < 24 ? "build" : "drop"; }
+  function buildFx(t, i, sx) { var b = bar % 32, bb = (b % 4); if (i === 0 && bb === 0) riser(t, sx * 64);
+    var every = bb < 2 ? 4 : bb === 2 ? 2 : 1; if (i % every === 0) snare(t, .35 + (bb * 16 + i) / 64 * .6); }
+  function dropHit(t, i) { var b = bar % 32; if (i === 0 && (b === 8 || b === 24)) { crash(t); kick(t, 1.2); } }
+  MOODS.house = { e: "🏝️", n: "Tropical House", km: "EDM ស្រស់ៗ · Marimba + 4-on-floor", bpm: 122, swing: 0, layers: {}, rx: 1,
+    chords: [[57, 60, 64], [53, 57, 60], [48, 52, 55], [55, 59, 62]], scale: [69, 72, 74, 76, 79, 81], fn: function (t, i, ch, f, cd, sx) {
+      var S = sec(); dropHit(t, i);
+      if (S !== "break" && S !== "intro" || i % 8 === 0) { if (i % 4 === 0 && S !== "build") kick(t, .95); }
+      if (S === "build") buildFx(t, i, sx);
+      if (S === "drop" || S === "intro") { if (i % 4 === 2) noiseHit(t, "highpass", 7000, .5, .07, .2); if (i === 4 || i === 12) clap(t, .8); }
+      if (S === "drop" && i % 4 === 2) stab(ch, t, sx * 1.5, .8, 2400);
+      if (S === "drop" && i % 4 === 2) bass(ch[0] - 24, t, .9);
+      if ((S === "drop" || S === "break") && (i % 2 === 0) && R() < .55) roneat(walk(), t, .8);
+      if (S === "break" && f) pad(ch, t, cd, .9);
+    } };
+  MOODS.futurebass = { e: "🌈", n: "Future Bass", km: "Supersaw ធំៗ · Vocal chop", bpm: 75, swing: 0, layers: {}, rx: 1,
+    chords: [[53, 57, 60, 64, 67], [55, 59, 62, 67], [52, 55, 59, 64], [57, 60, 64, 69]], scale: [72, 74, 76, 79, 81, 84], fn: function (t, i, ch, f, cd, sx) {
+      var S = sec(); dropHit(t, i);
+      if (S === "build") buildFx(t, i, sx);
+      if (S === "drop") { if (i === 0 || i === 3 || i === 10) kick(t, 1); if (i === 8) clap(t, 1); if (i % 2 === 0) hat(t, .6);
+        if ([0, 3, 6, 8, 11, 14].indexOf(i) >= 0) stab(ch.map(function (m) { return m + 12; }), t, sx * 1.6, .9, 3200);
+        if (i === 0) b808(ch[0] - 24, t, sx * 8); if (R() < .3) chop(walk(), t, .8, i % 4 ? "o" : "a"); }
+      if (S === "intro" || S === "break") { if (f) pad(ch, t, cd, .8); if (i % 4 === 0 && R() < .5) chop(walk(), t, .55, "a"); if (i === 8 && S === "intro") clap(t, .4); }
+    } };
+  MOODS.dembow = { e: "💃", n: "Reggaeton Dembow", km: "ចង្វាក់ Dembow · Pluck + 808", bpm: 95, swing: 0, layers: {}, rx: 1,
+    chords: [[57, 60, 64], [53, 57, 60], [55, 59, 62], [52, 56, 59]], scale: [69, 71, 72, 74, 76, 79], fn: function (t, i, ch, f, cd, sx) {
+      var S = sec(); dropHit(t, i);
+      if (S === "build") buildFx(t, i, sx);
+      var full = S === "drop";
+      if (full || S === "intro") { if (i % 4 === 0) kick(t, full ? 1 : .6); if (i === 3 || i === 6 || i === 11 || i === 14) noiseHit(t, "bandpass", 2600, 1.4, full ? .22 : .12, .09); if (full && i % 2 === 0) hat(t, .5); }
+      if (full && i % 4 === 0) b808(ch[0] - 24 + (i === 8 ? 7 : 0), t, sx * 3);
+      if ((full || S === "break") && (i === 0 || i === 3 || i === 6 || i === 10 || i === 13)) ch.forEach(function (m) { pluck(m + 12, t, .55, 2600); });
+      if (full && i % 2 === 0 && R() < .25) chop(walk(), t, .7, "o");
+      if (S === "break" && f) pad(ch, t, cd, .7);
+    } };
+  MOODS.khremix = { e: "🇰🇭", n: "Khmer Remix", km: "Remix ខ្មែរ Party · ឃឹម + ទ្រ + Bass ធ្ងន់", bpm: 132, swing: 0, layers: {}, rx: 1, khmer: 1,
+    chords: [[45, 52, 57], [43, 50, 55], [41, 48, 53], [43, 50, 55]], scale: [69, 72, 74, 76, 79, 81, 84], fn: function (t, i, ch, f, cd, sx) {
+      var S = sec(); dropHit(t, i);
+      if (S === "build") buildFx(t, i, sx);
+      if (S === "drop" || S === "intro") { if (i % 4 === 0) kick(t, 1.05); if (i % 4 === 2) { chhing(t, true, .7); noiseHit(t, "highpass", 7000, .5, .06, .18); } if (S === "drop" && (i === 4 || i === 12)) clap(t, .9); }
+      if (S === "drop") { if (i % 4 === 2 || i % 4 === 3) bass(ch[0] - 12, t, 1); if (i % 4 === 2) stab(ch.map(function (m) { return m + 12; }), t, sx * 1.2, .65, 2800);
+        if (i % 2 === 0 && R() < .62) khim(walk(), t, .8, R() < .25 ? 2 : 1, sx); }
+      if (S === "break" || S === "intro") { if (i % 8 === 0 && R() < .8) tro(walk(), t, sx * 7, .9); if (f) pad([ch[0] - 12, ch[1] - 12], t, cd, .6, "sine"); if (S === "break" && i % 4 === 0) chhing(t, i % 8 === 4, .5); }
+    } };
+  MOODS.phonk = { e: "🏎️", n: "Drift Phonk", km: "Cowbell + 808 ខូចៗ · លឿន", bpm: 70, swing: 0, layers: {}, rx: 1,
+    chords: [[49, 56], [49, 56], [52, 59], [47, 54]], scale: [73, 76, 78, 80, 83, 85], fn: function (t, i, ch, f, cd, sx) {
+      var S = sec(); dropHit(t, i);
+      if (S === "build") buildFx(t, i, sx);
+      var cb = [0, 3, 6, 8, 10, 13];
+      if (S === "drop") { if (i === 0 || i === 6 || i === 10) { kick(t, 1); b808(ch[0] - 12 + (i === 10 ? 3 : 0), t, sx * 3, i === 6); } if (i === 8) { clap(t, 1.1); snare(t, .6); } hatRoll(t, i, sx);
+        if (cb.indexOf(i) >= 0) cowbell(walk(), t, .9); }
+      if (S === "intro" || S === "break") { if (cb.indexOf(i) >= 0) cowbell(walk(), t, .6); if (f) pad(ch, t, cd, .6, "sawtooth"); }
+    } };
+  MOODS.dubstep = { e: "🤖", n: "Melodic Dubstep", km: "Wobble bass · Supersaw ខ្លាំង", bpm: 70, swing: 0, layers: {}, rx: 1,
+    chords: [[50, 57, 62, 65], [46, 53, 58, 62], [48, 55, 60, 64], [45, 52, 57, 61]], scale: [74, 77, 79, 81, 84, 86], fn: function (t, i, ch, f, cd, sx) {
+      var S = sec(); dropHit(t, i);
+      if (S === "build") buildFx(t, i, sx);
+      if (S === "drop") { if (i === 0 || i === 10) kick(t, 1.1); if (i === 8) { snare(t, 1.2); clap(t, .8); } if (i % 2 === 0) hat(t, .45);
+        if (i % 4 === 0) wob(ch[0] - 24, t, sx * 4, pick([2, 4, 4, 8])); if (i === 0 || i === 8) stab(ch, t, sx * 7, .55, 1800); }
+      if (S === "intro" || S === "break") { if (f) pad(ch, t, cd, 1); if (i % 2 === 0 && R() < .35) bell(walk(), t, .8); if (S === "intro" && i === 8) snare(t, .3); }
+    } };
+  var ORDER_RX = ["house", "futurebass", "dembow", "khremix", "phonk", "dubstep"];
+
+  /* original rap lyrics (written for xCenBar) — one line per bar */
+  var HOOK = ["រៀនឥតគិតថ្លៃ yeah — xCenBar ពេញចិត្ត", "ពីសូន្យដល់អាជីព — មួយជំហានៗ កាន់តែជិត", "បើកកុំព្យូទ័រ ចុច Play — ចិត្តខ្ញុំមិនឈប់", "ចំណេះជាអាវុធ — ថ្ងៃស្អែកខ្ញុំត្រៀមរួច"];
+  var V1 = ["ភ្ញាក់ពីគេងព្រឹកព្រលឹម កាហ្វេមួយកែវក្នុងដៃ", "Laptop ចាស់មួយគ្រឿង តែក្តីស្រមៃនៅថ្មី", "សរសេរកូដដំបូង Error ក្រហមពេញអេក្រង់", "មិនបោះបង់ទេបង ព្រោះខ្ញុំដឹងថាខ្ញុំខ្លាំង", "Excel · Python · Design — រៀនម្តងមួយៗ", "ពាក្យអង់គ្លេសម្ភៃថ្ងៃនេះ ស្អែកថែមម្ភៃទៀតៗ", "គ្មានលុយបង់សាលាថ្លៃ មិនមែនជាលេសនោះទេ", "Wi-Fi មួយ ចិត្តមួយ — អនាគតខ្ញុំសង់ខ្លួនឯង"];
+  var V2 = ["យប់ជ្រៅភ្លើងនៅភ្លឺ មិត្តភក្តិដេកលក់ហើយ", "ខ្ញុំនៅហាត់ Typing មិនដែលធុញទ្រាន់ឡើយ", "Quiz ខុសម្តង ពីរដង ខ្ញុំធ្វើម្តងទៀត", "មួយជំហាន មួយថ្ងៃ ក្តីស្រមៃកាន់តែជិត", "ថ្ងៃមួយ Portfolio និយាយជំនួសខ្ញុំ", "CV មួយទំព័រ តែពេញដោយការតស៊ូ", "ពីភូមិតូចមួយ ទៅការងារទូទាំងលោក", "រៀនឥតគិតថ្លៃ — តែតម្លៃវាធំណាស់ បងប្អូនអើយ!"];
+  var LYR = [].concat(["🎵 (Intro — ៤ ខណ្ឌ)", "🎵", "🎵", "🎵"], HOOK, V1, HOOK, V2, HOOK, ["🎵 (Outro)", "🎵", "🎵", "🎵"]), barTimes = [];
+
+  function walk() { var M = MOODS[st.mood]; melNote = Math.max(0, Math.min(M.scale.length - 1, melNote + pick([-2, -1, -1, 0, 1, 1, 2]))); return M.scale[melNote]; }
+  var mel2 = 4; function M2() { var sc = MOODS[st.mood].scale; mel2 = Math.max(2, Math.min(sc.length - 1, mel2 + pick([-1, 0, 1]))); return sc[mel2] + (R() < .5 ? 12 : 0); }
+
+
+  var st = lget("xc_music", { mood: "pplofi", vol: .55, layers: null });
+  if (!MOODS[st.mood]) st.mood = "pplofi";
+  try { localStorage.removeItem("xc_yt"); } catch (e) {}
+  var ctx, master, comp, verb, verbIn, analyser, noiseBuf, playing = false, timerId = null, sleepT = null, step = 0, nextT = 0, bar = 0, layerNodes = {}, melNote = 3;
+
+  function initAudio() {
+    if (ctx) return;
+    var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+    ctx = new AC();
+    master = ctx.createGain(); master.gain.value = 0;
+    comp = ctx.createDynamicsCompressor(); comp.threshold.value = -18; comp.ratio.value = 3;
+    analyser = ctx.createAnalyser(); analyser.fftSize = 64;
+    master.connect(comp); comp.connect(analyser); analyser.connect(ctx.destination);
+    verb = ctx.createConvolver(); var len = ctx.sampleRate * 2.6, ir = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (var c = 0; c < 2; c++) { var d = ir.getChannelData(c); for (var i = 0; i < len; i++) d[i] = (R() * 2 - 1) * Math.pow(1 - i / len, 2.6); }
+    verb.buffer = ir; verbIn = ctx.createGain(); verbIn.gain.value = .32; verbIn.connect(verb); verb.connect(master);
+    noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate); var nd = noiseBuf.getChannelData(0); for (var j = 0; j < nd.length; j++) nd[j] = R() * 2 - 1;
+  }
+  function out(node, wet) { node.connect(master); if (wet) { var s = ctx.createGain(); s.gain.value = wet; node.connect(s); s.connect(verbIn); } }
+  function env(g, t, a, peak, dec, sus, rel, dur) {
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(peak, t + a);
+    g.gain.setTargetAtTime(peak * sus, t + a, dec); g.gain.setTargetAtTime(0.0001, t + dur, rel);
+  }
+  /* ---------- instruments ---------- */
+  function ep(m, t, dur, v) {
+    var g = ctx.createGain(), f = ctx.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 1800;
+    [[1, "sine", 1], [2, "sine", .18], [1, "triangle", .25]].forEach(function (o) {
+      var osc = ctx.createOscillator(), og = ctx.createGain(); osc.type = o[1]; osc.frequency.value = mtof(m) * o[0]; osc.detune.value = (R() - .5) * 8;
+      og.gain.value = o[2]; osc.connect(og); og.connect(f); osc.start(t); osc.stop(t + dur + 2);
+    });
+    f.connect(g); env(g, t, .012, .16 * v, .5, .35, .35, dur); out(g, .35);
+  }
+  function pluck(m, t, v, bright) {
+    var osc = ctx.createOscillator(), g = ctx.createGain(), f = ctx.createBiquadFilter(); osc.type = "triangle"; osc.frequency.value = mtof(m);
+    f.type = "lowpass"; f.frequency.setValueAtTime(bright || 3200, t); f.frequency.exponentialRampToValueAtTime(700, t + .5);
+    osc.connect(f); f.connect(g); g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(.2 * v, t + .005); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.1);
+    osc.start(t); osc.stop(t + 1.2); out(g, .45);
+  }
+  function bell(m, t, v) {
+    var osc = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain(); osc.type = "sine"; o2.type = "sine"; osc.frequency.value = mtof(m); o2.frequency.value = mtof(m) * 2.76;
+    var g2 = ctx.createGain(); g2.gain.value = .25; o2.connect(g2); g2.connect(g); osc.connect(g);
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(.09 * v, t + .01); g.gain.exponentialRampToValueAtTime(0.0001, t + 3);
+    osc.start(t); o2.start(t); osc.stop(t + 3.1); o2.stop(t + 3.1); out(g, .7);
+  }
+  function pad(notes, t, dur, v, type) {
+    var f = ctx.createBiquadFilter(), g = ctx.createGain(); f.type = "lowpass"; f.frequency.value = type === "sawtooth" ? 900 : 1400; f.Q.value = .7;
+    notes.forEach(function (m) { [-6, 6].forEach(function (dt) { var o = ctx.createOscillator(); o.type = type || "triangle"; o.frequency.value = mtof(m); o.detune.value = dt; o.connect(f); o.start(t); o.stop(t + dur + 3); }); });
+    f.connect(g); g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(.035 * v, t + Math.min(1.6, dur / 3)); g.gain.setTargetAtTime(0.0001, t + dur, .9); out(g, .6);
+  }
+  function noiseHit(t, type, freq, q, peak, decay) {
+    var s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain(); s.buffer = noiseBuf; f.type = type; f.frequency.value = freq; f.Q.value = q || .7;
+    s.connect(f); f.connect(g); g.gain.setValueAtTime(peak, t); g.gain.exponentialRampToValueAtTime(0.0001, t + decay); s.start(t, R() * 1.5); s.stop(t + decay + .05); out(g, .15);
+  }
+  function kick(t, v, lo) {
+    var o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.setValueAtTime(lo ? 110 : 130, t); o.frequency.exponentialRampToValueAtTime(lo ? 60 : 45, t + .12);
+    g.gain.setValueAtTime(.55 * v, t); g.gain.exponentialRampToValueAtTime(0.0001, t + (lo ? .25 : .35)); o.connect(g); o.start(t); o.stop(t + .4); out(g, 0);
+  }
+  function snare(t, v) { noiseHit(t, "bandpass", 1900, .8, .22 * v, .18); var o = ctx.createOscillator(), g = ctx.createGain(); o.type = "triangle"; o.frequency.value = 185; g.gain.setValueAtTime(.12 * v, t); g.gain.exponentialRampToValueAtTime(0.0001, t + .09); o.connect(g); o.start(t); o.stop(t + .12); out(g, .2); }
+  function hat(t, v) { noiseHit(t, "highpass", 7500, .5, .06 * v, .045); }
+  /* Khmer-inspired timbres (approximations) */
+  function roneat(m, t, v) { /* xylophone-like: wooden bar = fundamental + inharmonic partial + click */
+    [[1, .9], [3.93, .18], [9.2, .05]].forEach(function (p) { var o = ctx.createOscillator(), g = ctx.createGain(); o.type = "sine"; o.frequency.value = mtof(m) * p[0];
+      g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(.16 * v * p[1], t + .003); g.gain.exponentialRampToValueAtTime(0.0001, t + (p[0] > 1 ? .12 : .55)); o.connect(g); out(g, .3); o.start(t); o.stop(t + .6); });
+    noiseHit(t, "bandpass", 2500, 1.5, .03 * v, .02);
+  }
+  function khim(m, t, v, reps, sx) { /* hammered dulcimer: bright double strings, optional tremolo strikes */
+    for (var r = 0; r < (reps || 1); r++) { var tt = t + r * (sx || .1) * .5, vv = v * (1 - r * .22);
+      [-5, 5].forEach(function (dt) { var o = ctx.createOscillator(), f = ctx.createBiquadFilter(), g = ctx.createGain(); o.type = "sawtooth"; o.frequency.value = mtof(m); o.detune.value = dt;
+        f.type = "lowpass"; f.frequency.setValueAtTime(3800, tt); f.frequency.exponentialRampToValueAtTime(900, tt + .6); o.connect(f); f.connect(g);
+        g.gain.setValueAtTime(0.0001, tt); g.gain.linearRampToValueAtTime(.05 * vv, tt + .004); g.gain.exponentialRampToValueAtTime(0.0001, tt + 1.4); out(g, .4); o.start(tt); o.stop(tt + 1.5); }); }
+  }
+  function tro(m, t, dur, v) { /* bowed fiddle: slide into note + delayed vibrato */
+    var o = ctx.createOscillator(), f = ctx.createBiquadFilter(), b = ctx.createBiquadFilter(), g = ctx.createGain(), l = ctx.createOscillator(), lg = ctx.createGain();
+    o.type = "sawtooth"; o.frequency.setValueAtTime(mtof(m) * .97, t); o.frequency.setTargetAtTime(mtof(m), t, .05);
+    l.frequency.value = 5.4; lg.gain.setValueAtTime(0, t); lg.gain.linearRampToValueAtTime(mtof(m) * .006, t + Math.min(.6, dur * .6)); l.connect(lg); lg.connect(o.frequency);
+    f.type = "lowpass"; f.frequency.value = 1700; b.type = "peaking"; b.frequency.value = 1000; b.gain.value = 5; o.connect(f); f.connect(b); b.connect(g);
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(.075 * v, t + .16); g.gain.setTargetAtTime(.055 * v, t + .2, .3); g.gain.setTargetAtTime(0.0001, t + dur, .18);
+    out(g, .45); o.start(t); l.start(t); o.stop(t + dur + 1); l.stop(t + dur + 1);
+  }
+  function chhing(t, closed, v) { /* small cymbals: open 'chhing' / closed 'chhap' */
+    v = v == null ? 1 : v; var f = ctx.createBiquadFilter(), g = ctx.createGain(); f.type = "highpass"; f.frequency.value = 4500; f.connect(g);
+    [2417, 3189, 4271, 5611, 7012].forEach(function (fr) { var o = ctx.createOscillator(); o.type = "square"; o.frequency.value = fr; o.connect(f); o.start(t); o.stop(t + (closed ? .1 : .9)); });
+    g.gain.setValueAtTime(.022 * v, t); g.gain.exponentialRampToValueAtTime(0.0001, t + (closed ? .07 : .8)); out(g, .25);
+  }
+  function skor(t, v, high) { /* barrel drum: low boom or high slap */
+    var o = ctx.createOscillator(), g = ctx.createGain(); o.type = "sine"; o.frequency.setValueAtTime(high ? 240 : 105, t); o.frequency.exponentialRampToValueAtTime(high ? 180 : 68, t + .15);
+    g.gain.setValueAtTime((high ? .22 : .45) * v, t); g.gain.exponentialRampToValueAtTime(0.0001, t + (high ? .14 : .42)); o.connect(g); o.start(t); o.stop(t + .5); out(g, .12);
+    if (high) noiseHit(t, "bandpass", 1200, 1.2, .06 * v, .05);
+  }
+  function organ(notes, t, dur, v) { /* 60s combo-organ stab */
+    var f = ctx.createBiquadFilter(), g = ctx.createGain(); f.type = "lowpass"; f.frequency.value = 2600; f.connect(g);
+    notes.forEach(function (m) { [1, 2].forEach(function (mul) { var o = ctx.createOscillator(); o.type = "square"; o.frequency.value = mtof(m) * mul; var og = ctx.createGain(); og.gain.value = mul === 1 ? 1 : .35; o.connect(og); og.connect(f); o.start(t); o.stop(t + dur + .2); }); });
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(.022 * v, t + .01); g.gain.setTargetAtTime(0.0001, t + dur, .05); out(g, .35);
+  }
+  function twang(m, t, v) { /* surf-style guitar pluck, heavy reverb */
+    var o = ctx.createOscillator(), f = ctx.createBiquadFilter(), g = ctx.createGain(); o.type = "sawtooth"; o.frequency.setValueAtTime(mtof(m) * .985, t); o.frequency.setTargetAtTime(mtof(m), t, .02);
+    f.type = "lowpass"; f.Q.value = 4; f.frequency.setValueAtTime(3000, t); f.frequency.exponentialRampToValueAtTime(800, t + .35); o.connect(f); f.connect(g);
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(.075 * v, t + .004); g.gain.exponentialRampToValueAtTime(0.0001, t + .9); out(g, .75); o.start(t); o.stop(t + 1);
+  }
+
+  function b808(m, t, dur, glide) { /* 808 bass: sine + soft saturation + optional pitch glide */
+    var o = ctx.createOscillator(), ws = ctx.createWaveShaper(), g = ctx.createGain(), cu = new Float32Array(256);
+    for (var k = 0; k < 256; k++) { var x = k / 128 - 1; cu[k] = Math.tanh(x * 2.2); } ws.curve = cu;
+    o.type = "sine"; var fr = mtof(m); o.frequency.setValueAtTime(glide ? fr * 1.5 : fr * 2.2, t); o.frequency.exponentialRampToValueAtTime(fr, t + (glide ? .18 : .04));
+    o.connect(ws); ws.connect(g); g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(.42, t + .006); g.gain.setTargetAtTime(.28, t + .05, .2); g.gain.setTargetAtTime(.0001, t + dur, .12);
+    out(g, 0); o.start(t); o.stop(t + dur + .8);
+  }
+  function clap(t, v) { for (var k = 0; k < 3; k++) noiseHit(t + k * .011, "bandpass", 1500, 1.1, .18 * v, k === 2 ? .2 : .03); }
+  function hatRoll(t, i, sx) {
+    if (R() < .17 && i % 4 !== 0) { var n = pick([3, 4, 6]); for (var k = 0; k < n; k++) hat(t + k * sx / n, .45 + k * .08); }
+    else hat(t, i % 2 === 0 ? .85 : .5);
+    if (i === 14 && R() < .5) noiseHit(t, "highpass", 6000, .5, .05, .3);
+  }
+  function scratch(t, sx) { /* vinyl scratch: band-passed noise with fast pitch sweeps */
+    var src = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain(); src.buffer = noiseBuf; f.type = "bandpass"; f.Q.value = 6;
+    f.frequency.setValueAtTime(400, t); f.frequency.exponentialRampToValueAtTime(2600, t + sx * .8); f.frequency.exponentialRampToValueAtTime(500, t + sx * 1.6); f.frequency.exponentialRampToValueAtTime(3000, t + sx * 2.2);
+    src.connect(f); f.connect(g); g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(.22, t + .01); g.gain.setValueAtTime(.22, t + sx * 2.1); g.gain.exponentialRampToValueAtTime(.0001, t + sx * 2.4);
+    out(g, .1); src.start(t); src.stop(t + sx * 2.5);
+  }
+
+  function stab(notes, t, dur, v, cut) { /* supersaw chord stab */
+    var f = ctx.createBiquadFilter(), g = ctx.createGain(); f.type = "lowpass"; f.frequency.setValueAtTime(cut || 2400, t); f.frequency.exponentialRampToValueAtTime((cut || 2400) * .35, t + dur); f.connect(g);
+    notes.forEach(function (m) { [-14, 0, 14].forEach(function (dt) { var o = ctx.createOscillator(); o.type = "sawtooth"; o.frequency.value = mtof(m); o.detune.value = dt; o.connect(f); o.start(t); o.stop(t + dur + .1); }); });
+    g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(.022 * v, t + .006); g.gain.setTargetAtTime(.0001, t + dur * .8, dur * .2); out(g, .3);
+  }
+  function riser(t, dur) { var s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain(); s.buffer = noiseBuf; s.loop = true; f.type = "highpass";
+    f.frequency.setValueAtTime(250, t); f.frequency.exponentialRampToValueAtTime(8000, t + dur); g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.16, t + dur); g.gain.setValueAtTime(.0001, t + dur + .02);
+    s.connect(f); f.connect(g); out(g, .3); s.start(t); s.stop(t + dur + .05);
+    var o = ctx.createOscillator(), og = ctx.createGain(); o.type = "sawtooth"; o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(880, t + dur);
+    og.gain.setValueAtTime(.0001, t); og.gain.exponentialRampToValueAtTime(.025, t + dur); og.gain.setValueAtTime(.0001, t + dur + .02); o.connect(og); out(og, .4); o.start(t); o.stop(t + dur + .05); }
+  function crash(t) { noiseHit(t, "highpass", 4500, .5, .2, 1.6); }
+  function cowbell(m, t, v) { var f = ctx.createBiquadFilter(), g = ctx.createGain(); f.type = "bandpass"; f.frequency.value = mtof(m) * 1.4; f.Q.value = 3; f.connect(g);
+    [1, 1.48].forEach(function (k) { var o = ctx.createOscillator(); o.type = "square"; o.frequency.value = mtof(m) * k; o.connect(f); o.start(t); o.stop(t + .35); });
+    g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(.16 * v, t + .003); g.gain.exponentialRampToValueAtTime(.0001, t + .3); out(g, .35); }
+  function chop(m, t, v, vow) { /* synthetic "vocal chop" (formant filtered saw, no real voice) */
+    var o = ctx.createOscillator(), g = ctx.createGain(), F = vow === "o" ? [450, 800] : [800, 1200]; o.type = "sawtooth"; o.frequency.setValueAtTime(mtof(m), t);
+    F.forEach(function (fr, k) { var b = ctx.createBiquadFilter(); b.type = "bandpass"; b.frequency.value = fr; b.Q.value = 8; var bg = ctx.createGain(); bg.gain.value = k ? .6 : 1; o.connect(b); b.connect(bg); bg.connect(g); });
+    g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(.32 * v, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + .22); out(g, .5); o.start(t); o.stop(t + .25); }
+  function wob(m, t, dur, rate) { /* wobble bass: saw+square through LFO-swept lowpass */
+    var f = ctx.createBiquadFilter(), g = ctx.createGain(), l = ctx.createOscillator(), lg = ctx.createGain(); f.type = "lowpass"; f.Q.value = 6; f.frequency.value = 600;
+    l.frequency.value = rate / (60 / MOODS[st.mood].bpm); lg.gain.value = 520; l.connect(lg); lg.connect(f.frequency);
+    ["sawtooth", "square"].forEach(function (ty, k) { var o = ctx.createOscillator(); o.type = ty; o.frequency.value = mtof(m) * (k ? 1.005 : 1); o.connect(f); o.start(t); o.stop(t + dur + .05); });
+    f.connect(g); g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(.09, t + .01); g.gain.setValueAtTime(.09, t + dur - .03); g.gain.linearRampToValueAtTime(.0001, t + dur); out(g, .05); l.start(t); l.stop(t + dur + .05); }
+  function bass(m, t, v) { var o = ctx.createOscillator(), g = ctx.createGain(), f = ctx.createBiquadFilter(); o.type = "triangle"; o.frequency.value = mtof(m); f.type = "lowpass"; f.frequency.value = 600;
+    o.connect(f); f.connect(g); g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(.22 * v, t + .01); g.gain.exponentialRampToValueAtTime(0.0001, t + .45); out(g, 0); o.start(t); o.stop(t + .5); }
+
+  /* ---------- texture layers ---------- */
+  function layer(name, on) {
+    if (layerNodes[name]) { try { layerNodes[name].g.gain.setTargetAtTime(0.0001, ctx.currentTime, .4); var n = layerNodes[name]; setTimeout(function () { n.stop(); }, 1500); } catch (e) {} delete layerNodes[name]; }
+    if (!on || !ctx) return;
+    var s = ctx.createBufferSource(), g = ctx.createGain(), nodes = [s]; s.loop = true; g.gain.value = 0.0001;
+    if (name === "vinyl") {
+      var b = ctx.createBuffer(1, ctx.sampleRate * 3, ctx.sampleRate), d = b.getChannelData(0);
+      for (var i = 0; i < d.length; i++) d[i] = (R() * 2 - 1) * .012 + (R() < .0009 ? (R() * 2 - 1) * .7 : 0);
+      s.buffer = b; var hp = ctx.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 900; s.connect(hp); hp.connect(g); g.gain.setTargetAtTime(.5, ctx.currentTime, .5);
+    } else if (name === "rain") {
+      s.buffer = noiseBuf; var lp = ctx.createBiquadFilter(), hp2 = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 1400; hp2.type = "highpass"; hp2.frequency.value = 350;
+      s.connect(hp2); hp2.connect(lp); lp.connect(g); g.gain.setTargetAtTime(.16, ctx.currentTime, 1);
+    } else if (name === "waves") {
+      s.buffer = noiseBuf; var lp2 = ctx.createBiquadFilter(); lp2.type = "lowpass"; lp2.frequency.value = 650; s.connect(lp2); lp2.connect(g);
+      var lfo = ctx.createOscillator(), lg = ctx.createGain(); lfo.frequency.value = .11; lg.gain.value = .09; lfo.connect(lg); lg.connect(g.gain); lfo.start(); nodes.push(lfo);
+      g.gain.setTargetAtTime(.11, ctx.currentTime, 1);
+    }
+    g.connect(master); s.start();
+    layerNodes[name] = { g: g, stop: function () { nodes.forEach(function (n) { try { n.stop(); } catch (e) {} }); } };
+  }
+  /* ---------- sequencer ---------- */
+  function schedule(t, s) {
+    var M = MOODS[st.mood], bars = M.bars || 1, chord = M.chords[Math.floor(bar / bars) % M.chords.length], i = s % 16, firstOfChord = i === 0 && bar % bars === 0, chordDur = 60 / M.bpm * 4 * bars;
+    if (i === 0) { barTimes.push([t, bar]); if (barTimes.length > 8) barTimes.shift(); }
+    if (M.fn) { M.fn(t, i, chord, firstOfChord, chordDur, 60 / M.bpm / 4); if (i === 15) bar++; return; }
+    if (M.inst === "ep") { if (firstOfChord) chord.forEach(function (m, k) { ep(m, t + k * .012, 60 / M.bpm * 2.2, .9); }); if (i === 10 && R() < .5) chord.slice(1).forEach(function (m) { ep(m, t, .35, .55); }); }
+    if (M.inst === "arp") { if (firstOfChord) pad(chord.slice(0, 3), t, chordDur, .8); if (i % 2 === 0 && R() < .75) { var a = chord[(i / 2) % chord.length] + 12; ep(a, t, .9, .6); } }
+    if (M.inst === "pad") { if (firstOfChord) { pad(chord, t, chordDur, 1.1); pad([chord[0] - 12], t, chordDur, .9, "sine"); } }
+    if (M.inst === "pluck") { if (firstOfChord) pad([chord[0] - 12, chord[1] - 12], t, chordDur, .7, "sine"); }
+    if (M.inst === "synth") { if (firstOfChord) pad(chord, t, chordDur, 1, "sawtooth"); if (i % 2 === 0) pluck(chord[(i / 2) % chord.length] + 12, t, .45, 1800); }
+    /* melody: random walk over the mood's scale */
+    if (R() < M.mel && (i % 2 === 0 || R() < .3)) {
+      melNote = Math.max(0, Math.min(M.scale.length - 1, melNote + pick([-2, -1, -1, 0, 1, 1, 2])));
+      var mn = M.scale[melNote];
+      if (M.inst === "pluck" || M.inst === "synth") pluck(mn, t, .8); else if (M.inst === "pad") bell(mn, t, .9); else ep(mn, t, .6, .7);
+    }
+    if (M.inst === "pluck" && i === 0 && R() < .5) bell(M.scale[M.scale.length - 1], t, .6);
+    /* drums */
+    if (M.drums === "lofi") { if (i === 0 || i === 7 || (i === 10 && R() < .6)) kick(t, .9); if (i === 4 || i === 12) snare(t, .8); if (i % 2 === 0) hat(t, i % 4 === 0 ? 1 : .6); else if (R() < .15) hat(t, .35); }
+    if (M.drums === "hand") { if (i === 0 || i === 6 || i === 8) kick(t, .55, 1); if (i === 12) noiseHit(t, "bandpass", 900, 2, .1, .12); if (i % 4 === 2) hat(t, .4); }
+    if (M.drums === "synth") { if (i === 0 || i === 8) kick(t, .8); if (i === 4 || i === 12) snare(t, .7); if (i % 2 === 1) hat(t, .45); }
+    if (i === 15) bar++;
+  }
+  function tick() {
+    var M = MOODS[st.mood], sixteenth = 60 / M.bpm / 4;
+    while (nextT < ctx.currentTime + .15) { var sw = (step % 2) ? M.swing * sixteenth : 0; schedule(nextT + sw, step); nextT += sixteenth; step++; }
+  }
+  function applyLayers() { var M = MOODS[st.mood]; ["vinyl", "rain", "waves"].forEach(function (k) { layer(k, playing && !!(st.layers ? st.layers[k] : M.layers[k])); }); }
+  function play() {
+    initAudio(); if (!ctx) { alert("Browser នេះមិនគាំទ្រ Web Audio"); return; }
+    ctx.resume(); playing = true; step = 0; bar = 0; nextT = ctx.currentTime + .1;
+    master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setTargetAtTime(st.vol * .9, ctx.currentTime, .6);
+    clearInterval(timerId); timerId = setInterval(tick, 25); applyLayers(); ui();
+    if ("mediaSession" in navigator) { try { navigator.mediaSession.metadata = new MediaMetadata({ title: MOODS[st.mood].n, artist: "xCenBar Chill (generative)", album: "xCenBar Rean Free" }); navigator.mediaSession.setActionHandler("play", play); navigator.mediaSession.setActionHandler("pause", pause); } catch (e) {} }
+  }
+  function pause() {
+    if (!ctx) return; playing = false; clearInterval(timerId); master.gain.setTargetAtTime(0.0001, ctx.currentTime, .3);
+    Object.keys(layerNodes).forEach(function (k) { layer(k, false); }); clearTimeout(sleepT); sleepT = null; ui();
+  }
+  function setMood(k) { st.mood = k; st.layers = null; lset("xc_music", st); if (playing) { bar = 0; step = 0; nextT = ctx.currentTime + .1; applyLayers(); } ui(); }
+
+  /* ---------- UI ---------- */
+  var css = ".xcm-fab{position:fixed;left:max(14px,env(safe-area-inset-left,0px));bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:71;width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:linear-gradient(135deg,#5f3dc4,#0ca678);color:#fff;font-size:22px;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.28);display:grid;place-items:center}" +
+    ".xcm-fab.on{animation:xcmp 2.4s ease-in-out infinite}@keyframes xcmp{50%{transform:scale(1.08)}}@media (prefers-reduced-motion:reduce){.xcm-fab.on{animation:none}}" +
+    "@media (max-width:760px){.xcm-fab{bottom:calc(76px + env(safe-area-inset-bottom,0px))}}" +
+    ".xcm-p{position:fixed;left:max(14px,env(safe-area-inset-left,0px));bottom:calc(80px + env(safe-area-inset-bottom,0px));z-index:96;width:min(340px,calc(100vw - 28px));max-height:calc(100vh - 120px);overflow:auto;border-radius:18px;padding:14px;background:rgba(18,16,34,.94);color:#f1f3f5;box-shadow:0 18px 50px rgba(0,0,0,.45);font-family:'Kantumruy Pro',Inter,system-ui,sans-serif;display:none;backdrop-filter:blur(12px)}" +
+    "@media (max-width:760px){.xcm-p{bottom:calc(134px + env(safe-area-inset-bottom,0px))}}" +
+    ".xcm-p.open{display:block}.xcm-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.xcm-h b{font-size:15px}.xcm-x{background:none;border:0;color:#adb5bd;font-size:18px;cursor:pointer}" +
+    ".xcm-m{display:grid;grid-template-columns:1fr 1fr;gap:6px}.xcm-m button{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:inherit;border-radius:12px;padding:8px;text-align:left;cursor:pointer;font:inherit;font-size:12.5px;line-height:1.35}.xcm-m button.on{border-color:#63e6be;background:rgba(99,230,190,.14)}.xcm-m small{display:block;color:#adb5bd;font-size:10.5px}" +
+    ".xcm-c{display:flex;align-items:center;gap:10px;margin:12px 0 6px}.xcm-pl{width:52px;height:52px;border-radius:50%;border:0;background:#63e6be;color:#0b1f1a;font-size:22px;cursor:pointer;flex:none}" +
+    ".xcm-c input[type=range]{flex:1;accent-color:#63e6be}.xcm-l{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.xcm-l label,.xcm-t{font-size:12px;background:rgba(255,255,255,.07);border-radius:999px;padding:4px 9px;cursor:pointer}.xcm-t{border:0;color:inherit;font:inherit;font-size:12px}" +
+    ".xcm-g{font-size:12px;color:#ced4da;margin:8px 2px 5px;font-weight:700}.xcm-p .xcm-m+.xcm-g{margin-top:10px}.xcm-c{margin-top:2px!important}" +
+    ".xcm-ly{background:rgba(255,255,255,.06);border-radius:12px;padding:8px 10px;margin:6px 0}.xcm-lt{font-size:10.5px;color:#adb5bd;margin-bottom:4px}.xcm-lw div{font-size:12.5px;line-height:1.6;color:#868e96;transition:all .25s}.xcm-lw div.now{color:#fff;font-size:15px;font-weight:700}.xcm-lw div.nx{color:#ced4da}" +
+    ".xcm-cv{width:100%;height:36px;display:block;margin:4px 0}.xcm-n{font-size:10.5px;color:#868e96;margin-top:6px;line-height:1.5}";
+  var s = document.createElement("style"); s.textContent = css; document.head.appendChild(s);
+  function mbtn(k) { var M = MOODS[k]; return '<button type="button" data-k="' + k + '">' + M.e + " <b>" + M.n + "</b><small>" + M.km + "</small></button>"; }
+  var fab = document.createElement("button"); fab.className = "xcm-fab"; fab.type = "button"; fab.setAttribute("aria-label", "Chill Music"); fab.title = "🎧 Chill Music"; fab.textContent = "🎧";
+  var p = document.createElement("div"); p.className = "xcm-p"; p.setAttribute("role", "dialog"); p.setAttribute("aria-label", "Chill Music player");
+  p.innerHTML = '<div class="xcm-h"><b>🎧 Chill Music</b><button class="xcm-x" type="button" aria-label="បិទ">✕</button></div>' +
+    '<div class="xcm-c"><button class="xcm-pl" type="button" aria-label="Play">▶</button><span aria-hidden="true">🔈</span><input type="range" min="0" max="1" step=".01" aria-label="កម្រិតសំឡេង"><span aria-hidden="true">🔊</span></div>' +
+    '<canvas class="xcm-cv" width="300" height="36"></canvas>' +
+    '<div class="xcm-ly" hidden><div class="xcm-lt">🎤 «រៀនដើម្បីថ្ងៃស្អែក» — Rap ខ្មែរ (និពន្ធថ្មីសម្រាប់ xCenBar) · ច្រៀងតាមបន្ទាត់ពណ៌</div><div class="xcm-lw"></div></div>' +
+    '<div class="xcm-g">🇰🇭 ភ្លេងបែបខ្មែរ (ពីដើម &amp; សម័យ)</div><div class="xcm-m">' + ORDER_KH.map(mbtn).join("") + '</div><div class="xcm-g">🔥 Remix / EDM (Intro → Build → DROP)</div><div class="xcm-m">' + ORDER_RX.map(mbtn).join("") + '</div><div class="xcm-g">🎤 Hip-Hop / Rap Beats</div><div class="xcm-m">' + ORDER_HH.map(mbtn).join("") + '</div><div class="xcm-g">🌙 Chill ទូទៅ</div><div class="xcm-m">' + ORDER.map(mbtn).join("") + "</div>" +
+    
+    '<div class="xcm-l"><label><input type="checkbox" data-l="vinyl"> 💿 Vinyl</label><label><input type="checkbox" data-l="rain"> 🌧️ ភ្លៀង</label><label><input type="checkbox" data-l="waves"> 🌊 រលក</label></div>' +
+    '<div class="xcm-l"><span style="font-size:12px;padding:4px 0">⏲️ បិទក្រោយ៖</span>' + [15, 30, 60].map(function (m) { return '<button class="xcm-t" type="button" data-t="' + m + '">' + m + " នាទី</button>"; }).join("") + '<span class="xcm-tl" style="font-size:12px;padding:4px 0"></span></div>' +
+    '<div class="xcm-n">🎼 ភ្លេងនិពន្ធដោយកុំព្យូទ័រភ្លាមៗ (Generative) — មិនមែនបទចម្រៀងមានកម្មសិទ្ធិ ហើយមិនប្រើ Internet។ សំឡេងរនាត ឃឹម ទ្រ ឈិង ស្គរ ជាការក្លែងសំឡេងដោយ Synth (បំផុសគំនិតពីតន្ត្រីខ្មែរ មិនមែនថតពីឧបករណ៍ពិត)។ iPhone៖ បើកកុងតាក់ Silent ចេញ ដើម្បីឮសំឡេង។</div>';
+  document.body.appendChild(fab); document.body.appendChild(p);
+  var plb = p.querySelector(".xcm-pl"), vol = p.querySelector("input[type=range]"), cv = p.querySelector(".xcm-cv"), tl = p.querySelector(".xcm-tl");
+  vol.value = st.vol;
+  function ui() {
+    fab.classList.toggle("on", playing); fab.textContent = playing ? "🎶" : "🎧"; plb.textContent = playing ? "❚❚" : "▶"; plb.setAttribute("aria-label", playing ? "Pause" : "Play");
+    p.querySelectorAll(".xcm-m button").forEach(function (b) { b.classList.toggle("on", b.dataset.k === st.mood); b.setAttribute("aria-pressed", b.dataset.k === st.mood); });
+    var M = MOODS[st.mood]; p.querySelectorAll("[data-l]").forEach(function (c) { c.checked = !!(st.layers ? st.layers[c.dataset.l] : M.layers[c.dataset.l]); });
+  }
+  fab.onclick = function () { p.classList.toggle("open"); if (p.classList.contains("open")) draw(); };
+  p.querySelector(".xcm-x").onclick = function () { p.classList.remove("open"); };
+  plb.onclick = function () { playing ? pause() : play(); };
+  p.querySelectorAll(".xcm-m").forEach(function (box) { box.onclick = function (e) { var b = e.target.closest("button[data-k]"); if (!b) return; setMood(b.dataset.k); if (!playing) play(); }; });
+  vol.oninput = function () { st.vol = +vol.value; lset("xc_music", st); if (ctx && playing) master.gain.setTargetAtTime(st.vol * .9, ctx.currentTime, .1); };
+  p.querySelectorAll("[data-l]").forEach(function (c) { c.onchange = function () { var M = MOODS[st.mood]; st.layers = st.layers || { vinyl: !!M.layers.vinyl, rain: !!M.layers.rain, waves: !!M.layers.waves }; st.layers[c.dataset.l] = c.checked; lset("xc_music", st); if (playing) layer(c.dataset.l, c.checked); }; });
+  p.querySelectorAll(".xcm-t").forEach(function (b) { b.onclick = function () { clearTimeout(sleepT); var m = +b.dataset.t, end = Date.now() + m * 60000; if (!playing) play();
+    sleepT = setTimeout(pause, m * 60000); var iv = setInterval(function () { if (!sleepT) { tl.textContent = ""; clearInterval(iv); return; } var r = Math.max(0, end - Date.now()); tl.textContent = "⏳ " + Math.floor(r / 60000) + ":" + String(Math.floor(r / 1000) % 60).padStart(2, "0"); }, 1000); }; });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") p.classList.remove("open"); });
+  var g2 = cv.getContext("2d");
+  function draw() {
+    if (!p.classList.contains("open")) return; requestAnimationFrame(draw);
+    lyr();
+    var w = cv.width, h = cv.height; g2.clearRect(0, 0, w, h); if (!analyser) return;
+    var d = new Uint8Array(analyser.frequencyBinCount); analyser.getByteFrequencyData(d); var n = d.length, bw = w / n;
+    for (var i = 0; i < n; i++) { var v = d[i] / 255 * h; g2.fillStyle = "hsl(" + (160 + i * 4) + ",70%,60%)"; g2.fillRect(i * bw + 1, h - v, bw - 2, v); }
+  }
+  var ly = p.querySelector(".xcm-ly"), lw = p.querySelector(".xcm-lw"), lastLine = -2;
+  lw.addEventListener("click", function (e) { if (e.target.closest("[data-jump]") && playing) { var b = bar % 32; bar = bar - b + (b < 4 ? 4 : b < 16 ? 20 : b < 20 ? 20 : 32 + 4); lastLine = -2; } });
+  function lyr() {
+    var M = MOODS[st.mood];
+    if (M.rx) { ly.hidden = false; var cb = -1; if (playing && ctx) for (var q = barTimes.length - 1; q >= 0; q--) if (barTimes[q][0] <= ctx.currentTime) { cb = barTimes[q][1]; break; }
+      var SN = { intro: "🎬 INTRO", build: "⏫ BUILD-UP…", drop: "🔥🔥 DROP 🔥🔥", "break": "🌙 BREAK" }, cur = cb < 0 ? "" : (function () { var b = cb % 32; return b < 4 ? "intro" : b < 8 ? "build" : b < 16 ? "drop" : b < 20 ? "break" : b < 24 ? "build" : "drop"; })();
+      var key = "rx" + cur + (cb % 32); if (key === lastLine) return; lastLine = key;
+      ly.querySelector(".xcm-lt").textContent = "🔥 " + M.n + " — Remix ថ្មី (និពន្ធដោយកុំព្យូទ័រ)";
+      lw.innerHTML = (cur ? '<div class="now">' + SN[cur] + '</div><div>ខណ្ឌ ' + ((cb % 32) + 1) + " / 32</div>" : "<div>ចុច ▶ ដើម្បីចាក់</div>") + (playing ? '<button type="button" class="xcm-t" data-jump="1" style="margin-top:4px">⏩ រំលងទៅ Build → DROP</button>' : ""); return; }
+    ly.hidden = !M.rap; if (!M.rap) return;
+    var cur = -1; if (playing && ctx) for (var k = barTimes.length - 1; k >= 0; k--) if (barTimes[k][0] <= ctx.currentTime) { cur = barTimes[k][1]; break; }
+    var line = cur < 0 ? -1 : cur % LYR.length; if (line === lastLine) return; lastLine = line;
+    var a = Math.max(0, line), rows = [a - 1, a, a + 1, a + 2].filter(function (x) { return x >= 0 && x < LYR.length; });
+    ly.querySelector(".xcm-lt").textContent = "🎤 «រៀនដើម្បីថ្ងៃស្អែក» — Rap ខ្មែរ (និពន្ធថ្មីសម្រាប់ xCenBar) · ច្រៀងតាមបន្ទាត់ពណ៌"; lw.innerHTML = rows.map(function (x) { return '<div class="' + (x === line ? "now" : x === line + 1 ? "nx" : "") + '">' + LYR[x] + "</div>"; }).join("");
+  }
+  ui();
+  window.XCMusic = { play: play, pause: pause, mood: setMood, moods: ORDER, jump: function (b) { bar = b; } };
+})();
+
+/* ===== xCenBar Welcome: TTS greeting (English · ខ្មែរ · Français) + original remix jingle =====
+   New account  → "Welcome to xCenBar Rean Free"
+   Returning    → "Welcome back to xCenBar Rean Free" (on the first tap of each visit — browsers block sound before a tap) */
+(function () {
+  if (window.XCWelcome || !window.XC_SKIN_SITE) return;
+  function lget(k, d) { try { var v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } }
+  function lset(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function sget(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
+  function sset(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
+  var cfg = lget("xc_welcome", { on: true, lang: "all", music: true });
+  var esc = function (s) { return String(s || "").replace(/[<>&"]/g, ""); };
+
+  /* text shown · text spoken (spelled so voices pronounce the brand) */
+  var L = {
+    en: { code: "en", flag: "🇬🇧", n: "English",
+          neu: function (n) { return ["Welcome to xCenBar Rean Free" + (n ? ", " + n : "") + "!", "Welcome to Ex Sen Bar, Rien Free" + (n ? ", " + n : "") + "!"]; },
+          back: function (n) { return ["Welcome back to xCenBar Rean Free" + (n ? ", " + n : "") + "!", "Welcome back to Ex Sen Bar, Rien Free" + (n ? ", " + n : "") + "!"]; } },
+    km: { code: "km", flag: "🇰🇭", n: "ខ្មែរ",
+          neu: function (n) { return ["សូមស្វាគមន៍មកកាន់ xCenBar Rean Free" + (n ? " " + n : "") + "!", "សូមស្វាគមន៍មកកាន់ អ៊ិចសេនបារ រៀនហ្វ្រី" + (n ? " " + n : "")]; },
+          back: function (n) { return ["សូមស្វាគមន៍ការត្រឡប់មកវិញ" + (n ? " " + n : "") + " — xCenBar Rean Free!", "សូមស្វាគមន៍ការត្រឡប់មកវិញ" + (n ? " " + n : "") + " អ៊ិចសេនបារ រៀនហ្វ្រី"]; } },
+    fr: { code: "fr", flag: "🇫🇷", n: "Français",
+          neu: function (n) { return ["Bienvenue sur xCenBar Rean Free" + (n ? ", " + n : "") + " !", "Bienvenue sur Ex Senne Bar, Rienne Free" + (n ? ", " + n : "") + " !"]; },
+          back: function (n) { return ["Bon retour sur xCenBar Rean Free" + (n ? ", " + n : "") + " !", "Bon retour sur Ex Senne Bar, Rienne Free" + (n ? ", " + n : "") + " !"]; } }
+  };
+  var TTS = window.speechSynthesis || null;
+  function voiceFor(code) {
+    if (!TTS) return null; var vs = TTS.getVoices() || [];
+    return vs.filter(function (v) { return (v.lang || "").toLowerCase().indexOf(code) === 0; }).sort(function (a, b) { return (b.localService ? 1 : 0) - (a.localService ? 1 : 0); })[0] || null;
+  }
+  if (TTS && TTS.onvoiceschanged !== undefined) TTS.onvoiceschanged = function () { settingsNote(); };
+
+  /* ---------- remix jingle (original, synthesized) ---------- */
+  var ctx, mix;
+  function audio() {
+    if (!ctx) { var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; ctx = new AC(); }
+    if (ctx.state === "suspended") ctx.resume(); return ctx;
+  }
+  function noise(sec) { var b = ctx.createBuffer(1, ctx.sampleRate * sec, ctx.sampleRate), d = b.getChannelData(0); for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; return b; }
+  function tone(type, f, t, dur, g0, dest, f2) {
+    var o = ctx.createOscillator(), g = ctx.createGain(); o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(g0, t + .008); g.gain.exponentialRampToValueAtTime(0.0001, t + dur); o.connect(g); g.connect(dest); o.start(t); o.stop(t + dur + .05);
+  }
+  function nz(t, dur, type, freq, g0, dest, f2) {
+    var s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain(); s.buffer = noise(Math.max(.1, dur + .1)); f.type = type; f.frequency.setValueAtTime(freq, t); if (f2) f.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(g0, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur); s.connect(f); f.connect(g); g.connect(dest); s.start(t); s.stop(t + dur + .05);
+  }
+  function jingle(bars) {
+    if (!audio()) return 0;
+    var t0 = ctx.currentTime + .05, spb = .5, dest; mix = ctx.createGain(); mix.gain.value = .8;
+    var comp = ctx.createDynamicsCompressor(); mix.connect(comp); comp.connect(ctx.destination); dest = mix;
+    /* riser */
+    var r = ctx.createBufferSource(), rf = ctx.createBiquadFilter(), rg = ctx.createGain(); r.buffer = noise(1.3); rf.type = "highpass"; rf.frequency.setValueAtTime(300, t0); rf.frequency.exponentialRampToValueAtTime(7000, t0 + 1.2);
+    rg.gain.setValueAtTime(.0001, t0); rg.gain.exponentialRampToValueAtTime(.25, t0 + 1.15); rg.gain.exponentialRampToValueAtTime(.0001, t0 + 1.25); r.connect(rf); rf.connect(rg); rg.connect(dest); r.start(t0); r.stop(t0 + 1.3);
+    tone("sawtooth", 110, t0, 1.2, .05, dest, 880);
+    var d = t0 + 1.2; /* drop */
+    tone("sine", 90, d, .9, .7, dest, 38); nz(d, 1.4, "highpass", 5000, .18, dest); nz(d, .25, "bandpass", 1500, .35, dest);
+    var chords = [[60, 64, 67, 71], [57, 60, 64, 67], [53, 57, 60, 64], [55, 59, 62, 67]], motif = [72, 76, 79, 84, 79, 76, 72, 79];
+    var mt = function (m) { return 440 * Math.pow(2, (m - 69) / 12); };
+    for (var b = 0; b < (bars || 2); b++) for (var s = 0; s < 8; s++) {
+      var t = d + (b * 8 + s) * spb / 2, beat = s % 2 === 0;
+      if (s === 0 || s === 4 || (s === 5 && b % 2)) tone("sine", 140, t, .32, .65, dest, 45);
+      if (s === 2 || s === 6) { nz(t, .2, "bandpass", 1600, .3, dest); nz(t + .012, .15, "bandpass", 1400, .2, dest); }
+      nz(t, .05, "highpass", 8000, beat ? .07 : .04, dest);
+      if (!beat) chords[(b * 2 + (s > 3 ? 1 : 0)) % 4].forEach(function (m) { [-8, 8].forEach(function (dt) { var o = ctx.createOscillator(), g = ctx.createGain(), f = ctx.createBiquadFilter(); o.type = "sawtooth"; o.frequency.value = mt(m); o.detune.value = dt; f.type = "lowpass"; f.frequency.value = 2400;
+        g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(.025, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + .22); o.connect(f); f.connect(g); g.connect(dest); o.start(t); o.stop(t + .25); }); });
+      tone("square", mt(motif[s] + (b % 2 ? 2 : 0)), t, .18, .035, dest);
+      if (beat) tone("triangle", mt(chords[(b * 2 + (s > 3 ? 1 : 0)) % 4][0] - 24), t, .3, .3, dest);
+    }
+    var end = d + (bars || 2) * 4 * spb; nz(end, 1.2, "highpass", 4000, .12, dest); tone("sine", mt(48), end, 1.2, .25, dest);
+    return (end - ctx.currentTime + 1) * 1000;
+  }
+  function duck(on) { if (mix && ctx) mix.gain.setTargetAtTime(on ? .28 : .8, ctx.currentTime, .08); }
+
+  /* ---------- overlay ---------- */
+  var css = ".xcw{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;pointer-events:none;font-family:'Kantumruy Pro',Inter,system-ui,sans-serif}" +
+    ".xcw-c{pointer-events:auto;max-width:min(520px,calc(100vw - 32px));text-align:center;padding:22px 22px 16px;border-radius:24px;background:radial-gradient(120% 140% at 50% 0%,rgba(124,58,237,.96),rgba(17,12,40,.97) 70%);color:#fff;box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.15) inset;animation:xcwIn .5s cubic-bezier(.2,1.4,.4,1)}" +
+    "@keyframes xcwIn{from{transform:scale(.6);opacity:0}}.xcw.out .xcw-c{transition:.4s;transform:scale(.9);opacity:0}" +
+    ".xcw-w{font:900 clamp(34px,9vw,58px)/1 Inter,system-ui,sans-serif;letter-spacing:2px;background:linear-gradient(90deg,#ffd43b,#ff6b9a,#63e6be,#4dabf7);-webkit-background-clip:text;background-clip:text;color:transparent;animation:xcwG 1.6s steps(2) 1.2s 3}" +
+    "@keyframes xcwG{50%{transform:translateX(-3px) skewX(-8deg);text-shadow:4px 0 rgba(0,240,255,.6),-4px 0 rgba(255,43,214,.6)}}" +
+    ".xcw-b{font-weight:800;font-size:18px;margin:6px 0 2px}.xcw-n{font-size:15px;color:#ffe066;font-weight:700}" +
+    ".xcw-s{min-height:52px;margin:12px 0 6px;font-size:16px;line-height:1.5;color:#f1f3f5}.xcw-s small{display:block;font-size:11px;color:#b197fc}" +
+    ".xcw-eq{display:flex;justify-content:center;gap:4px;height:26px;align-items:flex-end;margin:4px 0 10px}.xcw-eq i{width:6px;border-radius:3px;background:#63e6be;animation:xcwE .5s ease-in-out infinite alternate}" +
+    ".xcw-tap{background:#63e6be!important;color:#0b1f1a!important;font-weight:800;animation:xcwP 1.2s ease-in-out infinite}@keyframes xcwP{50%{transform:scale(1.07)}}" +
+    "@keyframes xcwE{from{height:4px}to{height:26px}}.xcw-x{border:0;background:rgba(255,255,255,.14);color:#fff;border-radius:999px;padding:7px 14px;font:inherit;font-size:12.5px;cursor:pointer;margin:0 4px}" +
+    "@media (prefers-reduced-motion:reduce){.xcw-c,.xcw-w,.xcw-eq i{animation:none!important}}";
+  var st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
+  var ov = null, timer = null;
+  function close() { clearInterval(cycle); if (TTS) TTS.cancel(); if (mix && ctx) { mix.gain.setTargetAtTime(.0001, ctx.currentTime, .15); } clearTimeout(timer); if (!ov) return; var o = ov; ov = null; o.classList.add("out"); setTimeout(function () { o.remove(); }, 420); }
+  function show(kind, name) {
+    if (ov) ov.remove(); ov = document.createElement("div"); ov.className = "xcw"; ov.setAttribute("role", "status"); ov.setAttribute("aria-live", "polite");
+    ov.innerHTML = '<div class="xcw-c"><div class="xcw-w">' + (kind === "back" ? "WELCOME BACK" : "WELCOME") + '</div><div class="xcw-b">to xCenBar Rean Free</div>' + (name ? '<div class="xcw-n">✨ ' + esc(name) + " ✨</div>" : "") +
+      '<div class="xcw-s"></div><div class="xcw-eq" aria-hidden="true">' + Array.from({ length: 9 }, function (_, i) { return '<i style="animation-delay:' + (i * .07) + 's"></i>'; }).join("") + "</div>" +
+      '<button class="xcw-x" type="button" data-a="mute">🔇 បិទសំឡេងស្វាគមន៍</button><button class="xcw-x" type="button" data-a="close">✕ បិទ</button></div>';
+    document.body.appendChild(ov);
+    ov.querySelector('[data-a="close"]').onclick = close;
+    ov.querySelector('[data-a="mute"]').onclick = function () { cfg.on = false; lset("xc_welcome", cfg); settingsUI(); close(); };
+  }
+  function caption(text, lang) { if (!ov) return; var s = ov.querySelector(".xcw-s"); s.innerHTML = esc(text) + "<small>" + L[lang].flag + " " + L[lang].n + "</small>"; }
+
+  /* ---------- greet ---------- */
+  function greet(kind, name, force) {
+    if (!force && !cfg.on) return; sset("xc_wb", "1");
+    var langs = cfg.lang === "all" ? ["en", "km", "fr"] : [cfg.lang];
+    show(kind, name);
+    var musicMs = cfg.music ? jingle(langs.length > 1 ? 4 : 2) : 0;
+    var lines = langs.map(function (l) { var t = L[l][kind === "back" ? "back" : "neu"](name); return { lang: l, show: t[0], say: t[1] }; });
+    var startAt = cfg.music ? 1250 : 150, k = 0;
+    function next() {
+      if (!ov) return;
+      if (k >= lines.length) { duck(false); timer = setTimeout(close, Math.max(1200, musicMs - (Date.now() - t0))); return; }
+      var ln = lines[k++]; caption(ln.show, ln.lang);
+      var v = voiceFor(L[ln.lang].code);
+      if (!TTS || !v) { /* no voice for this language on this device → show the text only */ timer = setTimeout(next, 2300); return; }
+      /* "remix" vocal: quick stutter on the first word, then the full line */
+      var first = ln.say.split(/[ ,]/)[0], parts = k === 1 ? [[first, 1.35, 1.25], [first, 1.35, .8]] : [];
+      parts.push([ln.say, 1.0, 1.05]);
+      var i = 0;
+      (function speak() {
+        if (!ov) return; if (i >= parts.length) { duck(false); timer = setTimeout(next, 250); return; }
+        var p = parts[i++], u = new SpeechSynthesisUtterance(p[0]); u.voice = v; u.lang = v.lang; u.rate = p[1]; u.pitch = p[2]; u.volume = 1;
+        u.onstart = function () { duck(true); }; u.onend = speak; u.onerror = speak; TTS.speak(u);
+      })();
+    }
+    var t0 = Date.now(); if (TTS) TTS.cancel(); timer = setTimeout(next, startAt);
+  }
+
+  /* returning visitor: show WELCOME BACK automatically on open; play sound automatically if the browser allows,
+     otherwise play it on the first tap (browsers block sound until the user touches the page) */
+  function session() { return lget("xc_session", null); }
+  var cycle = null;
+  function greetVisual(kind, name) {
+    show(kind, name); var langs = cfg.lang === "all" ? ["en", "km", "fr"] : [cfg.lang], k = 0;
+    var c = ov.querySelector(".xcw-c"), tap = document.createElement("button"); tap.type = "button"; tap.className = "xcw-x xcw-tap"; tap.textContent = "🔊 ចុចដើម្បីស្តាប់សំឡេង";
+    c.insertBefore(tap, c.querySelector(".xcw-x")); ov.querySelector(".xcw-eq").style.opacity = ".35";
+    function cap() { var l = langs[k++ % langs.length]; caption(L[l][kind === "back" ? "back" : "neu"](name)[0], l); }
+    cap(); clearInterval(cycle); cycle = setInterval(cap, 2200);
+    clearTimeout(timer); timer = setTimeout(function () { clearInterval(cycle); close(); }, 9000);
+  }
+  function canAutoplay() {
+    return new Promise(function (ok) {
+      var c = audio(); if (!c) return ok(false); if (c.state === "running") return ok(true);
+      var done = false; try { c.resume().then(function () { if (!done) { done = true; ok(c.state === "running"); } }, function () { if (!done) { done = true; ok(false); } }); } catch (e) { ok(false); }
+      setTimeout(function () { if (!done) { done = true; ok(c.state === "running"); } }, 400);
+    });
+  }
+  var s0 = session();
+  if (!sget("xc_wb") && s0 && cfg.on) {
+    var heard = false, firstTap = function (ev) {
+      ["pointerdown", "keydown", "touchstart"].forEach(function (e) { document.removeEventListener(e, firstTap, true); });
+      if (heard || (ev && ev.target && ev.target.closest && ev.target.closest(".xcw [data-a]"))) { heard = true; return; } heard = true; clearInterval(cycle); var s = session(); if (s) setTimeout(function () { greet("back", s.name); }, 60);
+    };
+    var start = function () {
+      canAutoplay().then(function (yes) {
+        sset("xc_wb", "1");
+        if (yes) { heard = true; greet("back", s0.name); }               /* browser allowed sound → fully automatic */
+        else { greetVisual("back", s0.name);                               /* visual welcome now, sound on first tap */
+          ["pointerdown", "keydown", "touchstart"].forEach(function (e) { document.addEventListener(e, firstTap, true); });
+          setTimeout(function () { ["pointerdown", "keydown", "touchstart"].forEach(function (e) { document.removeEventListener(e, firstTap, true); }); }, 30000); }
+      });
+    };
+    if (document.readyState === "complete") setTimeout(start, 700); else window.addEventListener("load", function () { setTimeout(start, 700); });
+  }
+
+  /* settings inside the 🎧 music panel */
+  var box;
+  function settingsNote() { if (!box) return; var miss = ["en", "km", "fr"].filter(function (l) { return !voiceFor(l); }).map(function (l) { return L[l].n; });
+    box.querySelector(".xcw-note").textContent = !TTS ? "⚠️ Browser នេះមិនគាំទ្រ TTS — បង្ហាញអក្សរតែប៉ុណ្ណោះ" : miss.length ? "ℹ️ ឧបករណ៍នេះគ្មានសំឡេង៖ " + miss.join(", ") + " → បង្ហាញជាអក្សរ (iPhone/Android អាចដំឡើងសំឡេងក្នុង Settings › Accessibility › Spoken Content / Text-to-speech)" : "✅ មានសំឡេងគ្រប់ភាសា"; }
+  function settingsUI() { if (!box) return; box.querySelector(".xcw-on").checked = cfg.on; box.querySelector(".xcw-mu").checked = cfg.music; box.querySelector(".xcw-lg").value = cfg.lang; }
+  function mount() {
+    var panel = document.querySelector(".xcm-p"); if (!panel || box) return;
+    box = document.createElement("div"); box.style.cssText = "margin:10px 0 0;padding:10px;border-radius:12px;background:rgba(255,255,255,.06);font-size:12.5px";
+    box.innerHTML = '<b>🔊 សំឡេងស្វាគមន៍ (Welcome voice)</b><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px">' +
+      '<label><input type="checkbox" class="xcw-on"> បើក</label><label><input type="checkbox" class="xcw-mu"> 🎵 Remix</label>' +
+      '<select class="xcw-lg" aria-label="ភាសា" style="border-radius:8px;padding:4px;background:#2b2840;color:#fff;border:1px solid #555"><option value="all">🇬🇧🇰🇭🇫🇷 ទាំង ៣</option><option value="en">🇬🇧 English</option><option value="km">🇰🇭 ខ្មែរ</option><option value="fr">🇫🇷 Français</option></select>' +
+      '<button type="button" class="xcm-t xcw-test">▶ សាក</button></div><div class="xcw-note" style="color:#adb5bd;font-size:11px;margin-top:6px;line-height:1.5"></div>';
+    var n = panel.querySelector(".xcm-n"); panel.insertBefore(box, n || null);
+    box.querySelector(".xcw-on").onchange = function (e) { cfg.on = e.target.checked; lset("xc_welcome", cfg); };
+    box.querySelector(".xcw-mu").onchange = function (e) { cfg.music = e.target.checked; lset("xc_welcome", cfg); };
+    box.querySelector(".xcw-lg").onchange = function (e) { cfg.lang = e.target.value; lset("xc_welcome", cfg); };
+    box.querySelector(".xcw-test").onclick = function () { var s = session(); if (window.XCMusic) window.XCMusic.pause(); greet(s ? "back" : "new", s ? s.name : "", true); };
+    settingsUI(); settingsNote();
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount); else mount();
+  setTimeout(mount, 800);
+
+  window.XCWelcome = { greet: greet, close: close };
+})();
