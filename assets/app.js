@@ -130,6 +130,7 @@ const ST = {
 
 /* ---------- theme */
 const THEMES = [
+  { id: "sky", name: "ទីក្រុងមេឃ ☁️", c1: "#1f6fe0", c2: "#22c58b", look: "sky", sw: "linear-gradient(180deg,#8fbff2 0%,#f4faff 55%,#c9dcf0 56%,#a9c3e2 100%)" },
   { id: "royal", name: "កម្ពុជារុងរឿង 💜", c1: "#8b5cf6", c2: "#ff9f3a", look: "royal", sw: "linear-gradient(135deg,#3b1580,#140828 55%,#f07a1a)" },
   { id: "bayon", name: "ភ្នំពេញរាត្រី 🌃", c1: "#b67d27", c2: "#e2ad55", look: "bayon", sw: "linear-gradient(170deg,#1c3b58 0%,#10263c 55%,#2b1e10 56%,#c9973a 100%)" },
   { id: "modern", name: "អង្គរសម័យ ✨", c1: "#7c6cf0", c2: "#f3708f", look: "modern", sw: "linear-gradient(135deg,#7ea6f7,#b996d4,#f3708f)" },
@@ -145,14 +146,14 @@ const THEMES = [
   { id: "night", name: "រាត្រីអង្គរ", c1: "#3b2a7a", c2: "#e2b04a" },
 ];
 const TH = {
-  get() { const s = LS.get("xc_theme2", {}); if (s && s.look === "pop") { delete s.id; delete s.look; delete s.c1; delete s.c2; } return Object.assign({ c1: THEMES[0].c1, c2: THEMES[0].c2, id: "royal", look: "royal", mode: "auto", pat: 8, temple: true }, s); },
+  get() { const s = LS.get("xc_theme2", {}); if (s && (s.look === "pop" || s.look === "khmer" || s.look === "fire")) { delete s.id; delete s.look; delete s.c1; delete s.c2; } return Object.assign({ c1: THEMES[0].c1, c2: THEMES[0].c2, id: "sky", look: "sky", mode: "auto", pat: 8, temple: true }, s); },
   apply() {
     const t = this.get(), r = document.documentElement;
     if (t.look) r.dataset.look = t.look; else delete r.dataset.look;
     r.style.setProperty("--c1", t.c1); r.style.setProperty("--c2", t.c2); r.style.setProperty("--pat", t.pat / 100);
     if (t.mode === "auto") delete r.dataset.mode; else r.dataset.mode = t.mode;
     document.body.classList.toggle("no-temple", !t.temple);
-    const m = $('meta[name="theme-color"]'); if (m) m.content = t.look === "modern" ? "#0e1428" : t.look === "bayon" ? "#1c3b58" : t.look === "pop" ? "#1d1d1f" : t.look === "royal" ? "#140828" : ({ arcade: "#12002b", pixel: "#16123a", circuit: "#04121c", matrix: "#020a06" })[t.look] || t.c1;
+    const m = $('meta[name="theme-color"]'); if (m) m.content = t.look === "modern" ? "#0e1428" : t.look === "bayon" ? "#1c3b58" : t.look === "pop" ? "#1d1d1f" : t.look === "royal" ? "#140828" : ({ sky: "#8fbff2", arcade: "#12002b", pixel: "#16123a", circuit: "#04121c", matrix: "#020a06" })[t.look] || t.c1;
   },
   set(p) { LS.set("xc_theme2", Object.assign(this.get(), p)); this.apply(); },
 };

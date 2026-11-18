@@ -323,7 +323,16 @@
   function ask(q) {
     q = q.trim(); if (!q) return;
     bubble(esc(q), "me");
-    var cc = chat(q);
+    var qzNote = "", QZ = /(បង្កើត|ធ្វើ|make|create)?\s*(សំណួរ\s*[-–]?\s*ចម្លើយ|សំណួរ|តេស្ត|ប្រឡង|លំហាត់|quiz|test|q\s*&\s*a)/i;
+    if (QZ.test(q)) {
+      var qmode = /ចម្លើយ|q\s*&\s*a/i.test(q) ? "qa" : "quiz";
+      var rest = q.replace(QZ, " ").replace(/អំពី|មេរៀន|ឲ្យ|អោយ|ខ្ញុំ|សូម|ពី|about|from|lesson/gi, " ").replace(/\s+/g, " ").trim();
+      try { sessionStorage.setItem("xct_auto", JSON.stringify({ m: qmode, t: Date.now() })); } catch (e) {}
+      var how = "📝 <b>xCenBot បង្កើត" + (qmode === "qa" ? "សំណួរ-ចម្លើយ" : "តេស្ត") + "ពីមេរៀនបាន!</b> ចុចបើកមេរៀនមួយខាងក្រោម — xCenBot នឹងអានមេរៀន ហើយបង្កើតសំណួរឲ្យភ្លាម។ ក្នុងមេរៀនណាក៏ដោយ ចុចប៊ូតុង <b>🤖 xCenBot</b> (ខាងឆ្វេងក្រោម) ដើម្បីសួរ ឬធ្វើតេស្តបានគ្រប់ពេល។";
+      if (rest.length < 2) { bubble(how + "<br><br>សាកសរសេរ៖ «សំណួរ HTML» · «តេស្ត HSK 2» · «សំណួរ-ចម្លើយ Python»" + chips()); return; }
+      qzNote = how + "<br><br>"; q = rest;
+    }
+    var cc = qzNote ? null : chat(q);
     if (cc && cc.only) { var tb = bubble('<span class="xai-dots"><i></i><i></i><i></i></span>'); setTimeout(function () { tb.innerHTML = cc.h; log.scrollTop = log.scrollHeight; }, 450); return; }
     var r = search(q), n = r.res.length + r.verbs.length;
     if (cc && cc.guess && n) { cc = null; tries = 0; lastKind = ""; }
@@ -335,7 +344,7 @@
         h = "សុំទោស ខ្ញុំរកមិនឃើញមេរៀនអំពី «<b>" + esc(q) + "</b>» ក្នុង xCenBar ទេ។ សាកប្រើពាក្យផ្សេង ឬស្វែងរកលើ Internet៖" + web(q) + chips();
       } else {
         var courses = {}; r.res.forEach(function (x) { courses[x.e[0]] = 1; });
-        h = (cc ? cc.h.replace(/<div class="xai-chips">[\s\S]*$/, "") + "<br><br>" : "") + "ខ្ញុំរកឃើញ <b>" + n + "</b> លទ្ធផល" + (Object.keys(courses).length ? " ក្នុង <b>" + Object.keys(courses).length + "</b> វគ្គ" : "") + " សម្រាប់ «" + esc(q) + "»៖";
+        h = qzNote + (cc ? cc.h.replace(/<div class="xai-chips">[\s\S]*$/, "") + "<br><br>" : "") + "ខ្ញុំរកឃើញ <b>" + n + "</b> លទ្ធផល" + (Object.keys(courses).length ? " ក្នុង <b>" + Object.keys(courses).length + "</b> វគ្គ" : "") + " សម្រាប់ «" + esc(q) + "»៖";
         h += '<div class="xai-list">' + r.verbs.map(vcard).join("") + r.res.slice(0, 6).map(card).join("") + "</div>";
         if (r.res.length > 6) h += '<details class="xai-more"><summary>បង្ហាញបន្ថែម (' + (r.res.length - 6) + ")</summary><div class=\"xai-list\">" + r.res.slice(6, 30).map(card).join("") + "</div></details>";
         h += web(q);
